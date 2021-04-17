@@ -1,8 +1,10 @@
 package com.xueyi.system.organize.controller;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import com.xueyi.system.api.authority.SysRole;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -69,7 +71,13 @@ public class SysDeptController extends BaseController {
     @PreAuthorize(hasPermi = "system:dept:query")
     @GetMapping(value = "/{deptId}")
     public AjaxResult getInfo(@PathVariable Long deptId) {
-        return AjaxResult.success(deptService.selectDeptById(deptId));
+        AjaxResult ajax = AjaxResult.success();
+        if (StringUtils.isNotNull(deptId)) {
+            SysDept dept = deptService.selectDeptById(deptId);
+            ajax.put(AjaxResult.DATA_TAG, dept);
+            ajax.put("roleIds", Arrays.toString(dept.getRoles().stream().map(SysRole::getRoleId).toArray(Long[]::new)));
+        }
+        return ajax;
     }
 
     /**
@@ -110,10 +118,11 @@ public class SysDeptController extends BaseController {
     /**
      * 修改部门-角色关系
      */
-    @PreAuthorize(hasPermi = "system:dept:edit")
+    @PreAuthorize(hasPermi = "system:role:set")
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeDeptRole")
     public AjaxResult editDeptRole(@Validated @RequestBody SysDept dept) {
+        System.out.println(Arrays.toString(dept.getRoleIds()));
         return toAjax(deptService.updateDeptRole(dept.getDeptId(), dept.getRoleIds()));
     }
 

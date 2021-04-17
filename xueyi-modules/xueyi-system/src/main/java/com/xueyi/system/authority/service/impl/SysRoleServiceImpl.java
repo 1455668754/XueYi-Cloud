@@ -51,46 +51,14 @@ public class SysRoleServiceImpl implements ISysRoleService {
     private SysUserRoleMapper userRoleMapper;
 
     /**
-     * 根据用户Id查询权限
-     *
-     * @param userId 用户Id
-     * @return 权限列表
-     */
-    @Override
-    public Set<String> selectRolePermissionByUserId(Long userId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        List<SysRole> perms = roleMapper.selectRolePermissionByUserId(search);
-        Set<String> permsSet = new HashSet<>();
-        for (SysRole perm : perms) {
-            if (StringUtils.isNotNull(perm)) {
-                permsSet.addAll(Arrays.asList(perm.getRoleKey().trim().split(",")));
-            }
-        }
-        return permsSet;
-    }
-
-    /**
      * 查询所有角色
      *
      * @return 角色列表
      */
     @Override
     public List<SysRole> selectRoleAll() {
-        return SpringUtils.getAopProxy(this).selectRoleList(new SysRole());
-    }
-
-    /**
-     * 根据用户ID获取角色选择框列表
-     *
-     * @param userId 用户ID
-     * @return 选中角色ID列表
-     */
-    @Override
-    public List<Integer> selectRoleListByUserId(Long userId) {
         SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        return roleMapper.selectRoleListByUserId(search);
+        return roleMapper.selectRoleAll(search);
     }
 
     /**

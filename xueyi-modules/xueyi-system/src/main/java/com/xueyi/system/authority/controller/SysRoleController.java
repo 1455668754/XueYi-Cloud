@@ -146,13 +146,13 @@ public class SysRoleController extends BaseController {
         util.exportExcel(response, list, "角色数据");
     }
 
-//    /**
-//     * 获取角色选择框列表
-//     */
-//    @PreAuthorize(hasPermi = "system:role:query")
-//    @GetMapping("/optionselect")
-//    public AjaxResult optionselect()
-//    {
-//        return AjaxResult.success(roleService.selectRoleAll());
-//    }
+    /**
+     * 获取角色选择框列表
+     */
+    @PreAuthorize(hasPermi = "system:role:query")
+    @GetMapping("/optionSelect")
+    public AjaxResult optionSelect()
+    {
+        return AjaxResult.success(roleService.selectRoleAll());
+    }
 }

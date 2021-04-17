@@ -64,3 +64,11 @@ export function delRole(roleId) {
     method: 'delete'
   })
 }
+
+// 角色下拉选择列表
+export function optionSelect() {
+  return request({
+    url: '/system/role/optionSelect',
+    method: 'get'
+  })
+}

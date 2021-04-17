@@ -21,13 +21,6 @@ public interface ISysRoleService {
 
     public List<SysRole> selectRoleList(SysRole role);
 
-    /**
-     * 根据用户Id查询角色
-     *
-     * @param userId 用户Id
-     * @return 权限列表
-     */
-    public Set<String> selectRolePermissionByUserId(Long userId);
 
     /**
      * 查询所有角色
@@ -35,14 +28,6 @@ public interface ISysRoleService {
      * @return 角色列表
      */
     public List<SysRole> selectRoleAll();
-
-    /**
-     * 根据用户Id获取角色选择框列表
-     *
-     * @param userId 用户Id
-     * @return 选中角色Id列表
-     */
-    public List<Integer> selectRoleListByUserId(Long userId);
 
     /**
      * 通过角色Id查询角色

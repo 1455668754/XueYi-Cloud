@@ -44,7 +44,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:dept:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
@@ -73,14 +74,24 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:dept:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleRoleUpdate(scope.row)"
+            v-hasPermi="['system:role:set']"
+          >部门权限
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-plus"
             @click="handleAdd(scope.row)"
             v-hasPermi="['system:dept:add']"
-          >新增</el-button>
+          >新增
+          </el-button>
           <el-button
             v-if="scope.row.parentId != 0"
             size="mini"
@@ -88,7 +99,8 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:dept:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -99,37 +111,37 @@
         <el-row>
           <el-col :span="24" v-if="form.parentId !== 0">
             <el-form-item label="上级部门" prop="parentId">
-              <treeselect v-model="form.parentId" :options="deptOptions" :normalizer="normalizer" placeholder="选择上级部门" />
+              <treeselect v-model="form.parentId" :options="deptOptions" :normalizer="normalizer" placeholder="选择上级部门"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="部门编号" prop="deptCode">
-              <el-input v-model="form.deptCode" placeholder="请输入部门编号" :readonly="form.deptId !== undefined"/>
+              <el-input v-model="form.deptCode" placeholder="请输入部门编号"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="部门名称" prop="deptName">
-              <el-input v-model="form.deptName" placeholder="请输入部门名称" />
+              <el-input v-model="form.deptName" placeholder="请输入部门名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="负责人" prop="leader">
-              <el-input v-model="form.leader" placeholder="请输入负责人" maxlength="20" />
+              <el-input v-model="form.leader" placeholder="请输入负责人" maxlength="20"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系电话" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11" />
+              <el-input v-model="form.phone" placeholder="请输入联系电话" maxlength="11"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
+              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示排序" prop="sort">
-              <el-input-number v-model="form.sort" controls-position="right" :min="0" />
+              <el-input-number v-model="form.sort" controls-position="right" :min="0"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -139,7 +151,8 @@
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                >{{ dict.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -150,19 +163,57 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    {{deptList}}
+    <!-- 修改部门权限对话框 -->
+    <el-dialog :title="title" :visible.sync="roleOpen" width="600px" append-to-body>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="部门编码" prop="deptCode">
+              <el-input v-model="form.deptCode" placeholder="请输入部门编码" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="部门名称" prop="deptName">
+              <el-input v-model="form.deptName" placeholder="请输入部门名称" readonly/>
+            </el-form-item>
+          </el-col>
+          {{form.roleIds}}
+          <el-select
+            v-model="form.roleIds"
+            multiple
+            collapse-tags
+            style="margin-left: 20px;"
+            placeholder="请选择">
+            <el-option
+              v-for="item in roleOptions"
+              :key="item.roleId"
+              :label="item.roleName"
+              :value="item.roleId">
+            </el-option>
+          </el-select>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitRoleForm">确 定</el-button>
+        <el-button @click="roleCancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listDept, getDept, delDept, addDept, updateDept, listDeptExcludeChild } from "@/api/system/dept";
+import {listDept, getDept, delDept, addDept, updateDept, listDeptExcludeChild, changeDeptRole} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {optionSelect} from "@/api/system/role";
 
 export default {
   name: "Dept",
-  components: { Treeselect },
+  components: {Treeselect},
   data() {
     return {
+      value2:[],
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -171,10 +222,14 @@ export default {
       deptList: [],
       // 部门树选项
       deptOptions: [],
+      // 权限数据选项
+      roleOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
+      // 是否显示弹出层/部门权限设置弹窗
+      roleOpen: false,
       // 状态数据字典
       statusOptions: [],
       // 查询参数
@@ -188,13 +243,16 @@ export default {
       // 表单校验
       rules: {
         parentId: [
-          { required: true, message: "上级部门不能为空", trigger: "blur" }
+          {required: true, message: "上级部门不能为空", trigger: "blur"}
         ],
         deptCode: [
-          { required: true, message: "部门编码不能为空", trigger: "blur" }
+          {required: true, message: "部门编号不能为空", trigger: "blur"}
         ],
         deptName: [
-          { required: true, message: "部门名称不能为空", trigger: "blur" }
+          {required: true, message: "部门名称不能为空", trigger: "blur"}
+        ],
+        orderNum: [
+          {required: true, message: "菜单顺序不能为空", trigger: "blur"}
         ],
         email: [
           {
@@ -248,6 +306,10 @@ export default {
       this.open = false;
       this.reset();
     },
+    roleCancel(){
+      this.roleOpen = false;
+      this.reset();
+    },
     // 表单重置
     reset() {
       this.form = {
@@ -255,11 +317,12 @@ export default {
         parentId: undefined,
         deptCode: undefined,
         deptName: undefined,
-        sort: undefined,
+        sort: 0,
         leader: undefined,
         phone: undefined,
         email: undefined,
-        status: '0'
+        status: '0',
+        roleIds:[]
       };
       this.resetForm("form");
     },
@@ -275,13 +338,13 @@ export default {
     /** 新增按钮操作 */
     handleAdd(row) {
       this.reset();
-      if (row != undefined) {
+      if (row !== undefined) {
         this.form.parentId = row.deptId;
       }
       this.open = true;
       this.title = "添加部门";
       listDept().then(response => {
-	        this.deptOptions = this.handleTree(response.data, "deptId");
+        this.deptOptions = this.handleTree(response.data, "deptId");
       });
     },
     /** 修改按钮操作 */
@@ -293,14 +356,28 @@ export default {
         this.title = "修改部门";
       });
       listDeptExcludeChild(row.deptId).then(response => {
-	        this.deptOptions = this.handleTree(response.data, "deptId");
+        this.deptOptions = this.handleTree(response.data, "deptId");
+      });
+    },
+
+    /** 部门权限按钮操作 */
+    handleRoleUpdate(row) {
+      this.reset();
+      getDept(row.deptId).then(response => {
+        this.form = response.data;
+        this.form.roleIds=response.roleIds;
+        this.roleOpen = true;
+        this.title = "设置部门权限";
+      });
+      optionSelect().then(response => {
+        this.roleOptions = response.data;
       });
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.deptId != undefined) {
+          if (this.form.deptId !== undefined) {
             updateDept(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -316,18 +393,28 @@ export default {
         }
       });
     },
+    /** 部门权限提交按钮 */
+    submitRoleForm: function () {
+      if (this.form.deptId !== undefined) {
+        changeDeptRole(this.form).then(response => {
+          this.msgSuccess("部门权限修改成功");
+          this.roleOpen = false;
+          this.getList();
+        });
+      }
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
       this.$confirm('是否确认删除名称为"' + row.deptName + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delDept(row.deptId);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        })
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delDept(row.deptId);
+      }).then(() => {
+        this.getList();
+        this.msgSuccess("删除成功");
+      })
     }
   }
 };

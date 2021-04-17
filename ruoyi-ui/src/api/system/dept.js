@@ -59,6 +59,15 @@ export function updateDept(data) {
   })
 }
 
+// 修改部门-角色关系
+export function changeDeptRole(data) {
+  return request({
+    url: '/system/dept/changeDeptRole',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除部门
 export function delDept(deptId) {
   return request({

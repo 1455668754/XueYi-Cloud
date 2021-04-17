@@ -23,16 +23,6 @@ public interface SysRoleMapper {
     public List<SysRole> checkLoginRolePermission(SysSearch search);
 
     /**
-     * 根据用户Id查询角色
-     * 访问控制 r 租户查询
-     *
-     * @param search 万用组件 | userId 用户Id
-     * @return 角色列表
-     */
-    @DataScope(enterpriseAlias = "r")
-    public List<SysRole> selectRolePermissionByUserId(SysSearch search);
-
-    /**
      * 查询所有角色
      * 访问控制 r 租户查询
      *
@@ -41,16 +31,6 @@ public interface SysRoleMapper {
      */
     @DataScope(enterpriseAlias = "r")
     public List<SysRole> selectRoleAll(SysSearch search);
-
-    /**
-     * 根据用户Id获取角色选择框列表
-     * 访问控制 r 租户查询
-     *
-     * @param search 万用组件 | userId 用户Id
-     * @return 选中角色Id列表
-     */
-    @DataScope(enterpriseAlias = "r")
-    public List<Integer> selectRoleListByUserId(SysSearch search);
 
     /**
      * 根据用户Id查询角色

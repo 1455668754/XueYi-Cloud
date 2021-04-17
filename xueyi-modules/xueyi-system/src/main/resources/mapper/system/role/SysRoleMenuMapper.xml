@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<insert id="batchRoleMenu" parameterType="com.xueyi.system.api.utilTool.SysSearch">
 		insert into sys_role_menu (role_id, menu_id, tenant_id) values
-		<foreach item="menuId" collection="search.menuIds" open="(" separator="," close=")">
+		<foreach item="menuId" collection="search.menuIds" separator=",">
 			(#{search.roleId}, #{menuId}, #{enterpriseId})
 		</foreach>
 	</insert>
