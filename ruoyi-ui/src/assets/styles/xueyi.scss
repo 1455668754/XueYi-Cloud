@@ -1,0 +1,59 @@
+//1.element-UI el-tabs type=card 样式调整
+
+//外边框
+.tabs-card {
+  border-top: 1px solid #E4E7ED;
+  border-bottom: 1px solid #E4E7ED;
+  margin: 0 -20px 0 -20px;
+}
+
+.el-tabs--left.el-tabs--card .el-tabs__nav {
+  border-radius: 4px 0 0 4px;
+  border: none;
+}
+
+.el-tabs--card > .el-tabs__header {
+  border-bottom: none;
+}
+
+.el-tabs--left.el-tabs--card .el-tabs__item.is-left {
+  border: none;
+  border-right: 1px solid #E4E7ED;
+  text-align: left;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+.el-tabs--left.el-tabs--card .el-tabs__item.is-left.is-active {
+  padding-left: 34px;
+  border: 1px solid #E4E7ED;
+  border-left: 6px solid #557ce1;
+  border-right-color: #fff;
+}
+
+.el-tabs--left.el-tabs--card .el-tabs__item.is-left.is-active:first-child {
+  border-top: none;
+}
+
+.el-tabs--left.el-tabs--card .el-tabs__item.is-left.is-active:last-child {
+  border-bottom: 1px solid #E4E7ED;
+}
+
+.el-tabs--left.el-tabs--card > .el-tabs__header{
+  border-right: 1px solid #E4E7ED;
+}
+
+.el-tabs__item {
+  padding: 0 20px;
+  height: 66px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  line-height: 66px;
+  display: inline-block;
+  list-style: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #303133;
+  position: relative;
+}
+

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.system.organize.mapper.SysDeptMapper">
+
+	<resultMap type="SysDept" id="SysDeptResult">
+		<id     property="deptId"     		column="dept_id"     />
+		<result property="parentId"   		column="parent_id"   />
+		<result property="deptCode"   		column="dept_code"   />
+		<result property="deptName"   		column="dept_name"   />
+		<result property="ancestors"  		column="ancestors"   />
+		<result property="leader"     		column="leader"      />
+		<result property="phone"      		column="phone"       />
+		<result property="email"      		column="email"       />
+		<result property="parentName" 		column="parent_name" />
+		<result property="sort"   			column="sort"   	 />
+		<result property="status"     		column="status"      />
+		<result property="createBy"   		column="create_by"   />
+		<result property="createName"   	column="create_name" />
+		<result property="createTime" 		column="create_time" />
+		<result property="updateBy"   		column="update_by"   />
+		<result property="updateName"   	column="update_name" />
+		<result property="updateTime" 		column="update_time" />
+		<result property="remark" 			column="remark" 	 />
+		<collection  property="roles"   javaType="java.util.List"        	resultMap="roleResult" />
+	</resultMap>
+
+	<resultMap type="SysRole" id="roleResult">
+		<id     property="roleId"       column="role_id"        />
+		<result property="roleCode"     column="role_code"      />
+		<result property="roleName"     column="role_name"      />
+		<result property="roleKey"      column="role_key"       />
+		<result property="roleSort"     column="role_sort"      />
+		<result property="dataScope"     column="data_scope"    />
+		<result property="status"       column="role_status"    />
+	</resultMap>
+
+	<sql id="selectVo">
+		select d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email, d.sort, d.status, d.create_by, d.create_time, d.update_by, d.update_time, d.remark,
+			   r.role_id, r.role_code, r.role_name, r.role_key, r.sort, r.data_scope, r.status as role_status
+		from sys_dept d
+				 left join sys_dept_role dr on dr.dept_id = d.dept_id
+				 left join sys_role r on r.role_id = dr.role_id
+	</sql>
+
+	<sql id="checkVo">
+		select d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email, d.sort, d.status
+		from sys_dept d
+	</sql>
+
+	<sql id="countVo">
+		select count(1)
+		from sys_dept d
+	</sql>
+
+	<select id="selectDeptList" parameterType="SysDept" resultMap="SysDeptResult">
+		<include refid="selectVo"/>
+		where 1 = 1
+		<if test="parentId != null and parentId != 0">
+			AND d.parent_id = #{parentId}
+		</if>
+		<if test="deptCode != null and deptCode != ''">
+			AND d.dept_name like concat('%', #{deptCode}, '%')
+		</if>
+		<if test="deptName != null and deptName != ''">
+			AND d.dept_name like concat('%', #{deptName}, '%')
+		</if>
+		<if test="leader != null and leader != ''">
+			AND d.leader like concat('%', #{leader}, '%')
+		</if>
+		<if test="status != null and status != ''">
+			AND d.status = #{status}
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		order by d.sort
+	</select>
+
+	<select id="selectDeptById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysDeptResult">
+		<include refid="selectVo"/>
+		where d.dept_id = #{search.deptId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="selectChildrenDeptById" parameterType="com.xueyi.system.api.utilTool.SysSearch"
+			resultMap="SysDeptResult">
+		<include refid="selectVo"/>
+		where find_in_set(#{search.deptId}, d.ancestors)
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="selectNormalChildrenDeptById" parameterType="com.xueyi.system.api.utilTool.SysSearch"
+			resultType="java.lang.Integer">
+		<include refid="countVo"/>
+		where d.status = 0 and find_in_set(#{search.deptId}, d.ancestors)
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<insert id="insertDept" parameterType="SysDept">
+		insert into sys_dept
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="Id != null and Id != 0">							dept_id			    ,</if>
+			<if test="enterpriseId != null and enterpriseId != 0">		tenant_id			,</if>
+			<if test="parentId != null and parentId != 0">				parent_id			,</if>
+			<if test="deptCode != null and deptCode != ''">				dept_code			,</if>
+			<if test="deptName != null and deptName != ''">				dept_name			,</if>
+			<if test="ancestors != null and ancestors != ''">			ancestors			,</if>
+			<if test="leader != null and leader != ''">					leader				,</if>
+			<if test="phone != null and phone != ''">					phone				,</if>
+			<if test="email != null and email != ''">					email				,</if>
+			<if test="sort != null">									sort				,</if>
+			<if test="status != null and status != ''">					status				,</if>
+			<if test="createBy != null">				                create_by			,</if>
+			<if test="remark != null and remark != ''">					remark				,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="Id != null and Id != 0">							#{Id}				,</if>
+			<if test="enterpriseId != null and enterpriseId != 0">		#{enterpriseId}	    ,</if>
+			<if test="parentId != null and parentId != 0">				#{parentId}		    ,</if>
+			<if test="deptCode != null and deptCode != ''">				#{deptCode}		    ,</if>
+			<if test="deptName != null and deptName != ''">				#{deptName}		    ,</if>
+			<if test="ancestors != null and ancestors != ''">			#{ancestors}		,</if>
+			<if test="leader != null and leader != ''">					#{leader}			,</if>
+			<if test="phone != null and phone != ''">					#{phone}			,</if>
+			<if test="email != null and email != ''">					#{email}			,</if>
+			<if test="sort != null">									#{sort}			    ,</if>
+			<if test="status != null and status != ''">					#{status}			,</if>
+			<if test="createBy != null">				                #{createBy}		    ,</if>
+			<if test="remark != null and remark != ''">					#{remark}			,</if>
+		</trim>
+	</insert>
+
+	<update id="updateDept" parameterType="SysDept">
+		update sys_dept
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="parentId != null and parentId != 0">		parent_id = #{parentId}		,</if>
+			<if test="deptCode != null and deptCode != ''">		dept_code = #{deptCode}		,</if>
+			<if test="deptName != null and deptName != ''">		dept_name = #{deptName}		,</if>
+			<if test="ancestors != null and ancestors != ''">	ancestors = #{ancestors}	,</if>
+			<if test="leader != null">							leader = #{leader}			,</if>
+			<if test="phone != null">							phone = #{phone}			,</if>
+			<if test="email != null">							email = #{email}			,</if>
+			<if test="sort != null">							sort = #{sort}				,</if>
+			<if test="status != null and status != ''">			status = #{status}			,</if>
+			<if test="updateBy != null">		                update_by = #{updateBy}		,</if>
+			<if test="remark != null and remark != ''">			remark = #{remark}			,</if>
+		</trim>
+		where dept_id = #{deptId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</update>
+
+	<update id="updateDeptStatus" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		update sys_dept
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="search.status != null and search.status != ''">	status = #{search.status}	,</if>
+			<if test="updateBy != null">		                        update_by = #{updateBy}		,</if>
+		</trim>
+		where dept_id = #{search.deptId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</update>
+
+	<update id="updateAncestorsDeptStatus" parameterType="SysDept">
+		update sys_dept
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="status != null and status != ''">			status = #{status}			,</if>
+			<if test="updateBy != null">		                update_by = #{updateBy}		,</if>
+		</trim>
+		where dept_id in (${ancestors})
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</update>
+
+	<update id="updateDeptChildren" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		update sys_dept set ancestors =
+		<foreach collection="search.depts" item="item" index="index"
+				 separator=" " open="case dept_id" close="end">
+			when #{item.deptId} then #{item.ancestors}
+		</foreach>
+		where dept_id in
+		<foreach collection="search.depts" item="item" index="index"
+				 separator="," open="(" close=")">
+			#{item.deptId}
+		</foreach>
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</update>
+
+	<delete id="deleteDeptById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		update sys_dept
+		set del_flag = 1
+		where dept_id = #{search.deptId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<select id="hasChildByDeptId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="int">
+		<include refid="countVo"/>
+		where d.parent_id = #{search.deptId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="checkDeptCodeUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysDeptResult">
+		<include refid="checkVo"/>
+		where d.dept_code=#{search.deptCode}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		limit 1
+	</select>
+
+	<select id="checkDeptNameUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysDeptResult">
+		<include refid="checkVo"/>
+		where d.dept_name=#{search.deptName} and d.parent_id = #{search.parentId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		limit 1
+	</select>
+
+	<select id="checkIsChild" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysDeptResult">
+		<include refid="checkVo"/>
+		where d.dept_id = #{search.parentId} and find_in_set(#{search.deptId},d.ancestors)
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		limit 1
+	</select>
+
+</mapper>

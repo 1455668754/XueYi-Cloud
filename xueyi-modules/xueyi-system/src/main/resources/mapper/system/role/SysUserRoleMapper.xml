@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.system.role.mapper.SysUserRoleMapper">
+
+	<resultMap type="SysUserRole" id="SysUserRoleResult">
+		<id     property="userId"      column="user_id"    />
+		<result property="roleId"      column="role_id"    />
+	</resultMap>
+
+	<select id="selectUserRoleByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="SysUserRole">
+		select ur.user_id, ur.role_id from sys_user_role ur
+		where ur.user_id = #{search.userId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		order by ur.role_id
+	</select>
+
+	<select id="countUserRoleByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="java.lang.Integer">
+		select count(1) from sys_user_role ur
+		where ur.role_id=#{search.roleId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<insert id="batchNewUserRole" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		insert into sys_user_role (user_id, role_id, tenant_id) values
+		<foreach item="roleId" collection="search.roleIds" open="(" separator="," close=")">
+			(#{Id}, #{roleId}, #{enterpriseId})
+		</foreach>
+	</insert>
+
+	<insert id="batchUserRole" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		insert into sys_user_role (user_id, role_id, tenant_id) values
+		<foreach item="roleId" collection="search.roleIds" open="(" separator="," close=")">
+			(#{search.userId}, #{roleId}, #{enterpriseId})
+		</foreach>
+	</insert>
+
+	<delete id="deleteUserRoleByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		delete from sys_user_role
+		where role_id = #{search.roleId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<delete id="deleteUserRoleByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		delete from sys_user_role
+		where user_id = #{search.userId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<delete id="deleteUserRoleByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		delete from sys_user_role where user_id in
+		<foreach item="userId" collection="search.userIds" open="(" separator="," close=")">
+			#{userId}
+		</foreach>
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+</mapper>

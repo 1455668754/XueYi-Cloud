@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.system.role.mapper.SysRoleDeptMapper">
+
+	<resultMap type="SysRoleDept" id="SysRoleDeptResult">
+		<id     property="roleId"      column="role_id"    />
+		<result property="deptId"      column="dept_id"    />
+	</resultMap>
+
+	<select id="checkDeptExistRole" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="java.lang.Integer">
+		select count(1) from sys_role_dept rd
+		where rd.role_id=#{search.deptId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<insert id="batchRoleDept" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		insert into sys_role_dept (role_id, dept_id, tenant_id) values
+		<foreach item="deptId" collection="search.deptIds" open="(" separator="," close=")">
+			(#{search.roleId}, #{deptId}, #{enterpriseId})
+		</foreach>
+	</insert>
+
+	<delete id="deleteRoleDeptByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		delete from sys_role_dept
+		where role_id = #{search.roleId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<delete id="deleteRoleDeptByDeptId" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		delete from sys_role_dept
+		where dept_id = #{search.deptId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<delete id="deleteRoleDeptByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		delete from sys_role_dept where role_id in
+		<foreach item="roleId" collection="search.roleIds" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+</mapper>

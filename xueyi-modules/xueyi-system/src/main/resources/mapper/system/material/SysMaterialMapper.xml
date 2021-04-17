@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.system.material.mapper.SysMaterialMapper">
+
+    <resultMap type="SysMaterial" id="SysMaterialResult">
+        <id     property="materialId"               column="material_id"            />
+        <result property="folderId"                 column="folder_id"              />
+        <result property="materialNick"             column="material_nick"          />
+        <result property="materialName"             column="material_name"          />
+        <result property="materialOriginalName"     column="material_original_name" />
+        <result property="materialUrl"              column="material_url"           />
+        <result property="materialOriginalUrl"      column="material_original_url"  />
+        <result property="materialSize"             column="material_size"          />
+        <result property="type"                     column="type"                   />
+        <result property="createBy"   		        column="create_by"              />
+        <result property="createName"               column="create_name"            />
+        <result property="createTime" 	            column="create_time"            />
+        <result property="updateBy"   	            column="update_by"              />
+        <result property="updateName"               column="update_name"            />
+        <result property="updateTime" 	            column="update_time"            />
+    </resultMap>
+
+    <sql id="selectVo">
+        select m.material_id, m.folder_id, m.material_nick, m.material_name, m.material_original_name, m.material_url, m.material_original_url, m.material_size, m.type, m.sort, m.status, m.create_by, m.create_time, m.update_by, m.update_time
+        from xy_material m
+    </sql>
+
+    <select id="selectList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMaterialResult">
+        <include refid="selectVo"/>
+        where 1 = 1
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by m.create_time desc
+    </select>
+
+    <select id="selectMaterialList" parameterType="SysMaterial" resultMap="SysMaterialResult">
+        <include refid="selectVo"/>
+        where 1 = 1
+        <if test="folderId != null "> and m.folder_id = #{folderId} </if>
+        <if test="materialNick != null and materialNick != ''">
+            AND m.material_nick like concat('%', #{materialNick}, '%')
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by m.create_time desc
+    </select>
+
+    <select id="selectMaterialListByFolderId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMaterialResult">
+        <include refid="selectVo"/>
+        where 1=1 and m.folder_id = #{search.folderId}
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by m.create_time desc
+    </select>
+
+    <select id="selectMaterialById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMaterialResult">
+        <include refid="selectVo"/>
+        where 1=1 and m.material_id = #{search.materialId}
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by m.create_time desc
+    </select>
+
+    <insert id="insertMaterial" parameterType="SysMaterial" useGeneratedKeys="true" keyProperty="materialId">
+        insert into xy_material
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Id != null">                                                 material_id            ,</if>
+            <if test="folderId != null">                                           folder_id              ,</if>
+            <if test="materialNick != null and materialNick != ''">                material_nick          ,</if>
+            <if test="materialName != null and materialName != ''">                material_name          ,</if>
+            <if test="materialOriginalName != null and materialOriginalName != ''">material_original_name ,</if>
+            <if test="materialUrl != null and materialUrl != ''">                  material_url           ,</if>
+            <if test="materialOriginalUrl != null and materialOriginalUrl != ''">  material_original_url  ,</if>
+            <if test="materialSize != null">                                       material_size          ,</if>
+            <if test="type != null and type != ''">                                type                   ,</if>
+            <if test="sort != null">                                               sort                   ,</if>
+            <if test="status != null and status != ''">                            status                 ,</if>
+            <if test="createBy != null and createBy != 0">                         create_by              ,</if>
+            <if test="enterpriseId != null and enterpriseId != 0">                 tenant_id              ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Id != null">                                                 #{Id}                  ,</if>
+            <if test="folderId != null">                                           #{folderId}            ,</if>
+            <if test="materialNick != null and materialNick != ''">                #{materialNick}        ,</if>
+            <if test="materialName != null and materialName != ''">                #{materialName}        ,</if>
+            <if test="materialOriginalName != null and materialOriginalName != ''">#{materialOriginalName},</if>
+            <if test="materialUrl != null and materialUrl != ''">                  #{materialUrl}         ,</if>
+            <if test="materialOriginalUrl != null and materialOriginalUrl != ''">  #{materialOriginalUrl} ,</if>
+            <if test="materialSize != null">                                       #{materialSize}        ,</if>
+            <if test="type != null and type != ''">                                #{type}                ,</if>
+            <if test="sort != null">                                               #{sort}                ,</if>
+            <if test="status != null and status != ''">                            #{status}              ,</if>
+            <if test="createBy != null and createBy != 0">                         #{createBy}            ,</if>
+            <if test="enterpriseId != null and enterpriseId != 0">                 #{enterpriseId}        ,</if>
+        </trim>
+    </insert>
+
+    <update id="updateMaterial" parameterType="SysMaterial">
+        update xy_material
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="folderId != null">                                           folder_id = #{folderId}              ,</if>
+            <if test="materialNick != null and materialNick != ''">                material_nick = #{materialNick}      ,</if>
+            <if test="type != null and type != ''">                                type = #{type}                       ,</if>
+            <if test="sort != null">							                   sort = #{sort}				        ,</if>
+            <if test="status != null and status != ''">			                   status = #{status}			        ,</if>
+            <if test="updateBy != null and updateBy != 0">		                   update_by = #{updateBy}		        ,</if>
+        </trim>
+        where material_id = #{materialId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+
+    <delete id="deleteMaterialById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+        update xy_material
+        set del_flag = 1
+        where material_id = #{search.materialId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
+    <delete id="deleteMaterialByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+        update xy_material
+        set del_flag = 1
+        where 1 = 1 and material_id in
+        <foreach item="materialId" collection="search.materialIds" open="(" separator="," close=")">
+            #{materialId}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
+    <delete id="deleteMaterialByFolderId" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+        update xy_material
+        set del_flag = 1
+        where folder_id = #{search.folderId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
+    <delete id="deleteMaterialByFolderIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+        update xy_material
+        set del_flag = 1
+        where 1 = 1 and folder_id in
+        <foreach item="folderId" collection="search.folderIds" open="(" separator="," close=")">
+            #{folderId}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+</mapper>
+

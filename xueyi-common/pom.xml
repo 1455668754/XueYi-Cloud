@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.xueyi</groupId>
+        <artifactId>xueyi</artifactId>
+        <version>2.5.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>xueyi-common-log</module>
+        <module>xueyi-common-core</module>
+        <module>xueyi-common-redis</module>
+        <module>xueyi-common-swagger</module>
+        <module>xueyi-common-security</module>
+        <module>xueyi-common-datascope</module>
+		<module>xueyi-common-datasource</module>
+    </modules>
+
+    <artifactId>xueyi-common</artifactId>
+    <packaging>pom</packaging>
+
+    <description>
+	    xueyi-common通用模块
+    </description>
+
+</project>

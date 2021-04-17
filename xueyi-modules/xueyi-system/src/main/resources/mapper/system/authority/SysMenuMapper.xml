@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.system.authority.mapper.SysMenuMapper">
+
+	<resultMap type="SysMenu" id="SysMenuResult">
+		<id     property="menuId"           column="menu_id"        />
+		<result property="SystemId"         column="System_id"      />
+		<result property="menuName"         column="menu_name"      />
+		<result property="parentName"       column="parent_name"    />
+		<result property="parentId"         column="parent_id"      />
+		<result property="path"             column="path"           />
+		<result property="component"        column="component"      />
+		<result property="isFrame"          column="is_frame"       />
+		<result property="isCache"          column="is_cache"       />
+		<result property="menuType"         column="menu_type"      />
+		<result property="visible"          column="visible"        />
+		<result property="perms"            column="perms"          />
+		<result property="icon"             column="icon"           />
+		<result property="sort"             column="sort"           />
+		<result property="status"           column="status"         />
+		<result property="createBy"   		column="create_by"      />
+		<result property="createName"   	column="create_name"    />
+		<result property="createTime" 		column="create_time"    />
+		<result property="updateBy"   		column="update_by"      />
+		<result property="updateName"   	column="update_name"    />
+		<result property="updateTime" 		column="update_time"    />
+		<result property="remark"           column="remark"         />
+	</resultMap>
+
+	<sql id="selectVo">
+		select m.menu_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status,
+			   ifnull(perms, '') as perms, m.icon, m.create_time
+		from sys_menu m
+	</sql>
+
+	<sql id="selectPermsVo">
+		select distinct m.perms
+		from sys_menu m
+				 left join sys_role_menu rm on m.menu_id = rm.menu_id
+				 left join sys_user_role ur on rm.role_id = ur.role_id
+				 left join sys_role r on r.role_id = ur.role_id
+	</sql>
+
+	<sql id="selectDistinctVo">
+		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
+						ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.sort, m.create_time
+		from sys_menu m
+	</sql>
+
+	<sql id="selectTreeVo">
+		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
+						ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.sort, m.create_time
+		from sys_menu m
+				 left join sys_role_menu rm on m.menu_id = rm.menu_id
+				 left join sys_user_role ur on rm.role_id = ur.role_id
+				 left join sys_role ro on ur.role_id = ro.role_id
+				 left join sys_user u on ur.user_id = u.user_id
+	</sql>
+
+	<sql id="checkVo">
+		select m.menu_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status,
+			   ifnull(perms, '') as perms
+		from sys_menu m
+	</sql>
+
+	<sql id="countVo">
+		select count(1)
+		from sys_menu m
+	</sql>
+
+	<!--未登录用户的登录校验方法，不允许加访问控制-->
+	<select id="checkLoginMenuPermission" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">
+		<include refid="selectPermsVo"/>
+		where ur.user_id = #{search.userId} and m.status = 0 and m.tenant_id = #{search.enterpriseId} and r.status = 0 and r.tenant_id = #{search.enterpriseId}
+	</select>
+
+	<select id="selectMenuList" parameterType="SysMenu" resultMap="SysMenuResult">
+		<include refid="selectVo"/>
+		where 1 = 1
+		<if test="menuName != null and menuName != ''">
+			AND m.menu_name like concat('%', #{menuName}, '%')
+		</if>
+		<if test="visible != null and visible != ''">
+			AND m.visible = #{visible}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
+		<!-- 数据范围过滤 -->
+		and m.system_id = #{systemId}
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
+	<select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
+		<include refid="selectTreeVo"/>
+		where ur.user_id = #{params.userId}
+		<if test="menuName != null and menuName != ''">
+			AND m.menu_name like concat('%', #{menuName}, '%')
+		</if>
+		<if test="visible != null and visible != ''">
+			AND m.visible = #{visible}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
+		<!-- 数据范围过滤 -->
+		and m.system_id = #{systemId}
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
+	<select id="selectMenuPermsByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">
+		<include refid="selectPermsVo"/>
+		where m.status = '0' and r.status = '0' and ur.user_id = #{search.userId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="selectMenuTreeAll" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
+		<include refid="selectDistinctVo"/>
+		where m.menu_type in ('M', 'C') and m.status = 0
+		<!-- 数据范围过滤 -->
+		and m.system_id = #{search.systemId}
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
+	<select id="selectMenuTreeByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
+		<include refid="selectTreeVo"/>
+		where m.menu_type in ('M', 'C') and m.status = 0 and ro.status = 0 and u.user_id = #{search.userId}
+		<!-- 数据范围过滤 -->
+		and m.system_id = #{search.systemId}
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
+	<select id="selectMenuListByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="Integer">
+		select m.menu_id
+		from sys_menu m
+		left join sys_role_menu rm on m.menu_id = rm.menu_id
+		where rm.role_id = #{search.roleId}
+		<if test="search.menuCheckStrictly">
+			and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_menu rm on m.menu_id =
+			rm.menu_id and rm.role_id = #{search.roleId})
+		</if>
+		<!-- 数据范围过滤 -->
+		and m.system_id = #{search.systemId}
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
+	<select id="selectMenuById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
+		<include refid="selectVo"/>
+		where m.menu_id = #{search.menuId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<insert id="insertMenu" parameterType="SysMenu">
+		insert into sys_menu
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="Id != null and Id != 0">                            menu_id                         ,</if>
+			<if test="systemId != null">                                  system_id                       ,</if>
+			<if test="parentId != null and parentId != 0">                parent_id                       ,</if>
+			<if test="menuName != null and menuName != ''">               menu_name                       ,</if>
+			<if test="path != null and path != ''">                       path                            ,</if>
+			<if test="component != null and component != ''">             component                       ,</if>
+			<if test="isFrame != null and isFrame != ''">                 is_frame                        ,</if>
+			<if test="isCache != null and isCache != ''">                 is_cache                        ,</if>
+			<if test="menuType != null and menuType != ''">               menu_type                       ,</if>
+			<if test="visible != null">                                   visible                         ,</if>
+			<if test="perms !=null and perms != ''">                      perms                           ,</if>
+			<if test="icon != null and icon != ''">                       icon                            ,</if>
+			<if test="sort != null">                                      sort                            ,</if>
+			<if test="status != null and status != ''">                   status                          ,</if>
+			<if test="createBy != null and createBy != 0">                create_by                       ,</if>
+			<if test="remark != null and remark != ''">                   remark                          ,</if>
+			<if test="enterpriseId != null and enterpriseId != 0">		  tenant_id	                      ,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="Id != null and Id != 0">                            #{Id}                           ,</if>
+			<if test="systemId != null">                                  #{systemId}                     ,</if>
+			<if test="parentId != null and parentId != 0">                #{parentId}                     ,</if>
+			<if test="menuName != null and menuName != ''">               #{menuName}                     ,</if>
+			<if test="path != null and path != ''">                       #{path}                         ,</if>
+			<if test="component != null and component != ''">             #{component}                    ,</if>
+			<if test="isFrame != null and isFrame != ''">                 #{isFrame}                      ,</if>
+			<if test="isCache != null and isCache != ''">                 #{isCache}                      ,</if>
+			<if test="menuType != null and menuType != ''">               #{menuType}                     ,</if>
+			<if test="visible != null">                                   #{visible}                      ,</if>
+			<if test="perms !=null and perms != ''">                      #{perms}                        ,</if>
+			<if test="icon != null and icon != ''">                       #{icon}                         ,</if>
+			<if test="sort != null">                                      #{sort}                         ,</if>
+			<if test="status != null and status != ''">                   #{status}                       ,</if>
+			<if test="createBy != null and createBy != 0">                #{createBy}                     ,</if>
+			<if test="remark != null and remark != ''">                   #{remark}                       ,</if>
+			<if test="enterpriseId != null and enterpriseId != 0">		  #{enterpriseId}                 ,</if>
+		</trim>
+	</insert>
+
+	<update id="updateMenu" parameterType="SysMenu">
+		update sys_menu
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="systemId != null">                                  system_id = #{systemId}         ,</if>
+			<if test="menuName != null and menuName != ''">               menu_name = #{menuName}         ,</if>
+			<if test="parentId != null">                                  parent_id = #{parentId}         ,</if>
+			<if test="path != null and path != ''">                       path = #{path}                  ,</if>
+			<if test="component != null">                                 component = #{component}        ,</if>
+			<if test="isFrame != null and isFrame != ''">                 is_frame = #{isFrame}           ,</if>
+			<if test="isCache != null and isCache != ''">                 is_cache = #{isCache}           ,</if>
+			<if test="menuType != null and menuType != ''">               menu_type = #{menuType}         ,</if>
+			<if test="visible != null">                                   visible = #{visible}            ,</if>
+			<if test="perms !=null">                                      perms = #{perms}                ,</if>
+			<if test="icon !=null and icon != ''">                        icon = #{icon}                  ,</if>
+			<if test="sort != null">                                      sort = #{sort}                  ,</if>
+			<if test="status != null and status != ''">                   status = #{status}              ,</if>
+			<if test="updateBy != null and updateBy != 0">                update_by = #{updateBy}         ,</if>
+			<if test="remark != null and remark != ''">                   remark = #{remark}              ,</if>
+		</trim>
+		where menu_id = #{menuId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</update>
+
+
+	<delete id="deleteMenuById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		update sys_menu
+		set del_flag = 1
+		where menu_id = #{search.menuId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<select id="checkMenuNameUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
+		<include refid="checkVo"/>
+		where m.menu_name=#{search.menuName} and m.parent_id = #{search.parentId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		limit 1
+	</select>
+
+	<select id="hasChildByMenuId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="Integer">
+		<include refid="countVo"/>
+		where m.parent_id = #{search.menuId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+</mapper>
