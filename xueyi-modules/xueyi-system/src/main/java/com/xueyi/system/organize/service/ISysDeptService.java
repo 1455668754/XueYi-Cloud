@@ -3,6 +3,7 @@ package com.xueyi.system.organize.service;
 import java.util.List;
 
 import com.xueyi.system.api.organize.SysDept;
+import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author xueyi
  */
 public interface ISysDeptService {
+
     /**
      * 查询部门管理数据
      *
@@ -128,4 +130,20 @@ public interface ISysDeptService {
      * @return 结果
      */
     public String checkIsChild(Long deptId, Long parentId);
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param depts 部门列表
+     * @return 树结构列表
+     */
+    public List<SysDept> buildDeptTree(List<SysDept> depts);
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param depts 部门列表
+     * @return 下拉树结构列表
+     */
+    public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts);
 }

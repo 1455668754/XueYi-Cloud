@@ -22,6 +22,12 @@ public class TreeSelect implements Serializable
     /** 节点名称 */
     private String label;
 
+    /** 节点名称 */
+    private String status;
+
+    /** 节点名称 */
+    private String type;
+
     /** 子节点 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TreeSelect> children;
@@ -63,6 +69,22 @@ public class TreeSelect implements Serializable
     public void setLabel(String label)
     {
         this.label = label;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public List<TreeSelect> getChildren()

@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.hutool.core.lang.tree.Tree;
+import cn.hutool.core.lang.tree.TreeNodeConfig;
+import cn.hutool.core.lang.tree.TreeUtil;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +36,7 @@ import com.xueyi.system.organize.service.ISysDeptService;
 @RestController
 @RequestMapping("/dept")
 public class SysDeptController extends BaseController {
+
     @Autowired
     private ISysDeptService deptService;
 
@@ -42,8 +46,7 @@ public class SysDeptController extends BaseController {
     @PreAuthorize(hasPermi = "system:dept:list")
     @GetMapping("/list")
     public AjaxResult list(SysDept dept) {
-        List<SysDept> depts = deptService.selectDeptList(dept);
-        return AjaxResult.success(depts);
+        return AjaxResult.success(deptService.selectDeptList(dept));
     }
 
     /**
@@ -70,13 +73,7 @@ public class SysDeptController extends BaseController {
     @PreAuthorize(hasPermi = "system:dept:query")
     @GetMapping(value = "/{deptId}")
     public AjaxResult getInfo(@PathVariable Long deptId) {
-        AjaxResult ajax = AjaxResult.success();
-        if (StringUtils.isNotNull(deptId)) {
-            SysDept dept = deptService.selectDeptById(deptId);
-            ajax.put(AjaxResult.DATA_TAG, dept);
-//            ajax.put("roleIds", Arrays.toString(dept.getRoles().stream().map(SysRole::getRoleId).toArray(Long[]::new)));
-        }
-        return ajax;
+        return AjaxResult.success(deptService.selectDeptById(deptId));
     }
 
     /**
@@ -142,5 +139,15 @@ public class SysDeptController extends BaseController {
             return AjaxResult.error("部门存在用户,不允许删除");
         }
         return toAjax(deptService.deleteDeptById(deptId));
+    }
+
+    /**
+     * 获取部门下拉树列表
+     */
+    @GetMapping("/treeSelect")
+    public AjaxResult treeSelect(SysDept dept)
+    {
+        List<SysDept> depts = deptService.selectDeptList(dept);
+        return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
     }
 }

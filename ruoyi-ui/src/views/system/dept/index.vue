@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch">
-      <el-form-item label="部门编号" prop="deptCode">
+      <el-form-item label="部门编码" prop="deptCode">
         <el-input
           v-model="queryParams.deptCode"
-          placeholder="请输入部门名称"
+          placeholder="请输入部门编码"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -72,17 +72,17 @@
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:dept:edit']"
-          >修改
+            @click="handleRoleUpdate(scope.row)"
+            v-hasPermi="['system:role:set']"
+          >部门权限
           </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleRoleUpdate(scope.row)"
-            v-hasPermi="['system:role:set']"
-          >部门权限
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['system:dept:edit']"
+          >修改
           </el-button>
           <el-button
             size="mini"
@@ -93,7 +93,7 @@
           >新增
           </el-button>
           <el-button
-            v-if="scope.row.parentId != 0"
+            v-if="scope.row.parentId !== 0"
             size="mini"
             type="text"
             icon="el-icon-delete"
@@ -114,9 +114,9 @@
               <treeselect v-model="form.parentId" :options="deptOptions" :normalizer="normalizer" placeholder="选择上级部门"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="部门编号" prop="deptCode">
-              <el-input v-model="form.deptCode" placeholder="请输入部门编号"/>
+          <el-col :span="24">
+            <el-form-item label="部门编码" prop="deptCode">
+              <el-input v-model="form.deptCode" placeholder="请输入部门编码"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -164,19 +164,21 @@
       </div>
     </el-dialog>
     <!-- 修改部门权限对话框 -->
-    <el-dialog :title="title" :visible.sync="roleOpen" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="roleOpen" width="350px" center append-to-body>
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="部门编码" prop="deptCode">
               <el-input v-model="form.deptCode" placeholder="请输入部门编码" readonly/>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="部门名称" prop="deptName">
               <el-input v-model="form.deptName" placeholder="请输入部门名称" readonly/>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+          <el-form-item label="部门权限" prop="roleIds">
           <el-select
             v-model="form.roleIds"
             multiple
@@ -190,6 +192,8 @@
               :value="item.roleId">
             </el-option>
           </el-select>
+          </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">

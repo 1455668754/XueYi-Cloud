@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			AND d.parent_id = #{parentId}
 		</if>
 		<if test="deptCode != null and deptCode != ''">
-			AND d.dept_name like concat('%', #{deptCode}, '%')
+			AND d.dept_code like concat('%', #{deptCode}, '%')
 		</if>
 		<if test="deptName != null and deptName != ''">
 			AND d.dept_name like concat('%', #{deptName}, '%')

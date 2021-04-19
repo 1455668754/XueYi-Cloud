@@ -11,11 +11,14 @@ import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.organize.service.ISysDeptService;
 import com.xueyi.system.role.mapper.SysDeptRoleMapper;
+import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -286,6 +289,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public String checkDeptCodeUnique(Long deptId, String deptCode) {
+        if (StringUtils.isNull(deptId)) {
+            deptId = -1L;
+        }
         SysSearch search = new SysSearch();
         search.getSearch().put("deptCode", deptCode);
         SysDept info = deptMapper.checkDeptCodeUnique(search);//@param search 万用组件 | deptCode 部门编码
@@ -334,5 +340,93 @@ public class SysDeptServiceImpl implements ISysDeptService {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param depts 部门列表
+     * @return 树结构列表
+     */
+    @Override
+    public List<SysDept> buildDeptTree(List<SysDept> depts)
+    {
+        List<SysDept> returnList = new ArrayList<SysDept>();
+        List<Long> tempList = new ArrayList<Long>();
+        for (SysDept dept : depts)
+        {
+            tempList.add(dept.getDeptId());
+        }
+        for (Iterator<SysDept> iterator = depts.iterator(); iterator.hasNext();)
+        {
+            SysDept dept = (SysDept) iterator.next();
+            // 如果是顶级节点, 遍历该父节点的所有子节点
+            if (!tempList.contains(dept.getParentId()))
+            {
+                recursionFn(depts, dept);
+                returnList.add(dept);
+            }
+        }
+        if (returnList.isEmpty())
+        {
+            returnList = depts;
+        }
+        return returnList;
+    }
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param depts 部门列表
+     * @return 下拉树结构列表
+     */
+    @Override
+    public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts)
+    {
+        List<SysDept> deptTrees = buildDeptTree(depts);
+        return deptTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    /**
+     * 递归列表
+     */
+    private void recursionFn(List<SysDept> list, SysDept t)
+    {
+        // 得到子节点列表
+        List<SysDept> childList = getChildList(list, t);
+        t.setChildren(childList);
+        for (SysDept tChild : childList)
+        {
+            if (hasChild(list, tChild))
+            {
+                recursionFn(list, tChild);
+            }
+        }
+    }
+
+    /**
+     * 得到子节点列表
+     */
+    private List<SysDept> getChildList(List<SysDept> list, SysDept t)
+    {
+        List<SysDept> tlist = new ArrayList<SysDept>();
+        Iterator<SysDept> it = list.iterator();
+        while (it.hasNext())
+        {
+            SysDept n = (SysDept) it.next();
+            if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getDeptId().longValue())
+            {
+                tlist.add(n);
+            }
+        }
+        return tlist;
+    }
+
+    /**
+     * 判断是否有子节点
+     */
+    private boolean hasChild(List<SysDept> list, SysDept t)
+    {
+        return getChildList(list, t).size() > 0;
     }
 }
