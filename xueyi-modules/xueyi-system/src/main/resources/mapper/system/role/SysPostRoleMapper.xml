@@ -24,13 +24,6 @@
         ${params.dataScope}
     </select>
 
-    <insert id="batchNewPostRole" parameterType="com.xueyi.system.api.utilTool.SysSearch">
-        insert into sys_post_role (post_id, role_id, tenant_id) values
-        <foreach item="roleId" collection="search.roleIds" separator=",">
-            (#{Id}, #{roleId}, #{enterpriseId})
-        </foreach>
-    </insert>
-
     <insert id="batchPostRole" parameterType="com.xueyi.system.api.utilTool.SysSearch">
         insert into sys_post_role (post_id, role_id, tenant_id) values
         <foreach item="roleId" collection="search.roleIds" separator=",">

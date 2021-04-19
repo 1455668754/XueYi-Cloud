@@ -66,28 +66,20 @@ public class SysPostServiceImpl implements ISysPostService {
 
     /**
      * 新增保存岗位信息
-     * 访问控制 empty 租户更新（无前缀）(SysPostRoleMapper/batchNewPostRole && SysPostMapper/insertPost)
      *
      * @param post 岗位信息
      * @return 结果
      */
     @Override
     @Transactional
-    @DataScope(updateEnterpriseAlias = "empty")
     public int insertPost(SysPost post) {
-        int rows, t;
-        SysSearch search = new SysSearch();
         // 1.更新岗位状态 | t==0时代表归属部门被禁用，则该岗位也需变成禁用状态
-        t = updatePostStatus(post.getPostId(), post.getDeptId(), post.getStatus());
+        System.out.println(post);
+        int t = updatePostStatus(post.getPostId(), post.getDeptId(), post.getStatus());
         if (t == 0) {
             post.setStatus(UserConstants.POST_DISABLE);
         }
-        rows = postMapper.insertPost(post);//@param post 岗位信息
-        if (rows > 0 && post.getRoleIds().length > 0) {
-            search.getSearch().put("roleIds", post.getRoleIds());
-            rows = rows + postRoleMapper.batchNewPostRole(search);//@param search 万用组件 | 自动生成Id做postId | roleIds 角色Ids
-        }
-        return rows;
+        return postMapper.insertPost(post);//@param post 岗位信息
     }
 
     /**
@@ -99,37 +91,33 @@ public class SysPostServiceImpl implements ISysPostService {
     @Override
     @Transactional
     public int updatePost(SysPost post) {
-        int rows, t;
-        SysSearch search = new SysSearch();
         // 1.更新岗位状态 | t==0时代表归属部门被禁用，则该岗位也需变成禁用状态
-        t = updatePostStatus(post.getPostId(), post.getDeptId(), post.getStatus());
+        int t = updatePostStatus(post.getPostId(), post.getDeptId(), post.getStatus());
         if (t == 0) {
             post.setStatus(UserConstants.POST_DISABLE);
         }
-        rows = postMapper.updatePost(post);//@param post 岗位信息
-        //执行岗位-角色变更 处理逻辑依次为：1.判断是否变动 → 2.是否需要执行删除 → 3.是否需要执行新增
-        if (rows > 0 && post.getRoleIds().length > 0) {
-            search.getSearch().put("postId", post.getPostId());
-            List<SysPostRole> postRoles = postRoleMapper.selectPostRoleByPostId(search);//@param search 万用组件 | postId 岗位Id
-            int k = 0;
-            //1.检验roles是否变动
-            if (postRoles.size() > 0) {
-                for (SysPostRole postRole : postRoles) {
-                    for (Long role : post.getRoleIds()) {
-                        if (role.equals(postRole.getRoleId())) {
-                            k++;
-                        }
-                    }
-                }
-            }
-            if (k != postRoles.size() && k != post.getRoleIds().length) {
-                //2.删除原有的postRole信息
-                search.getSearch().put("postId", post.getPostId());
-                search.getSearch().put("roleIds", post.getRoleIds());
-                postRoleMapper.deletePostRoleByPostId(search);//@param search 查询组件 | postId 岗位Id
-                //3.改变为最新的postRole信息
-                rows = rows + postRoleMapper.batchPostRole(search);//@param search 万用组件 | postId 岗位Id | roleIds 角色Ids
-            }
+        return postMapper.updatePost(post);//@param post 岗位信息
+    }
+
+    /**
+     * 修改保存部门-角色信息
+     *
+     * @param postId  岗位Id
+     * @param roleIds 角色组Ids
+     * @return 结果
+     */
+    @Override
+    @Transactional
+    public int updatePostRole(Long postId, Long[] roleIds) {
+        //执行部门-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
+        SysSearch search = new SysSearch();
+        //删除原有的postRole信息
+        search.getSearch().put("postId", postId);
+        int rows = postRoleMapper.deletePostRoleByPostId(search);//@param search 查询组件 | postId 岗位Id
+        if (roleIds.length > 0) {
+            //改变为最新的postRole信息
+            search.getSearch().put("roleIds", roleIds);
+            rows = rows + postRoleMapper.batchPostRole(search);//@param search 万用组件 | postId 岗位Id | roleIds 角色Ids
         }
         return rows;
     }
@@ -175,7 +163,7 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 删除岗位信息
      *
-     * @param postId 岗位ID
+     * @param postId 岗位Id
      * @return 结果
      */
     @Override

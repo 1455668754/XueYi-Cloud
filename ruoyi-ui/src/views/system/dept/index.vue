@@ -57,9 +57,9 @@
       default-expand-all
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
-      <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
-      <el-table-column prop="deptCode" label="部门编码" width="260"></el-table-column>
-      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="100"></el-table-column>
+      <el-table-column prop="deptName" label="部门名称" width="260"/>
+      <el-table-column prop="deptCode" label="部门编码" width="260"/>
+      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="100"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="200">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -328,6 +328,7 @@ export default {
         phone: undefined,
         email: undefined,
         status: '0',
+        remark: undefined,
         roleIds: []
       };
       this.resetForm("form");

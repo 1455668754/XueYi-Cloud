@@ -34,11 +34,12 @@ public interface SysPostMapper {
 
     /**
      * 新增岗位信息
-     * 访问控制 empty 租户更新（无前缀）(控制器在SysPostServiceImpl层 insertPost方法)
+     * 访问控制 empty 租户更新（无前缀）
      *
      * @param post 岗位信息
      * @return 结果
      */
+    @DataScope(updateEnterpriseAlias = "empty")
     public int insertPost(SysPost post);
 
     /**

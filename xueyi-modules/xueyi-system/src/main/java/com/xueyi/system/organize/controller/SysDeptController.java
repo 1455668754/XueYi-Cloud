@@ -7,6 +7,7 @@ import java.util.List;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
 import cn.hutool.core.lang.tree.TreeUtil;
+import com.xueyi.system.api.organize.SysUser;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -119,6 +120,16 @@ public class SysDeptController extends BaseController {
     @PutMapping("/changeDeptRole")
     public AjaxResult editDeptRole(@Validated @RequestBody SysDept dept) {
         return toAjax(deptService.updateDeptRole(dept.getDeptId(), dept.getRoleIds()));
+    }
+
+    /**
+     * 状态修改
+     */
+    @PreAuthorize(hasPermi = "system:dept:edit")
+    @Log(title = "部门管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody SysDept dept) {
+        return toAjax(deptService.updateDeptStatus(dept.getDeptId(), dept.getStatus()));
     }
 
     /**

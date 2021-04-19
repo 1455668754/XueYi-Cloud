@@ -35,15 +35,6 @@ public interface SysPostRoleMapper {
 
     /**
      * 批量新增岗位和角色关联
-     * 访问控制 empty 租户更新（无前缀）(控制器在SysPostServiceImpl层 insertPost方法)
-     *
-     * @param search 万用组件 | 自动生成Id做postId | roleIds 角色Ids
-     * @return 结果
-     */
-    public int batchNewPostRole(SysSearch search);
-
-    /**
-     * 批量新增岗位和角色关联
      * 访问控制 empty 租户更新（无前缀）
      *
      * @param search 万用组件 | postId 岗位Id | roleIds 角色Ids

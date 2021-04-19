@@ -109,17 +109,20 @@
             >导出
             </el-button>
           </el-col>
-          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
         </el-row>
 
         <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center"/>
-          <el-table-column label="岗位编号" align="center" prop="postId"/>
-          <el-table-column label="岗位编码" align="center" prop="postCode"/>
-          <el-table-column label="岗位名称" align="center" prop="postName"/>
-          <el-table-column label="岗位排序" align="center" prop="postSort"/>
-          <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
-          <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+          <el-table-column label="岗位编码" align="center" prop="postCode" key="postCode" v-if="columns[0].visible"/>
+          <el-table-column label="岗位名称" align="center" prop="postName" key="postName" v-if="columns[1].visible"
+                           :show-overflow-tooltip="true"/>
+          <el-table-column label="归属部门" align="center" prop="dept.deptName" key="dept.deptName"
+                           v-if="columns[2].visible" :show-overflow-tooltip="true"/>
+          <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" key="status"
+                           v-if="columns[3].visible" :show-overflow-tooltip="true"/>
+          <el-table-column label="创建时间" align="center" prop="createTime" width="180" key="createTime"
+                           v-if="columns[4].visible" :show-overflow-tooltip="true">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
@@ -165,30 +168,47 @@
     </el-row>
 
     <!-- 添加或修改岗位对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="岗位名称" prop="postName">
-          <el-input v-model="form.postName" placeholder="请输入岗位名称"/>
-        </el-form-item>
-        <el-form-item label="岗位编码" prop="postCode">
-          <el-input v-model="form.postCode" placeholder="请输入编码名称"/>
-        </el-form-item>
-        <el-form-item label="岗位顺序" prop="postSort">
-          <el-input-number v-model="form.postSort" controls-position="right" :min="0"/>
-        </el-form-item>
-        <el-form-item label="岗位状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="归属部门" prop="deptId">
+              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="岗位编码" prop="postCode">
+              <el-input v-model="form.postCode" placeholder="请输入岗位编码"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="岗位名称" prop="postName">
+              <el-input v-model="form.postName" placeholder="请输入岗位名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="岗位顺序" prop="sort">
+              <el-input-number v-model="form.sort" controls-position="right" :min="0"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="岗位状态" prop="status">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{ dict.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -204,9 +224,10 @@ import {changeDeptRole, getDept, treeSelect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import {optionSelect} from "@/api/system/role";
+
 export default {
   name: "Post",
-  components: { Treeselect },
+  components: {Treeselect},
   data() {
     return {
       // 遮罩层
@@ -229,6 +250,8 @@ export default {
       open: false,
       // 是否显示弹出层/部门权限设置弹窗
       roleOpen: false,
+      // 状态数据字典
+      statusOptions: [],
       // 部门树选项
       deptOptions: undefined,
       // 部门名称
@@ -237,8 +260,6 @@ export default {
         children: "children",
         label: "label"
       },
-      // 状态数据字典
-      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -249,26 +270,24 @@ export default {
       },
       // 列信息
       columns: [
-        { key: 0, label: `用户编号`, visible: true },
-        { key: 1, label: `用户名称`, visible: true },
-        { key: 2, label: `用户昵称`, visible: true },
-        { key: 3, label: `部门`, visible: true },
-        { key: 4, label: `手机号码`, visible: true },
-        { key: 5, label: `状态`, visible: true },
-        { key: 6, label: `创建时间`, visible: true }
+        {key: 0, label: `岗位编码`, visible: true},
+        {key: 1, label: `岗位名称`, visible: true},
+        {key: 2, label: `归属部门`, visible: true},
+        {key: 3, label: `状态`, visible: true},
+        {key: 4, label: `创建时间`, visible: true}
       ],
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        deptId: [
+          {required: true, message: "归属部门不能为空", trigger: "blur"}
+        ],
         postName: [
           {required: true, message: "岗位名称不能为空", trigger: "blur"}
         ],
         postCode: [
           {required: true, message: "岗位编码不能为空", trigger: "blur"}
-        ],
-        postSort: [
-          {required: true, message: "岗位顺序不能为空", trigger: "blur"}
         ]
       }
     };
@@ -327,10 +346,10 @@ export default {
         postId: undefined,
         postCode: undefined,
         postName: undefined,
-        postSort: 0,
+        sort: 0,
         status: "0",
         remark: undefined,
-        roleIds:[]
+        roleIds: []
       };
       this.resetForm("form");
     },

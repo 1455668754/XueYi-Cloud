@@ -132,8 +132,8 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 修改保存部门-角色信息
      *
-     * @param deptId  部门信息
-     * @param roleIds 部门信息
+     * @param deptId  部门Id
+     * @param roleIds 角色组Ids
      * @return 结果
      */
     @Override

@@ -3,6 +3,8 @@ package com.xueyi.system.organize.controller;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.xueyi.system.api.organize.SysDept;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -85,7 +87,15 @@ public class SysPostController extends BaseController {
         return toAjax(postService.updatePost(post));
     }
 
-
+    /**
+     * 修改岗位-角色关系
+     */
+    @PreAuthorize(hasPermi = "system:role:set")
+    @Log(title = "部门管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/changePostRole")
+    public AjaxResult editPostRole(@Validated @RequestBody SysPost post) {
+        return toAjax(postService.updatePostRole(post.getPostId(), post.getRoleIds()));
+    }
 
     /**
      * 删除岗位
