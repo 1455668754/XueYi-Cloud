@@ -61,7 +61,6 @@ public class SysDept extends BaseEntity
     private List<SysRole> roles;
 
     /** 角色组 */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long[] roleIds;
 
     public Long getDeptId() {

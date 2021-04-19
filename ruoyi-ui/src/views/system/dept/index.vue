@@ -163,7 +163,6 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
-    {{deptList}}
     <!-- 修改部门权限对话框 -->
     <el-dialog :title="title" :visible.sync="roleOpen" width="600px" append-to-body>
       <el-form ref="form" :model="form" label-width="80px">
@@ -178,7 +177,6 @@
               <el-input v-model="form.deptName" placeholder="请输入部门名称" readonly/>
             </el-form-item>
           </el-col>
-          {{form.roleIds}}
           <el-select
             v-model="form.roleIds"
             multiple
@@ -365,7 +363,7 @@ export default {
       this.reset();
       getDept(row.deptId).then(response => {
         this.form = response.data;
-        this.form.roleIds=response.roleIds;
+        this.form.roleIds = Array.from(this.form.roles,x=>x.roleId)
         this.roleOpen = true;
         this.title = "设置部门权限";
       });

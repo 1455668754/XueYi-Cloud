@@ -7,7 +7,7 @@ create table sys_dept (
   parent_id                 bigint              default 0                               comment '父部门id',
   dept_code                 varchar(64)         not null                                comment '部门编码',
   dept_name                 varchar(30)         default ''                              comment '部门名称',
-  ancestors                 varchar(500)        default ''                              comment '祖级列表',
+  ancestors                 varchar(10000)      default ''                              comment '祖级列表',
   leader                    varchar(20)         default ''                              comment '负责人',
   phone                     varchar(11)         default ''                              comment '联系电话',
   email                     varchar(50)         default ''                              comment '邮箱',

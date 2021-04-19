@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import com.xueyi.system.api.authority.SysRole;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -75,7 +74,7 @@ public class SysDeptController extends BaseController {
         if (StringUtils.isNotNull(deptId)) {
             SysDept dept = deptService.selectDeptById(deptId);
             ajax.put(AjaxResult.DATA_TAG, dept);
-            ajax.put("roleIds", Arrays.toString(dept.getRoles().stream().map(SysRole::getRoleId).toArray(Long[]::new)));
+//            ajax.put("roleIds", Arrays.toString(dept.getRoles().stream().map(SysRole::getRoleId).toArray(Long[]::new)));
         }
         return ajax;
     }
