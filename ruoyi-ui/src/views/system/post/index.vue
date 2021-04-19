@@ -5,7 +5,7 @@
       <el-col :span="4" :xs="24">
         <div class="head-container">
           <el-input
-            v-model="treeStructure.deptName"
+            v-model="deptName"
             placeholder="请输入部门名称"
             clearable
             size="small"
@@ -15,8 +15,8 @@
         </div>
         <div class="head-container">
           <el-tree
-            :data="treeStructure.deptOptions"
-            :props="treeStructure.defaultProps"
+            :data="deptOptions"
+            :props="defaultProps"
             :expand-on-click-node="false"
             :filter-node-method="filterNode"
             ref="tree"
@@ -25,13 +25,12 @@
           />
         </div>
       </el-col>
-      <!--用户数据-->
+      <!--岗位数据-->
       <el-col :span="20" :xs="24">
-        <el-form :model="search.queryParams" ref="queryForm" :inline="true" v-show="search.showSearch"
-                 label-width="68px">
+        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
           <el-form-item label="岗位编码" prop="postCode">
             <el-input
-              v-model="search.queryParams.postCode"
+              v-model="queryParams.postCode"
               placeholder="请输入岗位编码"
               clearable
               size="small"
@@ -40,7 +39,7 @@
           </el-form-item>
           <el-form-item label="岗位名称" prop="postName">
             <el-input
-              v-model="search.queryParams.postName"
+              v-model="queryParams.postName"
               placeholder="请输入岗位名称"
               clearable
               size="small"
@@ -48,9 +47,9 @@
             />
           </el-form-item>
           <el-form-item label="状态" prop="status">
-            <el-select v-model="search.queryParams.status" placeholder="岗位状态" clearable size="small">
+            <el-select v-model="queryParams.status" placeholder="岗位状态" clearable size="small">
               <el-option
-                v-for="dict in option.statusOptions"
+                v-for="dict in statusOptions"
                 :key="dict.dictValue"
                 :label="dict.dictLabel"
                 :value="dict.dictValue"
@@ -81,7 +80,7 @@
               plain
               icon="el-icon-edit"
               size="mini"
-              :disabled="search.single"
+              :disabled="single"
               @click="handleUpdate"
               v-hasPermi="['system:post:edit']"
             >修改
@@ -93,7 +92,7 @@
               plain
               icon="el-icon-delete"
               size="mini"
-              :disabled="search.multiple"
+              :disabled="multiple"
               @click="handleDelete"
               v-hasPermi="['system:post:remove']"
             >删除
@@ -110,33 +109,31 @@
             >导出
             </el-button>
           </el-col>
-          <right-toolbar :showSearch.sync="search.showSearch" @queryTable="getList" :columns="search.columns"/>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
         </el-row>
 
-        <el-table v-loading="table.loading" :data="table.list" @selection-change="handleSelectionChange">
+        <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="55" align="center"/>
-          <el-table-column label="岗位编号" align="center">
-            <template slot-scope="scope">
-              {{ search.queryParams.pageSize * (search.queryParams.pageNum - 1) + scope.$index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column label="岗位编码" align="center" prop="postCode" key="postCode" v-if="search.columns[0].visible"
-                           :show-overflow-tooltip="true"/>
-          <el-table-column label="岗位名称" align="center" prop="postName" key="postName" v-if="search.columns[1].visible"
-                           :show-overflow-tooltip="true"/>
-          <el-table-column label="部门" align="center" prop="dept.deptName" key="deptName"
-                           v-if="search.columns[2].visible"
-                           :show-overflow-tooltip="true"/>
-          <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" key="status"
-                           v-if="search.columns[3].visible" :show-overflow-tooltip="true"/>
-          <el-table-column label="创建时间" align="center" prop="createTime" width="180" key="createTime"
-                           v-if="search.columns[4].visible" :show-overflow-tooltip="true">
+          <el-table-column label="岗位编号" align="center" prop="postId"/>
+          <el-table-column label="岗位编码" align="center" prop="postCode"/>
+          <el-table-column label="岗位名称" align="center" prop="postName"/>
+          <el-table-column label="岗位排序" align="center" prop="postSort"/>
+          <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
+          <el-table-column label="创建时间" align="center" prop="createTime" width="180">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template slot-scope="scope">
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
+                @click="handleRoleUpdate(scope.row)"
+                v-hasPermi="['system:role:set']"
+              >岗位权限
+              </el-button>
               <el-button
                 size="mini"
                 type="text"
@@ -158,64 +155,40 @@
         </el-table>
 
         <pagination
-          v-show="table.total>0"
-          :total="table.total"
-          :page.sync="search.queryParams.pageNum"
-          :limit.sync="search.queryParams.pageSize"
+          v-show="total>0"
+          :total="total"
+          :page.sync="queryParams.pageNum"
+          :limit.sync="queryParams.pageSize"
           @pagination="getList"
         />
       </el-col>
     </el-row>
 
     <!-- 添加或修改岗位对话框 -->
-    <el-dialog :title="form.title" :visible.sync="form.open" width="600px" append-to-body>
-      <el-form ref="form" :model="form.form" :rules="form.rules" label-width="80px">
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.form.deptId" :options="treeStructure.deptOptions" :show-count="true"
-                          placeholder="请选择归属部门"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="岗位编码" prop="postCode">
-              <el-input v-model="form.form.postCode" placeholder="请输入岗位编码" :readonly="form.postId !== undefined"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="岗位名称" prop="postName">
-              <el-input v-model="form.form.postName" placeholder="请输入岗位名称"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="岗位顺序" prop="postSort">
-              <el-input-number v-model="form.form.postSort" controls-position="right" :min="0"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="岗位状态" prop="status">
-              <el-radio-group v-model="form.form.status">
-                <el-radio
-                  v-for="dict in option.statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="备注">
-              <editor v-model="form.form.remark" :min-height="192"/>
-            </el-form-item>
-          </el-col>
-        </el-row>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="岗位名称" prop="postName">
+          <el-input v-model="form.postName" placeholder="请输入岗位名称"/>
+        </el-form-item>
+        <el-form-item label="岗位编码" prop="postCode">
+          <el-input v-model="form.postCode" placeholder="请输入编码名称"/>
+        </el-form-item>
+        <el-form-item label="岗位顺序" prop="postSort">
+          <el-input-number v-model="form.postSort" controls-position="right" :min="0"/>
+        </el-form-item>
+        <el-form-item label="岗位状态" prop="status">
+          <el-radio-group v-model="form.status">
+            <el-radio
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictValue"
+            >{{ dict.dictLabel }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -227,93 +200,76 @@
 
 <script>
 import {listPost, getPost, delPost, addPost, updatePost} from "@/api/system/post";
-import {treeselect} from "@/api/system/dept";
+import {changeDeptRole, getDept, treeSelect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import Editor from '@/components/Editor';
-
+import {optionSelect} from "@/api/system/role";
 export default {
   name: "Post",
-  components: {Treeselect, Editor},
+  components: { Treeselect },
   data() {
     return {
-      //表格
-      table: {
-        // 遮罩层
-        loading: true,
-        // 选中数组
-        ids: [],
-        // 总条数
-        total: 0,
-        // 表格数据
-        list: [],
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 岗位表格数据
+      postList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 是否显示弹出层/部门权限设置弹窗
+      roleOpen: false,
+      // 部门树选项
+      deptOptions: undefined,
+      // 部门名称
+      deptName: undefined,
+      defaultProps: {
+        children: "children",
+        label: "label"
       },
-      // 操作栏
-      search: {
-        // 非单个禁用
-        single: true,
-        // 非多个禁用
-        multiple: true,
-        // 显示搜索条件
-        showSearch: true,
-        // 显隐列信息
-        columns: [
-          {key: 0, label: `岗位编码`, visible: true},
-          {key: 1, label: `岗位名称`, visible: true},
-          {key: 2, label: `部门`, visible: true},
-          {key: 3, label: `状态`, visible: true},
-          {key: 4, label: `创建时间`, visible: true},
+      // 状态数据字典
+      statusOptions: [],
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        postCode: undefined,
+        postName: undefined,
+        status: undefined
+      },
+      // 列信息
+      columns: [
+        { key: 0, label: `用户编号`, visible: true },
+        { key: 1, label: `用户名称`, visible: true },
+        { key: 2, label: `用户昵称`, visible: true },
+        { key: 3, label: `部门`, visible: true },
+        { key: 4, label: `手机号码`, visible: true },
+        { key: 5, label: `状态`, visible: true },
+        { key: 6, label: `创建时间`, visible: true }
+      ],
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        postName: [
+          {required: true, message: "岗位名称不能为空", trigger: "blur"}
         ],
-        // 查询参数
-        queryParams: {
-          pageNum: 1,
-          pageSize: 10,
-          deptId: undefined,
-          postCode: undefined,
-          postName: undefined,
-          status: undefined
-        },
-      },
-      // 选项
-      option: {
-        // 状态数据字典
-        statusOptions: [],
-      },
-      //树结构
-      treeStructure: {
-        // 部门名称
-        deptName: undefined,
-        // 部门树选项
-        deptOptions: undefined,
-        //树组织
-        defaultProps: {
-          children: "children",
-          label: "label"
-        },
-      },
-      //表单
-      form: {
-        // 表单参数
-        form: {},
-        // 弹出层标题
-        title: "",
-        // 是否显示弹出层
-        open: false,
-        // 表单校验
-        rules: {
-          deptId: [
-            {required: true, message: "部门不能为空", trigger: "change"}
-          ],
-          postCode: [
-            {required: true, message: "岗位编码不能为空", trigger: "blur"}
-          ],
-          postName: [
-            {required: true, message: "岗位名称不能为空", trigger: "blur"}
-          ],
-          postSort: [
-            {required: true, message: "岗位顺序不能为空", trigger: "blur"}
-          ]
-        }
+        postCode: [
+          {required: true, message: "岗位编码不能为空", trigger: "blur"}
+        ],
+        postSort: [
+          {required: true, message: "岗位顺序不能为空", trigger: "blur"}
+        ]
       }
     };
   },
@@ -325,25 +281,25 @@ export default {
   },
   created() {
     this.getList();
-    this.getTreeselect();
+    this.getTreeSelect();
     this.getDicts("sys_normal_disable").then(response => {
-      this.option.statusOptions = response.data;
+      this.statusOptions = response.data;
     });
   },
   methods: {
     /** 查询岗位列表 */
     getList() {
-      this.table.loading = true;
-      listPost(this.search.queryParams).then(response => {
-        this.table.list = response.rows;
-        this.table.total = response.total;
-        this.table.loading = false;
+      this.loading = true;
+      listPost(this.queryParams).then(response => {
+        this.postList = response.rows;
+        this.total = response.total;
+        this.loading = false;
       });
     },
     /** 查询部门下拉树结构 */
-    getTreeselect() {
-      treeselect().then(response => {
-        this.treeStructure.deptOptions = response.data;
+    getTreeSelect() {
+      treeSelect().then(response => {
+        this.deptOptions = response.data;
       });
     },
     // 筛选节点
@@ -353,33 +309,34 @@ export default {
     },
     // 节点单击事件
     handleNodeClick(data) {
-      this.search.queryParams.deptId = data.id;
+      this.queryParams.deptId = data.id;
       this.getList();
     },
     // 岗位状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.option.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status);
     },
     // 取消按钮
     cancel() {
-      this.form.open = false;
+      this.open = false;
       this.reset();
     },
     // 表单重置
     reset() {
-      this.form.form = {
+      this.form = {
         postId: undefined,
         postCode: undefined,
         postName: undefined,
         postSort: 0,
-        status: 0,
-        remark: undefined
+        status: "0",
+        remark: undefined,
+        roleIds:[]
       };
       this.resetForm("form");
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.search.queryParams.pageNum = 1;
+      this.queryParams.pageNum = 1;
       this.getList();
     },
     /** 重置按钮操作 */
@@ -389,52 +346,73 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.table.ids = selection.map(item => item.postId)
-      this.search.single = selection.length !== 1
-      this.search.multiple = !selection.length
+      this.ids = selection.map(item => item.postId)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.getTreeselect();
-      this.form.open = true;
-      this.form.title = "添加岗位";
+      this.open = true;
+      this.title = "添加岗位";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      this.getTreeselect();
-      const postId = row.postId || this.table.ids
+      const postId = row.postId || this.ids
       getPost(postId).then(response => {
-        this.form.form = response.data;
-        this.form.open = true;
-        this.form.title = "修改岗位";
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改岗位";
+      });
+    },
+    /** 岗位权限按钮操作 */
+    handleRoleUpdate(row) {
+      this.reset();
+      getPost(row.postId).then(response => {
+        this.form = response.data;
+        this.form.roleIds = Array.from(this.form.roles, x => x.roleId)
+        this.roleOpen = true;
+        this.title = "设置岗位权限";
+      });
+      optionSelect().then(response => {
+        this.roleOptions = response.data;
       });
     },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.form.postId !== undefined) {
-            updatePost(this.form.form).then(response => {
+          if (this.form.postId !== undefined) {
+            updatePost(this.form).then(response => {
               this.msgSuccess("修改成功");
-              this.form.open = false;
+              this.open = false;
               this.getList();
             });
           } else {
-            addPost(this.form.form).then(response => {
+            addPost(this.form).then(response => {
               this.msgSuccess("新增成功");
-              this.form.open = false;
+              this.open = false;
               this.getList();
             });
           }
         }
       });
     },
+    /** 岗位权限提交按钮 */
+    submitRoleForm: function () {
+      if (this.form.postId !== undefined) {
+        changePostRole(this.form).then(response => {
+          this.msgSuccess("岗位权限修改成功");
+          this.roleOpen = false;
+          this.getList();
+        });
+      }
+    },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const postIds = row.postId || this.table.ids;
-      this.$confirm('是否确认删除选中的岗位?', "警告", {
+      const postIds = row.postId || this.ids;
+      this.$confirm('是否确认删除岗位编号为"' + postIds + '"的数据项?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -448,7 +426,7 @@ export default {
     /** 导出按钮操作 */
     handleExport() {
       this.download('system/post/export', {
-        ...this.search.queryParams
+        ...this.queryParams
       }, `post_${new Date().getTime()}.xlsx`)
     }
   }

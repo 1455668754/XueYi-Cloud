@@ -13,11 +13,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public class SysFile
 {
     /** 文件Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /** 文件夹Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long fid;
 
     /** 文件别称 */

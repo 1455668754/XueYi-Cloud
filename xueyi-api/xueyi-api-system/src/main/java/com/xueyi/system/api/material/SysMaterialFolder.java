@@ -21,14 +21,12 @@ public class SysMaterialFolder extends BaseEntity {
     /**
      * 分类Id
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long folderId;
 
     /**
      * 父类Id
      */
     @Excel(name = "父类Id")
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /**
@@ -58,13 +56,11 @@ public class SysMaterialFolder extends BaseEntity {
     /**
      * 归属素材对象集合
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private List<Object> materialList;
 
     /**
      * 子对象集合
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private List<Object> children;
 
     /** 前端参数 */

@@ -22,11 +22,9 @@ public class SysMenu extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 菜单ID */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long menuId;
 
     /** 系统Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long SystemId;
 
     /** 菜单名称 */
@@ -36,7 +34,6 @@ public class SysMenu extends BaseEntity
     private String parentName;
 
     /** 父菜单ID */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /** 路由地址 */

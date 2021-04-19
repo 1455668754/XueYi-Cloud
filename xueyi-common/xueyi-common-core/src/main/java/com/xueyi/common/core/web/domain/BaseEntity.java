@@ -21,11 +21,9 @@ public class BaseEntity implements Serializable
     private static final long serialVersionUID = 1L;
 
     /** 租户Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long enterpriseId;
 
     /** 雪花Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long Id;
 
     /** 搜索值 */
@@ -36,16 +34,13 @@ public class BaseEntity implements Serializable
     private Integer sort;
 
     /** 创建者Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long createBy;
 
     /** 创建者 */
-    @JsonSerialize(using = ToStringSerializer.class)
     private String createName;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "创建时间", type = Excel.Type.EXPORT)
     private Date createTime;
 
     /** 更新者Id */
@@ -53,12 +48,10 @@ public class BaseEntity implements Serializable
     private Long updateBy;
 
     /** 更新者 */
-    @Excel(name = "更新者", type = Excel.Type.EXPORT)
     private String updateName;
 
     /** 更新时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "更新时间", type = Excel.Type.EXPORT)
     private Date updateTime;
 
     /** 备注 */

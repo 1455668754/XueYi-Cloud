@@ -25,12 +25,10 @@ public class SysPost extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 岗位序号 */
-    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "岗位序号", cellType = ColumnType.NUMERIC)
     private Long postId;
 
     /** 部门Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long deptId;
 
     /** 岗位编码 */
@@ -60,7 +58,6 @@ public class SysPost extends BaseEntity
     private List<SysRole> roles;
 
     /** 角色组 */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long[] roleIds;
 
 

@@ -6,6 +6,8 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import com.xueyi.common.security.config.JacksonConfig;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
@@ -24,7 +26,7 @@ import com.xueyi.common.security.feign.FeignAutoConfiguration;
 // 开启线程异步执行
 @EnableAsync
 // 自动加载类
-@Import({ ApplicationConfig.class, FeignAutoConfiguration.class })
+@Import({ ApplicationConfig.class, FeignAutoConfiguration.class, JacksonConfig.class })
 public @interface EnableCustomConfig
 {
 

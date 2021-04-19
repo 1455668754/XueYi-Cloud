@@ -118,7 +118,6 @@ public class SysDeptController extends BaseController {
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeDeptRole")
     public AjaxResult editDeptRole(@Validated @RequestBody SysDept dept) {
-        System.out.println(Arrays.toString(dept.getRoleIds()));
         return toAjax(deptService.updateDeptRole(dept.getDeptId(), dept.getRoleIds()));
     }
 

@@ -23,14 +23,12 @@ public class SysDept extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 部门ID */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long deptId;
 
     /** 部门编码 */
     private String deptCode;
 
     /** 父部门ID */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long parentId;
 
     /** 祖级列表 */

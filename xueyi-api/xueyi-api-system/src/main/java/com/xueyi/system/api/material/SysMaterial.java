@@ -19,12 +19,10 @@ public class SysMaterial extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 素材Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long materialId;
 
     /** 分类Id */
     @Excel(name = "分类Id")
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long folderId;
 
     /** 素材昵称 */

@@ -17,7 +17,6 @@ public class SysSystem extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 系统Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long systemId;
 
     /** 系统名称 */

@@ -28,17 +28,14 @@ public class SysUser extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 用户ID */
-    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "用户序号", cellType = ColumnType.NUMERIC, prompt = "用户编号")
     private Long userId;
 
     /** 部门ID */
-    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "部门编号", type = Type.IMPORT)
     private Long deptId;
 
     /** 岗位Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "岗位编号", type = Type.IMPORT)
     private Long postId;
 
@@ -109,7 +106,6 @@ public class SysUser extends BaseEntity
     private List<SysRole> roles;
 
     /** 角色组 */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long[] roleIds;
 
     public SysUser() {

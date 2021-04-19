@@ -58,8 +58,7 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
     >
       <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
-      <el-table-column prop="deptCode" label="部门编号" width="260"></el-table-column>
-      <el-table-column prop="sort" label="排序" width="200"></el-table-column>
+      <el-table-column prop="deptCode" label="部门编码" width="260"></el-table-column>
       <el-table-column prop="status" label="状态" :formatter="statusFormat" width="100"></el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="200">
         <template slot-scope="scope">
@@ -156,6 +155,11 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -178,21 +182,22 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-          <el-form-item label="部门权限" prop="roleIds">
-          <el-select
-            v-model="form.roleIds"
-            multiple
-            collapse-tags
-            style="margin-left: 20px;"
-            placeholder="请选择">
-            <el-option
-              v-for="item in roleOptions"
-              :key="item.roleId"
-              :label="item.roleName"
-              :value="item.roleId">
-            </el-option>
-          </el-select>
-          </el-form-item>
+            <el-form-item label="部门权限" prop="roleIds">
+              <el-select
+                v-model="form.roleIds"
+                multiple
+                collapse-tags
+                style="margin-left: 20px;"
+                placeholder="请选择"
+                @change="$forceUpdate()">
+                <el-option
+                  v-for="item in roleOptions"
+                  :key="item.roleId"
+                  :label="item.roleName"
+                  :value="item.roleId">
+                </el-option>
+              </el-select>
+            </el-form-item>
           </el-col>
         </el-row>
       </el-form>
@@ -215,7 +220,6 @@ export default {
   components: {Treeselect},
   data() {
     return {
-      value2:[],
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -308,7 +312,7 @@ export default {
       this.open = false;
       this.reset();
     },
-    roleCancel(){
+    roleCancel() {
       this.roleOpen = false;
       this.reset();
     },
@@ -324,7 +328,7 @@ export default {
         phone: undefined,
         email: undefined,
         status: '0',
-        roleIds:[]
+        roleIds: []
       };
       this.resetForm("form");
     },
@@ -361,13 +365,12 @@ export default {
         this.deptOptions = this.handleTree(response.data, "deptId");
       });
     },
-
     /** 部门权限按钮操作 */
     handleRoleUpdate(row) {
       this.reset();
       getDept(row.deptId).then(response => {
         this.form = response.data;
-        this.form.roleIds = Array.from(this.form.roles,x=>x.roleId)
+        this.form.roleIds = Array.from(this.form.roles, x => x.roleId)
         this.roleOpen = true;
         this.title = "设置部门权限";
       });

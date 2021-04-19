@@ -17,7 +17,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  *
  */
 @Configuration
-public class AccuracyLongConfig
+public class JacksonConfig
 {
     @Bean
     public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter()

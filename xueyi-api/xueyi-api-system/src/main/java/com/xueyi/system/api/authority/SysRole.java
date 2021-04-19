@@ -21,7 +21,6 @@ public class SysRole extends BaseEntity
     private static final long serialVersionUID = 1L;
 
     /** 角色ID */
-    @JsonSerialize(using = ToStringSerializer.class)
     @Excel(name = "角色序号", cellType = ColumnType.NUMERIC)
     private Long roleId;
 
@@ -54,19 +53,15 @@ public class SysRole extends BaseEntity
     private boolean flag = false;
 
     /** 系统组（菜单权限） */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long[] systemIds;
 
     /** 菜单组（菜单权限） */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long[] menuIds;
 
     /** 部门组（数据权限） */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long[] deptIds;
 
     /** 岗位组（数据权限） */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long[] postIds;
 
     public SysRole() {
