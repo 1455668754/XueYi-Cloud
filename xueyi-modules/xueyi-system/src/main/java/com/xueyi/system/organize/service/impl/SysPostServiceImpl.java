@@ -2,17 +2,14 @@ package com.xueyi.system.organize.service.impl;
 
 import java.util.List;
 
-import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
-import com.xueyi.system.role.domain.SysPostRole;
 import com.xueyi.system.role.mapper.SysPostRoleMapper;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.CustomException;
 import com.xueyi.common.core.utils.StringUtils;

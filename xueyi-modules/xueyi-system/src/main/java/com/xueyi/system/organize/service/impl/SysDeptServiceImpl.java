@@ -3,7 +3,6 @@ package com.xueyi.system.organize.service.impl;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.CustomException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.authority.SysRole;
 import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -61,7 +61,6 @@
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
-
         <el-row :gutter="10" class="mb8">
           <el-col :span="1.5">
             <el-button
@@ -72,30 +71,6 @@
               @click="handleAdd"
               v-hasPermi="['system:post:add']"
             >新增
-            </el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              type="success"
-              plain
-              icon="el-icon-edit"
-              size="mini"
-              :disabled="single"
-              @click="handleUpdate"
-              v-hasPermi="['system:post:edit']"
-            >修改
-            </el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              type="danger"
-              plain
-              icon="el-icon-delete"
-              size="mini"
-              :disabled="multiple"
-              @click="handleDelete"
-              v-hasPermi="['system:post:remove']"
-            >删除
             </el-button>
           </el-col>
           <el-col :span="1.5">
@@ -112,8 +87,7 @@
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
         </el-row>
 
-        <el-table v-loading="loading" :data="postList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" width="55" align="center"/>
+        <el-table v-loading="loading" :data="postList">
           <el-table-column label="岗位编码" align="center" prop="postCode" key="postCode" v-if="columns[0].visible"/>
           <el-table-column label="岗位名称" align="center" prop="postName" key="postName" v-if="columns[1].visible"
                            :show-overflow-tooltip="true"/>
@@ -281,12 +255,6 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 选中数组
-      ids: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -418,12 +386,6 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.postId)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
-    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
@@ -433,8 +395,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const postId = row.postId || this.ids
-      getPost(postId).then(response => {
+      getPost(row.postId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改岗位";
@@ -501,13 +462,12 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const postIds = row.postId || this.ids;
-      this.$confirm('是否确认删除岗位编号为"' + postIds + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除岗位"' + row.deptName + '"?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delPost(postIds);
+        return delPost(row.postId);
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");

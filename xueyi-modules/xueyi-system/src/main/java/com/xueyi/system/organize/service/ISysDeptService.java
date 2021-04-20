@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.utils.vo.TreeSelect;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 部门管理 服务层
