@@ -106,7 +106,7 @@ public class SysDeptController extends BaseController {
         } else if (dept.getParentId().equals(dept.getDeptId()) || UserConstants.NOT_UNIQUE.equals(deptService.checkIsChild(dept.getDeptId(), dept.getParentId()))) {
             return AjaxResult.error("修改部门'" + dept.getDeptName() + "'失败，上级部门不能是自己或自己的子部门");
         } else if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus())
-                && deptService.selectNormalChildrenDeptById(dept.getDeptId()) > 0) {
+                && deptService.checkNormalChildrenCount(dept.getDeptId()) > 0) {
             return AjaxResult.error("该部门包含未停用的子部门！");
         }
         return toAjax(deptService.updateDept(dept));
@@ -129,6 +129,14 @@ public class SysDeptController extends BaseController {
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysDept dept) {
+        if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus())
+                && deptService.checkNormalChildrenCount(dept.getDeptId()) > 0) {
+            return AjaxResult.error("该部门包含未停用的子部门！");
+        } else if (StringUtils.equals(UserConstants.DEPT_NORMAL, dept.getStatus())
+                && UserConstants.DEPT_DISABLE.equals(deptService.checkParentDeptStatus(dept.getParentId()))) {
+            return AjaxResult.error("启用失败，该部门的父级部门已被禁用！");
+        }
+        System.out.println(deptService.checkParentDeptStatus(dept.getParentId()));
         return toAjax(deptService.updateDeptStatus(dept.getDeptId(), dept.getStatus()));
     }
 
@@ -155,8 +163,7 @@ public class SysDeptController extends BaseController {
      * 获取部门下拉树列表
      */
     @GetMapping("/treeSelect")
-    public AjaxResult treeSelect(SysDept dept)
-    {
+    public AjaxResult treeSelect(SysDept dept) {
         List<SysDept> depts = deptService.selectDeptList(dept);
         return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
     }

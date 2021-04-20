@@ -30,14 +30,6 @@ public interface ISysDeptService {
     public SysDept selectDeptById(Long deptId);
 
     /**
-     * 根据Id查询所有子部门（正常状态）
-     *
-     * @param deptId 部门Id
-     * @return 子部门数
-     */
-    public int selectNormalChildrenDeptById(Long deptId);
-
-    /**
      * 新增保存部门信息
      *
      * @param dept 部门信息
@@ -130,6 +122,22 @@ public interface ISysDeptService {
      * @return 结果
      */
     public String checkIsChild(Long deptId, Long parentId);
+
+    /**
+     * 校验已启用子部门数量(正常状态)
+     *
+     * @param deptId 部门Id
+     * @return 子部门数
+     */
+    public int checkNormalChildrenCount(Long deptId);
+
+    /**
+     * 校验父级部门状态
+     *
+     * @param parentId 父级Id
+     * @return 结果
+     */
+    public String checkParentDeptStatus(Long parentId);
 
     /**
      * 构建前端所需要树结构

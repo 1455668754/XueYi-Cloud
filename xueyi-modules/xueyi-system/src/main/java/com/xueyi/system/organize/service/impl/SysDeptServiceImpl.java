@@ -67,19 +67,6 @@ public class SysDeptServiceImpl implements ISysDeptService {
     }
 
     /**
-     * 根据Id查询所有子部门（正常状态）
-     *
-     * @param deptId 部门Id
-     * @return 子部门数
-     */
-    @Override
-    public int selectNormalChildrenDeptById(Long deptId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("deptId", deptId);
-        return deptMapper.selectNormalChildrenDeptById(search);//@param search 万用组件 | deptId 部门Id
-    }
-
-    /**
      * 新增保存部门信息
      *
      * @param dept 部门信息
@@ -119,13 +106,18 @@ public class SysDeptServiceImpl implements ISysDeptService {
             dept.setAncestors(newAncestors);
             updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
         }
-        rows = deptMapper.updateDept(dept);//@param dept 部门信息
-        if (UserConstants.DEPT_NORMAL.equals(dept.getStatus())) {
-            // 如果该部门是启用状态，则启用该部门的所有上级部门
-            updateParentDeptStatus(dept);
+        // 欲启用部门时判断上级部门是否启用，未启用则设置本部门为禁用状态
+        if(UserConstants.DEPT_NORMAL.equals(dept.getStatus())){
+            if(UserConstants.DEPT_DISABLE.equals(checkParentDeptStatus(dept.getParentId()))){
+                dept.setStatus(UserConstants.DEPT_DISABLE);
+                try{
+                    throw new CustomException(String.format("%1$s上级部门已停用,无法启用该部门", dept.getDeptName()));
+                } catch (Exception ignored) {
+                }
+            }
         }
         //执行部门状态变更
-        updateDeptStatus(dept.getDeptId(), dept.getStatus());
+        rows = deptMapper.updateDept(dept);//@param dept 部门信息
         return rows;
     }
 
@@ -155,36 +147,27 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 修改保存部门状态
      *
-     * @param deptId 部门Id
-     * @param status 部门状态
+     * @param deptId   部门Id
+     * @param status   部门状态
      * @return 结果
      */
     @Override
     @Transactional
     public int updateDeptStatus(Long deptId, String status) {
+        //操作逻辑：1.当欲设置禁用时，同步执行禁用本岗位所属岗位、用户
         int rows;
         SysSearch sear = new SysSearch();
-        //停用时停用该部门的所有子部门以及其岗位和用户
-        if (UserConstants.DEPT_DISABLE.equals(status)) {
-            // 1.停用本部门所有岗位/用户的状态
-            sear.getSearch().put("deptId", deptId);
-            sear.getSearch().put("status", status);
-            rows = postMapper.updatePostStatusByDeptId(sear);//@param search 万用组件 | deptId 部门Id | status 用户状态
-            rows = rows + userMapper.updateUserStatusByDeptId(sear);//@param search 万用组件 | deptId 部门Id | status 用户状态
-            // 2.获取所有子部门
-            List<SysDept> deptList = deptMapper.selectChildrenDeptById(sear);//@param search 万用组件 | deptId 部门Id
-            // 3.停用子部门所有岗位/用户的状态
-            for (SysDept dept : deptList) {
-                sear.getSearch().put("deptId", dept.getDeptId());
-                sear.getSearch().put("status", status);
-                rows = rows + postMapper.updatePostStatusByDeptId(sear);//@param search 万用组件 | deptId 部门Id | status 用户状态
-                rows = rows + userMapper.updateUserStatusByDeptId(sear);//@param search 万用组件 | deptId 部门Id | status 用户状态
-            }
-        }
-        // 3.变更部门状态
         sear.getSearch().put("deptId", deptId);
         sear.getSearch().put("status", status);
-        return deptMapper.updateDeptStatus(sear);//@param search 万用组件 | deptId 部门Id | status 部门状态
+        // 3.变更部门状态
+        rows = deptMapper.updateDeptStatus(sear);//@param search 万用组件 | deptId 部门Id | status 部门状态
+        // 1.欲停用时停用本部门所有岗位/用户的状态
+        if (rows>0 && UserConstants.DEPT_DISABLE.equals(status)) {
+            rows = rows + postMapper.updatePostStatusByDeptId(sear);//@param search 万用组件 | deptId 部门Id | status 用户状态
+            rows = rows + userMapper.updateUserStatusByDeptId(sear);//@param search 万用组件 | deptId 部门Id | status 用户状态
+        }
+
+        return rows;
     }
 
     /**
@@ -343,32 +326,58 @@ public class SysDeptServiceImpl implements ISysDeptService {
     }
 
     /**
+     * 校验已启用子部门数量(正常状态)
+     *
+     * @param deptId 部门Id
+     * @return 子部门数
+     */
+    @Override
+    public int checkNormalChildrenCount(Long deptId) {
+        SysSearch search = new SysSearch();
+        search.getSearch().put("deptId", deptId);
+        return deptMapper.checkNormalChildrenCount(search);//@param search 万用组件 | deptId 部门Id
+    }
+
+    /**
+     * 校验父级部门状态
+     *
+     * @param parentId 父级Id
+     * @return 结果
+     */
+    public String checkParentDeptStatus(Long parentId) {
+        if (StringUtils.isNotNull(parentId) && parentId != 0L) {
+            SysSearch search = new SysSearch();
+            search.getSearch().put("deptId", parentId);
+            SysDept info = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
+            if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
+                return UserConstants.DEPT_DISABLE;
+            }
+        }
+        return UserConstants.DEPT_NORMAL;
+    }
+
+    /**
      * 构建前端所需要树结构
      *
      * @param depts 部门列表
      * @return 树结构列表
      */
     @Override
-    public List<SysDept> buildDeptTree(List<SysDept> depts)
-    {
+    public List<SysDept> buildDeptTree(List<SysDept> depts) {
         List<SysDept> returnList = new ArrayList<SysDept>();
         List<Long> tempList = new ArrayList<Long>();
-        for (SysDept dept : depts)
-        {
+        for (SysDept dept : depts) {
             tempList.add(dept.getDeptId());
         }
-        for (Iterator<SysDept> iterator = depts.iterator(); iterator.hasNext();)
-        {
+        for (Iterator<SysDept> iterator = depts.iterator(); iterator.hasNext(); ) {
             SysDept dept = (SysDept) iterator.next();
             // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(dept.getParentId()))
-            {
+            if (!tempList.contains(dept.getParentId())) {
                 recursionFn(depts, dept);
                 returnList.add(dept);
             }
         }
-        if (returnList.isEmpty())
-        {
+        if (returnList.isEmpty()) {
             returnList = depts;
         }
         return returnList;
@@ -381,8 +390,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * @return 下拉树结构列表
      */
     @Override
-    public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts)
-    {
+    public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts) {
         List<SysDept> deptTrees = buildDeptTree(depts);
         return deptTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
@@ -390,15 +398,12 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 递归列表
      */
-    private void recursionFn(List<SysDept> list, SysDept t)
-    {
+    private void recursionFn(List<SysDept> list, SysDept t) {
         // 得到子节点列表
         List<SysDept> childList = getChildList(list, t);
         t.setChildren(childList);
-        for (SysDept tChild : childList)
-        {
-            if (hasChild(list, tChild))
-            {
+        for (SysDept tChild : childList) {
+            if (hasChild(list, tChild)) {
                 recursionFn(list, tChild);
             }
         }
@@ -407,15 +412,12 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 得到子节点列表
      */
-    private List<SysDept> getChildList(List<SysDept> list, SysDept t)
-    {
+    private List<SysDept> getChildList(List<SysDept> list, SysDept t) {
         List<SysDept> tlist = new ArrayList<SysDept>();
         Iterator<SysDept> it = list.iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             SysDept n = (SysDept) it.next();
-            if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getDeptId().longValue())
-            {
+            if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getDeptId().longValue()) {
                 tlist.add(n);
             }
         }
@@ -425,8 +427,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 判断是否有子节点
      */
-    private boolean hasChild(List<SysDept> list, SysDept t)
-    {
+    private boolean hasChild(List<SysDept> list, SysDept t) {
         return getChildList(list, t).size() > 0;
     }
 }

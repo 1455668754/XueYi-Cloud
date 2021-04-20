@@ -68,6 +68,20 @@ export function changeDeptRole(data) {
   })
 }
 
+// 用户状态修改
+export function changeDeptStatus(deptId, parentId, status) {
+  const data = {
+    deptId,
+    parentId,
+    status
+  }
+  return request({
+    url: '/system/dept/changeStatus',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除部门
 export function delDept(deptId) {
   return request({

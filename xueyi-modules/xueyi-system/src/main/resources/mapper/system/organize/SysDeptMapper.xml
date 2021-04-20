@@ -92,14 +92,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.dataScope}
 	</select>
 
-	<select id="selectNormalChildrenDeptById" parameterType="com.xueyi.system.api.utilTool.SysSearch"
-			resultType="java.lang.Integer">
-		<include refid="countVo"/>
-		where d.status = 0 and find_in_set(#{search.deptId}, d.ancestors)
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
-	</select>
-
 	<insert id="insertDept" parameterType="SysDept">
 		insert into sys_dept
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -230,4 +222,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		limit 1
 	</select>
 
+	<select id="checkNormalChildrenCount" parameterType="com.xueyi.system.api.utilTool.SysSearch"
+			resultType="java.lang.Integer">
+		<include refid="countVo"/>
+		where d.status = 0 and find_in_set(#{search.deptId}, d.ancestors)
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
 </mapper>

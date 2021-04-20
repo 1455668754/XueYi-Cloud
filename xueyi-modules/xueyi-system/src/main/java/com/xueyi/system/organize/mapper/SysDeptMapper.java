@@ -44,16 +44,6 @@ public interface SysDeptMapper {
     public List<SysDept> selectChildrenDeptById(SysSearch search);
 
     /**
-     * 根据Id查询所有子部门（正常状态）
-     * 访问控制 d 租户查询
-     *
-     * @param search 万用组件 | deptId 部门Id
-     * @return 子部门数
-     */
-    @DataScope(enterpriseAlias = "d")
-    public int selectNormalChildrenDeptById(SysSearch search);
-
-    /**
      * 新增部门信息
      * 访问控制 empty 租户更新（无前缀）
      *
@@ -151,4 +141,14 @@ public interface SysDeptMapper {
      */
     @DataScope(enterpriseAlias = "d")
     public SysDept checkIsChild(SysSearch search);
+
+    /**
+     * 校验已启用子部门数量(正常状态)
+     * 访问控制 d 租户查询
+     *
+     * @param search 万用组件 | deptId 子级Id
+     * @return 子部门数
+     */
+    @DataScope(enterpriseAlias = "d")
+    public int checkNormalChildrenCount(SysSearch search);
 }

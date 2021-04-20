@@ -59,7 +59,16 @@
     >
       <el-table-column prop="deptName" label="部门名称" width="260"/>
       <el-table-column prop="deptCode" label="部门编码" width="260"/>
-      <el-table-column prop="status" label="状态" :formatter="statusFormat" width="100"/>
+      <el-table-column prop="status" label="状态" width="100">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          ></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="200">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime) }}</span>
@@ -210,10 +219,20 @@
 </template>
 
 <script>
-import {listDept, getDept, delDept, addDept, updateDept, listDeptExcludeChild, changeDeptRole} from "@/api/system/dept";
+import {
+  listDept,
+  getDept,
+  delDept,
+  addDept,
+  updateDept,
+  listDeptExcludeChild,
+  changeDeptRole,
+  changeDeptStatus
+} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import {optionSelect} from "@/api/system/role";
+import {changeUserStatus} from "@/api/system/user";
 
 export default {
   name: "Dept",
@@ -379,6 +398,22 @@ export default {
         this.roleOptions = response.data;
       });
     },
+    // 部门状态修改
+    handleStatusChange(row) {
+      let msg = row.status === "0" ? "启用" : "停用";
+      let text = row.status === "0" ? '启用部门"' + row.deptName + '"吗?' : '停用部门"' + row.deptName + '"吗?停用部门会同步停用所有归属岗位及用户，且归属岗位与用户将无法启用！';
+      this.$confirm('确认要' + text, "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return changeDeptStatus(row.deptId, row.parentId, row.status);
+      }).then(() => {
+        this.msgSuccess(msg + "成功");
+      }).catch(function () {
+        row.status = row.status === "0" ? "1" : "0";
+      });
+    },
     /** 提交按钮 */
     submitForm: function () {
       this.$refs["form"].validate(valid => {
@@ -411,7 +446,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$confirm('是否确认删除名称为"' + row.deptName + '"的数据项?', "警告", {
+      this.$confirm('是否确认删除部门"' + row.deptName + '"?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
