@@ -68,7 +68,7 @@ export function changeDeptRole(data) {
   })
 }
 
-// 用户状态修改
+// 部门状态修改
 export function changeDeptStatus(deptId, parentId, status) {
   const data = {
     deptId,

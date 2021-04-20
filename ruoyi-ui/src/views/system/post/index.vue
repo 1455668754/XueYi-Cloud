@@ -215,12 +215,52 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 修改岗位权限对话框 -->
+    <el-dialog :title="title" :visible.sync="roleOpen" width="350px" center append-to-body>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="部门编码" prop="postCode">
+              <el-input v-model="form.postCode" placeholder="请输入部门编码" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="部门名称" prop="postName">
+              <el-input v-model="form.postName" placeholder="请输入部门名称" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="岗位权限" prop="roleIds">
+              <el-select
+                v-model="form.roleIds"
+                multiple
+                collapse-tags
+                style="margin-left: 20px;"
+                placeholder="请选择"
+                @change="$forceUpdate()">
+                <el-option
+                  v-for="item in roleOptions"
+                  :key="item.roleId"
+                  :label="item.roleName"
+                  :value="item.roleId">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitRoleForm">确 定</el-button>
+        <el-button @click="roleCancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {listPost, getPost, delPost, addPost, updatePost} from "@/api/system/post";
-import {changeDeptRole, getDept, treeSelect} from "@/api/system/dept";
+import {listPost, getPost, delPost, addPost, updatePost, changePostRole} from "@/api/system/post";
+import {treeSelect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import {optionSelect} from "@/api/system/role";
@@ -244,22 +284,16 @@ export default {
       total: 0,
       // 岗位表格数据
       postList: [],
+      // 权限数据选项
+      roleOptions: [],
+      // 状态数据字典
+      statusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 是否显示弹出层/部门权限设置弹窗
       roleOpen: false,
-      // 状态数据字典
-      statusOptions: [],
-      // 部门树选项
-      deptOptions: undefined,
-      // 部门名称
-      deptName: undefined,
-      defaultProps: {
-        children: "children",
-        label: "label"
-      },
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -289,7 +323,15 @@ export default {
         postCode: [
           {required: true, message: "岗位编码不能为空", trigger: "blur"}
         ]
-      }
+      },
+      // 部门树选项
+      deptOptions: undefined,
+      // 部门名称
+      deptName: undefined,
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
     };
   },
   watch: {
@@ -338,6 +380,10 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
+      this.reset();
+    },
+    roleCancel() {
+      this.roleOpen = false;
       this.reset();
     },
     // 表单重置

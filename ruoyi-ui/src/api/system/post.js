@@ -35,6 +35,29 @@ export function updatePost(data) {
   })
 }
 
+// 修改岗位-角色关系
+export function changePostRole(data) {
+  return request({
+    url: '/system/post/changePostRole',
+    method: 'put',
+    data: data
+  })
+}
+
+// 岗位状态修改
+export function changePostStatus(postId, deptId, status) {
+  const data = {
+    postId,
+    deptId,
+    status
+  }
+  return request({
+    url: '/system/post/changeStatus',
+    method: 'put',
+    data: data
+  })
+}
+
 // 删除岗位
 export function delPost(postId) {
   return request({

@@ -176,6 +176,7 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
     <!-- 修改部门权限对话框 -->
     <el-dialog :title="title" :visible.sync="roleOpen" width="350px" center append-to-body>
       <el-form ref="form" :model="form" label-width="80px">
@@ -249,14 +250,14 @@ export default {
       deptOptions: [],
       // 权限数据选项
       roleOptions: [],
+      // 状态数据字典
+      statusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       // 是否显示弹出层/部门权限设置弹窗
       roleOpen: false,
-      // 状态数据字典
-      statusOptions: [],
       // 查询参数
       queryParams: {
         deptCode: undefined,
