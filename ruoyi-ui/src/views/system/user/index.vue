@@ -28,9 +28,29 @@
       <!--用户数据-->
       <el-col :span="20" :xs="24">
         <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-          <el-form-item label="用户名称" prop="userName">
+          <el-form-item label="用户编码" prop="userCode">
+            <el-input
+              v-model="queryParams.userCode"
+              placeholder="请输入用户编码"
+              clearable
+              size="small"
+              style="width: 240px"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="用户账号" prop="userName">
             <el-input
               v-model="queryParams.userName"
+              placeholder="请输入用户账号"
+              clearable
+              size="small"
+              style="width: 240px"
+              @keyup.enter.native="handleQuery"
+            />
+          </el-form-item>
+          <el-form-item label="用户名称" prop="userNick">
+            <el-input
+              v-model="queryParams.userNick"
               placeholder="请输入用户名称"
               clearable
               size="small"
@@ -38,9 +58,9 @@
               @keyup.enter.native="handleQuery"
             />
           </el-form-item>
-          <el-form-item label="手机号码" prop="phonenumber">
+          <el-form-item label="手机号码" prop="phone">
             <el-input
-              v-model="queryParams.phonenumber"
+              v-model="queryParams.phone"
               placeholder="请输入手机号码"
               clearable
               size="small"
@@ -137,14 +157,17 @@
           </el-col>
           <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
         </el-row>
-
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="用户编号" align="center" key="userId" prop="userId" v-if="columns[0].visible" />
+          <el-table-column label="用户编码" align="center" key="userCode" prop="userCode" v-if="columns[0].visible" />
           <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns[1].visible" :show-overflow-tooltip="true" />
           <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible" :show-overflow-tooltip="true" />
-          <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" v-if="columns[4].visible" width="120" />
+          <el-table-column label="部门/岗位" align="center" key="post.postName" v-if="columns[3].visible" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <span>{{scope.row.dept.deptName}}/{{scope.row.post.postName}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="手机号码" align="center" key="phone" prop="phone" v-if="columns[4].visible" width="120" />
           <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
             <template slot-scope="scope">
               <el-switch
@@ -171,6 +194,21 @@
                 size="mini"
                 type="text"
                 icon="el-icon-edit"
+                @click="handleRoleUpdate(scope.row)"
+                v-hasPermi="['system:role:set']"
+              >用户权限
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-key"
+                @click="handleResetPwd(scope.row)"
+                v-hasPermi="['system:user:resetPwd']"
+              >重置密码</el-button>
+              <el-button
+                size="mini"
+                type="text"
+                icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
                 v-hasPermi="['system:user:edit']"
               >修改</el-button>
@@ -182,13 +220,7 @@
                 @click="handleDelete(scope.row)"
                 v-hasPermi="['system:user:remove']"
               >删除</el-button>
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-key"
-                @click="handleResetPwd(scope.row)"
-                v-hasPermi="['system:user:resetPwd']"
-              >重置</el-button>
+
             </template>
           </el-table-column>
         </el-table>
@@ -207,21 +239,34 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="用户昵称" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="归属部门" prop="deptId">
               <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门" />
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
-            <el-form-item label="手机号码" prop="phonenumber">
-              <el-input v-model="form.phonenumber" placeholder="请输入手机号码" maxlength="11" />
+            <el-form-item label="用户编码" prop="userCode">
+              <el-input v-model="form.userCode" placeholder="请输入用户编码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="用户编码" prop="userCode">
+              <el-input v-model="form.userCode" placeholder="请输入用户编码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="用户账号" prop="userName">
+              <el-input v-model="form.userName" placeholder="请输入用户账号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="用户名称" prop="nickName">
+              <el-input v-model="form.nickName" placeholder="请输入用户名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机号码" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入手机号码" maxlength="11" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -276,24 +321,12 @@
                   :key="item.postId"
                   :label="item.postName"
                   :value="item.postId"
-                  :disabled="item.status == 1"
+                  :disabled="item.status === 1"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="角色">
-              <el-select v-model="form.roleIds" multiple placeholder="请选择">
-                <el-option
-                  v-for="item in roleOptions"
-                  :key="item.roleId"
-                  :label="item.roleName"
-                  :value="item.roleId"
-                  :disabled="item.status == 1"
-                ></el-option>
-              </el-select>
-            </el-form-item>
-          </el-col>
+
         </el-row>
         <el-row>
           <el-col :span="24">
@@ -306,6 +339,47 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 修改用户权限对话框 -->
+    <el-dialog :title="title" :visible.sync="roleOpen" width="350px" center append-to-body>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="用户编码" prop="userCode">
+              <el-input v-model="form.userCode" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="用户名称" prop="nickName">
+              <el-input v-model="form.nickName" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="用户权限" prop="roleIds">
+              <el-select
+                v-model="form.roleIds"
+                multiple
+                collapse-tags
+                style="margin-left: 20px;"
+                placeholder="请选择"
+                @change="$forceUpdate()">
+                <el-option
+                  v-for="item in roleOptions"
+                  :key="item.roleId"
+                  :label="item.roleName"
+                  :value="item.roleId"
+                  :disabled="item.status === 1">
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitRoleForm">确 定</el-button>
+        <el-button @click="roleCancel">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -343,11 +417,21 @@
 </template>
 
 <script>
-import { listUser, getUser, delUser, addUser, updateUser, resetUserPwd, changeUserStatus } from "@/api/system/user";
+import {
+  listUser,
+  getUser,
+  delUser,
+  addUser,
+  updateUser,
+  resetUserPwd,
+  changeUserStatus,
+  changeUserRole
+} from "@/api/system/user";
 import { getToken } from "@/utils/auth";
-import { treeselect } from "@/api/system/dept";
+import {changeDeptRole, getDept, treeSelect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import {optionSelect} from "@/api/system/role";
 
 export default {
   name: "User",
@@ -374,6 +458,8 @@ export default {
       deptOptions: undefined,
       // 是否显示弹出层
       open: false,
+      // 是否显示弹出层/部门权限设置弹窗
+      roleOpen: false,
       // 部门名称
       deptName: undefined,
       // 默认密码
@@ -413,8 +499,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        userCode: undefined,
         userName: undefined,
-        phonenumber: undefined,
+        userNick: undefined,
+        phone: undefined,
         status: undefined,
         deptId: undefined
       },
@@ -488,7 +576,7 @@ export default {
     },
     /** 查询部门下拉树结构 */
     getTreeSelect() {
-      treeselect().then(response => {
+      treeSelect().then(response => {
         this.deptOptions = response.data;
       });
     },
@@ -502,24 +590,13 @@ export default {
       this.queryParams.deptId = data.id;
       this.getList();
     },
-    // 用户状态修改
-    handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用";
-      this.$confirm('确认要"' + text + '""' + row.userName + '"用户吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function() {
-        return changeUserStatus(row.userId, row.status);
-      }).then(() => {
-        this.msgSuccess(text + "成功");
-      }).catch(function() {
-        row.status = row.status === "0" ? "1" : "0";
-      });
-    },
     // 取消按钮
     cancel() {
       this.open = false;
+      this.reset();
+    },
+    roleCancel() {
+      this.roleOpen = false;
       this.reset();
     },
     // 表单重置
@@ -527,15 +604,16 @@ export default {
       this.form = {
         userId: undefined,
         deptId: undefined,
+        postId: undefined,
+        userCode: undefined,
         userName: undefined,
         nickName: undefined,
         password: undefined,
-        phonenumber: undefined,
+        phone: undefined,
         email: undefined,
         sex: undefined,
         status: "0",
         remark: undefined,
-        postIds: [],
         roleIds: []
       };
       this.resetForm("form");
@@ -596,11 +674,39 @@ export default {
         });
       }).catch(() => {});
     },
+    /** 用户权限按钮操作 */
+    handleRoleUpdate(row) {
+      this.reset();
+      getUser(row.userId).then(response => {
+        this.form = response.data;
+        this.form.roleIds = Array.from(this.form.roles, x => x.roleId)
+        this.roleOpen = true;
+        this.title = "设置用户权限";
+      });
+      optionSelect().then(response => {
+        this.roleOptions = response.data;
+      });
+    },
+    /** 用户状态修改 */
+    handleStatusChange(row) {
+      let text = row.status === "0" ? "启用" : "停用";
+      this.$confirm('确认要"' + text + '""' + row.userName + '"用户吗?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function() {
+        return changeUserStatus(row.userId, row.status);
+      }).then(() => {
+        this.msgSuccess(text + "成功");
+      }).catch(function() {
+        row.status = row.status === "0" ? "1" : "0";
+      });
+    },
     /** 提交按钮 */
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.userId != undefined) {
+          if (this.form.userId !== undefined) {
             updateUser(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
@@ -615,6 +721,16 @@ export default {
           }
         }
       });
+    },
+    /** 用户权限提交按钮 */
+    submitRoleForm: function () {
+      if (this.form.userId !== undefined) {
+        changeUserRole(this.form).then(response => {
+          this.msgSuccess("用户权限修改成功");
+          this.roleOpen = false;
+          this.getList();
+        });
+      }
     },
     /** 删除按钮操作 */
     handleDelete(row) {

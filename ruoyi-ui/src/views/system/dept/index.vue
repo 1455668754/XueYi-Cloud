@@ -183,12 +183,12 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="部门编码" prop="deptCode">
-              <el-input v-model="form.deptCode" placeholder="请输入部门编码" readonly/>
+              <el-input v-model="form.deptCode" readonly/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="部门名称" prop="deptName">
-              <el-input v-model="form.deptName" placeholder="请输入部门名称" readonly/>
+              <el-input v-model="form.deptName" readonly/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -204,7 +204,8 @@
                   v-for="item in roleOptions"
                   :key="item.roleId"
                   :label="item.roleName"
-                  :value="item.roleId">
+                  :value="item.roleId"
+                  :disabled="item.status === 1">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -271,13 +272,10 @@ export default {
           {required: true, message: "上级部门不能为空", trigger: "blur"}
         ],
         deptCode: [
-          {required: true, message: "部门编号不能为空", trigger: "blur"}
+          {required: true, message: "部门编码不能为空", trigger: "blur"}
         ],
         deptName: [
           {required: true, message: "部门名称不能为空", trigger: "blur"}
-        ],
-        orderNum: [
-          {required: true, message: "菜单顺序不能为空", trigger: "blur"}
         ],
         email: [
           {
@@ -398,7 +396,7 @@ export default {
         this.roleOptions = response.data;
       });
     },
-    // 部门状态修改
+    /** 部门状态修改 */
     handleStatusChange(row) {
       let msg = row.status === "0" ? "启用" : "停用";
       let text = row.status === "0" ? '启用部门"' + row.deptName + '"吗?' : '停用部门"' + row.deptName + '"吗?停用部门会同步停用所有归属岗位及用户，且归属岗位与用户将无法启用！';

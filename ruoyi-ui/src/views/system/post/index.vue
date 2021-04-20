@@ -156,7 +156,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" placeholder="请选择归属部门"/>
+              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" :normalizer="normalizer" placeholder="请选择归属部门"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -204,13 +204,13 @@
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="部门编码" prop="postCode">
-              <el-input v-model="form.postCode" placeholder="请输入部门编码" readonly/>
+            <el-form-item label="岗位编码" prop="postCode">
+              <el-input v-model="form.postCode" readonly/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="部门名称" prop="postName">
-              <el-input v-model="form.postName" placeholder="请输入部门名称" readonly/>
+            <el-form-item label="岗位名称" prop="postName">
+              <el-input v-model="form.postName" readonly/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -226,7 +226,8 @@
                   v-for="item in roleOptions"
                   :key="item.roleId"
                   :label="item.roleName"
-                  :value="item.roleId">
+                  :value="item.roleId"
+                  :disabled="item.status === 1">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -294,11 +295,11 @@ export default {
         deptId: [
           {required: true, message: "归属部门不能为空", trigger: "blur"}
         ],
-        postName: [
-          {required: true, message: "岗位名称不能为空", trigger: "blur"}
-        ],
         postCode: [
           {required: true, message: "岗位编码不能为空", trigger: "blur"}
+        ],
+        postName: [
+          {required: true, message: "岗位名称不能为空", trigger: "blur"}
         ]
       },
       // 部门树选项
@@ -339,6 +340,18 @@ export default {
       treeSelect().then(response => {
         this.deptOptions = response.data;
       });
+    },
+    /** 转换部门数据结构 */
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.id,
+        label: node.label,
+        children: node.children,
+        isDisabled: node.status === '1'
+      };
     },
     // 筛选节点
     filterNode(value, data) {
@@ -414,7 +427,7 @@ export default {
         this.roleOptions = response.data;
       });
     },
-    // 岗位状态修改
+    /** 岗位状态修改 */
     handleStatusChange(row) {
       let msg = row.status === "0" ? "启用" : "停用";
       let text = row.status === "0" ? '启用岗位"' + row.postName + '"吗?' : '停用岗位"' + row.postName + '"吗?停用岗位会同步停用所有归属用户，且归属用户将无法启用！';
@@ -462,7 +475,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$confirm('是否确认删除岗位"' + row.deptName + '"?', "警告", {
+      this.$confirm('是否确认删除岗位"' + row.postName + '"?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"

@@ -103,4 +103,12 @@ public interface ISysPostService {
      * @return 结果
      */
     public String checkPostNameUnique(Long postId, Long deptId,String postName);
+
+    /**
+     * 校验岗位状态
+     *
+     * @param postId 岗位Id
+     * @return 结果
+     */
+    public String checkPostStatus(Long postId);
 }

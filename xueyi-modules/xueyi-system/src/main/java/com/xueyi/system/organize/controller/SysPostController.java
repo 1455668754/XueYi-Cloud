@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.organize.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

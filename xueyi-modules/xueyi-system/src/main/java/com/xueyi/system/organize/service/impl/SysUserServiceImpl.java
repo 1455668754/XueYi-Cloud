@@ -2,6 +2,7 @@ package com.xueyi.system.organize.service.impl;
 
 import java.util.List;
 
+import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,24 +115,21 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 结果
      */
     @Override
-    @Transactional
-    @DataScope(updateEnterpriseAlias = "empty")
     public int insertUser(SysUser user) {
-        int rows, t;
+        // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
         SysSearch search = new SysSearch();
-        // 1.更新用户状态 | t==0时代表归属岗位被禁用，则该用户也需变成禁用状态
-        t = updateUserStatus(user.getUserId(), user.getPostId(), user.getStatus());
-        if (t == 0) {
-            user.setStatus(UserConstants.USER_DISABLE);
+        search.getSearch().put("postId", user.getPostId());
+        if (UserConstants.USER_NORMAL.equals(user.getStatus())) {
+            SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+            if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
+                user.setStatus(UserConstants.USER_DISABLE);
+                try {
+                    throw new CustomException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
+                } catch (Exception ignored) {
+                }
+            }
         }
-        // 新增用户信息
-        rows = userMapper.insertUser(user);
-        // 新增用户-角色信息
-        if (rows > 0 && user.getRoleIds().length > 0) {
-            search.getSearch().put("roleIds", user.getRoleIds());
-            rows = rows + userRoleMapper.batchNewUserRole(search); //@param search 万用组件 | 自动生成Id做userId | roleIds 角色Ids
-        }
-        return rows;
+        return userMapper.insertUser(user);//@param user 用户信息
     }
 
     /**
@@ -141,40 +139,42 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int updateUser(SysUser user) {
-        int rows, t;
+        // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
         SysSearch search = new SysSearch();
-        // 1.更新用户状态 | t==0时代表归属岗位被禁用，则该用户也需变成禁用状态
-        t = updateUserStatus(user.getUserId(), user.getPostId(), user.getStatus());
-        if (t == 0) {
-            user.setStatus(UserConstants.USER_DISABLE);
-        }
-        // 修改用户信息
-        rows = userMapper.updateUser(user);
-        //执行用户-角色变更 处理逻辑依次为：1.判断是否变动 → 2.是否需要执行删除 → 3.是否需要执行新增
-        if (rows > 0 && user.getRoleIds().length > 0) {
-            search.getSearch().put("userId", user.getUserId());
-            List<SysUserRole> userRoles = userRoleMapper.selectUserRoleByUserId(search);//@param search 万用组件 | userId 用户Id
-            int k = 0;
-            //1.检验roles是否变动
-            if (userRoles.size() > 0) {
-                for (SysUserRole userRole : userRoles) {
-                    for (Long role : user.getRoleIds()) {
-                        if (role.equals(userRole.getRoleId())) {
-                            k++;
-                        }
-                    }
+        search.getSearch().put("postId", user.getPostId());
+        if (UserConstants.USER_NORMAL.equals(user.getStatus())) {
+            SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+            if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
+                user.setStatus(UserConstants.USER_DISABLE);
+                try {
+                    throw new CustomException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
+                } catch (Exception ignored) {
                 }
             }
-            if (k != userRoles.size() && k != user.getRoleIds().length) {
-                //2.删除原有的postRole信息
-                search.getSearch().put("userId", user.getUserId());
-                search.getSearch().put("roleIds", user.getRoleIds());
-                userRoleMapper.deleteUserRoleByUserId(search);//@param search 查询组件 | userId 用户Id
-                //3.改变为最新的postRole信息
-                rows = rows + userRoleMapper.batchUserRole(search);//@param search 万用组件 | userId 用户Id | roleIds 角色Ids
-            }
+        }
+        return userMapper.updateUser(user);//@param user 用户信息
+    }
+
+    /**
+     * 修改保存用户-角色信息
+     *
+     * @param userId  用户Id
+     * @param roleIds 角色组Ids
+     * @return 结果
+     */
+    @Override
+    @Transactional
+    public int updateUserRole(Long userId, Long[] roleIds) {
+        // 执行用户-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
+        SysSearch search = new SysSearch();
+        // 删除原有的userRole信息
+        search.getSearch().put("userId", userId);
+        int rows = userRoleMapper.deleteUserRoleByUserId(search);//@param search 查询组件 | userId 用户Id
+        if (roleIds.length > 0) {
+            // 改变为最新的userRole信息
+            search.getSearch().put("roleIds", roleIds);
+            rows = rows + userRoleMapper.batchUserRole(search);//@param search 万用组件 | userId 用户Id | roleIds 角色Ids
         }
         return rows;
     }
@@ -183,33 +183,15 @@ public class SysUserServiceImpl implements ISysUserService {
      * 修改用户状态
      *
      * @param userId 用户Id
-     * @param postId 岗位Id
      * @param status 用户状态
      * @return 结果
      */
     @Override
-    public int updateUserStatus(Long userId, Long postId, String status) {
-        int rows = 1;
+    public int updateUserStatus(Long userId, String status) {
         SysSearch sear = new SysSearch();
-        sear.getSearch().put("postId", postId);
-        // 1.当岗位状态为禁用时，停用该用户
-        if (UserConstants.USER_NORMAL.equals(status)) {
-            SysPost post = postMapper.selectPostById(sear);//@param search 万用组件 | postId 岗位Id
-            if (UserConstants.POST_DISABLE.equals(post.getStatus())) {
-                status = UserConstants.USER_DISABLE;
-                try {
-                    rows = 0;
-                    throw new CustomException(String.format("%1$s岗位已停用,无法启用该用户", post.getPostName()));
-                } catch (Exception ignored) {
-                }
-            }
-        }
-        if (StringUtils.isNotNull(userId)) {
-            sear.getSearch().put("userId", userId);
-            sear.getSearch().put("status", status);
-            rows = userMapper.updateUserStatus(sear);//@param search 万用组件 | userId 用户Id | status 用户状态
-        }
-        return rows;
+        sear.getSearch().put("userId", userId);
+        sear.getSearch().put("status", status);
+        return userMapper.updateUserStatus(sear);//@param search 万用组件 | userId 用户Id | status 用户状态
     }
 
     /**
@@ -241,7 +223,7 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 重置用户密码
      *
-     * @param userId 用户Id
+     * @param userId   用户Id
      * @param password 密码
      * @return 结果
      */

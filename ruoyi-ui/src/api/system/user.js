@@ -44,6 +44,15 @@ export function delUser(userId) {
   })
 }
 
+// 修改用户-角色关系
+export function changeUserRole(data) {
+  return request({
+    url: '/system/user/changeUserRole',
+    method: 'put',
+    data: data
+  })
+}
+
 // 用户密码重置
 export function resetUserPwd(userId, password) {
   const data = {

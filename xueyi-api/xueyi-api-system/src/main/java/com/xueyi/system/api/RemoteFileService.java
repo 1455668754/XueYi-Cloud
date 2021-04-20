@@ -17,8 +17,7 @@ import com.xueyi.system.api.factory.RemoteFileFallbackFactory;
  * @originalAuthor ruoyi
  */
 @FeignClient(contextId = "remoteFileService", value = ServiceNameConstants.FILE_SERVICE, fallbackFactory = RemoteFileFallbackFactory.class)
-public interface RemoteFileService
-{
+public interface RemoteFileService {
     /**
      * 上传文件
      *

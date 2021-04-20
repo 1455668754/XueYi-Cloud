@@ -60,14 +60,23 @@ public interface ISysUserService {
     public int updateUser(SysUser user);
 
     /**
+     * 修改保存用户-角色信息
+     *
+     * @param userId  用户Id
+     * @param roleIds 角色组Ids
+     * @return 结果
+     */
+    public int updateUserRole(Long userId, Long[] roleIds);
+
+    /**
      * 修改用户状态
      *
      * @param userId 用户Id
-     * @param postId 岗位Id
      * @param status 用户状态
      * @return 结果
      */
-    public int updateUserStatus(Long userId, Long postId, String status);
+    public int updateUserStatus(Long userId, String status);
+
     /**
      * 修改用户基本信息
      *
@@ -88,7 +97,7 @@ public interface ISysUserService {
     /**
      * 重置用户密码
      *
-     * @param userId 用户Id
+     * @param userId   用户Id
      * @param password 密码
      * @return 结果
      */

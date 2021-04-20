@@ -253,4 +253,23 @@ public class SysPostServiceImpl implements ISysPostService {
         }
         return UserConstants.UNIQUE;
     }
+
+    /**
+     * 校验岗位状态
+     *
+     * @param postId 岗位Id
+     * @return 结果
+     */
+    @Override
+    public String checkPostStatus(Long postId){
+        if (StringUtils.isNotNull(postId)) {
+            SysSearch search = new SysSearch();
+            search.getSearch().put("postId", postId);
+            SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+            if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
+                return UserConstants.POST_DISABLE;
+            }
+        }
+        return UserConstants.POST_NORMAL;
+    }
 }

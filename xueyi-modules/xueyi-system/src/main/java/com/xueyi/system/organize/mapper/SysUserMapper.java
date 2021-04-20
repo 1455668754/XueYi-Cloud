@@ -57,11 +57,12 @@ public interface SysUserMapper {
 
     /**
      * 新增用户信息
-     * 访问控制 empty 租户更新（无前缀）(控制器在SysUserServiceImpl层 insertUser方法)
+     * 访问控制 empty 租户更新（无前缀）
      *
      * @param user 用户信息
      * @return 结果
      */
+    @DataScope(updateEnterpriseAlias = "empty")
     public int insertUser(SysUser user);
 
     /**

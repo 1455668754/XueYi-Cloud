@@ -335,7 +335,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
             SysSearch search = new SysSearch();
             search.getSearch().put("deptId", deptId);
             SysDept info = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
-            if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
+            if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
                 return UserConstants.DEPT_DISABLE;
             }
         }
