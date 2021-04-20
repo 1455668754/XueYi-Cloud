@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.system.api.organize.SysDept;
+import com.xueyi.system.organize.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +38,9 @@ import com.xueyi.system.organize.service.ISysPostService;
 public class SysPostController extends BaseController {
     @Autowired
     private ISysPostService postService;
+
+    @Autowired
+    private ISysDeptService deptService;
 
     /**
      * 获取岗位列表
@@ -90,10 +96,24 @@ public class SysPostController extends BaseController {
      * 修改岗位-角色关系
      */
     @PreAuthorize(hasPermi = "system:role:set")
-    @Log(title = "部门管理", businessType = BusinessType.UPDATE)
+    @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changePostRole")
     public AjaxResult editPostRole(@Validated @RequestBody SysPost post) {
         return toAjax(postService.updatePostRole(post.getPostId(), post.getRoleIds()));
+    }
+
+    /**
+     * 状态修改
+     */
+    @PreAuthorize(hasPermi = "system:post:edit")
+    @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeStatus")
+    public AjaxResult changeStatus(@RequestBody SysPost post) {
+        if (StringUtils.equals(UserConstants.POST_NORMAL, post.getStatus())
+                && UserConstants.DEPT_DISABLE.equals(deptService.checkDeptStatus(post.getDeptId()))) {
+            return AjaxResult.error("启用失败，该岗位的归属部门已被禁用！");
+        }
+        return toAjax(postService.updatePostStatus(post.getPostId(),post.getStatus()));
     }
 
     /**

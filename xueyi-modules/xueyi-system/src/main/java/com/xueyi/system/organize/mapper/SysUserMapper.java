@@ -84,7 +84,7 @@ public interface SysUserMapper {
     public int updateUserStatus(SysSearch search);
 
     /**
-     * 根据岗位Id修改用户状态
+     * 根据岗位Id修改用户状态（just禁用）
      * 访问控制 empty 租户更新（无前缀）
      *
      * @param search 万用组件 | postId 岗位Id | status 用户状态
@@ -93,7 +93,7 @@ public interface SysUserMapper {
     public int updateUserStatusByPostId(SysSearch search);
 
     /**
-     * 根据部门Id修改用户状态
+     * 根据部门Id修改用户状态（just禁用）
      * 访问控制 empty 租户更新（无前缀）
      *
      * @param search 万用组件 | deptId 部门Id | status 用户状态

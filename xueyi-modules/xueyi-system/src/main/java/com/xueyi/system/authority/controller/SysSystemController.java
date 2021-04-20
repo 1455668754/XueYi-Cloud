@@ -61,7 +61,6 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysSystem sysSystem) {
-        System.out.println(sysSystem);
         return toAjax(systemService.insertSystem(sysSystem));
     }
 
@@ -72,7 +71,6 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysSystem sysSystem) {
-        System.out.println(sysSystem);
         return toAjax(systemService.updateSystem(sysSystem));
     }
 
@@ -84,7 +82,6 @@ public class SysSystemController extends BaseController {
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysSystem sysSystem)
     {
-        System.out.println(sysSystem);
         return toAjax(systemService.updateSystemStatus(sysSystem));
     }
 
@@ -95,7 +92,6 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{systemIds}")
     public AjaxResult remove(@PathVariable Long[] systemIds) {
-        System.out.println(Arrays.toString(systemIds));
         return toAjax(systemService.deleteSystemByIds(systemIds));
     }
 }

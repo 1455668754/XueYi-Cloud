@@ -120,7 +120,16 @@
           <el-table-column label="归属部门" align="center" prop="dept.deptName" key="dept.deptName"
                            v-if="columns[2].visible" :show-overflow-tooltip="true"/>
           <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" key="status"
-                           v-if="columns[3].visible" :show-overflow-tooltip="true"/>
+                           v-if="columns[3].visible" :show-overflow-tooltip="true">
+            <template slot-scope="scope">
+              <el-switch
+                v-model="scope.row.status"
+                active-value="0"
+                inactive-value="1"
+                @change="handleStatusChange(scope.row)"
+              ></el-switch>
+            </template>
+          </el-table-column>
           <el-table-column label="创建时间" align="center" prop="createTime" width="180" key="createTime"
                            v-if="columns[4].visible" :show-overflow-tooltip="true">
             <template slot-scope="scope">
@@ -259,7 +268,7 @@
 </template>
 
 <script>
-import {listPost, getPost, delPost, addPost, updatePost, changePostRole} from "@/api/system/post";
+import {listPost, getPost, delPost, addPost, updatePost, changePostRole, changePostStatus} from "@/api/system/post";
 import {treeSelect} from "@/api/system/dept";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -442,6 +451,22 @@ export default {
       });
       optionSelect().then(response => {
         this.roleOptions = response.data;
+      });
+    },
+    // 岗位状态修改
+    handleStatusChange(row) {
+      let msg = row.status === "0" ? "启用" : "停用";
+      let text = row.status === "0" ? '启用岗位"' + row.postName + '"吗?' : '停用岗位"' + row.postName + '"吗?停用岗位会同步停用所有归属用户，且归属用户将无法启用！';
+      this.$confirm('确认要' + text, "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return changePostStatus(row.postId, row.deptId, row.status);
+      }).then(() => {
+        this.msgSuccess(msg + "成功");
+      }).catch(function () {
+        row.status = row.status === "0" ? "1" : "0";
       });
     },
     /** 提交按钮 */

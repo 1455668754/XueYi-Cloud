@@ -74,15 +74,6 @@ public interface SysDeptMapper {
     public int updateDeptStatus(SysSearch search);
 
     /**
-     * 修改所在部门的父级部门状态
-     * 访问控制 empty 租户更新（无前缀）
-     *
-     * @param dept 部门
-     */
-    @DataScope(updateEnterpriseAlias = "empty")
-    public void updateAncestorsDeptStatus(SysDept dept);
-
-    /**
      * 修改子元素关系
      * 访问控制 empty 租户更新（无前缀）
      *

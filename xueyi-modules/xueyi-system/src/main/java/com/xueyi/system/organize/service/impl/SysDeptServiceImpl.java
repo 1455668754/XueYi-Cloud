@@ -94,7 +94,6 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     @Transactional
     public int updateDept(SysDept dept) {
-        int rows;
         SysSearch search = new SysSearch();
         search.getSearch().put("deptId", dept.getParentId());
         SysDept newParentDept = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
@@ -107,18 +106,18 @@ public class SysDeptServiceImpl implements ISysDeptService {
             updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
         }
         // 欲启用部门时判断上级部门是否启用，未启用则设置本部门为禁用状态
-        if(UserConstants.DEPT_NORMAL.equals(dept.getStatus())){
-            if(UserConstants.DEPT_DISABLE.equals(checkParentDeptStatus(dept.getParentId()))){
+        if (UserConstants.DEPT_NORMAL.equals(dept.getStatus())) {
+            if (UserConstants.DEPT_DISABLE.equals(checkDeptStatus(dept.getParentId()))) {
                 dept.setStatus(UserConstants.DEPT_DISABLE);
-                try{
+                try {
                     throw new CustomException(String.format("%1$s上级部门已停用,无法启用该部门", dept.getDeptName()));
                 } catch (Exception ignored) {
                 }
+                updateDeptStatus(dept.getDeptId(),dept.getStatus());//修改保存部门状态
             }
         }
-        //执行部门状态变更
-        rows = deptMapper.updateDept(dept);//@param dept 部门信息
-        return rows;
+        // 执行部门状态变更
+        return deptMapper.updateDept(dept);//@param dept 部门信息
     }
 
     /**
@@ -131,13 +130,13 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     @Transactional
     public int updateDeptRole(Long deptId, Long[] roleIds) {
-        //执行部门-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
+        // 执行部门-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
         SysSearch search = new SysSearch();
-        //删除原有的deptRole信息
+        // 删除原有的deptRole信息
         search.getSearch().put("deptId", deptId);
         int rows = deptRoleMapper.deleteDeptRoleByDeptId(search);//@param search 万用组件 | deptId 部门Id
         if (roleIds.length > 0) {
-            //改变为最新的deptRole信息
+            // 改变为最新的deptRole信息
             search.getSearch().put("roleIds", roleIds);
             rows = rows + deptRoleMapper.batchDeptRole(search);//@param search 万用组件 | deptId 部门Id | roleIds 角色Ids(Long[])
         }
@@ -147,39 +146,27 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 修改保存部门状态
      *
-     * @param deptId   部门Id
-     * @param status   部门状态
+     * @param deptId 部门Id
+     * @param status 部门状态
      * @return 结果
      */
     @Override
     @Transactional
     public int updateDeptStatus(Long deptId, String status) {
-        //操作逻辑：1.当欲设置禁用时，同步执行禁用本岗位所属岗位、用户
+        // 操作逻辑：当欲设置禁用时，同步执行禁用本部门所属岗位、用户
         int rows;
         SysSearch sear = new SysSearch();
         sear.getSearch().put("deptId", deptId);
         sear.getSearch().put("status", status);
-        // 3.变更部门状态
+        // 变更部门状态
         rows = deptMapper.updateDeptStatus(sear);//@param search 万用组件 | deptId 部门Id | status 部门状态
-        // 1.欲停用时停用本部门所有岗位/用户的状态
-        if (rows>0 && UserConstants.DEPT_DISABLE.equals(status)) {
+        // 欲停用时停用本部门所有岗位/用户的状态
+        if (rows > 0 && UserConstants.DEPT_DISABLE.equals(status)) {
             rows = rows + postMapper.updatePostStatusByDeptId(sear);//@param search 万用组件 | deptId 部门Id | status 用户状态
             rows = rows + userMapper.updateUserStatusByDeptId(sear);//@param search 万用组件 | deptId 部门Id | status 用户状态
         }
 
         return rows;
-    }
-
-    /**
-     * 修改该部门的父级部门状态
-     *
-     * @param dept 当前部门
-     */
-    private void updateParentDeptStatus(SysDept dept) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("deptId", dept.getDeptId());
-        dept = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
-        deptMapper.updateAncestorsDeptStatus(dept);//@param dept 部门
     }
 
     /**
@@ -339,15 +326,16 @@ public class SysDeptServiceImpl implements ISysDeptService {
     }
 
     /**
-     * 校验父级部门状态
+     * 校验部门状态
      *
-     * @param parentId 父级Id
+     * @param deptId 部门Id
      * @return 结果
      */
-    public String checkParentDeptStatus(Long parentId) {
-        if (StringUtils.isNotNull(parentId) && parentId != 0L) {
+    @Override
+    public String checkDeptStatus(Long deptId) {
+        if (StringUtils.isNotNull(deptId) && deptId != 0L) {
             SysSearch search = new SysSearch();
-            search.getSearch().put("deptId", parentId);
+            search.getSearch().put("deptId", deptId);
             SysDept info = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
             if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
                 return UserConstants.DEPT_DISABLE;

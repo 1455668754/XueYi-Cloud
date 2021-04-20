@@ -233,7 +233,6 @@ import {
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import {optionSelect} from "@/api/system/role";
-import {changeUserStatus} from "@/api/system/user";
 
 export default {
   name: "Dept",

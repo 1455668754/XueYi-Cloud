@@ -157,17 +157,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</update>
 
-	<update id="updateAncestorsDeptStatus" parameterType="SysDept">
-		update sys_dept
-		<trim prefix="SET" suffixOverrides=",">
-			<if test="status != null and status != ''">			status = #{status}			,</if>
-			<if test="updateBy != null">		                update_by = #{updateBy}		,</if>
-		</trim>
-		where dept_id in (${ancestors})
-		<!-- 数据范围过滤 -->
-		${params.updateScope}
-	</update>
-
 	<update id="updateDeptChildren" parameterType="com.xueyi.system.api.utilTool.SysSearch">
 		update sys_dept set ancestors =
 		<foreach collection="search.depts" item="item" index="index"

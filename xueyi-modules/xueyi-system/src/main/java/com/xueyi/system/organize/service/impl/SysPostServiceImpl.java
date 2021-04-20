@@ -71,13 +71,19 @@ public class SysPostServiceImpl implements ISysPostService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int insertPost(SysPost post) {
-        // 1.更新岗位状态 | t==0时代表归属部门被禁用，则该岗位也需变成禁用状态
-        System.out.println(post);
-        int t = updatePostStatus(post.getPostId(), post.getDeptId(), post.getStatus());
-        if (t == 0) {
-            post.setStatus(UserConstants.POST_DISABLE);
+        // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
+        SysSearch search = new SysSearch();
+        search.getSearch().put("deptId", post.getDeptId());
+        if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
+            SysDept info = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
+            if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
+                post.setStatus(UserConstants.POST_DISABLE);
+                try {
+                    throw new CustomException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
+                } catch (Exception ignored) {
+                }
+            }
         }
         return postMapper.insertPost(post);//@param post 岗位信息
     }
@@ -91,11 +97,21 @@ public class SysPostServiceImpl implements ISysPostService {
     @Override
     @Transactional
     public int updatePost(SysPost post) {
-        // 1.更新岗位状态 | t==0时代表归属部门被禁用，则该岗位也需变成禁用状态
-        int t = updatePostStatus(post.getPostId(), post.getDeptId(), post.getStatus());
-        if (t == 0) {
-            post.setStatus(UserConstants.POST_DISABLE);
+        // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
+        SysSearch search = new SysSearch();
+        search.getSearch().put("deptId", post.getDeptId());
+        if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
+            SysDept info = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
+            if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
+                post.setStatus(UserConstants.POST_DISABLE);
+                try {
+                    throw new CustomException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
+                } catch (Exception ignored) {
+                }
+                updatePostStatus(post.getPostId(), post.getStatus());//修改保存岗位状态
+            }
         }
+        // 执行岗位状态变更
         return postMapper.updatePost(post);//@param post 岗位信息
     }
 
@@ -109,13 +125,13 @@ public class SysPostServiceImpl implements ISysPostService {
     @Override
     @Transactional
     public int updatePostRole(Long postId, Long[] roleIds) {
-        //执行部门-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
+        // 执行部门-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
         SysSearch search = new SysSearch();
-        //删除原有的postRole信息
+        // 删除原有的postRole信息
         search.getSearch().put("postId", postId);
         int rows = postRoleMapper.deletePostRoleByPostId(search);//@param search 查询组件 | postId 岗位Id
         if (roleIds.length > 0) {
-            //改变为最新的postRole信息
+            // 改变为最新的postRole信息
             search.getSearch().put("roleIds", roleIds);
             rows = rows + postRoleMapper.batchPostRole(search);//@param search 万用组件 | postId 岗位Id | roleIds 角色Ids
         }
@@ -126,36 +142,22 @@ public class SysPostServiceImpl implements ISysPostService {
      * 修改保存岗位状态
      *
      * @param postId 岗位Id
-     * @param deptId 部门Id
      * @param status 部门状态
      * @return 结果
      */
     @Override
     @Transactional
-    public int updatePostStatus(Long postId, Long deptId, String status) {
-        int rows = 1;
+    public int updatePostStatus(Long postId, String status) {
+        //操作逻辑：当欲设置禁用时，同步执行禁用本岗位所属用户
+        int rows;
         SysSearch sear = new SysSearch();
-        // 1.当部门状态为禁用时，停用该岗位
-        if (UserConstants.POST_NORMAL.equals(status)) {
-            sear.getSearch().put("deptId", deptId);
-            SysDept dept = deptMapper.selectDeptById(sear);//@param search 万用组件 | deptId 部门Id
-            if (UserConstants.DEPT_DISABLE.equals(dept.getStatus())) {
-                status = UserConstants.POST_DISABLE;
-                try {
-                    rows = 0;
-                    throw new CustomException(String.format("%1$s已停用,无法启用该岗位", dept.getDeptName()));
-                } catch (Exception ignored) {
-                }
-            }
-        }
-        if (StringUtils.isNotNull(postId)) {
-            sear.getSearch().put("postId", postId);
-            sear.getSearch().put("status", status);
-            // 2.停用时停用该岗位所有用户
-            if (UserConstants.POST_DISABLE.equals(status)) {
-                rows = userMapper.updateUserStatusByPostId(sear);//@param search 万用组件 | postId 岗位Id | status 用户状态
-            }
-            rows = postMapper.updatePostStatus(sear);//@param search 万用组件 | postId 岗位Id | status 岗位状态
+        sear.getSearch().put("postId", postId);
+        sear.getSearch().put("status", status);
+        // 变更岗位状态
+        rows = postMapper.updatePostStatus(sear);//@param search 万用组件 | postId 岗位Id | status 岗位状态
+        // 欲停用时停用本岗位所有用户的状态
+        if (rows > 0 && UserConstants.POST_DISABLE.equals(status)) {
+            rows = rows + userMapper.updateUserStatusByPostId(sear);//@param search 万用组件 | postId 岗位Id | status 用户状态
         }
         return rows;
     }

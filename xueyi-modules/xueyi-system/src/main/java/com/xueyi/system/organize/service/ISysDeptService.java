@@ -132,12 +132,12 @@ public interface ISysDeptService {
     public int checkNormalChildrenCount(Long deptId);
 
     /**
-     * 校验父级部门状态
+     * 校验部门状态
      *
-     * @param parentId 父级Id
+     * @param deptId 部门Id
      * @return 结果
      */
-    public String checkParentDeptStatus(Long parentId);
+    public String checkDeptStatus(Long deptId);
 
     /**
      * 构建前端所需要树结构

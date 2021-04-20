@@ -212,7 +212,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="search.status != null and search.status != ''">	      status = #{search.status}	     ,</if>
 			<if test="updateBy != null">		                              update_by = #{updateBy}		 ,</if>
 		</trim>
-		where post_id = #{search.postId}
+		where post_id = #{search.postId} and status = 0
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</update>
@@ -223,7 +223,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="search.status != null and search.status != ''">	      status = #{search.status}	     ,</if>
 			<if test="updateBy != null">		                              update_by = #{updateBy}		 ,</if>
 		</trim>
-		where dept_id = #{search.deptId}
+		where dept_id = #{search.deptId} and status = 0
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</update>

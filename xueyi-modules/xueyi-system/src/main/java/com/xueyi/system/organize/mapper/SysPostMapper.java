@@ -63,7 +63,7 @@ public interface SysPostMapper {
     public int updatePostStatus(SysSearch search);
 
     /**
-     * 根据部门Id修改岗位状态
+     * 根据部门Id修改岗位状态（just禁用）
      * 访问控制 empty 租户更新（无前缀）
      *
      * @param search 万用组件 | deptId 部门Id | status 用户状态

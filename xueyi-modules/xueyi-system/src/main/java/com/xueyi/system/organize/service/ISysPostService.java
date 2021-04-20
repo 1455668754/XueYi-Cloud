@@ -55,11 +55,10 @@ public interface ISysPostService {
      * 修改保存岗位状态
      *
      * @param postId 岗位Id
-     * @param deptId 部门Id
      * @param status 部门状态
      * @return 结果
      */
-    public int updatePostStatus(Long postId, Long deptId, String status);
+    public int updatePostStatus(Long postId, String status);
 
     /**
      * 删除岗位信息
