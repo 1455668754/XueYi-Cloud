@@ -18,7 +18,7 @@ public class TreeSelect implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 节点ID
+     * 节点Id
      */
     private Long id;
 

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.organize.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -138,5 +139,14 @@ public class SysPostController extends BaseController {
         List<SysPost> list = postService.selectPostList(post);
         ExcelUtil<SysPost> util = new ExcelUtil<SysPost>(SysPost.class);
         util.exportExcel(response, list, "岗位数据");
+    }
+
+    /**
+     * 获取部门/岗位下拉树列表
+     */
+    @GetMapping("/treeSelect")
+    public AjaxResult treeSelect(SysDept dept) {
+
+        return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
     }
 }
