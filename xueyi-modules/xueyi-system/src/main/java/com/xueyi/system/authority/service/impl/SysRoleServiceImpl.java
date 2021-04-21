@@ -113,7 +113,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int insertRole(SysRole role) {
         return roleMapper.insertRole(role);//@param role 角色信息
     }
@@ -125,7 +124,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int updateRole(SysRole role) {
         return roleMapper.updateRole(role);//@param role 角色信息
     }
