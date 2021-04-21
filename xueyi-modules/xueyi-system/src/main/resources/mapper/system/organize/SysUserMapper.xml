@@ -94,8 +94,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
 		<include refid="selectVo"/>
 		where 1 = 1
+		<if test="postId != null and postId != 0">
+			AND u.post_id = #{postId}
+		</if>
+		<if test="userCode != null and userCode != ''">
+			AND u.user_code like concat('%', #{userCode}, '%')
+		</if>
 		<if test="userName != null and userName != ''">
 			AND u.user_name like concat('%', #{userName}, '%')
+		</if>
+		<if test="nickName != null and nickName != ''">
+			AND u.nick_name like concat('%', #{nickName}, '%')
 		</if>
 		<if test="status != null and status != ''">
 			AND u.status = #{status}

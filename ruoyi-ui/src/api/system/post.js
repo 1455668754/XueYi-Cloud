@@ -9,6 +9,14 @@ export function listPost(query) {
   })
 }
 
+// 查询部门下拉树结构
+export function treeSelect() {
+  return request({
+    url: '/system/post/treeSelect',
+    method: 'get'
+  })
+}
+
 // 查询岗位详细
 export function getPost(postId) {
   return request({

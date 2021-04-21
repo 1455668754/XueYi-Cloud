@@ -110,7 +110,7 @@ drop table if exists xy_system;
 create table xy_system (
   system_id		            bigint	            not null                                comment '系统Id',
   system_name		        varchar(50)	        not null	                            comment '系统名称',
-  image_url                 json	            not null	        	                comment '图片地址',
+  image_url                 json	            not null 	        	                comment '图片地址',
   type		                char(1)	            not null default '1'	                comment '跳转类型(0内部跳转 1外部跳转)',
   route                     varchar(500)        not null	                            comment '跳转路由',
   sort                      tinyint             not null default 0                      comment '显示顺序',
@@ -128,12 +128,7 @@ create table xy_system (
 # ----------------------------
 # 初始化-租户信息表数据
 # ----------------------------
-insert into xy_system (system_id, system_name, image_url, route, tenant_id)
-values (1,'系统1', null,'www', 0),
-       (2,'系统2', null,'www', 0),
-       (3,'系统3', null,'www', 0),
-       (4,'系统4', null,'www', 0),
-       (5,'系统5', null,'www', 0);
+
 
 -- ----------------------------
 -- 6、角色信息表

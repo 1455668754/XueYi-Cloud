@@ -293,7 +293,7 @@ public class SysPostServiceImpl implements ISysPostService {
             deptPost = new deptPostVo();
             deptPost.setUid(dept.getDeptId());
             deptPost.setFUid(dept.getParentId());
-            deptPost.setName(dept.getDeptName());
+            deptPost.setName("部门|"+dept.getDeptName());
             deptPost.setStatus(dept.getStatus());
             deptPost.setType("0");
             deptPostList.add(deptPost);
@@ -302,7 +302,7 @@ public class SysPostServiceImpl implements ISysPostService {
             deptPost = new deptPostVo();
             deptPost.setUid(post.getPostId());
             deptPost.setFUid(post.getDeptId());
-            deptPost.setName(post.getPostName());
+            deptPost.setName("岗位|"+post.getPostName());
             deptPost.setStatus(post.getStatus());
             deptPost.setType("1");
             deptPostList.add(deptPost);

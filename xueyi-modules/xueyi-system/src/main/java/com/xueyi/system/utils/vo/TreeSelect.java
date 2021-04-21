@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.organize.domain.deptPostVo;
@@ -65,7 +66,7 @@ public class TreeSelect implements Serializable {
     public TreeSelect(deptPostVo deptPostVo) {
         this.id = deptPostVo.getUid();
         this.label = deptPostVo.getName();
-        this.status = deptPostVo.getStatus();
+        this.status = (deptPostVo.getStatus().equals("1") || (StringUtils.isEmpty(deptPostVo.getChildren())) && deptPostVo.getType().equals("0"))?"1":"0";
         this.type = deptPostVo.getType();
         this.children = deptPostVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }

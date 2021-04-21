@@ -119,14 +119,13 @@ public class SysUserServiceImpl implements ISysUserService {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
         SysSearch search = new SysSearch();
         search.getSearch().put("postId", user.getPostId());
-        if (UserConstants.USER_NORMAL.equals(user.getStatus())) {
-            SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
-            if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
-                user.setStatus(UserConstants.USER_DISABLE);
-                try {
-                    throw new CustomException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
-                } catch (Exception ignored) {
-                }
+        SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+        user.setDeptId(info.getDeptId());
+        if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
+            user.setStatus(UserConstants.USER_DISABLE);
+            try {
+                throw new CustomException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
+            } catch (Exception ignored) {
             }
         }
         return userMapper.insertUser(user);//@param user 用户信息
@@ -143,14 +142,13 @@ public class SysUserServiceImpl implements ISysUserService {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
         SysSearch search = new SysSearch();
         search.getSearch().put("postId", user.getPostId());
-        if (UserConstants.USER_NORMAL.equals(user.getStatus())) {
-            SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
-            if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
-                user.setStatus(UserConstants.USER_DISABLE);
-                try {
-                    throw new CustomException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
-                } catch (Exception ignored) {
-                }
+        SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+        user.setDeptId(info.getDeptId());
+        if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
+            user.setStatus(UserConstants.USER_DISABLE);
+            try {
+                throw new CustomException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
+            } catch (Exception ignored) {
             }
         }
         return userMapper.updateUser(user);//@param user 用户信息
