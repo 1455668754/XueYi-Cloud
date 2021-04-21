@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.organize.domain.deptPostVo;
 
 /**
  * Treeselect树结构实体类
@@ -59,6 +60,14 @@ public class TreeSelect implements Serializable {
         this.label = menu.getMenuName();
         this.status = menu.getStatus();
         this.children = menu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(deptPostVo deptPostVo) {
+        this.id = deptPostVo.getUid();
+        this.label = deptPostVo.getName();
+        this.status = deptPostVo.getStatus();
+        this.type = deptPostVo.getType();
+        this.children = deptPostVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getId() {

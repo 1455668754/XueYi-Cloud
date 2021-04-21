@@ -2,7 +2,10 @@ package com.xueyi.system.organize.service;
 
 import java.util.List;
 
+import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.api.organize.SysPost;
+import com.xueyi.system.organize.domain.deptPostVo;
+import com.xueyi.system.utils.vo.TreeSelect;
 
 /**
  * 岗位信息 服务层
@@ -111,4 +114,20 @@ public interface ISysPostService {
      * @return 结果
      */
     public String checkPostStatus(Long postId);
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @return 下拉树结构列表
+     */
+    public List<TreeSelect> buildDeptPostTreeSelect();
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param deptPostList 部门-岗位数组装列表
+     * @return 树结构列表
+     */
+    public List<deptPostVo> buildDeptPostTree(List<deptPostVo> deptPostList);
+
 }

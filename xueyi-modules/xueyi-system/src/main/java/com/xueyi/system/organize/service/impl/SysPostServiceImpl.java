@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.xueyi.system.api.organize.SysDept;
+import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
@@ -286,48 +287,53 @@ public class SysPostServiceImpl implements ISysPostService {
     public List<TreeSelect> buildDeptPostTreeSelect() {
         List<SysDept> deptList = deptMapper.selectDeptList(new SysDept());
         List<SysPost> postList = postMapper.selectPostList(new SysPost());
-        List<TreeSelect> treeSelects = new TreeList<>();
+        List<deptPostVo> deptPostList = new TreeList<>();
+        deptPostVo deptPost;
         for (SysDept dept:deptList) {
-            TreeSelect tree = new TreeSelect();
-            tree.setId(dept.getDeptId());
-            tree.setLabel(dept.getDeptName());
-            tree.setStatus(dept.getStatus());
-            tree.setType("0");
+            deptPost = new deptPostVo();
+            deptPost.setUid(dept.getDeptId());
+            deptPost.setFUid(dept.getParentId());
+            deptPost.setName(dept.getDeptName());
+            deptPost.setStatus(dept.getStatus());
+            deptPost.setType("0");
+            deptPostList.add(deptPost);
         }
         for (SysPost post:postList) {
-            TreeSelect tree = new TreeSelect();
-            tree.setId(post.getDeptId());
-            tree.setLabel(post.getDeptName());
-            tree.setStatus(post.getStatus());
-            tree.setType("1");
+            deptPost = new deptPostVo();
+            deptPost.setUid(post.getPostId());
+            deptPost.setFUid(post.getDeptId());
+            deptPost.setName(post.getPostName());
+            deptPost.setStatus(post.getStatus());
+            deptPost.setType("1");
+            deptPostList.add(deptPost);
         }
-        List<SysDept> deptTrees = buildDeptPostTree(depts);
-        return deptTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
+        List<deptPostVo> trees = buildDeptPostTree(deptPostList);
+        return trees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     /**
      * 构建前端所需要树结构
      *
-     * @param depts 部门列表
+     * @param deptPostList 部门-岗位数组装列表
      * @return 树结构列表
      */
     @Override
-    public List<SysDept> buildDeptPostTree(List<SysDept> depts) {
-        List<SysDept> returnList = new ArrayList<SysDept>();
+    public List<deptPostVo> buildDeptPostTree(List<deptPostVo> deptPostList) {
+        List<deptPostVo> returnList = new ArrayList<deptPostVo>();
         List<Long> tempList = new ArrayList<Long>();
-        for (SysDept dept : depts) {
-            tempList.add(dept.getDeptId());
+        for (deptPostVo deptPostVo: deptPostList) {
+            tempList.add(deptPostVo.getUid());
         }
-        for (Iterator<SysDept> iterator = depts.iterator(); iterator.hasNext(); ) {
-            SysDept dept = (SysDept) iterator.next();
+        for (Iterator<deptPostVo> iterator = deptPostList.iterator(); iterator.hasNext(); ) {
+            deptPostVo deptPostVo = (deptPostVo) iterator.next();
             // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(dept.getParentId())) {
-                recursionFn(depts, dept);
-                returnList.add(dept);
+            if (!tempList.contains(deptPostVo.getFUid())) {
+                recursionFn(deptPostList, deptPostVo);
+                returnList.add(deptPostVo);
             }
         }
         if (returnList.isEmpty()) {
-            returnList = depts;
+            returnList = deptPostList;
         }
         return returnList;
     }
@@ -335,11 +341,11 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 递归列表
      */
-    private void recursionFn(List<SysDept> list, SysDept t) {
+    private void recursionFn(List<deptPostVo> list, deptPostVo t) {
         // 得到子节点列表
-        List<SysDept> childList = getChildList(list, t);
+        List<deptPostVo> childList = getChildList(list, t);
         t.setChildren(childList);
-        for (SysDept tChild : childList) {
+        for (deptPostVo tChild : childList) {
             if (hasChild(list, tChild)) {
                 recursionFn(list, tChild);
             }
@@ -349,22 +355,22 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 得到子节点列表
      */
-    private List<SysDept> getChildList(List<SysDept> list, SysDept t) {
-        List<SysDept> tlist = new ArrayList<SysDept>();
-        Iterator<SysDept> it = list.iterator();
+    private List<deptPostVo> getChildList(List<deptPostVo> list, deptPostVo t) {
+        List<deptPostVo> tList = new ArrayList<deptPostVo>();
+        Iterator<deptPostVo> it = list.iterator();
         while (it.hasNext()) {
-            SysDept n = (SysDept) it.next();
-            if (StringUtils.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getDeptId().longValue()) {
-                tlist.add(n);
+            deptPostVo n = (deptPostVo) it.next();
+            if (StringUtils.isNotNull(n.getFUid()) && n.getFUid().longValue() == t.getUid().longValue()) {
+                tList.add(n);
             }
         }
-        return tlist;
+        return tList;
     }
 
     /**
      * 判断是否有子节点
      */
-    private boolean hasChild(List<SysDept> list, SysDept t) {
+    private boolean hasChild(List<deptPostVo> list, deptPostVo t) {
         return getChildList(list, t).size() > 0;
     }
 }

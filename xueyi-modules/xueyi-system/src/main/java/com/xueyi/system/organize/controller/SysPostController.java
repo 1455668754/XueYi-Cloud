@@ -145,8 +145,7 @@ public class SysPostController extends BaseController {
      * 获取部门/岗位下拉树列表
      */
     @GetMapping("/treeSelect")
-    public AjaxResult treeSelect(SysDept dept) {
-
-        return AjaxResult.success(deptService.buildDeptTreeSelect(depts));
+    public AjaxResult treeSelect() {
+        return AjaxResult.success(postService.buildDeptPostTreeSelect());
     }
 }
