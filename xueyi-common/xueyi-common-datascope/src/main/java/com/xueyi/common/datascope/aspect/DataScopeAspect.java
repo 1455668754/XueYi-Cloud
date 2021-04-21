@@ -1,6 +1,7 @@
 package com.xueyi.common.datascope.aspect;
 
 import java.lang.reflect.Method;
+
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -29,8 +30,7 @@ import com.xueyi.system.api.model.LoginUser;
  */
 @Aspect
 @Component
-public class DataScopeAspect
-{
+public class DataScopeAspect {
     /**
      * 全部数据权限
      */
@@ -71,22 +71,18 @@ public class DataScopeAspect
 
     // 配置织入点
     @Pointcut("@annotation(com.xueyi.common.datascope.annotation.DataScope)")
-    public void dataScopePointCut()
-    {
+    public void dataScopePointCut() {
     }
 
     @Before("dataScopePointCut()")
-    public void doBefore(JoinPoint point) throws Throwable
-    {
+    public void doBefore(JoinPoint point) throws Throwable {
         handleDataScope(point);
     }
 
-    protected void handleDataScope(final JoinPoint joinPoint)
-    {
+    protected void handleDataScope(final JoinPoint joinPoint) {
         // 获得注解
         DataScope controllerDataScope = getAnnotationLog(joinPoint);
-        if (controllerDataScope == null)
-        {
+        if (controllerDataScope == null) {
             return;
         }
         // 获取当前的用户
@@ -182,7 +178,7 @@ public class DataScopeAspect
                     baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
                 }
                 if (StringUtils.isNotBlank(upSqlString.toString())) {
-
+                    //雪花ID生成
                     //终端ID
                     int workerId = RandomUtil.randomInt(0, 31);
                     //数据中心ID
@@ -190,6 +186,7 @@ public class DataScopeAspect
                     Snowflake snowflake = IdUtil.getSnowflake(workerId, datacenterId);
                     Long id = snowflake.nextId();
                     baseEntity.setId(id);
+
                     baseEntity.getParams().put(UPDATE_SCOPE, " AND (" + upSqlString.substring(4) + ")");
                 }
             }
@@ -199,14 +196,12 @@ public class DataScopeAspect
     /**
      * 是否存在注解，如果存在就获取
      */
-    private DataScope getAnnotationLog(JoinPoint joinPoint)
-    {
+    private DataScope getAnnotationLog(JoinPoint joinPoint) {
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
 
-        if (method != null)
-        {
+        if (method != null) {
             return method.getAnnotation(DataScope.class);
         }
         return null;

@@ -153,7 +153,7 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysUser user) {
-        userService.checkUserAllowed(tokenService.getLoginUser().getUserType());
+        userService.checkUserAllowed(user.getUserType());
         if (UserConstants.NOT_UNIQUE.equals(userService.checkUserCodeUnique(user.getUserId(), user.getUserCode()))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户编码已存在");
         } else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserId(), user.getUserName()))) {
@@ -175,6 +175,7 @@ public class SysUserController extends BaseController {
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeUserRole")
     public AjaxResult editUserRole(@Validated @RequestBody SysUser user) {
+        userService.checkUserAllowed(user.getUserType());
         return toAjax(userService.updateUserRole(user.getUserId(), user.getRoleIds()));
     }
 
@@ -185,7 +186,7 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/resetPwd")
     public AjaxResult resetPwd(@RequestBody SysUser user) {
-        userService.checkUserAllowed(tokenService.getLoginUser().getUserType());
+        userService.checkUserAllowed(user.getUserType());
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         return toAjax(userService.resetUserPwd(user.getUserId(), user.getPassword()));
     }
@@ -197,7 +198,7 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysUser user) {
-        userService.checkUserAllowed(tokenService.getLoginUser().getUserType());
+        userService.checkUserAllowed(user.getUserType());
         if (StringUtils.equals(UserConstants.USER_NORMAL, user.getStatus())
                 && UserConstants.POST_DISABLE.equals(postService.checkPostStatus(user.getPostId()))) {
             return AjaxResult.error("启用失败，该用户的归属岗位已被禁用！");

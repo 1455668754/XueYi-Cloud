@@ -165,9 +165,9 @@
         <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
           <el-table-column type="selection" width="50" align="center"/>
           <el-table-column label="用户编码" align="center" key="userCode" prop="userCode" v-if="columns[0].visible"/>
-          <el-table-column label="用户名称" align="center" key="userName" prop="userName" v-if="columns[1].visible"
+          <el-table-column label="用户账号" align="center" key="userName" prop="userName" v-if="columns[1].visible"
                            :show-overflow-tooltip="true"/>
-          <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible"
+          <el-table-column label="用户名称" align="center" key="nickName" prop="nickName" v-if="columns[2].visible"
                            :show-overflow-tooltip="true"/>
           <el-table-column label="部门|岗位" align="center" key="post.postName" v-if="columns[3].visible"
                            :show-overflow-tooltip="true">
@@ -195,8 +195,7 @@
             label="操作"
             align="center"
             width="160"
-            class-name="small-padding fixed-width"
-          >
+            class-name="small-padding fixed-width">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -231,7 +230,6 @@
                 v-hasPermi="['system:user:remove']"
               >删除
               </el-button>
-
             </template>
           </el-table-column>
         </el-table>
@@ -423,6 +421,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      // 选中数组名称
+      idsText:[],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -522,7 +522,7 @@ export default {
             trigger: ["blur", "change"]
           }
         ],
-        phonenumber: [
+        phone: [
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
             message: "请输入正确的手机号码",
@@ -639,7 +639,8 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.userId);
-      this.single = selection.length != 1;
+      this.idsText = selection.map(item => item.nickName);
+      this.single = selection.length !== 1;
       this.multiple = !selection.length;
     },
     /** 新增按钮操作 */
@@ -743,7 +744,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userIds = row.userId || this.ids;
-      this.$confirm('是否确认删除用户编号为"' + userIds + '"的数据项?', "警告", {
+      const text = row.nickName || this.idsText;
+      this.$confirm('是否确认删除用户"' + text + '"?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
