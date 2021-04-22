@@ -1,14 +1,24 @@
 ## 平台简介
 
-若依是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
+目前主要做了五块：
+1.共享多租户；
+2.租户独立素材模块（各租户的素材建档，统一管理）；
+3.重置角色权限，部门-岗位-用户层级管理，上级禁用时同步禁用所有下级；
+4.建立模块组，建立多前端时可以作为通用入口，同时模块组与菜单组关联，如用统一后台多前端模式可以通过模块-菜单方式进行控制， 不同前端显示对应前端模块的菜单；
+5.重构权限控制，角色-模块-菜单控制模式，同时角色-部门|角色-岗位|角色-用户多种角色授权方式，岗位继承部门角色，用户继承岗位、部门角色。
 
-* 采用前后端分离的模式，微服务版本前端(基于 [RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue))。
+基于本系统还有许多内容是我想要加入进来的，但限于时间问题，后续慢慢更新进来，刚发布初期可能存在一些bug，如遇到欢迎提出Issues，看到会进行解决。
+
+关于文档这块，近期有时间会更新上来。
+
+（暂时写这么多，等1.1版本发布再来更新这个）
+
+同时也非常感谢ruoyi大佬。
+
+* 采用前后端分离的模式，微服务版本前端。
 * 后端采用Spring Boot、Spring Cloud & Alibaba。
 * 注册中心、配置中心选型Nacos，权限认证使用Redis。
 * 流量控制框架选型Sentinel，分布式事务选型Seata。
-* 如需不分离应用，请移步 [RuoYi](https://gitee.com/y_project/RuoYi)，如需分离应用，请移步 [RuoYi-Vue](https://gitee.com/y_project/RuoYi-Vue)
-* 阿里云折扣场：[点我进入](http://aly.ruoyi.vip)，腾讯云秒杀场：[点我进入](http://txy.ruoyi.vip)&nbsp;&nbsp;
-* 阿里云优惠券：[点我领取](https://www.aliyun.com/minisite/goods?userCode=brki8iof&share_source=copy_link)，腾讯云优惠券：[点我领取](https://cloud.tencent.com/redirect.php?redirect=1025&cps_key=198c8df2ed259157187173bc7f4f32fd&from=console)&nbsp;&nbsp;
 
 #### 友情链接 [若依/RuoYi-Cloud](https://gitee.com/zhangmrit/ruoyi-cloud) Ant Design版本。
 
@@ -111,8 +121,3 @@ com.ruoyi
         <td><img src="https://oscimg.oschina.net/oscnet/up-5e4daac0bb59612c5038448acbcef235e3a.png"/></td>
     </tr>
 </table>
-
-
-## 若依微服务交流群
-
-QQ群： [![加入QQ群](https://img.shields.io/badge/已满-42799195-blue.svg)](https://jq.qq.com/?_wv=1027&k=yqInfq0S) [![加入QQ群](https://img.shields.io/badge/已满-170157040-blue.svg)](https://jq.qq.com/?_wv=1027&k=Oy1mb3p8) [![加入QQ群](https://img.shields.io/badge/已满-130643120-blue.svg)](https://jq.qq.com/?_wv=1027&k=rvxkJtXK) [![加入QQ群](https://img.shields.io/badge/225920371-blue.svg)](https://jq.qq.com/?_wv=1027&k=0Ck3PvTe) 点击按钮入群。
