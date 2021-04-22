@@ -11,6 +11,8 @@ import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.annotation.Excel.ColumnType;
 import com.xueyi.common.core.web.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 角色表 sys_role
  *
@@ -57,6 +59,9 @@ public class SysRole extends BaseEntity
 
     /** 菜单组（菜单权限） */
     private Long[] menuIds;
+
+    /** 部门-岗位对象 */
+    private List<Long> deptPostIds;
 
     /** 部门组（数据权限） */
     private Long[] deptIds;
@@ -170,6 +175,14 @@ public class SysRole extends BaseEntity
 
     public void setMenuIds(Long[] menuIds) {
         this.menuIds = menuIds;
+    }
+
+    public List<Long> getDeptPostIds() {
+        return deptPostIds;
+    }
+
+    public void setDeptPostIds(List<Long> deptPostIds) {
+        this.deptPostIds = deptPostIds;
     }
 
     public Long[] getDeptIds() {

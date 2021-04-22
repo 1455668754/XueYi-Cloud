@@ -145,6 +145,13 @@
             size="mini"
             type="text"
             icon="el-icon-circle-check"
+            @click="handleMenuScope(scope.row)"
+            v-hasPermi="['system:role:edit']"
+          >菜单配置</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-circle-check"
             @click="handleDataScope(scope.row)"
             v-hasPermi="['system:role:edit']"
           >数据权限</el-button>
@@ -216,7 +223,7 @@
     </el-dialog>
 
     <!-- 分配角色菜单配置对话框 -->
-    <el-dialog :title="title" :visible.sync="openMenu" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="openMenuScope" width="500px" append-to-body>
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="24">
@@ -302,6 +309,7 @@
 import { listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus } from "@/api/system/role";
 import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
 import { treeSelect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
+import { treeSelect as deptPostTreeSelect } from "@/api/system/post";
 
 export default {
   name: "Role",
@@ -327,7 +335,7 @@ export default {
       // 是否显示弹出层
       open: false,
       // 是否显示弹出层（菜单配置）
-      openMenu:false,
+      openMenuScope:false,
       // 是否显示弹出层（数据权限）
       openDataScope: false,
       menuExpand: false,
@@ -446,7 +454,7 @@ export default {
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
       return checkedKeys;
     },
-    /** 根据角色ID查询菜单树结构 */
+    /** 根据角色Id查询菜单树结构 */
     getRoleMenuTreeselect(roleId) {
       //roleId占用menuId通道上传参数
       return roleMenuTreeselect(roleId,this.systemId).then(response => {
@@ -454,7 +462,7 @@ export default {
         return response;
       });
     },
-    /** 根据角色ID查询部门树结构 */
+    /** 根据角色Id查询部门树结构 */
     getRoleDeptTreeselect(roleId) {
       return roleDeptTreeselect(roleId).then(response => {
         this.deptOptions = response.depts;
@@ -579,6 +587,21 @@ export default {
         this.$refs.dept.setCheckedKeys([]);
       }
     },
+    /** 分配菜单权限操作 */
+    handleMenuScope(row) {
+      this.reset();
+      const roleDeptTreeselect = this.getRoleDeptTreeselect(row.roleId);
+      getRole(row.roleId).then(response => {
+        this.form = response.data;
+        this.openDataScope = true;
+        this.$nextTick(() => {
+          roleDeptTreeselect.then(res => {
+            this.$refs.dept.setCheckedKeys(res.checkedKeys);
+          });
+        });
+        this.title = "分配菜单权限";
+      });
+    },
     /** 分配数据权限操作 */
     handleDataScope(row) {
       this.reset();
@@ -598,7 +621,7 @@ export default {
     submitForm: function() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.roleId != undefined) {
+          if (this.form.roleId !== undefined) {
             this.form.menuIds = this.getMenuAllCheckedKeys();
             updateRole(this.form).then(response => {
               this.msgSuccess("修改成功");
@@ -618,7 +641,7 @@ export default {
     },
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
-      if (this.form.roleId != undefined) {
+      if (this.form.roleId !== undefined) {
         this.form.deptIds = this.getDeptAllCheckedKeys();
         dataScope(this.form).then(response => {
           this.msgSuccess("修改成功");

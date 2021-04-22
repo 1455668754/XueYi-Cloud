@@ -1,9 +1,6 @@
 package com.xueyi.system.authority.service.impl;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.role.mapper.*;
@@ -84,6 +81,32 @@ public class SysRoleServiceImpl implements ISysRoleService {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", roleId);
         return roleMapper.selectRoleById(search);//@param search 万用组件 | roleId 角色Id
+    }
+
+    /**
+     * 根据角色Id获取菜单范围信息
+     *
+     * @param roleId 角色Id
+     * @return 角色对象信息
+     */
+    //    ????????
+    @Override
+    public SysRole selectMenuScopeById(Long roleId){
+        return null;
+    }
+
+    /**
+     * 根据角色Id获取数据范围信息
+     *
+     * @param roleId 角色Id
+     * @return 角色对象信息
+     */
+//    ????????
+    @Override
+    public SysRole selectDataScopeById(Long roleId){
+        SysSearch search = new SysSearch();
+        search.getSearch().put("roleId", roleId);
+        return null;
     }
 
     /**
