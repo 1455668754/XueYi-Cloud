@@ -170,7 +170,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="岗位顺序" prop="sort">
+            <el-form-item label="显示顺序" prop="sort">
               <el-input-number v-model="form.sort" controls-position="right" :min="0" :max="127"/>
             </el-form-item>
           </el-col>

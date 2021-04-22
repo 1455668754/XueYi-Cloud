@@ -168,7 +168,7 @@
     />
 
     <!-- 添加或修改角色配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="24">
@@ -187,7 +187,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="角色顺序" prop="sort">
+            <el-form-item label="显示顺序" prop="sort">
               <el-input-number v-model="form.sort" controls-position="right" :min="0" :max="127"/>
             </el-form-item>
           </el-col>
@@ -394,9 +394,6 @@ export default {
         ],
         roleKey: [
           { required: true, message: "权限字符不能为空", trigger: "blur" }
-        ],
-        sort: [
-          { required: true, message: "角色顺序不能为空", trigger: "blur" }
         ]
       }
     };
@@ -570,20 +567,9 @@ export default {
     handleUpdate(row) {
       this.reset();
       const roleId = row.roleId || this.ids
-      const roleMenu = this.getRoleMenuTreeselect(roleId);
       getRole(roleId).then(response => {
         this.form = response.data;
         this.open = true;
-        this.$nextTick(() => {
-          roleMenu.then(res => {
-            let checkedKeys = res.checkedKeys
-            checkedKeys.forEach((v) => {
-                this.$nextTick(()=>{
-                    this.$refs.menu.setChecked(v, true ,false);
-                })
-            })
-          });
-        });
         this.title = "修改角色";
       });
     },
