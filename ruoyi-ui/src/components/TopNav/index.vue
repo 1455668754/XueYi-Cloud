@@ -6,8 +6,10 @@
   >
     <template v-for="(item, index) in topMenus">
       <el-menu-item :style="{'--theme': theme}" :index="item.path" :key="index" v-if="index < visibleNumber"
-        ><svg-icon :icon-class="item.meta.icon" />
-        {{ item.meta.title }}</el-menu-item
+      >
+        <svg-icon :icon-class="item.meta.icon"/>
+        {{ item.meta.title }}
+      </el-menu-item
       >
     </template>
 
@@ -19,8 +21,10 @@
           :index="item.path"
           :key="index"
           v-if="index >= visibleNumber"
-          ><svg-icon :icon-class="item.meta.icon" />
-          {{ item.meta.title }}</el-menu-item
+        >
+          <svg-icon :icon-class="item.meta.icon"/>
+          {{ item.meta.title }}
+        </el-menu-item
         >
       </template>
     </el-submenu>
@@ -28,7 +32,7 @@
 </template>
 
 <script>
-import { constantRoutes } from "@/router";
+import {constantRoutes} from "@/router";
 
 export default {
   data() {
@@ -70,10 +74,12 @@ export default {
       this.routers.map((router) => {
         for (var item in router.children) {
           if (router.children[item].parentPath === undefined) {
-            if(router.path === "/") {
+            if (router.path === "/") {
               router.children[item].path = "/redirect/" + router.children[item].path;
             } else {
-              router.children[item].path = router.path + "/" + router.children[item].path;
+              if (!this.ishttp(router.children[item].path)) {
+                router.children[item].path = router.path + "/" + router.children[item].path;
+              }
             }
             router.children[item].parentPath = router.path;
           }
@@ -122,12 +128,12 @@ export default {
     // 菜单选择事件
     handleSelect(key, keyPath) {
       this.currentIndex = key;
-      if (key.indexOf("http://") !== -1 || key.indexOf("https://") !== -1) {
+      if (this.ishttp(key)) {
         // http(s):// 路径新窗口打开
         window.open(key, "_blank");
       } else if (key.indexOf("/redirect") !== -1) {
         // /redirect 路径内部打开
-        this.$router.push({ path: key.replace("/redirect", "") });
+        this.$router.push({path: key.replace("/redirect", "")});
       } else {
         // 显示左侧联动菜单
         this.activeRoutes(key);
@@ -143,10 +149,13 @@ export default {
           }
         });
       }
-      if(routes.length > 0) {
+      if (routes.length > 0) {
         this.$store.commit("SET_SIDEBAR_ROUTERS", routes);
       }
       return routes;
+    },
+    ishttp(url) {
+      return url.indexOf('http://') !== -1 || url.indexOf('https://') !== -1
     }
   },
 };
