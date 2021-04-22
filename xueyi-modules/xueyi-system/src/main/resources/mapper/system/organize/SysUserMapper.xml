@@ -123,6 +123,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
+		order by u.sort,u.user_name
 	</select>
 
 	<select id="selectUserByUserName" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysUserResult">
