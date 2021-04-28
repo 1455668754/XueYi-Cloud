@@ -37,21 +37,21 @@ public interface ISysRoleService {
      */
     public SysRole selectRoleById(Long roleId);
 
-    /**
-     * 根据角色Id获取菜单范围信息
-     *
-     * @param roleId 角色Id
-     * @return 角色对象信息
-     */
-    public SysRole selectMenuScopeById(Long roleId);
-
-    /**
-     * 根据角色Id获取数据范围信息
-     *
-     * @param roleId 角色Id
-     * @return 角色对象信息
-     */
-    public SysRole selectDataScopeById(Long roleId);
+//    /**
+//     * 根据角色Id获取菜单范围信息
+//     *
+//     * @param roleId 角色Id
+//     * @return 角色对象信息
+//     */
+//    public SysRole selectMenuScopeById(Long roleId);
+//
+//    /**
+//     * 根据角色Id获取数据范围信息
+//     *
+//     * @param roleId 角色Id
+//     * @return 角色对象信息
+//     */
+//    public SysRole selectDataScopeById(Long roleId);
 
     /**
      * 通过角色Id查询角色使用数量

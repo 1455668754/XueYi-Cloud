@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.organize.domain.deptPostVo;
 
 /**
@@ -69,6 +70,14 @@ public class TreeSelect implements Serializable {
         this.status = (deptPostVo.getStatus().equals("1") || (StringUtils.isEmpty(deptPostVo.getChildren())) && deptPostVo.getType().equals("0"))?"1":"0";
         this.type = deptPostVo.getType();
         this.children = deptPostVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(SystemMenuVo systemMenuVo) {
+        this.id = systemMenuVo.getUid();
+        this.label = systemMenuVo.getName();
+        this.status = systemMenuVo.getStatus();
+        this.type = systemMenuVo.getType();
+        this.children = systemMenuVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getId() {

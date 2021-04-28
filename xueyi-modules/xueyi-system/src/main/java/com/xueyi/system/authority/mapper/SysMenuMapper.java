@@ -23,6 +23,16 @@ public interface SysMenuMapper {
     public List<String> checkLoginMenuPermission(SysSearch search);
 
     /**
+     * 查询系统全部菜单列表
+     * 访问控制 m 租户查询
+     *
+     * @param menu 菜单信息
+     * @return 菜单列表
+     */
+    @DataScope(systemAlias = "m")
+    public List<SysMenu> selectMenuListAll(SysMenu menu);
+
+    /**
      * 查询系统菜单列表
      * 访问控制 m 租户查询
      *

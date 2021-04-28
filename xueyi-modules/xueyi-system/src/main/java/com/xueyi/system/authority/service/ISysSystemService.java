@@ -1,6 +1,9 @@
 package com.xueyi.system.authority.service;
 
 import com.xueyi.system.api.authority.SysSystem;
+import com.xueyi.system.authority.domain.SystemMenuVo;
+import com.xueyi.system.organize.domain.deptPostVo;
+import com.xueyi.system.utils.vo.TreeSelect;
 
 import java.util.List;
 
@@ -66,4 +69,17 @@ public interface ISysSystemService {
      * @return 结果
      */
     public int deleteSystemByIds(Long[] systemIds);
+
+    /**
+     * 加载对应角色系统-菜单列表树
+     */
+    public List<TreeSelect> buildSystemMenuTreeSelect();
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param systemMenuList 系统-菜单数组装列表
+     * @return 树结构列表
+     */
+    public List<SystemMenuVo> buildSystemMenuTree(List<SystemMenuVo> systemMenuList);
 }

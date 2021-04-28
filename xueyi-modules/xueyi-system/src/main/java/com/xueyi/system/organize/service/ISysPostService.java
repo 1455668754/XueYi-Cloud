@@ -48,7 +48,7 @@ public interface ISysPostService {
     /**
      * 修改保存部门-角色信息
      *
-     * @param postId 岗位Id
+     * @param postId  岗位Id
      * @param roleIds 角色组Ids
      * @return 结果
      */
@@ -91,7 +91,7 @@ public interface ISysPostService {
     /**
      * 校验岗位编码
      *
-     * @param postId 岗位Id
+     * @param postId   岗位Id
      * @param postCode 岗位编码
      * @return 结果
      */
@@ -100,12 +100,12 @@ public interface ISysPostService {
     /**
      * 校验岗位名称
      *
-     * @param postId 岗位Id
-     * @param deptId 部门Id
+     * @param postId   岗位Id
+     * @param deptId   部门Id
      * @param postName 岗位名称
      * @return 结果
      */
-    public String checkPostNameUnique(Long postId, Long deptId,String postName);
+    public String checkPostNameUnique(Long postId, Long deptId, String postName);
 
     /**
      * 校验岗位状态
@@ -129,5 +129,4 @@ public interface ISysPostService {
      * @return 树结构列表
      */
     public List<deptPostVo> buildDeptPostTree(List<deptPostVo> deptPostList);
-
 }

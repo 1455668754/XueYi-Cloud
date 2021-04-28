@@ -83,31 +83,29 @@ public class SysRoleServiceImpl implements ISysRoleService {
         return roleMapper.selectRoleById(search);//@param search 万用组件 | roleId 角色Id
     }
 
-    /**
-     * 根据角色Id获取菜单范围信息
-     *
-     * @param roleId 角色Id
-     * @return 角色对象信息
-     */
-    //    ????????
-    @Override
-    public SysRole selectMenuScopeById(Long roleId){
-        return null;
-    }
-
-    /**
-     * 根据角色Id获取数据范围信息
-     *
-     * @param roleId 角色Id
-     * @return 角色对象信息
-     */
-//    ????????
-    @Override
-    public SysRole selectDataScopeById(Long roleId){
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", roleId);
-        return null;
-    }
+//    /**
+//     * 根据角色Id获取菜单范围信息
+//     *
+//     * @param roleId 角色Id
+//     * @return 角色对象信息
+//     */
+//    @Override
+//    public SysRole selectMenuScopeById(Long roleId){
+//        return null;
+//    }
+//
+//    /**
+//     * 根据角色Id获取数据范围信息
+//     *
+//     * @param roleId 角色Id
+//     * @return 角色对象信息
+//     */
+//    @Override
+//    public SysRole selectDataScopeById(Long roleId){
+//        SysSearch search = new SysSearch();
+//        search.getSearch().put("roleId", roleId);
+//        return null;
+//    }
 
     /**
      * 通过角色Id查询角色使用数量

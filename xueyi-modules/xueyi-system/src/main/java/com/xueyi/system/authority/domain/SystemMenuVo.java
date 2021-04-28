@@ -1,23 +1,24 @@
-package com.xueyi.system.organize.domain;
+package com.xueyi.system.authority.domain;
 
 import com.xueyi.common.core.web.domain.BaseEntity;
+import com.xueyi.system.organize.domain.deptPostVo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 部门-岗位数组装结构
+ * 系统-菜单数组装结构
  *
  * @author xueyi
  */
-public class deptPostVo extends BaseEntity
+public class SystemMenuVo  extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** Id */
     private Long Uid;
 
-    /** 父Id（岗位父Id为归属部门） */
+    /** 父Id（系统父Id为-1） */
     private Long FUid;
 
     /** 名称 */
@@ -26,11 +27,11 @@ public class deptPostVo extends BaseEntity
     /** 状态 */
     private String status;
 
-    /** 类型（0部门 1岗位） */
+    /** 类型（0系统 1菜单） */
     private String type;
 
     /** 子部门/岗位 */
-    private List<deptPostVo> children = new ArrayList<deptPostVo>();
+    private List<SystemMenuVo> children = new ArrayList<SystemMenuVo>();
 
     public Long getUid() {
         return Uid;
@@ -72,11 +73,11 @@ public class deptPostVo extends BaseEntity
         this.type = type;
     }
 
-    public List<deptPostVo> getChildren() {
+    public List<SystemMenuVo> getChildren() {
         return children;
     }
 
-    public void setChildren(List<deptPostVo> children) {
+    public void setChildren(List<SystemMenuVo> children) {
         this.children = children;
     }
 }

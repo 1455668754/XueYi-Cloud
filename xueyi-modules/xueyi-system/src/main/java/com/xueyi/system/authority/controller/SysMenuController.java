@@ -45,7 +45,7 @@ public class SysMenuController extends BaseController {
      * 获取菜单下拉树列表
      */
     @GetMapping("/treeSelect/{systemId}")
-    public AjaxResult treeselect(@PathVariable("systemId") Long systemId) {
+    public AjaxResult treeSelect(@PathVariable("systemId") Long systemId) {
         Long userId = SecurityUtils.getUserId();
         SysMenu menu = new SysMenu();
         menu.setSystemId(systemId);
@@ -58,7 +58,7 @@ public class SysMenuController extends BaseController {
      * 加载对应角色菜单列表树
      */
     @GetMapping(value = "/roleMenuTreeSelect/{roleId}/{systemId}")
-    public AjaxResult roleMenuTreeselect(@PathVariable("roleId") Long roleId, @PathVariable("systemId") Long systemId) {
+    public AjaxResult roleMenuTreeSelect(@PathVariable("roleId") Long roleId, @PathVariable("systemId") Long systemId) {
         LoginUser loginUser = tokenService.getLoginUser();
         List<SysMenu> menus = menuService.selectMenuList(loginUser.getUserid(), systemId,loginUser.getUserType());
         AjaxResult ajax = AjaxResult.success();

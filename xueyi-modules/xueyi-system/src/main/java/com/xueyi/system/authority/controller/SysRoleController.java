@@ -55,23 +55,23 @@ public class SysRoleController extends BaseController {
         return AjaxResult.success(roleService.selectRoleById(roleId));
     }
 
-    /**
-     * 根据角色Id获取菜单范围信息
-     */
-    @PreAuthorize(hasPermi = "system:role:query")
-    @GetMapping(value = "/{roleId}")
-    public AjaxResult getMenuScope(@PathVariable Long roleId) {
-        return AjaxResult.success(roleService.selectMenuScopeById(roleId));
-    }
-
-    /**
-     * 根据角色Id获取数据范围信息
-     */
-    @PreAuthorize(hasPermi = "system:role:query")
-    @GetMapping(value = "/{roleId}")
-    public AjaxResult getDataScope(@PathVariable Long roleId) {
-        return AjaxResult.success(roleService.selectDataScopeById(roleId));
-    }
+//    /**
+//     * 根据角色Id获取菜单范围信息
+//     */
+//    @PreAuthorize(hasPermi = "system:role:query")
+//    @GetMapping(value = "/{roleId}")
+//    public AjaxResult getMenuScope(@PathVariable Long roleId) {
+//        return AjaxResult.success(roleService.selectMenuScopeById(roleId));
+//    }
+//
+//    /**
+//     * 根据角色Id获取数据范围信息
+//     */
+//    @PreAuthorize(hasPermi = "system:role:query")
+//    @GetMapping(value = "/{roleId}")
+//    public AjaxResult getDataScope(@PathVariable Long roleId) {
+//        return AjaxResult.success(roleService.selectDataScopeById(roleId));
+//    }
 
     /**
      * 新增角色

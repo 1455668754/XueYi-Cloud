@@ -7,6 +7,8 @@ import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.system.api.authority.SysSystem;
+import com.xueyi.system.api.model.LoginUser;
+import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.service.ISysSystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +45,14 @@ public class SysSystemController extends BaseController {
         startPage();
         List<SysSystem> list = systemService.selectSystemList(sysSystem);
         return getDataTable(list);
+    }
+
+    /**
+     * 加载对应角色系统-菜单列表树
+     */
+    @GetMapping(value = "/roleSystemMenuTreeSelect/{systemId}")
+    public AjaxResult roleSystemMenuTreeSelect(@PathVariable("systemId") Long systemId) {
+        return AjaxResult.success(systemService.buildSystemMenuTreeSelect());
     }
 
     /**

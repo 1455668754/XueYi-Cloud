@@ -4,6 +4,7 @@ import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView';
 import defaultSettings from '@/settings'
 
+//系统编号
 const { systemNum } = defaultSettings
 const permission = {
   state: {
@@ -37,8 +38,6 @@ const permission = {
     // 生成路由
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
-        //系统编号
-        const systemId=systemNum;
         // 向后端请求路由数据
         getRouters(systemNum).then(res => {
           const sdata = JSON.parse(JSON.stringify(res.data))

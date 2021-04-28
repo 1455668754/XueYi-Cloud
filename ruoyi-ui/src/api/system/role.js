@@ -35,6 +35,15 @@ export function updateRole(data) {
   })
 }
 
+// 角色菜单权限
+export function menuScope(data) {
+  return request({
+    url: '/system/role/menuScope',
+    method: 'put',
+    data: data
+  })
+}
+
 // 角色数据权限
 export function dataScope(data) {
   return request({

@@ -173,7 +173,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
     <!-- 添加或修改角色配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -238,12 +237,11 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="菜单权限">
-              <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'menu')">展开/折叠</el-checkbox>
-              <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'menu')">全选/全不选</el-checkbox>
-              <el-checkbox v-model="form.menuCheckStrictly" @change="handleCheckedTreeConnect($event, 'menu')">父子联动</el-checkbox>
+              <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event, 'systemMenu')">展开/折叠</el-checkbox>
+              <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event, 'systemMenu')">全选/全不选</el-checkbox>
               <el-tree
                 class="tree-border"
-                :data="menuOptions"
+                :data="systemMenuOptions"
                 show-checkbox
                 ref="menu"
                 node-key="id"
@@ -256,8 +254,8 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitMenuScope">确 定</el-button>
+        <el-button @click="cancelMenuScope">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -281,12 +279,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="数据权限" v-show="form.dataScope == 2">
-          <el-checkbox v-model="deptExpand" @change="handleCheckedTreeExpand($event, 'dept')">展开/折叠</el-checkbox>
-          <el-checkbox v-model="deptNodeAll" @change="handleCheckedTreeNodeAll($event, 'dept')">全选/全不选</el-checkbox>
-          <el-checkbox v-model="form.deptCheckStrictly" @change="handleCheckedTreeConnect($event, 'dept')">父子联动</el-checkbox>
+          <el-checkbox v-model="deptExpand" @change="handleCheckedTreeExpand($event, 'deptPost')">展开/折叠</el-checkbox>
+          <el-checkbox v-model="deptNodeAll" @change="handleCheckedTreeNodeAll($event, 'deptPost')">全选/全不选</el-checkbox>
           <el-tree
             class="tree-border"
-            :data="deptOptions"
+            :data="deptPostOptions"
             show-checkbox
             default-expand-all
             ref="dept"
@@ -303,13 +300,15 @@
       </div>
     </el-dialog>
   </div>
+
 </template>
 
 <script>
-import { listRole, getRole, delRole, addRole, updateRole, dataScope, changeRoleStatus } from "@/api/system/role";
+import { listRole, getRole, delRole, addRole, updateRole, menuScope, dataScope, changeRoleStatus } from "@/api/system/role";
 import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
 import { treeSelect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
 import { treeSelect as deptPostTreeSelect } from "@/api/system/post";
+import {roleSystemMenuTreeSelect} from "@/api/system/system";
 
 export default {
   name: "Role",
@@ -373,9 +372,10 @@ export default {
           label: "仅本人数据权限"
         }
       ],
-      // 菜单列表
-      menuOptions: [],
-      // 部门列表
+      // 系统-菜单列表
+      systemMenuOptions: [],
+      // 部门-岗位列表
+      deptPostOptions: [],
       deptOptions: [],
       // 查询参数
       queryParams: {
@@ -425,19 +425,19 @@ export default {
       );
     },
     /** 查询菜单树结构 */
-    getMenuTreeselect() {
-      menuTreeselect(this.systemId).then(response => {
-        this.menuOptions = response.data;
+    getSystemMenuTreeSelect() {
+      roleSystemMenuTreeSelect().then(response => {
+        this.systemMenuOptions = response.data;
       });
     },
     /** 查询部门树结构 */
-    getDeptTreeselect() {
+    getDeptPostTreeSelect() {
       deptTreeselect().then(response => {
-        this.deptOptions = response.data;
+        this.deptPostOptions = response.data;
       });
     },
-    // 所有菜单节点数据
-    getMenuAllCheckedKeys() {
+    // 所有系统-菜单节点数据
+    getSystemMenuAllCheckedKeys() {
       // 目前被选中的菜单节点
       let checkedKeys = this.$refs.menu.getCheckedKeys();
       // 半选中的菜单节点
@@ -445,8 +445,8 @@ export default {
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
       return checkedKeys;
     },
-    // 所有部门节点数据
-    getDeptAllCheckedKeys() {
+    // 所有部门-岗位节点数据
+    getDeptPostAllCheckedKeys() {
       // 目前被选中的部门节点
       let checkedKeys = this.$refs.dept.getCheckedKeys();
       // 半选中的部门节点
@@ -455,17 +455,17 @@ export default {
       return checkedKeys;
     },
     /** 根据角色Id查询菜单树结构 */
-    getRoleMenuTreeselect(roleId) {
+    getRoleSystemMenuTreeSelect(roleId) {
       //roleId占用menuId通道上传参数
-      return roleMenuTreeselect(roleId,this.systemId).then(response => {
-        this.menuOptions = response.menus;
+      return roleSystemMenuTreeSelect().then(response => {
+        this.systemMenuOptions = response.data;
         return response;
       });
     },
     /** 根据角色Id查询部门树结构 */
     getRoleDeptTreeselect(roleId) {
       return roleDeptTreeselect(roleId).then(response => {
-        this.deptOptions = response.depts;
+        this.deptPostOptions = response.depts;
         return response;
       });
     },
@@ -489,6 +489,11 @@ export default {
       this.open = false;
       this.reset();
     },
+    // 取消按钮（菜单权限）
+    cancelMenuScope() {
+      this.openMenuScope = false;
+      this.reset();
+    },
     // 取消按钮（数据权限）
     cancelDataScope() {
       this.openDataScope = false;
@@ -499,10 +504,10 @@ export default {
       if (this.$refs.menu !== undefined) {
         this.$refs.menu.setCheckedKeys([]);
       }
-      this.menuExpand = false,
-      this.menuNodeAll = false,
-      this.deptExpand = true,
-      this.deptNodeAll = false,
+      this.menuExpand = false;
+      this.menuNodeAll = false;
+      this.deptExpand = true;
+      this.deptNodeAll = false;
       this.form = {
         roleId: undefined,
         roleCode: undefined,
@@ -510,8 +515,12 @@ export default {
         roleKey: undefined,
         sort: 0,
         status: 0,
+        systemMenuIds:[],
+        systemIds: [],
         menuIds: [],
+        deptPostIds: [],
         deptIds: [],
+        postIds: [],
         menuCheckStrictly: true,
         deptCheckStrictly: true,
         remark: undefined
@@ -537,13 +546,13 @@ export default {
     },
     // 树权限（展开/折叠）
     handleCheckedTreeExpand(value, type) {
-      if (type === 'menu') {
-        let treeList = this.menuOptions;
+      if (type === 'systemMenu') {
+        let treeList = this.systemMenuOptions;
         for (let i = 0; i < treeList.length; i++) {
           this.$refs.menu.store.nodesMap[treeList[i].id].expanded = value;
         }
-      } else if (type === 'dept') {
-        let treeList = this.deptOptions;
+      } else if (type === 'deptPost') {
+        let treeList = this.deptPostOptions;
         for (let i = 0; i < treeList.length; i++) {
           this.$refs.dept.store.nodesMap[treeList[i].id].expanded = value;
         }
@@ -551,18 +560,10 @@ export default {
     },
     // 树权限（全选/全不选）
     handleCheckedTreeNodeAll(value, type) {
-      if (type === 'menu') {
-        this.$refs.menu.setCheckedNodes(value ? this.menuOptions: []);
-      } else if (type === 'dept') {
-        this.$refs.dept.setCheckedNodes(value ? this.deptOptions: []);
-      }
-    },
-    // 树权限（父子联动）
-    handleCheckedTreeConnect(value, type) {
-      if (type === 'menu') {
-        this.form.menuCheckStrictly = value ? true: false;
-      } else if (type === 'dept') {
-        this.form.deptCheckStrictly = value ? true: false;
+      if (type === 'systemMenu') {
+        this.$refs.menu.setCheckedNodes(value ? this.systemMenuOptions: []);
+      } else if (type === 'deptPost') {
+        this.$refs.dept.setCheckedNodes(value ? this.deptPostOptions: []);
       }
     },
     /** 新增按钮操作 */
@@ -590,12 +591,13 @@ export default {
     /** 分配菜单权限操作 */
     handleMenuScope(row) {
       this.reset();
-      const roleDeptTreeselect = this.getRoleDeptTreeselect(row.roleId);
+      this.getSystemMenuTreeSelect();
+      const roleSystemMenuTreeSelect = this.getRoleSystemMenuTreeSelect(row.roleId);
       getRole(row.roleId).then(response => {
         this.form = response.data;
-        this.openDataScope = true;
+        this.openMenuScope = true;
         this.$nextTick(() => {
-          roleDeptTreeselect.then(res => {
+          roleSystemMenuTreeSelect.then(res => {
             this.$refs.dept.setCheckedKeys(res.checkedKeys);
           });
         });
@@ -605,12 +607,12 @@ export default {
     /** 分配数据权限操作 */
     handleDataScope(row) {
       this.reset();
-      const roleDeptTreeselect = this.getRoleDeptTreeselect(row.roleId);
+      const roleDeptMenuTreeSelect = this.getRoleDeptTreeselect(row.roleId);
       getRole(row.roleId).then(response => {
         this.form = response.data;
         this.openDataScope = true;
         this.$nextTick(() => {
-          roleDeptTreeselect.then(res => {
+          roleDeptMenuTreeSelect.then(res => {
             this.$refs.dept.setCheckedKeys(res.checkedKeys);
           });
         });
@@ -622,14 +624,12 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.roleId !== undefined) {
-            this.form.menuIds = this.getMenuAllCheckedKeys();
             updateRole(this.form).then(response => {
               this.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            this.form.menuIds = this.getMenuAllCheckedKeys();
             addRole(this.form).then(response => {
               this.msgSuccess("新增成功");
               this.open = false;
@@ -639,10 +639,21 @@ export default {
         }
       });
     },
+    /** 提交按钮（菜单权限） */
+    submitMenuScope: function() {
+      if (this.form.roleId !== undefined) {
+        this.form.deptIds = this.getSystemMenuAllCheckedKeys();
+        menuScope(this.form).then(response => {
+          this.msgSuccess("修改成功");
+          this.openDataScope = false;
+          this.getList();
+        });
+      }
+    },
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
       if (this.form.roleId !== undefined) {
-        this.form.deptIds = this.getDeptAllCheckedKeys();
+        this.form.deptIds = this.getDeptPostAllCheckedKeys();
         dataScope(this.form).then(response => {
           this.msgSuccess("修改成功");
           this.openDataScope = false;
