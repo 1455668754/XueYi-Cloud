@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="checkDeptPostExistRole" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="java.lang.Integer">
 		select count(1) from sys_role_dept_post rdp
-		where rd.dept_post_id = #{search.deptPostId}
+		where rdp.dept_post_id = #{search.deptPostId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>

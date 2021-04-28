@@ -12,7 +12,7 @@
     <select id="checkSystemMenuExistRole" parameterType="com.xueyi.system.api.utilTool.SysSearch"
             resultType="java.lang.Integer">
         select count(1) from sys_role_system_menu rsm
-        where rs.system_menu_id = #{search.systemMenuId}
+        where rsm.system_menu_id = #{search.systemMenuId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
