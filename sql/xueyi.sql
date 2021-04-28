@@ -163,55 +163,31 @@ values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
        (3, 2, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员');
 
 -- ----------------------------
--- 7、角色和系统关联表  角色1-N系统
+-- 7、角色和系统-菜单关联表  角色1-N系统-菜单
 -- ----------------------------
-drop table if exists sys_role_system;
-create table sys_role_system (
+drop table if exists sys_role_system_menu;
+create table sys_role_system_menu (
   role_id                   bigint              not null                                comment '角色Id',
-  system_id                 bigint              not null                                comment '系统Id',
+  system_menu_id            bigint              not null                                comment '系统-菜单Id',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
   tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
-  primary key(role_id, system_id)
-) engine=innodb comment = '角色和系统关联表';
+  primary key(role_id, system_menu_id)
+) engine=innodb comment = '角色和系统-菜单关联表';
 
 -- ----------------------------
--- 8、角色和菜单关联表  角色1-N菜单
+-- 8、角色和部门-岗位关联表  角色1-N部门-岗位
 -- ----------------------------
-drop table if exists sys_role_menu;
-create table sys_role_menu (
+drop table if exists sys_role_dept_post;
+create table sys_role_dept_post (
   role_id                   bigint              not null                                comment '角色Id',
-  menu_id                   bigint              not null                                comment '菜单Id',
+  dept_post_id              bigint              not null                                comment '部门-岗位Id',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
   tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
-  primary key(role_id, menu_id)
-) engine=innodb comment = '角色和菜单关联表';
+  primary key(role_id, dept_post_id)
+) engine=innodb comment = '角色和部门-岗位关联表';
 
 -- ----------------------------
--- 9、角色和部门关联表  角色1-N部门
--- ----------------------------
-drop table if exists sys_role_dept;
-create table sys_role_dept (
-  role_id                   bigint              not null                                comment '角色Id',
-  dept_id                   bigint              not null                                comment '部门Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
-  primary key(role_id, dept_id)
-) engine=innodb comment = '角色和部门关联表';
-
--- ----------------------------
--- 10、角色和岗位关联表  角色1-N岗位
--- ----------------------------
-drop table if exists sys_role_post;
-create table sys_role_post (
-  role_id                   bigint              not null                                comment '角色Id',
-  post_id                   bigint              not null                                comment '岗位Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
-  primary key(role_id, post_id)
-) engine=innodb comment = '角色和岗位关联表';
-
--- ----------------------------
--- 11、部门和角色关联表  部门N-1角色
+-- 9、部门和角色关联表  部门N-1角色
 -- ----------------------------
 drop table if exists sys_dept_role;
 create table sys_dept_role (
@@ -223,7 +199,7 @@ create table sys_dept_role (
 ) engine=innodb comment = '部门和角色关联表';
 
 -- ----------------------------
--- 12、岗位和角色关联表  岗位N-1角色
+-- 10、岗位和角色关联表  岗位N-1角色
 -- ----------------------------
 drop table if exists sys_post_role;
 create table sys_post_role (
@@ -235,7 +211,7 @@ create table sys_post_role (
 ) engine=innodb comment = '岗位和角色关联表';
 
 -- ----------------------------
--- 13、用户和角色关联表  用户N-1角色
+-- 11、用户和角色关联表  用户N-1角色
 -- ----------------------------
 drop table if exists sys_user_role;
 create table sys_user_role (

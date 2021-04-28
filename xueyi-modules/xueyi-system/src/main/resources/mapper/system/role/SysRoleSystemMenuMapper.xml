@@ -4,15 +4,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xueyi.system.role.mapper.SysRoleSystemMenuMapper">
 
-    <resultMap type="SysRoleSystemMenu" id="SysRoleSystemResult">
-        <id     property="roleId"       column="role_id"        />
-        <result property="systemMenuId" column="system_menu_id" />
+    <resultMap type="SysRoleSystemMenu" id="SysRoleSystemMenuResult">
+        <id     property="roleId"           column="role_id"            />
+        <result property="systemMenuId"     column="system_menu_id"     />
     </resultMap>
 
     <select id="checkSystemMenuExistRole" parameterType="com.xueyi.system.api.utilTool.SysSearch"
             resultType="java.lang.Integer">
         select count(1) from sys_role_system_menu rsm
-        where rs.system_menu_id=#{search.systemMenuId}
+        where rs.system_menu_id = #{search.systemMenuId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>

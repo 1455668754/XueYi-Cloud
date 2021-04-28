@@ -4,14 +4,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xueyi.system.role.mapper.SysRoleDeptPostMapper">
 
-	<resultMap type="SysRoleDeptPost" id="SysRoleDeptResult">
-		<id     property="roleId"      column="role_id"    />
-		<result property="deptPostId"      column="dept_post_id"    />
+	<resultMap type="SysRoleDeptPost" id="SysRoleDeptPostResult">
+		<id     property="roleId"      		column="role_id"    		/>
+		<result property="deptPostId"      	column="dept_post_id"    	/>
 	</resultMap>
 
 	<select id="checkDeptPostExistRole" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="java.lang.Integer">
 		select count(1) from sys_role_dept_post rdp
-		where rd.dept_post_id=#{search.deptPostId}
+		where rd.dept_post_id = #{search.deptPostId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
