@@ -253,7 +253,6 @@
           </el-col>
         </el-row>
       </el-form>
-      {{form.systemMenuIds}}
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitMenuScope">确 定</el-button>
         <el-button @click="cancelMenuScope">取 消</el-button>
@@ -456,11 +455,7 @@ export default {
     // 所有部门-岗位节点数据
     getDeptPostAllCheckedKeys() {
       // 目前被选中的部门节点
-      let checkedKeys = this.$refs.deptPost.getCheckedKeys();
-      // 半选中的部门节点
-      // let halfCheckedKeys = this.$refs.deptPost.getHalfCheckedKeys();
-      // checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
-      return checkedKeys;
+      return this.$refs.deptPost.getCheckedKeys();
     },
     /** 根据角色Id查询系统-菜单树结构 */
     getMenuScope(roleId) {
