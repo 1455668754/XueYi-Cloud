@@ -253,6 +253,7 @@
           </el-col>
         </el-row>
       </el-form>
+      {{form.systemMenuIds}}
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitMenuScope">确 定</el-button>
         <el-button @click="cancelMenuScope">取 消</el-button>
@@ -322,7 +323,6 @@ export default {
   name: "Role",
   data() {
     return {
-      systemId:this.$store.state.settings.systemNum,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -458,8 +458,8 @@ export default {
       // 目前被选中的部门节点
       let checkedKeys = this.$refs.deptPost.getCheckedKeys();
       // 半选中的部门节点
-      let halfCheckedKeys = this.$refs.deptPost.getHalfCheckedKeys();
-      checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
+      // let halfCheckedKeys = this.$refs.deptPost.getHalfCheckedKeys();
+      // checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
       return checkedKeys;
     },
     /** 根据角色Id查询系统-菜单树结构 */
@@ -600,7 +600,12 @@ export default {
         this.openMenuScope = true;
         this.$nextTick(() => {
           menuScope.then(res => {
-            this.$refs.systemMenu.setCheckedKeys(Array.from(res.data, x => x.systemMenuId));
+            const checkedKeys=Array.from(res.data, x => x.systemMenuId);
+            checkedKeys.forEach((v) => {
+              this.$nextTick(()=>{
+                this.$refs.systemMenu.setChecked(v, true ,false);
+              })
+            })
           });
         });
         this.title = "分配菜单权限";
@@ -648,7 +653,7 @@ export default {
         this.form.systemMenuIds = this.getSystemMenuAllCheckedKeys();
         menuScope(this.form).then(response => {
           this.msgSuccess("修改成功");
-          this.openDataScope = false;
+          this.openMenuScope = false;
           this.getList();
         });
       }
