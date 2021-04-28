@@ -304,7 +304,17 @@
 </template>
 
 <script>
-import { listRole, getRole, delRole, addRole, updateRole, menuScope, dataScope, changeRoleStatus } from "@/api/system/role";
+import {
+  listRole,
+  getRole,
+  delRole,
+  addRole,
+  updateRole,
+  menuScope,
+  dataScope,
+  changeRoleStatus,
+  getMenuScope, getDataScope
+} from "@/api/system/role";
 import {treeSelect as roleDeptTreeSelect} from "@/api/system/post";
 import {treeSelect as roleSystemMenuTreeSelect} from "@/api/system/system";
 
@@ -453,17 +463,14 @@ export default {
       return checkedKeys;
     },
     /** 根据角色Id查询系统-菜单树结构 */
-    getRoleSystemMenuTreeSelect(roleId) {
-      //roleId占用menuId通道上传参数
-      return roleSystemMenuTreeSelect().then(response => {
-        this.systemMenuOptions = response.data;
+    getMenuScope(roleId) {
+      return getMenuScope(roleId).then(response => {
         return response;
       });
     },
     /** 根据角色Id查询部门-岗位树结构 */
-    getRoleDeptTreeSelect(roleId) {
-      return roleDeptTreeSelect().then(response => {
-        this.deptPostOptions = response.data;
+    getDataScope(roleId) {
+      return getDataScope(roleId).then(response => {
         return response;
       });
     },
@@ -511,14 +518,11 @@ export default {
         roleCode: undefined,
         roleName: undefined,
         roleKey: undefined,
+        dataScope:0,
         sort: 0,
         status: 0,
         systemMenuIds:[],
-        systemIds: [],
-        menuIds: [],
         deptPostIds: [],
-        deptIds: [],
-        postIds: [],
         menuCheckStrictly: true,
         deptCheckStrictly: true,
         remark: undefined
@@ -590,13 +594,13 @@ export default {
     handleMenuScope(row) {
       this.reset();
       this.getSystemMenuTreeSelect();
-      const roleSystemMenuTreeSelect = this.getRoleSystemMenuTreeSelect(row.roleId);
+      const menuScope = this.getMenuScope(row.roleId);
       getRole(row.roleId).then(response => {
         this.form = response.data;
         this.openMenuScope = true;
         this.$nextTick(() => {
-          roleSystemMenuTreeSelect.then(res => {
-            this.$refs.systemMenu.setCheckedKeys(res.checkedKeys);
+          menuScope.then(res => {
+            this.$refs.systemMenu.setCheckedKeys(Array.from(res.data, x => x.systemMenuId));
           });
         });
         this.title = "分配菜单权限";
@@ -606,15 +610,15 @@ export default {
     handleDataScope(row) {
       this.reset();
       this.getDeptPostTreeSelect();
-      // const roleDeptMenuTreeSelect = this.getRoleDeptTreeselect(row.roleId);
+      const dataScope = this.getDataScope(row.roleId);
       getRole(row.roleId).then(response => {
         this.form = response.data;
         this.openDataScope = true;
-        // this.$nextTick(() => {
-        //   roleDeptMenuTreeSelect.then(res => {
-        //     this.$refs.deptPost.setCheckedKeys(res.checkedKeys);
-        //   });
-        // });
+        this.$nextTick(() => {
+          dataScope.then(res => {
+            this.$refs.deptPost.setCheckedKeys(Array.from(res.data, x => x.deptPostId));
+          });
+        });
         this.title = "分配数据权限";
       });
     },
@@ -641,7 +645,7 @@ export default {
     /** 提交按钮（菜单权限） */
     submitMenuScope: function() {
       if (this.form.roleId !== undefined) {
-        this.form.deptIds = this.getSystemMenuAllCheckedKeys();
+        this.form.systemMenuIds = this.getSystemMenuAllCheckedKeys();
         menuScope(this.form).then(response => {
           this.msgSuccess("修改成功");
           this.openDataScope = false;
@@ -652,7 +656,7 @@ export default {
     /** 提交按钮（数据权限） */
     submitDataScope: function() {
       if (this.form.roleId !== undefined) {
-        this.form.deptIds = this.getDeptPostAllCheckedKeys();
+        this.form.deptPostIds = this.getDeptPostAllCheckedKeys();
         dataScope(this.form).then(response => {
           this.msgSuccess("修改成功");
           this.openDataScope = false;

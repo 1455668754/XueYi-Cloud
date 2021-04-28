@@ -9,6 +9,20 @@
         <result property="systemMenuId"     column="system_menu_id"     />
     </resultMap>
 
+    <select id="selectSystemMenuList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">
+        select rsm.role_id, rsm.system_menu_id
+        from sys_role_system_menu rsm
+        where 1 = 1
+        <if test="search.roleId != null">
+            AND rsm.role_id = #{search.roleId}
+        </if>
+        <if test="search.systemMenuId != null">
+            AND rsm.system_menu_id = #{search.systemMenuId}
+        </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
     <select id="checkSystemMenuExistRole" parameterType="com.xueyi.system.api.utilTool.SysSearch"
             resultType="java.lang.Integer">
         select count(1) from sys_role_system_menu rsm

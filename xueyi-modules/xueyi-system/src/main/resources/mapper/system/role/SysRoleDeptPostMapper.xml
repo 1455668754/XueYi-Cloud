@@ -9,6 +9,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="deptPostId"      	column="dept_post_id"    	/>
 	</resultMap>
 
+	<select id="selectDeptPostList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleDeptPostResult">
+		select rdp.role_id, rdp.dept_post_id
+		from sys_role_dept_post rdp
+		where 1 = 1
+		<if test="search.roleId != null">
+			AND rdp.role_id = #{search.roleId}
+		</if>
+		<if test="search.deptPostId != null">
+			AND rdp.dept_post_id = #{search.deptPostId}
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
 	<select id="checkDeptPostExistRole" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="java.lang.Integer">
 		select count(1) from sys_role_dept_post rdp
 		where rdp.dept_post_id = #{search.deptPostId}

@@ -2,6 +2,9 @@ package com.xueyi.system.role.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.system.role.domain.SysRoleDeptPost;
+
+import java.util.List;
 
 /**
  * 角色和部门-岗位关联Mapper接口
@@ -9,6 +12,17 @@ import com.xueyi.system.api.utilTool.SysSearch;
  * @author xueyi
  */
 public interface SysRoleDeptPostMapper {
+
+    /**
+     * 查询部门-岗位集合
+     * 访问控制 rdp 租户查询
+     *
+     * @param search 万用组件 | roleId 角色Id | deptPostId 部门-岗位Id
+     * @return 结果
+     */
+    @DataScope(enterpriseAlias = "rdp")
+    public List<SysRoleDeptPost> selectDeptPostList(SysSearch search);
+
     /**
      * 查询部门-岗位使用数量
      * 访问控制 rdp 租户查询

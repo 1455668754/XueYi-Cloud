@@ -57,20 +57,8 @@ public class SysRole extends BaseEntity
     /** 系统-菜单组（菜单权限） */
     private Long[] systemMenuIds;
 
-    /** 系统组（菜单权限） */
-    private Long[] systemIds;
-
-    /** 菜单组（菜单权限） */
-    private Long[] menuIds;
-
     /** 部门-岗位组（数据权限） */
     private Long[] deptPostIds;
-
-    /** 部门组（数据权限） */
-    private Long[] deptIds;
-
-    /** 岗位组（数据权限） */
-    private Long[] postIds;
 
     public SysRole() {
 
@@ -86,14 +74,6 @@ public class SysRole extends BaseEntity
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin(this.roleKey);
-    }
-
-    public static boolean isAdmin(String roleKey) {
-        return roleKey != null && roleKey.equals("admin");
     }
 
     public String getRoleCode() {
@@ -164,22 +144,6 @@ public class SysRole extends BaseEntity
         this.flag = flag;
     }
 
-    public Long[] getSystemIds() {
-        return systemIds;
-    }
-
-    public void setSystemIds(Long[] systemIds) {
-        this.systemIds = systemIds;
-    }
-
-    public Long[] getMenuIds() {
-        return menuIds;
-    }
-
-    public void setMenuIds(Long[] menuIds) {
-        this.menuIds = menuIds;
-    }
-
     public Long[] getSystemMenuIds() {
         return systemMenuIds;
     }
@@ -194,22 +158,6 @@ public class SysRole extends BaseEntity
 
     public void setDeptPostIds(Long[] deptPostIds) {
         this.deptPostIds = deptPostIds;
-    }
-
-    public Long[] getDeptIds() {
-        return deptIds;
-    }
-
-    public void setDeptIds(Long[] deptIds) {
-        this.deptIds = deptIds;
-    }
-
-    public Long[] getPostIds() {
-        return postIds;
-    }
-
-    public void setPostIds(Long[] postIds) {
-        this.postIds = postIds;
     }
 
     public String toString() {

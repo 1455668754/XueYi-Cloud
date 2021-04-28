@@ -174,6 +174,7 @@ create table sys_role_system_menu (
   primary key(role_id, system_menu_id)
 ) engine=innodb comment = '角色和系统-菜单关联表';
 
+insert into sys_role_system_menu value (1,12005,0,1);
 -- ----------------------------
 -- 8、角色和部门-岗位关联表  角色1-N部门-岗位
 -- ----------------------------
@@ -186,6 +187,7 @@ create table sys_role_dept_post (
   primary key(role_id, dept_post_id)
 ) engine=innodb comment = '角色和部门-岗位关联表';
 
+insert into sys_role_dept_post value (1,107,0,1);
 -- ----------------------------
 -- 9、部门和角色关联表  部门N-1角色
 -- ----------------------------
