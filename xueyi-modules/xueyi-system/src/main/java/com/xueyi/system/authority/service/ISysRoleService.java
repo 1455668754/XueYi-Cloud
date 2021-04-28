@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.xueyi.system.api.authority.SysRole;
+import com.xueyi.system.role.domain.SysRoleDeptPost;
+import com.xueyi.system.role.domain.SysRoleSystemMenu;
 
 /**
  * 角色业务层
@@ -37,21 +39,21 @@ public interface ISysRoleService {
      */
     public SysRole selectRoleById(Long roleId);
 
-//    /**
-//     * 根据角色Id获取菜单范围信息
-//     *
-//     * @param roleId 角色Id
-//     * @return 角色对象信息
-//     */
-//    public SysRole selectMenuScopeById(Long roleId);
-//
-//    /**
-//     * 根据角色Id获取数据范围信息
-//     *
-//     * @param roleId 角色Id
-//     * @return 角色对象信息
-//     */
-//    public SysRole selectDataScopeById(Long roleId);
+    /**
+     * 根据角色Id获取菜单范围信息
+     *
+     * @param roleId 角色Id
+     * @return 系统-菜单对象信息集合
+     */
+    public List<SysRoleSystemMenu>  selectMenuScopeById(Long roleId);
+
+    /**
+     * 根据角色Id获取数据范围信息
+     *
+     * @param roleId 角色Id
+     * @return 部门-岗位对象信息集合
+     */
+    public List<SysRoleDeptPost> selectDataScopeById(Long roleId);
 
     /**
      * 通过角色Id查询角色使用数量
@@ -144,11 +146,4 @@ public interface ISysRoleService {
      * @return 结果
      */
     public String checkRoleKeyUnique(Long roleId, String roleKey);
-
-    /**
-     * 校验角色是否允许操作
-     *
-     * @param role 角色信息
-     */
-    public void checkRoleAllowed(SysRole role);
 }

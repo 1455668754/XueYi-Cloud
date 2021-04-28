@@ -55,23 +55,23 @@ public class SysRoleController extends BaseController {
         return AjaxResult.success(roleService.selectRoleById(roleId));
     }
 
-//    /**
-//     * 根据角色Id获取菜单范围信息
-//     */
-//    @PreAuthorize(hasPermi = "system:role:query")
-//    @GetMapping(value = "/{roleId}")
-//    public AjaxResult getMenuScope(@PathVariable Long roleId) {
-//        return AjaxResult.success(roleService.selectMenuScopeById(roleId));
-//    }
-//
-//    /**
-//     * 根据角色Id获取数据范围信息
-//     */
-//    @PreAuthorize(hasPermi = "system:role:query")
-//    @GetMapping(value = "/{roleId}")
-//    public AjaxResult getDataScope(@PathVariable Long roleId) {
-//        return AjaxResult.success(roleService.selectDataScopeById(roleId));
-//    }
+    /**
+     * 根据角色Id获取菜单范围信息
+     */
+    @PreAuthorize(hasPermi = "system:role:query")
+    @GetMapping(value = "/menuScope/{roleId}")
+    public AjaxResult getMenuScope(@PathVariable Long roleId) {
+        return AjaxResult.success(roleService.selectMenuScopeById(roleId));
+    }
+
+    /**
+     * 根据角色Id获取数据范围信息
+     */
+    @PreAuthorize(hasPermi = "system:role:query")
+    @GetMapping(value = "/dataScope/{roleId}")
+    public AjaxResult getDataScope(@PathVariable Long roleId) {
+        return AjaxResult.success(roleService.selectDataScopeById(roleId));
+    }
 
     /**
      * 新增角色
@@ -97,7 +97,6 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysRole role) {
-        roleService.checkRoleAllowed(role);
         if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleCodeUnique(role.getRoleId(), role.getRoleCode()))) {
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色编码已存在");
         } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role.getRoleId(), role.getRoleName()))) {
@@ -115,7 +114,6 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/menuScope")
     public AjaxResult menuScope(@RequestBody SysRole role) {
-        roleService.checkRoleAllowed(role);
         return toAjax(roleService.authMenuScope(role));
     }
 
@@ -126,7 +124,6 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/dataScope")
     public AjaxResult dataScope(@RequestBody SysRole role) {
-        roleService.checkRoleAllowed(role);
         return toAjax(roleService.authDataScope(role));
     }
 
@@ -137,7 +134,6 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysRole role) {
-        roleService.checkRoleAllowed(role);
         return toAjax(roleService.updateRoleStatus(role.getRoleId(), role.getStatus()));
     }
 

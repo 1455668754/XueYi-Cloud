@@ -3,6 +3,8 @@ package com.xueyi.system.authority.service.impl;
 import java.util.*;
 
 import com.xueyi.system.authority.mapper.SysRoleMapper;
+import com.xueyi.system.role.domain.SysRoleDeptPost;
+import com.xueyi.system.role.domain.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.*;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,29 +79,31 @@ public class SysRoleServiceImpl implements ISysRoleService {
         return roleMapper.selectRoleById(search);//@param search 万用组件 | roleId 角色Id
     }
 
-//    /**
-//     * 根据角色Id获取菜单范围信息
-//     *
-//     * @param roleId 角色Id
-//     * @return 角色对象信息
-//     */
-//    @Override
-//    public SysRole selectMenuScopeById(Long roleId){
-//        return null;
-//    }
-//
-//    /**
-//     * 根据角色Id获取数据范围信息
-//     *
-//     * @param roleId 角色Id
-//     * @return 角色对象信息
-//     */
-//    @Override
-//    public SysRole selectDataScopeById(Long roleId){
-//        SysSearch search = new SysSearch();
-//        search.getSearch().put("roleId", roleId);
-//        return null;
-//    }
+    /**
+     * 根据角色Id获取菜单范围信息
+     *
+     * @param roleId 角色Id
+     * @return 系统-菜单对象信息集合
+     */
+    @Override
+    public List<SysRoleSystemMenu> selectMenuScopeById(Long roleId){
+        SysSearch search = new SysSearch();
+        search.getSearch().put("roleId", roleId);
+        return roleSystemMenuMapper.selectSystemMenuList(search);//@param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
+    }
+
+    /**
+     * 根据角色Id获取数据范围信息
+     *
+     * @param roleId 角色Id
+     * @return 部门-岗位对象信息集合
+     */
+    @Override
+    public List<SysRoleDeptPost> selectDataScopeById(Long roleId){
+        SysSearch search = new SysSearch();
+        search.getSearch().put("roleId", roleId);
+        return roleDeptPostMapper.selectDeptPostList(search);//@param search 万用组件 | roleId 角色Id | deptPostId 部门-岗位Id
+    }
 
     /**
      * 通过角色Id查询角色使用数量
@@ -325,17 +329,5 @@ public class SysRoleServiceImpl implements ISysRoleService {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
-    }
-
-    /**
-     * 校验角色是否允许操作
-     *
-     * @param role 角色信息
-     */
-    @Override
-    public void checkRoleAllowed(SysRole role) {
-        if (StringUtils.isNotNull(role.getRoleId()) && role.isAdmin()) {
-            throw new CustomException("不允许操作超级管理员角色");
-        }
     }
 }
