@@ -5,18 +5,18 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * 角色和岗位关联对象 sys_role_post
+ * 角色和系统关联对象 sys_role_system_menu
  *
  * @author xueyi
  */
-public class SysRolePost extends BaseEntity {
+public class SysRoleSystemMenu extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 角色Id */
     private Long roleId;
 
-    /** 岗位Id */
-    private Long postId;
+    /** 系统Id */
+    private Long systemMenuId;
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
@@ -26,19 +26,19 @@ public class SysRolePost extends BaseEntity {
         return roleId;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public Long getSystemMenuId() {
+        return systemMenuId;
     }
 
-    public Long getPostId() {
-        return postId;
+    public void setSystemMenuId(Long systemMenuId) {
+        this.systemMenuId = systemMenuId;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("roleId", getRoleId())
-                .append("postId", getPostId())
+                .append("systemMenuId", getSystemMenuId())
                 .toString();
     }
 }

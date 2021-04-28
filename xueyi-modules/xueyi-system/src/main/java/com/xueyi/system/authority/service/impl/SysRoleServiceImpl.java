@@ -27,16 +27,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
     private SysRoleMapper roleMapper;
 
     @Autowired
-    private SysRoleSystemMapper roleSystemMapper;
+    private SysRoleSystemMenuMapper roleSystemMenuMapper;
 
     @Autowired
-    private SysRoleMenuMapper roleMenuMapper;
-
-    @Autowired
-    private SysRoleDeptMapper roleDeptMapper;
-
-    @Autowired
-    private SysRolePostMapper rolePostMapper;
+    private SysRoleDeptPostMapper roleDeptPostMapper;
 
     @Autowired
     private SysDeptRoleMapper deptRoleMapper;
@@ -175,22 +169,15 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public int authMenuScope(SysRole role) {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", role.getRoleId());
-        search.getSearch().put("systemIds", role.getSystemIds());
-        search.getSearch().put("menuIds", role.getMenuIds());
-        int rs, rm;
-        // 1.删除角色和系统关联
-        rs = roleSystemMapper.deleteRoleSystemByRoleId(search);//@param search 查询组件 | roleId 角色Id
-        // 2.删除角色和菜单关联
-        rm = roleMenuMapper.deleteRoleMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
-        // 3.批量新增角色和系统关联
-        if (role.getSystemIds().length > 0) {
-            rs = roleSystemMapper.batchRoleSystem(search);//@param search 万用组件 | roleId 角色Id | systemIds 系统Ids(Long[])
+        int rs;
+        // 1.删除角色和系统-菜单关联
+        rs = roleSystemMenuMapper.deleteRoleSystemMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
+        // 2.批量新增角色和系统-菜单关联
+        if (role.getSystemMenuIds().length > 0) {
+            search.getSearch().put("systemMenuIds", role.getSystemMenuIds());
+            rs = roleSystemMenuMapper.batchRoleSystemMenu(search);//@param search 万用组件 | roleId 角色Id | systemMenuIds 系统-菜单Ids(Long[])
         }
-        // 4.批量新增角色和菜单关联
-        if (role.getMenuIds().length > 0) {
-            rm = roleMenuMapper.batchRoleMenu(search);//@param search 万用组件 | roleId 角色Id | menuIds 菜单Ids(Long[])
-        }
-        return (rs + rm + 1);
+        return (rs + 1);
     }
 
     /**
@@ -205,23 +192,16 @@ public class SysRoleServiceImpl implements ISysRoleService {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", role.getRoleId());
         search.getSearch().put("dataScope", role.getDataScope());
-
         int r;
         // 1.更新角色数据权限范围
         r = roleMapper.updateRoleDataScope(search);//@param search 万用组件 | roleId 角色Id | dataScope 数据范围
-        // 2.删除角色和部门关联
-        r = r + roleDeptMapper.deleteRoleDeptByRoleId(search);//@param search 查询组件 | roleId 角色Id
-        // 3.删除角色和岗位关联
-        r = r + rolePostMapper.deleteRolePostByRoleId(search);//@param search 查询组件 | roleId 角色Id
-        search.getSearch().put("deptIds", role.getDeptIds());
-        search.getSearch().put("postIds", role.getPostIds());
-        // 4.批量新增角色和部门关联
-        if (role.getDeptIds().length > 0) {
-            r = r + roleDeptMapper.batchRoleDept(search);//@param search 万用组件 | roleId 角色Id | deptIds 部门Ids(Long[])
-        }
-        // 5.批量新增角色和岗位关联
-        if (role.getPostIds().length > 0) {
-            r = r + rolePostMapper.batchRolePost(search);//@param search 万用组件 | roleId 角色Id | postIds 岗位Ids(Long[])
+        // 2.删除角色和部门-岗位关联
+        r = r + roleDeptPostMapper.deleteRoleDeptPostByRoleId(search);//@param search 查询组件 | roleId 角色Id
+
+        // 3.批量新增角色和部门-岗位关联(仅设置为自定义数据时执行)
+        if (role.getDeptPostIds().length > 0 && role.getDataScope().equals("2")) {
+            search.getSearch().put("deptPostIds", role.getDeptPostIds());
+            r = r + roleDeptPostMapper.batchRoleDeptPost(search);//@param search 万用组件 | roleId 角色Id | deptPostIds 部门Ids(Long[])
         }
         return (r);
     }
@@ -242,19 +222,15 @@ public class SysRoleServiceImpl implements ISysRoleService {
         // 1.通过角色Id删除角色
         r = roleMapper.deleteRoleById(search);//@param search 万用组件 | roleId 角色Id
         if (r > 0) {
-            // 2.删除角色和系统关联
-            r = r + roleSystemMapper.deleteRoleSystemByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 3.删除角色和菜单关联
-            r = r + roleMenuMapper.deleteRoleMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 4.删除角色和部门关联
-            r = r + roleDeptMapper.deleteRoleDeptByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 5.删除角色和岗位关联
-            r = r + rolePostMapper.deleteRolePostByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 6.删除部门和角色关联
+            // 1.删除角色和系统-菜单关联
+            r = r + roleSystemMenuMapper.deleteRoleSystemMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
+            // 2.删除角色和部门-岗位关联
+            r = r + roleDeptPostMapper.deleteRoleDeptPostByRoleId(search);//@param search 查询组件 | roleId 角色Id
+            // 3.删除部门和角色关联
             r = r + deptRoleMapper.deleteDeptRoleByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 7.删除岗位和角色关联
+            // 4.删除岗位和角色关联
             r = r + postRoleMapper.deletePostRoleByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 8.删除用户和角色关联
+            // 5.删除用户和角色关联
             r = r + userRoleMapper.deleteUserRoleByRoleId(search);//@param search 查询组件 | roleId 角色Id
         }
         return r;
@@ -275,19 +251,15 @@ public class SysRoleServiceImpl implements ISysRoleService {
         // 1.批量删除角色信息
         rs = roleMapper.deleteRoleByIds(search);
         if (rs > 0) {
-            // 2.批量删除角色和系统关联
-            rs = rs + roleSystemMapper.deleteRoleSystemByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 3.批量删除角色和菜单关联
-            rs = rs + roleMenuMapper.deleteRoleMenuByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 4.批量删除角色和部门关联
-            rs = rs + roleDeptMapper.deleteRoleDeptByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 5.批量删除角色和岗位关联
-            rs = rs + rolePostMapper.deleteRolePostByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 6.批量删除部门和角色关联
+            // 1.批量删除角色和系统-菜单关联
+            rs = rs + roleSystemMenuMapper.deleteRoleSystemMenuByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+            // 2.批量删除角色和部门-岗位关联
+            rs = rs + roleDeptPostMapper.deleteRoleDeptPostByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+            // 3.批量删除部门和角色关联
             rs = rs + deptRoleMapper.deleteDeptRoleByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 7.批量删除岗位和角色关联
+            // 4.批量删除岗位和角色关联
             rs = rs + postRoleMapper.deletePostRoleByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 8.批量删除用户和角色关联
+            // 5.批量删除用户和角色关联
             rs = rs + userRoleMapper.deleteUserRoleByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
         }
         return rs;

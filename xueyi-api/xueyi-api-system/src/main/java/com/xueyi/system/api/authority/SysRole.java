@@ -54,14 +54,17 @@ public class SysRole extends BaseEntity
     /** 用户是否存在此角色标识 默认不存在 */
     private boolean flag = false;
 
+    /** 系统-菜单组（菜单权限） */
+    private Long[] systemMenuIds;
+
     /** 系统组（菜单权限） */
     private Long[] systemIds;
 
     /** 菜单组（菜单权限） */
     private Long[] menuIds;
 
-    /** 部门-岗位对象 */
-    private List<Long> deptPostIds;
+    /** 部门-岗位组（数据权限） */
+    private Long[] deptPostIds;
 
     /** 部门组（数据权限） */
     private Long[] deptIds;
@@ -177,11 +180,19 @@ public class SysRole extends BaseEntity
         this.menuIds = menuIds;
     }
 
-    public List<Long> getDeptPostIds() {
+    public Long[] getSystemMenuIds() {
+        return systemMenuIds;
+    }
+
+    public void setSystemMenuIds(Long[] systemMenuIds) {
+        this.systemMenuIds = systemMenuIds;
+    }
+
+    public Long[] getDeptPostIds() {
         return deptPostIds;
     }
 
-    public void setDeptPostIds(List<Long> deptPostIds) {
+    public void setDeptPostIds(Long[] deptPostIds) {
         this.deptPostIds = deptPostIds;
     }
 

@@ -243,7 +243,7 @@
                 class="tree-border"
                 :data="systemMenuOptions"
                 show-checkbox
-                ref="menu"
+                ref="systemMenu"
                 node-key="id"
                 :check-strictly="!form.menuCheckStrictly"
                 empty-text="加载中，请稍后"
@@ -286,7 +286,7 @@
             :data="deptPostOptions"
             show-checkbox
             default-expand-all
-            ref="dept"
+            ref="deptPost"
             node-key="id"
             :check-strictly="!form.deptCheckStrictly"
             empty-text="加载中，请稍后"
@@ -305,10 +305,8 @@
 
 <script>
 import { listRole, getRole, delRole, addRole, updateRole, menuScope, dataScope, changeRoleStatus } from "@/api/system/role";
-import { treeselect as menuTreeselect, roleMenuTreeselect } from "@/api/system/menu";
-import { treeSelect as deptTreeselect, roleDeptTreeselect } from "@/api/system/dept";
-import { treeSelect as deptPostTreeSelect } from "@/api/system/post";
-import {roleSystemMenuTreeSelect} from "@/api/system/system";
+import {treeSelect as roleDeptTreeSelect} from "@/api/system/post";
+import {treeSelect as roleSystemMenuTreeSelect} from "@/api/system/system";
 
 export default {
   name: "Role",
@@ -424,37 +422,37 @@ export default {
         }
       );
     },
-    /** 查询菜单树结构 */
+    /** 查询系统-菜单树结构 */
     getSystemMenuTreeSelect() {
       roleSystemMenuTreeSelect().then(response => {
         this.systemMenuOptions = response.data;
       });
     },
-    /** 查询部门树结构 */
+    /** 查询部门-岗位树结构 */
     getDeptPostTreeSelect() {
-      deptTreeselect().then(response => {
+      roleDeptTreeSelect().then(response => {
         this.deptPostOptions = response.data;
       });
     },
     // 所有系统-菜单节点数据
     getSystemMenuAllCheckedKeys() {
       // 目前被选中的菜单节点
-      let checkedKeys = this.$refs.menu.getCheckedKeys();
+      let checkedKeys = this.$refs.systemMenu.getCheckedKeys();
       // 半选中的菜单节点
-      let halfCheckedKeys = this.$refs.menu.getHalfCheckedKeys();
+      let halfCheckedKeys = this.$refs.systemMenu.getHalfCheckedKeys();
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
       return checkedKeys;
     },
     // 所有部门-岗位节点数据
     getDeptPostAllCheckedKeys() {
       // 目前被选中的部门节点
-      let checkedKeys = this.$refs.dept.getCheckedKeys();
+      let checkedKeys = this.$refs.deptPost.getCheckedKeys();
       // 半选中的部门节点
-      let halfCheckedKeys = this.$refs.dept.getHalfCheckedKeys();
+      let halfCheckedKeys = this.$refs.deptPost.getHalfCheckedKeys();
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys);
       return checkedKeys;
     },
-    /** 根据角色Id查询菜单树结构 */
+    /** 根据角色Id查询系统-菜单树结构 */
     getRoleSystemMenuTreeSelect(roleId) {
       //roleId占用menuId通道上传参数
       return roleSystemMenuTreeSelect().then(response => {
@@ -462,10 +460,10 @@ export default {
         return response;
       });
     },
-    /** 根据角色Id查询部门树结构 */
-    getRoleDeptTreeselect(roleId) {
-      return roleDeptTreeselect(roleId).then(response => {
-        this.deptPostOptions = response.depts;
+    /** 根据角色Id查询部门-岗位树结构 */
+    getRoleDeptTreeSelect(roleId) {
+      return roleDeptTreeSelect().then(response => {
+        this.deptPostOptions = response.data;
         return response;
       });
     },
@@ -501,8 +499,8 @@ export default {
     },
     // 表单重置
     reset() {
-      if (this.$refs.menu !== undefined) {
-        this.$refs.menu.setCheckedKeys([]);
+      if (this.$refs.systemMenu !== undefined) {
+        this.$refs.systemMenu.setCheckedKeys([]);
       }
       this.menuExpand = false;
       this.menuNodeAll = false;
@@ -549,21 +547,21 @@ export default {
       if (type === 'systemMenu') {
         let treeList = this.systemMenuOptions;
         for (let i = 0; i < treeList.length; i++) {
-          this.$refs.menu.store.nodesMap[treeList[i].id].expanded = value;
+          this.$refs.systemMenu.store.nodesMap[treeList[i].id].expanded = value;
         }
       } else if (type === 'deptPost') {
         let treeList = this.deptPostOptions;
         for (let i = 0; i < treeList.length; i++) {
-          this.$refs.dept.store.nodesMap[treeList[i].id].expanded = value;
+          this.$refs.deptPost.store.nodesMap[treeList[i].id].expanded = value;
         }
       }
     },
     // 树权限（全选/全不选）
     handleCheckedTreeNodeAll(value, type) {
       if (type === 'systemMenu') {
-        this.$refs.menu.setCheckedNodes(value ? this.systemMenuOptions: []);
+        this.$refs.systemMenu.setCheckedNodes(value ? this.systemMenuOptions: []);
       } else if (type === 'deptPost') {
-        this.$refs.dept.setCheckedNodes(value ? this.deptPostOptions: []);
+        this.$refs.deptPost.setCheckedNodes(value ? this.deptPostOptions: []);
       }
     },
     /** 新增按钮操作 */
@@ -585,7 +583,7 @@ export default {
     /** 选择角色权限范围触发 */
     dataScopeSelectChange(value) {
       if(value !== '2') {
-        this.$refs.dept.setCheckedKeys([]);
+        this.$refs.deptPost.setCheckedKeys([]);
       }
     },
     /** 分配菜单权限操作 */
@@ -598,7 +596,7 @@ export default {
         this.openMenuScope = true;
         this.$nextTick(() => {
           roleSystemMenuTreeSelect.then(res => {
-            this.$refs.dept.setCheckedKeys(res.checkedKeys);
+            this.$refs.systemMenu.setCheckedKeys(res.checkedKeys);
           });
         });
         this.title = "分配菜单权限";
@@ -607,15 +605,16 @@ export default {
     /** 分配数据权限操作 */
     handleDataScope(row) {
       this.reset();
-      const roleDeptMenuTreeSelect = this.getRoleDeptTreeselect(row.roleId);
+      this.getDeptPostTreeSelect();
+      // const roleDeptMenuTreeSelect = this.getRoleDeptTreeselect(row.roleId);
       getRole(row.roleId).then(response => {
         this.form = response.data;
         this.openDataScope = true;
-        this.$nextTick(() => {
-          roleDeptMenuTreeSelect.then(res => {
-            this.$refs.dept.setCheckedKeys(res.checkedKeys);
-          });
-        });
+        // this.$nextTick(() => {
+        //   roleDeptMenuTreeSelect.then(res => {
+        //     this.$refs.deptPost.setCheckedKeys(res.checkedKeys);
+        //   });
+        // });
         this.title = "分配数据权限";
       });
     },

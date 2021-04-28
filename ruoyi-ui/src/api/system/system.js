@@ -31,7 +31,7 @@ export function getSystem(systemId) {
 }
 
 // 查询系统-菜单权限树结构
-export function roleSystemMenuTreeSelect() {
+export function treeSelect() {
   return request({
     url: '/system/system/roleSystemMenuTreeSelect/'+systemNum,
     method: 'get'

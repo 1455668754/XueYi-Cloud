@@ -10,8 +10,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.xueyi.system.api.organize.SysUser;
-import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,6 @@ import com.xueyi.system.utils.vo.RouterVo;
 import com.xueyi.system.utils.vo.TreeSelect;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
-import com.xueyi.system.role.mapper.SysRoleMenuMapper;
 import com.xueyi.system.authority.service.ISysMenuService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,7 +43,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
     private SysRoleMapper roleMapper;
 
     @Autowired
-    private SysRoleMenuMapper roleMenuMapper;
+    private SysRoleSystemMenuMapper roleSystemMenuMapper;
 
     /**
      * 根据用户查询系统菜单列表
@@ -339,8 +338,8 @@ public class SysMenuServiceImpl implements ISysMenuService {
     @Override
     public boolean checkMenuExistRole(Long menuId) {
         SysSearch search = new SysSearch();
-        search.getSearch().put("menuId", menuId);
-        int result = roleMenuMapper.checkMenuExistRole(search);//@param search 万用组件 | menuId 菜单Id
+        search.getSearch().put("systemMenuId", menuId);
+        int result = roleSystemMenuMapper.checkSystemMenuExistRole(search);//@param search 万用组件 | systemMenuId 系统-菜单Id
         return result > 0;
     }
 
