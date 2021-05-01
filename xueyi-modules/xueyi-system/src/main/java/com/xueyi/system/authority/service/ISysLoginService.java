@@ -33,11 +33,13 @@ public interface ISysLoginService {
      * 获取角色数据权限（登录校验）
      *
      * @param enterpriseId 租户Id
+     * @param deptId       部门Id
+     * @param postId       岗位Id
      * @param userId       用户Id
      * @param userType     用户标识
      * @return 角色权限信息
      */
-    public Set<String> getRolePermission(Long enterpriseId, Long userId, String userType);
+    public Set<String> getRolePermission(Long enterpriseId, Long deptId, Long postId, Long userId, String userType);
 
     /**
      * 获取菜单数据权限（登录校验）

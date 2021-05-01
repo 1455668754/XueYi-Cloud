@@ -74,13 +74,13 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @return 角色权限信息
      */
     @Override
-    public Set<String> getRolePermission(Long enterpriseId, Long userId, String userType) {
+    public Set<String> getRolePermission(Long enterpriseId, Long deptId, Long postId, Long userId, String userType) {
         Set<String> roles = new HashSet<String>();
         // 管理员拥有所有权限
         if (SysUser.isAdmin(userType)) {
             roles.add("admin");
         } else {
-            roles.addAll(checkLoginRolePerms(enterpriseId, userId));
+            roles.addAll(checkLoginRolePerms(enterpriseId, deptId, postId, userId));
         }
         return roles;
     }
@@ -92,9 +92,11 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @param userId       用户Id
      * @return 权限列表
      */
-    public Set<String> checkLoginRolePerms(Long enterpriseId, Long userId) {
+    public Set<String> checkLoginRolePerms(Long enterpriseId, Long deptId, Long postId, Long userId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("enterpriseId", enterpriseId);
+        search.getSearch().put("deptId", deptId);
+        search.getSearch().put("postId", postId);
         search.getSearch().put("userId", userId);
         List<SysRole> perms = roleMapper.checkLoginRolePermission(search);
         Set<String> permsSet = new HashSet<>();
@@ -137,7 +139,10 @@ public class SysLoginServiceImpl implements ISysLoginService {
         SysSearch search = new SysSearch();
         search.getSearch().put("enterpriseId", enterpriseId);
         search.getSearch().put("userId", userId);
+        System.out.println(enterpriseId);
+        System.out.println(userId);
         List<String> perms = menuMapper.checkLoginMenuPermission(search);
+        System.out.println(menuMapper.checkLoginMenuPermission(search));
         Set<String> permsSet = new HashSet<>();
         for (String perm : perms) {
             if (StringUtils.isNotEmpty(perm)) {

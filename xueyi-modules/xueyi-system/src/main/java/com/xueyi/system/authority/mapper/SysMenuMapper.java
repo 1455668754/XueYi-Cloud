@@ -22,6 +22,17 @@ public interface SysMenuMapper {
      */
     public List<String> checkLoginMenuPermission(SysSearch search);
 
+
+    /**
+     * 根据用户Id查询权限
+     * 访问控制 m 租户查询
+     *
+     * @param search 万用组件 | userId 用户Id
+     * @return 权限列表
+     */
+    @DataScope(systemAlias = "m")
+    public List<String> selectMenuPermsByUserId(SysSearch search);
+
     /**
      * 查询系统全部菜单列表
      * 访问控制 m 租户查询
@@ -52,16 +63,6 @@ public interface SysMenuMapper {
      */
     @DataScope(systemAlias = "m")
     public List<SysMenu> selectMenuListByUserId(SysMenu menu);
-
-    /**
-     * 根据用户Id查询权限
-     * 访问控制 m 租户查询
-     *
-     * @param search 万用组件 | userId 用户Id
-     * @return 权限列表
-     */
-    @DataScope(systemAlias = "m")
-    public List<String> selectMenuPermsByUserId(SysSearch search);
 
     /**
      * 根据用户Id查询菜单

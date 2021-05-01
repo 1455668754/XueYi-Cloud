@@ -38,9 +38,12 @@
 	<sql id="selectPermsVo">
 		select distinct m.perms
 		from sys_menu m
-				 left join sys_role_menu rm on m.menu_id = rm.menu_id
-				 left join sys_user_role ur on rm.role_id = ur.role_id
-				 left join sys_role r on r.role_id = ur.role_id
+				 left join sys_role_system_menu rsm on rsm.system_menu_id = m.menu_id
+				 left join sys_dept_role dr on dr.role_id = rsm.role_id
+				 left join sys_post_role pr on pr.role_id = rsm.role_id
+				 left join sys_user_role ur on ur.role_id = rsm.role_id
+				 left join sys_user u on u.dept_id = dr.dept_id or u.post_id = pr.post_id or u.user_id = ur.user_id
+				 left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
 	</sql>
 
 	<sql id="selectDistinctVo">
@@ -53,10 +56,12 @@
 		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
 						ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.sort, m.create_time
 		from sys_menu m
-				 left join sys_role_menu rm on m.menu_id = rm.menu_id
-				 left join sys_user_role ur on rm.role_id = ur.role_id
-				 left join sys_role ro on ur.role_id = ro.role_id
-				 left join sys_user u on ur.user_id = u.user_id
+				 left join sys_role_system_menu rsm on rsm.system_menu_id = m.menu_id
+				 left join sys_dept_role dr on dr.role_id = rsm.role_id
+				 left join sys_post_role pr on pr.role_id = rsm.role_id
+				 left join sys_user_role ur on ur.role_id = rsm.role_id
+				 left join sys_user u on u.dept_id = dr.dept_id or u.post_id = pr.post_id or u.user_id = ur.user_id
+				 left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
 	</sql>
 
 	<sql id="checkVo">
@@ -73,8 +78,47 @@
 	<!--未登录用户的登录校验方法，不允许加访问控制-->
 	<select id="checkLoginMenuPermission" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">
 		<include refid="selectPermsVo"/>
-		where ur.user_id = #{search.userId} and m.status = 0 and m.tenant_id = #{search.enterpriseId} and r.status = 0 and r.tenant_id = #{search.enterpriseId}
+		where u.user_id = #{search.userId}
+		and m.status = 0 and ( m.tenant_id = #{search.enterpriseId} or m.tenant_id = 0 )
+		and r.status = 0 and r.tenant_id = #{search.enterpriseId}
+		and u.status = 0 and u.tenant_id = #{search.enterpriseId}
 	</select>
+
+	<select id="selectMenuPermsByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">
+		<include refid="selectPermsVo"/>
+		where m.status = 0 and r.status = 0 and u.user_id = #{search.userId}
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+	</select>
+
+	<select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
+		<include refid="selectTreeVo"/>
+		where u.user_id = #{params.userId}
+		<if test="menuName != null and menuName != ''">
+			AND m.menu_name like concat('%', #{menuName}, '%')
+		</if>
+		<if test="visible != null and visible != ''">
+			AND m.visible = #{visible}
+		</if>
+		<if test="status != null and status != ''">
+			AND m.status = #{status}
+		</if>
+		<!-- 数据范围过滤 -->
+		and m.system_id = #{systemId}
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
+
+	<select id="selectMenuTreeByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
+		<include refid="selectTreeVo"/>
+		where m.menu_type in ('M', 'C') and m.status = 0 and r.status = 0 and u.user_id = #{search.userId}
+		<!-- 数据范围过滤 -->
+		and m.system_id = #{search.systemId}
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
 
 	<select id="selectMenuListAll" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectVo"/>
@@ -102,31 +146,6 @@
 		order by m.parent_id, m.sort
 	</select>
 
-	<select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
-		<include refid="selectTreeVo"/>
-		where ur.user_id = #{params.userId}
-		<if test="menuName != null and menuName != ''">
-			AND m.menu_name like concat('%', #{menuName}, '%')
-		</if>
-		<if test="visible != null and visible != ''">
-			AND m.visible = #{visible}
-		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
-		</if>
-		<!-- 数据范围过滤 -->
-		and m.system_id = #{systemId}
-		${params.dataScope}
-		order by m.parent_id, m.sort
-	</select>
-
-	<select id="selectMenuPermsByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">
-		<include refid="selectPermsVo"/>
-		where m.status = '0' and r.status = '0' and ur.user_id = #{search.userId}
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
-	</select>
-
 	<select id="selectMenuTreeAll" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
 		<include refid="selectDistinctVo"/>
 		where m.menu_type in ('M', 'C') and m.status = 0
@@ -136,23 +155,14 @@
 		order by m.parent_id, m.sort
 	</select>
 
-	<select id="selectMenuTreeByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
-		<include refid="selectTreeVo"/>
-		where m.menu_type in ('M', 'C') and m.status = 0 and ro.status = 0 and u.user_id = #{search.userId}
-		<!-- 数据范围过滤 -->
-		and m.system_id = #{search.systemId}
-		${params.dataScope}
-		order by m.parent_id, m.sort
-	</select>
-
 	<select id="selectMenuListByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="Integer">
 		select m.menu_id
 		from sys_menu m
-		left join sys_role_menu rm on m.menu_id = rm.menu_id
+		left join sys_role_system_menu rm on m.menu_id = rm.system_menu_id
 		where rm.role_id = #{search.roleId}
 		<if test="search.menuCheckStrictly">
-			and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_menu rm on m.menu_id =
-			rm.menu_id and rm.role_id = #{search.roleId})
+			and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_system_menu rm on m.menu_id =
+			rm.system_menu_id and rm.role_id = #{search.roleId})
 		</if>
 		<!-- 数据范围过滤 -->
 		and m.system_id = #{search.systemId}

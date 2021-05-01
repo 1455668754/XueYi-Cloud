@@ -52,9 +52,14 @@ public class DataScopeAspect {
     public static final String DATA_SCOPE_DEPT_AND_CHILD = "4";
 
     /**
+     * 部门数据权限
+     */
+    public static final String DATA_SCOPE_POST = "5";
+
+    /**
      * 仅本人数据权限
      */
-    public static final String DATA_SCOPE_SELF = "5";
+    public static final String DATA_SCOPE_SELF = "6";
 
     /**
      * 数据权限过滤关键字
@@ -93,8 +98,8 @@ public class DataScopeAspect {
             SysEnterprise currentEnterprise = loginUser.getSysEnterprise();
 
             if (StringUtils.isNotNull(currentUser)) {
-                dataScopeFilter(joinPoint, currentEnterprise, currentUser, controllerDataScope.loginEnterpriseAlias(), controllerDataScope.enterpriseAlias(), controllerDataScope.systemAlias(), controllerDataScope.updateEnterpriseAlias(), controllerDataScope.deptAlias(),
-                        controllerDataScope.userAlias());
+                dataScopeFilter(joinPoint, currentEnterprise, currentUser, controllerDataScope.enterpriseAlias(), controllerDataScope.systemAlias(), controllerDataScope.updateEnterpriseAlias(), controllerDataScope.deptAlias(),
+                        controllerDataScope.postAlias(), controllerDataScope.userAlias());
             }
         }
     }
@@ -105,14 +110,14 @@ public class DataScopeAspect {
      * @param joinPoint             切点
      * @param enterprise            租户
      * @param user                  用户
-     * @param loginEnterpriseAlias  登录验证
      * @param enterpriseAlias       租户别名
      * @param systemAlias           租户+系统基础别名
      * @param updateEnterpriseAlias 租户更新控制的别名 empty 无前缀更新|other 有前缀更新
      * @param deptAlias             部门别名
+     * @param postAlias             岗位别名
      * @param userAlias             用户别名
      */
-    public static void dataScopeFilter(JoinPoint joinPoint, SysEnterprise enterprise, SysUser user, String loginEnterpriseAlias, String enterpriseAlias, String systemAlias, String updateEnterpriseAlias, String deptAlias, String userAlias) {
+    public static void dataScopeFilter(JoinPoint joinPoint, SysEnterprise enterprise, SysUser user, String enterpriseAlias, String systemAlias, String updateEnterpriseAlias, String deptAlias, String postAlias, String userAlias) {
         StringBuilder sqlString = new StringBuilder();
         StringBuilder upSqlString = new StringBuilder();
 
@@ -120,29 +125,55 @@ public class DataScopeAspect {
         if (!user.isAdmin()) {
             for (SysRole role : user.getRoles()) {
                 String dataScope = role.getDataScope();
+                // 1.全部数据权限
                 if (DATA_SCOPE_ALL.equals(dataScope)) {
                     sqlString = new StringBuilder();
                     break;
-                } else if (DATA_SCOPE_CUSTOM.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                }
+                // 2.自定数据权限
+                else if (DATA_SCOPE_CUSTOM.equals(dataScope) && StringUtils.isNotBlank(deptAlias) && StringUtils.isNotBlank(postAlias)) {
                     sqlString.append(StringUtils.format(
-                            " OR {}.dept_id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = {} ) ", deptAlias,
-                            role.getRoleId()));
-                } else if (DATA_SCOPE_DEPT.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                            " OR {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} )", deptAlias,
+                            role.getRoleId(), postAlias, role.getRoleId()));
+                }
+                // 3.本部门数据权限
+                else if (DATA_SCOPE_DEPT.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
                     sqlString.append(StringUtils.format(" OR {}.dept_id = {} ", deptAlias, user.getDeptId()));
-                } else if (DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                }
+                // 4.本部门及以下数据权限
+                else if (DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
                     sqlString.append(StringUtils.format(
                             " OR {}.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = {} or find_in_set( {} , ancestors ) )",
                             deptAlias, user.getDeptId(), user.getDeptId()));
-                } else if (DATA_SCOPE_SELF.equals(dataScope)) {
+                }
+                // 5.本岗位数据权限
+                else if (DATA_SCOPE_POST.equals(dataScope) && StringUtils.isNotBlank(postAlias)) {
+                    sqlString.append(StringUtils.format(" OR {}.post_id = {} ", postAlias, user.getPostId()));
+                }
+                // 6.仅本人数据权限
+                else if (DATA_SCOPE_SELF.equals(dataScope)) {
                     if (StringUtils.isNotBlank(userAlias)) {
                         sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
                     } else {
                         // 数据权限为仅本人且没有userAlias别名不查询任何数据
-                        sqlString.append(" AND 1=0 ");
+                        sqlString.append(" AND 1 = 0 ");
                     }
                 }
             }
         }
+        // 租户控制
+
+        //控制数据权限 分离
+        if(StringUtils.isNotBlank(deptAlias)){
+            sqlString.append(StringUtils.format(" AND {}.tenant_id = {} AND {}.del_flag = 0", deptAlias, enterprise.getEnterpriseId(), deptAlias));
+        }
+        if(StringUtils.isNotBlank(postAlias)){
+            sqlString.append(StringUtils.format(" AND {}.tenant_id = {} AND {}.del_flag = 0", postAlias, enterprise.getEnterpriseId(), postAlias));
+        }
+        if(StringUtils.isNotBlank(userAlias)){
+            sqlString.append(StringUtils.format(" AND {}.tenant_id = {} AND {}.del_flag = 0", userAlias, enterprise.getEnterpriseId(), userAlias));
+        }
+
         //1.租户数据查询分离模式1(仅当具备租户别名时生效)
         if (StringUtils.isNotBlank(enterpriseAlias)) {
             sqlString.append(StringUtils.format(" AND {}.tenant_id = {} AND {}.del_flag = 0", enterpriseAlias, enterprise.getEnterpriseId(), enterpriseAlias));
@@ -158,8 +189,6 @@ public class DataScopeAspect {
             } else {
                 upSqlString.append(StringUtils.format(" AND {}.tenant_id = {} AND {}.del_flag = 0", updateEnterpriseAlias, enterprise.getEnterpriseId(), updateEnterpriseAlias));
             }
-        } else if (StringUtils.isNotBlank(loginEnterpriseAlias)) {
-            sqlString.append(StringUtils.format(" AND {}.del_flag = 0", loginEnterpriseAlias));
         }
         //4.当无查询控制时，阻断查询进行，保证数据安全(后续可跟进设置总领超管系统，解除权限设置)
         else {

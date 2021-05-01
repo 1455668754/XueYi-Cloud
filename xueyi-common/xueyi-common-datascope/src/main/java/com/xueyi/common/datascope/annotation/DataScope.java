@@ -43,6 +43,11 @@ public @interface DataScope
     public String deptAlias() default "";
 
     /**
+     * 岗位表的别名
+     */
+    public String postAlias() default "";
+
+    /**
      * 用户表的别名
      */
     public String userAlias() default "";

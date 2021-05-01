@@ -70,7 +70,7 @@ public class SysUserController extends BaseController {
             return R.fail("账号或密码错误，请检查");
         }
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(sysEnterprise.getEnterpriseId(), sysUser.getUserId(), sysUser.getUserType());
+        Set<String> roles = loginService.getRolePermission(sysEnterprise.getEnterpriseId(), sysUser.getDeptId(), sysUser.getPostId(), sysUser.getUserId(), sysUser.getUserType());
         // 权限集合
         Set<String> permissions = loginService.getMenuPermission(sysEnterprise.getEnterpriseId(), sysUser.getUserId(), sysUser.getUserType());
         LoginUser sysUserVo = new LoginUser();
@@ -90,15 +90,12 @@ public class SysUserController extends BaseController {
     @GetMapping("getInfo")
     public AjaxResult getInfo() {
         LoginUser loginUser = tokenService.getLoginUser();
-        Long enterpriseId = loginUser.getEnterpriseId();
-        Long userId = loginUser.getUserid();
-        String userType = loginUser.getUserType();
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(enterpriseId, userId, userType);
+        Set<String> roles = loginService.getRolePermission(loginUser.getEnterpriseId(), loginUser.getSysUser().getDeptId(), loginUser.getSysUser().getPostId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(enterpriseId, userId, userType);
+        Set<String> permissions = loginService.getMenuPermission(loginUser.getEnterpriseId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
         AjaxResult ajax = AjaxResult.success();
-        ajax.put("user", userService.selectUserById(userId));
+        ajax.put("user", userService.selectUserById(loginUser.getSysUser().getUserId()));
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
         return ajax;
