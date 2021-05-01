@@ -90,23 +90,23 @@ com.ruoyi
 
 <table>
     <tr>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140445_bdd838af_7382127.png "8.png")</td>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140513_48ff7abd_7382127.png "1.png")</td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140445_bdd838af_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140513_48ff7abd_7382127.png"/></td>
     </tr>
     <tr>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140849_681cc401_7382127.png "11.png")</td>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140859_d9190514_7382127.png "12.png")</td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140849_681cc401_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140859_d9190514_7382127.png"/></td>
     </tr>
     <tr>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140524_ec4af10e_7382127.png "2.png")</td>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140534_98a211b1_7382127.png "3.png")</td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140524_ec4af10e_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140534_98a211b1_7382127.png"/></td>
     </tr>
     <tr>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140545_9c62338d_7382127.png "4.png")</td>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140558_1c729ee4_7382127.png "5.png")</td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140545_9c62338d_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140558_1c729ee4_7382127.png"/></td>
     </tr>
-	<tr>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140607_d6697a5a_7382127.png "6.png")</td>
-        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png "7.png")</td>
+    <tr>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140607_d6697a5a_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png"/></td>
     </tr>	 
 </table>
