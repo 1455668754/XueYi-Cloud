@@ -8,10 +8,9 @@
 * 重构权限控制，角色-模块-菜单控制模式，同时角色-部门|角色-岗位|角色-用户多种角色授权方式，岗位继承部门角色，用户继承岗位、部门角色。
 
 基于本系统还有许多内容是我想要加入进来的，但限于时间问题，后续慢慢更新进来，刚发布初期可能存在一些bug，如遇到欢迎提出Issues，看到会进行解决。
-（新权限只剩下查询控制了，1.1版本终于马上就要做完了）
+
 关于文档这块，近期有时间会更新上来。
 
-（暂时写这么多，等1.1版本发布再来更新这个）
 
 同时也非常感谢ruoyi大佬。
 
@@ -41,6 +40,13 @@ com.ruoyi
 │       └── ruoyi-common-swagger                      // 系统接口
 ├── ruoyi-modules         // 业务模块
 │       └── ruoyi-system                              // 系统模块 [9201]
+│               └── authority                         // 权限模块
+│               └── dict                              // 字典配置
+│               └── material                          // 素材模块
+│               └── monitor                           // 监控模块
+│               └── notice                            // 公告模块
+│               └── organize                          // 组织模块
+│               └── role                              // 权限关系
 │       └── ruoyi-gen                                 // 代码生成 [9202]
 │       └── ruoyi-job                                 // 定时任务 [9203]
 │       └── ruoyi-file                                // 文件服务 [9300]
@@ -74,9 +80,8 @@ com.ruoyi
 17. 连接池监视：监视当前系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
 
 ## 在线体验
-
-- admin/admin123  
-- 陆陆续续收到一些打赏，为了更好的体验已用于演示服务器升级。谢谢各位小伙伴。
+- 企业账号/员工账号/密码
+- xueYi/admin/admin123
 
 演示地址：http://ruoyi.vip  
 文档地址：http://doc.ruoyi.vip
@@ -85,39 +90,23 @@ com.ruoyi
 
 <table>
     <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/cd1f90be5f2684f4560c9519c0f2a232ee8.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/1cbcf0e6f257c7d3a063c0e3f2ff989e4b3.jpg"/></td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140445_bdd838af_7382127.png "8.png")</td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140513_48ff7abd_7382127.png "1.png")</td>
     </tr>
     <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8074972883b5ba0622e13246738ebba237a.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-9f88719cdfca9af2e58b352a20e23d43b12.png"/></td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140849_681cc401_7382127.png "11.png")</td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140859_d9190514_7382127.png "12.png")</td>
     </tr>
     <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-39bf2584ec3a529b0d5a3b70d15c9b37646.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-4148b24f58660a9dc347761e4cf6162f28f.png"/></td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140524_ec4af10e_7382127.png "2.png")</td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140534_98a211b1_7382127.png "3.png")</td>
+    </tr>
+    <tr>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140545_9c62338d_7382127.png "4.png")</td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140558_1c729ee4_7382127.png "5.png")</td>
     </tr>
 	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-b2d62ceb95d2dd9b3fbe157bb70d26001e9.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d67451d308b7a79ad6819723396f7c3d77a.png"/></td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140607_d6697a5a_7382127.png "6.png")</td>
+        <td>![输入图片说明](https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png "7.png")</td>
     </tr>	 
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/5e8c387724954459291aafd5eb52b456f53.jpg"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/644e78da53c2e92a95dfda4f76e6d117c4b.jpg"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-8370a0d02977eebf6dbf854c8450293c937.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-49003ed83f60f633e7153609a53a2b644f7.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-d4fe726319ece268d4746602c39cffc0621.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-c195234bbcd30be6927f037a6755e6ab69c.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-ece3fd37a3d4bb75a3926e905a3c5629055.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-92ffb7f3835855cff100fa0f754a6be0d99.png"/></td>
-    </tr>
-    <tr>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-ff9e3066561574aca73005c5730c6a41f15.png"/></td>
-        <td><img src="https://oscimg.oschina.net/oscnet/up-5e4daac0bb59612c5038448acbcef235e3a.png"/></td>
-    </tr>
 </table>
