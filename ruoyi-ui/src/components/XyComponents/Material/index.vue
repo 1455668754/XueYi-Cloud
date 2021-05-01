@@ -472,13 +472,31 @@ export default {
 
 .dialogTop {
   margin-top: 9vh;
-  left: 21%;
+  left: 22%;
+  @media screen and (max-width: 1920px) {
+    left: 22%;
+  }
+  @media screen and (min-width: 1921px) and (max-width: 2560px) {
+    left: 30%;
+  }
+  @media screen and (min-width: 2561px) {
+    left: 38%;
+  }
   position: fixed;
 }
 
 .minor-dialogTop {
   margin-top: 9vh;
-  left: calc(21% + 960px);
+  left: calc(22% + 960px);
+  @media screen and (max-width: 1920px) {
+    left: calc(22% + 960px);
+  }
+  @media screen and (min-width: 1921px) and (max-width: 2560px) {
+    left: calc(30% + 960px);
+  }
+  @media screen and (min-width: 2561px) {
+    left: calc(38% + 960px);
+  }
   position: fixed;
 
   .minor-title-text {

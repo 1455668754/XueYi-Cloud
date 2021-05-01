@@ -170,7 +170,7 @@
           <el-input v-model="form.form.route" placeholder="请输入跳转路由"/>
         </el-form-item>
         <el-form-item label="系统图片">
-          <ImageBox v-model="form.form.imageUrl" max="1" :clear="true"/>
+          <ImageBox v-model="form.form.imageUrl" max="2" :clear="true"/>
         </el-form-item>
         <el-row>
           <el-col :span="12">
