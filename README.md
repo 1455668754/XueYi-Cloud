@@ -90,7 +90,7 @@ com.ruoyi
 
 <table>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/141508_5d3e33f1_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0501/142108_5c0567fd_7382127.png"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140513_48ff7abd_7382127.png"/></td>
     </tr>
     <tr>
