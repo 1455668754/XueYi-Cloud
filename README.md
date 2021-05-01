@@ -10,8 +10,6 @@
 
 基于本系统还有许多内容是我想要加入进来的，但限于时间问题，后续慢慢更新进来，刚发布初期可能存在一些bug，如遇到欢迎提出Issues，看到会进行解决。
 
-同时也非常感谢ruoyi大佬。
-
 * 采用前后端分离的模式，微服务版本前端。
 * 后端采用Spring Boot、Spring Cloud & Alibaba。
 * 注册中心、配置中心选型Nacos，权限认证使用Redis。
@@ -20,22 +18,22 @@
 ## 系统模块
 
 ~~~
-com.ruoyi     
-├── ruoyi-ui              // 前端框架 [80]
-├── ruoyi-gateway         // 网关模块 [8080]
-├── ruoyi-auth            // 认证中心 [9200]
-├── ruoyi-api             // 接口模块
-│       └── ruoyi-api-system                          // 系统接口
-├── ruoyi-common          // 通用模块
-│       └── ruoyi-common-core                         // 核心模块
-│       └── ruoyi-common-datascope                    // 权限范围
-│       └── ruoyi-common-datasource                   // 多数据源
-│       └── ruoyi-common-log                          // 日志记录
-│       └── ruoyi-common-redis                        // 缓存服务
-│       └── ruoyi-common-security                     // 安全模块
-│       └── ruoyi-common-swagger                      // 系统接口
-├── ruoyi-modules         // 业务模块
-│       └── ruoyi-system                              // 系统模块 [9201]
+com.xueyi     
+├── xueyi-ui              // 前端框架 [80]
+├── xueyi-gateway         // 网关模块 [8080]
+├── xueyi-auth            // 认证中心 [9200]
+├── xueyi-api             // 接口模块
+│       └── xueyi-api-system                          // 系统接口
+├── xueyi-common          // 通用模块
+│       └── xueyi-common-core                         // 核心模块
+│       └── xueyi-common-datascope                    // 权限范围
+│       └── xueyi-common-datasource                   // 多数据源
+│       └── xueyi-common-log                          // 日志记录
+│       └── xueyi-common-redis                        // 缓存服务
+│       └── xueyi-common-security                     // 安全模块
+│       └── xueyi-common-swagger                      // 系统接口
+├── xueyi-modules         // 业务模块
+│       └── xueyi-system                              // 系统模块 [9201]
 │               └── authority                         // 权限模块
 │               └── dict                              // 字典配置
 │               └── material                          // 素材模块
@@ -43,11 +41,11 @@ com.ruoyi
 │               └── notice                            // 公告模块
 │               └── organize                          // 组织模块
 │               └── role                              // 权限关系
-│       └── ruoyi-gen                                 // 代码生成 [9202]
-│       └── ruoyi-job                                 // 定时任务 [9203]
-│       └── ruoyi-file                                // 文件服务 [9300]
-├── ruoyi-visual          // 图形化管理模块
-│       └── ruoyi-visual-monitor                      // 监控中心 [9100]
+│       └── xueyi-gen                                 // 代码生成 [9202]
+│       └── xueyi-job                                 // 定时任务 [9203]
+│       └── xueyi-file                                // 文件服务 [9300]
+├── xueyi-visual          // 图形化管理模块
+│       └── xueyi-visual-monitor                      // 监控中心 [9100]
 ├──pom.xml                // 公共依赖
 ~~~
 
@@ -104,5 +102,5 @@ com.ruoyi
     <tr>
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140607_d6697a5a_7382127.png"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png"/></td>
-    </tr>	 
+    </tr>
 </table>
