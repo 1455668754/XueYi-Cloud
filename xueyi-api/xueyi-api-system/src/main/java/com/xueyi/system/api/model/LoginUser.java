@@ -2,7 +2,6 @@ package com.xueyi.system.api.model;
 
 import java.io.Serializable;
 import java.util.Set;
-
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.api.organize.SysUser;
 
@@ -10,7 +9,6 @@ import com.xueyi.system.api.organize.SysUser;
  * 用户信息
  *
  * @author xueyi
- * @originalAuthor ruoyi
  */
 public class LoginUser implements Serializable
 {
