@@ -69,6 +69,9 @@ public class SysUser extends BaseEntity
     /** 用户头像 */
     private String avatar;
 
+    /** 个人简介 */
+    private String profile;
+
     /** 密码 */
     private String password;
 
@@ -220,6 +223,14 @@ public class SysUser extends BaseEntity
         this.avatar = avatar;
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
     @JsonProperty
     public String getPassword() {
         return password;
@@ -308,6 +319,7 @@ public class SysUser extends BaseEntity
                 .append("dept", getDept())
                 .append("post", getPost())
                 .append("avatar", getAvatar())
+                .append("profile", getProfile())
                 .append("password", getPassword())
                 .append("salt", getSalt())
                 .append("loginIp", getLoginIp())
