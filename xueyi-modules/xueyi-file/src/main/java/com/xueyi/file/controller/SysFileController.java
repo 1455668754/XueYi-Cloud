@@ -3,7 +3,10 @@ package com.xueyi.file.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import com.xueyi.common.core.domain.R;
@@ -42,6 +45,24 @@ public class SysFileController
         catch (Exception e)
         {
             log.error("上传文件失败", e);
+            return R.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * 文件上传请求
+     */
+    @PostMapping("delete")
+    public R<Boolean> delete(String url)
+    {
+        try
+        {
+            Boolean result = sysFileService.deleteFile(url);
+            return R.ok(result);
+        }
+        catch (Exception e)
+        {
+            log.error("文件删除失败", e);
             return R.fail(e.getMessage());
         }
     }

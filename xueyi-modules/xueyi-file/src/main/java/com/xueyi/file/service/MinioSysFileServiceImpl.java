@@ -42,4 +42,15 @@ public class MinioSysFileServiceImpl implements ISysFileService
         client.putObject(args);
         return minioConfig.getUrl() + "/" + minioConfig.getBucketName() + "/" + fileName;
     }
+
+    /**
+     * 文件删除接口
+     *
+     * @param url 文件地址
+     * @return 删除状态
+     * @throws Exception
+     */
+    public Boolean deleteFile(String url) throws Exception{
+        return true;
+    }
 }

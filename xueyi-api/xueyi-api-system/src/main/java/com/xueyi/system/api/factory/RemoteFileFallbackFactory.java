@@ -12,7 +12,8 @@ import feign.hystrix.FallbackFactory;
 /**
  * 文件服务降级处理
  *
- * @author ruoyi
+ * @author xueyi
+ * @originalAuthor ruoyi
  */
 @Component
 public class RemoteFileFallbackFactory implements FallbackFactory<RemoteFileService>
@@ -27,6 +28,12 @@ public class RemoteFileFallbackFactory implements FallbackFactory<RemoteFileServ
         {
             @Override
             public R<SysFile> upload(MultipartFile file)
+            {
+                return R.fail("上传文件失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<Boolean> delete(String url)
             {
                 return R.fail("上传文件失败:" + throwable.getMessage());
             }
