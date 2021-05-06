@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

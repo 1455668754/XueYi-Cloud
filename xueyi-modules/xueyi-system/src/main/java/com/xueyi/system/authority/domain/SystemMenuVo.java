@@ -1,8 +1,6 @@
 package com.xueyi.system.authority.domain;
 
 import com.xueyi.common.core.web.domain.BaseEntity;
-import com.xueyi.system.organize.domain.deptPostVo;
-
 import java.util.ArrayList;
 import java.util.List;
 

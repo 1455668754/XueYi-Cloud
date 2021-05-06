@@ -4,14 +4,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-
 import com.xueyi.common.core.web.domain.BaseEntity;
 
 /**
  * 通知公告表 sys_notice
  *
  * @author xueyi
- * @originalAuthor ruoyi
  */
 public class SysNotice extends BaseEntity
 {

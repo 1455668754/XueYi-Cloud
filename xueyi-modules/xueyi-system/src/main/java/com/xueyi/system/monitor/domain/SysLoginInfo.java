@@ -9,7 +9,7 @@ import com.xueyi.common.core.web.domain.BaseEntity;
 /**
  * 系统访问记录表 sys_loginInfo
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class SysLoginInfo extends BaseEntity
 {

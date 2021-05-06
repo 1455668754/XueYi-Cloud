@@ -12,7 +12,6 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  * 参数配置表 sys_config
  *
  * @author xueyi
- * @originalAuthor ruoyi
  */
 public class SysConfig extends BaseEntity
 {

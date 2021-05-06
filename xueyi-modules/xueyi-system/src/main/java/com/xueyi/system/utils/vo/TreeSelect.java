@@ -3,7 +3,6 @@ package com.xueyi.system.utils.vo;
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.organize.SysDept;
@@ -15,7 +14,6 @@ import com.xueyi.system.organize.domain.deptPostVo;
  * Treeselect树结构实体类
  *
  * @author xueyi
- * @originalAuthor ruoyi
  */
 public class TreeSelect implements Serializable {
     private static final long serialVersionUID = 1L;

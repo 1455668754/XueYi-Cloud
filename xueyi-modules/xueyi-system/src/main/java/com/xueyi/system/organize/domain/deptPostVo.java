@@ -1,7 +1,6 @@
 package com.xueyi.system.organize.domain;
 
 import com.xueyi.common.core.web.domain.BaseEntity;
-
 import java.util.ArrayList;
 import java.util.List;
 

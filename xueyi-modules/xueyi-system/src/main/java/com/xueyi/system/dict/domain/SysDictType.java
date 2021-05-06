@@ -12,7 +12,6 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  * 字典类型表 sys_dict_type
  *
  * @author xueyi
- * @originalAuthor ruoyi
  */
 public class SysDictType extends BaseEntity
 {
