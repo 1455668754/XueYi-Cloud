@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import defaultSettings from '@/settings'
 
+//系统编号
+const { homePageName, homePageIcon } = defaultSettings
 Vue.use(Router)
 
 /* Layout */
@@ -61,8 +64,8 @@ export const constantRoutes = [
       {
         path: 'index',
         component: (resolve) => require(['@/views/index'], resolve),
-        name: '首页',
-        meta: { title: '首页', icon: 'dashboard', noCache: true, affix: true }
+        name: homePageName,
+        meta: { title: homePageName, icon: homePageIcon, noCache: true, affix: true }
       }
     ]
   },

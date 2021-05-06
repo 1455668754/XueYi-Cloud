@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div class="system-title">产品中心</div>
+    <div class="system-title">{{ homePageName }}</div>
     <el-card class="system-card" shadow="hover" v-for="(item,index) in list">
       <div class="card-main">
         <div class="card-image">
@@ -30,7 +30,8 @@ export default {
   name: "index",
   data() {
     return {
-      list: []
+      list: [],
+      homePageName:this.$store.state.settings.homePageName,
     }
   },
   created() {

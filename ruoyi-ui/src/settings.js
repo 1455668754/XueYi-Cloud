@@ -35,6 +35,13 @@ module.exports = {
    * 系统编号
    */
   systemNum: 0,
+
+  /**
+   * 初始页名称|图标
+   */
+  homePageName: '产品中心',
+  homePageIcon: 'dashboard',
+
   /**
    * @type {string | array} 'production' | ['production', 'development']
    * @description Need show err logs component.
