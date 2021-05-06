@@ -87,6 +87,7 @@ create table sys_user (
   email                     varchar(50)         default ''                              comment '用户邮箱',
   sex                       char(1)             default '2'                             comment '用户性别（0男 1女 2保密）',
   avatar                    varchar(100)        default ''                              comment '头像地址',
+  profile                   varchar(100)        default '这个人很懒，暂未留下什么'          comment '个人简介',
   password                  varchar(100)        default ''                              comment '密码',
   login_ip                  varchar(128)        default ''                              comment '最后登录IP',
   login_date                datetime                                                    comment '最后登录时间',

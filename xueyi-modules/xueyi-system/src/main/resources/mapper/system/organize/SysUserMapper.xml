@@ -16,6 +16,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="email"        	column="email"       />
 		<result property="sex"          	column="sex"         />
 		<result property="avatar"       	column="avatar"      />
+		<result property="profile"       	column="profile"     />
 		<result property="password"     	column="password"    />
 		<result property="loginIp"      	column="login_ip"    />
 		<result property="loginDate"    	column="login_date"  />
@@ -65,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<sql id="selectVo">
-		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
+		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.profile, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
 			   d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email,d.status as dept_status,
 			   p.post_id, p.dept_id, p.post_code, p.post_name,p.status as post_status,
 			   r.role_id, r.role_code, r.role_name, r.role_key, r.sort, r.data_scope, r.status as role_status
@@ -77,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</sql>
 
 	<sql id="checkVo">
-		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark
+		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.profile, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark
 		from sys_user u
 	</sql>
 
@@ -153,6 +154,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="email != null and email != ''">                 email                               ,</if>
 			<if test="sex != null and sex != ''">                     sex                                 ,</if>
 			<if test="avatar != null and avatar != ''">               avatar                              ,</if>
+			<if test="profile != null and profile != ''">        	  profile                             ,</if>
 			<if test="password != null and password != ''">           password                            ,</if>
 			<if test="sort != null">                                  sort                                ,</if>
 			<if test="status != null and status != ''">               status                              ,</if>
@@ -171,6 +173,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="email != null and email != ''">                 #{email}                            ,</if>
 			<if test="sex != null and sex != ''">                     #{sex}                              ,</if>
 			<if test="avatar != null and avatar != ''">               #{avatar}                           ,</if>
+			<if test="profile != null and profile != ''">             #{profile}                          ,</if>
 			<if test="password != null and password != ''">           #{password}                         ,</if>
 			<if test="sort != null">                                  #{sort}                             ,</if>
 			<if test="status != null and status != ''">               #{status}                           ,</if>
@@ -192,6 +195,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="email != null ">                                email = #{email}                    ,</if>
 			<if test="sex != null and sex != ''">                     sex = #{sex}                        ,</if>
 			<if test="avatar != null and avatar != ''">               avatar = #{avatar}                  ,</if>
+			<if test="profile != null and profile != ''">             profile = #{profile}                ,</if>
 			<if test="password != null and password != ''">           password = #{password}              ,</if>
 			<if test="loginIp != null and loginIp != ''">             login_ip = #{loginIp}               ,</if>
 			<if test="loginDate != null">                             login_date = #{loginDate}           ,</if>
