@@ -175,7 +175,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteRoleById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
 		update sys_role
 		set del_flag = 1
-		where role_key!='admin' and role_id = #{search.roleId}
+		where role_id = #{search.roleId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</delete>
@@ -183,7 +183,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<delete id="deleteRoleByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
 		update sys_role
 		set del_flag = 1
-		where role_key!='admin' and role_id in
+		where role_id in
 		<foreach collection="search.roleIds" item="roleId" open="(" separator="," close=")">
 			#{roleId}
 		</foreach>
