@@ -87,28 +87,26 @@
 
     <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="系统编号" align="center" prop="systemId" v-if="columns[0].visible"
+      <el-table-column label="系统名称" align="center" prop="systemName" v-if="columns[0].visible"
                        :show-overflow-tooltip="true"/>
-      <el-table-column label="系统名称" align="center" prop="systemName" v-if="columns[1].visible"
-                       :show-overflow-tooltip="true"/>
-      <el-table-column label="系统图片" align="center" prop="imageUrl" v-if="columns[2].visible"
+      <el-table-column label="系统图片" align="center" prop="imageUrl" v-if="columns[1].visible"
                        :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <el-image
-            style="width: 100px; height: 100px"
+            style="width: 80px; height: 80px"
             :src="item.materialUrl"
             fit="contain" v-for="item in JSON.parse(scope.row.imageUrl)"/>
         </template>
       </el-table-column>
-      <el-table-column label="跳转类型" align="center" prop="type" v-if="columns[3].visible"
+      <el-table-column label="跳转类型" align="center" prop="type" v-if="columns[2].visible"
                        :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <el-tag :type="scope.row.type==='0'?'success':'warning'">{{ typeFormat(scope.row) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="跳转路由" align="center" prop="route" v-if="columns[4].visible"
+      <el-table-column label="路由|外链" align="center" prop="route" v-if="columns[3].visible"
                        :show-overflow-tooltip="true"/>
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible"
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[4].visible"
                        :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <el-switch
@@ -118,7 +116,7 @@
             @change="handleStatusChange(scope.row)"/>
         </template>
       </el-table-column>
-      <el-table-column label="系统简介" align="center" prop="remark" v-if="columns[6].visible"
+      <el-table-column label="系统简介" align="center" prop="remark" v-if="columns[5].visible"
                        :show-overflow-tooltip="true"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -156,6 +154,9 @@
         <el-form-item label="系统名称" prop="systemName">
           <el-input v-model="form.systemName" placeholder="请输入系统名称" maxlength="7" show-word-limit/>
         </el-form-item>
+        <el-form-item label="系统简介" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" maxlength="14" show-word-limit/>
+        </el-form-item>
         <el-form-item label="跳转类型">
           <el-radio-group v-model="form.type">
             <el-radio
@@ -166,20 +167,12 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="跳转路由" prop="route">
-          <el-input v-model="form.route" placeholder="请输入跳转路由"/>
-        </el-form-item>
-        <el-form-item label="系统图片">
-          <ImageBox v-model="form.imageUrl" max="1" :clear="true"/>
+        <el-form-item :label="form.type==='0'?'跳转路由':'跳转链接'" prop="route">
+          <el-input v-model="form.route" :placeholder="form.type==='0'?'请输入跳转路由':'请输入跳转链接'"/>
         </el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="显示顺序" prop="sort">
-              <el-input-number size="mini" v-model="form.sort" :min="0" :max="125"/>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="状态">
+            <el-form-item label="显示状态">
               <el-radio-group v-model="form.status">
                 <el-radio
                   v-for="dict in statusOptions"
@@ -190,9 +183,14 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="显示顺序" prop="sort">
+              <el-input-number size="mini" v-model="form.sort" :min="0" :max="125"/>
+            </el-form-item>
+          </el-col>
         </el-row>
-        <el-form-item label="系统简介" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" maxlength="14" show-word-limit/>
+        <el-form-item label="系统图片">
+          <ImageBox v-model="form.imageUrl" max="1" :clear="true"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -214,64 +212,63 @@ export default {
     return {
       dialogImageUrl: '',
       dialogVisible: false,
-        // 遮罩层
-        loading: true,
-        // 选中数组
-        ids: [],
-        // 总条数
-        total: 0,
-        // 表格数据
-        list: [],
-        // 非单个禁用
-        single: true,
-        // 非多个禁用
-        multiple: true,
-        // 显示搜索条件
-        showSearch: true,
-        // 显隐列信息
-        columns: [
-          {key: 0, label: `系统编号`, visible: true},
-          {key: 1, label: `系统名称`, visible: true},
-          {key: 2, label: `系统图片`, visible: true},
-          {key: 3, label: `跳转类型`, visible: true},
-          {key: 4, label: `跳转路由`, visible: true},
-          {key: 5, label: `状态`, visible: true},
-          {key: 6, label: `系统简介`, visible: true},
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ids: [],
+      // 总条数
+      total: 0,
+      // 表格数据
+      list: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 显隐列信息
+      columns: [
+        {key: 0, label: `系统名称`, visible: true},
+        {key: 1, label: `系统图片`, visible: true},
+        {key: 2, label: `跳转类型`, visible: true},
+        {key: 3, label: `跳转路由`, visible: true},
+        {key: 4, label: `状态`, visible: true},
+        {key: 5, label: `系统简介`, visible: true},
+      ],
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        systemName: null,
+        type: null,
+        route: null,
+        status: null,
+      },
+      // 跳转类型字典
+      typeOptions: [],
+      // 状态字典
+      statusOptions: [],
+      // 表单参数
+      form: {},
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 表单校验
+      rules: {
+        systemName: [
+          {required: true, message: "系统名称不能为空", trigger: "blur"}
         ],
-        // 查询参数
-        queryParams: {
-          pageNum: 1,
-          pageSize: 10,
-          systemName: null,
-          type: null,
-          route: null,
-          status: null,
-        },
-        // 跳转类型字典
-        typeOptions: [],
-        // 状态字典
-        statusOptions: [],
-        // 表单参数
-        form: {},
-        // 弹出层标题
-        title: "",
-        // 是否显示弹出层
-        open: false,
-        // 表单校验
-        rules: {
-          systemName: [
-            {required: true, message: "系统名称不能为空", trigger: "blur"}
-          ],
-          type: [
-            {required: true, message: "跳转类型不能为空", trigger: "blur"}
-          ],
-          route: [
-            {required: true, message: "跳转路由不能为空", trigger: "blur"}
-          ],
-          remark: [
-            {required: true, message: "系统简介不能为空", trigger: "blur"}
-          ]
-        }
+        type: [
+          {required: true, message: "跳转类型不能为空", trigger: "blur"}
+        ],
+        route: [
+          {required: true, message: "路由|外链不能为空", trigger: "blur"}
+        ],
+        remark: [
+          {required: true, message: "系统简介不能为空", trigger: "blur"}
+        ]
+      }
     };
   },
   created() {
