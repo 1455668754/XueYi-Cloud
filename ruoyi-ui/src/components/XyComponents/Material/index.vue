@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="">
     <el-dialog class="dialogTop" :visible.sync="visible" width="950px" :close-on-click-modal="false"
                :modal="true" append-to-body :before-close="handleClose">
       <template slot="title">
@@ -8,7 +8,7 @@
         </div>
       </template>
       <div class="tabs-card">
-        <el-tabs v-model="activeName" type="card" tabPosition="left" style="height: 500px">
+        <el-tabs v-model="activeName" type="card" tabPosition="left" class="material" style="height: 500px">
           <el-tab-pane label="我的文件" name="first">
             <el-container>
               <el-header class="container-header">
@@ -683,6 +683,11 @@ export default {
 .dialogTop >>> .el-dialog {
   margin-left: 0 !important;
   margin-right: 0 !important;
+}
+
+.material >>> .el-tabs__item {
+  height: 66px;
+  line-height: 66px;
 }
 
 .minor-dialogTop >>> .el-dialog {
