@@ -74,10 +74,13 @@ export default {
   watch: {
     imageList(val, oldVal) {//普通的watch监听
       this.changeList();
-    }
+    },
+    list(val, oldVal) {
+      this.init();
+    },
   },
   mounted() {
-    this.init()
+    this.init();
   },
   methods: {
     /** 初始化方法 */
