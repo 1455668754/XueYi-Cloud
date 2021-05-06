@@ -181,16 +181,16 @@ create table sys_menu (
 insert into sys_menu (menu_id, system_id, tenant_id, parent_id, menu_name, path, component, menu_type, perms, icon, sort, create_by, remark)
 values
        -- 一级菜单
-       (10000, 0, 0, 0, '组织管理', 'organize',   null, 'M', '', 'organize',   1, 0, '组织管理目录'),
+       (10000, 0, 0, 0, '组织管理', 'organize',   null, 'M', '', 'xy_organization', 1, 0, '组织管理目录'),
               -- 二级菜单
-              (11000, 0, 0, 10000, '部门管理', 'dept',   'system/organize/dept/index',      'C',  'system:dept:list',      'tree',      1, 0, '部门管理菜单'),
+              (11000, 0, 0, 10000, '部门管理', 'dept',   'system/organize/dept/index',      'C',  'system:dept:list',      'xy_dept',   1, 0, '部门管理菜单'),
                                    -- 部门管理按钮
                                    (11001, 0, 0, 11000, '部门查询', '', '', 'F', 'system:dept:query',           '#', 1, 0, ''),
                                    (11002, 0, 0, 11000, '部门新增', '', '', 'F', 'system:dept:add',             '#', 2, 0, ''),
                                    (11003, 0, 0, 11000, '部门修改', '', '', 'F', 'system:dept:edit',            '#', 3, 0, ''),
                                    (11004, 0, 0, 11000, '部门删除', '', '', 'F', 'system:dept:remove',          '#', 4, 0, ''),
               -- 二级菜单
-              (12000, 0, 0, 10000, '岗位管理', 'post',   'system/organize/post/index',      'C',  'system:post:list',      'post',      2, 0, '岗位管理菜单'),
+              (12000, 0, 0, 10000, '岗位管理', 'post',   'system/organize/post/index',      'C',  'system:post:list',      'xy_post',   2, 0, '岗位管理菜单'),
                                    -- 岗位管理按钮
                                    (12001, 0, 0, 12000, '岗位查询', '', '', 'F', 'system:post:query',           '#', 1, 0, ''),
                                    (12002, 0, 0, 12000, '岗位新增', '', '', 'F', 'system:post:add',             '#', 2, 0, ''),
@@ -198,7 +198,7 @@ values
                                    (12004, 0, 0, 12000, '岗位删除', '', '', 'F', 'system:post:remove',          '#', 4, 0, ''),
                                    (12005, 0, 0, 12000, '岗位导出', '', '', 'F', 'system:post:export',          '#', 5, 0, ''),
               -- 二级菜单
-              (13000, 0, 0, 10000, '用户管理', 'user',   'system/organize/user/index',      'C',  'system:user:list',      'user',      3, 0, '用户管理菜单'),
+              (13000, 0, 0, 10000, '用户管理', 'user',   'system/organize/user/index',      'C',  'system:user:list',      'xy_user',   3, 0, '用户管理菜单'),
                                    -- 用户管理按钮
                                    (13001, 0, 0, 13000, '用户查询', '', '', 'F', 'system:user:query',           '#', 1, 0, ''),
                                    (13002, 0, 0, 13000, '用户新增', '', '', 'F', 'system:user:add',             '#', 2, 0, ''),
@@ -208,10 +208,10 @@ values
                                    (13006, 0, 0, 13000, '用户导入', '', '', 'F', 'system:user:import',          '#', 6, 0, ''),
                                    (13007, 0, 0, 13000, '重置密码', '', '', 'F', 'system:user:resetPwd',        '#', 7, 0, ''),
        -- 一级菜单
-       (20000, 0, 0, 0, '企业账户', 'enterprise', null, 'M', '', 'enterprise', 2, 0, '企业账户目录'),
+       (20000, 0, 0, 0, '企业账户', 'enterprise', null, 'M', '', 'xy_enterprise',   2, 0, '企业账户目录'),
        -- 一级菜单
-       (30000, 0, 0, 0, '系统管理', 'system',     null, 'M', '', 'system',     3, 0, '系统管理目录'),
-              (31000, 0, 0, 30000, '字典管理', 'dict',   'system/system/dict/index',        'C',  'system:dict:list',      'dict',      1, 0, '字典管理菜单'),
+       (30000, 0, 0, 0, '系统管理', 'system',     null, 'M', '', 'xy_setting',      3, 0, '系统管理目录'),
+              (31000, 0, 0, 30000, '字典管理', 'dict',   'system/system/dict/index',        'C',  'system:dict:list',      'xy_dict',   1, 0, '字典管理菜单'),
                                    -- 字典管理按钮
                                    (31001, 0, 0, 31000, '字典查询', '#', '', 'F', 'system:dict:query',          '#', 1, 0, ''),
                                    (31002, 0, 0, 31000, '字典新增', '#', '', 'F', 'system:dict:add',            '#', 2, 0, ''),
@@ -219,7 +219,7 @@ values
                                    (31004, 0, 0, 31000, '字典删除', '#', '', 'F', 'system:dict:remove',         '#', 4, 0, ''),
                                    (31005, 0, 0, 31000, '字典导出', '#', '', 'F', 'system:dict:export',         '#', 5, 0, ''),
               -- 二级菜单
-              (32000, 0, 0, 30000, '参数管理', 'config', 'system/system/config/index',      'C',  'system:config:list',    'edit',      2, 0, '参数管理菜单'),
+              (32000, 0, 0, 30000, '参数管理', 'config', 'system/system/config/index',      'C',  'system:config:list',    'xy_config', 2, 0, '参数管理菜单'),
                                    -- 参数设置按钮
                                    (32001, 0, 0, 32000, '参数查询', '#', '', 'F', 'system:config:query',        '#', 1, 0, ''),
                                    (32002, 0, 0, 32000, '参数新增', '#', '', 'F', 'system:config:add',          '#', 2, 0, ''),
@@ -227,30 +227,30 @@ values
                                    (32004, 0, 0, 32000, '参数删除', '#', '', 'F', 'system:config:remove',       '#', 4, 0, ''),
                                    (32005, 0, 0, 32000, '参数导出', '#', '', 'F', 'system:config:export',       '#', 5, 0, ''),
               -- 二级菜单
-              (33000, 0, 0, 30000, '通知公告', 'notice', 'system/system/notice/index',      'C',  'system:notice:list',    'message',   3, 0, '通知公告菜单'),
+              (33000, 0, 0, 30000, '通知公告', 'notice', 'system/system/notice/index',      'C',  'system:notice:list',    'xy_message', 3, 0, '通知公告菜单'),
                                    -- 通知公告按钮
                                    (33001, 0, 0, 33000, '公告查询', '#', '', 'F', 'system:notice:query',        '#', 1, 0, ''),
                                    (33002, 0, 0, 33000, '公告新增', '#', '', 'F', 'system:notice:add',          '#', 2, 0, ''),
                                    (33003, 0, 0, 33000, '公告修改', '#', '', 'F', 'system:notice:edit',         '#', 3, 0, ''),
                                    (33004, 0, 0, 33000, '公告删除', '#', '', 'F', 'system:notice:remove',       '#', 4, 0, ''),
               -- 二级菜单
-              (34000, 0, 0, 30000, '日志管理', 'log',    '',                                'M',  '',                      'log',       4, 0, '日志管理菜单'),
+              (34000, 0, 0, 30000, '日志管理', 'log',    '',                                'M',  '',                      'xy_log',    4, 0, '日志管理菜单'),
                      -- 三级菜单
-                     (34100, 0, 0, 34000, '操作日志', 'operlog',   'system/system/journal/operlog/index',    'C', 'system:operlog:list',   'form',      1, 0, '操作日志菜单'),
+                     (34100, 0, 0, 34000, '操作日志', 'operlog',   'system/system/journal/operlog/index',    'C', 'system:operlog:list',   'xy_log_operation',  1, 0, '操作日志菜单'),
                                    -- 操作日志按钮
                                    (34101, 0, 0, 34100, '操作查询', '#', '', 'F', 'system:operlog:query',       '#', 1, 0, ''),
                                    (34102, 0, 0, 34100, '操作删除', '#', '', 'F', 'system:operlog:remove',      '#', 2, 0, ''),
                                    (34103, 0, 0, 34100, '日志导出', '#', '', 'F', 'system:operlog:export',      '#', 3, 0, ''),
                      -- 三级菜单
-                     (34200, 0, 0, 34000, '登录日志', 'loginInfo', 'system/system/journal/loginInfo/index',  'C', 'system:loginInfo:list', 'loginInfo', 2, 0, '登录日志菜单'),
+                     (34200, 0, 0, 34000, '登录日志', 'loginInfo', 'system/system/journal/loginInfo/index',  'C', 'system:loginInfo:list', 'xy_log_loginInfo',  2, 0, '登录日志菜单'),
                                    -- 登录日志按钮
                                    (34201, 0, 0, 34200, '登录查询', '#', '', 'F', 'system:loginInfo:query',     '#', 1, 0, ''),
                                    (34202, 0, 0, 34200, '登录删除', '#', '', 'F', 'system:loginInfo:remove',    '#', 2, 0, ''),
                                    (34203, 0, 0, 34200, '日志导出', '#', '', 'F', 'system:loginInfo:export',    '#', 3, 0, ''),
        -- 一级菜单
-       (40000, 0, 0, 0, '权限管理', 'authority',  null, 'M', '', 'authority',  3, 0, '权限管理目录'),
+       (40000, 0, 0, 0, '权限管理', 'authority',  null, 'M', '', 'xy_authority',    3, 0, '权限管理目录'),
               -- 二级菜单
-              (41000, 0, 0, 40000, '角色管理', 'role',   'system/authority/role/index',     'C', 'system:role:list',      'peoples',    1, 0, '角色管理菜单'),
+              (41000, 0, 0, 40000, '角色管理', 'role',   'system/authority/role/index',     'C', 'system:role:list',      'xy_role',    1, 0, '角色管理菜单'),
                                    -- 角色管理按钮
                                    (41001, 0, 0, 41000, '角色查询', '', '', 'F', 'system:role:query',           '#', 1, 0, ''),
                                    (41002, 0, 0, 41000, '角色授权', '', '', 'F', 'system:role:set',             '#', 2, 0, ''),
@@ -259,30 +259,30 @@ values
                                    (41005, 0, 0, 41000, '角色删除', '', '', 'F', 'system:role:remove',          '#', 5, 0, ''),
                                    (41006, 0, 0, 41000, '角色导出', '', '', 'F', 'system:role:export',          '#', 6, 0, ''),
               -- 二级菜单
-              (42000, 0, 0, 40000, '菜单管理', 'menu',   'system/authority/menu/index',     'C', 'system:menu:list',      'tree-table', 2, 0, '菜单管理菜单'),
+              (42000, 0, 0, 40000, '菜单管理', 'menu',   'system/authority/menu/index',     'C', 'system:menu:list',      'xy_menu',    2, 0, '菜单管理菜单'),
                                    -- 菜单管理按钮
                                    (42001, 0, 0, 42000, '菜单查询', '', '', 'F', 'system:menu:query',           '#', 1, 0, ''),
                                    (42002, 0, 0, 42000, '菜单新增', '', '', 'F', 'system:menu:add',             '#', 2, 0, ''),
                                    (42003, 0, 0, 42000, '菜单修改', '', '', 'F', 'system:menu:edit',            '#', 3, 0, ''),
                                    (42004, 0, 0, 42000, '菜单删除', '', '', 'F', 'system:menu:remove',          '#', 4, 0, ''),
               -- 二级菜单
-              (43000, 0, 0, 40000, '模块管理', 'system', 'system/authority/system/index',   'C', 'system:system:list',    '#',          3, 0, '模块管理菜单'),
+              (43000, 0, 0, 40000, '模块管理', 'system', 'system/authority/system/index',   'C', 'system:system:list',    'xy_system',  3, 0, '模块管理菜单'),
                                    -- 模块管理按钮
                                    (43001, 0, 0, 43000, '模块管理查询', '#', '', 'F', 'system:system:query',    '#', 1, 0, ''),
                                    (43002, 0, 0, 43000, '模块管理新增', '#', '', 'F', 'system:system:add',      '#', 1, 0, ''),
                                    (43003, 0, 0, 43000, '模块管理修改', '#', '', 'F', 'system:system:edit',     '#', 1, 0, ''),
                                    (43004, 0, 0, 43000, '模块管理删除', '#', '', 'F', 'system:system:remove',   '#', 1, 0, ''),
        -- 一级菜单
-       (50000, 0, 0, 0, '系统监控', 'monitor',    null, 'M', '', 'monitor',    4, 0, '系统监控目录'),
+       (50000, 0, 0, 0, '系统监控', 'monitor',    null, 'M', '', 'xy_monitor',         4, 0, '系统监控目录'),
               -- 二级菜单
-              (51000, 0, 0, 50000, '在线用户', 'online', 'system/monitor/online/index',     'C', 'monitor:online:list',   'online',     1, 0, '在线用户菜单'),
+              (51000, 0, 0, 50000, '在线用户', 'online', 'system/monitor/online/index',     'C', 'monitor:online:list',   'xy_online',  1, 0, '在线用户菜单'),
                                    -- 在线用户按钮
                                    (51001, 0, 0, 51000, '在线查询', '#', '', 'F', 'monitor:online:query',       '#', 1, 0, ''),
                                    (51002, 0, 0, 51000, '批量强退', '#', '', 'F', 'monitor:online:batchLogout', '#', 2, 0, ''),
                                    (51003, 0, 0, 51000, '单条强退', '#', '', 'F', 'monitor:online:forceLogout', '#', 3, 0, ''),
 
               -- 二级菜单
-              (52000, 0, 0, 50000, '定时任务', 'job',    'system/monitor/job/index',        'C', 'monitor:job:list',      'job',        2, 0, '定时任务菜单'),
+              (52000, 0, 0, 50000, '定时任务', 'job',    'system/monitor/job/index',        'C', 'monitor:job:list',      'xy_job',     2, 0, '定时任务菜单'),
                                    -- 定时任务按钮
                                    (52001, 0, 0, 52000, '任务查询', '#', '', 'F', 'monitor:job:query',          '#', 1, 0, ''),
                                    (52002, 0, 0, 52000, '任务新增', '#', '', 'F', 'monitor:job:add',            '#', 2, 0, ''),
@@ -291,17 +291,17 @@ values
                                    (52005, 0, 0, 52000, '状态修改', '#', '', 'F', 'monitor:job:changeStatus',   '#', 5, 0, ''),
                                    (52006, 0, 0, 52000, '任务导出', '#', '', 'F', 'monitor:job:export',         '#', 6, 0, ''),
               -- 二级菜单
-              (53000, 0, 0, 50000, 'Sentinel控制台', 'http://localhost:8718',      '',      'C', 'monitor:sentinel:list', 'sentinel',   3, 0, '流量控制菜单'),
+              (53000, 0, 0, 50000, 'Sentinel控制台', 'http://localhost:8718',      '',      'C', 'monitor:sentinel:list', 'xy_sentinel', 3, 0, '流量控制菜单'),
               -- 二级菜单
-              (54000, 0, 0, 50000, 'Nacos控制台',    'http://localhost:8848/nacos', '',     'C', 'monitor:nacos:list',    'nacos',      4, 0, '服务治理菜单'),
+              (54000, 0, 0, 50000, 'Nacos控制台',    'http://localhost:8848/nacos', '',     'C', 'monitor:nacos:list',    'xy_nacos',  4, 0, '服务治理菜单'),
               -- 二级菜单
-              (55000, 0, 0, 50000, 'Admin控制台',    'http://localhost:9100/login', '',     'C', 'monitor:server:list',   'server',     5, 0, '服务监控菜单'),
+              (55000, 0, 0, 50000, 'Admin控制台',    'http://localhost:9100/login', '',     'C', 'monitor:server:list',   'xy_server', 5, 0, '服务监控菜单'),
        -- 一级菜单
-       (60000, 0, 0, 0, '系统工具', 'tool',       null, 'M', '', 'tool',       5, 0, '系统工具目录'),
+       (60000, 0, 0, 0, '系统工具', 'tool',       null, 'M', '', 'xy_tool',     5, 0, '系统工具目录'),
               -- 二级菜单
-              (61000, 0, 0, 60000, '表单构建', 'build',  'tool/build/index',                'C', 'tool:build:list',       'build',      1, 0, '表单构建菜单'),
+              (61000, 0, 0, 60000, '表单构建', 'build',  'tool/build/index',                'C', 'tool:build:list',       'xy_build',   1, 0, '表单构建菜单'),
               -- 二级菜单
-              (62000, 0, 0, 60000, '代码生成', 'gen',    'tool/gen/index',                  'C', 'tool:gen:list',         'code',       2, 0, '代码生成菜单'),
+              (62000, 0, 0, 60000, '代码生成', 'gen',    'tool/gen/index',                  'C', 'tool:gen:list',         'xy_code',    2, 0, '代码生成菜单'),
                                    -- 代码生成按钮
                                    (62001, 0, 0, 62000, '生成查询', '#', '', 'F', 'tool:gen:query',             '#', 1, 0, ''),
                                    (62002, 0, 0, 62000, '生成修改', '#', '', 'F', 'tool:gen:edit',              '#', 2, 0, ''),
@@ -310,7 +310,7 @@ values
                                    (62005, 0, 0, 62000, '预览代码', '#', '', 'F', 'tool:gen:preview',           '#', 5, 0, ''),
                                    (62006, 0, 0, 62000, '生成代码', '#', '', 'F', 'tool:gen:code',              '#', 6, 0, ''),
               -- 二级菜单
-              (63000, 0, 0, 60000, '系统接口', 'http://localhost:8080/swagger-ui.html', '', 'C', 'tool:swagger:list',     'swagger',    3, 0, '系统接口菜单');
+              (63000, 0, 0, 60000, '系统接口', 'http://localhost:8080/swagger-ui.html', '', 'C', 'tool:swagger:list',     'xy_swagger', 3, 0, '系统接口菜单');
 
 -- ----------------------------
 -- 6、字典类型表

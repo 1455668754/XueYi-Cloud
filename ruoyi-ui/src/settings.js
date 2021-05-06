@@ -40,7 +40,7 @@ module.exports = {
    * 初始页名称|图标
    */
   homePageName: '产品中心',
-  homePageIcon: 'dashboard',
+  homePageIcon: 'xy_productCenter',
 
   /**
    * @type {string | array} 'production' | ['production', 'development']
