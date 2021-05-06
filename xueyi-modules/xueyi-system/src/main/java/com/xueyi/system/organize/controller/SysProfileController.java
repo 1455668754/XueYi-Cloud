@@ -136,6 +136,10 @@ public class SysProfileController extends BaseController
             String url = fileResult.getData().getUrl();
             if (userService.updateUserAvatar(loginUser.getUserid(), url))
             {
+                String oldAvatarUrl = loginUser.getSysUser().getAvatar();
+                if(StringUtils.isNotEmpty(oldAvatarUrl)){
+                    remoteFileService.delete(oldAvatarUrl);
+                }
                 AjaxResult ajax = AjaxResult.success();
                 ajax.put("imgUrl", url);
                 // 更新缓存用户头像
