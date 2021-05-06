@@ -13,6 +13,7 @@ import com.xueyi.system.api.material.SysMaterial;
 import com.xueyi.system.api.material.SysMaterialFolder;
 import com.xueyi.system.material.service.ISysMaterialFolderService;
 import com.xueyi.system.material.service.ISysMaterialService;
+import javafx.scene.paint.Material;
 import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
@@ -164,6 +165,10 @@ public class SysMaterialController extends BaseController {
     @Log(title = "素材信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{materialId}")
     public AjaxResult remove(@PathVariable Long materialId) {
+        //删除素材文件
+        SysMaterial material = materialService.selectMaterialById(materialId);
+        remoteFileService.delete(material.getMaterialUrl());
+        remoteFileService.delete(material.getMaterialOriginalUrl());
         return toAjax(materialService.deleteMaterialById(materialId));
     }
 }
