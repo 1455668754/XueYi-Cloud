@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       list: [],
-      homePageName:this.$store.state.settings.homePageName,
+      homePageName: this.$store.state.settings.homePageName,
     }
   },
   created() {
@@ -45,7 +45,15 @@ export default {
       });
     },
     jumpClick(item) {
-
+      //内部路由
+      if (item.type === '0') {
+        this.$router.push(item.route)
+      }
+      //外部链接
+      else if (item.type === '1') {
+        window.open(item.route, '_blank') // 在新窗口打开外链接
+        // window.location.href = item.route;  //在本页面打开外部链接
+      }
     }
   }
 }
