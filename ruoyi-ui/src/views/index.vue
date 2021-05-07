@@ -7,7 +7,7 @@
           <el-image
             style="width: 60px; height: 60px"
             :src="item1.materialUrl"
-            fit="cover" v-for="(item1,index1) in JSON.parse(item.imageUrl)" v-if="index1===0"/>
+            fit="cover" v-for="(item1,index1) in JSON.parse(item.imageUrl)"/>
         </div>
         <div class="card-text">
           <div>

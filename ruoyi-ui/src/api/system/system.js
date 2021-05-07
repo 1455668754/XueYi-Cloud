@@ -5,11 +5,10 @@ import defaultSettings from '@/settings'
 const { systemNum } = defaultSettings
 
 // 查询首页可展示子系统模块列表
-export function viewListSystem(query) {
+export function viewListSystem() {
   return request({
     url: '/system/system/viewList',
-    method: 'get',
-    params: query
+    method: 'get'
   })
 }
 
