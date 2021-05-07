@@ -8,6 +8,7 @@ import './assets/styles/element-variables.scss'
 import '@/assets/styles/index.scss' // global css
 import '@/assets/styles/ruoyi.scss' // ruoyi css
 import '@/assets/styles/xueyi.scss' //xueyi css element-UI重置
+import '@/utils/element' //js element-UI重置
 import App from './App'
 import store from './store'
 import router from './router'
