@@ -471,7 +471,7 @@ export default {
 }
 
 .dialogTop {
-  margin-top: 9vh;
+  top: 9vh;
   left: 22%;
   @media screen and (max-width: 1920px) {
     left: 22%;
@@ -486,7 +486,7 @@ export default {
 }
 
 .minor-dialogTop {
-  margin-top: 9vh;
+  top: 9vh;
   left: calc(22% + 960px);
   @media screen and (max-width: 1920px) {
     left: calc(22% + 960px);
