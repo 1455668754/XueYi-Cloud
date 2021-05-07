@@ -1,14 +1,16 @@
 ## 平台简介
 
 目前主要做了如下几块：
-* 多租户设计：共享多租户；
-* 素材管理模块：租户独立素材模块（各租户的素材建档，统一管理）；
+* 多租户设计：简单配置即可转变共享多租户模式；
+* 素材管理模块：独立素材模块（文件|图片统一管理，配置，一次上传多处使用，同时删除时进行同步删除，已接管富文本上传）；
 * 部门架构管理优化：重置角色权限，部门-岗位-用户层级管理，上级禁用时同步禁用所有下级；
 * 多系统云台：建立模块组，建立多前端时可以作为通用入口，同时模块组与菜单组关联，如用统一后台多前端模式可以通过模块-菜单方式进行控制， 不同前端显示对应前端模块的菜单；
 * RBAC优化：角色-模块-菜单控制模式，同时角色-部门|角色-岗位|角色-用户多种角色授权方式，岗位继承部门角色，用户继承岗位、部门角色。
 * 分布式Id：雪花Id
 
-基于本系统还有许多内容是我想要加入进来的，但限于时间问题，后续慢慢更新进来，刚发布初期可能存在一些bug，如遇到欢迎提出Issues，看到会进行解决。
+基于本系统还有许多内容是希望加入进来的，但限于时间问题，后续慢慢更新进来，刚发布初期可能存在一些bug，如遇到欢迎提出Issues，看到会进行解决。
+
+走过路过，点个star :kissing_heart: 
 
 * 采用前后端分离的模式，微服务版本前端。
 * 后端采用Spring Boot、Spring Cloud & Alibaba。
@@ -77,8 +79,8 @@ com.xueyi
 - 企业账号/员工账号/密码
 - xueYi/admin/admin123
 
-演示地址：http://ruoyi.vip  
-文档地址：http://doc.ruoyi.vip
+演示地址：(即将上线)
+文档地址：(即将上线)
 
 ## 演示图
 
@@ -88,8 +90,8 @@ com.xueyi
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140513_48ff7abd_7382127.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140849_681cc401_7382127.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140859_d9190514_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0507/132106_c1b9451d_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0507/131952_3b892800_7382127.png"/></td>
     </tr>
     <tr>
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140524_ec4af10e_7382127.png"/></td>
