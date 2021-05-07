@@ -2,6 +2,7 @@ package com.xueyi.system.authority.service.impl;
 
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.authority.SysSystem;
+import com.xueyi.system.api.organize.SysUser;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
@@ -35,12 +36,18 @@ public class SysSystemServiceImpl implements ISysSystemService {
     /**
      * 查询首页可展示子系统模块列表
      *
-     * @param sysSystem 子系统模块
-     * @return 子系统模块
+     * @param userId 当前用户Id
+     * @param userType     用户标识
+     * @return 子系统模块集合
      */
     @Override
-    public List<SysSystem> selectSystemViewList(SysSystem sysSystem) {
-        return systemMapper.selectSystemViewList(sysSystem);
+    public List<SysSystem> selectSystemViewList(Long userId,String userType) {
+        if(SysUser.isAdmin(userType)){
+            return systemMapper.selectSystemViewAdminList(new SysSearch());//@param search 查询组件 | null
+        }
+        SysSearch search = new SysSearch();
+        search.getSearch().put("userId", userId);
+        return systemMapper.selectSystemViewList(search);//@param search 查询组件 | userId 当前用户Id
     }
 
     /**
@@ -53,7 +60,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     public SysSystem selectSystemById(Long systemId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("systemId", systemId);
-        return systemMapper.selectSystemById(search);
+        return systemMapper.selectSystemById(search);//@param search 查询组件 | systemId 子系统模块Id
     }
 
     /**
@@ -109,7 +116,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     public int deleteSystemByIds(Long[] systemIds) {
         SysSearch search = new SysSearch();
         search.getSearch().put("systemIds", systemIds);
-        return systemMapper.deleteSystemByIds(search);
+        return systemMapper.deleteSystemByIds(search);//@param search 查询组件 | systemIds 需要删除的数据Ids
     }
 
     /**

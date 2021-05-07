@@ -17,10 +17,11 @@ public interface ISysSystemService {
     /**
      * 查询首页可展示子系统模块列表
      *
-     * @param sysSystem 子系统模块
+     * @param userId   当前用户Id
+     * @param userType 用户标识
      * @return 子系统模块集合
      */
-    public List<SysSystem> selectSystemViewList(SysSystem sysSystem);
+    public List<SysSystem> selectSystemViewList(Long userId, String userType);
 
     /**
      * 查询子系统模块

@@ -258,18 +258,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</update>
 
-	<!-- user_type != '01'表示无法删除超级管理员 -->
+	<!-- user_type != '00'表示无法删除超级管理员 -->
 	<delete id="deleteUserById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
 		update sys_user set del_flag = 1
-		where user_type != '01' and user_id = #{search.userId}
+		where user_type != '00' and user_id = #{search.userId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</delete>
 
-	<!-- user_type != '01'表示无法删除超级管理员 -->
+	<!-- user_type != '00'表示无法删除超级管理员 -->
 	<delete id="deleteUserByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
 		update sys_user set del_flag = 1
-		where user_type != '01' and user_id in
+		where user_type != '00' and user_id in
 		<foreach collection="search.userIds" item="userId" open="(" separator="," close=")">
 			#{userId}
 		</foreach>

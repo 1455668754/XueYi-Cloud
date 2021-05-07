@@ -14,14 +14,24 @@ import java.util.List;
 public interface SysSystemMapper {
 
     /**
-     * 查询子系统模块列表
+     * 查询子系统模块列表|超管
      * 访问控制 s 租户查询
      *
-     * @param sysSystem 子系统模块
+     * @param search 查询组件 | null
      * @return 子系统模块集合
      */
     @DataScope(systemAlias = "s")
-    public List<SysSystem> selectSystemViewList(SysSystem sysSystem);
+    public List<SysSystem> selectSystemViewAdminList(SysSearch search);
+
+    /**
+     * 查询子系统模块列表
+     * 访问控制 s 租户查询
+     *
+     * @param search 查询组件 | userId 当前用户Id
+     * @return 子系统模块集合
+     */
+    @DataScope(systemAlias = "s")
+    public List<SysSystem> selectSystemViewList(SysSearch search);
 
     /**
      * 查询子系统模块

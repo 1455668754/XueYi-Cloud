@@ -21,21 +21,40 @@
         <result property="remark" 			column="remark" 	 />
     </resultMap>
 
-    <sql id="selectSystemVo">
+    <sql id="selectVo">
         select s.system_id, s.system_name, s.image_url, s.type, s.route, s.sort, s.status, s.create_by, s.create_time, s.update_by, s.update_time, s.remark
         from xy_system s
     </sql>
 
-    <select id="selectSystemViewList" parameterType="SysSystem" resultMap="SysSystemResult">
-        <include refid="selectSystemVo"/>
+    <sql id="RouteVo">
+        select distinct s.system_id, s.system_name, s.image_url, s.type, s.route, s.sort, s.status, s.remark
+        from xy_system s
+                 left join sys_role_system_menu rsm on rsm.system_menu_id = s.system_id
+                 left join sys_dept_role dr on dr.role_id = rsm.role_id
+                 left join sys_post_role pr on pr.role_id = rsm.role_id
+                 left join sys_user_role ur on ur.role_id = rsm.role_id
+                 left join sys_user u on u.dept_id = dr.dept_id or u.post_id = pr.post_id or u.user_id = ur.user_id
+                 left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
+    </sql>
+
+    <select id="selectSystemViewAdminList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysSystemResult">
+        <include refid="RouteVo"/>
         where s.status = '0'
         <!-- 数据范围过滤 -->
         ${params.dataScope}
         order by s.sort
     </select>
 
+    <select id="selectSystemViewList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysSystemResult">
+        <include refid="RouteVo"/>
+        where u.user_id = #{search.userId} and s.status = '0'
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by s.sort
+    </select>
+
     <select id="selectSystemList" parameterType="SysSystem" resultMap="SysSystemResult">
-        <include refid="selectSystemVo"/>
+        <include refid="selectVo"/>
         where 1=1
         <if test="systemName != null  and systemName != ''"> and s.system_name like concat('%', #{systemName}, '%')</if>
         <if test="type != null  and type != ''"> and s.type = #{type}</if>
@@ -48,7 +67,7 @@
     </select>
 
     <select id="selectSystemById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysSystemResult">
-        <include refid="selectSystemVo"/>
+        <include refid="selectVo"/>
         where s.system_id = #{search.systemId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}

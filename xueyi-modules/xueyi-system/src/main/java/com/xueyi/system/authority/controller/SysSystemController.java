@@ -6,6 +6,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.authority.SysSystem;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.authority.domain.SysMenu;
@@ -27,12 +28,16 @@ public class SysSystemController extends BaseController {
     @Autowired
     private ISysSystemService systemService;
 
+    @Autowired
+    private TokenService tokenService;
+
     /**
      * 查询首页可展示子系统模块列表
      */
     @GetMapping("/viewList")
     public TableDataInfo viewList(SysSystem sysSystem) {
-        List<SysSystem> list = systemService.selectSystemViewList(sysSystem);
+        LoginUser loginUser = tokenService.getLoginUser();
+        List<SysSystem> list = systemService.selectSystemViewList(loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
         return getDataTable(list);
     }
 
