@@ -9,17 +9,17 @@ import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
 /**
  * 定时任务
  * 
- * @author ruoyi
+ * @author xueyi
  */
 @EnableCustomConfig
 @EnableCustomSwagger2   
 @EnableRyFeignClients
 @SpringCloudApplication
-public class RuoYiJobApplication
+public class XueYiJobApplication
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(RuoYiJobApplication.class, args);
+        SpringApplication.run(XueYiJobApplication.class, args);
         System.out.println("(♥◠‿◠)ﾉﾞ  定时任务模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +

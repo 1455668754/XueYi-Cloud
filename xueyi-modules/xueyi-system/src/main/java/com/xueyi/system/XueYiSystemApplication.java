@@ -1,21 +1,26 @@
-package com.xueyi.gateway;
+package com.xueyi.system;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.client.SpringCloudApplication;
+import com.xueyi.common.security.annotation.EnableCustomConfig;
+import com.xueyi.common.security.annotation.EnableRyFeignClients;
+import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
 
 /**
- * 网关启动程序
+ * 系统模块
  * 
- * @author ruoyi
+ * @author xueyi
  */
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
-public class RuoYiGatewayApplication
+@EnableCustomConfig
+@EnableCustomSwagger2
+@EnableRyFeignClients
+@SpringCloudApplication
+public class XueYiSystemApplication
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(RuoYiGatewayApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  若依网关启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        SpringApplication.run(XueYiSystemApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  系统模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +
                 " | ( ' )  |       \\  _. /  '       \n" +

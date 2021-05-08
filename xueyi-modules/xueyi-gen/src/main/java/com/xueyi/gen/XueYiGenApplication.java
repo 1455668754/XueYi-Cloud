@@ -1,4 +1,4 @@
-package com.xueyi.system;
+package com.xueyi.gen;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.cloud.client.SpringCloudApplication;
@@ -7,20 +7,20 @@ import com.xueyi.common.security.annotation.EnableRyFeignClients;
 import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
 
 /**
- * 系统模块
+ * 代码生成
  * 
- * @author ruoyi
+ * @author xueyi
  */
 @EnableCustomConfig
-@EnableCustomSwagger2
+@EnableCustomSwagger2   
 @EnableRyFeignClients
 @SpringCloudApplication
-public class RuoYiSystemApplication
+public class XueYiGenApplication
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(RuoYiSystemApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  系统模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        SpringApplication.run(XueYiGenApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  代码生成模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +
                 " | ( ' )  |       \\  _. /  '       \n" +

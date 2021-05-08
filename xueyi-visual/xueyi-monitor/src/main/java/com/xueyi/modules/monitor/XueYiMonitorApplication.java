@@ -1,23 +1,22 @@
-package com.xueyi.auth;
+package com.xueyi.modules.monitor;
 
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import com.xueyi.common.security.annotation.EnableRyFeignClients;
+import org.springframework.cloud.client.SpringCloudApplication;
 
 /**
- * 认证授权中心
+ * 监控中心
  * 
- * @author ruoyi
+ * @author xueyi
  */
-@EnableRyFeignClients
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
-public class RuoYiAuthApplication
+@EnableAdminServer
+@SpringCloudApplication
+public class XueYiMonitorApplication
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(RuoYiAuthApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  认证授权中心启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        SpringApplication.run(XueYiMonitorApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  监控中心启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +
                 " | ( ' )  |       \\  _. /  '       \n" +
