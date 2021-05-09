@@ -33,7 +33,7 @@ public @interface DataScope
     public String systemAlias() default "";
 
     /**
-     * 租户更新控制的别名 i 无前缀更新|other 有前缀更新
+     * 租户更新控制的别名 empty 无前缀更新|other 有前缀更新
      */
     public String updateEnterpriseAlias() default "";
 
