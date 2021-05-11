@@ -117,7 +117,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="status != null and status != ''">                       status             ,</if>
 			<if test="createBy != null">                                      create_by          ,</if>
 			<if test="remark != null and remark != ''">                       remark             ,</if>
-			<if test="enterpriseId != null and enterpriseId != 0">            tenant_id          ,</if>
+			<if test="enterpriseId != null">            					  tenant_id          ,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="Id != null and Id != 0">                                #{Id}              ,</if>
@@ -128,7 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="status != null and status != ''">                       #{status}          ,</if>
 			<if test="createBy != null">                                      #{createBy}        ,</if>
 			<if test="remark != null and remark != ''">                       #{remark}          ,</if>
-			<if test="enterpriseId != null and enterpriseId != 0">            #{enterpriseId}    ,</if>
+			<if test="enterpriseId != null">           						  #{enterpriseId}    ,</if>
 		</trim>
 	</insert>
 

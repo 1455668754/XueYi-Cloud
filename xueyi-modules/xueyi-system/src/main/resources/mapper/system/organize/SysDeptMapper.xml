@@ -96,7 +96,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into sys_dept
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="Id != null and Id != 0">							dept_id			    ,</if>
-			<if test="enterpriseId != null and enterpriseId != 0">		tenant_id			,</if>
 			<if test="parentId != null and parentId != 0">				parent_id			,</if>
 			<if test="deptCode != null and deptCode != ''">				dept_code			,</if>
 			<if test="deptName != null and deptName != ''">				dept_name			,</if>
@@ -108,10 +107,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="status != null and status != ''">					status				,</if>
 			<if test="createBy != null">				                create_by			,</if>
 			<if test="remark != null and remark != ''">					remark				,</if>
+			<if test="enterpriseId != null">							tenant_id			,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="Id != null and Id != 0">							#{Id}				,</if>
-			<if test="enterpriseId != null and enterpriseId != 0">		#{enterpriseId}	    ,</if>
 			<if test="parentId != null and parentId != 0">				#{parentId}		    ,</if>
 			<if test="deptCode != null and deptCode != ''">				#{deptCode}		    ,</if>
 			<if test="deptName != null and deptName != ''">				#{deptName}		    ,</if>
@@ -123,6 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="status != null and status != ''">					#{status}			,</if>
 			<if test="createBy != null">				                #{createBy}		    ,</if>
 			<if test="remark != null and remark != ''">					#{remark}			,</if>
+			<if test="enterpriseId != null">							#{enterpriseId}	    ,</if>
 		</trim>
 	</insert>
 

@@ -77,27 +77,27 @@
         insert into xy_system
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="Id != null and Id != 0">                         system_id,               </if>
-            <if test="enterpriseId != null and enterpriseId != 0">     tenant_id,               </if>
             <if test="systemName != null and systemName != ''">        system_name,             </if>
             <if test="imageUrl != null and imageUrl != ''">            image_url,               </if>
             <if test="type != null and type != ''">                    type,                    </if>
             <if test="route != null and route != ''">                  route,                   </if>
             <if test="sort != null">                                   sort,                    </if>
             <if test="status != null and status != ''">                status,                  </if>
-            <if test="createBy != null and createBy != 0">             create_by,               </if>
+            <if test="createBy != null">                               create_by,               </if>
             <if test="remark != null and remark != ''">                remark,                  </if>
+            <if test="enterpriseId != null">                           tenant_id,               </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="Id != null and Id != 0">                         #{Id},                   </if>
-            <if test="enterpriseId != null and enterpriseId != 0">     #{enterpriseId},         </if>
             <if test="systemName != null and systemName != ''">        #{systemName},           </if>
             <if test="imageUrl != null and imageUrl != ''">            #{imageUrl},             </if>
             <if test="type != null and type != ''">                    #{type},                 </if>
             <if test="route != null and route != ''">                  #{route},                </if>
             <if test="sort != null">                                   #{sort},                 </if>
             <if test="status != null and status != ''">                #{status},               </if>
-            <if test="createBy != null and createBy != 0">             #{createBy},             </if>
+            <if test="createBy != null">                               #{createBy},             </if>
             <if test="remark != null and remark != ''">                #{remark},               </if>
+            <if test="enterpriseId != null">                           #{enterpriseId},         </if>
         </trim>
     </insert>
 
@@ -110,7 +110,7 @@
             <if test="route != null and route != ''">                  route = #{route},               </if>
             <if test="sort != null">                                   sort = #{sort},                 </if>
             <if test="status != null and status != ''">                status = #{status},             </if>
-            <if test="updateBy != null and updateBy != 0">             update_by = #{updateBy},        </if>
+            <if test="updateBy != null">                               update_by = #{updateBy},        </if>
             <if test="remark != null">                                 remark = #{remark},             </if>
         </trim>
         where system_id = #{systemId}

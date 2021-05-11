@@ -84,8 +84,8 @@
             <if test="type != null and type != ''">                                type                   ,</if>
             <if test="sort != null">                                               sort                   ,</if>
             <if test="status != null and status != ''">                            status                 ,</if>
-            <if test="createBy != null and createBy != 0">                         create_by              ,</if>
-            <if test="enterpriseId != null and enterpriseId != 0">                 tenant_id              ,</if>
+            <if test="createBy != null">                                           create_by              ,</if>
+            <if test="enterpriseId != null">                                       tenant_id              ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="Id != null">                                                 #{Id}                  ,</if>
@@ -95,8 +95,8 @@
             <if test="type != null and type != ''">                                #{type}                ,</if>
             <if test="sort != null">                                               #{sort}                ,</if>
             <if test="status != null and status != ''">                            #{status}              ,</if>
-            <if test="createBy != null and createBy != 0">                         #{createBy}            ,</if>
-            <if test="enterpriseId != null and enterpriseId != 0">                 #{enterpriseId}        ,</if>
+            <if test="createBy != null">                                           #{createBy}            ,</if>
+            <if test="enterpriseId != null">                                       #{enterpriseId}        ,</if>
         </trim>
     </insert>
 
@@ -109,7 +109,7 @@
             <if test="type != null and type != ''">                               type = #{type}                    ,</if>
             <if test="sort != null">						                  	  sort = #{sort}			        ,</if>
             <if test="status != null and status != ''">			              	  status = #{status}		        ,</if>
-            <if test="updateBy != null and updateBy != 0">		              	  update_by = #{updateBy}	        ,</if>
+            <if test="updateBy != null">		              	                  update_by = #{updateBy}	        ,</if>
         </trim>
         where folder_id = #{folderId}
         <!-- 数据范围过滤 -->
