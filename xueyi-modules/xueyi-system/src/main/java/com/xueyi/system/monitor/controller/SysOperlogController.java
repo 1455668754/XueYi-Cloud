@@ -51,7 +51,8 @@ public class SysOperlogController extends BaseController
         ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
         util.exportExcel(response, list, "操作日志");
     }
-
+    
+    @Log(title = "操作日志", businessType = BusinessType.DELETE)
     @PreAuthorize(hasPermi = "system:operlog:remove")
     @DeleteMapping("/{operIds}")
     public AjaxResult remove(@PathVariable Long[] operIds)
