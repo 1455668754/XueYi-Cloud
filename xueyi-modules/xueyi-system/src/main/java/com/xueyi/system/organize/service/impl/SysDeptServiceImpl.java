@@ -179,7 +179,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
         search.getSearch().put("deptId", deptId);
         List<SysDept> children = deptMapper.selectChildrenDeptById(search);//@param search 万用组件 | deptId 部门Id
         for (SysDept child : children) {
-            child.setAncestors(child.getAncestors().replace(oldAncestors, newAncestors));
+            child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
         }
         if (children.size() > 0) {
             search.getSearch().put("depts", children);
