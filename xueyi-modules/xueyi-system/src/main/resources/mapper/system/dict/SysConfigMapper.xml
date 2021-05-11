@@ -74,7 +74,7 @@
             <if test="configType != null and configType != '' ">        config_type                     ,</if>
             <if test="createBy != null">								create_by				        ,</if>
             <if test="remark != null and remark != ''">					remark					        ,</if>
-            <if test="enterpriseId != null">							tenant_id				        ,</if>
+            tenant_id
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="configName != null and configName != ''">         #{configName}                   ,</if>
@@ -83,7 +83,7 @@
             <if test="configType != null and configType != ''">         #{configType}                   ,</if>
             <if test="createBy != null">								#{createBy}				        ,</if>
             <if test="remark != null and remark != ''">					#{remark}				        ,</if>
-            <if test="enterpriseId != null">							#{enterpriseId}			        ,</if>
+            0
         </trim>
     </insert>
 
