@@ -3,6 +3,8 @@ package com.xueyi.system.dict.service.impl;
 import java.util.Collection;
 import java.util.List;
 import javax.annotation.PostConstruct;
+
+import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.core.constant.Constants;
@@ -45,7 +47,7 @@ public class SysConfigServiceImpl implements ISysConfigService
     /**
      * 查询参数配置信息
      *
-     * @param configId 参数配置ID
+     * @param configId 参数配置Id
      * @return 参数配置信息
      */
     @Override
@@ -144,7 +146,9 @@ public class SysConfigServiceImpl implements ISysConfigService
                 throw new CustomException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
         }
-        int count = configMapper.deleteConfigByIds(configIds);
+        SysSearch search = new SysSearch();
+        search.getSearch().put("configIds", configIds);
+        int count = configMapper.deleteConfigByIds(search);
         if (count > 0)
         {
             Collection<String> keys = redisService.keys(Constants.SYS_CONFIG_KEY + "*");

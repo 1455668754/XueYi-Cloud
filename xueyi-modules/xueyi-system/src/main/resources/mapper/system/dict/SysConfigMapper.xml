@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xueyi.system.dict.mapper.SysConfigMapper">
 
     <resultMap type="SysConfig" id="SysConfigResult">
-    	<id     property="configId"      column="config_id"      />
+        <id     property="configId"      column="config_id"      />
         <result property="configName"    column="config_name"    />
         <result property="configKey"     column="config_key"     />
         <result property="configValue"   column="config_value"   />
@@ -18,97 +18,107 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime" 	 column="update_time"    />
     </resultMap>
 
-    <sql id="selectConfigVo">
+    <sql id="selectVo">
         select config_id, config_name, config_key, config_value, config_type, create_by, create_time, update_by, update_time, remark
-		from sys_config
+        from sys_config
     </sql>
 
     <!-- 查询条件 -->
-	<sql id="sqlwhereSearch">
-		<where>
-			<if test="configId !=null">
-				and config_id = #{configId}
-			</if>
-			<if test="configKey !=null and configKey != ''">
-				and config_key = #{configKey}
-			</if>
-		</where>
-	</sql>
+    <sql id="sqlWhereSearch">
+        where del_flag = 0
+        <if test="configId !=null">
+            and config_id = #{configId}
+        </if>
+        <if test="configKey !=null and configKey != ''">
+            and config_key = #{configKey}
+        </if>
+    </sql>
 
     <select id="selectConfig" parameterType="SysConfig" resultMap="SysConfigResult">
-        <include refid="selectConfigVo"/>
-        <include refid="sqlwhereSearch"/>
+        <include refid="selectVo"/>
+        <include refid="sqlWhereSearch"/>
     </select>
 
     <select id="selectConfigList" parameterType="SysConfig" resultMap="SysConfigResult">
-        <include refid="selectConfigVo"/>
-        <where>
-			<if test="configName != null and configName != ''">
-				AND config_name like concat('%', #{configName}, '%')
-			</if>
-			<if test="configType != null and configType != ''">
-				AND config_type = #{configType}
-			</if>
-			<if test="configKey != null and configKey != ''">
-				AND config_key like concat('%', #{configKey}, '%')
-			</if>
-			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-			</if>
-			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-			</if>
-		</where>
+        <include refid="selectVo"/>
+        where del_flag = 0
+        <if test="configName != null and configName != ''">
+            AND config_name like concat('%', #{configName}, '%')
+        </if>
+        <if test="configType != null and configType != ''">
+            AND config_type = #{configType}
+        </if>
+        <if test="configKey != null and configKey != ''">
+            AND config_key like concat('%', #{configKey}, '%')
+        </if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
     </select>
 
     <select id="checkConfigKeyUnique" parameterType="String" resultMap="SysConfigResult">
-        <include refid="selectConfigVo"/>
-        where config_key = #{configKey} limit 1
+        <include refid="selectVo"/>
+        where config_key = #{configKey} and del_flag = 0
+        limit 1
     </select>
 
     <insert id="insertConfig" parameterType="SysConfig">
-        insert into sys_config (
-			<if test="configName != null and configName != '' ">config_name,</if>
-			<if test="configKey != null and configKey != '' ">config_key,</if>
-			<if test="configValue != null and configValue != '' ">config_value,</if>
-			<if test="configType != null and configType != '' ">config_type,</if>
-			<if test="createBy != null and createBy != ''">create_by,</if>
-			<if test="remark != null and remark != ''">remark,</if>
- 			create_time
-        )values(
-			<if test="configName != null and configName != ''">#{configName},</if>
-			<if test="configKey != null and configKey != ''">#{configKey},</if>
-			<if test="configValue != null and configValue != ''">#{configValue},</if>
-			<if test="configType != null and configType != ''">#{configType},</if>
-			<if test="createBy != null and createBy != ''">#{createBy},</if>
-			<if test="remark != null and remark != ''">#{remark},</if>
- 			sysdate()
-		)
+        insert into sys_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="configName != null and configName != '' ">        config_name                     ,</if>
+            <if test="configKey != null and configKey != '' ">          config_key                      ,</if>
+            <if test="configValue != null and configValue != '' ">      config_value                    ,</if>
+            <if test="configType != null and configType != '' ">        config_type                     ,</if>
+            <if test="createBy != null">								create_by				        ,</if>
+            <if test="remark != null and remark != ''">					remark					        ,</if>
+            <if test="enterpriseId != null">							tenant_id				        ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="configName != null and configName != ''">         #{configName}                   ,</if>
+            <if test="configKey != null and configKey != ''">           #{configKey}                    ,</if>
+            <if test="configValue != null and configValue != ''">       #{configValue}                  ,</if>
+            <if test="configType != null and configType != ''">         #{configType}                   ,</if>
+            <if test="createBy != null">								#{createBy}				        ,</if>
+            <if test="remark != null and remark != ''">					#{remark}				        ,</if>
+            <if test="enterpriseId != null">							#{enterpriseId}			        ,</if>
+        </trim>
     </insert>
 
     <update id="updateConfig" parameterType="SysConfig">
         update sys_config
-        <set>
-            <if test="configName != null and configName != ''">config_name = #{configName},</if>
-            <if test="configKey != null and configKey != ''">config_key = #{configKey},</if>
-            <if test="configValue != null and configValue != ''">config_value = #{configValue},</if>
-            <if test="configType != null and configType != ''">config_type = #{configType},</if>
-            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
-            <if test="remark != null">remark = #{remark},</if>
- 			update_time = sysdate()
-        </set>
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="configName != null and configName != ''">                     config_name = #{configName}                 ,</if>
+            <if test="configKey != null and configKey != ''">                       config_key = #{configKey}                   ,</if>
+            <if test="configValue != null and configValue != ''">                   config_value = #{configValue}               ,</if>
+            <if test="configType != null and configType != ''">                     config_type = #{configType}                 ,</if>
+            <if test="updateBy != null">											update_by = #{updateBy}						,</if>
+            <if test="remark != null">												remark = #{remark}							,</if>
+        </trim>
         where config_id = #{configId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
     </update>
 
     <delete id="deleteConfigById" parameterType="Long">
-        delete from sys_config where config_id = #{configId}
+        update sys_config
+        set del_flag = 1
+        where config_id = #{configId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
     </delete>
 
     <delete id="deleteConfigByIds" parameterType="Long">
-        delete from sys_config where config_id in
+        update sys_config
+        set del_flag = 1
+        where config_id in
         <foreach item="configId" collection="array" open="(" separator="," close=")">
-        	#{configId}
+            #{configId}
         </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
     </delete>
 
 </mapper>

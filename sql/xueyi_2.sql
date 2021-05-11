@@ -406,3 +406,28 @@ values (1, 1, '男', '0', 'sys_user_sex', '', '', 'Y', 0, '性别男'),
        (33, 5, '刷新模式', 'refresh_token', 'sys_grant_type', '', '', 'N', 0, '刷新模式'),
        (34, 1, '内部跳转', '0', 'sys_jump_type', '', '', 'N', 0, '路由内部跳转'),
        (35, 2, '外部跳转', '1', 'sys_jump_type', '', '', 'N', 0, '路由外部跳转');
+
+-- ----------------------------
+-- 13、参数配置表
+-- ----------------------------
+drop table if exists sys_config;
+create table sys_config (
+  config_id                 bigint(20)          not null                                comment '参数主键',
+  config_name               varchar(100)        default ''                              comment '参数名称',
+  config_key                varchar(100)        default ''                              comment '参数键名',
+  config_value              varchar(500)        default ''                              comment '参数键值',
+  config_type               char(1)             default 'N'                             comment '系统内置（Y是 N否）',
+  create_by                 bigint              default null                            comment '创建者',
+  create_time               datetime            default current_timestamp               comment '创建时间',
+  update_by                 bigint              default null                            comment '更新者',
+  update_time               datetime            on update current_timestamp             comment '更新时间',
+  remark                    varchar(1000)       default null                            comment '备注',
+  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  primary key (config_id)
+) engine=innodb comment = '参数配置表';
+
+insert into sys_config (config_id, config_name, config_key, config_value, config_type, remark, tenant_id)
+values (1, '主框架页-默认皮肤样式名称', 'sys.index.skinName',     'skin-blue',     'Y', '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow', 0),
+       (2, '用户管理-账号初始密码',     'sys.user.initPassword',  '123456',        'Y', '初始化密码 123456', 0),
+       (3, '主框架页-侧边栏主题',       'sys.index.sideTheme',    'theme-dark',    'Y', '深色主题theme-dark，浅色主题theme-light', 0);
