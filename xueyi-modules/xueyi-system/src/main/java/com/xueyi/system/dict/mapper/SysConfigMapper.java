@@ -11,8 +11,7 @@ import com.xueyi.system.dict.domain.SysConfig;
  *
  * @author ruoyi
  */
-public interface SysConfigMapper
-{
+public interface SysConfigMapper {
     /**
      * 查询参数配置信息
      *
@@ -40,6 +39,7 @@ public interface SysConfigMapper
     /**
      * 新增参数配置
      * 访问控制 empty 租户更新（无前缀）
+     *
      * @param config 参数配置信息
      * @return 结果
      */
@@ -49,6 +49,7 @@ public interface SysConfigMapper
     /**
      * 修改参数配置
      * 访问控制 empty 租户更新（无前缀）
+     *
      * @param config 参数配置信息
      * @return 结果
      */
@@ -58,6 +59,7 @@ public interface SysConfigMapper
     /**
      * 删除参数配置
      * 访问控制 empty 租户更新（无前缀）
+     *
      * @param search 万用组件 | configId 参数Id
      * @return 结果
      */
@@ -67,6 +69,7 @@ public interface SysConfigMapper
     /**
      * 批量删除参数信息
      * 访问控制 empty 租户更新（无前缀）
+     *
      * @param search 万用组件 | configIds 需要删除的参数Ids(Long[])
      * @return 结果
      */

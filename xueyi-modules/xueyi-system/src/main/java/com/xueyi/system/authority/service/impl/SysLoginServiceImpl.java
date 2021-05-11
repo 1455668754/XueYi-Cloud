@@ -139,10 +139,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
         SysSearch search = new SysSearch();
         search.getSearch().put("enterpriseId", enterpriseId);
         search.getSearch().put("userId", userId);
-        System.out.println(enterpriseId);
-        System.out.println(userId);
         List<String> perms = menuMapper.checkLoginMenuPermission(search);
-        System.out.println(menuMapper.checkLoginMenuPermission(search));
         Set<String> permsSet = new HashSet<>();
         for (String perm : perms) {
             if (StringUtils.isNotEmpty(perm)) {

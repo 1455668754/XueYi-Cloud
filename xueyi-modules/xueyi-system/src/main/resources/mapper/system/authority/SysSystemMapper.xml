@@ -76,42 +76,42 @@
     <insert id="insertSystem" parameterType="SysSystem">
         insert into xy_system
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null and Id != 0">                         system_id,               </if>
-            <if test="systemName != null and systemName != ''">        system_name,             </if>
-            <if test="imageUrl != null and imageUrl != ''">            image_url,               </if>
-            <if test="type != null and type != ''">                    type,                    </if>
-            <if test="route != null and route != ''">                  route,                   </if>
-            <if test="sort != null">                                   sort,                    </if>
-            <if test="status != null and status != ''">                status,                  </if>
-            <if test="createBy != null">                               create_by,               </if>
-            <if test="remark != null and remark != ''">                remark,                  </if>
-            <if test="enterpriseId != null">                           tenant_id,               </if>
+            <if test="Id != null and Id != 0">                         system_id               ,</if>
+            <if test="systemName != null and systemName != ''">        system_name             ,</if>
+            <if test="imageUrl != null and imageUrl != ''">            image_url               ,</if>
+            <if test="type != null and type != ''">                    type                    ,</if>
+            <if test="route != null and route != ''">                  route                   ,</if>
+            <if test="sort != null">                                   sort                    ,</if>
+            <if test="status != null and status != ''">                status                  ,</if>
+            <if test="createBy != null">                               create_by               ,</if>
+            <if test="remark != null and remark != ''">                remark                  ,</if>
+            <if test="enterpriseId != null">                           tenant_id               ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null and Id != 0">                         #{Id},                   </if>
-            <if test="systemName != null and systemName != ''">        #{systemName},           </if>
-            <if test="imageUrl != null and imageUrl != ''">            #{imageUrl},             </if>
-            <if test="type != null and type != ''">                    #{type},                 </if>
-            <if test="route != null and route != ''">                  #{route},                </if>
-            <if test="sort != null">                                   #{sort},                 </if>
-            <if test="status != null and status != ''">                #{status},               </if>
-            <if test="createBy != null">                               #{createBy},             </if>
-            <if test="remark != null and remark != ''">                #{remark},               </if>
-            <if test="enterpriseId != null">                           #{enterpriseId},         </if>
+            <if test="Id != null and Id != 0">                         #{Id}                   ,</if>
+            <if test="systemName != null and systemName != ''">        #{systemName}           ,</if>
+            <if test="imageUrl != null and imageUrl != ''">            #{imageUrl}             ,</if>
+            <if test="type != null and type != ''">                    #{type}                 ,</if>
+            <if test="route != null and route != ''">                  #{route}                ,</if>
+            <if test="sort != null">                                   #{sort}                 ,</if>
+            <if test="status != null and status != ''">                #{status}               ,</if>
+            <if test="createBy != null">                               #{createBy}             ,</if>
+            <if test="remark != null and remark != ''">                #{remark}               ,</if>
+            <if test="enterpriseId != null">                           #{enterpriseId}         ,</if>
         </trim>
     </insert>
 
     <update id="updateSystem" parameterType="SysSystem">
         update xy_system
         <trim prefix="SET" suffixOverrides=",">
-            <if test="systemName != null and systemName != ''">        system_name = #{systemName},    </if>
-            <if test="imageUrl != null and imageUrl != ''">            image_url = #{imageUrl},        </if>
-            <if test="type != null and type != ''">                    type = #{type},                 </if>
-            <if test="route != null and route != ''">                  route = #{route},               </if>
-            <if test="sort != null">                                   sort = #{sort},                 </if>
-            <if test="status != null and status != ''">                status = #{status},             </if>
-            <if test="updateBy != null">                               update_by = #{updateBy},        </if>
-            <if test="remark != null">                                 remark = #{remark},             </if>
+            <if test="systemName != null and systemName != ''">        system_name = #{systemName}    ,</if>
+            <if test="imageUrl != null and imageUrl != ''">            image_url = #{imageUrl}        ,</if>
+            <if test="type != null and type != ''">                    type = #{type}                 ,</if>
+            <if test="route != null and route != ''">                  route = #{route}               ,</if>
+            <if test="sort != null">                                   sort = #{sort}                 ,</if>
+            <if test="status != null and status != ''">                status = #{status}             ,</if>
+            <if test="updateBy != null">                               update_by = #{updateBy}        ,</if>
+            <if test="remark != null">                                 remark = #{remark}             ,</if>
         </trim>
         where system_id = #{systemId}
         <!-- 数据范围过滤 -->
@@ -121,7 +121,7 @@
     <update id="updateSystemStatus" parameterType="SysSystem">
         update xy_system
         <trim prefix="SET" suffixOverrides=",">
-            <if test="status != null and status != ''">                status = #{status},             </if>
+            <if test="status != null and status != ''">                status = #{status}             ,</if>
         </trim>
         where system_id = #{systemId}
         <!-- 数据范围过滤 -->

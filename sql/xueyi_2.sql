@@ -431,3 +431,51 @@ insert into sys_config (config_id, config_name, config_key, config_value, config
 values (1, '主框架页-默认皮肤样式名称', 'sys.index.skinName',     'skin-blue',     'Y', '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow', 0),
        (2, '用户管理-账号初始密码',     'sys.user.initPassword',  '123456',        'Y', '初始化密码 123456', 0),
        (3, '主框架页-侧边栏主题',       'sys.index.sideTheme',    'theme-dark',    'Y', '深色主题theme-dark，浅色主题theme-light', 0);
+
+-- ----------------------------
+-- 15、定时任务调度表
+-- ----------------------------
+drop table if exists sys_job;
+create table sys_job (
+  job_id                    bigint(20)          not null                                comment '任务Id',
+  job_name                  varchar(64)         default ''                              comment '任务名称',
+  job_group                 varchar(64)         default 'DEFAULT'                       comment '任务组名',
+  invoke_target             varchar(500)        not null                                comment '调用目标字符串',
+  cron_expression           varchar(255)        default ''                              comment 'cron执行表达式',
+  misfire_policy            varchar(20)         default '3'                             comment '计划执行错误策略（1立即执行 2执行一次 3放弃执行）',
+  concurrent                char(1)             default '1'                             comment '是否并发执行（0允许 1禁止）',
+  status                    char(1)             not null default '0'                    comment '状态（0正常 1暂停）',
+  create_by                 bigint              default null                            comment '创建者',
+  create_time               datetime            default current_timestamp               comment '创建时间',
+  update_by                 bigint              default null                            comment '更新者',
+  update_time               datetime            on update current_timestamp             comment '更新时间',
+  remark                    varchar(1000)       default null                            comment '备注',
+  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  primary key (job_id, job_name, job_group, tenant_id)
+) engine=innodb auto_increment=100 comment = '定时任务调度表';
+
+insert into sys_job (job_id, job_name, job_group, invoke_target, cron_expression, misfire_policy, concurrent, status, tenant_id)
+values (1, '系统默认（无参）', 'DEFAULT', 'ryTask.ryNoParams',        '0/10 * * * * ?', '3', '1', '1', 0),
+       (2, '系统默认（有参）', 'DEFAULT', 'ryTask.ryParams(\'ry\')',  '0/15 * * * * ?', '3', '1', '1', 0),
+       (3, '系统默认（多参）', 'DEFAULT', 'ryTask.ryMultipleParams(\'ry\', true, 2000L, 316.50D, 100)',  '0/20 * * * * ?', '3', '1', '1', 0),
+       (4, '系统默认（多参）', 'DEFAULT', 'ryTask.ryMultipleParams(\'ry\', true, 2000L, 316.50D, 100)',  '0/20 * * * * ?', '3', '1', '1', 1),
+       (5, '系统默认（多参）', 'DEFAULT', 'ryTask.ryMultipleParams(\'ry\', true, 2000L, 316.50D, 100)',  '0/20 * * * * ?', '3', '1', '1', 2);
+
+-- ----------------------------
+-- 16、定时任务调度日志表
+-- ----------------------------
+drop table if exists sys_job_log;
+create table sys_job_log (
+  job_log_id                bigint(20)          not null auto_increment                 comment '任务日志Id',
+  job_name                  varchar(64)         not null                                comment '任务名称',
+  job_group                 varchar(64)         not null                                comment '任务组名',
+  invoke_target             varchar(500)        not null                                comment '调用目标字符串',
+  job_message               varchar(500)                                                comment '日志信息',
+  status                    char(1)             not null default '0'                    comment '执行状态（0正常 1失败）',
+  exception_info            varchar(2000)       default ''                              comment '异常信息',
+  create_time               datetime            default current_timestamp               comment '创建时间',
+  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  primary key (job_log_id)
+) engine=innodb comment = '定时任务调度日志表';

@@ -128,7 +128,7 @@
         </template>
       </el-table-column>
     </el-table>
-
+{{jobList}}
     <pagination
       v-show="total>0"
       :total="total"

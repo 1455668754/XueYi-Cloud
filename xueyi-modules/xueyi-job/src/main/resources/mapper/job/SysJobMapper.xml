@@ -18,29 +18,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="updateBy"       column="update_by"       />
 		<result property="updateTime"     column="update_time"     />
 		<result property="remark"         column="remark"          />
+		<result property="enterpriseId"   column="tenant_id"       />
 	</resultMap>
 	
 	<sql id="selectJobVo">
-        select job_id, job_name, job_group, invoke_target, cron_expression, misfire_policy, concurrent, status, create_by, create_time, remark 
-		from sys_job
+        select j.job_id, j.job_name, j.job_group, j.invoke_target, j.cron_expression, j.misfire_policy, j.concurrent, j.status, j.create_by, j.create_time, j.remark, j.tenant_id
+		from sys_job j
     </sql>
-	
+
 	<select id="selectJobList" parameterType="SysJob" resultMap="SysJobResult">
 		<include refid="selectJobVo"/>
-		<where>
-			<if test="jobName != null and jobName != ''">
-				AND job_name like concat('%', #{jobName}, '%')
-			</if>
-			<if test="jobGroup != null and jobGroup != ''">
-				AND job_group = #{jobGroup}
-			</if>
-			<if test="status != null and status != ''">
-				AND status = #{status}
-			</if>
-			<if test="invokeTarget != null and invokeTarget != ''">
-				AND invoke_target like concat('%', #{invokeTarget}, '%')
-			</if>
-		</where>
+		where 1 = 1
+		<if test="jobName != null and jobName != ''">
+			AND j.job_name like concat('%', #{jobName}, '%')
+		</if>
+		<if test="jobGroup != null and jobGroup != ''">
+			AND j.job_group = #{jobGroup}
+		</if>
+		<if test="status != null and status != ''">
+			AND j.status = #{status}
+		</if>
+		<if test="invokeTarget != null and invokeTarget != ''">
+			AND j.invoke_target like concat('%', #{invokeTarget}, '%')
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
 	</select>
 	
 	<select id="selectJobAll" resultMap="SysJobResult">
@@ -49,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<select id="selectJobById" parameterType="Long" resultMap="SysJobResult">
 		<include refid="selectJobVo"/>
-		where job_id = #{jobId}
+		where j.job_id = #{jobId}
 	</select>
 	
 	<delete id="deleteJobById" parameterType="Long">
@@ -65,47 +67,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	
  	<update id="updateJob" parameterType="SysJob">
  		update sys_job
- 		<set>
- 			<if test="jobName != null and jobName != ''">job_name = #{jobName},</if>
- 			<if test="jobGroup != null and jobGroup != ''">job_group = #{jobGroup},</if>
- 			<if test="invokeTarget != null and invokeTarget != ''">invoke_target = #{invokeTarget},</if>
- 			<if test="cronExpression != null and cronExpression != ''">cron_expression = #{cronExpression},</if>
- 			<if test="misfirePolicy != null and misfirePolicy != ''">misfire_policy = #{misfirePolicy},</if>
- 			<if test="concurrent != null and concurrent != ''">concurrent = #{concurrent},</if>
- 			<if test="status !=null">status = #{status},</if>
- 			<if test="remark != null and remark != ''">remark = #{remark},</if>
- 			<if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
- 			update_time = sysdate()
- 		</set>
+		<trim prefix="SET" suffixOverrides=",">
+ 			<if test="jobName != null and jobName != ''">				job_name = #{jobName}					,</if>
+ 			<if test="jobGroup != null and jobGroup != ''">				job_group = #{jobGroup}					,</if>
+ 			<if test="invokeTarget != null and invokeTarget != ''">		invoke_target = #{invokeTarget}			,</if>
+ 			<if test="cronExpression != null and cronExpression != ''">	cron_expression = #{cronExpression}		,</if>
+ 			<if test="misfirePolicy != null and misfirePolicy != ''">	misfire_policy = #{misfirePolicy}		,</if>
+ 			<if test="concurrent != null and concurrent != ''">			concurrent = #{concurrent}				,</if>
+			<if test="status != null and status != ''">                	status = #{status}             			,</if>
+			<if test="updateBy != null">                               	update_by = #{updateBy}        			,</if>
+			<if test="remark != null">                                 	remark = #{remark}             			,</if>
+		</trim>
  		where job_id = #{jobId}
 	</update>
- 	
- 	<insert id="insertJob" parameterType="SysJob" useGeneratedKeys="true" keyProperty="jobId">
- 		insert into sys_job(
- 			<if test="jobId != null and jobId != 0">job_id,</if>
- 			<if test="jobName != null and jobName != ''">job_name,</if>
- 			<if test="jobGroup != null and jobGroup != ''">job_group,</if>
- 			<if test="invokeTarget != null and invokeTarget != ''">invoke_target,</if>
- 			<if test="cronExpression != null and cronExpression != ''">cron_expression,</if>
- 			<if test="misfirePolicy != null and misfirePolicy != ''">misfire_policy,</if>
- 			<if test="concurrent != null and concurrent != ''">concurrent,</if>
- 			<if test="status != null and status != ''">status,</if>
- 			<if test="remark != null and remark != ''">remark,</if>
- 			<if test="createBy != null and createBy != ''">create_by,</if>
- 			create_time
- 		)values(
- 			<if test="jobId != null and jobId != 0">#{jobId},</if>
- 			<if test="jobName != null and jobName != ''">#{jobName},</if>
- 			<if test="jobGroup != null and jobGroup != ''">#{jobGroup},</if>
- 			<if test="invokeTarget != null and invokeTarget != ''">#{invokeTarget},</if>
- 			<if test="cronExpression != null and cronExpression != ''">#{cronExpression},</if>
- 			<if test="misfirePolicy != null and misfirePolicy != ''">#{misfirePolicy},</if>
- 			<if test="concurrent != null and concurrent != ''">#{concurrent},</if>
- 			<if test="status != null and status != ''">#{status},</if>
- 			<if test="remark != null and remark != ''">#{remark},</if>
- 			<if test="createBy != null and createBy != ''">#{createBy},</if>
- 			sysdate()
- 		)
+
+	<insert id="insertJob" parameterType="SysJob" useGeneratedKeys="true" keyProperty="jobId">
+		insert into sys_job
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="Id != null and Id != 0">							job_id					,</if>
+			<if test="jobName != null and jobName != ''">				job_name				,</if>
+			<if test="jobGroup != null and jobGroup != ''">				job_group				,</if>
+			<if test="invokeTarget != null and invokeTarget != ''">		invoke_target			,</if>
+			<if test="cronExpression != null and cronExpression != ''">	cron_expression			,</if>
+			<if test="misfirePolicy != null and misfirePolicy != ''">	misfire_policy			,</if>
+			<if test="concurrent != null and concurrent != ''">			concurrent				,</if>
+			<if test="status != null and status != ''">                	status                  ,</if>
+			<if test="createBy != null">                               	create_by               ,</if>
+			<if test="remark != null and remark != ''">                	remark                  ,</if>
+			<if test="enterpriseId != null">                           	tenant_id               ,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="Id != null and Id != 0">							#{Id}					,</if>
+			<if test="jobName != null and jobName != ''">				#{jobName}				,</if>
+			<if test="jobGroup != null and jobGroup != ''">				#{jobGroup}				,</if>
+			<if test="invokeTarget != null and invokeTarget != ''">		#{invokeTarget}			,</if>
+			<if test="cronExpression != null and cronExpression != ''">	#{cronExpression}		,</if>
+			<if test="misfirePolicy != null and misfirePolicy != ''">	#{misfirePolicy}		,</if>
+			<if test="concurrent != null and concurrent != ''">			#{concurrent}			,</if>
+			<if test="status != null and status != ''">                	#{status}               ,</if>
+			<if test="createBy != null">                               	#{createBy}             ,</if>
+			<if test="remark != null and remark != ''">                	#{remark}               ,</if>
+			<if test="enterpriseId != null">                           	#{enterpriseId}         ,</if>
+		</trim>
 	</insert>
 
 </mapper> 

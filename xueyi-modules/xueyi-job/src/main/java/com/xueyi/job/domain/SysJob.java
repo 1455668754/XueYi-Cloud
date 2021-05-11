@@ -18,13 +18,12 @@ import com.xueyi.job.util.CronUtils;
  * 定时任务调度表 sys_job
  *
  * @author xueyi
- * @originalAuthor ruoyi
  */
 public class SysJob extends BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    /** 任务ID */
+    /** 任务Id */
     @Excel(name = "任务序号", cellType = ColumnType.NUMERIC)
     private Long jobId;
 

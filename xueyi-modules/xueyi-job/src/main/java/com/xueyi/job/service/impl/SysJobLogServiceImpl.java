@@ -1,6 +1,8 @@
-package com.xueyi.job.service;
+package com.xueyi.job.service.impl;
 
 import java.util.List;
+
+import com.xueyi.job.service.ISysJobLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.job.domain.SysJobLog;
@@ -9,7 +11,7 @@ import com.xueyi.job.mapper.SysJobLogMapper;
 /**
  * 定时任务调度日志信息 服务层
  * 
- * @author ruoyi
+ * @author xueyi
  */
 @Service
 public class SysJobLogServiceImpl implements ISysJobLogService
@@ -30,9 +32,9 @@ public class SysJobLogServiceImpl implements ISysJobLogService
     }
 
     /**
-     * 通过调度任务日志ID查询调度信息
+     * 通过调度任务日志Id查询调度信息
      * 
-     * @param jobLogId 调度任务日志ID
+     * @param jobLogId 调度任务日志Id
      * @return 调度任务日志对象信息
      */
     @Override
@@ -55,7 +57,7 @@ public class SysJobLogServiceImpl implements ISysJobLogService
     /**
      * 批量删除调度日志信息
      * 
-     * @param logIds 需要删除的数据ID
+     * @param logIds 需要删除的数据Id
      * @return 结果
      */
     @Override
@@ -67,7 +69,7 @@ public class SysJobLogServiceImpl implements ISysJobLogService
     /**
      * 删除任务日志
      * 
-     * @param jobId 调度日志ID
+     * @param jobId 调度日志Id
      */
     @Override
     public int deleteJobLogById(Long jobId)

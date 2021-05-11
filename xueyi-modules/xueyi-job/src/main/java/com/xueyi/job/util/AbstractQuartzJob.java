@@ -78,6 +78,7 @@ public abstract class AbstractQuartzJob implements Job
         sysJobLog.setInvokeTarget(sysJob.getInvokeTarget());
         sysJobLog.setStartTime(startTime);
         sysJobLog.setStopTime(new Date());
+        sysJobLog.setEnterpriseId(sysJob.getEnterpriseId());
         long runMs = sysJobLog.getStopTime().getTime() - sysJobLog.getStartTime().getTime();
         sysJobLog.setJobMessage(sysJobLog.getJobName() + " 总共耗时：" + runMs + "毫秒");
         if (e != null)
@@ -90,7 +91,6 @@ public abstract class AbstractQuartzJob implements Job
         {
             sysJobLog.setStatus("0");
         }
-
         // 写入数据库当中
         SpringUtils.getBean(ISysJobLogService.class).addJobLog(sysJobLog);
     }

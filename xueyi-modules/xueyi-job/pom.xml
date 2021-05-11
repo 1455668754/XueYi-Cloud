@@ -66,18 +66,24 @@
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
         
-        <!-- RuoYi Common Log -->
+        <!-- XueYi Common Log -->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-log</artifactId>
         </dependency>
         
-        <!-- RuoYi Common Swagger -->
+        <!-- XueYi Common Swagger -->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-swagger</artifactId>
         </dependency>
-        
+
+        <!-- XueYi Common DataScope -->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-common-datascope</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

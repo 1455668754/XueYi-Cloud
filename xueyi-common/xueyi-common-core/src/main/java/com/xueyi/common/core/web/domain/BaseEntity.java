@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 /**
  * Entity基类
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class BaseEntity implements Serializable
 {
