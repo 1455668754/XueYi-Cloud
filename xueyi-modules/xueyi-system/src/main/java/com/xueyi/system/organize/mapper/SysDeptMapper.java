@@ -15,12 +15,12 @@ import com.xueyi.system.api.organize.SysDept;
 public interface SysDeptMapper {
     /**
      * 查询部门管理数据
-     * 访问控制 d 部门 | p 岗位 | u 用户 | d 租户查询
+     * 访问控制 d 部门 | d 租户查询
      *
      * @param dept 部门信息
      * @return 部门信息集合
      */
-    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", enterpriseAlias = "d")
+    @DataScope(deptAlias = "d", enterpriseAlias = "d")
     public List<SysDept> selectDeptList(SysDept dept);
 
     /**

@@ -14,12 +14,12 @@ import com.xueyi.system.api.utilTool.SysSearch;
 public interface SysPostMapper {
     /**
      * 查询岗位数据集合
-     * 访问控制 d 部门 | p 岗位 | u 用户 | p 租户查询
+     * 访问控制 d 部门 | p 岗位 | p 租户查询
      *
      * @param post 岗位信息
      * @return 岗位数据集合
      */
-    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", enterpriseAlias = "p")
+    @DataScope(deptAlias = "d", postAlias = "p", enterpriseAlias = "p")
     public List<SysPost> selectPostList(SysPost post);
 
     /**
