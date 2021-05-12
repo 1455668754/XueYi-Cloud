@@ -53,7 +53,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2021-2022 xueyi.com All Rights Reserved.</span>
+      <span>Copyright © 2021-2022 xueyitt.cn All Rights Reserved.</span>
     </div>
   </div>
 </template>

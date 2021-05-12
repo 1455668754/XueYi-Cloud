@@ -32,7 +32,6 @@ public class SysMaterialFolderController extends BaseController {
     /**
      * 查询素材分类列表
      */
-    @PreAuthorize(hasPermi = "system:folder:list")
     @GetMapping("/list")
     public AjaxResult list(SysMaterialFolder materialFolder) {
         List<SysMaterialFolder> tree = materialFolderService.selectMaterialFolderList(materialFolder);

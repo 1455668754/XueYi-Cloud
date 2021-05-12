@@ -408,7 +408,7 @@ values (1, 1, '男', '0', 'sys_user_sex', '', '', 'Y', 0, '性别男'),
        (35, 2, '外部跳转', '1', 'sys_jump_type', '', '', 'N', 0, '路由外部跳转');
 
 -- ----------------------------
--- 13、参数配置表
+-- 8、参数配置表
 -- ----------------------------
 drop table if exists sys_config;
 create table sys_config (
@@ -433,7 +433,7 @@ values (1, '主框架页-默认皮肤样式名称', 'sys.index.skinName',     's
        (3, '主框架页-侧边栏主题',       'sys.index.sideTheme',    'theme-dark',    'Y', '深色主题theme-dark，浅色主题theme-light', 0);
 
 -- ----------------------------
--- 15、定时任务调度表
+-- 9、定时任务调度表
 -- ----------------------------
 drop table if exists sys_job;
 create table sys_job (
@@ -461,7 +461,7 @@ values (1, '系统默认（无参）', 'DEFAULT', 'ryTask.ryNoParams',        '0
        (3, '系统默认（多参）', 'DEFAULT', 'ryTask.ryMultipleParams(\'ry\', true, 2000L, 316.50D, 100)',  '0/20 * * * * ?', '3', '1', '1', 0);
 
 -- ----------------------------
--- 16、定时任务调度日志表
+-- 10、定时任务调度日志表
 -- ----------------------------
 drop table if exists sys_job_log;
 create table sys_job_log (
@@ -480,7 +480,7 @@ create table sys_job_log (
 ) engine=innodb comment = '定时任务调度日志表';
 
 -- ----------------------------
--- 10、操作日志记录
+-- 11、操作日志记录
 -- ----------------------------
 drop table if exists sys_oper_log;
 create table sys_oper_log (
@@ -506,7 +506,7 @@ create table sys_oper_log (
 ) engine=innodb auto_increment=100 comment = '操作日志记录';
 
 -- ----------------------------
--- 14、系统访问记录
+-- 12、系统访问记录
 -- ----------------------------
 drop table if exists sys_logininfor;
 create table sys_logininfor (
@@ -525,7 +525,7 @@ create table sys_logininfor (
 ) engine=innodb auto_increment=100 comment = '系统访问记录';
 
 -- ----------------------------
--- 17、通知公告表
+-- 13、通知公告表
 -- ----------------------------
 drop table if exists sys_notice;
 create table sys_notice (
@@ -545,7 +545,7 @@ create table sys_notice (
 ) engine=innodb comment = '通知公告表';
 
 -- ----------------------------
--- 18、代码生成业务表
+-- 14、代码生成业务表
 -- ----------------------------
 drop table if exists gen_table;
 create table gen_table (
@@ -574,7 +574,7 @@ create table gen_table (
 
 
 -- ----------------------------
--- 19、代码生成业务表字段
+-- 15、代码生成业务表字段
 -- ----------------------------
 drop table if exists gen_table_column;
 create table gen_table_column (

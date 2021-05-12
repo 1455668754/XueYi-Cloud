@@ -45,12 +45,12 @@ public interface SysRoleMapper {
 
     /**
      * 根据条件分页查询角色数据
-     * 访问控制 r 部门 | r 租户查询
+     * 访问控制 r 租户查询
      *
      * @param role 角色信息
      * @return 角色数据集合信息
      */
-    @DataScope(deptAlias = "r", enterpriseAlias = "r")
+    @DataScope(enterpriseAlias = "r")
     public List<SysRole> selectRoleList(SysRole role);
 
     /**

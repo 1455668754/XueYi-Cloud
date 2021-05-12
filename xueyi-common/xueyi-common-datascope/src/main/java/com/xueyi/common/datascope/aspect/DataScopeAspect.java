@@ -52,7 +52,7 @@ public class DataScopeAspect {
     public static final String DATA_SCOPE_DEPT_AND_CHILD = "4";
 
     /**
-     * 部门数据权限
+     * 岗位数据权限
      */
     public static final String DATA_SCOPE_POST = "5";
 
