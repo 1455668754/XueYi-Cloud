@@ -523,3 +523,23 @@ create table sys_logininfor (
   tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
   primary key (info_id)
 ) engine=innodb auto_increment=100 comment = '系统访问记录';
+
+-- ----------------------------
+-- 17、通知公告表
+-- ----------------------------
+drop table if exists sys_notice;
+create table sys_notice (
+  notice_id                 bigint              not null                                comment '公告Id',
+  notice_title              varchar(50)         not null                                comment '公告标题',
+  notice_type               char(1)             not null                                comment '公告类型（1通知 2公告）',
+  notice_content            longblob            default null                            comment '公告内容',
+  status                    char(1)             default '0'                             comment '公告状态（0正常 1关闭）',
+  create_by                 bigint              default null                            comment '创建者',
+  create_time               datetime            default current_timestamp               comment '创建时间',
+  update_by                 bigint              default null                            comment '更新者',
+  update_time               datetime            on update current_timestamp             comment '更新时间',
+  remark                    varchar(1000)       default null                            comment '备注',
+  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  primary key (notice_id)
+) engine=innodb comment = '通知公告表';

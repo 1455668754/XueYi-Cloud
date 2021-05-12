@@ -14,7 +14,7 @@
       <el-form-item label="操作账号" prop="userName">
         <el-input
           v-model="queryParams.userName"
-          placeholder="请输入操作人员"
+          placeholder="请输入操作账号"
           clearable
           style="width: 240px;"
           size="small"
@@ -122,7 +122,7 @@
       <el-table-column label="系统模块" align="center" prop="title" />
       <el-table-column label="操作类型" align="center" prop="businessType" :formatter="typeFormat" />
       <el-table-column label="请求方式" align="center" prop="requestMethod" />
-      <el-table-column label="操作人员" align="center">
+      <el-table-column label="操作账号 | 操作人员" align="center">
         <template slot-scope="scope">
           <span>{{scope.row.userName }} | {{scope.row.userNick }}</span>
         </template>
