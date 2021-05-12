@@ -15,7 +15,7 @@
                 <el-row :gutter="20" type="flex" justify="space-between">
                   <el-col :xs="9" :sm="9" :md="9" :lg="9" :xl="9">
                     <el-row type="flex" justify="space-between">
-                      <el-col>
+                      <el-col v-hasPermi="['system:material:add']">
                         <el-upload
                           ref="upload"
                           :limit="5"
@@ -29,16 +29,15 @@
                           :on-success="handleFileSuccess"
                           :on-error="handleFileError"
                           :show-file-list="false">
-                          <el-button slot="trigger" size="medium" icon="el-icon-upload2" :loading="upload.isUploading"
-                                     v-hasPermi="['system:material:add']">直接上传
+                          <el-button slot="trigger" size="medium" icon="el-icon-upload2" :loading="upload.isUploading">直接上传
                           </el-button>
                         </el-upload>
                       </el-col>
-                      <el-col>
+                      <el-col v-hasPermi="['system:material:add']">
                         <el-button class="hidden-xs-only" size="medium" icon="el-icon-folder-add"
                                    @click="handleAddFolder"
                                    :loading="upload.isUploading"
-                                   v-hasPermi="['system:folder:add']">新增文件夹
+                                   >新增文件夹
                         </el-button>
                       </el-col>
                     </el-row>
@@ -75,7 +74,7 @@
                           </el-image>
                           <svg-icon slot="prefix" icon-class="xy-cancel"
                                     :class="item.hiddenVisible?'folder-cancel image-hand':'folder-cancel'"
-                                    v-if="item.hiddenVisible" @click="imageDelete(0,item,index)"/>
+                                    v-if="item.hiddenVisible" @click="imageDelete(0,item,index)" v-hasPermi="['system:material:remove']"/>
                         </div>
                         <div class="image-box">
                           <el-input
@@ -105,7 +104,7 @@
                           </div>
                           <svg-icon slot="prefix" icon-class="xy-cancel"
                                     :class="item.hiddenVisible?'image-cancel image-hand':'image-cancel'"
-                                    v-if="item.hiddenVisible" @click="imageDelete(1, item, index)"/>
+                                    v-if="item.hiddenVisible" @click="imageDelete(1, item, index)" v-hasPermi="['system:material:remove']"/>
                         </div>
                         <div class="image-box">
                           <el-input
