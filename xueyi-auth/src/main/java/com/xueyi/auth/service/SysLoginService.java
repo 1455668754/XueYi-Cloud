@@ -18,7 +18,6 @@ import com.xueyi.system.api.model.LoginUser;
  * 登录校验方法
  *
  * @author xueyi
- * @originalAuthor ruoyi
  */
 @Component
 public class SysLoginService {

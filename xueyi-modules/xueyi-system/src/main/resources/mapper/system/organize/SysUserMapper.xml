@@ -65,6 +65,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="status"       column="role_status"    />
 	</resultMap>
 
+	<sql id="loginVo">
+		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.profile, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
+			   d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email,d.status as dept_status,
+			   p.post_id, p.dept_id, p.post_code, p.post_name,p.status as post_status,
+			   r.role_id, r.role_code, r.role_name, r.role_key, r.sort, r.data_scope, r.status as role_status
+		from sys_user u
+				 left join sys_dept d on u.dept_id = d.dept_id
+				 left join sys_post p on u.post_id = p.post_id
+				 left join sys_dept_role dr on dr.dept_id = d.dept_id
+				 left join sys_post_role pr on pr.post_id = p.post_id
+				 left join sys_user_role ur on ur.user_id = u.user_id
+				 left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
+	</sql>
+
 	<sql id="selectVo">
 		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.profile, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
 			   d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email,d.status as dept_status,
@@ -88,7 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</sql>
 
 	<select id="checkLoginByEnterpriseIdANDUserName" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysUserResult">
-		<include refid="checkVo"/>
+		<include refid="loginVo"/>
 		where u.tenant_id = #{search.enterpriseId} and u.user_name=#{search.userName} and u.status = '0'
 	</select>
 
