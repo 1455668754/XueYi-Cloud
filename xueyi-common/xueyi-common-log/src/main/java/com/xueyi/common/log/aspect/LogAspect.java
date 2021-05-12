@@ -6,6 +6,8 @@ import java.util.Iterator;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.xueyi.common.security.service.TokenService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -33,7 +35,7 @@ import com.xueyi.system.api.monitor.SysOperLog;
 /**
  * 操作日志记录处理
  *
- * @author ruoyi
+ * @author xueyi
  */
 @Aspect
 @Component
@@ -43,6 +45,9 @@ public class LogAspect
 
     @Autowired
     private AsyncLogService asyncLogService;
+
+    @Autowired
+    private TokenService tokenService;
 
     // 配置织入点
     @Pointcut("@annotation(com.xueyi.common.log.annotation.Log)")
@@ -94,10 +99,20 @@ public class LogAspect
             operLog.setJsonResult(JSON.toJSONString(jsonResult));
 
             operLog.setOperUrl(ServletUtils.getRequest().getRequestURI());
-            String username = SecurityUtils.getUsername();
-            if (StringUtils.isNotBlank(username))
+            Long userId = tokenService.getLoginUser().getUserid();
+            Long enterpriseId = tokenService.getLoginUser().getEnterpriseId();
+            if (StringUtils.isNotNull(userId))
             {
-                operLog.setOperName(username);
+                operLog.setUserId(userId);
+            }else {
+                operLog.setUserId(0L);
+            }
+
+            if (StringUtils.isNotNull(enterpriseId))
+            {
+                operLog.setEnterpriseId(enterpriseId);
+            }else {
+                operLog.setEnterpriseId(0L);
             }
 
             if (e != null)

@@ -9,7 +9,7 @@ import com.xueyi.common.core.web.domain.BaseEntity;
 /**
  * 操作日志记录表 oper_log
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class SysOperLog extends BaseEntity
 {
@@ -42,9 +42,16 @@ public class SysOperLog extends BaseEntity
     @Excel(name = "操作类别", readConverterExp = "0=其它,1=后台用户,2=手机端用户")
     private Integer operatorType;
 
+    /** 操作Id */
+    private Long userId;
+
+    /** 操作账号 */
+    @Excel(name = "操作账号")
+    private String userName;
+
     /** 操作人员 */
     @Excel(name = "操作人员")
-    private String operName;
+    private String userNick;
 
     /** 部门名称 */
     @Excel(name = "部门名称")
@@ -149,14 +156,28 @@ public class SysOperLog extends BaseEntity
         this.operatorType = operatorType;
     }
 
-    public String getOperName()
-    {
-        return operName;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setOperName(String operName)
-    {
-        this.operName = operName;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserNick() {
+        return userNick;
+    }
+
+    public void setUserNick(String userNick) {
+        this.userNick = userNick;
     }
 
     public String getDeptName()

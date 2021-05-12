@@ -19,13 +19,19 @@ public class SysLoginInfo extends BaseEntity
     @Excel(name = "序号", cellType = ColumnType.NUMERIC)
     private Long infoId;
 
-    /** 用户账号 */
-    @Excel(name = "企业账号")
+    /** 企业账号 */
     private String enterpriseName;
+
+    /** 用户Id */
+    private Long userId;
 
     /** 用户账号 */
     @Excel(name = "用户账号")
     private String userName;
+
+    /** 用户名称 */
+    @Excel(name = "用户名称")
+    private String userNick;
 
     /** 状态 0成功 1失败 */
     @Excel(name = "状态", readConverterExp = "0=成功,1=失败")
@@ -62,14 +68,28 @@ public class SysLoginInfo extends BaseEntity
         this.enterpriseName = enterpriseName;
     }
 
-    public String getUserName()
-    {
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName)
-    {
+    public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getUserNick() {
+        return userNick;
+    }
+
+    public void setUserNick(String userNick) {
+        this.userNick = userNick;
     }
 
     public String getStatus()

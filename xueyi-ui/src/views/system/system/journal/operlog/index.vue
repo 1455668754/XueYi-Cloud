@@ -11,9 +11,19 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="操作人员" prop="operName">
+      <el-form-item label="操作账号" prop="userName">
         <el-input
-          v-model="queryParams.operName"
+          v-model="queryParams.userName"
+          placeholder="请输入操作人员"
+          clearable
+          style="width: 240px;"
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="操作人员" prop="userNick">
+        <el-input
+          v-model="queryParams.userNick"
           placeholder="请输入操作人员"
           clearable
           style="width: 240px;"
@@ -112,7 +122,11 @@
       <el-table-column label="系统模块" align="center" prop="title" />
       <el-table-column label="操作类型" align="center" prop="businessType" :formatter="typeFormat" />
       <el-table-column label="请求方式" align="center" prop="requestMethod" />
-      <el-table-column label="操作人员" align="center" prop="operName" />
+      <el-table-column label="操作人员" align="center">
+        <template slot-scope="scope">
+          <span>{{scope.row.userName }} | {{scope.row.userNick }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="主机" align="center" prop="operIp" width="130" :show-overflow-tooltip="true" />
       <el-table-column label="操作状态" align="center" prop="status" :formatter="statusFormat" />
       <el-table-column label="操作日期" align="center" prop="operTime" width="180">
@@ -149,7 +163,7 @@
             <el-form-item label="操作模块：">{{ form.title }} / {{ typeFormat(form) }}</el-form-item>
             <el-form-item
               label="登录信息："
-            >{{ form.operName }} / {{ form.operIp }}</el-form-item>
+            >{{ form.userName }} / {{ form.userNick }} / {{ form.operIp }}</el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="请求地址：">{{ form.operUrl }}</el-form-item>
@@ -219,7 +233,8 @@ export default {
         pageNum: 1,
         pageSize: 10,
         title: undefined,
-        operName: undefined,
+        userName: undefined,
+        userNick: undefined,
         businessType: undefined,
         status: undefined
       }
