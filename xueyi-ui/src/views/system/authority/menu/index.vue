@@ -253,9 +253,6 @@ export default {
         menuName: [
           {required: true, message: "菜单名称不能为空", trigger: "blur"}
         ],
-        sort: [
-          {required: true, message: "菜单顺序不能为空", trigger: "blur"}
-        ],
         path: [
           {required: true, message: "路由地址不能为空", trigger: "blur"}
         ]
@@ -332,7 +329,7 @@ export default {
         menuName: undefined,
         icon: undefined,
         menuType: "M",
-        sort: undefined,
+        sort: 0,
         isFrame: "1",
         isCache: "0",
         visible: "0",

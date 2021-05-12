@@ -64,7 +64,7 @@ public class SysMaterialFolderController extends BaseController {
     /**
      * 新增素材分类
      */
-    @PreAuthorize(hasPermi = "system:folder:add")
+    @PreAuthorize(hasPermi = "system:material:add")
     @Log(title = "素材分类", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysMaterialFolder folder) {
@@ -83,7 +83,7 @@ public class SysMaterialFolderController extends BaseController {
     /**
      * 修改素材分类
      */
-    @PreAuthorize(hasPermi = "system:folder:edit")
+    @PreAuthorize(hasPermi = "system:material:edit")
     @Log(title = "素材分类", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysMaterialFolder materialFolder) {
@@ -93,7 +93,7 @@ public class SysMaterialFolderController extends BaseController {
     /**
      * 删除素材分类
      */
-    @PreAuthorize(hasPermi = "system:folder:remove")
+    @PreAuthorize(hasPermi = "system:material:remove")
     @Log(title = "素材分类", businessType = BusinessType.DELETE)
     @DeleteMapping("/{folderId}")
     public AjaxResult remove(@PathVariable Long folderId) {
