@@ -27,12 +27,12 @@ public interface SysUserMapper {
 
     /**
      * 根据条件分页查询用户列表
-     * 访问控制 u 部门 | u 租户查询
+     * 访问控制 d 部门 | p 岗位 | u 用户 | u 租户查询
      *
      * @param sysUser 用户信息
      * @return 用户信息集合信息
      */
-    @DataScope(deptAlias = "u", enterpriseAlias = "u")
+    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", enterpriseAlias = "u")
     public List<SysUser> selectUserList(SysUser sysUser);
 
     /**
