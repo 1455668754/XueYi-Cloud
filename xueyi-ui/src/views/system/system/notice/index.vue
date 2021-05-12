@@ -10,15 +10,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="操作人员" prop="createBy">
-        <el-input
-          v-model="queryParams.createBy"
-          placeholder="请输入操作人员"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="类型" prop="noticeType">
         <el-select v-model="queryParams.noticeType" placeholder="公告类型" clearable size="small">
           <el-option
@@ -73,7 +64,11 @@
 
     <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="noticeId" width="100" />
+      <el-table-column label="序号" align="center">
+        <template slot-scope="scope">
+          <span>{{queryParams.pageSize*(queryParams.pageNum-1)+scope.$index+1}}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         label="公告标题"
         align="center"
@@ -94,8 +89,8 @@
         :formatter="statusFormat"
         width="100"
       />
-      <el-table-column label="创建者" align="center" prop="createBy" width="100" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="100">
+      <el-table-column label="创建者" align="center" prop="createName"/>
+      <el-table-column label="创建时间" align="center" prop="createTime">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -190,6 +185,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      // 选中数组名称
+      idTitles:[],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -213,7 +210,6 @@ export default {
         pageNum: 1,
         pageSize: 10,
         noticeTitle: undefined,
-        createBy: undefined,
         status: undefined
       },
       // 表单参数
@@ -285,6 +281,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.noticeId)
+      this.idTitles = selection.map(item => item.noticeTitle)
       this.single = selection.length!=1
       this.multiple = !selection.length
     },
@@ -327,7 +324,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const noticeIds = row.noticeId || this.ids
-      this.$confirm('是否确认删除公告编号为"' + noticeIds + '"的数据项?', "警告", {
+      const noticeTitles = row.noticeTitle || this.idTitles
+      this.$confirm('是否确认删除公告"' + noticeTitles + '"?', "警告", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"

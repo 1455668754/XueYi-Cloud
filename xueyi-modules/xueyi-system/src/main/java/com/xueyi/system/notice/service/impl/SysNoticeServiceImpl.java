@@ -2,6 +2,7 @@ package com.xueyi.system.notice.service.impl;
 
 import java.util.List;
 
+import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,9 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     @Override
     public SysNotice selectNoticeById(Long noticeId)
     {
-        return noticeMapper.selectNoticeById(noticeId);
+        SysSearch search = new SysSearch();
+        search.getSearch().put("noticeId", noticeId);
+        return noticeMapper.selectNoticeById(search);//@param search 万用组件 | noticeId 公告Id
     }
 
     /**
@@ -77,7 +80,9 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     @Override
     public int deleteNoticeById(Long noticeId)
     {
-        return noticeMapper.deleteNoticeById(noticeId);
+        SysSearch search = new SysSearch();
+        search.getSearch().put("noticeId", noticeId);
+        return noticeMapper.deleteNoticeById(search);//@param search 万用组件 | noticeId 公告Id
     }
 
     /**
@@ -89,6 +94,8 @@ public class SysNoticeServiceImpl implements ISysNoticeService
     @Override
     public int deleteNoticeByIds(Long[] noticeIds)
     {
-        return noticeMapper.deleteNoticeByIds(noticeIds);
+        SysSearch search = new SysSearch();
+        search.getSearch().put("noticeIds", noticeIds);
+        return noticeMapper.deleteNoticeByIds(search);//@param search 万用组件 | noticeIds 需要删除的公告Id(Long[])
     }
 }
