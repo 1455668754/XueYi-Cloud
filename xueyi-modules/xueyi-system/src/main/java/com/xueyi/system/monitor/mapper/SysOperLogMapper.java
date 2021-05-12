@@ -9,7 +9,7 @@ import com.xueyi.system.api.utilTool.SysSearch;
 /**
  * 操作日志 数据层
  *
- * @author ruoyi
+ * @author xueyi
  */
 public interface SysOperLogMapper {
     /**

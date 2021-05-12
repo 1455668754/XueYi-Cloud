@@ -318,7 +318,7 @@ values
 drop table if exists sys_dict_type;
 create table sys_dict_type
 (
-  dict_id                   bigint(20)          not null auto_increment                 comment '字典主键',
+  dict_id                   bigint              not null auto_increment                 comment '字典主键',
   dict_name                 varchar(100)        default ''                              comment '字典名称',
   dict_type                 varchar(100)        default ''                              comment '字典类型',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
@@ -352,7 +352,7 @@ values (1, '用户性别', 'sys_user_sex', 0, '用户性别列表'),
 drop table if exists sys_dict_data;
 create table sys_dict_data
 (
-  dict_code                 bigint(20)          not null auto_increment                 comment '字典编码',
+  dict_code                 bigint              not null auto_increment                 comment '字典编码',
   dict_sort                 int(4)              default 0                               comment '字典排序',
   dict_label                varchar(100)        default ''                              comment '字典标签',
   dict_value                varchar(100)        default ''                              comment '字典键值',
@@ -412,7 +412,7 @@ values (1, 1, '男', '0', 'sys_user_sex', '', '', 'Y', 0, '性别男'),
 -- ----------------------------
 drop table if exists sys_config;
 create table sys_config (
-  config_id                 bigint(20)          not null                                comment '参数主键',
+  config_id                 bigint              not null                                comment '参数主键',
   config_name               varchar(100)        default ''                              comment '参数名称',
   config_key                varchar(100)        default ''                              comment '参数键名',
   config_value              varchar(500)        default ''                              comment '参数键值',
@@ -437,7 +437,7 @@ values (1, '主框架页-默认皮肤样式名称', 'sys.index.skinName',     's
 -- ----------------------------
 drop table if exists sys_job;
 create table sys_job (
-  job_id                    bigint(20)          not null                                comment '任务Id',
+  job_id                    bigint              not null                                comment '任务Id',
   job_name                  varchar(64)         default ''                              comment '任务名称',
   job_group                 varchar(64)         default 'DEFAULT'                       comment '任务组名',
   invoke_target             varchar(500)        not null                                comment '调用目标字符串',
@@ -465,7 +465,7 @@ values (1, '系统默认（无参）', 'DEFAULT', 'ryTask.ryNoParams',        '0
 -- ----------------------------
 drop table if exists sys_job_log;
 create table sys_job_log (
-  job_log_id                bigint(20)          not null auto_increment                 comment '任务日志Id',
+  job_log_id                bigint              not null auto_increment                 comment '任务日志Id',
   job_name                  varchar(64)         not null                                comment '任务名称',
   job_group                 varchar(64)         not null                                comment '任务组名',
   invoke_target             varchar(500)        not null                                comment '调用目标字符串',
@@ -473,6 +473,7 @@ create table sys_job_log (
   status                    char(1)             not null default '0'                    comment '执行状态（0正常 1失败）',
   exception_info            varchar(2000)       default ''                              comment '异常信息',
   create_time               datetime            default current_timestamp               comment '创建时间',
+  del_time                  datetime            on update current_timestamp             comment '删除时间',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
   tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
   primary key (job_log_id)
@@ -483,14 +484,13 @@ create table sys_job_log (
 -- ----------------------------
 drop table if exists sys_oper_log;
 create table sys_oper_log (
-  oper_id                   bigint(20)          not null auto_increment                 comment '日志主键',
+  oper_id                   bigint              not null auto_increment                 comment '日志主键',
   title                     varchar(50)         default ''                              comment '模块标题',
   business_type             int(2)              default 0                               comment '业务类型（0其它 1新增 2修改 3删除）',
   method                    varchar(100)        default ''                              comment '方法名称',
   request_method            varchar(10)         default ''                              comment '请求方式',
   operator_type             int(1)              default 0                               comment '操作类别（0其它 1后台用户 2手机端用户）',
-  user_id                   bigint(20)          not null default 0                      comment '操作人员',
-  dept_name                 varchar(50)         default ''                              comment '部门名称',
+  user_id                   bigint              not null                                comment '操作人员',
   oper_url                  varchar(255)        default ''                              comment '请求URL',
   oper_ip                   varchar(128)        default ''                              comment '主机地址',
   oper_location             varchar(255)        default ''                              comment '操作地点',
@@ -498,8 +498,28 @@ create table sys_oper_log (
   json_result               varchar(2000)       default ''                              comment '返回参数',
   status                    int(1)              default 0                               comment '操作状态（0正常 1异常）',
   error_msg                 varchar(2000)       default ''                              comment '错误消息',
-  oper_time                 datetime                                                    comment '操作时间',
+  oper_time                 datetime            default current_timestamp               comment '操作时间',
+  del_time                  datetime            on update current_timestamp             comment '删除时间',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null default 0                      comment '租户Id(0默认系统 otherId特定租户专属)',
+  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
   primary key (oper_id)
 ) engine=innodb auto_increment=100 comment = '操作日志记录';
+
+-- ----------------------------
+-- 14、系统访问记录
+-- ----------------------------
+drop table if exists sys_logininfor;
+create table sys_logininfor (
+  info_id                   bigint              not null auto_increment                 comment '访问Id',
+  enterprise_name           varchar(50)         default ''                              comment '企业账号',
+  user_name                 varchar(50)         default ''                              comment '用户账号',
+  user_id                   bigint              default null                            comment '用户Id',
+  ipaddr                    varchar(128)        default ''                              comment '登录IP地址',
+  status                    char(1)             default '0'                             comment '登录状态（0成功 1失败）',
+  msg                       varchar(255)        default ''                              comment '提示信息',
+  access_time               datetime            default current_timestamp               comment '访问时间',
+  del_time                  datetime            on update current_timestamp             comment '删除时间',
+  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  primary key (info_id)
+) engine=innodb auto_increment=100 comment = '系统访问记录';

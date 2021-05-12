@@ -20,10 +20,18 @@ public interface SysUserMapper {
      * 登陆前验证，无需切片控制(service/impl层在com.xueyi.authority.service)
      *
      * @param search 万用组件 | enterpriseId 租户Id | userName 用户账号
-     * @param
      * @return 用户对象信息
      */
     public SysUser checkLoginByEnterpriseIdANDUserName(SysSearch search);
+
+    /**
+     * 登录日志用户检验
+     * 登陆前验证，无需切片控制(service/impl层在com.xueyi.authority.service)
+     *
+     * @param search 万用组件 | enterpriseId 租户Id | userName 用户账号
+     * @return 用户对象信息
+     */
+    public SysUser checkUserByUserName(SysSearch search);
 
     /**
      * 根据条件分页查询用户列表

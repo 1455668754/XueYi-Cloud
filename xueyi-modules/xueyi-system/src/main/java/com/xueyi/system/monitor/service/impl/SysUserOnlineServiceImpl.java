@@ -9,7 +9,7 @@ import com.xueyi.system.monitor.service.ISysUserOnlineService;
 /**
  * 在线用户 服务层处理
  *
- * @author ruoyi
+ * @author xueyi
  */
 @Service
 public class SysUserOnlineServiceImpl implements ISysUserOnlineService

@@ -5,50 +5,74 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.xueyi.system.monitor.mapper.SysLoginInfoMapper">
 
 	<resultMap type="SysLoginInfo" id="SysLoginInfoResult">
-		<id     property="infoId"        column="info_id"           />
-		<result property="userName"      column="user_name"         />
-		<result property="status"        column="status"            />
-		<result property="ipaddr"        column="ipaddr"            />
-		<result property="msg"           column="msg"               />
-		<result property="accessTime"    column="access_time"       />
+		<id     property="infoId"        	column="info_id"           		/>
+		<result property="enterpriseName"	column="enterprise_name"   		/>
+		<result property="userName"      	column="user_name"         		/>
+		<result property="userNick"      	column="user_nick"         		/>
+		<result property="userId"      	 	column="user_id"        	 	/>
+		<result property="status"        	column="status"            		/>
+		<result property="ipaddr"        	column="ipaddr"            		/>
+		<result property="msg"           	column="msg"               		/>
+		<result property="accessTime"    	column="access_time"       		/>
 	</resultMap>
 
+	<sql id="selectVo">
+		select li.info_id, li.enterprise_name, li.user_id, li.ipaddr, li.status, li.msg, li.access_time,
+		       u.user_name as user_name, u.nick_name as user_nick
+		from sys_logininfor li
+		left join sys_user u on u.user_id = li.user_id
+		left join sys_post p on p.post_id = u.post_id
+		left join sys_dept d on d.dept_id = u.dept_id
+	</sql>
+
 	<insert id="insertLoginInfo" parameterType="SysLoginInfo">
-		insert into sys_logininfor (user_name, status, ipaddr, msg, access_time)
-		values (#{userName}, #{status}, #{ipaddr}, #{msg}, sysdate())
+		insert into sys_logininfor (enterprise_name, user_name, user_id, status, ipaddr, msg, tenant_id)
+		values (#{enterpriseName}, #{userName}, #{userId}, #{status}, #{ipaddr}, #{msg}, #{enterpriseId})
 	</insert>
 
 	<select id="selectLoginInfoList" parameterType="SysLoginInfo" resultMap="SysLoginInfoResult">
-		select info_id, user_name, ipaddr, status, msg, access_time from sys_logininfor
-		<where>
-			<if test="ipaddr != null and ipaddr != ''">
-				AND ipaddr like concat('%', #{ipaddr}, '%')
-			</if>
-			<if test="status != null and status != ''">
-				AND status = #{status}
-			</if>
-			<if test="userName != null and userName != ''">
-				AND user_name like concat('%', #{userName}, '%')
-			</if>
-			<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
-				and date_format(access_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
-			</if>
-			<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
-				and date_format(access_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
-			</if>
-		</where>
-		order by info_id desc
+		<include refid="selectVo"/>
+		where 1 = 1
+		<if test="ipaddr != null and ipaddr != ''">
+			AND li.ipaddr like concat('%', #{ipaddr}, '%')
+		</if>
+		<if test="status != null and status != ''">
+			AND li.status = #{status}
+		</if>
+		<if test="userName != null and userName != ''">
+			AND u.user_name like concat('%', #{userName}, '%')
+		</if>
+		<if test="userNick != null and userNick != ''">
+			AND u.nick_name like concat('%', #{userNick}, '%')
+		</if>
+		<if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+			and date_format(li.access_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+		</if>
+		<if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+			and date_format(li.access_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		order by li.info_id desc
 	</select>
 
-	<delete id="deleteLoginInfoByIds" parameterType="Long">
- 		delete from sys_logininfor where info_id in
- 		<foreach collection="array" item="infoId" open="(" separator="," close=")">
+	<delete id="deleteLoginInfoByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		update sys_logininfor
+		set del_flag = 1
+ 		where info_id in
+ 		<foreach collection="search.infoIds" item="infoId" open="(" separator="," close=")">
  			#{infoId}
         </foreach>
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
  	</delete>
 
-    <update id="cleanLoginInfo">
-        truncate table sys_logininfor
+    <update id="cleanLoginInfo" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		update sys_logininfor
+		set del_flag = 1
+		where 1 = 1
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
     </update>
 
 </mapper>

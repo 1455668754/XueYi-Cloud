@@ -1,16 +1,15 @@
 package com.xueyi.system.monitor.service;
 
 import java.util.List;
+
 import com.xueyi.system.monitor.domain.SysLoginInfo;
 
 /**
  * 系统访问日志情况信息 服务层
  *
  * @author xueyi
- * @originalAuthor ruoyi
  */
-public interface ISysLoginInfoService
-{
+public interface ISysLoginInfoService {
     /**
      * 新增系统登录日志
      *
@@ -29,8 +28,8 @@ public interface ISysLoginInfoService
     /**
      * 批量删除系统登录日志
      *
-     * @param infoIds 需要删除的登录日志ID
-     * @return
+     * @param infoIds 需要删除的登录日志Id
+     * @return 结果
      */
     public int deleteLoginInfoByIds(Long[] infoIds);
 

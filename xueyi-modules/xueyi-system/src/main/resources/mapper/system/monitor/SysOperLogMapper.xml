@@ -14,7 +14,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="userId"       	column="user_id"      	/>
 		<result property="userName"       	column="user_name"      />
 		<result property="userNick"       	column="user_nick"      />
-		<result property="deptName"       	column="dept_name"      />
 		<result property="operUrl"        	column="oper_url"       />
 		<result property="operIp"         	column="oper_ip"        />
 		<result property="operParam"      	column="oper_param"     />
@@ -25,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<sql id="selectVo">
-        select ol.oper_id, ol.title, ol.business_type, ol.method, ol.request_method, ol.operator_type, ol.user_id, ol.dept_name, ol.oper_url, ol.oper_ip, ol.oper_param, ol.json_result, ol.status, ol.error_msg, ol.oper_time,
+        select ol.oper_id, ol.title, ol.business_type, ol.method, ol.request_method, ol.operator_type, ol.user_id, ol.oper_url, ol.oper_ip, ol.oper_param, ol.json_result, ol.status, ol.error_msg, ol.oper_time,
         u.user_name as user_name, u.nick_name as user_nick
         from sys_oper_log ol
 		left join sys_user u on u.user_id = ol.user_id
@@ -34,8 +33,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
 	<insert id="insertOperlog" parameterType="SysOperLog">
-		insert into sys_oper_log(title, business_type, method, request_method, operator_type, user_id, dept_name, oper_url, oper_ip, oper_param, json_result, status, error_msg, oper_time, tenant_id)
-        values (#{title}, #{businessType}, #{method}, #{requestMethod}, #{operatorType}, #{userId}, #{deptName}, #{operUrl}, #{operIp}, #{operParam}, #{jsonResult}, #{status}, #{errorMsg}, sysdate(), #{enterpriseId})
+		insert into sys_oper_log(title, business_type, method, request_method, operator_type, user_id, oper_url, oper_ip, oper_param, json_result, status, error_msg, tenant_id)
+        values (#{title}, #{businessType}, #{method}, #{requestMethod}, #{operatorType}, #{userId}, #{operUrl}, #{operIp}, #{operParam}, #{jsonResult}, #{status}, #{errorMsg}, #{enterpriseId})
 	</insert>
 
 	<select id="selectOperLogList" parameterType="SysOperLog" resultMap="SysOperLogResult">

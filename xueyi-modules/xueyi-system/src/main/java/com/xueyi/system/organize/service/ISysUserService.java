@@ -20,6 +20,16 @@ public interface ISysUserService {
     public List<SysUser> selectUserList(SysUser user);
 
     /**
+     * 登录日志用户检验
+     *
+     * @param enterpriseId 租户Id
+     * @param userName     用户账号
+     * @param
+     * @return 用户对象信息
+     */
+    public SysUser checkUserByUserName(Long enterpriseId, String userName);
+
+    /**
      * 通过用户名查询用户
      *
      * @param userName 用户名
