@@ -23,7 +23,6 @@ public class SysEnterpriseController{
     /**
      * 获取logo信息
      */
-    @PreAuthorize(hasPermi = "system:enterprise:logo")
     @GetMapping("/logo")
     public AjaxResult logo()
     {
