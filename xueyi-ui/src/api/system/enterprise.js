@@ -25,3 +25,19 @@ export function uploadLogo(data) {
     data: data
   })
 }
+
+export function updateEnterprise(data) {
+  return request({
+    url: '/system/enterprise/updateEnterprise',
+    method: 'put',
+    data: data
+  })
+}
+
+export function changeEnterpriseName(data) {
+  return request({
+    url: '/system/enterprise/changeEnterpriseName',
+    method: 'put',
+    data: data
+  })
+}

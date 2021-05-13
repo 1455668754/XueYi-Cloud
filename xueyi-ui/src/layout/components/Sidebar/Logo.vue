@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      title: store.getters.enterpriseName,
+      title: store.getters.enterpriseSystemName,
       logo: store.getters.logo
     }
   }

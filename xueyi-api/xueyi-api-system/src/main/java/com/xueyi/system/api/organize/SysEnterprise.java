@@ -34,7 +34,7 @@ public class SysEnterprise extends BaseEntity {
     private String logo;
 
     /**
-     * 企业修改次数
+     * 企业账号修改次数
      */
     private Long enterpriseNameFrequency;
 

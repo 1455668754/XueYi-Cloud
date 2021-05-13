@@ -49,4 +49,24 @@ public interface SysEnterpriseMapper {
      */
     @DataScope(updateEnterpriseAlias = "empty")
     public int updateLogo(SysSearch search);
+
+    /**
+     * 更新租户信息
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    @DataScope(updateEnterpriseAlias = "empty")
+    public int updateEnterprise(SysEnterprise enterprise);
+
+    /**
+     * 更新租户账号
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    @DataScope(updateEnterpriseAlias = "empty")
+    public int changeEnterpriseName(SysEnterprise enterprise);
 }

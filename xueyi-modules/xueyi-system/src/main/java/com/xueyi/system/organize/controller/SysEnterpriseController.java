@@ -1,8 +1,10 @@
 package com.xueyi.system.organize.controller;
 
+import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
@@ -14,6 +16,7 @@ import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +29,7 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("/enterprise")
-public class SysEnterpriseController {
+public class SysEnterpriseController extends BaseController {
 
     @Autowired
     private ISysEnterpriseService enterpriseService;
@@ -54,10 +57,10 @@ public class SysEnterpriseController {
     }
 
     /**
-     * 头像上传
+     * logo上传
      */
     @PreAuthorize(hasPermi = "system:enterpriseAdmin:edit")
-    @Log(title = "企业Logo", businessType = BusinessType.UPDATE)
+    @Log(title = "企业Logo修改", businessType = BusinessType.UPDATE)
     @PostMapping("/changeLogo")
     public AjaxResult avatar(@RequestParam("logo") MultipartFile file) throws IOException
     {
@@ -85,5 +88,26 @@ public class SysEnterpriseController {
             }
         }
         return AjaxResult.error("上传图片异常，请稍后再试");
+    }
+
+    /**
+     * 普通信息修改
+     */
+    @PreAuthorize(hasPermi = "system:enterprise:edit")
+    @Log(title = "企业资料修改", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateEnterprise")
+    public AjaxResult updateEnterprise(@Validated @RequestBody SysEnterprise enterprise) {
+        return toAjax(enterpriseService.updateEnterprise(enterprise));
+    }
+
+    /**
+     * 超管信息修改
+     */
+    @PreAuthorize(hasPermi = "system:enterpriseAdmin:edit")
+    @Log(title = "企业账号修改", businessType = BusinessType.UPDATE)
+    @PutMapping("/changeEnterpriseName")
+    public AjaxResult changeEnterpriseName(@Validated @RequestBody SysEnterprise enterprise) {
+        System.out.println(2);
+        return toAjax(enterpriseService.changeEnterpriseName(enterprise));
     }
 }

@@ -53,9 +53,29 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @param logoUrl logo地址
      * @return 结果
      */
-    public int updateLogo(String logoUrl){
+    public int updateLogo(String logoUrl) {
         SysSearch search = new SysSearch();
         search.getSearch().put("logoUrl", logoUrl);
         return enterpriseMapper.updateLogo(search);
+    }
+
+    /**
+     * 更新租户信息
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    public int updateEnterprise(SysEnterprise enterprise) {
+        return enterpriseMapper.updateEnterprise(enterprise);
+    }
+
+    /**
+     * 更新租户账号
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    public int changeEnterpriseName(SysEnterprise enterprise) {
+        return enterpriseMapper.changeEnterpriseName(enterprise);
     }
 }

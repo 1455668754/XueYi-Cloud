@@ -67,4 +67,27 @@
         ${params.updateScope}
     </update>
 
+    <update id="updateEnterprise" parameterType="SysEnterprise">
+        update xy_tenant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enterpriseSystemName != null and enterpriseSystemName != ''">	        tenant_system_name = #{enterpriseSystemName}	    ,</if>
+            <if test="enterpriseNick != null and enterpriseNick != ''">	                    tenant_nick = #{enterpriseNick}	                    ,</if>
+            <if test="updateBy != null">		                                            update_by = #{updateBy}		                        ,</if>
+        </trim>
+        where tenant_id = #{enterpriseId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+
+    <update id="changeEnterpriseName" parameterType="SysEnterprise">
+        update xy_tenant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="enterpriseName != null and enterpriseName != ''">	      tenant_name = #{enterpriseName}	                    ,</if>
+            <if test="updateBy != null">		                              update_by = #{updateBy}		                        ,</if>
+            <if test="enterpriseName != null and enterpriseName != ''">	      tenant_name_frequency = tenant_name_frequency + 1     ,</if>
+        </trim>
+        where tenant_id = #{enterpriseId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
 </mapper>

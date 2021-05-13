@@ -39,4 +39,20 @@ public interface ISysEnterpriseService {
      * @return 结果
      */
     public int updateLogo(String logoUrl);
+
+    /**
+     * 更新租户信息
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    public int updateEnterprise(SysEnterprise enterprise);
+
+    /**
+     * 更新租户账号
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    public int changeEnterpriseName(SysEnterprise enterprise);
 }

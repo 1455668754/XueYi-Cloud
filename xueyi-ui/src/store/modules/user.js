@@ -8,6 +8,7 @@ const user = {
     name: '',
     avatar: '',
     enterpriseName: '',
+    enterpriseSystemName: '',
     logo: '',
     roles: [],
     permissions: []
@@ -25,6 +26,9 @@ const user = {
     },
     SET_ENTERPRISENAME: (state, enterpriseName) => {
       state.enterpriseName = enterpriseName
+    },
+    SET_ENTERPRISESYSTEMNAME: (state, enterpriseSystemName) => {
+      state.enterpriseSystemName = enterpriseSystemName
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -84,7 +88,8 @@ const user = {
           const enterprise = res.data
           const systemName = enterprise.enterpriseSystemName === "" ? "雪忆管理系统" : enterprise.enterpriseSystemName;
           const logo = enterprise.logo === "" ? require("@/assets/images/logo.jpg") : enterprise.logo;
-          commit('SET_ENTERPRISENAME', systemName)
+          commit('SET_ENTERPRISENAME', enterprise.enterpriseName)
+          commit('SET_ENTERPRISESYSTEMNAME', systemName)
           commit('SET_LOGO', logo)
         }).catch(error => {
           reject(error)
