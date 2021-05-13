@@ -33,7 +33,7 @@
               <li class="list-group-item">
                 <svg-icon icon-class="xy_roleGroup"/>
                 <span class="pull-left">角色组</span>
-                <span class="pull-right">{{ roleGroup }}</span>
+                <span class="pull-right"><span v-for="(item,index) in user.roles">{{item.roleName}}<span v-if="index < user.roles.length-1"> | </span></span></span>
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="xy_creatTime"/>
@@ -81,8 +81,6 @@ export default {
   data() {
     return {
       user: {},
-      roleGroup: {},
-      postGroup: {},
       activeTab: "userinfo"
     };
   },
@@ -93,7 +91,6 @@ export default {
     getUser() {
       getUserProfile().then(response => {
         this.user = response.data;
-        this.roleGroup = response.roleGroup;
       });
     }
   }
