@@ -107,7 +107,6 @@ public class SysEnterpriseController extends BaseController {
     @Log(title = "企业账号修改", businessType = BusinessType.UPDATE)
     @PutMapping("/changeEnterpriseName")
     public AjaxResult changeEnterpriseName(@Validated @RequestBody SysEnterprise enterprise) {
-        System.out.println(2);
         return toAjax(enterpriseService.changeEnterpriseName(enterprise));
     }
 }
