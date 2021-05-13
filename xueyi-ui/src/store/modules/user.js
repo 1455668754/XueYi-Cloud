@@ -1,11 +1,14 @@
 import { login, logout, getInfo, refreshToken } from '@/api/login'
 import { getToken, setToken, setExpiresIn, removeToken } from '@/utils/auth'
+import {getEnterpriseProfile} from "@/api/system/enterprise";
 
 const user = {
   state: {
     token: getToken(),
     name: '',
     avatar: '',
+    enterpriseName: '',
+    logo: '',
     roles: [],
     permissions: []
   },
@@ -20,8 +23,14 @@ const user = {
     SET_NAME: (state, name) => {
       state.name = name
     },
+    SET_ENTERPRISENAME: (state, enterpriseName) => {
+      state.enterpriseName = enterpriseName
+    },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
+    },
+    SET_LOGO: (state, logo) => {
+      state.logo = logo
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -58,7 +67,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
           const user = res.user
-          const avatar = user.avatar == "" ? require("@/assets/images/profile.jpg") : user.avatar;
+          const avatar = user.avatar === "" ? require("@/assets/images/profile.jpg") : user.avatar;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
@@ -68,6 +77,15 @@ const user = {
           commit('SET_NAME', user.userName)
           commit('SET_AVATAR', avatar)
           resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+        getEnterpriseProfile().then(res => {
+          const enterprise = res.data
+          const systemName = enterprise.enterpriseSystemName === "" ? "雪忆管理系统" : enterprise.enterpriseSystemName;
+          const logo = enterprise.logo === "" ? require("@/assets/images/logo.jpg") : enterprise.logo;
+          commit('SET_ENTERPRISENAME', systemName)
+          commit('SET_LOGO', logo)
         }).catch(error => {
           reject(error)
         })

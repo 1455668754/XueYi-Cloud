@@ -19,9 +19,8 @@
 </template>
 
 <script>
-import {getLogo} from "@/api/system/enterprise";
-import logoImg from '@/assets/logo/logo.png'
 import variables from '@/assets/styles/variables.scss'
+import store from "@/store";
 
 export default {
   name: 'SidebarLogo',
@@ -41,22 +40,8 @@ export default {
   },
   data() {
     return {
-      title: '信息管理系统',
-      logo: logoImg
-    }
-  },
-  created() {
-    this.getLogoInformation()
-  },
-  methods: {
-    getLogoInformation() {
-      getLogo().then(
-        response => {
-          const data=response.data
-          this.title=data.enterpriseSystemName
-          this.logo=data.logo
-          this.loading = false;
-        })
+      title: store.getters.enterpriseName,
+      logo: store.getters.logo
     }
   }
 }
