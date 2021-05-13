@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
  * @author xueyi
  */
 @Service
-public class SysEnterpriseServiceImpl implements ISysEnterpriseService
-{
+public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @Autowired
     private SysEnterpriseMapper enterpriseMapper;
 
@@ -24,7 +23,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService
      * @param enterpriseName 企业账号
      * @return 租户对象
      */
-    public SysEnterprise checkLoginByEnterpriseName(String enterpriseName){
+    public SysEnterprise checkLoginByEnterpriseName(String enterpriseName) {
         SysSearch search = new SysSearch();
         search.getSearch().put("enterpriseName", enterpriseName);
         return enterpriseMapper.checkLoginByEnterpriseName(search);//@param search 万用组件 | enterpriseName 企业账号
@@ -35,8 +34,28 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService
      *
      * @return 租户对象
      */
-    public SysEnterprise selectLogo(){
+    public SysEnterprise selectLogo() {
+        return enterpriseMapper.selectLogo(new SysSearch());//@param search 万用组件 | null
+    }
+
+    /**
+     * 查询租户信息
+     *
+     * @return 租户对象
+     */
+    public SysEnterprise selectEnterpriseById() {
+        return enterpriseMapper.selectEnterpriseById(new SysSearch());//@param search 万用组件 | null
+    }
+
+    /**
+     * 更新Logo
+     *
+     * @param logoUrl logo地址
+     * @return 结果
+     */
+    public int updateLogo(String logoUrl){
         SysSearch search = new SysSearch();
-        return enterpriseMapper.selectLogo(search);//@param search 万用组件 | null
+        search.getSearch().put("logoUrl", logoUrl);
+        return enterpriseMapper.updateLogo(search);
     }
 }

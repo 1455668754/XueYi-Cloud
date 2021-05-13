@@ -22,7 +22,7 @@
           </div>
         </el-col>
       </el-row>
-      <br />
+      <br/>
       <el-row>
         <el-col :lg="2" :md="2">
           <el-upload action="#" :http-request="requestUpload" :show-file-list="false" :before-upload="beforeUpload">
@@ -140,7 +140,7 @@ export default {
     // 关闭窗口
     closeDialog() {
       this.options.img = store.getters.avatar
-	  this.visible = false;
+	    this.visible = false;
     }
   }
 };

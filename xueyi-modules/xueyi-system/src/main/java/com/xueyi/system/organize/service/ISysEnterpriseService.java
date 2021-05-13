@@ -24,4 +24,19 @@ public interface ISysEnterpriseService {
      * @return 租户对象
      */
     public SysEnterprise selectLogo();
+
+    /**
+     * 查询租户信息
+     *
+     * @return 租户对象
+     */
+    public SysEnterprise selectEnterpriseById();
+
+    /**
+     * 更新Logo
+     *
+     * @param logoUrl logo地址
+     * @return 结果
+     */
+    public int updateLogo(String logoUrl);
 }

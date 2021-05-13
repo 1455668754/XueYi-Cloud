@@ -7,6 +7,7 @@
     <resultMap type="SysEnterprise" id="SysEnterpriseResult">
         <id     property="enterpriseId"                 column="tenant_id"                  />
         <result property="enterpriseName"               column="tenant_name"                />
+        <result property="enterpriseSystemName"         column="tenant_system_name"         />
         <result property="enterpriseNick"               column="tenant_nick"                />
         <result property="logo"                         column="tenant_logo"                />
         <result property="enterpriseNameFrequency"      column="tenant_name_frequency"      />
@@ -19,20 +20,25 @@
         <result property="updateTime" 	            	column="update_time"                />
     </resultMap>
 
-    <sql id="selectVo">
-        select e.tenant_id, e.tenant_name, e.tenant_full_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.tenant_database_status, e.create_by, e.create_time, e.update_by, e.update_time,
+    <sql id="checkVo">
+        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.tenant_database_status, e.create_by, e.create_time, e.update_by, e.update_time,
                td.datasource
         from xy_tenant e
                  left join xy_tenant_database td on e.tenant_id=td.tenant_id
     </sql>
 
+    <sql id="selectVo">
+        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.tenant_database_status, e.create_by, e.create_time, e.update_by, e.update_time
+        from xy_tenant e
+    </sql>
+
     <sql id="logoVo">
-        select e.tenant_nick, e.tenant_logo
+        select e.tenant_system_name, e.tenant_logo
         from xy_tenant e
     </sql>
 
     <select id="checkLoginByEnterpriseName" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysEnterpriseResult">
-        <include refid="selectVo"/>
+        <include refid="checkVo"/>
         where e.tenant_name=#{search.enterpriseName} and e.status = '0' and e.tenant_database_status = 0 and e.del_flag = 0
     </select>
 
@@ -42,4 +48,23 @@
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
+
+    <select id="selectEnterpriseById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysEnterpriseResult">
+        <include refid="selectVo"/>
+        where 1 = 1
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <update id="updateLogo" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+        update xy_tenant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="search.logoUrl != null and search.logoUrl != ''">	      tenant_logo = #{search.logoUrl}	    ,</if>
+            <if test="updateBy != null">		                              update_by = #{updateBy}		        ,</if>
+        </trim>
+        where tenant_id = #{enterpriseId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+
 </mapper>

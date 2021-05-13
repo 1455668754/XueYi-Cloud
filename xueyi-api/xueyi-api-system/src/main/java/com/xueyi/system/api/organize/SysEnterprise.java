@@ -19,9 +19,9 @@ public class SysEnterprise extends BaseEntity {
     private String enterpriseName;
 
     /**
-     * 企业全称
+     * 系统名称
      */
-    private String enterpriseFullName;
+    private String enterpriseSystemName;
 
     /**
      * 企业昵称
@@ -49,12 +49,12 @@ public class SysEnterprise extends BaseEntity {
     @Excel(name = "状态(0正常 1停用)", readConverterExp = "0=正常,1=停用")
     private String status;
 
-    public String getEnterpriseFullName() {
-        return enterpriseFullName;
+    public String getEnterpriseSystemName() {
+        return enterpriseSystemName;
     }
 
-    public void setEnterpriseFullName(String enterpriseFullName) {
-        this.enterpriseFullName = enterpriseFullName;
+    public void setEnterpriseSystemName(String enterpriseSystemName) {
+        this.enterpriseSystemName = enterpriseSystemName;
     }
 
     public String getEnterpriseName() {
@@ -109,7 +109,7 @@ public class SysEnterprise extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("enterpriseId", getEnterpriseId())
-                .append("enterpriseFullName", getEnterpriseFullName())
+                .append("enterpriseSystemName", getEnterpriseSystemName())
                 .append("enterpriseName", getEnterpriseName())
                 .append("enterpriseNick", getEnterpriseNick())
                 .append("logo", getLogo())

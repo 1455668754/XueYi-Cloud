@@ -29,4 +29,24 @@ public interface SysEnterpriseMapper {
      */
     @DataScope(enterpriseAlias = "e")
     public SysEnterprise selectLogo(SysSearch search);
+
+    /**
+     * 查询租户信息
+     * 访问控制 e 租户查询
+     *
+     * @param search 万用组件 | null
+     * @return 租户对象
+     */
+    @DataScope(enterpriseAlias = "e")
+    public SysEnterprise selectEnterpriseById(SysSearch search);
+
+    /**
+     * 更新Logo
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param search 万用组件 | logoUrl logo地址
+     * @return 结果
+     */
+    @DataScope(updateEnterpriseAlias = "empty")
+    public int updateLogo(SysSearch search);
 }

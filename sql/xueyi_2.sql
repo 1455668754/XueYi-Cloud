@@ -209,6 +209,10 @@ values
                                    (13007, 0, 0, 13000, '重置密码', '', '', 'F', '0', 'system:user:resetPwd',        '#', 7, 0, ''),
        -- 一级菜单
        (20000, 0, 0, 0, '企业账户', 'enterprise', null, 'M', '0', '', 'xy_enterprise',   2, 0, '企业账户目录'),
+              (21000, 0, 0, 20000, '资料管理', 'dict',   'system/dataSetting/enterprise/profile/index',        'C', '0',  'system:enterprise:list',      'xy_dict',   1, 0, '资料管理菜单'),
+                                   -- 字典管理按钮
+                                   (21001, 0, 0, 21000, '普通操作权限', '#', '', 'F', '0', 'system:enterprise:edit',      '#', 1, 0, ''),
+                                   (21002, 0, 0, 21000, '超管操作权限', '#', '', 'F', '0', 'system:enterpriseAdmin:edit', '#', 2, 0, ''),
        -- 一级菜单
        (30000, 0, 0, 0, '系统管理', 'system',     null, 'M', '0', '', 'xy_setting',      3, 0, '系统管理目录'),
               (31000, 0, 0, 30000, '字典管理', 'dict',   'system/system/dict/index',        'C', '0',  'system:dict:list',      'xy_dict',   1, 0, '字典管理菜单'),
