@@ -53,7 +53,7 @@ export default {
       getLogo().then(
         response => {
           const data=response.data
-          this.title=data.enterpriseNick
+          this.title=data.enterpriseSystemName
           this.logo=data.logo
           this.loading = false;
         })
