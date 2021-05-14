@@ -1,8 +1,6 @@
 package com.xueyi.system.organize.service.impl;
 
 import java.util.List;
-
-import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +15,6 @@ import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.authority.SysRole;
 import com.xueyi.system.api.organize.SysUser;
 import com.xueyi.system.api.organize.SysPost;
-import com.xueyi.system.role.domain.SysUserRole;
 import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
