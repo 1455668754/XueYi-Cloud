@@ -10,8 +10,11 @@ public class SysUserOnline
     /** 会话编号 */
     private String tokenId;
 
-    /** 用户名称 */
+    /** 用户账号 */
     private String userName;
+
+    /** 用户名称 */
+    private String userNick;
 
     /** 登录IP地址 */
     private String ipaddr;
@@ -46,6 +49,14 @@ public class SysUserOnline
     public void setUserName(String userName)
     {
         this.userName = userName;
+    }
+
+    public String getUserNick() {
+        return userNick;
+    }
+
+    public void setUserNick(String userNick) {
+        this.userNick = userNick;
     }
 
     public String getIpaddr()

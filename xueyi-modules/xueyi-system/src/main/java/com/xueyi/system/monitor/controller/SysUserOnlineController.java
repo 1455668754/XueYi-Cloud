@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import com.xueyi.common.security.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,27 +39,33 @@ public class SysUserOnlineController extends BaseController {
     @Autowired
     private RedisService redisService;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PreAuthorize(hasPermi = "monitor:online:list")
     @GetMapping("/list")
     public TableDataInfo list(String ipaddr, String userName) {
         Collection<String> keys = redisService.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
+        LoginUser mine = tokenService.getLoginUser();
         for (String key : keys) {
             LoginUser user = redisService.getCacheObject(key);
-            if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName)) {
-                if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUsername())) {
-                    userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
+            if (mine.getEnterpriseId().equals(user.getEnterpriseId())) {
+                if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName)) {
+                    if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUsername())) {
+                        userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
+                    }
+                } else if (StringUtils.isNotEmpty(ipaddr)) {
+                    if (StringUtils.equals(ipaddr, user.getIpaddr())) {
+                        userOnlineList.add(userOnlineService.selectOnlineByIpaddr(ipaddr, user));
+                    }
+                } else if (StringUtils.isNotEmpty(userName)) {
+                    if (StringUtils.equals(userName, user.getUsername())) {
+                        userOnlineList.add(userOnlineService.selectOnlineByUserName(userName, user));
+                    }
+                } else {
+                    userOnlineList.add(userOnlineService.loginUserToUserOnline(user));
                 }
-            } else if (StringUtils.isNotEmpty(ipaddr)) {
-                if (StringUtils.equals(ipaddr, user.getIpaddr())) {
-                    userOnlineList.add(userOnlineService.selectOnlineByIpaddr(ipaddr, user));
-                }
-            } else if (StringUtils.isNotEmpty(userName)) {
-                if (StringUtils.equals(userName, user.getUsername())) {
-                    userOnlineList.add(userOnlineService.selectOnlineByUserName(userName, user));
-                }
-            } else {
-                userOnlineList.add(userOnlineService.loginUserToUserOnline(user));
             }
         }
         Collections.reverse(userOnlineList);

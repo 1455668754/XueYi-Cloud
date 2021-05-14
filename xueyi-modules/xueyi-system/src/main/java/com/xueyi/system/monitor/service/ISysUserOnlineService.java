@@ -20,19 +20,19 @@ public interface ISysUserOnlineService
     public SysUserOnline selectOnlineByIpaddr(String ipaddr, LoginUser user);
 
     /**
-     * 通过用户名称查询信息
+     * 通过用户账号查询信息
      *
-     * @param userName 用户名称
+     * @param userName 用户账号
      * @param user 用户信息
      * @return 在线用户信息
      */
     public SysUserOnline selectOnlineByUserName(String userName, LoginUser user);
 
     /**
-     * 通过登录地址/用户名称查询信息
+     * 通过登录地址/用户账号查询信息
      *
      * @param ipaddr 登录地址
-     * @param userName 用户名称
+     * @param userName 用户账号
      * @param user 用户信息
      * @return 在线用户信息
      */

@@ -10,10 +10,10 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户名称" prop="userName">
+      <el-form-item label="用户账号" prop="userName">
         <el-input
           v-model="queryParams.userName"
-          placeholder="请输入用户名称"
+          placeholder="请输入用户账号"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -35,9 +35,10 @@
           <span>{{(pageNum - 1) * pageSize + scope.$index + 1}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="会话编号" align="center" prop="tokenId" :show-overflow-tooltip="true" />
-      <el-table-column label="登录名称" align="center" prop="userName" :show-overflow-tooltip="true" />
-      <el-table-column label="主机" align="center" prop="ipaddr" :show-overflow-tooltip="true" />
+      <el-table-column label="会话编号" align="center" prop="tokenId" :show-overflow-tooltip="true"/>
+      <el-table-column label="登录账号" align="center" prop="userName" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户名称" align="center" prop="userNick" :show-overflow-tooltip="true"/>
+      <el-table-column label="主机" align="center" prop="ipaddr" :show-overflow-tooltip="true"/>
       <el-table-column label="登录时间" align="center" prop="loginTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.loginTime) }}</span>
