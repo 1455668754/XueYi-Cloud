@@ -69,4 +69,14 @@ public interface SysEnterpriseMapper {
      */
     @DataScope(updateEnterpriseAlias = "empty")
     public int changeEnterpriseName(SysEnterprise enterprise);
+
+    /**
+     * 校验租户账号是否唯一
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    @DataScope(updateEnterpriseAlias = "empty")
+    public SysEnterprise checkEnterpriseNameUnique(SysEnterprise enterprise);
 }

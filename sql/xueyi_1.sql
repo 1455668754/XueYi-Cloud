@@ -47,7 +47,8 @@ create table xy_tenant (
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  primary key (tenant_id)
+  primary key (tenant_id),
+  unique key (tenant_name)
 ) engine=innodb auto_increment=1 comment = '租户信息表';
 
 -- ----------------------------

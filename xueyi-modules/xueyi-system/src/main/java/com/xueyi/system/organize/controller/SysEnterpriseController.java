@@ -1,5 +1,6 @@
 package com.xueyi.system.organize.controller;
 
+import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.utils.ServletUtils;
@@ -8,6 +9,7 @@ import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.RemoteFileService;
@@ -36,6 +38,9 @@ public class SysEnterpriseController extends BaseController {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private RedisService redisService;
 
     @Autowired
     private RemoteFileService remoteFileService;
@@ -107,6 +112,10 @@ public class SysEnterpriseController extends BaseController {
     @Log(title = "企业账号修改", businessType = BusinessType.UPDATE)
     @PutMapping("/changeEnterpriseName")
     public AjaxResult changeEnterpriseName(@Validated @RequestBody SysEnterprise enterprise) {
-        return toAjax(enterpriseService.changeEnterpriseName(enterprise));
+        if (StringUtils.equals(UserConstants.NOT_UNIQUE, enterpriseService.checkEnterpriseNameUnique(enterprise))) {
+            return AjaxResult.error("修改失败，该企业账号名不可用，请换一个账号名！");
+        }
+        int i = enterpriseService.changeEnterpriseName(enterprise);
+        return toAjax(i);
     }
 }

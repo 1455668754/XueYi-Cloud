@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.security.service.TokenService;
+import com.xueyi.system.api.model.LoginUser;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -99,22 +100,27 @@ public class LogAspect
             operLog.setJsonResult(JSON.toJSONString(jsonResult));
 
             operLog.setOperUrl(ServletUtils.getRequest().getRequestURI());
-            Long userId = tokenService.getLoginUser().getUserid();
-            Long enterpriseId = tokenService.getLoginUser().getEnterpriseId();
-            if (StringUtils.isNotNull(userId))
-            {
-                operLog.setUserId(userId);
+            LoginUser user = tokenService.getLoginUser();
+            if(user != null){
+                Long userId = user.getUserid();
+                Long enterpriseId = user.getEnterpriseId();
+                if (StringUtils.isNotNull(userId))
+                {
+                    operLog.setUserId(userId);
+                }else {
+                    operLog.setUserId(0L);
+                }
+
+                if (StringUtils.isNotNull(enterpriseId))
+                {
+                    operLog.setEnterpriseId(enterpriseId);
+                }else {
+                    operLog.setEnterpriseId(0L);
+                }
             }else {
                 operLog.setUserId(0L);
-            }
-
-            if (StringUtils.isNotNull(enterpriseId))
-            {
-                operLog.setEnterpriseId(enterpriseId);
-            }else {
                 operLog.setEnterpriseId(0L);
             }
-
             if (e != null)
             {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());

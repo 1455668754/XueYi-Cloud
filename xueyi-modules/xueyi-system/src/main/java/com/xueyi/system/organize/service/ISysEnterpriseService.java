@@ -55,4 +55,12 @@ public interface ISysEnterpriseService {
      * @return 结果
      */
     public int changeEnterpriseName(SysEnterprise enterprise);
+
+    /**
+     * 校验租户账号是否唯一
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    public String checkEnterpriseNameUnique(SysEnterprise enterprise);
 }

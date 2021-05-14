@@ -1,5 +1,6 @@
 package com.xueyi.system.organize.service.impl;
 
+import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
@@ -23,6 +24,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @param enterpriseName 企业账号
      * @return 租户对象
      */
+    @Override
     public SysEnterprise checkLoginByEnterpriseName(String enterpriseName) {
         SysSearch search = new SysSearch();
         search.getSearch().put("enterpriseName", enterpriseName);
@@ -34,6 +36,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      *
      * @return 租户对象
      */
+    @Override
     public SysEnterprise selectLogo() {
         return enterpriseMapper.selectLogo(new SysSearch());//@param search 万用组件 | null
     }
@@ -43,6 +46,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      *
      * @return 租户对象
      */
+    @Override
     public SysEnterprise selectEnterpriseById() {
         return enterpriseMapper.selectEnterpriseById(new SysSearch());//@param search 万用组件 | null
     }
@@ -53,6 +57,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @param logoUrl logo地址
      * @return 结果
      */
+    @Override
     public int updateLogo(String logoUrl) {
         SysSearch search = new SysSearch();
         search.getSearch().put("logoUrl", logoUrl);
@@ -65,6 +70,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @param enterprise 租户对象
      * @return 结果
      */
+    @Override
     public int updateEnterprise(SysEnterprise enterprise) {
         return enterpriseMapper.updateEnterprise(enterprise);
     }
@@ -75,7 +81,19 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @param enterprise 租户对象
      * @return 结果
      */
+    @Override
     public int changeEnterpriseName(SysEnterprise enterprise) {
         return enterpriseMapper.changeEnterpriseName(enterprise);
+    }
+
+    /**
+     * 校验租户账号是否唯一
+     *
+     * @param enterprise 租户对象
+     * @return 结果
+     */
+    @Override
+    public String checkEnterpriseNameUnique(SysEnterprise enterprise) {
+        return enterpriseMapper.checkEnterpriseNameUnique(enterprise) == null ? UserConstants.UNIQUE:UserConstants.NOT_UNIQUE;
     }
 }
