@@ -16,6 +16,7 @@ import com.xueyi.system.api.RemoteFileService;
 import com.xueyi.system.api.material.SysFile;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.api.organize.SysEnterprise;
+import com.xueyi.system.monitor.domain.SysUserOnline;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 租户信息操作处理
@@ -116,6 +120,15 @@ public class SysEnterpriseController extends BaseController {
             return AjaxResult.error("修改失败，该企业账号名不可用，请换一个账号名！");
         }
         int i = enterpriseService.changeEnterpriseName(enterprise);
+        Collection<String> keys = redisService.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
+        LoginUser mine = tokenService.getLoginUser();
+        //强退当前企业账户所有在线账号
+        for (String key : keys) {
+            LoginUser user = redisService.getCacheObject(key);
+            if (mine.getEnterpriseId().equals(user.getEnterpriseId())) {
+                redisService.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + user.getToken());
+            }
+        }
         return toAjax(i);
     }
 }
