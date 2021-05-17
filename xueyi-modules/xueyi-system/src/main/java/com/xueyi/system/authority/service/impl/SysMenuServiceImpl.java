@@ -118,7 +118,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
         List<SysMenu> menus;
         SysSearch search = new SysSearch();
         // 管理员显示所有菜单信息
-        search.getSearch().put("systemId", systemId);
+        search.setSystemId(systemId);
         if (SysUser.isAdmin(userType)) {
             menus = menuMapper.selectMenuTreeAll(search);
         } else {
@@ -139,7 +139,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
     public List<Integer> selectMenuListByRoleId(Long roleId, Long systemId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", roleId);
-        search.getSearch().put("systemId", systemId);
+        search.setSystemId(systemId);
         SysRole role = roleMapper.selectRoleById(search);
         search.getSearch().put("roleId", roleId);
         search.getSearch().put("menuCheckStrictly", role.isMenuCheckStrictly());

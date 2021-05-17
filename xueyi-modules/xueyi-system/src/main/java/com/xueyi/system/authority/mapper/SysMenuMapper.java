@@ -49,7 +49,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息
      * @return 菜单列表
      */
-    @DataScope(edAlias = "m")
+    @DataScope(SedAlias = "m")
     public List<SysMenu> selectMenuList(SysMenu menu);
 
 
@@ -60,7 +60,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息 | params中携带userId
      * @return 菜单列表
      */
-    @DataScope(edAlias = "m")
+    @DataScope(SedAlias = "m")
     public List<SysMenu> selectMenuListByUserId(SysMenu menu);
 
     /**
@@ -70,7 +70,7 @@ public interface SysMenuMapper {
      * @param search 万用组件 | systemId 系统Id
      * @return 菜单列表
      */
-    @DataScope(edAlias = "m")
+    @DataScope(SedAlias = "m")
     public List<SysMenu> selectMenuTreeAll(SysSearch search);
 
     /**
@@ -80,17 +80,17 @@ public interface SysMenuMapper {
      * @param search 万用组件 | username 用户Id | systemId 系统Id
      * @return 菜单列表
      */
-    @DataScope(edAlias = "m")
+    @DataScope(SedAlias = "m")
     public List<SysMenu> selectMenuTreeByUserId(SysSearch search);
 
     /**
      * 根据角色Id查询菜单树信息
      * 访问控制 m 租户查询
      *
-     * @param search 万用组件 | roleId 角色Id | menuCheckStrictly 菜单树选择项是否关联显示
+     * @param search 万用组件 | systemId 系统Id | roleId 角色Id | menuCheckStrictly 菜单树选择项是否关联显示
      * @return 选中菜单列表
      */
-    @DataScope(edAlias = "m")
+    @DataScope(SedAlias = "m")
     public List<Integer> selectMenuListByRoleId(SysSearch search);
 
     /**

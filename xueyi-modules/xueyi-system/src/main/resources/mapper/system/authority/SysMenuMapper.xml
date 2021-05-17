@@ -104,7 +104,6 @@
 			AND m.status = #{status}
 		</if>
 		<!-- 数据范围过滤 -->
-		and m.system_id = #{systemId}
 		${params.dataScope}
 		order by m.parent_id, m.sort
 	</select>
@@ -114,7 +113,6 @@
 		<include refid="selectTreeVo"/>
 		where m.menu_type in ('M', 'C') and m.status = 0 and r.status = 0 and u.user_id = #{search.userId}
 		<!-- 数据范围过滤 -->
-		and m.system_id = #{search.systemId}
 		${params.dataScope}
 		order by m.parent_id, m.sort
 	</select>
@@ -141,7 +139,6 @@
 			AND m.status = #{status}
 		</if>
 		<!-- 数据范围过滤 -->
-		and m.system_id = #{systemId}
 		${params.dataScope}
 		order by m.parent_id, m.sort
 	</select>
@@ -150,7 +147,6 @@
 		<include refid="selectDistinctVo"/>
 		where m.menu_type in ('M', 'C') and m.status = 0
 		<!-- 数据范围过滤 -->
-		and m.system_id = #{search.systemId}
 		${params.dataScope}
 		order by m.parent_id, m.sort
 	</select>
@@ -165,7 +161,6 @@
 			rm.system_menu_id and rm.role_id = #{search.roleId})
 		</if>
 		<!-- 数据范围过滤 -->
-		and m.system_id = #{search.systemId}
 		${params.dataScope}
 		order by m.parent_id, m.sort
 	</select>
