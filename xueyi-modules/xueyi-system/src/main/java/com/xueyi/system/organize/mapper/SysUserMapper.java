@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.utilTool.SysSearch;
-import org.apache.ibatis.annotations.Param;
 
 import com.xueyi.system.api.organize.SysUser;
 
@@ -40,7 +39,7 @@ public interface SysUserMapper {
      * @param sysUser 用户信息
      * @return 用户信息集合信息
      */
-    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", enterpriseAlias = "u")
+    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", eAlias = "u")
     public List<SysUser> selectUserList(SysUser sysUser);
 
     /**
@@ -50,7 +49,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | userName 用户名
      * @return 用户对象信息
      */
-    @DataScope(enterpriseAlias = "u")
+    @DataScope(eAlias = "u")
     public SysUser selectUserByUserName(SysSearch search);
 
     /**
@@ -60,7 +59,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | userId 用户Id
      * @return 用户对象信息
      */
-    @DataScope(enterpriseAlias = "u")
+    @DataScope(eAlias = "u")
     public SysUser selectUserById(SysSearch search);
 
     /**
@@ -70,7 +69,7 @@ public interface SysUserMapper {
      * @param user 用户信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertUser(SysUser user);
 
     /**
@@ -80,7 +79,7 @@ public interface SysUserMapper {
      * @param user 用户信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateUser(SysUser user);
 
     /**
@@ -89,7 +88,7 @@ public interface SysUserMapper {
      *
      * @param search 万用组件 | userId 用户Id | status 用户状态
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateUserStatus(SysSearch search);
 
     /**
@@ -98,7 +97,7 @@ public interface SysUserMapper {
      *
      * @param search 万用组件 | postId 岗位Id | status 用户状态
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateUserStatusByPostId(SysSearch search);
 
     /**
@@ -107,7 +106,7 @@ public interface SysUserMapper {
      *
      * @param search 万用组件 | deptId 部门Id | status 用户状态
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateUserStatusByDeptId(SysSearch search);
 
     /**
@@ -117,7 +116,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | userId 用户Id | avatar 头像地址
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateUserAvatar(SysSearch search);
 
     /**
@@ -127,7 +126,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | userId 用户Id | password 密码
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int resetUserPwd(SysSearch search);
 
     /**
@@ -137,7 +136,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | userId 用户Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteUserById(SysSearch search);
 
     /**
@@ -147,7 +146,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | userIds 需要删除的用户Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteUserByIds(SysSearch search);
 
     /**
@@ -157,7 +156,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | deptId 部门Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "u")
+    @DataScope(eAlias = "u")
     public int checkDeptExistUser(SysSearch search);
 
     /**
@@ -167,7 +166,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | postId 岗位Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "u")
+    @DataScope(eAlias = "u")
     public int checkPostExistUser(SysSearch search);
 
     /**
@@ -177,7 +176,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | userCode 用户编码
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "u")
+    @DataScope(eAlias = "u")
     public SysUser checkUserCodeUnique(SysSearch search);
 
     /**
@@ -187,7 +186,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | userName 用户名称
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "u")
+    @DataScope(eAlias = "u")
     public SysUser checkUserNameUnique(SysSearch search);
 
     /**
@@ -197,7 +196,7 @@ public interface SysUserMapper {
      * @param search 万用组件 | phone 手机号码
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "u")
+    @DataScope(eAlias = "u")
     public SysUser checkPhoneUnique(SysSearch search);
 
     /**
@@ -207,6 +206,6 @@ public interface SysUserMapper {
      * @param search 万用组件 | email 用户邮箱
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "u")
+    @DataScope(eAlias = "u")
     public SysUser checkEmailUnique(SysSearch search);
 }

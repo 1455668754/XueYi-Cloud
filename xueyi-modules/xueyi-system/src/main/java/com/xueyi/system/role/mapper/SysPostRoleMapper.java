@@ -20,7 +20,7 @@ public interface SysPostRoleMapper {
      * @param search 万用组件 | postId 岗位Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "pr")
+    @DataScope(eAlias = "pr")
     public List<SysPostRole> selectPostRoleByPostId(SysSearch search);
 
     /**
@@ -30,7 +30,7 @@ public interface SysPostRoleMapper {
      * @param search 万用组件 | roleId 角色Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "pr")
+    @DataScope(eAlias = "pr")
     public int countPostRoleByRoleId(SysSearch search);
 
     /**
@@ -40,7 +40,7 @@ public interface SysPostRoleMapper {
      * @param search 万用组件 | postId 岗位Id | roleIds 角色Ids
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int batchPostRole(SysSearch search);
 
     /**
@@ -50,7 +50,7 @@ public interface SysPostRoleMapper {
      * @param search 查询组件 | roleId 角色Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deletePostRoleByRoleId(SysSearch search);
 
     /**
@@ -60,7 +60,7 @@ public interface SysPostRoleMapper {
      * @param search 查询组件 | postId 岗位Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deletePostRoleByPostId(SysSearch search);
 
     /**
@@ -70,6 +70,6 @@ public interface SysPostRoleMapper {
      * @param search 查询组件 | postIds 需要删除的岗位Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deletePostRoleByIds(SysSearch search);
 }

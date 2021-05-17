@@ -43,7 +43,7 @@ public interface SysConfigMapper {
      * @param config 参数配置信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertConfig(SysConfig config);
 
     /**
@@ -53,7 +53,7 @@ public interface SysConfigMapper {
      * @param config 参数配置信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateConfig(SysConfig config);
 
     /**
@@ -63,7 +63,7 @@ public interface SysConfigMapper {
      * @param search 万用组件 | configId 参数Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteConfigById(SysSearch search);
 
     /**
@@ -73,6 +73,6 @@ public interface SysConfigMapper {
      * @param search 万用组件 | configIds 需要删除的参数Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteConfigByIds(SysSearch search);
 }

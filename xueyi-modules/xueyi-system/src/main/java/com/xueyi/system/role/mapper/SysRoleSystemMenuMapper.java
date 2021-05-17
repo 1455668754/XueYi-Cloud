@@ -20,7 +20,7 @@ public interface SysRoleSystemMenuMapper {
      * @param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "rsm")
+    @DataScope(eAlias = "rsm")
     public List<SysRoleSystemMenu> selectSystemMenuList(SysSearch search);
 
     /**
@@ -30,7 +30,7 @@ public interface SysRoleSystemMenuMapper {
      * @param search 万用组件 | systemMenuId 系统-菜单Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "rsm")
+    @DataScope(eAlias = "rsm")
     public int checkSystemMenuExistRole(SysSearch search);
 
     /**
@@ -40,7 +40,7 @@ public interface SysRoleSystemMenuMapper {
      * @param search 万用组件 | roleId 角色Id | systemMenuIds 系统-菜单Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int batchRoleSystemMenu(SysSearch search);
 
     /**
@@ -50,7 +50,7 @@ public interface SysRoleSystemMenuMapper {
      * @param search 查询组件 | roleId 角色Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteRoleSystemMenuByRoleId(SysSearch search);
 
     /**
@@ -60,7 +60,7 @@ public interface SysRoleSystemMenuMapper {
      * @param search 查询组件 | systemMenuId 系统-菜单Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteRoleSystemMenuBySystemMenuId(SysSearch search);
 
     /**
@@ -70,6 +70,6 @@ public interface SysRoleSystemMenuMapper {
      * @param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteRoleSystemMenuByIds(SysSearch search);
 }

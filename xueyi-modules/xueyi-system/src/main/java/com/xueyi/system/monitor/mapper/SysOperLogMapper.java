@@ -26,7 +26,7 @@ public interface SysOperLogMapper {
      * @param operLog 操作日志对象
      * @return 操作日志集合
      */
-    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", enterpriseAlias = "ol")
+    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", eAlias = "ol")
     public List<SysOperLog> selectOperLogList(SysOperLog operLog);
 
     /**
@@ -36,7 +36,7 @@ public interface SysOperLogMapper {
      * @param search 万用组件 | operIds 需要删除的操作日志Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteOperLogByIds(SysSearch search);
 
     /**
@@ -46,7 +46,7 @@ public interface SysOperLogMapper {
      * @param search 万用组件 | operId 操作Id
      * @return 操作日志对象
      */
-    @DataScope(enterpriseAlias = "ol")
+    @DataScope(eAlias = "ol")
     public SysOperLog selectOperLogById(SysSearch search);
 
     /**
@@ -55,6 +55,6 @@ public interface SysOperLogMapper {
      *
      * @param search 万用组件 | null
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public void cleanOperLog(SysSearch search);
 }

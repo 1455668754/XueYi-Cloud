@@ -18,7 +18,7 @@ public interface SysJobLogMapper {
      * @param jobLog 调度日志信息
      * @return 调度任务日志集合
      */
-    @DataScope(enterpriseAlias = "jl")
+    @DataScope(eAlias = "jl")
     public List<SysJobLog> selectJobLogList(SysJobLog jobLog);
 
     /**

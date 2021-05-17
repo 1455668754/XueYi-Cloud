@@ -18,7 +18,7 @@ public interface SysJobMapper {
      * @param job 调度信息
      * @return 操作日志集合
      */
-    @DataScope(enterpriseAlias = "j")
+    @DataScope(eAlias = "j")
     public List<SysJob> selectJobList(SysJob job);
 
     /**

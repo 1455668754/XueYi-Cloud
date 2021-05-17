@@ -26,7 +26,7 @@ public interface SysLoginInfoMapper {
      * @param loginInfo 访问日志对象
      * @return 登录记录集合
      */
-    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", enterpriseAlias = "li")
+    @DataScope(deptAlias = "d", postAlias = "p", userAlias = "u", eAlias = "li")
     public List<SysLoginInfo> selectLoginInfoList(SysLoginInfo loginInfo);
 
     /**
@@ -36,7 +36,7 @@ public interface SysLoginInfoMapper {
      * @param search 万用组件 | @param infoIds 需要删除的登录日志Id(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteLoginInfoByIds(SysSearch search);
 
     /**
@@ -46,6 +46,6 @@ public interface SysLoginInfoMapper {
      * @param search 万用组件 | null
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int cleanLoginInfo(SysSearch search);
 }

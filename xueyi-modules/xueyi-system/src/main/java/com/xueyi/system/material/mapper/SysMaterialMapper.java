@@ -20,7 +20,7 @@ public interface SysMaterialMapper {
      * @param search 万用组件 | null
      * @return 素材信息集合
      */
-    @DataScope(enterpriseAlias = "m")
+    @DataScope(eAlias = "m")
     public List<SysMaterial> selectList(SysSearch search);
 
     /**
@@ -30,7 +30,7 @@ public interface SysMaterialMapper {
      * @param material 素材信息
      * @return 素材信息集合
      */
-    @DataScope(enterpriseAlias = "m")
+    @DataScope(eAlias = "m")
     public List<SysMaterial> selectMaterialList(SysMaterial material);
 
     /**
@@ -40,7 +40,7 @@ public interface SysMaterialMapper {
      * @param search 万用组件 | folderId 素材分类Id
      * @return 素材信息
      */
-    @DataScope(enterpriseAlias = "m")
+    @DataScope(eAlias = "m")
     public List<SysMaterial> selectMaterialListByFolderId(SysSearch search);
 
     /**
@@ -50,7 +50,7 @@ public interface SysMaterialMapper {
      * @param search 万用组件 | materialId 素材信息Id
      * @return 素材信息
      */
-    @DataScope(enterpriseAlias = "m")
+    @DataScope(eAlias = "m")
     public SysMaterial selectMaterialById(SysSearch search);
 
     /**
@@ -60,7 +60,7 @@ public interface SysMaterialMapper {
      * @param material 素材信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertMaterial(SysMaterial material);
 
     /**
@@ -70,7 +70,7 @@ public interface SysMaterialMapper {
      * @param material 素材信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateMaterial(SysMaterial material);
 
     /**
@@ -80,7 +80,7 @@ public interface SysMaterialMapper {
      * @param search 万用组件 | materialId 素材信息Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteMaterialById(SysSearch search);
 
     /**
@@ -90,7 +90,7 @@ public interface SysMaterialMapper {
      * @param search 万用组件 | materialIds 素材信息Id集合
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteMaterialByIds(SysSearch search);
 
     /**
@@ -100,7 +100,7 @@ public interface SysMaterialMapper {
      * @param search 万用组件 | folderId 素材分类Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteMaterialByFolderId(SysSearch search);
 
     /**
@@ -110,6 +110,6 @@ public interface SysMaterialMapper {
      * @param search 万用组件 | folderIds 素材分类Id集合
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteMaterialByFolderIds(SysSearch search);
 }

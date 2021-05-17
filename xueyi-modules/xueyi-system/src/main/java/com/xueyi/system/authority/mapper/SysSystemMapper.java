@@ -20,7 +20,7 @@ public interface SysSystemMapper {
      * @param search 查询组件 | null
      * @return 子系统模块集合
      */
-    @DataScope(systemAlias = "s")
+    @DataScope(edAlias = "s")
     public List<SysSystem> selectSystemViewAdminList(SysSearch search);
 
     /**
@@ -30,7 +30,7 @@ public interface SysSystemMapper {
      * @param search 查询组件 | userId 当前用户Id
      * @return 子系统模块集合
      */
-    @DataScope(systemAlias = "s")
+    @DataScope(edAlias = "s")
     public List<SysSystem> selectSystemViewList(SysSearch search);
 
     /**
@@ -40,7 +40,7 @@ public interface SysSystemMapper {
      * @param search 查询组件 | systemId 子系统模块Id
      * @return 子系统模块
      */
-    @DataScope(enterpriseAlias = "s")
+    @DataScope(eAlias = "s")
     public SysSystem selectSystemById(SysSearch search);
 
     /**
@@ -50,7 +50,7 @@ public interface SysSystemMapper {
      * @param sysSystem 子系统模块
      * @return 子系统模块集合
      */
-    @DataScope(enterpriseAlias = "s")
+    @DataScope(eAlias = "s")
     public List<SysSystem> selectSystemList(SysSystem sysSystem);
 
     /**
@@ -60,7 +60,7 @@ public interface SysSystemMapper {
      * @param sysSystem 子系统模块
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertSystem(SysSystem sysSystem);
 
     /**
@@ -70,7 +70,7 @@ public interface SysSystemMapper {
      * @param sysSystem 子系统模块
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateSystem(SysSystem sysSystem);
 
     /**
@@ -80,7 +80,7 @@ public interface SysSystemMapper {
      * @param sysSystem 子系统模块
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateSystemStatus(SysSystem sysSystem);
 
     /**
@@ -90,7 +90,7 @@ public interface SysSystemMapper {
      * @param search 查询组件 | systemIds 需要删除的数据Ids
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteSystemByIds(SysSearch search);
 }
 

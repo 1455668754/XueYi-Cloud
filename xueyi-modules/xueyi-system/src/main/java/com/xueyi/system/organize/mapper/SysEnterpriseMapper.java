@@ -27,7 +27,7 @@ public interface SysEnterpriseMapper {
      * @param search 万用组件 | null
      * @return 租户对象
      */
-    @DataScope(enterpriseAlias = "e")
+    @DataScope(eAlias = "e")
     public SysEnterprise selectLogo(SysSearch search);
 
     /**
@@ -37,7 +37,7 @@ public interface SysEnterpriseMapper {
      * @param search 万用组件 | null
      * @return 租户对象
      */
-    @DataScope(enterpriseAlias = "e")
+    @DataScope(eAlias = "e")
     public SysEnterprise selectEnterpriseById(SysSearch search);
 
     /**
@@ -47,7 +47,7 @@ public interface SysEnterpriseMapper {
      * @param search 万用组件 | logoUrl logo地址
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateLogo(SysSearch search);
 
     /**
@@ -57,7 +57,7 @@ public interface SysEnterpriseMapper {
      * @param enterprise 租户对象
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateEnterprise(SysEnterprise enterprise);
 
     /**
@@ -67,7 +67,7 @@ public interface SysEnterpriseMapper {
      * @param enterprise 租户对象
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int changeEnterpriseName(SysEnterprise enterprise);
 
     /**
@@ -77,6 +77,6 @@ public interface SysEnterpriseMapper {
      * @param enterprise 租户对象
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public SysEnterprise checkEnterpriseNameUnique(SysEnterprise enterprise);
 }

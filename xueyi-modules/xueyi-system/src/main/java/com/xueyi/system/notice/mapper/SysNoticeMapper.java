@@ -19,7 +19,7 @@ public interface SysNoticeMapper
      * @param search 万用组件 | noticeId 公告Id
      * @return 公告信息
      */
-    @DataScope(enterpriseAlias = "n")
+    @DataScope(eAlias = "n")
     public SysNotice selectNoticeById(SysSearch search);
 
     /**
@@ -28,7 +28,7 @@ public interface SysNoticeMapper
      * @param notice 公告信息
      * @return 公告集合
      */
-    @DataScope(enterpriseAlias = "n")
+    @DataScope(eAlias = "n")
     public List<SysNotice> selectNoticeList(SysNotice notice);
 
     /**
@@ -37,7 +37,7 @@ public interface SysNoticeMapper
      * @param notice 公告信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertNotice(SysNotice notice);
 
     /**
@@ -46,7 +46,7 @@ public interface SysNoticeMapper
      * @param notice 公告信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateNotice(SysNotice notice);
 
     /**
@@ -55,7 +55,7 @@ public interface SysNoticeMapper
      * @param search 万用组件 | noticeId 公告Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteNoticeById(SysSearch search);
 
     /**
@@ -64,6 +64,6 @@ public interface SysNoticeMapper
      * @param search 万用组件 | noticeIds 需要删除的公告Id(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteNoticeByIds(SysSearch search);
 }

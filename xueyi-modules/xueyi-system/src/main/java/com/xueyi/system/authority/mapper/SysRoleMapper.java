@@ -29,7 +29,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | null
      * @return 角色列表
      */
-    @DataScope(enterpriseAlias = "r")
+    @DataScope(eAlias = "r")
     public List<SysRole> selectRoleAll(SysSearch search);
 
     /**
@@ -39,7 +39,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | userName 用户名
      * @return 角色列表
      */
-    @DataScope(enterpriseAlias = "r")
+    @DataScope(eAlias = "r")
     public List<SysRole> selectRolesByUserName(SysSearch search);
 
 
@@ -50,7 +50,7 @@ public interface SysRoleMapper {
      * @param role 角色信息
      * @return 角色数据集合信息
      */
-    @DataScope(enterpriseAlias = "r")
+    @DataScope(eAlias = "r")
     public List<SysRole> selectRoleList(SysRole role);
 
     /**
@@ -60,7 +60,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | roleId 角色Id
      * @return 角色对象信息
      */
-    @DataScope(enterpriseAlias = "r")
+    @DataScope(eAlias = "r")
     public SysRole selectRoleById(SysSearch search);
 
     /**
@@ -70,7 +70,7 @@ public interface SysRoleMapper {
      * @param role 角色信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertRole(SysRole role);
 
     /**
@@ -80,7 +80,7 @@ public interface SysRoleMapper {
      * @param role 角色信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateRole(SysRole role);
 
     /**
@@ -89,7 +89,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | roleId 角色Id | status 角色状态
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateRoleStatus(SysSearch search);
 
     /**
@@ -98,7 +98,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | roleId 角色Id | dataScope 数据范围
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateRoleDataScope(SysSearch search);
 
     /**
@@ -108,7 +108,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | roleId 角色Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteRoleById(SysSearch search);
 
     /**
@@ -118,7 +118,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | roleIds 需要删除的角色Id(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteRoleByIds(SysSearch search);
 
     /**
@@ -128,7 +128,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | roleCode 角色编码
      * @return 角色信息
      */
-    @DataScope(enterpriseAlias = "r")
+    @DataScope(eAlias = "r")
     public SysRole checkRoleCodeUnique(SysSearch search);
 
     /**
@@ -138,7 +138,7 @@ public interface SysRoleMapper {
      * @param search 万用组件 | roleName 角色名称
      * @return 角色信息
      */
-    @DataScope(enterpriseAlias = "r")
+    @DataScope(eAlias = "r")
     public SysRole checkRoleNameUnique(SysSearch search);
 
     /**
@@ -148,6 +148,6 @@ public interface SysRoleMapper {
      * @param search 万用组件 | roleKey 角色权限
      * @return 角色信息
      */
-    @DataScope(enterpriseAlias = "r")
+    @DataScope(eAlias = "r")
     public SysRole checkRoleKeyUnique(SysSearch search);
 }

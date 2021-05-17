@@ -19,7 +19,7 @@ public interface SysPostMapper {
      * @param post 岗位信息
      * @return 岗位数据集合
      */
-    @DataScope(deptAlias = "d", postAlias = "p", enterpriseAlias = "p")
+    @DataScope(deptAlias = "d", postAlias = "p", eAlias = "p")
     public List<SysPost> selectPostList(SysPost post);
 
     /**
@@ -29,7 +29,7 @@ public interface SysPostMapper {
      * @param search 万用组件 | postId 岗位Id
      * @return 角色对象信息
      */
-    @DataScope(enterpriseAlias = "p")
+    @DataScope(eAlias = "p")
     public SysPost selectPostById(SysSearch search);
 
     /**
@@ -39,7 +39,7 @@ public interface SysPostMapper {
      * @param post 岗位信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertPost(SysPost post);
 
     /**
@@ -49,7 +49,7 @@ public interface SysPostMapper {
      * @param post 岗位信息
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updatePost(SysPost post);
 
     /**
@@ -59,7 +59,7 @@ public interface SysPostMapper {
      * @param search 万用组件 | postId 岗位Id | status 岗位状态
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updatePostStatus(SysSearch search);
 
     /**
@@ -68,7 +68,7 @@ public interface SysPostMapper {
      *
      * @param search 万用组件 | deptId 部门Id | status 用户状态
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updatePostStatusByDeptId(SysSearch search);
 
 
@@ -79,7 +79,7 @@ public interface SysPostMapper {
      * @param search 万用组件 | postId 岗位Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deletePostById(SysSearch search);
 
     /**
@@ -89,7 +89,7 @@ public interface SysPostMapper {
      * @param search 万用组件 | postIds 需要删除的岗位Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deletePostByIds(SysSearch search);
 
     /**
@@ -99,7 +99,7 @@ public interface SysPostMapper {
      * @param search 万用组件 | deptId 部门Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "p")
+    @DataScope(eAlias = "p")
     public int checkDeptExistPost(SysSearch search);
 
     /**
@@ -109,7 +109,7 @@ public interface SysPostMapper {
      * @param search 万用组件 | postCode 岗位编码
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "p")
+    @DataScope(eAlias = "p")
     public SysPost checkPostCodeUnique(SysSearch search);
 
     /**
@@ -119,6 +119,6 @@ public interface SysPostMapper {
      * @param search 万用组件 | deptId 部门Id | postName 岗位名称
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "p")
+    @DataScope(eAlias = "p")
     public SysPost checkPostNameUnique(SysSearch search);
 }

@@ -20,7 +20,7 @@ public interface SysMaterialFolderMapper {
      * @param search 万用组件 | null
      * @return 素材分类集合
      */
-    @DataScope(enterpriseAlias = "f")
+    @DataScope(eAlias = "f")
     public List<SysMaterialFolder> selectList(SysSearch search);
 
     /**
@@ -30,7 +30,7 @@ public interface SysMaterialFolderMapper {
      * @param materialFolder 素材分类
      * @return 素材分类集合
      */
-    @DataScope(enterpriseAlias = "f")
+    @DataScope(eAlias = "f")
     public List<SysMaterialFolder> selectMaterialFolderList(SysMaterialFolder materialFolder);
 
     /**
@@ -40,7 +40,7 @@ public interface SysMaterialFolderMapper {
      * @param search 万用组件 | folderId 素材分类Id
      * @return 素材分类
      */
-    @DataScope(enterpriseAlias = "f")
+    @DataScope(eAlias = "f")
     public SysMaterialFolder selectMaterialFolderById(SysSearch search);
 
     /**
@@ -50,7 +50,7 @@ public interface SysMaterialFolderMapper {
      * @param search 万用组件 | ancestors 祖级列表
      * @return 素材分类列表
      */
-    @DataScope(enterpriseAlias = "f")
+    @DataScope(eAlias = "f")
     public List<SysMaterialFolder> selectParentMaterialFolderByAncestors(SysSearch search);
 
     /**
@@ -60,7 +60,7 @@ public interface SysMaterialFolderMapper {
      * @param search 万用组件 | folderId 素材分类Id
      * @return 素材分类列表
      */
-    @DataScope(enterpriseAlias = "f")
+    @DataScope(eAlias = "f")
     public List<SysMaterialFolder> selectDirectChildrenMaterialFolderById(SysSearch search);
 
     /**
@@ -70,7 +70,7 @@ public interface SysMaterialFolderMapper {
      * @param search 万用组件 | folderId 素材分类Id
      * @return 素材分类列表
      */
-    @DataScope(enterpriseAlias = "f")
+    @DataScope(eAlias = "f")
     public List<SysMaterialFolder> selectChildrenMaterialFolderById(SysSearch search);
 
     /**
@@ -80,7 +80,7 @@ public interface SysMaterialFolderMapper {
      * @param materialFolder 素材分类
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertMaterialFolder(SysMaterialFolder materialFolder);
 
     /**
@@ -90,7 +90,7 @@ public interface SysMaterialFolderMapper {
      * @param materialFolder 素材分类
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int updateMaterialFolder(SysMaterialFolder materialFolder);
 
     /**
@@ -100,7 +100,7 @@ public interface SysMaterialFolderMapper {
      * @param search 万用组件 | folderId 素材分类Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteMaterialFolderById(SysSearch search);
 
     /**
@@ -110,6 +110,6 @@ public interface SysMaterialFolderMapper {
      * @param search 万用组件 | folderIds 素材分类Id集合
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteMaterialFolderByIds(SysSearch search);
 }

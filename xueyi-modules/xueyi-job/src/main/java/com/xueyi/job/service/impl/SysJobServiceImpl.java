@@ -2,7 +2,7 @@ package com.xueyi.job.service.impl;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
-import com.xueyi.common.core.utils.StringUtils;
+
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.job.service.ISysJobService;
 import org.quartz.JobDataMap;
@@ -177,7 +177,7 @@ public class SysJobServiceImpl implements ISysJobService {
      */
     @Override
     @Transactional
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int insertJob(SysJob job) throws SchedulerException, TaskException {
         job.setStatus(ScheduleConstants.Status.PAUSE.getValue());
         int rows = jobMapper.insertJob(job);

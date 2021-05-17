@@ -20,7 +20,7 @@ public interface SysDeptRoleMapper {
      * @param search 万用组件 | deptId 部门Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "dr")
+    @DataScope(eAlias = "dr")
     public List<SysDeptRole> selectDeptRoleByDeptId(SysSearch search);
 
     /**
@@ -30,7 +30,7 @@ public interface SysDeptRoleMapper {
      * @param search 万用组件 | roleId 角色Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "dr")
+    @DataScope(eAlias = "dr")
     public int countDeptRoleByRoleId(SysSearch search);
 
     /**
@@ -40,7 +40,7 @@ public interface SysDeptRoleMapper {
      * @param search 万用组件 | deptId 部门Id | roleIds 角色Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int batchDeptRole(SysSearch search);
 
     /**
@@ -50,7 +50,7 @@ public interface SysDeptRoleMapper {
      * @param search 万用组件 | roleId 角色Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteDeptRoleByRoleId(SysSearch search);
 
     /**
@@ -60,7 +60,7 @@ public interface SysDeptRoleMapper {
      * @param search 万用组件 | deptId 部门Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteDeptRoleByDeptId(SysSearch search);
 
     /**
@@ -70,6 +70,6 @@ public interface SysDeptRoleMapper {
      * @param search 万用组件 | deptIds 需要删除的部门Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteDeptRoleByIds(SysSearch search);
 }

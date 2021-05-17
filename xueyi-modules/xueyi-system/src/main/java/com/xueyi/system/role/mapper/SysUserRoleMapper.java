@@ -21,7 +21,7 @@ public interface SysUserRoleMapper {
      * @param search 万用组件 | userId 用户Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "ur")
+    @DataScope(eAlias = "ur")
     public List<SysUserRole> selectUserRoleByUserId(SysSearch search);
 
     /**
@@ -31,7 +31,7 @@ public interface SysUserRoleMapper {
      * @param search 万用组件 | roleId 角色Id
      * @return 结果
      */
-    @DataScope(enterpriseAlias = "ur")
+    @DataScope(eAlias = "ur")
     public int countUserRoleByRoleId(SysSearch search);
 
     /**
@@ -50,7 +50,7 @@ public interface SysUserRoleMapper {
      * @param search 万用组件 | userId 用户Id | roleIds 角色Ids
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int batchUserRole(SysSearch search);
 
     /**
@@ -60,7 +60,7 @@ public interface SysUserRoleMapper {
      * @param search 查询组件 | roleId 角色Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteUserRoleByRoleId(SysSearch search);
 
     /**
@@ -70,7 +70,7 @@ public interface SysUserRoleMapper {
      * @param search 查询组件 | userId 用户Id
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteUserRoleByUserId(SysSearch search);
 
     /**
@@ -80,6 +80,6 @@ public interface SysUserRoleMapper {
      * @param search 查询组件 | userIds 需要删除的用户Ids(Long[])
      * @return 结果
      */
-    @DataScope(updateEnterpriseAlias = "empty")
+    @DataScope(ueAlias = "empty")
     public int deleteUserRoleByIds(SysSearch search);
 }

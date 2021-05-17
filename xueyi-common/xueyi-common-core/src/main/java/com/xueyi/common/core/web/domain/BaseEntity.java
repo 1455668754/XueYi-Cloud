@@ -23,6 +23,12 @@ public class BaseEntity implements Serializable
     /** 租户Id */
     private Long enterpriseId;
 
+    /** 站点Id */
+    private Long siteId;
+
+    /** 系统Id */
+    private Long systemId;
+
     /** 雪花Id */
     private Long Id;
 
@@ -70,6 +76,22 @@ public class BaseEntity implements Serializable
 
     public void setEnterpriseId(Long enterpriseId) {
         this.enterpriseId = enterpriseId;
+    }
+
+    public Long getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
+    }
+
+    public Long getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(Long systemId) {
+        this.systemId = systemId;
     }
 
     public Long getId() {
