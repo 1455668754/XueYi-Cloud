@@ -196,7 +196,7 @@ public class DataScopeAspect {
             }
             //数据查询分离模式2
             else if (StringUtils.isNotBlank(edAlias)) {
-                sqlString.append(StringUtils.format(" AND {}.tenant_id = {} AND {}.del_flag = 0", edAlias, enterprise.getEnterpriseId(), edAlias));
+                sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", edAlias, enterprise.getEnterpriseId(), edAlias, edAlias));
             }
             //数据更新分离模式
             else if (StringUtils.isNotBlank(ueAlias)) {
