@@ -174,6 +174,7 @@ public class DataScopeAspect {
                 }
             }
         }
+
         // 租户控制
 
         //控制数据权限 分离
@@ -222,11 +223,11 @@ public class DataScopeAspect {
             //数据查询分离模式2
             else if (StringUtils.isNotBlank(SedAlias) || StringUtils.isNotBlank(WedAlias) || StringUtils.isNotBlank(SWedAlias)) {
                 if (StringUtils.isNotBlank(SedAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SedAlias, baseEntity.getSystemId(), SedAlias, enterprise.getEnterpriseId(), SedAlias));
+                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", SedAlias, baseEntity.getSystemId(), SedAlias, enterprise.getEnterpriseId(), SedAlias, SedAlias));
                 } else if (StringUtils.isNotBlank(WedAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.siteId = {} AND {}.tenant_id = {} AND {}.del_flag = 0", WedAlias, baseEntity.getSiteId(), WedAlias, enterprise.getEnterpriseId(), WedAlias));
+                    sqlString.append(StringUtils.format(" AND {}.siteId = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", WedAlias, baseEntity.getSiteId(), WedAlias, enterprise.getEnterpriseId(), WedAlias));
                 } else if (StringUtils.isNotBlank(SWedAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.siteId = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWedAlias, baseEntity.getSystemId(), SWedAlias, baseEntity.getSiteId(), SWedAlias, enterprise.getEnterpriseId(), SWedAlias));
+                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.siteId = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", SWedAlias, baseEntity.getSystemId(), SWedAlias, baseEntity.getSiteId(), SWedAlias, enterprise.getEnterpriseId(), SWedAlias));
                 }
             }
             //数据更新分离模式
@@ -282,7 +283,6 @@ public class DataScopeAspect {
                     Snowflake snowflake = IdUtil.getSnowflake(workerId, datacenterId);
                     Long id = snowflake.nextId();
                     baseEntity.setId(id);
-
                     baseEntity.getParams().put(UPDATE_SCOPE, " AND (" + upSqlString.substring(4) + ")");
                 }
             }
