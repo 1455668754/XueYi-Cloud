@@ -233,19 +233,19 @@ public class DataScopeAspect {
             //数据更新分离模式
             else if (StringUtils.isNotBlank(SueAlias) || StringUtils.isNotBlank(WueAlias) || StringUtils.isNotBlank(SWueAlias)) {
                 if (StringUtils.isNotBlank(SueAlias)) {
-                    if (ueAlias.equals("empty")) {
+                    if (SueAlias.equals("empty")) {
                         upSqlString.append(StringUtils.format(" AND system_id = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSystemId(), enterprise.getEnterpriseId()));
                     } else {
                         upSqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SueAlias, baseEntity.getSystemId(), SueAlias, enterprise.getEnterpriseId(), SueAlias));
                     }
                 } else if (StringUtils.isNotBlank(WueAlias)) {
-                    if (ueAlias.equals("empty")) {
+                    if (WueAlias.equals("empty")) {
                         upSqlString.append(StringUtils.format(" AND siteId = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSiteId(), enterprise.getEnterpriseId()));
                     } else {
                         upSqlString.append(StringUtils.format(" AND {}.siteId = {} AND {}.tenant_id = {} AND {}.del_flag = 0", WueAlias, baseEntity.getSiteId(), WueAlias, enterprise.getEnterpriseId(), WueAlias));
                     }
                 } else if (StringUtils.isNotBlank(SWueAlias)) {
-                    if (ueAlias.equals("empty")) {
+                    if (SWueAlias.equals("empty")) {
                         upSqlString.append(StringUtils.format(" AND system_id = {} AND siteId = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSystemId(), baseEntity.getSiteId(), enterprise.getEnterpriseId()));
                     } else {
                         upSqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.siteId = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWueAlias, baseEntity.getSystemId(), SWueAlias, baseEntity.getSiteId(), SWueAlias, enterprise.getEnterpriseId(), SWueAlias));
