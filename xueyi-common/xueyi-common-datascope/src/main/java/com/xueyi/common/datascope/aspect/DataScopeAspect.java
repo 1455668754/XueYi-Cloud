@@ -215,9 +215,9 @@ public class DataScopeAspect {
                 if (StringUtils.isNotBlank(SeAlias)) {
                     sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SeAlias, baseEntity.getSystemId(), SeAlias, enterprise.getEnterpriseId(), SeAlias));
                 } else if (StringUtils.isNotBlank(WeAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.siteId = {} AND {}.tenant_id = {} AND {}.del_flag = 0", WeAlias, baseEntity.getSiteId(), WeAlias, enterprise.getEnterpriseId(), WeAlias));
+                    sqlString.append(StringUtils.format(" AND {}.site_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", WeAlias, baseEntity.getSiteId(), WeAlias, enterprise.getEnterpriseId(), WeAlias));
                 } else if (StringUtils.isNotBlank(SWeAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.siteId = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWeAlias, baseEntity.getSystemId(), SWeAlias, baseEntity.getSiteId(), SWeAlias, enterprise.getEnterpriseId(), SWeAlias));
+                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWeAlias, baseEntity.getSystemId(), SWeAlias, baseEntity.getSiteId(), SWeAlias, enterprise.getEnterpriseId(), SWeAlias));
                 }
             }
             //数据查询分离模式2
@@ -225,9 +225,9 @@ public class DataScopeAspect {
                 if (StringUtils.isNotBlank(SedAlias)) {
                     sqlString.append(StringUtils.format(" AND {}.system_id = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", SedAlias, baseEntity.getSystemId(), SedAlias, enterprise.getEnterpriseId(), SedAlias, SedAlias));
                 } else if (StringUtils.isNotBlank(WedAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.siteId = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", WedAlias, baseEntity.getSiteId(), WedAlias, enterprise.getEnterpriseId(), WedAlias));
+                    sqlString.append(StringUtils.format(" AND {}.site_id = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", WedAlias, baseEntity.getSiteId(), WedAlias, enterprise.getEnterpriseId(), WedAlias));
                 } else if (StringUtils.isNotBlank(SWedAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.siteId = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", SWedAlias, baseEntity.getSystemId(), SWedAlias, baseEntity.getSiteId(), SWedAlias, enterprise.getEnterpriseId(), SWedAlias));
+                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", SWedAlias, baseEntity.getSystemId(), SWedAlias, baseEntity.getSiteId(), SWedAlias, enterprise.getEnterpriseId(), SWedAlias));
                 }
             }
             //数据更新分离模式
@@ -240,15 +240,15 @@ public class DataScopeAspect {
                     }
                 } else if (StringUtils.isNotBlank(WueAlias)) {
                     if (WueAlias.equals("empty")) {
-                        upSqlString.append(StringUtils.format(" AND siteId = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSiteId(), enterprise.getEnterpriseId()));
+                        upSqlString.append(StringUtils.format(" AND site_id = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSiteId(), enterprise.getEnterpriseId()));
                     } else {
-                        upSqlString.append(StringUtils.format(" AND {}.siteId = {} AND {}.tenant_id = {} AND {}.del_flag = 0", WueAlias, baseEntity.getSiteId(), WueAlias, enterprise.getEnterpriseId(), WueAlias));
+                        upSqlString.append(StringUtils.format(" AND {}.site_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", WueAlias, baseEntity.getSiteId(), WueAlias, enterprise.getEnterpriseId(), WueAlias));
                     }
                 } else if (StringUtils.isNotBlank(SWueAlias)) {
                     if (SWueAlias.equals("empty")) {
-                        upSqlString.append(StringUtils.format(" AND system_id = {} AND siteId = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSystemId(), baseEntity.getSiteId(), enterprise.getEnterpriseId()));
+                        upSqlString.append(StringUtils.format(" AND system_id = {} AND site_id = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSystemId(), baseEntity.getSiteId(), enterprise.getEnterpriseId()));
                     } else {
-                        upSqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.siteId = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWueAlias, baseEntity.getSystemId(), SWueAlias, baseEntity.getSiteId(), SWueAlias, enterprise.getEnterpriseId(), SWueAlias));
+                        upSqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWueAlias, baseEntity.getSystemId(), SWueAlias, baseEntity.getSiteId(), SWueAlias, enterprise.getEnterpriseId(), SWueAlias));
                     }
                 }
             }
