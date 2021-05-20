@@ -98,9 +98,9 @@ public class DataScopeAspect {
 
             if (StringUtils.isNotNull(currentUser)) {
                 dataScopeFilter(joinPoint, currentEnterprise, currentUser,
-                        controllerDataScope.eAlias(), controllerDataScope.SeAlias(), controllerDataScope.WeAlias(), controllerDataScope.SWeAlias(),
-                        controllerDataScope.edAlias(), controllerDataScope.SedAlias(), controllerDataScope.WedAlias(), controllerDataScope.SWedAlias(),
-                        controllerDataScope.ueAlias(), controllerDataScope.SueAlias(), controllerDataScope.WueAlias(), controllerDataScope.SWueAlias(),
+                        controllerDataScope.eAlias(), controllerDataScope.SeAlias(), controllerDataScope.WeAlias(), controllerDataScope.SWeAlias(), controllerDataScope.SWLeAlias(),
+                        controllerDataScope.edAlias(), controllerDataScope.SedAlias(), controllerDataScope.WedAlias(), controllerDataScope.SWedAlias(), controllerDataScope.SWLedAlias(),
+                        controllerDataScope.ueAlias(), controllerDataScope.SueAlias(), controllerDataScope.WueAlias(), controllerDataScope.SWueAlias(), controllerDataScope.SWLueAlias(),
                         controllerDataScope.deptAlias(), controllerDataScope.postAlias(), controllerDataScope.userAlias());
             }
         }
@@ -116,19 +116,22 @@ public class DataScopeAspect {
      * @param SeAlias    租户表的别名 | 控制到 e enterpriseId | s 系统Id systemId
      * @param WeAlias    租户表的别名 | 控制到 e enterpriseId | w 站点Id siteId
      * @param SWeAlias   租户表的别名 | 控制到 e enterpriseId | s 系统Id systemId | w 站点Id siteId
+     * @param SWLeAlias  租户表的别名 | 控制到 e enterpriseId | s 系统Id systemId | w 站点Id siteId | l 产品库Id libraryId
      * @param edAlias    租户表的别名 | 控制到 e enterpriseId （包含租户id=0的数据）
      * @param SedAlias   租户表的别名 | 控制到 e enterpriseId | s 系统Id systemId （包含租户id=0的数据）
      * @param WedAlias   租户表的别名 | 控制到 e enterpriseId | w 站点Id siteId （包含租户id=0的数据）
      * @param SWedAlias  租户表的别名 | 控制到 e enterpriseId | s 系统Id systemId | w 站点Id siteId （包含租户id=0的数据）
+     * @param SWLedAlias 租户表的别名 | 控制到 e enterpriseId | s 系统Id systemId | w 站点Id siteId | l 产品库Id libraryId （包含租户id=0的数据）
      * @param ueAlias    租户更新控制的别名 | 控制到 e enterpriseId (empty 无前缀更新 | other 有前缀更新)
      * @param SueAlias   租户更新控制的别名 | 控制到 e enterpriseId | s 系统Id systemId (empty 无前缀更新 | other 有前缀更新)
      * @param WueAlias   租户更新控制的别名 | 控制到 e enterpriseId | w 站点Id siteId (empty 无前缀更新 | other 有前缀更新)
      * @param SWueAlias  租户更新控制的别名 | 控制到 e enterpriseId | s 系统Id systemId | w 站点Id siteId (empty 无前缀更新 | other 有前缀更新)
+     * @param SWLueAlias 租户更新控制的别名 | 控制到 e enterpriseId | s 系统Id systemId | w 站点Id siteId | l 产品库Id libraryId (empty 无前缀更新 | other 有前缀更新)
      * @param deptAlias  部门别名
      * @param postAlias  岗位别名
      * @param userAlias  用户别名
      */
-    public static void dataScopeFilter(JoinPoint joinPoint, SysEnterprise enterprise, SysUser user, String eAlias, String SeAlias, String WeAlias, String SWeAlias, String edAlias, String SedAlias, String WedAlias, String SWedAlias, String ueAlias, String SueAlias, String WueAlias, String SWueAlias, String deptAlias, String postAlias, String userAlias) {
+    public static void dataScopeFilter(JoinPoint joinPoint, SysEnterprise enterprise, SysUser user, String eAlias, String SeAlias, String WeAlias, String SWeAlias, String SWLeAlias, String edAlias, String SedAlias, String WedAlias, String SWedAlias, String SWLedAlias, String ueAlias, String SueAlias, String WueAlias, String SWueAlias, String SWLueAlias, String deptAlias, String postAlias, String userAlias) {
         //默认只获取第一个参数
         Object params = joinPoint.getArgs()[0];
         StringBuilder sqlString = new StringBuilder();
@@ -211,27 +214,31 @@ public class DataScopeAspect {
         else if (StringUtils.isNotNull(params) && params instanceof BaseEntity) {
             BaseEntity baseEntity = (BaseEntity) params;
             //数据查询分离模式1
-            if (StringUtils.isNotBlank(SeAlias) || StringUtils.isNotBlank(WeAlias) || StringUtils.isNotBlank(SWeAlias)) {
+            if (StringUtils.isNotBlank(SeAlias) || StringUtils.isNotBlank(WeAlias) || StringUtils.isNotBlank(SWeAlias) || StringUtils.isNotBlank(SWLeAlias)) {
                 if (StringUtils.isNotBlank(SeAlias)) {
                     sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SeAlias, baseEntity.getSystemId(), SeAlias, enterprise.getEnterpriseId(), SeAlias));
                 } else if (StringUtils.isNotBlank(WeAlias)) {
                     sqlString.append(StringUtils.format(" AND {}.site_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", WeAlias, baseEntity.getSiteId(), WeAlias, enterprise.getEnterpriseId(), WeAlias));
                 } else if (StringUtils.isNotBlank(SWeAlias)) {
                     sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWeAlias, baseEntity.getSystemId(), SWeAlias, baseEntity.getSiteId(), SWeAlias, enterprise.getEnterpriseId(), SWeAlias));
+                } else if (StringUtils.isNotBlank(SWLeAlias)) {
+                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND {}.library_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWLeAlias, baseEntity.getSystemId(), SWLeAlias, baseEntity.getSiteId(), SWLeAlias, baseEntity.getLibraryId(), SWLeAlias, enterprise.getEnterpriseId(), SWLeAlias));
                 }
             }
             //数据查询分离模式2
-            else if (StringUtils.isNotBlank(SedAlias) || StringUtils.isNotBlank(WedAlias) || StringUtils.isNotBlank(SWedAlias)) {
+            else if (StringUtils.isNotBlank(SedAlias) || StringUtils.isNotBlank(WedAlias) || StringUtils.isNotBlank(SWedAlias) || StringUtils.isNotBlank(SWLedAlias)) {
                 if (StringUtils.isNotBlank(SedAlias)) {
                     sqlString.append(StringUtils.format(" AND {}.system_id = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", SedAlias, baseEntity.getSystemId(), SedAlias, enterprise.getEnterpriseId(), SedAlias, SedAlias));
                 } else if (StringUtils.isNotBlank(WedAlias)) {
                     sqlString.append(StringUtils.format(" AND {}.site_id = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", WedAlias, baseEntity.getSiteId(), WedAlias, enterprise.getEnterpriseId(), WedAlias));
                 } else if (StringUtils.isNotBlank(SWedAlias)) {
                     sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", SWedAlias, baseEntity.getSystemId(), SWedAlias, baseEntity.getSiteId(), SWedAlias, enterprise.getEnterpriseId(), SWedAlias));
+                } else if (StringUtils.isNotBlank(SWLedAlias)) {
+                    sqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND {}.library_id = {} AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0", SWLedAlias, baseEntity.getSystemId(), SWLedAlias, baseEntity.getSiteId(), SWLedAlias, baseEntity.getLibraryId(), SWLedAlias, enterprise.getEnterpriseId(), SWLedAlias));
                 }
             }
             //数据更新分离模式
-            else if (StringUtils.isNotBlank(SueAlias) || StringUtils.isNotBlank(WueAlias) || StringUtils.isNotBlank(SWueAlias)) {
+            else if (StringUtils.isNotBlank(SueAlias) || StringUtils.isNotBlank(WueAlias) || StringUtils.isNotBlank(SWueAlias) || StringUtils.isNotBlank(SWLueAlias)) {
                 if (StringUtils.isNotBlank(SueAlias)) {
                     if (SueAlias.equals("empty")) {
                         upSqlString.append(StringUtils.format(" AND system_id = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSystemId(), enterprise.getEnterpriseId()));
@@ -250,6 +257,12 @@ public class DataScopeAspect {
                     } else {
                         upSqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWueAlias, baseEntity.getSystemId(), SWueAlias, baseEntity.getSiteId(), SWueAlias, enterprise.getEnterpriseId(), SWueAlias));
                     }
+                } else if (StringUtils.isNotBlank(SWLueAlias)) {
+                    if (SWLueAlias.equals("empty")) {
+                        upSqlString.append(StringUtils.format(" AND system_id = {} AND site_id = {} AND library_id = {} AND tenant_id = {} AND del_flag = 0", baseEntity.getSystemId(), baseEntity.getSiteId(), baseEntity.getLibraryId(), enterprise.getEnterpriseId()));
+                    } else {
+                        upSqlString.append(StringUtils.format(" AND {}.system_id = {} AND {}.site_id = {} AND {}.library_id = {} AND {}.tenant_id = {} AND {}.del_flag = 0", SWLueAlias, baseEntity.getSystemId(), SWLueAlias, baseEntity.getSiteId(), SWLueAlias, baseEntity.getLibraryId(), SWLueAlias, enterprise.getEnterpriseId(), SWLueAlias));
+                    }
                 }
             }
             //当无复杂查询控制时，阻断查询进行，保证数据安全
@@ -264,13 +277,10 @@ public class DataScopeAspect {
             upSqlString.append(" 1 = 0 ");
         }
 
-
         if (StringUtils.isNotBlank(sqlString.toString()) || StringUtils.isNotBlank(upSqlString.toString())) {
             if (StringUtils.isNotNull(params) && params instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) params;
                 baseEntity.setEnterpriseId(enterprise.getEnterpriseId());
-                baseEntity.setCreateBy(user.getUserId());
-                baseEntity.setUpdateBy(user.getUserId());
                 if (StringUtils.isNotBlank(sqlString.toString())) {
                     baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
                 }
@@ -283,6 +293,8 @@ public class DataScopeAspect {
                     Snowflake snowflake = IdUtil.getSnowflake(workerId, datacenterId);
                     Long id = snowflake.nextId();
                     baseEntity.setId(id);
+                    baseEntity.setCreateBy(user.getUserId());
+                    baseEntity.setUpdateBy(user.getUserId());
                     baseEntity.getParams().put(UPDATE_SCOPE, " AND (" + upSqlString.substring(4) + ")");
                 }
             }
