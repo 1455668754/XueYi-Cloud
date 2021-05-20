@@ -93,4 +93,4 @@ com.xueyi
 
 ## 雪忆微服务交流群
 
-QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://qm.qq.com/cgi-bin/qm/qr?k=NC5nDYMPD8HVAQSzF8-zaA7f-OWiCVvu&jump_from=webapi) 点击按钮入群。
+QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://qm.qq.com/cgi-bin/qm/qr?k=qVIlkpv9oo4dw_WfbwADKpfiJiM4jb5L&jump_from=webapi) 点击按钮入群。
