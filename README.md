@@ -64,6 +64,8 @@ com.xueyi
 演示地址：(即将上线)        
 文档地址：https://doc.xueyitt.cn/
 
+
+
 ## 演示图
 
 <table>
@@ -88,3 +90,7 @@ com.xueyi
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png"/></td>
     </tr>
 </table>
+
+## 雪忆微服务交流群
+
+QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://qm.qq.com/cgi-bin/qm/qr?k=NC5nDYMPD8HVAQSzF8-zaA7f-OWiCVvu&jump_from=webapi) 点击按钮入群。
