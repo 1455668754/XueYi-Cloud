@@ -10,7 +10,7 @@
 
 基于本系统还有许多内容是希望加入进来的，但限于时间问题，后续慢慢更新进来，如遇bug，请提Issues。  
   
-####  [雪忆商城版/RuoYi-Mall](https://gitee.com/xueyitiantang/xueyi-cloud)。
+####  [雪忆商城版/RuoYi-Mall](https://gitee.com/xueyitiantang/xueyi-mall)。
 
 走过路过，点个star :kissing_heart: 
 
