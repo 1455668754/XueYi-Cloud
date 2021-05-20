@@ -50,7 +50,7 @@ public interface SysSystemMapper {
      * @param sysSystem 子系统模块
      * @return 子系统模块集合
      */
-    @DataScope(eAlias = "s")
+    @DataScope(edAlias = "s")
     public List<SysSystem> selectSystemList(SysSystem sysSystem);
 
     /**
