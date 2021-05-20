@@ -62,7 +62,8 @@ com.xueyi
 - xueYi/admin/admin123
 
 演示地址：(即将上线)        
-文档地址：https://doc.xueyitt.cn/
+文档地址：http://doc.xinggoushangmao.com/
+https://doc.xueyitt.cn/（暂不可用，先用上面的）
 
 
 
