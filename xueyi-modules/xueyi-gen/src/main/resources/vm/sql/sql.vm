@@ -1,22 +1,15 @@
--- 菜单 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('${functionName}', '${parentMenuId}', '1', '${businessName}', '${moduleName}/${businessName}/index', 1, 0, 'C', '0', '0', '${permissionPrefix}:list', '#', 'admin', sysdate(), '', null, '${functionName}菜单');
+insert into sys_menu (menu_id, system_id, tenant_id, parent_id, menu_name, path, component, menu_type, visible, perms, icon, sort, create_by, remark)
+values
+              -- 菜单 SQL
+              (11000, 0, 0, '${parentMenuId}', '${functionName}', '${businessName}',   '${moduleName}/${businessName}/index',      'C', '0',  '${permissionPrefix}:list',      '#',   1, 0, '${functionName}菜单'),
+                                   -- 按钮 SQL
+                                   (11001, 0, 0, 11000, '${functionName}查询', '', '', 'F', '0', '${permissionPrefix}:query',           '#', 1, 0, ''),
+                                   (11002, 0, 0, 11000, '${functionName}新增', '', '', 'F', '0', '${permissionPrefix}:add',             '#', 2, 0, ''),
+                                   (11003, 0, 0, 11000, '${functionName}修改', '', '', 'F', '0', '${permissionPrefix}:edit',            '#', 3, 0, ''),
+                                   (11004, 0, 0, 11000, '${functionName}删除', '', '', 'F', '0', '${permissionPrefix}:remove',          '#', 4, 0, ''),
+                                   (11005, 0, 0, 11000, '${functionName}导出', '', '', 'F', '0', '${permissionPrefix}:export',          '#', 4, 0, '');
 
--- 按钮父菜单ID
-SELECT @parentId := LAST_INSERT_ID();
-
--- 按钮 SQL
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('${functionName}查询', @parentId, '1',  '#', '', 1, 0, 'F', '0', '0', '${permissionPrefix}:query',        '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('${functionName}新增', @parentId, '2',  '#', '', 1, 0, 'F', '0', '0', '${permissionPrefix}:add',          '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('${functionName}修改', @parentId, '3',  '#', '', 1, 0, 'F', '0', '0', '${permissionPrefix}:edit',         '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('${functionName}删除', @parentId, '4',  '#', '', 1, 0, 'F', '0', '0', '${permissionPrefix}:remove',       '#', 'admin', sysdate(), '', null, '');
-
-insert into sys_menu (menu_name, parent_id, order_num, path, component, is_frame, is_cache, menu_type, visible, status, perms, icon, create_by, create_time, update_by, update_time, remark)
-values('${functionName}导出', @parentId, '5',  '#', '', 1, 0, 'F', '0', '0', '${permissionPrefix}:export',       '#', 'admin', sysdate(), '', null, '');
+                                   -- menu_id、parent_id需手动进行配置（分布式Id无法自动获取）
+                                   -- system_id、tenant_id根据自己需要设置
+                                   -- tenant_id = 0 代表所有租户都可看到
+                                   -- system_id = 0 代表该菜单只可再system_id为0的系统中看到（租户系统如果未修改system_id则默认未0）
