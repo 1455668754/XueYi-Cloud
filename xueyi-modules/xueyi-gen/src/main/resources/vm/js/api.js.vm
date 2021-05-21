@@ -10,10 +10,11 @@ export function list${BusinessName}(query) {
 }
 
 // 查询${functionName}详细
-export function get${BusinessName}(${pkColumn.javaField}) {
+export function get${BusinessName}(query) {
   return request({
-    url: '/${moduleName}/${businessName}/' + ${pkColumn.javaField},
-    method: 'get'
+    url: '/${moduleName}/${businessName}/byId',
+    method: 'get',
+    params: query
   })
 }
 
@@ -36,9 +37,10 @@ export function update${BusinessName}(data) {
 }
 
 // 删除${functionName}
-export function del${BusinessName}(${pkColumn.javaField}) {
+export function del${BusinessName}(data) {
   return request({
-    url: '/${moduleName}/${businessName}/' + ${pkColumn.javaField},
-    method: 'delete'
+    url: '/${moduleName}/${businessName}',
+    method: 'delete',
+    data: data
   })
 }
