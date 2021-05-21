@@ -66,9 +66,11 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
         int rows = ${className}Mapper.insert${ClassName}(${className});
         if (${className}.${subClassName}.size() > 0)
         {
-            #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
-            //获取生成雪花Id，并赋值给主键，加入至子表对应外键中
-            ${className}.set${pkColumn.javaField}(${className}.getId())
+#set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
+#if(!$pkColumn.increment)
+            /**获取生成雪花Id，并赋值给主键，加入至子表对应外键中*/
+            ${className}.set${AttrName}(${className}.getId())
+#end
             ${className}Mapper.batch${subClassName}(${className});
         }
         return rows;
@@ -90,7 +92,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     public int update${ClassName}(${ClassName} ${className})
     {
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${pkColumn.javaField}(${className});
+        ${className}Mapper.delete${subClassName}By${AttrName}(${className});
         if (${className}.${subClassName}.size() > 0)
         {
             ${className}Mapper.batch${subClassName}(${className});
@@ -112,7 +114,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     public int delete${ClassName}ByIds(${ClassName} ${className})
     {
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${pkColumn.javaField}s(${className});
+        ${className}Mapper.delete${subClassName}By${AttrName}s(${className});
 #end
         return ${className}Mapper.delete${ClassName}ByIds(${className});
     }
@@ -127,7 +129,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     public int delete${ClassName}ById(${ClassName} ${className})
     {
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${pkColumn.javaField}(${className});
+        ${className}Mapper.delete${subClassName}By${AttrName}(${className});
 #end
         return ${className}Mapper.delete${ClassName}ById(${className});
     }
