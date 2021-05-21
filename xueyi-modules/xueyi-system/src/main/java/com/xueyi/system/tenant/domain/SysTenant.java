@@ -50,7 +50,7 @@ public class SysTenant extends BaseEntity {
 
     /** 归属数据库(0系统默认 1独立库) */
     @Excel(name = "归属数据库")
-    private Long attributionDatabase;
+    private String attributionDatabase;
 
     /** 数据源url */
     @Excel(name = "数据源url")
@@ -128,11 +128,11 @@ public class SysTenant extends BaseEntity {
         this.datasource = datasource;
     }
 
-    public Long getAttributionDatabase() {
+    public String getAttributionDatabase() {
         return attributionDatabase;
     }
 
-    public void setAttributionDatabase(Long attributionDatabase) {
+    public void setAttributionDatabase(String attributionDatabase) {
         this.attributionDatabase = attributionDatabase;
     }
 

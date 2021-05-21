@@ -82,7 +82,7 @@
       <el-table-column label="租户账号" align="center" prop="tenantName" />
       <el-table-column label="租户名称" align="center" prop="tenantNick" />
       <el-table-column label="租户系统名称" align="center" prop="tenantSystemName" />
-      <el-table-column label="租户logo" align="center" prop="logo" />
+<!--      <el-table-column label="租户logo" align="center" prop="logo" />-->
       <el-table-column label="归属数据库" align="center" prop="attributionDatabase" :formatter="attributionDatabaseFormat" />
       <el-table-column label="数据库名称" align="center" prop="datasource" />
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
@@ -127,9 +127,9 @@
         <el-form-item label="租户名称" prop="tenantNick">
           <el-input v-model="form.tenantNick" placeholder="请输入租户名称" />
         </el-form-item>
-        <el-form-item label="租户logo" prop="logo">
-          <el-input v-model="form.logo" placeholder="请输入租户logo" />
-        </el-form-item>
+<!--        <el-form-item label="租户logo" prop="logo">-->
+<!--          <el-input v-model="form.logo" placeholder="请输入租户logo" />-->
+<!--        </el-form-item>-->
         <el-form-item label="归属数据库">
           <el-radio-group v-model="form.attributionDatabase">
             <el-radio
@@ -140,7 +140,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="数据库名称" prop="datasource">
-          <el-input v-model="form.datasource" placeholder="请输入数据库(master默认数据库)" />
+          <el-input v-model="form.datasource" placeholder="请输入数据库名称" />
         </el-form-item>
         <el-form-item label="数据源url" prop="datasourceUrl">
           <el-input v-model="form.datasourceUrl" placeholder="请输入数据源url" />
@@ -153,9 +153,6 @@
         </el-form-item>
         <el-form-item label="数据源驱动" prop="datasourceDriver">
           <el-input v-model="form.datasourceDriver" placeholder="请输入数据源驱动" />
-        </el-form-item>
-        <el-form-item label="租户账号修改次数" prop="enterpriseNameFrequency">
-          <el-input v-model="form.enterpriseNameFrequency" placeholder="请输入租户账号修改次数" :min="0" :max="2"/>
         </el-form-item>
         <el-form-item label="显示顺序" prop="sort">
           <el-input v-model="form.sort" placeholder="请输入显示顺序" :min="0" :max="125"/>
@@ -274,7 +271,7 @@ export default {
         tenantSystemName: null,
         tenantNick: null,
         logo: null,
-        attributionDatabase: 0,
+        attributionDatabase: '0',
         datasource: null,
         datasourceUrl: null,
         datasourceUsername: null,
