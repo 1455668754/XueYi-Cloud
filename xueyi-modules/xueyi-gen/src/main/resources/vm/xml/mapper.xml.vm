@@ -43,14 +43,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 
     <sql id="selectVo">
-        select#foreach($column in $columns) e.$column.columnName#if($velocityCount != $columns.size()),#end#end
-        from e.${tableName}
+        select #foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') e.$column.columnName#if($velocityCount != $columns.size()),#end#end#end
+
+        from ${tableName} e
     </sql>
 
     <select id="select${ClassName}List" parameterType="${ClassName}" resultMap="${ClassName}Result">
         <include refid="selectVo"/>
         where 1 = 1
 #foreach($column in $columns)
+#if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
 #set($queryType=$column.queryType)
 #set($javaField=$column.javaField)
 #set($javaType=$column.javaType)
@@ -76,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 #end
 #end
+#end
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
@@ -85,8 +88,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectVo"/>
         where e.${pkColumn.columnName} = #{${pkColumn.javaField}}
 #elseif($table.sub)
-        select#foreach($column in $columns) e.$column.columnName#if($velocityCount != $columns.size()),#end#end,
-           #foreach($column in $subTable.columns) b.$column.columnName as sub_$column.columnName#if($velocityCount != $subTable.columns.size()),#end#end
+        select#foreach($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') e.$column.columnName#if($velocityCount != $columns.size()),#end#end#end,
+           #foreach($column in $subTable.columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') b.$column.columnName as sub_$column.columnName#if($velocityCount != $subTable.columns.size()),#end#end#end
 
         from ${tableName} e
         left join ${subTableName} b on b.${subTableFkName} = e.${pkColumn.columnName}
@@ -104,8 +107,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #if(!$pkColumn.increment)
             <if test="Id != null">$column.columnName,</if>
 #end
-#elseif($column.columnName == 'createTime' || $column.columnName == 'updateTime' || $column.columnName == 'updateBy' || $column.columnName == 'delFlag')
-#elseif($column.columnName == 'tenantId')
+#elseif($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')
+#elseif($column.columnName == 'tenant_id')
             <if test="enterpriseId != null">            					  tenant_id          ,</if>
 #elseif($column.columnName != $pkColumn.columnName)
             <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">$column.columnName,</if>
@@ -116,11 +119,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #foreach($column in $columns)
 #if($column.columnName == $pkColumn.columnName)
 #if(!$pkColumn.increment)
-            <if test="Id != null">#{Id},</if>
+            <if test="Id != null">                                            #{Id}              ,</if>
 #end
-#elseif($column.columnName == 'createTime' || $column.columnName == 'updateTime' || $column.columnName == 'updateBy' || $column.columnName == 'delFlag')
-#elseif($column.columnName == 'tenantId')
-            <if test="enterpriseId != null">            					  tenant_id          ,</if>
+#elseif($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')
+#elseif($column.columnName == 'tenant_id')
+            <if test="enterpriseId != null">            					  #{enterpriseId}    ,</if>
 #elseif($column.columnName != $pkColumn.columnName)
             <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">#{$column.javaField},</if>
 #end
@@ -132,7 +135,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ${tableName}
         <trim prefix="SET" suffixOverrides=",">
 #foreach($column in $columns)
-#if($column.columnName == 'createBy' || $column.columnName == 'createTime' || $column.columnName == 'updateTime' || $column.columnName == 'delFlag' || $column.columnName == 'libraryId' || $column.columnName == 'siteId' || $column.columnName == 'systemId' || $column.columnName == 'tenantId')
+#if($column.columnName == 'create_by' || $column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'del_flag' || $column.columnName == 'library_id' || $column.columnName == 'site_id' || $column.columnName == 'system_id' || $column.columnName == 'tenant_id')
 #elseif($column.columnName != $pkColumn.columnName)
             <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">$column.columnName = #{$column.javaField},</if>
 #end
@@ -162,8 +165,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ${params.updateScope}
     </delete>
 #if($table.sub)
-    
-    <delete id="delete${subClassName}By${pkColumn.javaField}s" parameterType="${ClassName}">
+#set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
+    <delete id="delete${subClassName}By${AttrName}s" parameterType="${ClassName}">
         delete from ${subTableName}
         where ${pkColumn.columnName} in
         <foreach item="${pkColumn.javaField}" collection="params.Ids" open="(" separator="," close=")">
@@ -173,17 +176,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ${params.updateScope}
     </delete>
 
-    <delete id="delete${subClassName}By${pkColumn.javaField}" parameterType="${ClassName}">
+    <delete id="delete${subClassName}By${AttrName}" parameterType="${ClassName}">
         delete from ${subTableName}
-        where ${subTableFkName} = #{${subTableFkclassName}}
+        where ${pkColumn.columnName} = #{${pkColumn.javaField}}
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>
 
     <insert id="batch${subClassName}" parameterType="${ClassName}">
-        insert into ${subTableName}(#foreach($column in $subTable.columns)#if($column.columnName == 'createTime' || $column.columnName == 'updateTime' || $column.columnName == 'updateBy' || $column.columnName == 'delFlag')#else$column.columnName#if($velocityCount != $subTable.columns.size()),#end#end#end) values
+        insert into ${subTableName}(#foreach($column in $subTable.columns)#if($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')#else $column.columnName#if($velocityCount != $subTable.columns.size()),#end#end#end) values
 		<foreach item="item" index="index" collection="list" separator=",">
-            (#foreach($column in $subTable.columns) #if($column.columnName == 'createTime' || $column.columnName == 'updateTime' || $column.columnName == 'updateBy' || $column.columnName == 'delFlag')#elseif($column.columnName == 'tenantId')#{enterpriseId}#elseif($column.columnName == $pkColumn.javaField)#{$pkColumn.javaField}#else#{item.$column.javaField}#if($velocityCount != $subTable.columns.size()),#end#end#end)
+            (#foreach($column in $subTable.columns)#if($column.columnName != 'create_time' && $column.columnName != 'update_time' && $column.columnName != 'update_by' && $column.columnName != 'del_flag')#if($column.columnName == 'tenant_id') #{enterpriseId}#elseif($column.columnName == $pkColumn.columnName || $column.columnName == 'create_by' || $column.columnName == 'library_id' || $column.columnName == 'site_id' || $column.columnName == 'system_id') #{$column.javaField}#else #{item.$column.javaField}#end#if($velocityCount != $subTable.columns.size()),#end#end#end)
         </foreach>
     </insert>
 #end
