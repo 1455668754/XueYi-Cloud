@@ -1,91 +1,115 @@
 package ${packageName}.mapper;
 
 import java.util.List;
+import com.xueyi.common.datascope.annotation.DataScope;
 import ${packageName}.domain.${ClassName};
 #if($table.sub)
 import ${packageName}.domain.${subClassName};
 #end
 
 /**
- * ${functionName}Mapper接口
+ * ${functionName} 数据层
  * 
  * @author ${author}
- * @date ${datetime}
  */
 public interface ${ClassName}Mapper 
 {
     /**
      * 查询${functionName}
-     * 
-     * @param ${pkColumn.javaField} ${functionName}ID
+     * 访问控制 e 租户查询
+     *
+     * @param ${className} ${functionName}
      * @return ${functionName}
      */
-    public ${ClassName} select${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField});
+    @DataScope(eAlias = "e")
+    public ${ClassName} select${ClassName}ById(${ClassName} ${className});
 
     /**
      * 查询${functionName}列表
-     * 
+     * 访问控制 e 租户查询
+     *
      * @param ${className} ${functionName}
      * @return ${functionName}集合
      */
+    @DataScope(eAlias = "e")
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
 
     /**
      * 新增${functionName}
-     * 
+#if($table.sub)
+    * 访问控制 empty 租户更新（无前缀）()控制方法在impl层 | ${ClassName}ServiceImpl)
+#else
+    * 访问控制 empty 租户更新（无前缀）
+#end
+     *
      * @param ${className} ${functionName}
      * @return 结果
      */
+#if($table.sub)
+#else
+    @DataScope(ueAlias = "empty")
+#end
     public int insert${ClassName}(${ClassName} ${className});
 
     /**
      * 修改${functionName}
-     * 
+     * 访问控制 empty 租户更新（无前缀）
+     *
      * @param ${className} ${functionName}
      * @return 结果
      */
+    @DataScope(ueAlias = "empty")
     public int update${ClassName}(${ClassName} ${className});
 
     /**
      * 删除${functionName}
-     * 
-     * @param ${pkColumn.javaField} ${functionName}ID
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param ${className} ${functionName}
      * @return 结果
      */
-    public int delete${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField});
+    @DataScope(ueAlias = "empty")
+    public int delete${ClassName}ById(${ClassName} ${className});
 
     /**
      * 批量删除${functionName}
-     * 
-     * @param ${pkColumn.javaField}s 需要删除的数据ID
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param ${className} ${functionName}
      * @return 结果
      */
-    public int delete${ClassName}ByIds(${pkColumn.javaType}[] ${pkColumn.javaField}s);
+    @DataScope(ueAlias = "empty")
+    public int delete${ClassName}ByIds(${ClassName} ${className});
 #if($table.sub)
 
     /**
      * 批量删除${subTable.functionName}
-     * 
-     * @param customerIds 需要删除的数据ID
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param ${className} ${functionName}
      * @return 结果
      */
-    public int delete${subClassName}By${subTableFkClassName}s(${pkColumn.javaType}[] ${pkColumn.javaField}s);
+    @DataScope(ueAlias = "empty")
+    public int delete${subClassName}By${subTableFkClassName}s(${ClassName} ${className});
     
     /**
      * 批量新增${subTable.functionName}
-     * 
-     * @param ${subclassName}List ${subTable.functionName}列表
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param ${className} ${functionName}
      * @return 结果
      */
-    public int batch${subClassName}(List<${subClassName}> ${subclassName}List);
-    
+    @DataScope(ueAlias = "empty")
+    public int batch${subClassName}(${ClassName} ${className});
 
     /**
-     * 通过${functionName}ID删除${subTable.functionName}信息
-     * 
-     * @param roleId 角色ID
+     * 通过${functionName}Id删除${subTable.functionName}信息
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param ${className} ${functionName}
      * @return 结果
      */
-    public int delete${subClassName}By${subTableFkClassName}(${pkColumn.javaType} ${pkColumn.javaField});
+    @DataScope(ueAlias = "empty")
+    public int delete${subClassName}By${subTableFkClassName}(${ClassName} ${className});
 #end
 }
