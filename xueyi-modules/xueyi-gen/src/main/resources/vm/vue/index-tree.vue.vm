@@ -364,9 +364,8 @@ export default {
     this.getList();
 #foreach ($column in $columns)
 #if(${column.dictType} != '')
-    this.getDicts("${column.dictType}").then(response => {
-      this.${column.javaField}Options = response.data;
-    });
+    this.getDict();
+#break
 #end
 #end
   },
@@ -416,6 +415,20 @@ export default {
     },
 #foreach ($column in $columns)
 #if(${column.dictType} != '')
+    getDict(){
+#foreach ($column in $columns)
+#if(${column.dictType} != '')
+        this.getDicts("${column.dictType}").then(response => {
+        this.${column.javaField}Options = response.data;
+      });
+#end
+#end
+    },
+#break
+#end
+#end
+#foreach ($column in $columns)
+#if(${column.dictType} != '')
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)
 #set($comment=$column.columnComment.substring(0, $parentheseIndex))
@@ -424,7 +437,7 @@ export default {
 #end
     // $comment字典翻译
     ${column.javaField}Format(row, column) {
-      return this.selectDictLabel#if($column.htmlType == "checkbox")s#end(this.${column.javaField}Options, row.${column.javaField});
+        return this.selectDictLabel#if($column.htmlType == "checkbox")s#end(this.${column.javaField}Options, row.${column.javaField});
     },
 #end
 #end
@@ -485,7 +498,7 @@ export default {
       if (row != null) {
         this.form.${treeParentCode} = row.${treeCode};
       }
-      get${BusinessName}(row.${pkColumn.javaField}).then(response => {
+      get${BusinessName}({${pkColumn.javaField}:row.${pkColumn.javaField}}).then(response => {
         this.form = response.data;
 #foreach ($column in $columns)
 #if($column.htmlType == "checkbox")
@@ -528,7 +541,7 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return del${BusinessName}(row.${pkColumn.javaField});
+          return del${BusinessName}(this.deleteParamIds(row.${pkColumn.javaField}));
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
