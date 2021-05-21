@@ -4,7 +4,7 @@
 drop table if exists xy_tenant_database;
 create table xy_tenant_database (
   tenant_id		            bigint	            not null                                comment '租户Id',
-  attribution_database      tinyint	            not null default 1	                    comment '归属数据库(0独立库 1公共库)',
+  attribution_database      char(1)	            not null default '1'	                comment '归属数据库(0独立库 1公共库)',
   datasource		        varchar(50)	        not null default 'master'	            comment '数据库(master默认数据库)',
   datasource_url	        varchar(255)	    not null default ''	                    comment '数据源url',
   datasource_username	    varchar(255)	    not null default ''	                    comment '数据源用户名',
