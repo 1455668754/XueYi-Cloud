@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.system.tenant.mapper.SysTenantMapper">
+
+    <resultMap type="SysTenant" id="SysTenantResult">
+        <id     property="tenantId"                     column="tenant_id"                  />
+        <result property="tenantName"                   column="tenant_name"                />
+        <result property="tenantSystemName"             column="tenant_system_name"         />
+        <result property="tenantNick"                   column="tenant_nick"                />
+        <result property="logo"                         column="tenant_logo"                />
+        <result property="tenantNameFrequency"          column="tenant_name_frequency"      />
+        <result property="attributionDatabase"          column="attribution_database"       />
+        <result property="datasource"                   column="datasource"                 />
+        <result property="datasourceUrl"                column="datasource_url"             />
+        <result property="datasourceUsername"           column="datasource_username"        />
+        <result property="datasourcePassword"           column="datasource_password"        />
+        <result property="datasourceDriver"             column="datasource_driver"          />
+        <result property="sort"                         column="sort"                       />
+        <result property="status"                       column="status"                     />
+        <result property="createBy"   		            column="create_by"                  />
+        <result property="createName"   	            column="create_name"                />
+        <result property="createTime"                   column="create_time"                />
+        <result property="updateBy"   		            column="update_by"                  />
+        <result property="updateName"   	            column="update_name"                />
+        <result property="updateTime"                   column="update_time"                />
+        <result property="remark"                       column="remark"                     />
+    </resultMap>
+
+    <sql id="selectVo">
+        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark,
+               td.attribution_database, td.datasource, td.datasource_url, td.datasource_username, td.datasource_password, td.datasource_driver
+        from xy_tenant e
+        left join xy_tenant_database td on td.tenant_id = e.tenant_id
+    </sql>
+
+    <select id="selectSysTenantList" parameterType="SysTenant" resultMap="SysTenantResult">
+        <include refid="selectVo"/>
+        where 1 = 1 and e.del_flag = 0 and e.tenant_id != -1
+        <if test="tenantName != null  and tenantName != ''"> and e.tenant_name like concat('%', #{tenantName}, '%')</if>
+        <if test="tenantSystemName != null  and tenantSystemName != ''"> and e.tenant_system_name like concat('%', #{tenantSystemName}, '%')</if>
+        <if test="tenantNick != null  and tenantNick != ''"> and e.tenant_nick like concat('%', #{tenantNick}, '%')</if>
+        <if test="attributionDatabase != null "> and td.attribution_database = #{attributionDatabase}</if>
+        <if test="datasource != null  and datasource != ''"> and td.datasource like concat('%', #{datasource}, '%')</if>
+        <if test="status != null  and status != ''"> and e.status = #{status}</if>
+    </select>
+
+    <select id="selectSysTenantById" parameterType="SysTenant" resultMap="SysTenantResult">
+        <include refid="selectVo"/>
+        where e.tenant_id = #{tenantId} and e.del_flag = 0 and e.tenant_id != -1
+    </select>
+
+    <insert id="insertSysTenant" parameterType="SysTenant">
+        insert into xy_tenant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Id != null">tenant_id,</if>
+            <if test="tenantName != null and tenantName != ''">tenant_name,</if>
+            <if test="tenantSystemName != null and tenantSystemName != ''">tenant_system_name,</if>
+            <if test="tenantNick != null and tenantNick != ''">tenant_nick,</if>
+            <if test="logo != null">tenant_logo,</if>
+            <if test="tenantNameFrequency != null">tenant_name_frequency,</if>
+            <if test="sort != null">sort,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Id != null">#{Id},</if>
+            <if test="tenantName != null and tenantName != ''">#{tenantName},</if>
+            <if test="tenantSystemName != null and tenantSystemName != ''">#{tenantSystemName},</if>
+            <if test="tenantNick != null and tenantNick != ''">#{tenantNick},</if>
+            <if test="logo != null">#{logo},</if>
+            <if test="tenantNameFrequency != null">#{tenantNameFrequency},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertSysTenantDatabase" parameterType="SysTenant">
+        insert into xy_tenant_database
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Id != null">tenant_id,</if>
+            <if test="attributionDatabase != null">attribution_database,</if>
+            <if test="datasource != null and datasource != ''">datasource,</if>
+            <if test="datasourceUrl != null and datasourceUrl != ''">datasource_url,</if>
+            <if test="datasourceUsername != null and datasourceUsername != ''">datasource_username,</if>
+            <if test="datasourcePassword != null and datasourcePassword != ''">datasource_password,</if>
+            <if test="datasourceDriver != null and datasourceDriver != ''">datasource_driver,</if>
+            <if test="createBy != null">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Id != null">                                            #{Id}              ,</if>
+            <if test="attributionDatabase != null">#{attributionDatabase},</if>
+            <if test="datasource != null and datasource != ''">#{datasource},</if>
+            <if test="datasourceUrl != null and datasourceUrl != ''">#{datasourceUrl},</if>
+            <if test="datasourceUsername != null and datasourceUsername != ''">#{datasourceUsername},</if>
+            <if test="datasourcePassword != null and datasourcePassword != ''">#{datasourcePassword},</if>
+            <if test="datasourceDriver != null and datasourceDriver != ''">#{datasourceDriver},</if>
+            <if test="createBy != null">#{createBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateSysTenant" parameterType="SysTenant">
+        update xy_tenant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tenantName != null and tenantName != ''">tenant_name = #{tenantName},</if>
+            <if test="tenantSystemName != null and tenantSystemName != ''">tenant_system_name = #{tenantSystemName},</if>
+            <if test="tenantNick != null and tenantNick != ''">tenant_nick = #{tenantNick},</if>
+            <if test="logo != null">tenant_logo = #{logo},</if>
+            <if test="tenantNameFrequency != null">tenant_name_frequency = #{tenantNameFrequency},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where tenant_id = #{tenantId}
+    </update>
+
+    <update id="updateSysTenantDatabase" parameterType="SysTenant">
+        update xy_tenant_database
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="attributionDatabase != null">attribution_database = #{attributionDatabase},</if>
+            <if test="datasource != null and datasource != ''">datasource = #{datasource},</if>
+            <if test="datasourceUrl != null and datasourceUrl != ''">datasource_url = #{datasourceUrl},</if>
+            <if test="datasourceUsername != null and datasourceUsername != ''">datasource_username = #{datasourceUsername},</if>
+            <if test="datasourcePassword != null and datasourcePassword != ''">datasource_password = #{datasourcePassword},</if>
+            <if test="datasourceDriver != null and datasourceDriver != ''">datasource_driver = #{datasourceDriver},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where tenant_id = #{tenantId}
+    </update>
+
+    <delete id="deleteSysTenantById" parameterType="SysTenant">
+        update xy_tenant
+        set del_flag = 1
+        where tenant_id = #{tenantId}
+    </delete>
+
+    <delete id="deleteSysTenantDatabaseById" parameterType="SysTenant">
+        update xy_tenant_database
+        set del_flag = 1
+        where tenant_id = #{tenantId}
+    </delete>
+</mapper>
