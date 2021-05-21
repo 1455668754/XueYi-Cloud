@@ -32,7 +32,7 @@
         select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark,
                td.attribution_database, td.datasource, td.datasource_url, td.datasource_username, td.datasource_password, td.datasource_driver
         from xy_tenant e
-        left join xy_tenant_database td on td.tenant_id = e.tenant_id
+                 left join xy_tenant_database td on td.tenant_id = e.tenant_id
     </sql>
 
     <select id="selectSysTenantList" parameterType="SysTenant" resultMap="SysTenantResult">
@@ -144,4 +144,19 @@
         set del_flag = 1
         where tenant_id = #{tenantId}
     </delete>
+
+    <insert id="createDeptByTenantId" parameterType="SysTenant">
+        insert into sys_dept (dept_id, tenant_id, parent_id, ancestors, dept_name)
+            value (#{Id}, #{tenantId}, 0, '0', '主部门')
+    </insert>
+
+    <insert id="createPostByTenantId" parameterType="SysTenant">
+        insert into sys_post (post_id, tenant_id, dept_id, post_name)
+            value (#{Id}, #{tenantId}, 0, '主岗位')
+    </insert>
+
+    <insert id="createUserByTenantId" parameterType="SysTenant">
+        insert into sys_user (user_id, tenant_id, dept_id, post_id, user_name, nick_name, user_type, password)
+            value (#{Id}, #{tenantId}, 0, 0, 'admin', '超级管理员', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2')
+    </insert>
 </mapper>

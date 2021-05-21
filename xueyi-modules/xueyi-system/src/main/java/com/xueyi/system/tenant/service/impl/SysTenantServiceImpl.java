@@ -1,10 +1,12 @@
 package com.xueyi.system.tenant.service.impl;
 
+import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.tenant.domain.SysTenant;
 import com.xueyi.system.tenant.mapper.SysTenantMapper;
 import com.xueyi.system.tenant.service.ISysTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,8 +16,7 @@ import java.util.List;
  * @author xueyi
  */
 @Service
-public class SysTenantServiceImpl implements ISysTenantService
-{
+public class SysTenantServiceImpl implements ISysTenantService {
     @Autowired
     private SysTenantMapper sysTenantMapper;
 
@@ -26,8 +27,7 @@ public class SysTenantServiceImpl implements ISysTenantService
      * @return 租户管理
      */
     @Override
-    public SysTenant selectSysTenantById(SysTenant sysTenant)
-    {
+    public SysTenant selectSysTenantById(SysTenant sysTenant) {
         return sysTenantMapper.selectSysTenantById(sysTenant);
     }
 
@@ -38,21 +38,28 @@ public class SysTenantServiceImpl implements ISysTenantService
      * @return 租户管理
      */
     @Override
-    public List<SysTenant> selectSysTenantList(SysTenant sysTenant)
-    {
+    public List<SysTenant> selectSysTenantList(SysTenant sysTenant) {
         return sysTenantMapper.selectSysTenantList(sysTenant);
     }
 
     /**
      * 新增租户管理
+     * 访问控制 empty 租户更新（无前缀）
      *
      * @param sysTenant 租户管理
      * @return 结果
      */
     @Override
-    public int insertSysTenant(SysTenant sysTenant)
-    {
-        return sysTenantMapper.insertSysTenant(sysTenant);
+    @Transactional
+    @DataScope(ueAlias = "empty")
+    public int insertSysTenant(SysTenant sysTenant) {
+        int row = sysTenantMapper.insertSysTenant(sysTenant);
+        row = row + sysTenantMapper.insertSysTenantDatabase(sysTenant);
+        sysTenant.setTenantId(sysTenant.getId());
+        sysTenantMapper.createDeptByTenantId(sysTenant);
+//        sysTenantMapper.createPostByTenantId(sysTenant);
+        sysTenantMapper.createUserByTenantId(sysTenant);
+        return row;
     }
 
     /**
@@ -62,9 +69,11 @@ public class SysTenantServiceImpl implements ISysTenantService
      * @return 结果
      */
     @Override
-    public int updateSysTenant(SysTenant sysTenant)
-    {
-        return sysTenantMapper.updateSysTenant(sysTenant);
+    @Transactional
+    public int updateSysTenant(SysTenant sysTenant) {
+        int row = sysTenantMapper.updateSysTenant(sysTenant);
+        row = row + sysTenantMapper.updateSysTenantDatabase(sysTenant);
+        return row;
     }
 
     /**
@@ -74,8 +83,10 @@ public class SysTenantServiceImpl implements ISysTenantService
      * @return 结果
      */
     @Override
-    public int deleteSysTenantById(SysTenant sysTenant)
-    {
-        return sysTenantMapper.deleteSysTenantById(sysTenant);
+    @Transactional
+    public int deleteSysTenantById(SysTenant sysTenant) {
+        int row = sysTenantMapper.deleteSysTenantById(sysTenant);
+        row = row + sysTenantMapper.deleteSysTenantDatabaseById(sysTenant);
+        return row;
     }
 }

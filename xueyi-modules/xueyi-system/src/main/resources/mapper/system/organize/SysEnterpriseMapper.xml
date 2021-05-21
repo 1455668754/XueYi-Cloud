@@ -39,7 +39,7 @@
 
     <select id="checkLoginByEnterpriseName" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysEnterpriseResult">
         <include refid="selectVo"/>
-        where e.tenant_name=#{search.enterpriseName} and e.status = '0' and e.tenant_database_status = 0 and e.del_flag = 0
+        where e.tenant_name=#{search.enterpriseName} and e.status = '0' and e.del_flag = 0
     </select>
 
     <select id="selectLogo" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysEnterpriseResult">
