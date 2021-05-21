@@ -15,16 +15,6 @@ import ${packageName}.domain.${subClassName};
 public interface ${ClassName}Mapper 
 {
     /**
-     * 查询${functionName}
-     * 访问控制 e 租户查询
-     *
-     * @param ${className} ${functionName}
-     * @return ${functionName}
-     */
-    @DataScope(eAlias = "e")
-    public ${ClassName} select${ClassName}ById(${ClassName} ${className});
-
-    /**
      * 查询${functionName}列表
      * 访问控制 e 租户查询
      *
@@ -33,6 +23,16 @@ public interface ${ClassName}Mapper
      */
     @DataScope(eAlias = "e")
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
+
+    /**
+     * 查询${functionName}
+     * 访问控制 e 租户查询
+     *
+     * @param ${className} ${functionName}
+     * @return ${functionName}
+     */
+    @DataScope(eAlias = "e")
+    public ${ClassName} select${ClassName}ById(${ClassName} ${className});
 
     /**
      * 新增${functionName}
