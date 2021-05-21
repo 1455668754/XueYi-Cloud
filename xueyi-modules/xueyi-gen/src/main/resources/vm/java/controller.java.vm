@@ -26,10 +26,9 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 #end
 
 /**
- * ${functionName}Controller
+ * ${functionName} 业务处理
  * 
  * @author ${author}
- * @date ${datetime}
  */
 @RestController
 @RequestMapping("/${businessName}")
@@ -75,10 +74,10 @@ public class ${ClassName}Controller extends BaseController
      * 获取${functionName}详细信息
      */
     @PreAuthorize(hasPermi = "${permissionPrefix}:query")
-    @GetMapping(value = "/{${pkColumn.javaField}}")
-    public AjaxResult getInfo(@PathVariable("${pkColumn.javaField}") ${pkColumn.javaType} ${pkColumn.javaField})
+    @GetMapping(value = "/byId")
+    public AjaxResult getInfo(${ClassName} ${className})
     {
-        return AjaxResult.success(${className}Service.select${ClassName}ById(${pkColumn.javaField}));
+        return AjaxResult.success(${className}Service.select${ClassName}ById(${className}));
     }
 
     /**
@@ -108,9 +107,9 @@ public class ${ClassName}Controller extends BaseController
      */
     @PreAuthorize(hasPermi = "${permissionPrefix}:remove")
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{${pkColumn.javaField}s}")
-    public AjaxResult remove(@PathVariable ${pkColumn.javaType}[] ${pkColumn.javaField}s)
+	@DeleteMapping
+    public AjaxResult remove(@RequestBody ${ClassName} ${className})
     {
-        return toAjax(${className}Service.delete${ClassName}ByIds(${pkColumn.javaField}s));
+        return toAjax(${className}Service.delete${ClassName}ByIds(${className}));
     }
 }
