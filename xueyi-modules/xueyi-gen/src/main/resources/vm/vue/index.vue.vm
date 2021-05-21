@@ -462,6 +462,7 @@ export default {
     },
 #foreach ($column in $columns)
 #if(${column.dictType} != '')
+    /** 查询字典信息 */
     getDict(){
 #foreach ($column in $columns)
 #if(${column.dictType} != '')
@@ -545,8 +546,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const ${pkColumn.javaField} = row.${pkColumn.javaField} || this.ids
-      get${BusinessName}({${pkColumn.javaField}:${pkColumn.javaField}}).then(response => {
+      get${BusinessName}({${pkColumn.javaField}: row.${pkColumn.javaField}}).then(response => {
         this.form = response.data;
 #foreach ($column in $columns)
 #if($column.htmlType == "checkbox")
