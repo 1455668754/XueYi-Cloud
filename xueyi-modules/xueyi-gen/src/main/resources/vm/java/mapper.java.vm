@@ -81,17 +81,8 @@ public interface ${ClassName}Mapper
     @DataScope(ueAlias = "empty")
     public int delete${ClassName}ByIds(${ClassName} ${className});
 #if($table.sub)
+#set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 
-    /**
-     * 批量删除${subTable.functionName}
-     * 访问控制 empty 租户更新（无前缀）
-     *
-     * @param ${className} ${functionName}
-     * @return 结果
-     */
-    @DataScope(ueAlias = "empty")
-    public int delete${subClassName}By${subTableFkClassName}s(${ClassName} ${className});
-    
     /**
      * 批量新增${subTable.functionName}
      * 访问控制 empty 租户更新（无前缀）
@@ -110,6 +101,16 @@ public interface ${ClassName}Mapper
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int delete${subClassName}By${subTableFkClassName}(${ClassName} ${className});
+    public int delete${subClassName}By${AttrName}(${ClassName} ${className});
+
+    /**
+     * 批量删除${subTable.functionName}
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param ${className} ${functionName}
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int delete${subClassName}By${AttrName}s(${ClassName} ${className});
 #end
 }
