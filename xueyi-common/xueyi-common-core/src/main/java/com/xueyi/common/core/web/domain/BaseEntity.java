@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.xueyi.common.core.annotation.Excel;
 
 import javax.validation.constraints.Size;
@@ -53,7 +51,6 @@ public class BaseEntity implements Serializable
     private Date createTime;
 
     /** 更新者Id */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Long updateBy;
 
     /** 更新者 */
@@ -81,20 +78,20 @@ public class BaseEntity implements Serializable
         this.enterpriseId = enterpriseId;
     }
 
-    public Long getSiteId() {
-        return siteId;
-    }
-
-    public void setSiteId(Long siteId) {
-        this.siteId = siteId;
-    }
-
     public Long getSystemId() {
         return systemId;
     }
 
     public void setSystemId(Long systemId) {
         this.systemId = systemId;
+    }
+
+    public Long getSiteId() {
+        return siteId;
+    }
+
+    public void setSiteId(Long siteId) {
+        this.siteId = siteId;
     }
 
     public Long getLibraryId() {
