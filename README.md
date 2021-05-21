@@ -19,6 +19,19 @@
 * 注册中心、配置中心选型Nacos，权限认证使用Redis。
 * 流量控制框架选型Sentinel，分布式事务选型Seata。
 
+## 在线体验
+- 企业账号/员工账号/密码
+- xueYi/admin/admin123
+
+演示地址：(即将上线)        
+文档地址：http://doc.xinggoushangmao.com/        
+https://doc.xueyitt.cn/（暂不可用，先用上面的）
+
+## 雪忆微服务交流群
+
+QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://qm.qq.com/cgi-bin/qm/qr?k=qVIlkpv9oo4dw_WfbwADKpfiJiM4jb5L&jump_from=webapi) 点击按钮入群。
+
+
 ## 系统模块
 
 ~~~
@@ -57,15 +70,6 @@ com.xueyi
 
 <img src="https://oscimg.oschina.net/oscnet/up-82e9722ecb846786405a904bafcf19f73f3.png"/>
 
-## 在线体验
-- 企业账号/员工账号/密码
-- xueYi/admin/admin123
-
-演示地址：(即将上线)        
-文档地址：http://doc.xinggoushangmao.com/
-https://doc.xueyitt.cn/（暂不可用，先用上面的）
-
-
 
 ## 演示图
 
@@ -91,7 +95,3 @@ https://doc.xueyitt.cn/（暂不可用，先用上面的）
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png"/></td>
     </tr>
 </table>
-
-## 雪忆微服务交流群
-
-QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://qm.qq.com/cgi-bin/qm/qr?k=qVIlkpv9oo4dw_WfbwADKpfiJiM4jb5L&jump_from=webapi) 点击按钮入群。
