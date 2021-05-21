@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 
     <sql id="selectVo">
-        select #foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') e.$column.columnName#if($velocityCount != $columns.size()),#end#end#end
+        select#set($commaVo=0)#foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($commaVo == 1),#end#if($commaVo == 0)#set($commaVo=1)#end e.$column.columnName#end#end
 
         from ${tableName} e
     </sql>
@@ -185,9 +185,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <insert id="batch${subClassName}" parameterType="${ClassName}">
-        insert into ${subTableName}(#foreach($column in $subTable.columns)#if($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')#else $column.columnName#if($velocityCount != $subTable.columns.size()),#end#end#end) values
+        insert into ${subTableName}(#set($commaBatchId=0)#foreach($column in $subTable.columns)#if($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')#else#if($commaBatchId == 1),#end#if($commaBatchId == 0)#set($commaBatchId = 1)#end $column.columnName#end#end) values
 		<foreach item="item" index="index" collection="list" separator=",">
-            (#foreach($column in $subTable.columns)#if($column.columnName != 'create_time' && $column.columnName != 'update_time' && $column.columnName != 'update_by' && $column.columnName != 'del_flag')#if($column.columnName == 'tenant_id') #{enterpriseId}#elseif($column.columnName == $pkColumn.columnName || $column.columnName == 'create_by' || $column.columnName == 'library_id' || $column.columnName == 'site_id' || $column.columnName == 'system_id') #{$column.javaField}#else #{item.$column.javaField}#end#if($velocityCount != $subTable.columns.size()),#end#end#end)
+            (#set($commaBatch=0)#foreach($column in $subTable.columns)#if($column.columnName != 'create_time' && $column.columnName != 'update_time' && $column.columnName != 'update_by' && $column.columnName != 'del_flag')#if($column.columnName == 'tenant_id')#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{enterpriseId}#elseif($column.columnName == $pkColumn.columnName || $column.columnName == 'create_by' || $column.columnName == 'library_id' || $column.columnName == 'site_id' || $column.columnName == 'system_id')#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{$column.javaField}#else#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{item.$column.javaField}#end#end#end)
         </foreach>
     </insert>
 #end

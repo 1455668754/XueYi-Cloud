@@ -39,23 +39,33 @@ public class SysEnterprise extends BaseEntity {
     private Long enterpriseNameFrequency;
 
     /**
-     * 企业访问库
+     * 企业访问库(master默认数据库)
      */
     private String datasource;
 
-    /**
-     * 状态（0正常 1停用）
-     */
-    @Excel(name = "状态(0正常 1停用)", readConverterExp = "0=正常,1=停用")
+    /** 归属数据库(0系统默认 1独立库) */
+    @Excel(name = "归属数据库(0系统默认 1独立库)")
+    private Long attributionDatabase;
+
+    /** 数据源url */
+    @Excel(name = "数据源url")
+    private String datasourceUrl;
+
+    /** 数据源用户名 */
+    @Excel(name = "数据源用户名")
+    private String datasourceUsername;
+
+    /** 数据源密码 */
+    @Excel(name = "数据源密码")
+    private String datasourcePassword;
+
+    /** 数据源驱动 */
+    @Excel(name = "数据源驱动")
+    private String datasourceDriver;
+
+    /** 状态（0正常 1停用） */
+    @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
-
-    public String getEnterpriseSystemName() {
-        return enterpriseSystemName;
-    }
-
-    public void setEnterpriseSystemName(String enterpriseSystemName) {
-        this.enterpriseSystemName = enterpriseSystemName;
-    }
 
     public String getEnterpriseName() {
         return enterpriseName;
@@ -63,6 +73,14 @@ public class SysEnterprise extends BaseEntity {
 
     public void setEnterpriseName(String enterpriseName) {
         this.enterpriseName = enterpriseName;
+    }
+
+    public String getEnterpriseSystemName() {
+        return enterpriseSystemName;
+    }
+
+    public void setEnterpriseSystemName(String enterpriseSystemName) {
+        this.enterpriseSystemName = enterpriseSystemName;
     }
 
     public String getEnterpriseNick() {
@@ -97,6 +115,46 @@ public class SysEnterprise extends BaseEntity {
         this.datasource = datasource;
     }
 
+    public Long getAttributionDatabase() {
+        return attributionDatabase;
+    }
+
+    public void setAttributionDatabase(Long attributionDatabase) {
+        this.attributionDatabase = attributionDatabase;
+    }
+
+    public String getDatasourceUrl() {
+        return datasourceUrl;
+    }
+
+    public void setDatasourceUrl(String datasourceUrl) {
+        this.datasourceUrl = datasourceUrl;
+    }
+
+    public String getDatasourceUsername() {
+        return datasourceUsername;
+    }
+
+    public void setDatasourceUsername(String datasourceUsername) {
+        this.datasourceUsername = datasourceUsername;
+    }
+
+    public String getDatasourcePassword() {
+        return datasourcePassword;
+    }
+
+    public void setDatasourcePassword(String datasourcePassword) {
+        this.datasourcePassword = datasourcePassword;
+    }
+
+    public String getDatasourceDriver() {
+        return datasourceDriver;
+    }
+
+    public void setDatasourceDriver(String datasourceDriver) {
+        this.datasourceDriver = datasourceDriver;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -115,6 +173,10 @@ public class SysEnterprise extends BaseEntity {
                 .append("logo", getLogo())
                 .append("enterpriseNameFrequency", getEnterpriseNameFrequency())
                 .append("datasource", getDatasource())
+                .append("datasourceUrl", getDatasourceUrl())
+                .append("datasourceUsername", getDatasourceUsername())
+                .append("datasourcePassword", getDatasourcePassword())
+                .append("datasourceDriver", getDatasourceDriver())
                 .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())
