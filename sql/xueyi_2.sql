@@ -5,7 +5,7 @@ drop table if exists sys_dept;
 create table sys_dept (
   dept_id                   bigint              not null                                comment '部门id',
   parent_id                 bigint              default 0                               comment '父部门id',
-  dept_code                 varchar(64)         not null                                comment '部门编码',
+  dept_code                 varchar(64)         default null                            comment '部门编码',
   dept_name                 varchar(30)         default ''                              comment '部门名称',
   ancestors                 varchar(10000)      default ''                              comment '祖级列表',
   leader                    varchar(20)         default ''                              comment '负责人',
@@ -47,7 +47,7 @@ create table sys_post
 (
   post_id                   bigint              not null                                comment '岗位Id',
   dept_id		            bigint	            not null                                comment '部门Id',
-  post_code                 varchar(64)         not null                                comment '岗位编码',
+  post_code                 varchar(64)         default null                            comment '岗位编码',
   post_name                 varchar(50)         not null                                comment '岗位名称',
   sort                      tinyint             not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
@@ -79,7 +79,7 @@ create table sys_user (
   user_id                   bigint	            not null                                comment '用户Id',
   dept_id                   bigint	            not null                                comment '部门Id',
   post_id		            bigint	            not null                                comment '职位Id',
-  user_code                 varchar(64)         not null                                comment '用户编码',
+  user_code                 varchar(64)         default null                            comment '用户编码',
   user_name                 varchar(30)         not null                                comment '用户账号',
   nick_name                 varchar(30)         not null                                comment '用户昵称',
   user_type                 varchar(2)          default '01'                            comment '用户类型（00超级管理员 01系统用户）',
