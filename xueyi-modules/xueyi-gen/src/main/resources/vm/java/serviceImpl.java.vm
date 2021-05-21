@@ -102,6 +102,21 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     }
 
     /**
+     * 删除${functionName}信息
+     *
+     * @param ${className} ${functionName}
+     * @return 结果
+     */
+    @Override
+    public int delete${ClassName}ById(${ClassName} ${className})
+    {
+        #if($table.sub)
+                ${className}Mapper.delete${subClassName}By${AttrName}(${className});
+        #end
+        return ${className}Mapper.delete${ClassName}ById(${className});
+    }
+
+    /**
      * 批量删除${functionName}
      * 
      * @param ${className} ${functionName}
@@ -117,20 +132,5 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
         ${className}Mapper.delete${subClassName}By${AttrName}s(${className});
 #end
         return ${className}Mapper.delete${ClassName}ByIds(${className});
-    }
-
-    /**
-     * 删除${functionName}信息
-     * 
-     * @param ${className} ${functionName}
-     * @return 结果
-     */
-    @Override
-    public int delete${ClassName}ById(${ClassName} ${className})
-    {
-#if($table.sub)
-        ${className}Mapper.delete${subClassName}By${AttrName}(${className});
-#end
-        return ${className}Mapper.delete${ClassName}ById(${className});
     }
 }

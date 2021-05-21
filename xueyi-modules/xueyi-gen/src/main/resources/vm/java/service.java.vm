@@ -43,18 +43,18 @@ public interface I${ClassName}Service
     public int update${ClassName}(${ClassName} ${className});
 
     /**
+     * 删除${functionName}信息
+     *
+     * @param ${className} ${functionName}
+     * @return 结果
+     */
+    public int delete${ClassName}ById(${ClassName} ${className});
+
+    /**
      * 批量删除${functionName}
      * 
      * @param ${className} ${functionName}
      * @return 结果
      */
     public int delete${ClassName}ByIds(${ClassName} ${className});
-
-    /**
-     * 删除${functionName}信息
-     * 
-     * @param ${className} ${functionName}
-     * @return 结果
-     */
-    public int delete${ClassName}ById(${ClassName} ${className});
 }
