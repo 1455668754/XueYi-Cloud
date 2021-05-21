@@ -107,7 +107,7 @@ public class ${ClassName}Controller extends BaseController
      */
     @PreAuthorize(hasPermi = "${permissionPrefix}:remove")
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
-	@DeleteMapping
+    @DeleteMapping
     public AjaxResult remove(@RequestBody ${ClassName} ${className})
     {
         return toAjax(${className}Service.delete${ClassName}ByIds(${className}));

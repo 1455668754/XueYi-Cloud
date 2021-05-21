@@ -166,6 +166,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 #if($table.sub)
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
+
     <delete id="delete${subClassName}By${AttrName}s" parameterType="${ClassName}">
         delete from ${subTableName}
         where ${pkColumn.columnName} in
