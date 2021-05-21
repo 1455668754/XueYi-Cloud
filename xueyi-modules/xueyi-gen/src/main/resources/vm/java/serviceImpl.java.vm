@@ -1,17 +1,12 @@
 package ${packageName}.service.impl;
 
 import java.util.List;
-#foreach ($column in $columns)
-#if($column.javaField == 'createTime' || $column.javaField == 'updateTime')
-import com.xueyi.common.core.utils.DateUtils;
-#break
-#end
-#end
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 #if($table.sub)
 import java.util.ArrayList;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.datascope.annotation.DataScope;
 import org.springframework.transaction.annotation.Transactional;
 import ${packageName}.domain.${subClassName};
 #end
@@ -20,10 +15,9 @@ import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
 
 /**
- * ${functionName}Service业务层处理
+ * ${functionName} 业务层处理
  * 
  * @author ${author}
- * @date ${datetime}
  */
 @Service
 public class ${ClassName}ServiceImpl implements I${ClassName}Service 
@@ -34,13 +28,13 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     /**
      * 查询${functionName}
      * 
-     * @param ${pkColumn.javaField} ${functionName}ID
+     * @param ${className} ${functionName}
      * @return ${functionName}
      */
     @Override
-    public ${ClassName} select${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField})
+    public ${ClassName} select${ClassName}ById(${ClassName} ${className})
     {
-        return ${className}Mapper.select${ClassName}ById(${pkColumn.javaField});
+        return ${className}Mapper.select${ClassName}ById(${className});
     }
 
     /**
@@ -61,20 +55,22 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
      * @param ${className} ${functionName}
      * @return 结果
      */
+    @Override
 #if($table.sub)
     @Transactional
+    @DataScope(ueAlias = "empty")
 #end
-    @Override
     public int insert${ClassName}(${ClassName} ${className})
     {
-#foreach ($column in $columns)
-#if($column.javaField == 'createTime')
-        ${className}.setCreateTime(DateUtils.getNowDate());
-#end
-#end
 #if($table.sub)
         int rows = ${className}Mapper.insert${ClassName}(${className});
-        insert${subClassName}(${className});
+        if (${className}.${subClassName}.size() > 0)
+        {
+            #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
+            //获取生成雪花Id，并赋值给主键，加入至子表对应外键中
+            ${className}.set${pkColumn.javaField}(${className}.getId())
+            ${className}Mapper.batch${subClassName}(${className});
+        }
         return rows;
 #else
         return ${className}Mapper.insert${ClassName}(${className});
@@ -93,14 +89,12 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     @Override
     public int update${ClassName}(${ClassName} ${className})
     {
-#foreach ($column in $columns)
-#if($column.javaField == 'updateTime')
-        ${className}.setUpdateTime(DateUtils.getNowDate());
-#end
-#end
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${subTableFkClassName}(${className}.get${pkColumn.capJavaField}());
-        insert${subClassName}(${className});
+        ${className}Mapper.delete${subClassName}By${pkColumn.javaField}(${className});
+        if (${className}.${subClassName}.size() > 0)
+        {
+            ${className}Mapper.batch${subClassName}(${className});
+        }
 #end
         return ${className}Mapper.update${ClassName}(${className});
     }
@@ -108,59 +102,33 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     /**
      * 批量删除${functionName}
      * 
-     * @param ${pkColumn.javaField}s 需要删除的${functionName}ID
+     * @param ${className} ${functionName}
      * @return 结果
      */
 #if($table.sub)
     @Transactional
 #end
     @Override
-    public int delete${ClassName}ByIds(${pkColumn.javaType}[] ${pkColumn.javaField}s)
+    public int delete${ClassName}ByIds(${ClassName} ${className})
     {
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${subTableFkClassName}s(${pkColumn.javaField}s);
+        ${className}Mapper.delete${subClassName}By${pkColumn.javaField}s(${className});
 #end
-        return ${className}Mapper.delete${ClassName}ByIds(${pkColumn.javaField}s);
+        return ${className}Mapper.delete${ClassName}ByIds(${className});
     }
 
     /**
      * 删除${functionName}信息
      * 
-     * @param ${pkColumn.javaField} ${functionName}ID
+     * @param ${className} ${functionName}
      * @return 结果
      */
     @Override
-    public int delete${ClassName}ById(${pkColumn.javaType} ${pkColumn.javaField})
+    public int delete${ClassName}ById(${ClassName} ${className})
     {
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${subTableFkClassName}(${pkColumn.javaField});
+        ${className}Mapper.delete${subClassName}By${pkColumn.javaField}(${className});
 #end
-        return ${className}Mapper.delete${ClassName}ById(${pkColumn.javaField});
+        return ${className}Mapper.delete${ClassName}ById(${className});
     }
-#if($table.sub)
-
-    /**
-     * 新增${subTable.functionName}信息
-     * 
-     * @param ${className} ${functionName}对象
-     */
-    public void insert${subClassName}(${ClassName} ${className})
-    {
-        List<${subClassName}> ${subclassName}List = ${className}.get${subClassName}List();
-        Long ${pkColumn.javaField} = ${className}.get${pkColumn.capJavaField}();
-        if (StringUtils.isNotNull(${subclassName}List))
-        {
-            List<${subClassName}> list = new ArrayList<${subClassName}>();
-            for (${subClassName} ${subclassName} : ${subclassName}List)
-            {
-                ${subclassName}.set${subTableFkClassName}(${pkColumn.javaField});
-                list.add(${subclassName});
-            }
-            if (list.size() > 0)
-            {
-                ${className}Mapper.batch${subClassName}(list);
-            }
-        }
-    }
-#end
 }
