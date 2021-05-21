@@ -16,7 +16,6 @@ import com.xueyi.common.core.web.domain.TreeEntity;
  * ${functionName}对象 ${tableName}
  * 
  * @author ${author}
- * @date ${datetime}
  */
 #if($table.crud || $table.sub)
 #set($Entity="BaseEntity")
@@ -28,6 +27,7 @@ public class ${ClassName} extends ${Entity}
     private static final long serialVersionUID = 1L;
 
 #foreach ($column in $columns)
+#if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'createBy' && $column.javaField != 'createTime' && $column.javaField != 'updateBy' && $column.javaField != 'updateTime' && $column.javaField != 'sort' && $column.javaField != 'remark' && $column.javaField != 'delFlag' )
 #if(!$table.isSuperColumn($column.javaField))
     /** $column.columnComment */
 #if($column.list)
@@ -50,6 +50,7 @@ public class ${ClassName} extends ${Entity}
 
 #end
 #end
+#end
 #if($table.sub)
     /** $table.subTable.functionName信息 */
     private List<${subClassName}> ${subclassName}List;
@@ -57,6 +58,7 @@ public class ${ClassName} extends ${Entity}
 #end
 #foreach ($column in $columns)
 #if(!$table.isSuperColumn($column.javaField))
+#if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'createBy' && $column.javaField != 'createTime' && $column.javaField != 'updateBy' && $column.javaField != 'updateTime' && $column.javaField != 'sort' && $column.javaField != 'remark' && $column.javaField != 'delFlag' )
 #if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
 #set($AttrName=$column.javaField)
 #else
@@ -71,6 +73,7 @@ public class ${ClassName} extends ${Entity}
     {
         return $column.javaField;
     }
+#end
 #end
 #end
 
@@ -90,12 +93,22 @@ public class ${ClassName} extends ${Entity}
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
 #foreach ($column in $columns)
+#if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
+#if($column.javaField == 'createBy')
+            .append("createBy", getCreateBy())
+            .append("createName", getCreateName())
+#elseif($column.javaField == 'updateBy')
+            .append("updateBy", getUpdateBy())
+            .append("updateName", getUpdateName())
+#else
 #if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
 #set($AttrName=$column.javaField)
 #else
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
 #end
             .append("${column.javaField}", get${AttrName}())
+#end
+#end
 #end
 #if($table.sub)
             .append("${subclassName}List", get${subClassName}List())
