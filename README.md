@@ -20,8 +20,13 @@
 * 流量控制框架选型Sentinel，分布式事务选型Seata。
 
 ## 在线体验
+- 普通账户
 - 企业账号/员工账号/密码
 - xueYi/admin/admin123
+
+- 超管账户（可增减租户）
+- 企业账号/员工账号/密码
+- administrator/admin/admin123
 
 演示地址：(即将上线)        
 文档地址：http://doc.xinggoushangmao.com/        
