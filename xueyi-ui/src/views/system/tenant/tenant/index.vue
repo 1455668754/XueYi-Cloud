@@ -135,7 +135,7 @@
             <el-radio
               v-for="dict in attributionDatabaseOptions"
               :key="dict.dictValue"
-              :label="parseInt(dict.dictValue)"
+              :label="dict.dictValue"
             >{{dict.dictLabel}}</el-radio>
           </el-radio-group>
         </el-form-item>
