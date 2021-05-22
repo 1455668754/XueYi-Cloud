@@ -34,7 +34,7 @@ create table xy_tenant (
   tenant_name		        varchar(50)	        not null unique	                        comment '租户账号',
   tenant_system_name		varchar(50)	        not null 	                            comment '系统名称',
   tenant_nick		        varchar(50)	        not null 	                            comment '租户名称',
-  tenant_logo		        varchar(100)	    default ''	                            comment '租户logo',
+  tenant_logo		        varchar(1000)	    default ''	                            comment '租户logo',
   tenant_name_frequency     tinyint             default 0                               comment '租户账号修改次数',
   sort                      tinyint             not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
@@ -109,7 +109,7 @@ drop table if exists xy_system;
 create table xy_system (
   system_id		            bigint	            not null                                comment '系统Id',
   system_name		        varchar(50)	        not null	                            comment '系统名称',
-  image_url                 json	            not null 	        	                comment '图片地址',
+  image_url                 varchar(5000)	    default null 	        	            comment '图片地址',
   type		                char(1)	            not null default '1'	                comment '跳转类型(0内部跳转 1外部跳转)',
   route                     varchar(500)        not null	                            comment '跳转路由',
   sort                      tinyint             not null default 0                      comment '显示顺序',
