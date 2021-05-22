@@ -85,10 +85,10 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
      * @param ${className} ${functionName}
      * @return 结果
      */
+    @Override
 #if($table.sub)
     @Transactional
 #end
-    @Override
     public int update${ClassName}(${ClassName} ${className})
     {
 #if($table.sub)
@@ -108,6 +108,9 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
      * @return 结果
      */
     @Override
+#if($table.sub)
+    @Transactional
+#end
     public int delete${ClassName}ById(${ClassName} ${className})
     {
 #if($table.sub)
@@ -122,10 +125,10 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
      * @param ${className} ${functionName}
      * @return 结果
      */
+    @Override
 #if($table.sub)
     @Transactional
 #end
-    @Override
     public int delete${ClassName}ByIds(${ClassName} ${className})
     {
 #if($table.sub)
