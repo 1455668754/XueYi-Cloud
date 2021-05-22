@@ -23,6 +23,26 @@
         ${params.dataScope}
     </select>
 
+    <select id="selectSystemMenuListOnlyChild" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">
+        select rsm.role_id, rsm.system_menu_id
+        from sys_role_system_menu rsm
+        left join (
+        select sm1.menu_id as menu_id
+        from sys_menu sm1
+        left join sys_menu sm2 on sm2.parent_id = sm1.menu_id
+        where sm2.parent_id is null
+        ) m on m.menu_id = rsm.system_menu_id
+        left join (
+        select xs.system_id as system_id
+        from xy_system xs
+        left join sys_menu sm on sm.system_id = xs.system_id
+        where sm.system_id is null
+        ) s on s.system_id = rsm.system_menu_id
+        where ( m.menu_id is not null or s.system_id is not null ) and rsm.role_id = #{search.roleId}
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
     <select id="checkSystemMenuExistRole" parameterType="com.xueyi.system.api.utilTool.SysSearch"
             resultType="java.lang.Integer">
         select count(1) from sys_role_system_menu rsm

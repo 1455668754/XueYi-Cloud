@@ -89,7 +89,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public List<SysRoleSystemMenu> selectMenuScopeById(Long roleId){
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", roleId);
-        return roleSystemMenuMapper.selectSystemMenuList(search);//@param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
+        return roleSystemMenuMapper.selectSystemMenuListOnlyChild(search);//@param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
     }
 
     /**

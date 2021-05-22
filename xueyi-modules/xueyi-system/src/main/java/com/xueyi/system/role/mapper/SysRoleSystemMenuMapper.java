@@ -24,6 +24,17 @@ public interface SysRoleSystemMenuMapper {
     public List<SysRoleSystemMenu> selectSystemMenuList(SysSearch search);
 
     /**
+     * 查询系统-菜单集合
+     * 访问控制 rsm 租户查询
+     * 仅获取没有子集的菜单或者系统信息
+     *
+     * @param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
+     * @return 结果
+     */
+    @DataScope(eAlias = "rsm")
+    public List<SysRoleSystemMenu> selectSystemMenuListOnlyChild(SysSearch search);
+
+    /**
      * 查询系统-菜单使用数量
      * 访问控制 rsm 租户查询
      *

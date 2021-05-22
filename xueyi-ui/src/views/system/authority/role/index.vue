@@ -116,7 +116,6 @@
       <el-table-column label="角色编码" prop="roleCode" width="150" align="center"/>
       <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" width="150" align="center"/>
       <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" width="150" align="center"/>
-      <el-table-column label="显示顺序" prop="sort" width="100" align="center"/>
       <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
           <el-switch
@@ -592,17 +591,10 @@ export default {
       const menuScope = this.getMenuScope(row.roleId);
       getRole(row.roleId).then(response => {
         this.form = response.data;
-        this.openMenuScope = true;
-        this.$nextTick(() => {
           menuScope.then(res => {
-            const checkedKeys=Array.from(res.data, x => x.systemMenuId);
-            checkedKeys.forEach((v) => {
-              this.$nextTick(()=>{
-                this.$refs.systemMenu.setChecked(v, true ,false);
-              })
-            })
+            this.$refs.systemMenu.setCheckedKeys(Array.from(res.data, x => x.systemMenuId));
           });
-        });
+        this.openMenuScope = true;
         this.title = "分配菜单权限";
       });
     },
