@@ -186,7 +186,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="batch${subClassName}" parameterType="${ClassName}">
         insert into ${subTableName}(#set($commaBatchId=0)#foreach($column in $subTable.columns)#if($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')#else#if($commaBatchId == 1),#end#if($commaBatchId == 0)#set($commaBatchId = 1)#end $column.columnName#end#end) values
-		<foreach item="item" index="index" collection="list" separator=",">
+		<foreach item="item" index="index" collection="${subclassName}List" separator=",">
             (#set($commaBatch=0)#foreach($column in $subTable.columns)#if($column.columnName != 'create_time' && $column.columnName != 'update_time' && $column.columnName != 'update_by' && $column.columnName != 'del_flag')#if($column.columnName == 'tenant_id')#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{enterpriseId}#elseif($column.columnName == $pkColumn.columnName || $column.columnName == 'create_by' || $column.columnName == 'library_id' || $column.columnName == 'site_id' || $column.columnName == 'system_id')#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{$column.javaField}#else#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{item.$column.javaField}#end#end#end)
         </foreach>
     </insert>
