@@ -29,7 +29,8 @@
                           :on-success="handleFileSuccess"
                           :on-error="handleFileError"
                           :show-file-list="false">
-                          <el-button slot="trigger" size="medium" icon="el-icon-upload2" :loading="upload.isUploading">直接上传
+                          <el-button slot="trigger" size="medium" icon="el-icon-upload2" :loading="upload.isUploading">
+                            直接上传
                           </el-button>
                         </el-upload>
                       </el-col>
@@ -37,7 +38,7 @@
                         <el-button class="hidden-xs-only" size="medium" icon="el-icon-folder-add"
                                    @click="handleAddFolder"
                                    :loading="upload.isUploading"
-                                   >新增文件夹
+                        >新增文件夹
                         </el-button>
                       </el-col>
                     </el-row>
@@ -74,7 +75,8 @@
                           </el-image>
                           <svg-icon slot="prefix" icon-class="xy-cancel"
                                     :class="item.hiddenVisible?'folder-cancel image-hand':'folder-cancel'"
-                                    v-if="item.hiddenVisible" @click="imageDelete(0,item,index)" v-hasPermi="['system:material:remove']"/>
+                                    v-if="item.hiddenVisible" @click="imageDelete(0,item,index)"
+                                    v-hasPermi="['system:material:remove']"/>
                         </div>
                         <div class="image-box">
                           <el-input
@@ -104,7 +106,8 @@
                           </div>
                           <svg-icon slot="prefix" icon-class="xy-cancel"
                                     :class="item.hiddenVisible?'image-cancel image-hand':'image-cancel'"
-                                    v-if="item.hiddenVisible" @click="imageDelete(1, item, index)" v-hasPermi="['system:material:remove']"/>
+                                    v-if="item.hiddenVisible" @click="imageDelete(1, item, index)"
+                                    v-hasPermi="['system:material:remove']"/>
                         </div>
                         <div class="image-box">
                           <el-input
@@ -216,6 +219,8 @@ export default {
     return {
       //活跃单元
       activeName: "first",
+      //list接收转换参数
+      imageList: [],
       // 上传参数
       upload: {
         // 是否禁用上传
@@ -235,7 +240,7 @@ export default {
         searchVisible: true,
         hiddenVisible: false
       },
-      materialFolder: null,
+      materialFolder: {children: [], materialFolder: []},
       choiceList: [],
       breadcrumbList: [],
       form: {
@@ -248,7 +253,7 @@ export default {
     this.init()
   },
   watch: {
-    list(val, oldVal) {//普通的watch监听
+    list(val, oldVal) {//监听imageBox控件是否执行顺序调整
       this.init();
     }
   },
@@ -260,12 +265,13 @@ export default {
     },
     creatChoiceList() {
       this.choiceList = [];
+      this.imageList = JSON.parse(JSON.stringify(this.list));
       if (this.list !== null && this.clear !== true) {
-        for (let i = 0; i < this.list.length; i++) {
+        for (let i = 0; i < this.imageList.length; i++) {
           this.choiceList.push({
-            "materialId": this.list[i].materialId,
-            "materialUrl": this.list[i].materialUrl,
-            "materialOriginalUrl": this.list[i].materialOriginalUrl,
+            "materialId": this.imageList[i].materialId,
+            "materialUrl": this.imageList[i].materialUrl,
+            "materialOriginalUrl": this.imageList[i].materialOriginalUrl,
             "hiddenVisible": false
           });
         }
@@ -432,9 +438,9 @@ export default {
     },
     /** 确定 */
     onSubmit() {
-      this.list = []
+      this.imageList = []
       for (let i = 0; i < this.choiceList.length; i++) {
-        this.list.push({
+        this.imageList.push({
           "materialId": this.choiceList[i].materialId,
           "materialNick": this.choiceList[i].materialNick,
           "materialUrl": this.choiceList[i].materialUrl,
@@ -442,7 +448,7 @@ export default {
           "hiddenVisible": false
         });
       }
-      this.$emit('change', this.list);
+      this.$emit('change', JSON.parse(JSON.stringify(this.imageList)));
       this.$emit('update:visible', false);
     },
     /** 关闭 */

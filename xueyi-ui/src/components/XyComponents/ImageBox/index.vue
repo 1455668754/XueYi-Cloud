@@ -44,7 +44,7 @@ export default {
     /** 传入list参数 */
     list: {
       type: String,
-      default: []
+      default: null
     },
     /** 图片上传最大数量参数 默认为 1 */
     width: {
@@ -87,7 +87,12 @@ export default {
     init() {
       this.imageList = [];
       if (this.list !== null && this.list !== '') {
-        this.imageList = JSON.parse(this.list);
+        const newList= JSON.parse(this.list);
+        if(Array.isArray(newList)){
+          this.imageList = newList;
+        }else{
+          this.imageList.push(newList);
+        }
       }
     },
     imageCancel(item) {
@@ -98,7 +103,13 @@ export default {
       }
     },
     changeList() {
-      this.$emit('change', JSON.stringify(this.imageList));
+      if(this.max === 1){
+        this.$emit('change', JSON.stringify(this.imageList[0]));
+      }else if(this.max > 1){
+        this.$emit('change', JSON.stringify(this.imageList));
+      }else{
+        this.$emit('change',null);
+      }
     },
     imageChoiceClick() {
       this.imageChoice.visible = true
@@ -108,7 +119,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .main-box {
   display: inline-flex;
 
