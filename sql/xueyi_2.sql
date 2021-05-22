@@ -318,10 +318,10 @@ values
               -- 二级菜单
               (63000, 0, 0, 60000, '系统接口', 'http://localhost:8080/swagger-ui.html', '', 'C', '0', 'tool:swagger:list',     'xy_swagger', 3, 0, '系统接口菜单'),
        -- 一级菜单
-       (70000, 0, -1, 0, '租户管理', 'tool',       null, 'M', '0', '', 'xy_tool',     6, 0, '租户管理目录'),
+       (70000, 0, -1, 0, '租户管理', 'tenant',       null, 'M', '0', '', 'xy_tenant',     6, 0, '租户管理目录'),
               -- 二级菜单
-              (71000, 0, -1, 70000, '租户管理', 'tenant',    'system/tenant/tenant/index',  'C', '0', 'system:tenant:list',    'xy_code',    2, 0, '租户管理菜单'),
-                                   -- 代码生成按钮
+              (71000, 0, -1, 70000, '租户管理', 'tenant',    'system/tenant/tenant/index',  'C', '0', 'system:tenant:list',    'xy_tenant',    1, 0, '租户管理菜单'),
+                                   -- 租户管理按钮
                                    (71001, 0, -1, 71000, '租户查询', '#', '', 'F', '0', 'system:tenant:query',          '#', 1, 0, ''),
                                    (71002, 0, -1, 71000, '租户新增', '#', '', 'F', '0', 'system:tenant:add',            '#', 2, 0, ''),
                                    (71003, 0, -1, 71000, '租户修改', '#', '', 'F', '0', 'system:tenant:edit',           '#', 3, 0, ''),
