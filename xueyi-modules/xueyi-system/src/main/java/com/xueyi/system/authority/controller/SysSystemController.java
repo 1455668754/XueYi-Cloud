@@ -44,6 +44,7 @@ public class SysSystemController extends BaseController {
     /**
      * 查询子系统模块列表
      */
+    @PreAuthorize(hasPermi = "system:system:list")
     @GetMapping("/list")
     public TableDataInfo list(SysSystem sysSystem) {
         startPage();

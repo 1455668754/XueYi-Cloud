@@ -59,7 +59,6 @@ public class SysEnterpriseController extends BaseController {
     /**
      * 获取租户信息
      */
-    @PreAuthorize(hasPermi = "system:enterprise:list")
     @GetMapping("/profile")
     public AjaxResult profile() {
         return AjaxResult.success(enterpriseService.selectEnterpriseById());
