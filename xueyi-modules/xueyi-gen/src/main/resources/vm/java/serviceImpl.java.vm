@@ -69,7 +69,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 #if(!$pkColumn.increment)
             /**获取生成雪花Id，并赋值给主键，加入至子表对应外键中*/
-            ${className}.set${AttrName}(${className}.getId())
+            ${className}.set${AttrName}(${className}.getId());
 #end
             ${className}Mapper.batch${subClassName}(${className});
         }
@@ -110,9 +110,9 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     @Override
     public int delete${ClassName}ById(${ClassName} ${className})
     {
-        #if($table.sub)
-                ${className}Mapper.delete${subClassName}By${AttrName}(${className});
-        #end
+#if($table.sub)
+        ${className}Mapper.delete${subClassName}By${AttrName}(${className});
+#end
         return ${className}Mapper.delete${ClassName}ById(${className});
     }
 
