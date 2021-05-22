@@ -94,8 +94,8 @@
         <template slot-scope="scope">
           <el-image
             style="width: 80px; height: 80px"
-            :src="item.materialUrl"
-            fit="contain" v-for="item in JSON.parse(scope.row.imageUrl)"/>
+            :src="scope.row.imageUrl != null?JSON.parse(scope.row.imageUrl).materialUrl:null"
+            fit="contain"/>
         </template>
       </el-table-column>
       <el-table-column label="跳转类型" align="center" prop="type" v-if="columns[2].visible"
@@ -190,7 +190,7 @@
           </el-col>
         </el-row>
         <el-form-item label="系统图片">
-          <ImageBox v-model="form.imageUrl" max="1" :clear="true"/>
+          <ImageBox v-model="form.imageUrl" :clear="true"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -200,8 +200,8 @@
     </el-dialog>
   </div>
 </template>
-
 <script>
+
 import {listSystem, getSystem, delSystem, addSystem, updateSystem, changeSystemStatus} from "@/api/system/system";
 import ImageBox from "@/components/XyComponents/ImageBox";
 
@@ -308,7 +308,7 @@ export default {
       this.form = {
         systemId: null,
         systemName: null,
-        imageUrl: [],
+        imageUrl: null,
         type: "0",
         route: null,
         sort: null,
