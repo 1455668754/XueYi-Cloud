@@ -18,6 +18,16 @@ public interface I${ClassName}Service
      */
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
 
+#if($table.tree)
+    /**
+     * 查询${functionName}树选项列表
+     *
+     * @param ${className} ${functionName}
+     * @return ${functionName}集合
+     */
+    public List<${ClassName}> select${ClassName}Tree(${ClassName} ${className});
+#end
+
     /**
      * 查询${functionName}
      * 
@@ -49,6 +59,7 @@ public interface I${ClassName}Service
      * @return 结果
      */
     public int delete${ClassName}ById(${ClassName} ${className});
+#if(!$table.tree)
 
     /**
      * 批量删除${functionName}
@@ -57,4 +68,5 @@ public interface I${ClassName}Service
      * @return 结果
      */
     public int delete${ClassName}ByIds(${ClassName} ${className});
+#end
 }

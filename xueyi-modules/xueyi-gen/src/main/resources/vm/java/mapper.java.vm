@@ -24,6 +24,32 @@ public interface ${ClassName}Mapper
     @DataScope(eAlias = "e")
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
 
+#if($table.tree)
+    /**
+     * 查询${functionName}树选项列表
+     * 访问控制 e 租户查询
+     *
+     * @param ${className} ${functionName}
+     * @return ${functionName}集合
+     */
+    @DataScope(eAlias = "e")
+    public List<${ClassName}> select${ClassName}Tree(${ClassName} ${className});
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+
+    /**
+     * 根据Id查询${functionName}子集
+     * 访问控制 e 租户查询
+     *
+     * @param ${className} ${functionName}
+     * @return ${functionName}集合
+     */
+    @DataScope(eAlias = "e")
+    public List<${ClassName}> selectChildrenById(${ClassName} ${className});
+#end
+#end
+
+#end
     /**
      * 查询${functionName}
      * 访问控制 e 租户查询
@@ -60,6 +86,22 @@ public interface ${ClassName}Mapper
      */
     @DataScope(ueAlias = "empty")
     public int update${ClassName}(${ClassName} ${className});
+#if($table.tree)
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+
+    /**
+     * 修改${functionName}子集祖籍信息
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param ${className} ${functionName} | List<${ClassName}> children
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int updateChildrenAncestors(${ClassName} ${className});
+#end
+#end
+#end
 
     /**
      * 删除${functionName}
@@ -80,7 +122,22 @@ public interface ${ClassName}Mapper
      */
     @DataScope(ueAlias = "empty")
     public int delete${ClassName}ByIds(${ClassName} ${className});
-#if($table.sub)
+#if($table.tree)
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+
+    /**
+     * 根据Id删除${functionName}子集
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param ${className} ${functionName}
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int deleteChildrenById(${ClassName} ${className});
+#end
+#end
+#elseif($table.sub)
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 
     /**

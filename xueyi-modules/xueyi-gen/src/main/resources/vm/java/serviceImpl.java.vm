@@ -37,6 +37,20 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
         return ${className}Mapper.select${ClassName}List(${className});
     }
 
+#if($table.tree)
+    /**
+     * 查询${functionName}树选项列表
+     *
+     * @param ${className} ${functionName}
+     * @return ${functionName}
+     */
+    @Override
+    public List<${ClassName}> select${ClassName}Tree(${ClassName} ${className})
+    {
+        return ${className}Mapper.select${ClassName}Tree(${className});
+    }
+#end
+
     /**
      * 查询${functionName}
      * 
@@ -74,6 +88,20 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
             ${className}Mapper.batch${subClassName}(${className});
         }
         return rows;
+#elseif($table.tree)
+#set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+        if(!${className}.getParentId.equals(0)){
+            ${ClassName} search = new ${ClassName}();
+            search.set${AttrName}(${className}.getParentId());
+            ${ClassName} newParent = ${className}Mapper.select${ClassName}ById(search);
+            ${className}.setAncestors(newParent.getAncestors());
+        }else{
+            ${className}.setAncestors("0");
+        }
+#end
+#end
 #else
         return ${className}Mapper.insert${ClassName}(${className});
 #end
@@ -97,6 +125,33 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
         {
             ${className}Mapper.batch${subClassName}(${className});
         }
+#elseif($table.tree)
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+        ${ClassName} search = new ${ClassName}();
+        search.set${AttrName}(${className}.get${AttrName}();
+        ${ClassName} old${ClassName} = ${className}Mapper.select${ClassName}ById(search);
+        if(!StringUtils.equals(old${ClassName}.getParentId()),${className}.getParentId())){
+            String newAncestors, oldAncestors;
+            if(StringUtils.equals(old${ClassName}.getParentId(),0)){
+                oldAncestors = "0";
+            }else{
+                search.set${AttrName}(old${className}.getParentId());
+                ${ClassName} oldParent = ${className}Mapper.select${ClassName}ById(search);
+                oldAncestors = oldParent.getAncestors();
+            }
+            if(StringUtils.equals(${ClassName}.getParentId(),0)){
+                newAncestors = "0";
+            }else{
+                search.set${AttrName}(${className}.getParentId();
+                ${ClassName} newParent = ${className}Mapper.select${ClassName}ById(search);
+                newAncestors = newParent.getAncestors();
+            }
+            ${className}.setAncestors(newAncestors);
+            update${ClassName}Children(${className}.get${AttrName}(), newAncestors, oldAncestors);
+        }
+#end
+#end
 #end
         return ${className}Mapper.update${ClassName}(${className});
     }
@@ -113,11 +168,18 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
 #end
     public int delete${ClassName}ById(${ClassName} ${className})
     {
-#if($table.sub)
+#if($table.tree)
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+        ${className}Mapper.deleteChildrenById(${className});
+#end
+#end
+#elseif($table.sub)
         ${className}Mapper.delete${subClassName}By${AttrName}(${className});
 #end
         return ${className}Mapper.delete${ClassName}ById(${className});
     }
+#if(!$table.tree)
 
     /**
      * 批量删除${functionName}
@@ -136,4 +198,31 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
 #end
         return ${className}Mapper.delete${ClassName}ByIds(${className});
     }
+#end
+#if($table.tree)
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+    /**
+    * 修改子元素关系
+    *
+    * @param ${pkColumn.javaField}  被修改的${functionName}Id
+    * @param newAncestors           新的父Id集合
+    * @param oldAncestors           旧的父Id集合
+    */
+    public void updateDeptChildren(Long ${pkColumn.javaField}, String newAncestors, String oldAncestors) {
+        ${ClassName} searchChild = new ${ClassName}();
+        searchChild.set${AttrName}(${pkColumn.javaField});
+        List<${ClassName}> children = ${className}Mapper.selectChildrenById(searchChild);
+        if (children.size() > 0) {
+            for (${ClassName} child : children) {
+                child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
+            }
+            searchChild.set${AttrName}(null);
+            searchChild.getParams().put("children", children);
+            ${className}Mapper.updateChildrenAncestors(searchChild);
+        }
+    }
+#end
+#end
+#end
 }

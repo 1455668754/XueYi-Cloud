@@ -13,6 +13,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #elseif($column.javaField == 'updateBy')
         <result property="updateBy"   		column="update_by"   />
         <result property="updateName"   	column="update_name" />
+#elseif($table.sub && $column.javaField == 'parentId')
+        <result property="parentId"   		column="parent_id"   />
+        <result property="parentName"   	column="parent_name" />
 #else
         <result property="${column.javaField}"    column="${column.columnName}"    />
 #end
@@ -42,14 +45,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 #end
 
+#if($table.tree)
     <sql id="selectVo">
         select#set($commaVo=0)#foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($commaVo == 1),#end#if($commaVo == 0)#set($commaVo=1)#end e.$column.columnName#end#end
 
         from ${tableName} e
     </sql>
 
+    <sql id="treeVo">
+        select#set($commaVo=0)#foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($commaVo == 1),#end#if($commaVo == 0)#set($commaVo=1)#end e.$column.columnName#end#end
+        #set($treeVo=0)#foreach ($column in $columns)#if($column.columnName == 'parent_id' || $column.columnName == 'name')#set($treeVo=$treeVo+1)#if($treeVo==2), pe.name as parent_name#end#end#end
+
+        from ${tableName} e
+        left join ${tableName} pe on pe.$pkColumn.columnName = e.$pkColumn.columnName
+    </sql>
+#else
+    <sql id="selectVo">
+        select#set($commaVo=0)#foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($commaVo == 1),#end#if($commaVo == 0)#set($commaVo=1)#end e.$column.columnName#end#end
+
+        from ${tableName} e
+    </sql>
+#end
+
     <select id="select${ClassName}List" parameterType="${ClassName}" resultMap="${ClassName}Result">
+#if($table.tree)
+        <include refid="treeVo"/>
+#else
         <include refid="selectVo"/>
+#end
         where 1 = 1
 #foreach($column in $columns)
 #if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
@@ -60,21 +83,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
 #if($column.query)
 #if($column.queryType == "EQ")
-            <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName = #{$javaField}</if>
+        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName = #{$javaField}</if>
 #elseif($queryType == "NE")
-            <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName != #{$javaField}</if>
+        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName != #{$javaField}</if>
 #elseif($queryType == "GT")
-            <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName &gt; #{$javaField}</if>
+        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName &gt; #{$javaField}</if>
 #elseif($queryType == "GTE")
-            <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName &gt;= #{$javaField}</if>
+        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName &gt;= #{$javaField}</if>
 #elseif($queryType == "LT")
-            <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName &lt; #{$javaField}</if>
+        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName &lt; #{$javaField}</if>
 #elseif($queryType == "LTE")
-            <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName &lt;= #{$javaField}</if>
+        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName &lt;= #{$javaField}</if>
 #elseif($queryType == "LIKE")
-            <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName like concat('%', #{$javaField}, '%')</if>
+        <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end"> and e.$columnName like concat('%', #{$javaField}, '%')</if>
 #elseif($queryType == "BETWEEN")
-            <if test="params.begin$AttrName != null and params.begin$AttrName != '' and params.end$AttrName != null and params.end$AttrName != ''"> and e.$columnName between #{params.begin$AttrName} and #{params.end$AttrName}</if>
+        <if test="params.begin$AttrName != null and params.begin$AttrName != '' and params.end$AttrName != null and params.end$AttrName != ''"> and e.$columnName between #{params.begin$AttrName} and #{params.end$AttrName}</if>
 #end
 #end
 #end
@@ -82,7 +105,29 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
-    
+
+#if($table.tree)
+    <select id="select${ClassName}Tree" parameterType="${ClassName}" resultMap="${ClassName}Result">
+        <include refid="selectVo"/>
+        where e.${pkColumn.columnName} != #{${pkColumn.javaField}}#foreach ($column in $columns)#if($column.columnName == 'ancestors') and NOT find_in_set( #{${pkColumn.javaField}} , e.ancestors )#elseif($column.columnName == 'status') and e.status = 0#end#end
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+    <select id="selectChildrenById" parameterType="${ClassName}" resultMap="${ClassName}Result">
+        <include refid="selectVo"/>
+        where find_in_set( #{${pkColumn.javaField}} , e.ancestors )
+
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+#end
+#end
+#end
+
     <select id="select${ClassName}ById" parameterType="${ClassName}" resultMap="#if($table.sub)${ClassName}${subClassName}Result#else${ClassName}Result#end">
 #if($table.crud || $table.tree)
         <include refid="selectVo"/>
@@ -146,6 +191,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ${params.updateScope}
     </update>
 
+#if($table.tree)
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+    <update id="updateChildrenAncestors" parameterType="${ClassName}">
+        update ${tableName} set ancestors =
+        <foreach collection="params.children" item="item" index="index"
+                 separator=" " open="case dept_id" close="end">
+            when #{item.${pkColumn.javaField}} then #{item.ancestors}
+        </foreach>
+        where ${pkColumn.columnName} in
+        <foreach collection="params.children" item="item" index="index"
+                 separator="," open="(" close=")">
+            #{item.${pkColumn.javaField}}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+#end
+#end
+
+#end
     <delete id="delete${ClassName}ById" parameterType="${ClassName}">
         update ${tableName}
         set del_flag = 1
@@ -153,6 +219,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>
+#if(!$table.tree)
 
     <delete id="delete${ClassName}ByIds" parameterType="${ClassName}">
         update ${tableName}
@@ -164,7 +231,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>
-#if($table.sub)
+#end
+#if($table.tree)
+#foreach($column in $columns)
+#if($column.javaField == 'ancestors')
+
+    <delete id="deleteChildrenById" parameterType="${ClassName}">
+        update ${tableName}
+        set del_flag = 1
+        where find_in_set( #{${pkColumn.javaField}} , ancestors )
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+#end
+#end
+#elseif($table.sub)
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 
     <delete id="delete${subClassName}By${AttrName}s" parameterType="${ClassName}">

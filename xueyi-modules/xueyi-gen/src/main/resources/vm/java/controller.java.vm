@@ -57,6 +57,18 @@ public class ${ClassName}Controller extends BaseController
     }
 #end
 
+#if($table.tree)
+    /**
+     * 查询${functionName}树选项列表
+     */
+    @GetMapping("/tree")
+    public AjaxResult tree(${ClassName} ${className})
+    {
+        List<${ClassName}> tree = ${className}Service.select${ClassName}Tree(${className});
+        return AjaxResult.success(tree);
+    }
+#end
+
     /**
      * 导出${functionName}列表
      */
@@ -110,6 +122,6 @@ public class ${ClassName}Controller extends BaseController
     @DeleteMapping
     public AjaxResult remove(@RequestBody ${ClassName} ${className})
     {
-        return toAjax(${className}Service.delete${ClassName}ByIds(${className}));
+        return toAjax(${className}Service.delete${ClassName}ById#if(!$table.tree)s#end(${className}));
     }
 }

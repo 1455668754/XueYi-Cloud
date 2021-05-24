@@ -9,6 +9,17 @@ export function list${BusinessName}(query) {
   })
 }
 
+#if($table.tree)
+// 查询${functionName}列表
+export function tree${BusinessName}(query) {
+  return request({
+    url: '/${moduleName}/${businessName}/tree',
+    method: 'get',
+    params: query
+  })
+}
+#end
+
 // 查询${functionName}详细
 export function get${BusinessName}(query) {
   return request({
