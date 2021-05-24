@@ -10,7 +10,7 @@ export function list${BusinessName}(query) {
 }
 
 #if($table.tree)
-// 查询${functionName}列表
+// 查询${functionName}树选项
 export function tree${BusinessName}(query) {
   return request({
     url: '/${moduleName}/${businessName}/tree',
