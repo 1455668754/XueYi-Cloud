@@ -92,7 +92,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
-        if(!${className}.getParentId.equals(0)){
+        if(!${className}.getParentId().equals(0L)){
             ${ClassName} search = new ${ClassName}();
             search.set${AttrName}(${className}.getParentId());
             ${ClassName} newParent = ${className}Mapper.select${ClassName}ById(search);
@@ -100,6 +100,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
         }else{
             ${className}.setAncestors("0");
         }
+        return ${className}Mapper.insert${ClassName}(${className});
 #end
 #end
 #else
@@ -129,21 +130,21 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
         ${ClassName} search = new ${ClassName}();
-        search.set${AttrName}(${className}.get${AttrName}();
+        search.set${AttrName}(${className}.get${AttrName}());
         ${ClassName} old${ClassName} = ${className}Mapper.select${ClassName}ById(search);
-        if(!StringUtils.equals(old${ClassName}.getParentId()),${className}.getParentId())){
+        if(!old${ClassName}.getParentId().equals(${className}.getParentId())){
             String newAncestors, oldAncestors;
-            if(StringUtils.equals(old${ClassName}.getParentId(),0)){
+            if(old${ClassName}.getParentId().equals(0L)){
                 oldAncestors = "0";
             }else{
-                search.set${AttrName}(old${className}.getParentId());
+                search.set${AttrName}(old${ClassName}.getParentId());
                 ${ClassName} oldParent = ${className}Mapper.select${ClassName}ById(search);
                 oldAncestors = oldParent.getAncestors();
             }
-            if(StringUtils.equals(${ClassName}.getParentId(),0)){
+            if(${className}.getParentId().equals(0L)){
                 newAncestors = "0";
             }else{
-                search.set${AttrName}(${className}.getParentId();
+                search.set${AttrName}(${className}.getParentId());
                 ${ClassName} newParent = ${className}Mapper.select${ClassName}ById(search);
                 newAncestors = newParent.getAncestors();
             }
@@ -205,11 +206,11 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     /**
     * 修改子元素关系
     *
-    * @param ${pkColumn.javaField}  被修改的${functionName}Id
-    * @param newAncestors           新的父Id集合
-    * @param oldAncestors           旧的父Id集合
+    * @param ${pkColumn.javaField}      被修改的${functionName}Id
+    * @param newAncestors               新的父Id集合
+    * @param oldAncestors               旧的父Id集合
     */
-    public void updateDeptChildren(Long ${pkColumn.javaField}, String newAncestors, String oldAncestors) {
+    public void update${ClassName}Children(Long ${pkColumn.javaField}, String newAncestors, String oldAncestors) {
         ${ClassName} searchChild = new ${ClassName}();
         searchChild.set${AttrName}(${pkColumn.javaField});
         List<${ClassName}> children = ${className}Mapper.selectChildrenById(searchChild);

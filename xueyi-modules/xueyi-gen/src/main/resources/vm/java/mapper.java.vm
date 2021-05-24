@@ -112,6 +112,7 @@ public interface ${ClassName}Mapper
      */
     @DataScope(ueAlias = "empty")
     public int delete${ClassName}ById(${ClassName} ${className});
+#if(!$table.tree)
 
     /**
      * 批量删除${functionName}
@@ -122,6 +123,7 @@ public interface ${ClassName}Mapper
      */
     @DataScope(ueAlias = "empty")
     public int delete${ClassName}ByIds(${ClassName} ${className});
+#end
 #if($table.tree)
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
