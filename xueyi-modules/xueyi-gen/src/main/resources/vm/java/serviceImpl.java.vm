@@ -96,7 +96,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
             ${ClassName} search = new ${ClassName}();
             search.set${AttrName}(${className}.getParentId());
             ${ClassName} newParent = ${className}Mapper.select${ClassName}ById(search);
-            ${className}.setAncestors(newParent.getAncestors());
+            ${className}.setAncestors(newParent.getAncestors()+","+newParent.get${AttrName}());
         }else{
             ${className}.setAncestors("0");
         }
@@ -139,14 +139,14 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
             }else{
                 search.set${AttrName}(old${ClassName}.getParentId());
                 ${ClassName} oldParent = ${className}Mapper.select${ClassName}ById(search);
-                oldAncestors = oldParent.getAncestors();
+                oldAncestors = oldParent.getAncestors()+","+oldParent.get${AttrName}();
             }
             if(${className}.getParentId().equals(0L)){
                 newAncestors = "0";
             }else{
                 search.set${AttrName}(${className}.getParentId());
                 ${ClassName} newParent = ${className}Mapper.select${ClassName}ById(search);
-                newAncestors = newParent.getAncestors();
+                newAncestors = newParent.getAncestors()+","+newParent.get${AttrName}();
             }
             ${className}.setAncestors(newAncestors);
             update${ClassName}Children(${className}.get${AttrName}(), newAncestors, oldAncestors);

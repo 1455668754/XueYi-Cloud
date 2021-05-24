@@ -109,7 +109,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #if($table.tree)
     <select id="select${ClassName}Tree" parameterType="${ClassName}" resultMap="${ClassName}Result">
         <include refid="selectVo"/>
-        where e.${pkColumn.columnName} != #{${pkColumn.javaField}}#foreach ($column in $columns)#if($column.columnName == 'ancestors') and NOT find_in_set( #{${pkColumn.javaField}} , e.ancestors )#elseif($column.columnName == 'status') and e.status = 0#end#end
+        where 1 = 1
+        #foreach($cu in $columns)#if($cu.columnName==${pkColumn.columnName})#set($javaField=$cu.javaField)#set($javaType=$cu.javaType)<if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end">and e.${pkColumn.columnName} != #{${pkColumn.javaField}}#foreach ($column in $columns)#if($column.columnName == 'ancestors') and NOT find_in_set( #{${pkColumn.javaField}} , e.ancestors )#elseif($column.columnName == 'status') and e.status = 0#end#end</if> #end#end
 
         <!-- 数据范围过滤 -->
         ${params.dataScope}
@@ -120,7 +121,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectChildrenById" parameterType="${ClassName}" resultMap="${ClassName}Result">
         <include refid="selectVo"/>
         where find_in_set( #{${pkColumn.javaField}} , e.ancestors )
-
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
@@ -197,7 +197,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateChildrenAncestors" parameterType="${ClassName}">
         update ${tableName} set ancestors =
         <foreach collection="params.children" item="item" index="index"
-                 separator=" " open="case dept_id" close="end">
+                 separator=" " open="case ${pkColumn.columnName}" close="end">
             when #{item.${pkColumn.javaField}} then #{item.ancestors}
         </foreach>
         where ${pkColumn.columnName} in
