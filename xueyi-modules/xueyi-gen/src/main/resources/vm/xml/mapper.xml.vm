@@ -196,6 +196,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ${params.updateScope}
     </update>
 
+#if($table.crud || $table.sub)
+#foreach ($co in $columns)
+#if($co.javaField == 'sort')
+    <update id="update${ClassName}Sort" parameterType="${ClassName}">
+        update ${tableName} set sort =
+        <foreach collection="params.Ids" item="item" index="index" separator=" " open="case $pkColumn.columnName" close="end">
+            when #{item.${pkColumn.javaField}} then #{item.sort}
+        </foreach>
+        where $pkColumn.columnName in
+        <foreach collection="params.Ids" item="item" index="index" separator="," open="(" close=")">
+            #{item.${pkColumn.javaField}}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+
+#end
+#end
+#end
 #if($table.tree)
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')

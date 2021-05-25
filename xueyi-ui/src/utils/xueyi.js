@@ -20,12 +20,12 @@ export function addSystem(data) {
 // 数组转对象
 export function updateParamIds(Ids, params, propName) {
   let search;
-  if(params != null){
+  if (params != null) {
     search = params;
-    if(!search.hasOwnProperty('params')){
+    if (!search.hasOwnProperty('params')) {
       search["params"] = {}
     }
-  }else{
+  } else {
     search = {params: {}};
   }
   if (null != Ids && '' != Ids) {
@@ -39,4 +39,29 @@ export function updateParamIds(Ids, params, propName) {
     }
   }
   return search;
+}
+
+// 数组对象排序 | 需有sort参数 | 返回新排序数组 | 仅排序变化数据
+export function sortOrderListOnlyDynamic(newList, oldList, idName) {
+  let returnList = [];
+  let id = idName != null ? idName : 'id';
+  let listNew = JSON.parse(JSON.stringify(newList));
+  for (let i = 0; i < listNew.length; i++) {
+    listNew[i].sort = (i - 128) < 127 ? (i - 128) : 127;
+    for (let j = 0; j < newList.length; j++) {
+      if (listNew[i][id] === newList[j][id] && listNew[i].sort !== newList[j].sort) {
+        returnList.push(listNew[i]);
+      }
+    }
+  }
+  return returnList;
+}
+
+// 数组对象排序 | 需有sort参数 | 返回新排序数组 全部数据
+export function sortOrderList(newList) {
+  let listNew = JSON.parse(JSON.stringify(newList));
+  for (let i = 0; i < listNew.length; i++) {
+    listNew[i].sort = (i - 128) < 127 ? (i - 128) : 127;
+  }
+  return listNew;
 }

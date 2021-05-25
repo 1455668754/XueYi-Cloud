@@ -81,6 +81,18 @@ export function update${BusinessName}(data) {
   })
 }
 
+#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort')
+// 修改${functionName}排序
+export function update${BusinessName}Sort(data) {
+  return request({
+    url: '/${moduleName}/${businessName}/sort',
+    method: 'put',
+  data:#if($method != '') ${method}(data)#else data#end
+
+  })
+}
+
+#end#end#end
 // 删除${functionName}
 export function del${BusinessName}(data) {
   return request({

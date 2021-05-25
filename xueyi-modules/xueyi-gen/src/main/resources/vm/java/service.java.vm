@@ -52,6 +52,20 @@ public interface I${ClassName}Service
      */
     public int update${ClassName}(${ClassName} ${className});
 
+#if($table.crud || $table.sub)
+#foreach ($column in $columns)
+#if($column.javaField == 'sort')
+    /**
+     * 修改${functionName}排序
+     *
+     * @param ${className} ${functionName}
+     * @return 结果
+     */
+    public int update${ClassName}Sort(${ClassName} ${className});
+
+#end
+#end
+#end
     /**
      * 删除${functionName}信息
      *

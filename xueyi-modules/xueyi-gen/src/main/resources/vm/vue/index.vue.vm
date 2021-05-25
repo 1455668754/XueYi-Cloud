@@ -112,10 +112,25 @@
           v-hasPermi="['${moduleName}:${businessName}:export']"
         >导出</el-button>
       </el-col>
+#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort')
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-sort"
+          size="mini"
+          @click="handleSort"
+          v-show="sortVisible"
+          v-hasPermi="['${moduleName}:${businessName}:edit']"
+        >保存排序</el-button>
+      </el-col>
+#end
+#end
+#end
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="${businessName}List" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="${businessName}List" @selection-change="handleSelectionChange"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') ref="dataTable" row-key="${pkColumn.javaField}"#end#end#end>
       <el-table-column type="selection" width="55" align="center" />
 #foreach($column in $columns)
 #set($javaField=$column.javaField)
@@ -126,20 +141,20 @@
 #set($comment=$column.columnComment)
 #end
 #if($column.pk)
-      <el-table-column label="${comment}" align="center" prop="${javaField}" />
+      <el-table-column label="${comment}" align="center" prop="${javaField}"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag"#end#end#end/>
 #elseif($column.list && $column.htmlType == "datetime")
-      <el-table-column label="${comment}" align="center" prop="${javaField}" width="180">
+      <el-table-column label="${comment}" align="center" prop="${javaField}" width="180"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag"#end#end#end>
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.${javaField}, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
 #elseif($column.list && "" != $column.dictType)
-      <el-table-column label="${comment}" align="center" prop="${javaField}" :formatter="${javaField}Format" />
+      <el-table-column label="${comment}" align="center" prop="${javaField}" :formatter="${javaField}Format"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag"#end#end#end/>
 #elseif($column.list && "" != $javaField)
-      <el-table-column label="${comment}" align="center" prop="${javaField}" />
+      <el-table-column label="${comment}" align="center" prop="${javaField}"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag"#end#end#end/>
 #end
 #end
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') allowDrag#end#end#end">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -375,6 +390,14 @@ export default {
       total: 0,
       // ${functionName}表格数据
       ${businessName}List: [],
+#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort')
+      // ${functionName}表格原始数据
+      old${BusinessName}List: [],
+      // 排序保存按钮显示
+      sortVisible: false,
+#end
+#end
+#end
 #if($table.sub)
       // ${subTable.functionName}表格数据
       ${subclassName}List: [],
@@ -663,7 +686,41 @@ export default {
       this.download('${moduleName}/${businessName}/export', {
         ...this.queryParams
       }, `${moduleName}_${businessName}.xlsx`)
+    }#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort'),
+    /** 保存排序按钮操作 */
+    handleSort(){
+      this.$confirm('是否确认保存新排序?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        let params = this.sortOrderListOnlyDynamic(this.${businessName}List, this.old${BusinessName}List, "${pkColumn.javaField}");
+        if(params.length>0) {
+          return updateTagSort(this.updateParamIds(params);
+        }
+      }).then(() => {
+        this.getList();
+        this.sortVisible = false;
+        this.msgSuccess("保存成功");
+      }).catch((err)=>{})
     }
+#end
+#end
+#end
+  }#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort'),
+  mounted() {
+    const el = this.$refs.dataTable.$el.querySelectorAll(".el-table__body-wrapper > table > tbody")[0];
+    Sortable.create(el, {
+      handle: ".allowDrag",
+      onEnd: evt => {
+        const targetRow = this.${businessName}List.splice(evt.oldIndex, 1)[0];
+        this.${businessName}List.splice(evt.newIndex, 0, targetRow);
+        this.sortVisible = true;
+      }
+    });
   }
+#end
+#end
+#end
 };
 </script>

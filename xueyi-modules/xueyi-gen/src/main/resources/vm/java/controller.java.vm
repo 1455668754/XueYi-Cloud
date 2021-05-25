@@ -114,6 +114,23 @@ public class ${ClassName}Controller extends BaseController
         return toAjax(${className}Service.update${ClassName}(${className}));
     }
 
+#if($table.crud || $table.sub)
+#foreach ($column in $columns)
+#if($column.javaField == 'sort')
+    /**
+     * 修改${functionName}排序
+     */
+    @PreAuthorize(hasPermi = "${permissionPrefix}:edit")
+    @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
+    @PutMapping(value = "/sort")
+    public AjaxResult updateSort(@RequestBody ${ClassName} ${className})
+    {
+        return toAjax(${className}Service.update${ClassName}Sort(${className}));
+    }
+
+#end
+#end
+#end
     /**
      * 删除${functionName}
      */
