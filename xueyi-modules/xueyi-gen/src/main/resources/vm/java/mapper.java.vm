@@ -6,14 +6,40 @@ import ${packageName}.domain.${ClassName};
 #if($table.sub)
 import ${packageName}.domain.${subClassName};
 #end
+#set($system=0)
+#set($site=0)
+#set($library=0)
+#foreach ($column in $columns)
+    #if($column.javaField == 'systemId')
+        #set($system=1)
+    #elseif($column.javaField == 'siteId')
+        #set($site=1)
+    #elseif($column.javaField == 'libraryId')
+        #set($library=1)
+    #end
+#end
+#set($method='')
+#if($system==1 && $site == 0 && $library == 0)
+    #set($method='S')
+#elseif($system==0 && $site == 1 && $library == 0)
+    #set($method='W')
+#elseif($system==0 && $site == 0 && $library == 1)
+    #set($method='L')
+#elseif($system==1 && $site == 1 && $library == 0)
+    #set($method='SW')
+#elseif($system==0 && $site == 1 && $library == 1)
+    #set($method='WL')
+#elseif($system==1 && $site == 1 && $library == 1)
+    #set($method='SWL')
+#end
 
 /**
  * ${functionName} 数据层
- * 
+ *
  * @author ${author}
  */
-public interface ${ClassName}Mapper 
-{
+public interface ${ClassName}Mapper
+    {
     /**
      * 查询${functionName}列表
      * 访问控制 e 租户查询
@@ -21,7 +47,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return ${functionName}集合
      */
-    @DataScope(eAlias = "e")
+    @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
+
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
 
 #if($table.tree)
@@ -32,7 +59,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return ${functionName}集合
      */
-    @DataScope(eAlias = "e")
+    @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
+
     public List<${ClassName}> select${ClassName}Tree(${ClassName} ${className});
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
@@ -44,7 +72,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return ${functionName}集合
      */
-    @DataScope(eAlias = "e")
+    @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
+
     public List<${ClassName}> selectChildrenById(${ClassName} ${className});
 #end
 #end
@@ -57,7 +86,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return ${functionName}
      */
-    @DataScope(eAlias = "e")
+    @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
+
     public ${ClassName} select${ClassName}ById(${ClassName} ${className});
 
     /**
@@ -73,7 +103,8 @@ public interface ${ClassName}Mapper
      */
 #if($table.sub)
 #else
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
 #end
     public int insert${ClassName}(${ClassName} ${className});
 
@@ -84,7 +115,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
     public int update${ClassName}(${ClassName} ${className});
 #if($table.tree)
 #foreach($column in $columns)
@@ -97,7 +129,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName} | List<${ClassName}> children
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
     public int updateChildrenAncestors(${ClassName} ${className});
 #end
 #end
@@ -110,7 +143,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
     public int delete${ClassName}ById(${ClassName} ${className});
 #if(!$table.tree)
 
@@ -121,7 +155,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
     public int delete${ClassName}ByIds(${ClassName} ${className});
 #end
 #if($table.tree)
@@ -135,7 +170,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
     public int deleteChildrenById(${ClassName} ${className});
 #end
 #end
@@ -149,7 +185,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
     public int batch${subClassName}(${ClassName} ${className});
 
     /**
@@ -159,7 +196,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
     public int delete${subClassName}By${AttrName}(${ClassName} ${className});
 
     /**
@@ -169,7 +207,8 @@ public interface ${ClassName}Mapper
      * @param ${className} ${functionName}
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
     public int delete${subClassName}By${AttrName}s(${ClassName} ${className});
 #end
 }

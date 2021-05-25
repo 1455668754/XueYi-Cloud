@@ -13,6 +13,32 @@ import ${packageName}.domain.${subClassName};
 import ${packageName}.mapper.${ClassName}Mapper;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
+#set($system=0)
+#set($site=0)
+#set($library=0)
+#foreach ($column in $columns)
+    #if($column.javaField == 'systemId')
+        #set($system=1)
+    #elseif($column.javaField == 'siteId')
+        #set($site=1)
+    #elseif($column.javaField == 'libraryId')
+        #set($library=1)
+    #end
+#end
+#set($method='')
+#if($system==1 && $site == 0 && $library == 0)
+    #set($method='S')
+#elseif($system==0 && $site == 1 && $library == 0)
+    #set($method='W')
+#elseif($system==0 && $site == 0 && $library == 1)
+    #set($method='L')
+#elseif($system==1 && $site == 1 && $library == 0)
+    #set($method='SW')
+#elseif($system==0 && $site == 1 && $library == 1)
+    #set($method='WL')
+#elseif($system==1 && $site == 1 && $library == 1)
+    #set($method='SWL')
+#end
 
 /**
  * ${functionName} 业务层处理
@@ -72,7 +98,8 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
     @Override
 #if($table.sub)
     @Transactional
-    @DataScope(ueAlias = "empty")
+    @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
+
 #end
     public int insert${ClassName}(${ClassName} ${className})
     {
