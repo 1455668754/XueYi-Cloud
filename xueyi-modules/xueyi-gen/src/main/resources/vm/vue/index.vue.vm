@@ -608,6 +608,7 @@ export default {
 #set($nameVo=1)
 #end
 #end
+      let $this = this;
 #if($nameVo==1)
       this.$confirm('是否确认删除${functionName}"' + names + '"?', "警告", {
 #else
@@ -617,7 +618,7 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return del${BusinessName}(this.deleteParamIds(${pkColumn.javaField}s));
+          return del${BusinessName}($this.deleteParamIds(${pkColumn.javaField}s));
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");
