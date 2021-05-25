@@ -382,7 +382,7 @@ export default {
         this.msgSuccess(text + "成功");
       }).catch(function () {
         row.status = row.status === 0 ? 1 : 0;
-      });
+      }).catch((err)=>{});
     },
     /** 删除按钮操作 */
     handleDelete(row) {
@@ -396,7 +396,7 @@ export default {
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
-      })
+      }).catch((err)=>{})
     }
   }
 };

@@ -484,7 +484,7 @@ export default {
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
-      })
+      }).catch((err)=>{})
     },
     /** 导出按钮操作 */
     handleExport() {
