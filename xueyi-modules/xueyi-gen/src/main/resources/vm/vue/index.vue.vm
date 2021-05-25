@@ -618,7 +618,7 @@ export default {
           cancelButtonText: "取消",
           type: "warning"
         }).then(function() {
-          return del${BusinessName}($this.deleteParamIds(${pkColumn.javaField}s));
+          return del${BusinessName}($this.updateParamIds(${pkColumn.javaField}s));
         }).then(() => {
           this.getList();
           this.msgSuccess("删除成功");

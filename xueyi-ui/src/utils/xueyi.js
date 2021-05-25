@@ -18,23 +18,16 @@ export function addSystem(data) {
 }
 
 // 数组转对象
-export function addParamIds(params, Ids, propName) {
-  let search = params;
-  search.params = {};
-  if (null != Ids && '' != Ids) {
-    if (typeof (propName) === "undefined") {
-      search.params["Ids"] = Ids;
-    } else {
-      search.params[propName] = Ids;
+export function updateParamIds(Ids, params, propName) {
+  let search;
+  if(params != null){
+    search = params;
+    if(!search.hasOwnProperty('params')){
+      search["params"] = {}
     }
+  }else{
+    search = {params: {}};
   }
-  return search;
-}
-
-// 数组转对象
-export function deleteParamIds(Ids, propName) {
-  let search = {params: null};
-  search.params = {};
   if (null != Ids && '' != Ids) {
     if (typeof (Ids) === 'string') {
       Ids = Ids.split(",");
