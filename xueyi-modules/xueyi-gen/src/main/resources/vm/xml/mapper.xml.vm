@@ -104,6 +104,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+#foreach($column in $columns)
+#if($column.javaField == 'sort')
+        order by e.sort
+#end
+#end
     </select>
 
 #if($table.tree)
