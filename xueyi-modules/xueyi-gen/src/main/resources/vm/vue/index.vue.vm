@@ -356,6 +356,11 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+#foreach ($column in $columns)
+#if($column.javaField == 'name')
+      idNames:[],
+#end
+#end
 #if($table.sub)
       // 子表选中数据
       checked${subClassName}: [],
@@ -534,6 +539,11 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.${pkColumn.javaField})
+#foreach ($column in $columns)
+#if($column.javaField == 'name')
+      this.idNames = selection.map(item => item.${pkColumn.javaField})
+#end
+#end
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -591,7 +601,18 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ${pkColumn.javaField}s = row.${pkColumn.javaField} || this.ids;
+#set($nameVo=0)
+#foreach ($column in $columns)
+#if($column.javaField == 'name')
+      const names = row.name || this.idNames;
+#set($nameVo=1)
+#end
+#end
+#if($nameVo==1)
+      this.$confirm('是否确认删除${functionName}"' + names + '"?', "警告", {
+#else
       this.$confirm('是否确认删除${functionName}编号为"' + ${pkColumn.javaField}s + '"的数据项?', "警告", {
+#end
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           type: "warning"

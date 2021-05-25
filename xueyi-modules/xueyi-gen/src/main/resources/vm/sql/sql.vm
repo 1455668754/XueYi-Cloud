@@ -7,7 +7,7 @@ values
                                    (11002, 0, 0, 11000, '${functionName}新增', '', '', 'F', '0', '${permissionPrefix}:add',             '#', 2, 0, ''),
                                    (11003, 0, 0, 11000, '${functionName}修改', '', '', 'F', '0', '${permissionPrefix}:edit',            '#', 3, 0, ''),
                                    (11004, 0, 0, 11000, '${functionName}删除', '', '', 'F', '0', '${permissionPrefix}:remove',          '#', 4, 0, ''),
-                                   (11005, 0, 0, 11000, '${functionName}导出', '', '', 'F', '0', '${permissionPrefix}:export',          '#', 4, 0, '');
+                                   (11005, 0, 0, 11000, '${functionName}导出', '', '', 'F', '0', '${permissionPrefix}:export',          '#', 5, 0, '');
 
                                    -- menu_id、parent_id需手动进行配置（分布式Id无法自动获取）
                                    -- system_id、tenant_id根据自己需要设置

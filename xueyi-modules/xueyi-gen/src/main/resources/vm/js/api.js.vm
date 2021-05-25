@@ -1,11 +1,41 @@
 import request from '@/utils/request'
+#set($system=0)
+#set($site=0)
+#set($library=0)
+#foreach ($column in $columns)
+#if($column.javaField == 'systemId')
+#set($system=1)
+#elseif($column.javaField == 'siteId')
+#set($site=1)
+#elseif($column.javaField == 'libraryId')
+#set($library=1)
+#end
+#end
+#set($method='null')
+#if($system==1 && $site == 0 && $library == 0)
+#set($method='addSystem')
+###elseif($system==0 && $site == 1 && $library == 0)
+###set($method='addSite')
+###elseif($system==0 && $site == 0 && $library == 1)
+###set($method='addLibrary')
+###elseif($system==1 && $site == 1 && $library == 0)
+###set($method='addSystemAndSite')
+###elseif($system==0 && $site == 1 && $library == 1)
+###set($method='addSiteAndLibrary')
+###elseif($system==1 && $site == 1 && $library == 1)
+###set($method='addSystemAndSiteAndLibrary')
+#end
+#if($method != 'null')
+import { ${method} } from "@/utils/xueyi";
+#end
 
 // 查询${functionName}列表
 export function list${BusinessName}(query) {
   return request({
     url: '/${moduleName}/${businessName}/list',
     method: 'get',
-    params: query
+    params:#if($method != 'null') ${method}(query)#else query#end
+
   })
 }
 
@@ -15,7 +45,8 @@ export function tree${BusinessName}(query) {
   return request({
     url: '/${moduleName}/${businessName}/tree',
     method: 'get',
-    params: query
+    params:#if($method != 'null') ${method}(query)#else query#end
+
   })
 }
 #end
@@ -25,7 +56,8 @@ export function get${BusinessName}(query) {
   return request({
     url: '/${moduleName}/${businessName}/byId',
     method: 'get',
-    params: query
+    params:#if($method != 'null') ${method}(query)#else query#end
+
   })
 }
 
@@ -34,7 +66,8 @@ export function add${BusinessName}(data) {
   return request({
     url: '/${moduleName}/${businessName}',
     method: 'post',
-    data: data
+    data:#if($method != 'null') ${method}(data)#else data#end
+
   })
 }
 
@@ -43,7 +76,8 @@ export function update${BusinessName}(data) {
   return request({
     url: '/${moduleName}/${businessName}',
     method: 'put',
-    data: data
+    data:#if($method != 'null') ${method}(data)#else data#end
+
   })
 }
 
@@ -52,6 +86,7 @@ export function del${BusinessName}(data) {
   return request({
     url: '/${moduleName}/${businessName}',
     method: 'delete',
-    data: data
+    data:#if($method != 'null') ${method}(data)#else data#end
+
   })
 }
