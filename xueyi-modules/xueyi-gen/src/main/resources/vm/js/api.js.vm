@@ -87,5 +87,6 @@ export function del${BusinessName}(data) {
     url: '/${moduleName}/${businessName}',
     method: 'delete',
     data:#if($method != '') ${method}(data)#else data#end
+    
   })
 }
