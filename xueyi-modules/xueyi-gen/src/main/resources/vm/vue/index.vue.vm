@@ -131,7 +131,7 @@
     </el-row>
 
     <el-table v-loading="loading" :data="${businessName}List" @selection-change="handleSelectionChange"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') ref="dataTable" row-key="${pkColumn.javaField}"#end#end#end>
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag"#end#end#end/>
 #foreach($column in $columns)
 #set($javaField=$column.javaField)
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
@@ -323,7 +323,8 @@
 </template>
 
 <script>
-import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName} } from "@/api/${moduleName}/${businessName}";
+import { list${BusinessName}, get${BusinessName}, del${BusinessName}, add${BusinessName}, update${BusinessName}#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort'), update${BusinessName}Sort#end#end#end } from "@/api/${moduleName}/${businessName}";
+#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort')import Sortable from "sortablejs";#end#end#end
 #foreach($column in $columns)
 #if($column.insert && !$column.superColumn && !$column.pk && $column.htmlType == "imageUpload")
 import ImageUpload from '@/components/ImageUpload';
