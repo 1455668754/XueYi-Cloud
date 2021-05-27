@@ -1,5 +1,6 @@
 package com.xueyi.system.tenant.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.tenant.domain.SysTenant;
 import com.xueyi.system.tenant.mapper.SysTenantMapper;
@@ -56,8 +57,11 @@ public class SysTenantServiceImpl implements ISysTenantService {
         int row = sysTenantMapper.insertSysTenant(sysTenant);
         row = row + sysTenantMapper.insertSysTenantDatabase(sysTenant);
         sysTenant.setTenantId(sysTenant.getId());
+        sysTenant.getParams().put("deptId", IdUtil.getSnowflake(0, 0).nextId());
+        sysTenant.getParams().put("postId", IdUtil.getSnowflake(0, 0).nextId());
+        sysTenant.getParams().put("userId", IdUtil.getSnowflake(0, 0).nextId());
         sysTenantMapper.createDeptByTenantId(sysTenant);
-//        sysTenantMapper.createPostByTenantId(sysTenant);
+        sysTenantMapper.createPostByTenantId(sysTenant);
         sysTenantMapper.createUserByTenantId(sysTenant);
         return row;
     }
@@ -89,4 +93,6 @@ public class SysTenantServiceImpl implements ISysTenantService {
         row = row + sysTenantMapper.deleteSysTenantDatabaseById(sysTenant);
         return row;
     }
+
+
 }

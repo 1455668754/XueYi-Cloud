@@ -147,16 +147,16 @@
 
     <insert id="createDeptByTenantId" parameterType="SysTenant">
         insert into sys_dept (dept_id, tenant_id, parent_id, ancestors, dept_name)
-            value (#{Id}, #{tenantId}, 0, '0', '主部门')
+            value (#{params.deptId}, #{tenantId}, 0, '0', '主部门')
     </insert>
 
     <insert id="createPostByTenantId" parameterType="SysTenant">
         insert into sys_post (post_id, tenant_id, dept_id, post_name)
-            value (#{Id}, #{tenantId}, 0, '主岗位')
+            value (#{params.postId}, #{tenantId}, #{params.deptId}, '主岗位')
     </insert>
 
     <insert id="createUserByTenantId" parameterType="SysTenant">
         insert into sys_user (user_id, tenant_id, dept_id, post_id, user_name, nick_name, user_type, password)
-            value (#{Id}, #{tenantId}, 0, 0, 'admin', '超级管理员', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2')
+            value (#{params.userId}, #{tenantId}, #{params.deptId}, #{params.postId}, 'admin', '超级管理员', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2')
     </insert>
 </mapper>

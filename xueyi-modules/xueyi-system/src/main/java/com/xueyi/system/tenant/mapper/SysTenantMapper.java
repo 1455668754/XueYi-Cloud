@@ -82,7 +82,6 @@ public interface SysTenantMapper {
      * @param sysTenant 租户管理
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int createDeptByTenantId(SysTenant sysTenant);
 
     /**
@@ -92,7 +91,6 @@ public interface SysTenantMapper {
      * @param sysTenant 租户管理
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int createPostByTenantId(SysTenant sysTenant);
 
     /**
@@ -102,6 +100,5 @@ public interface SysTenantMapper {
      * @param sysTenant 租户管理
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int createUserByTenantId(SysTenant sysTenant);
 }
