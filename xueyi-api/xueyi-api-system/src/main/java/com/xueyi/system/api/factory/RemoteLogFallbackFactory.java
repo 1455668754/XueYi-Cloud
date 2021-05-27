@@ -2,11 +2,11 @@ package com.xueyi.system.api.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.RemoteLogService;
 import com.xueyi.system.api.monitor.SysOperLog;
-import feign.hystrix.FallbackFactory;
 
 /**
  * 日志服务降级处理

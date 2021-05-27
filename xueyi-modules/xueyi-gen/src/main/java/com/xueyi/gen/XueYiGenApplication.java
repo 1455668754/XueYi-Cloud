@@ -1,7 +1,7 @@
 package com.xueyi.gen;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.xueyi.common.security.annotation.EnableCustomConfig;
 import com.xueyi.common.security.annotation.EnableRyFeignClients;
 import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
@@ -14,7 +14,7 @@ import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
 @EnableCustomConfig
 @EnableCustomSwagger2   
 @EnableRyFeignClients
-@SpringCloudApplication
+@SpringBootApplication
 public class XueYiGenApplication
 {
     public static void main(String[] args)

@@ -2,12 +2,12 @@ package com.xueyi.system.api.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.RemoteFileService;
 import com.xueyi.system.api.material.SysFile;
-import feign.hystrix.FallbackFactory;
 
 /**
  * 文件服务降级处理

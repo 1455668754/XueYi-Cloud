@@ -1,8 +1,8 @@
 package com.xueyi.modules.monitor;
 
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
 import org.springframework.boot.SpringApplication;
-import org.springframework.cloud.client.SpringCloudApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import de.codecentric.boot.admin.server.config.EnableAdminServer;
 
 /**
  * 监控中心
@@ -10,7 +10,7 @@ import org.springframework.cloud.client.SpringCloudApplication;
  * @author xueyi
  */
 @EnableAdminServer
-@SpringCloudApplication
+@SpringBootApplication
 public class XueYiMonitorApplication
 {
     public static void main(String[] args)
