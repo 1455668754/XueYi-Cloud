@@ -1,4 +1,4 @@
-package com.ruoyi.common.redis.configure;
+package com.xueyi.common.redis.configure;
 
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;

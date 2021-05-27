@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PatternMatchUtils;
-import com.ruoyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.exception.PreAuthorizeException;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
