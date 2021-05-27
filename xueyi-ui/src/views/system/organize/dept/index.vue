@@ -380,7 +380,13 @@ export default {
         this.title = "修改部门";
       });
       listDeptExcludeChild(row.deptId).then(response => {
-        this.deptOptions = this.handleTree(response.data, "deptId");
+        if (JSON.parse(row.parentId) === 0) {
+          this.deptOptions = [];
+          const data = { deptId: '0', deptName: '顶级部门', parentId: '-1', children: [] };
+          this.deptOptions.push(data);
+        } else {
+          this.deptOptions = this.handleTree(response.data, "deptId");
+        }
       });
     },
     /** 部门权限按钮操作 */
