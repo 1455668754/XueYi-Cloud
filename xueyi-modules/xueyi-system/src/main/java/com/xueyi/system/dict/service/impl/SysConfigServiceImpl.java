@@ -35,10 +35,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @PostConstruct
     public void init() {
-        List<SysConfig> configsList = configMapper.selectConfigList(new SysConfig());
-        for (SysConfig config : configsList) {
-            redisService.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
-        }
+        loadingConfigCache();
     }
 
     /**
@@ -124,21 +121,50 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * @return 结果
      */
     @Override
-    public int deleteConfigByIds(Long[] configIds) {
+    public void deleteConfigByIds(Long[] configIds) {
         for (Long configId : configIds) {
             SysConfig config = selectConfigById(configId);
             if (StringUtils.equals(UserConstants.YES, config.getConfigType())) {
                 throw new CustomException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
+            SysSearch search = new SysSearch();
+            search.getSearch().put("configId", configId);
+            configMapper.deleteConfigById(search);
+            redisService.deleteObject(getCacheKey(config.getConfigKey()));
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("configIds", configIds);
-        int count = configMapper.deleteConfigByIds(search);
-        if (count > 0) {
-            Collection<String> keys = redisService.keys(Constants.SYS_CONFIG_KEY + "*");
-            redisService.deleteObject(keys);
+    }
+
+    /**
+     * 加载参数缓存数据
+     */
+    @Override
+    public void loadingConfigCache()
+    {
+        List<SysConfig> configsList = configMapper.selectConfigList(new SysConfig());
+        for (SysConfig config : configsList)
+        {
+            redisService.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
         }
-        return count;
+    }
+
+    /**
+     * 清空参数缓存数据
+     */
+    @Override
+    public void clearConfigCache()
+    {
+        Collection<String> keys = redisService.keys(Constants.SYS_CONFIG_KEY + "*");
+        redisService.deleteObject(keys);
+    }
+
+    /**
+     * 重置参数缓存数据
+     */
+    @Override
+    public void resetConfigCache()
+    {
+        clearConfigCache();
+        loadingConfigCache();
     }
 
     /**

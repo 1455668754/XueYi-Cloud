@@ -83,7 +83,7 @@
             <if test="configType != null and configType != ''">         #{configType}                   ,</if>
             <if test="createBy != null">								#{createBy}				        ,</if>
             <if test="remark != null and remark != ''">					#{remark}				        ,</if>
-            0
+            -1
         </trim>
     </insert>
 
