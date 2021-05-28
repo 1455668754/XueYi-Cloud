@@ -168,15 +168,6 @@ public class SysConfigServiceImpl implements ISysConfigService {
     }
 
     /**
-     * 清空缓存数据
-     */
-    @Override
-    public void clearCache() {
-        Collection<String> keys = redisService.keys(Constants.SYS_CONFIG_KEY + "*");
-        redisService.deleteObject(keys);
-    }
-
-    /**
      * 校验参数键名是否唯一
      *
      * @param config 参数配置信息
