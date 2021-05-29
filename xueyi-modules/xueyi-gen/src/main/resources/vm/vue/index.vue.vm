@@ -697,7 +697,7 @@ export default {
       }).then(() => {
         let params = this.sortOrderListOnlyDynamic(this.${businessName}List, this.old${BusinessName}List, "${pkColumn.javaField}");
         if(params.length>0) {
-          return updateTagSort(this.updateParamIds(params);
+          return update${BusinessName}Sort(this.updateParamIds(params));
         }
       }).then(() => {
         this.getList();
