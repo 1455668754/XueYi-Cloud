@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="editor" ref="editor" :style="styles"></div>
-    <Material ref="material" visible="true" v-model="imageList" :visible.sync="imageChoice.visible" max="5"
+    <Material ref="material" visible="true" v-model="imageList" :visible.sync="imageChoice.visible" :max="5"
               clear="clear"/>
   </div>
 </template>
