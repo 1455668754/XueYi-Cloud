@@ -54,3 +54,27 @@
   color: #303133;
   position: relative;
 }
+
+//滚动条样式修改
+.el-table__body-wrapper::-webkit-scrollbar {
+  /*纵向滚动条*/
+  width: 6px;
+  /*横向滚动条*/
+  height: 6px;
+}
+
+.el-table__body-wrapper::-webkit-scrollbar-thumb {
+  /*滚动条滑块颜色*/
+  background-color: rgba(144,147,153,.5);
+  border-radius: 10px;
+}
+
+.el-table__body-wrapper::-webkit-scrollbar-track {
+  /*滚动条背景色*/
+  background-color: transparent;
+}
+
+.el-table__body-wrapper::-webkit-scrollbar-corner {
+  /*表格滚动条角落*/
+  background-color: transparent;
+}
