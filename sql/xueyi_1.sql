@@ -169,7 +169,7 @@ values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
        (3, 2, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员');
 
 -- ----------------------------
--- 7、角色和系统-菜单关联表  角色1-N系统-菜单
+-- 7、角色和系统-菜单关联表  角色N-N系统-菜单
 -- ----------------------------
 drop table if exists sys_role_system_menu;
 create table sys_role_system_menu (
@@ -182,7 +182,7 @@ create table sys_role_system_menu (
 
 insert into sys_role_system_menu value (1,12005,0,1);
 -- ----------------------------
--- 8、角色和部门-岗位关联表  角色1-N部门-岗位
+-- 8、角色和部门-岗位关联表  角色N-N部门-岗位
 -- ----------------------------
 drop table if exists sys_role_dept_post;
 create table sys_role_dept_post (
@@ -195,7 +195,7 @@ create table sys_role_dept_post (
 
 insert into sys_role_dept_post value (1,107,0,1);
 -- ----------------------------
--- 9、部门和角色关联表  部门N-1角色
+-- 9、部门和角色关联表  部门N-N角色
 -- ----------------------------
 drop table if exists sys_dept_role;
 create table sys_dept_role (
@@ -207,7 +207,7 @@ create table sys_dept_role (
 ) engine=innodb comment = '部门和角色关联表';
 
 -- ----------------------------
--- 10、岗位和角色关联表  岗位N-1角色
+-- 10、岗位和角色关联表  岗位N-N角色
 -- ----------------------------
 drop table if exists sys_post_role;
 create table sys_post_role (
@@ -219,7 +219,7 @@ create table sys_post_role (
 ) engine=innodb comment = '岗位和角色关联表';
 
 -- ----------------------------
--- 11、用户和角色关联表  用户N-1角色
+-- 11、用户和角色关联表  用户N-N角色
 -- ----------------------------
 drop table if exists sys_user_role;
 create table sys_user_role (

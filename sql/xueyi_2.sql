@@ -180,7 +180,6 @@ create table sys_menu (
 -- ----------------------------
 -- 初始化-菜单信息表数据
 -- ----------------------------
--- 一级菜单
 insert into sys_menu (menu_id, system_id, tenant_id, parent_id, menu_name, path, component, menu_type, visible, perms, icon, sort, create_by, remark)
 values
        -- 一级菜单
@@ -320,7 +319,7 @@ values
               -- 二级菜单
               (63000, 0, 0, 60000, '系统接口', 'http://localhost:8080/swagger-ui.html', '', 'C', '0', 'tool:swagger:list',     'xy_swagger', 3, 0, '系统接口菜单'),
        -- 一级菜单
-       (70000, 0, -1, 0, '租户管理', 'tenant',       null, 'M', '0', '', 'xy_tenant',     6, 0, '租户管理目录'),
+       (70000, 0, -1, 0, '租户管理', 'tenant',      null, 'M', '0', '', 'xy_tenant',     6, 0, '租户管理目录'),
               -- 二级菜单
               (71000, 0, -1, 70000, '租户管理', 'tenant',    'system/tenant/tenant/index',  'C', '0', 'system:tenant:list',    'xy_tenant',    1, 0, '租户管理菜单'),
                                    -- 租户管理按钮
@@ -373,7 +372,11 @@ values (1, '用户性别', 'sys_user_sex', 0, '用户性别列表'),
        (15, '商城版本', 'sys_mall_edition', 0, '商城版本列表'),
        (16, '展示状态', 'sys_view_type', 0, '展示状态列表'),
        (17, '字段类型', 'sys_field_type', 0, '字段类型列表'),
-       (18, '后台展示状态', 'sys_mall_view_type', 0, '后台展示状态列表');
+       (18, '后台展示状态', 'sys_mall_view_type', 0, '后台展示状态列表'),
+       (19, '上架状态', 'sys_mall_onSale_status', 0, '上架状态列表'),
+       (20, '产品类型', 'sys_mall_product_type', 0, '产品类型列表'),
+       (21, '填写类型', 'sys_mall_input_type', 0, '填写类型列表'),
+       (22, '是否默认', 'sys_mall_custom_type', 0, '是否默认列表');
 
 
 -- ----------------------------
@@ -454,7 +457,19 @@ values (1, 1, '男', '0', 'sys_user_sex', '', '', 'Y', 0, '性别男'),
        (51, 2, '文字输入型', '1', 'sys_field_type', '', '', 'N', 0, '文字输入型'),
        (52, 3, '数值输入型', '2', 'sys_field_type', '', '', 'N', 0, '数值输入型'),
        (53, 1, '正常', '0', 'sys_mall_view_type', '', '', 'N', 0, '正常'),
-       (54, 2, '仅后台可见', '1', 'sys_mall_view_type', '', '', 'N', 0, '仅后台可见');
+       (54, 2, '仅后台可见', '1', 'sys_mall_view_type', '', '', 'N', 0, '仅后台可见'),
+       (55, 1, '立即上架', '0', 'sys_mall_onSale_status', '', '', 'N', 0, '立即上架'),
+       (56, 2, '暂不上架', '1', 'sys_mall_onSale_status', '', '', 'N', 0, '暂不上架'),
+       (57, 3, '自定义上架时间', '2', 'sys_mall_onSale_status', '', '', 'N', 0, '自定义上架时间'),
+       (58, 1, '一般产品', '0', 'sys_mall_product_type', '', '', 'N', 0, '一般产品'),
+       (59, 2, '卡密产品', '1', 'sys_mall_product_type', '', '', 'N', 0, '卡密产品'),
+       (60, 3, '酒店产品', '2', 'sys_mall_product_type', '', '', 'N', 0, '酒店产品'),
+       (61, 4, '保险产品', '3', 'sys_mall_product_type', '', '', 'N', 0, '保险产品'),
+       (62, 1, '非必填型', '0', 'sys_mall_input_type', '', '', 'N', 0, '非必填型'),
+       (63, 2, '必填型', '1', 'sys_mall_input_type', '', '', 'N', 0, '必填型'),
+       (64, 1, '默认', '1', 'sys_mall_custom_type', '', '', 'N', 0, '默认'),
+       (65, 2, '自定义', '1', 'sys_mall_custom_type', '', '', 'N', 0, '自定义');
+
 
 -- ----------------------------
 -- 8、参数配置表
