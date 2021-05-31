@@ -12,7 +12,12 @@ export function addSystem(data) {
   const state = {
     systemId: systemId
   }
-  let search = data;
+  let search;
+  if(data != null){
+    search = data;
+  }else {
+    search={};
+  }
   search["systemId"] = state.systemId;
   return search;
 }
