@@ -576,6 +576,7 @@ import { isArray } from 'util'
 import TreeNodeDialog from './TreeNodeDialog'
 import { isNumberStr } from '@/utils/index'
 import IconsDialog from './IconsDialog'
+import draggable from 'vuedraggable'
 import {
   inputComponents,
   selectComponents,
@@ -595,6 +596,7 @@ const dateTimeFormat = {
 
 export default {
   components: {
+    draggable,
     TreeNodeDialog,
     IconsDialog
   },
