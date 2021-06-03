@@ -36,22 +36,22 @@ public class DataScopeAspect {
     public static final String DATA_SCOPE_ALL = "1";
 
     /**
-     * 自定数据权限
+     * 自定义数据权限
      */
     public static final String DATA_SCOPE_CUSTOM = "2";
 
     /**
-     * 部门数据权限
+     * 本部门数据权限
      */
     public static final String DATA_SCOPE_DEPT = "3";
 
     /**
-     * 部门及以下数据权限
+     * 本部门及以下数据权限
      */
     public static final String DATA_SCOPE_DEPT_AND_CHILD = "4";
 
     /**
-     * 岗位数据权限
+     * 本岗位数据权限
      */
     public static final String DATA_SCOPE_POST = "5";
 
