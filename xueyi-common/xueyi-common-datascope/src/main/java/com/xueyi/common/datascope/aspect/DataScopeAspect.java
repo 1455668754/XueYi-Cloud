@@ -180,17 +180,31 @@ public class DataScopeAspect {
         }
 
         // 租户控制
+        if (StringUtils.isNotBlank(SedAlias) || StringUtils.isNotBlank(WedAlias) || StringUtils.isNotBlank(SWedAlias) || StringUtils.isNotBlank(SWLedAlias)){
+            //控制数据权限 分离
+            if (StringUtils.isNotBlank(deptAlias)) {
+                sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 )", deptAlias, enterprise.getEnterpriseId(), deptAlias));
+            }
+            if (StringUtils.isNotBlank(postAlias)) {
+                sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 )", postAlias, enterprise.getEnterpriseId(), postAlias));
+            }
+            if (StringUtils.isNotBlank(userAlias)) {
+                sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 )", userAlias, enterprise.getEnterpriseId(), userAlias));
+            }
+        }else{
+            //控制数据权限 分离
+            if (StringUtils.isNotBlank(deptAlias)) {
+                sqlString.append(StringUtils.format(" AND {}.tenant_id = {}", deptAlias, enterprise.getEnterpriseId()));
+            }
+            if (StringUtils.isNotBlank(postAlias)) {
+                sqlString.append(StringUtils.format(" AND {}.tenant_id = {}", postAlias, enterprise.getEnterpriseId()));
+            }
+            if (StringUtils.isNotBlank(userAlias)) {
+                sqlString.append(StringUtils.format(" AND {}.tenant_id = {}", userAlias, enterprise.getEnterpriseId()));
+            }
+        }
 
-        //控制数据权限 分离
-        if (StringUtils.isNotBlank(deptAlias)) {
-            sqlString.append(StringUtils.format(" AND {}.tenant_id = {}", deptAlias, enterprise.getEnterpriseId(), deptAlias));
-        }
-        if (StringUtils.isNotBlank(postAlias)) {
-            sqlString.append(StringUtils.format(" AND {}.tenant_id = {}", postAlias, enterprise.getEnterpriseId(), postAlias));
-        }
-        if (StringUtils.isNotBlank(userAlias)) {
-            sqlString.append(StringUtils.format(" AND {}.tenant_id = {}", userAlias, enterprise.getEnterpriseId(), userAlias));
-        }
+
 
         //一般数据查询|更新分离模式
         if (StringUtils.isNotBlank(eAlias) || StringUtils.isNotBlank(edAlias) || StringUtils.isNotBlank(ueAlias)) {
