@@ -268,14 +268,14 @@ public class DataScopeAspect {
             }
             //当无复杂查询控制时，阻断查询进行，保证数据安全
             else {
-                sqlString.append(" 1 = 0 ");
-                upSqlString.append(" 1 = 0 ");
+                sqlString.append(" AND  1 = 0 ");
+                upSqlString.append(" AND  1 = 0 ");
             }
         }
         //4.当无简单查询控制 || 基类为空时，阻断查询进行，保证数据安全
         else {
-            sqlString.append(" 1 = 0 ");
-            upSqlString.append(" 1 = 0 ");
+            sqlString.append(" AND  1 = 0 ");
+            upSqlString.append(" AND  1 = 0 ");
         }
 
         if (StringUtils.isNotBlank(sqlString.toString()) || StringUtils.isNotBlank(upSqlString.toString())) {
