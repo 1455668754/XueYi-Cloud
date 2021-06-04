@@ -183,9 +183,6 @@ public class DataScopeAspect {
                 else if (DATA_SCOPE_SELF.equals(dataScope)) {
                     if (StringUtils.isNotBlank(userAlias)) {
                         sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
-                    } else {
-                        // 数据权限为仅本人且没有userAlias别名不查询任何数据
-                        sqlString.append(" AND 1 = 0 ");
                     }
                 }
             }
