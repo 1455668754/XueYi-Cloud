@@ -70,6 +70,9 @@ public class AuthFilter implements GlobalFilter, Ordered
         JSONObject obj = JSONObject.parseObject(userStr);
         String userid = obj.getString("userid");
         String username = obj.getString("username");
+        String userType = obj.getString("userType");
+        String enterpriseId = obj.getString("enterpriseId");
+        String enterpriseName = obj.getString("enterpriseName");
         if (StringUtils.isBlank(userid) || StringUtils.isBlank(username))
         {
             return setUnauthorizedResponse(exchange, "令牌验证失败");
@@ -78,8 +81,13 @@ public class AuthFilter implements GlobalFilter, Ordered
         // 设置过期时间
         redisService.expire(getTokenKey(token), EXPIRE_TIME);
         // 设置用户信息到请求
-        ServerHttpRequest mutableReq = exchange.getRequest().mutate().header(CacheConstants.DETAILS_USER_ID, userid)
-                .header(CacheConstants.DETAILS_USERNAME, ServletUtils.urlEncode(username)).build();
+        ServerHttpRequest mutableReq = exchange.getRequest().mutate()
+                .header(CacheConstants.DETAILS_USER_ID, userid)
+                .header(CacheConstants.DETAILS_USERNAME, ServletUtils.urlEncode(username))
+                .header(CacheConstants.DETAILS_TYPE, userType)
+                .header(CacheConstants.DETAILS_ENTERPRISE_ID, enterpriseId)
+                .header(CacheConstants.DETAILS_ENTERPRISE_NAME, enterpriseName)
+                .build();
         ServerWebExchange mutableExchange = exchange.mutate().request(mutableReq).build();
 
         return chain.filter(mutableExchange);
