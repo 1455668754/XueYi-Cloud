@@ -24,9 +24,9 @@ public class SecurityUtils
     /**
      * 获取企业名称
      */
-    public static Long getEnterpriseName()
+    public static String getEnterpriseName()
     {
-        return Convert.toLong(ServletUtils.getRequest().getHeader(CacheConstants.DETAILS_ENTERPRISE_NAME));
+        return ServletUtils.getRequest().getHeader(CacheConstants.DETAILS_ENTERPRISE_NAME);
     }
 
     /**
