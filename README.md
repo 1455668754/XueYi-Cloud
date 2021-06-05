@@ -10,14 +10,18 @@
 
 基于本系统还有许多内容是希望加入进来的，但限于时间问题，后续慢慢更新进来，如遇bug，请提Issues。  
   
+## 月度计划
+
+* 1.认证改造：redis改造oAuth 2.0
+* 2.物理隔离实现
+* 3.部署与基础操作视频讲解
+* 4.常规优化
+
 ####  [雪忆商城版/XueYi-Mall](https://gitee.com/xueyitiantang/xueyi-mall) 自用为主，有需要可参考其设计逻辑，基础架构完全来自于cloud。
 
 走过路过，点个star :kissing_heart: 
 
-* 采用前后端分离的模式，微服务版本前端。
-* 后端采用Spring Boot、Spring Cloud & Alibaba。
-* 注册中心、配置中心选型Nacos，权限认证使用Redis。
-* 流量控制框架选型Sentinel，分布式事务选型Seata。
+
 
 ## 在线体验
 - 普通账户
@@ -36,6 +40,10 @@ https://doc.xueyitt.cn/（暂不可用，先用上面的）
 
 QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://jq.qq.com/?_wv=1027&k=zw11JJhj) 点击按钮入群。
 
+* 采用前后端分离的模式，微服务版本前端。
+* 后端采用Spring Boot、Spring Cloud & Alibaba。
+* 注册中心、配置中心选型Nacos，权限认证使用Redis。
+* 流量控制框架选型Sentinel，分布式事务选型Seata。
 
 ## 系统模块
 
