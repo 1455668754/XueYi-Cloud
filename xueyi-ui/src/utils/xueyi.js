@@ -52,7 +52,7 @@ export function sortOrderListOnlyDynamic(newList, oldList, idName) {
   let id = idName != null ? idName : 'id';
   let listNew = JSON.parse(JSON.stringify(newList));
   for (let i = 0; i < listNew.length; i++) {
-    listNew[i].sort = (i - 128) < 127 ? (i - 128) : 127;
+    listNew[i].sort = i;
     for (let j = 0; j < newList.length; j++) {
       if (listNew[i][id] === newList[j][id] && listNew[i].sort !== newList[j].sort) {
         returnList.push(listNew[i]);
@@ -66,7 +66,7 @@ export function sortOrderListOnlyDynamic(newList, oldList, idName) {
 export function sortOrderList(newList) {
   let listNew = JSON.parse(JSON.stringify(newList));
   for (let i = 0; i < listNew.length; i++) {
-    listNew[i].sort = (i - 128) < 127 ? (i - 128) : 127;
+    listNew[i].sort = i;
   }
   return listNew;
 }

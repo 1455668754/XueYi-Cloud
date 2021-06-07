@@ -9,6 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
+        <module>xueyi-tenant</module>
         <module>xueyi-system</module>
         <module>xueyi-gen</module>
         <module>xueyi-job</module>

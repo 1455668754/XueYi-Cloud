@@ -1,4 +1,59 @@
 -- ----------------------------
+-- 1、数据源表|管理系统数据源信息 | 主库有且只能有一个，用途：主要用于存储公共数据，具体看后续文档或视频
+-- ----------------------------
+drop table if exists xy_tenant_source;
+create table xy_tenant_source (
+  source_id		            bigint	            not null                                comment '数据源Id',
+  database_type             char(1)	            not null default '0'	                comment '数据库(0从库 1主库)',
+  driver_class_name		    varchar(500)	    not null default 'master'	            comment '驱动',
+  url	                    varchar(500)	    not null default ''	                    comment '地址',
+  username	                varchar(500)	    not null default ''	                    comment '用户名',
+  password	                varchar(500)	    not null default ''	                    comment '密码',
+  type		                char(1)	            not null default '0'	                comment '读写类型(0读写 1只读 2只写)',
+  sort                      int unsigned        not null default 0                      comment '显示顺序',
+  status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
+  create_by                 bigint              default null                            comment '创建者',
+  create_time               datetime            default current_timestamp               comment '创建时间',
+  update_by                 bigint              default null                            comment '更新者',
+  update_time               datetime            on update current_timestamp             comment '更新时间',
+  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+primary key (source_id)
+) engine=innodb comment = '数据源表';
+
+-- ----------------------------
+-- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
+-- ----------------------------
+insert into xy_tenant_source(source_id, database_type, driver_class_name, url, username, password, type)
+values (1, '1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
+
+-- ----------------------------
+-- 1、Nacos配置表|管理Nacos配置信息 | 需要控制多数据源的方法写进此表
+-- ----------------------------
+drop table if exists xy_tenant_nacos;
+create table xy_tenant_nacos (
+  data_id		            bigint	            not null                                comment '配置Id',
+  name                      varchar(500)	    not null default ''	                    comment '配置名称',
+  prefix_str		        text	    	                                            comment '头部配置信息',
+  slave_str		            text	    	                                            comment '数据源配置信息',
+  suffix_str		        text	    	                                            comment '尾部配置信息',
+  type		                char(1)	            not null default '0'	                comment '读写类型(0自动配置 1手动配置)',
+  sort                      int unsigned        not null default 0                      comment '显示顺序',
+  status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
+  create_by                 bigint              default null                            comment '创建者',
+  create_time               datetime            default current_timestamp               comment '创建时间',
+  update_by                 bigint              default null                            comment '更新者',
+  update_time               datetime            on update current_timestamp             comment '更新时间',
+  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+primary key (data_id)
+) engine=innodb comment = 'Nacos配置表';
+
+-- ----------------------------
+-- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
+-- ----------------------------
+insert into xy_tenant_nacos(data_id, name, prefix_str, slave_str, suffix_str, type, sort, status)
+values
+
+-- ----------------------------
 -- 1、租户表|管理租户数据库信息
 -- ----------------------------
 drop table if exists xy_tenant_database;
@@ -36,7 +91,7 @@ create table xy_tenant (
   tenant_nick		        varchar(50)	        not null 	                            comment '租户名称',
   tenant_logo		        varchar(1000)	    default ''	                            comment '租户logo',
   tenant_name_frequency     tinyint             default 0                               comment '租户账号修改次数',
-  sort                      tinyint             not null default 0                      comment '显示顺序',
+  sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
@@ -70,7 +125,7 @@ create table xy_material (
   material_original_url		varchar(500)	    not null 	                            comment '原图地址',
   material_size		        decimal(8,4)	    not null 	                            comment '素材大小',
   type		                char(1)	            not null default '0'	                comment '素材类型(0默认素材 1系统素材)',
-  sort                      tinyint             not null default 0                      comment '显示顺序',
+  sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
@@ -91,7 +146,7 @@ create table xy_material_folder (
   folder_name		        varchar(100)	    not null	                            comment '分类名称',
   ancestors                 varchar(500)        default ''                              comment '祖级列表',
   type		                char(1)	            not null default '0'	                comment '分类类型(0默认文件夹 1系统文件夹)',
-  sort                      tinyint             not null default 0                      comment '显示顺序',
+  sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
@@ -112,7 +167,7 @@ create table xy_system (
   image_url                 varchar(5000)	    default null 	        	            comment '图片地址',
   type		                char(1)	            not null default '1'	                comment '跳转类型(0内部跳转 1外部跳转)',
   route                     varchar(500)        not null	                            comment '跳转路由',
-  sort                      tinyint             not null default 0                      comment '显示顺序',
+  sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
@@ -148,7 +203,7 @@ create table sys_role (
   data_scope                char(1)             default '1'                             comment '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限 5：本岗位数据权限  6：仅本人数据权限）',
   menu_check_strictly       tinyint             default 1                               comment '菜单树选择项是否关联显示',
   dept_check_strictly       tinyint             default 1                               comment '部门树选择项是否关联显示',
-  sort                      tinyint             not null default 0                      comment '显示顺序',
+  sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',

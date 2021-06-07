@@ -93,6 +93,4 @@ public class SysTenantServiceImpl implements ISysTenantService {
         row = row + sysTenantMapper.deleteSysTenantDatabaseById(sysTenant);
         return row;
     }
-
-
 }
