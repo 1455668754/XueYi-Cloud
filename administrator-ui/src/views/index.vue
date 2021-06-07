@@ -1,114 +1,96 @@
 <template>
-  <div class="app-container">
-    <div class="system-title">{{ homePageName }}</div>
-    <el-card class="system-card" shadow="hover" v-for="(item,index) in list">
-      <div class="card-main">
-        <div class="card-image">
-          <el-image
-            style="width: 60px; height: 60px"
-            :src="item.imageUrl != null ? JSON.parse(item.imageUrl).materialUrl : null"
-            fit="cover"/>
+  <div class="dashboard-editor-container">
+
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <line-chart :chart-data="lineChartData" />
+    </el-row>
+    <el-row :gutter="32">
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <raddar-chart />
         </div>
-        <div class="card-text">
-          <div>
-            <span class="card-text-main">{{ item.systemName }}</span>
-            <el-button size="mini" class="card-text-button" @click="jumpClick(item)" round>去管理></el-button>
-          </div>
-          <div class="card-text-remark">
-            <span>{{ item.remark }}</span>
-          </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <pie-chart />
         </div>
-      </div>
-    </el-card>
+      </el-col>
+      <el-col :xs="24" :sm="24" :lg="8">
+        <div class="chart-wrapper">
+          <bar-chart />
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
-import {viewListSystem} from "@/api/system/system";
+import PanelGroup from './dashboard/PanelGroup'
+import LineChart from './dashboard/LineChart'
+import RaddarChart from './dashboard/RaddarChart'
+import PieChart from './dashboard/PieChart'
+import BarChart from './dashboard/BarChart'
+
+const lineChartData = {
+  newVisitis: {
+    expectedData: [100, 120, 161, 134, 105, 160, 165],
+    actualData: [120, 82, 91, 154, 162, 140, 145]
+  },
+  messages: {
+    expectedData: [200, 192, 120, 144, 160, 130, 140],
+    actualData: [180, 160, 151, 106, 145, 150, 130]
+  },
+  purchases: {
+    expectedData: [80, 100, 121, 104, 105, 90, 100],
+    actualData: [120, 90, 100, 138, 142, 130, 130]
+  },
+  shoppings: {
+    expectedData: [130, 140, 141, 142, 145, 150, 160],
+    actualData: [120, 82, 91, 154, 162, 140, 130]
+  }
+}
 
 export default {
-  name: "index",
+  name: 'Index',
+  components: {
+    PanelGroup,
+    LineChart,
+    RaddarChart,
+    PieChart,
+    BarChart
+  },
   data() {
     return {
-      list: [],
-      homePageName: this.$store.state.settings.homePageName,
+      list:[ { "materialId": "1376349123774660608", "materialNick": "5efb19cb-cadc-4110-aba5-35158f547a2c.jpg", "materialUrl": "http://127.0.0.1:9300/statics/2021/03/29/5efb19cb-cadc-4110-aba5-35158f547a2c.jpg", "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/03/29/76b63f36-b232-4834-a269-d173d6eefad4.jpg" } ],
+      lineChartData: lineChartData.newVisitis
     }
   },
-  created() {
-    this.getList();
-  },
   methods: {
-    /** 查询可展示子系统模块列表 */
-    getList() {
-      viewListSystem().then(response => {
-        this.list = response.rows;
-      });
-    },
-    jumpClick(item) {
-      //内部路由
-      if (item.type === '0') {
-        this.$router.push(item.route)
-      }
-      //外部链接
-      else if (item.type === '1') {
-        window.open(item.route, '_blank') // 在新窗口打开外链接
-        // window.location.href = item.route;  //在本页面打开外部链接
-      }
+    handleSetLineChartData(type) {
+      this.lineChartData = lineChartData[type]
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.system-title {
-  margin-bottom: 30px;
-  margin-left: 30px;
-  font-size: 20px;
-  font-weight: 700;
-  color: #606067;
-  font-family: 微软雅黑, serif;
-}
+.dashboard-editor-container {
+  padding: 32px;
+  background-color: rgb(240, 242, 245);
+  position: relative;
 
-.system-card {
-  width: 360px;
-  height: 120px;
-  margin-bottom: 30px;
-  margin-left: 30px;
-  display: inline-flex;
-
-  .card-main {
-    margin-top: 13px;
-    display: inline-flex;
-
-    .card-image {
-      margin-left: 20px;
-    }
-
-    .card-text {
-      margin-left: 40px;
-
-      .card-text-main {
-        font-size: 16px;
-      }
-
-      .card-text-button {
-        margin-left: 20px;
-      }
-
-      .card-text-remark {
-        height: 38px;
-        line-height: 38px;
-        font-size: 14px;
-        color: #999999;
-      }
-    }
+  .chart-wrapper {
+    background: #fff;
+    padding: 16px 16px 0;
+    margin-bottom: 32px;
   }
 }
 
-</style>
-
-<style scoped>
-.card-text >>> .el-button--mini.is-round {
-  padding: 5px 9px !important;
+@media (max-width:1024px) {
+  .chart-wrapper {
+    padding: 8px;
+  }
 }
 </style>

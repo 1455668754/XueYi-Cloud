@@ -43,6 +43,11 @@ module.exports = {
   homePageIcon: 'xy_productCenter',
 
   /**
+   * 主登录页地址 | loginAddress='' 时则跳转至本地登录页 | 本参数目的为控制集中登录/分散登录
+   */
+  loginAddress: '',
+
+  /**
    * @type {string | array} 'production' | ['production', 'development']
    * @description Need show err logs component.
    * The default is only used in the production env

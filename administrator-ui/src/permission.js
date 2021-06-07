@@ -4,6 +4,7 @@ import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { getToken } from '@/utils/auth'
+import { loginAddress } from '@/settings'
 
 NProgress.configure({ showSpinner: false })
 
@@ -41,7 +42,11 @@ router.beforeEach((to, from, next) => {
       // 在免登录白名单，直接进入
       next()
     } else {
-      next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
+      if(loginAddress != null && loginAddress !== ''){
+        window.location.href = loginAddress // 否则全部重定向到指定登录页
+      }else {
+        next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
+      }
       NProgress.done()
     }
   }

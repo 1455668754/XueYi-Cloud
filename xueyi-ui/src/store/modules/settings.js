@@ -1,7 +1,7 @@
 import variables from '@/assets/styles/element-variables.scss'
 import defaultSettings from '@/settings'
 
-const { sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, systemNum, homePageName, homePageIcon } = defaultSettings
+const { sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, systemNum, homePageName, homePageIcon, loginAddress } = defaultSettings
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
 const state = {
@@ -14,7 +14,8 @@ const state = {
   sidebarLogo: storageSetting.sidebarLogo === undefined ? sidebarLogo : storageSetting.sidebarLogo,
   systemNum: systemNum,
   homePageName: homePageName,
-  homePageIcon: homePageIcon
+  homePageIcon: homePageIcon,
+  loginAddress: loginAddress
 }
 const mutations = {
   CHANGE_SETTING: (state, { key, value }) => {
