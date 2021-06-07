@@ -4,27 +4,29 @@
 drop table if exists xy_tenant_source;
 create table xy_tenant_source (
   source_id		            bigint	            not null                                comment '数据源Id',
-  database_type             char(1)	            not null default '0'	                comment '数据库(0从库 1主库)',
-  driver_class_name		    varchar(500)	    not null default 'master'	            comment '驱动',
+  name		                varchar(50)	        not null                                comment '数据源名称',
+  database_type             char(1)	            not null default '0'	                comment '数据源类型（0从数据源 1主数据源）',
+  slave		                varchar(500)	    not null default ''	                    comment '数据源编码',
+  driver_class_name		    varchar(500)	    not null default ''	                    comment '驱动',
   url	                    varchar(500)	    not null default ''	                    comment '地址',
   username	                varchar(500)	    not null default ''	                    comment '用户名',
   password	                varchar(500)	    not null default ''	                    comment '密码',
-  type		                char(1)	            not null default '0'	                comment '读写类型(0读&写 1只读 2只写)',
+  type		                char(1)	            not null default '0'	                comment '读写类型（0读&写 1只读 2只写）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (source_id)
 ) engine=innodb comment = '数据源表';
 
 -- ----------------------------
 -- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
 -- ----------------------------
-insert into xy_tenant_source(source_id, database_type, driver_class_name, url, username, password, type)
-values (0, '1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
+insert into xy_tenant_source(source_id, name, database_type, driver_class_name, url, username, password, type)
+values (0, 'master', '1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
 
 -- ----------------------------
 -- 2、Nacos配置表|管理Nacos配置信息 | 需要控制多数据源的方法写进此表 | 开启租户控制的模块一定要设置成自动配置
@@ -36,14 +38,14 @@ create table xy_tenant_nacos (
   prefix_str		        text	    	                                            comment '头部配置信息',
   slave_str		            text	    	                                            comment '数据源配置信息',
   suffix_str		        text	    	                                            comment '尾部配置信息',
-  type		                char(1)	            not null default '0'	                comment '配置类型(0自动配置 1手动配置)',
+  type		                char(1)	            not null default '0'	                comment '配置类型（0自动配置 1手动配置）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (data_id)
 ) engine=innodb comment = 'Nacos配置表';
 
@@ -69,7 +71,7 @@ drop table if exists xy_tenant_separation;
 create table xy_tenant_separation (
   write_id		            bigint	            not null                                comment '写数据源Id',
   read_id		            bigint	            not null                                comment '读数据源Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (write_id, read_id)
 ) engine=innodb comment = '读写分离关联表';
 
@@ -93,7 +95,7 @@ create table xy_tenant_strategy (
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (strategy_id)
 ) engine=innodb comment = '数据源策略表';
 
@@ -110,8 +112,8 @@ drop table if exists xy_tenant_strategy_source;
 create table xy_tenant_strategy_source (
   strategy_id		        bigint	            not null                                comment '策略Id',
   source_id		            bigint	            not null                                comment '数据源Id',
-  status		            char(1)	            not null default 'N'                    comment '主数据源(Y是 N否)',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  status		            char(1)	            not null default 'N'                    comment '主数据源（Y是 N否）',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (strategy_id, source_id)
 ) engine=innodb comment = '策略-数据源关联表';
 
@@ -128,10 +130,10 @@ drop table if exists xy_tenant_strategy_tenant;
 create table xy_tenant_strategy_tenant (
   strategy_id		        bigint	            not null                                comment '策略Id',
   tenant_id		            bigint	            not null                                comment '租户Id',
-  status		            char(1)	            not null default 'N'	                comment '主策略(Y是 N否)',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  status		            char(1)	            not null default 'N'	                comment '主策略（Y是 N否）',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (tenant_id)
-) engine=innodb comment = '租户表';
+) engine=innodb comment = '策略-租户关联表';
 
 -- ----------------------------
 -- 初始化-租户表数据
@@ -159,7 +161,7 @@ create table xy_tenant (
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
   primary key (tenant_id),
   unique key (tenant_name)
 ) engine=innodb comment = '租户信息表';
@@ -185,15 +187,15 @@ create table xy_material (
   material_url		        varchar(500)	    not null 	                            comment '素材地址',
   material_original_url		varchar(500)	    not null 	                            comment '原图地址',
   material_size		        decimal(8,4)	    not null 	                            comment '素材大小',
-  type		                char(1)	            not null default '0'	                comment '素材类型(0默认素材 1系统素材)',
+  type		                char(1)	            not null default '0'	                comment '素材类型（0默认素材 1系统素材）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key (material_id)
 ) engine=innodb comment = '素材信息表';
 
@@ -206,15 +208,15 @@ create table xy_material_folder (
   parent_id		            bigint	            not null default 0                      comment '父类Id',
   folder_name		        varchar(100)	    not null	                            comment '分类名称',
   ancestors                 varchar(500)        default ''                              comment '祖级列表',
-  type		                char(1)	            not null default '0'	                comment '分类类型(0默认文件夹 1系统文件夹)',
+  type		                char(1)	            not null default '0'	                comment '分类类型（0默认文件夹 1系统文件夹）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key (folder_id)
 ) engine=innodb comment = '素材分类表';
 
@@ -226,7 +228,7 @@ create table xy_system (
   system_id		            bigint	            not null                                comment '系统Id',
   system_name		        varchar(50)	        not null	                            comment '系统名称',
   image_url                 varchar(5000)	    default null 	        	            comment '图片地址',
-  type		                char(1)	            not null default '1'	                comment '跳转类型(0内部跳转 1外部跳转)',
+  type		                char(1)	            not null default '1'	                comment '跳转类型（0内部跳转 1外部跳转）',
   route                     varchar(500)        not null	                            comment '跳转路由',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
@@ -235,8 +237,8 @@ create table xy_system (
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key (system_id)
 ) engine=innodb comment = '子系统模块表';
 
@@ -272,8 +274,8 @@ create table sys_role (
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key (role_id)
 ) engine=innodb comment = '角色信息表';
 
@@ -292,8 +294,8 @@ drop table if exists sys_role_system_menu;
 create table sys_role_system_menu (
   role_id                   bigint              not null                                comment '角色Id',
   system_menu_id            bigint              not null                                comment '系统-菜单Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(role_id, system_menu_id)
 ) engine=innodb comment = '角色和系统-菜单关联表';
 
@@ -305,8 +307,8 @@ drop table if exists sys_role_dept_post;
 create table sys_role_dept_post (
   role_id                   bigint              not null                                comment '角色Id',
   dept_post_id              bigint              not null                                comment '部门-岗位Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(role_id, dept_post_id)
 ) engine=innodb comment = '角色和部门-岗位关联表';
 
@@ -318,8 +320,8 @@ drop table if exists sys_dept_role;
 create table sys_dept_role (
   dept_id                   bigint              not null                                comment '部门id',
   role_id                   bigint              not null                                comment '角色Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(dept_id, role_id)
 ) engine=innodb comment = '部门和角色关联表';
 
@@ -330,8 +332,8 @@ drop table if exists sys_post_role;
 create table sys_post_role (
   post_id                   bigint              not null                                comment '岗位Id',
   role_id                   bigint              not null                                comment '角色Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(post_id, role_id)
 ) engine=innodb comment = '岗位和角色关联表';
 
@@ -342,8 +344,8 @@ drop table if exists sys_user_role;
 create table sys_user_role (
   user_id                   bigint              not null                                comment '用户Id',
   role_id                   bigint              not null                                comment '角色Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
+  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(user_id, role_id)
 ) engine=innodb comment = '用户和角色关联表';
 
