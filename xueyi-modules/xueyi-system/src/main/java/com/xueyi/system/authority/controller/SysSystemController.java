@@ -55,8 +55,8 @@ public class SysSystemController extends BaseController {
     /**
      * 加载对应角色系统-菜单列表树
      */
-    @GetMapping(value = "/roleSystemMenuTreeSelect/{systemId}")
-    public AjaxResult roleSystemMenuTreeSelect(@PathVariable("systemId") Long systemId) {
+    @GetMapping(value = "/roleSystemMenuTreeSelect")
+    public AjaxResult roleSystemMenuTreeSelect() {
         return AjaxResult.success(systemService.buildSystemMenuTreeSelect());
     }
 

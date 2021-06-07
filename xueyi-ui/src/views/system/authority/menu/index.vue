@@ -213,7 +213,7 @@
 </template>
 
 <script>
-import {listMenu, getMenu, delMenu, addMenu, updateMenu, listMenuExcludeChild} from "@/api/system/menu";
+import {listMenu, getMenu, delMenu, addMenu, updateMenu} from "@/api/system/menu";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import IconSelect from "@/components/IconSelect";
@@ -239,12 +239,10 @@ export default {
       visibleOptions: [],
       // 菜单状态数据字典
       statusOptions: [],
-      systemNum: this.$store.state.settings.systemNum,
       // 查询参数
       queryParams: {
         menuName: undefined,
-        visible: undefined,
-        systemId: this.$store.state.settings.systemNum
+        visible: undefined
       },
       // 表单参数
       form: {},
@@ -294,7 +292,7 @@ export default {
     },
     /** 查询菜单下拉树结构 */
     getTreeSelect() {
-        listMenu({systemId: this.systemNum}).then(response => {
+        listMenu().then(response => {
           this.menuOptions = [];
           const menu = {menuId: 0, menuName: '主类目', children: []};
           menu.children = this.handleTree(response.data, "menuId");
@@ -362,7 +360,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       this.getTreeSelect();
-      getMenu(row.menuId).then(response => {
+      getMenu({menuId:row.menuId}).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改菜单";
@@ -372,7 +370,6 @@ export default {
     submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          this.form.systemId = this.systemNum;
           if (this.form.menuId != undefined) {
             updateMenu(this.form).then(response => {
               this.msgSuccess("修改成功");
@@ -396,7 +393,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delMenu(row.menuId);
+        return delMenu({menuId:row.menuId});
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");

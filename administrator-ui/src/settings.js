@@ -34,7 +34,7 @@ module.exports = {
   /**
    * 系统编号
    */
-  systemNum: 0,
+  systemId: 2,
 
   /**
    * 初始页名称|图标

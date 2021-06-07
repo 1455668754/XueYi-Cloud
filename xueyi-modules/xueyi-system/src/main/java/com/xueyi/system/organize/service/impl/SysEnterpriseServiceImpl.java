@@ -32,16 +32,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     }
 
     /**
-     * 查询租户logo
-     *
-     * @return 租户对象
-     */
-    @Override
-    public SysEnterprise selectLogo() {
-        return enterpriseMapper.selectLogo(new SysSearch());//@param search 万用组件 | null
-    }
-
-    /**
      * 查询租户信息
      *
      * @return 租户对象

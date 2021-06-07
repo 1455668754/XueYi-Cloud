@@ -48,13 +48,6 @@ public class SysEnterpriseController extends BaseController {
 
     @Autowired
     private RemoteFileService remoteFileService;
-    /**
-     * 获取logo信息
-     */
-    @GetMapping("/logo")
-    public AjaxResult logo() {
-        return AjaxResult.success(enterpriseService.selectLogo());
-    }
 
     /**
      * 获取租户信息

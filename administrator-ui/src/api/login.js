@@ -25,6 +25,22 @@ export function getInfo() {
   })
 }
 
+// 获取企业信息
+export function getEnterpriseProfile() {
+  return request({
+    url: '/system/enterprise/profile',
+    method: 'get',
+  })
+}
+
+// 获取首页可展示子系统模块列表
+export function viewListSystem() {
+  return request({
+    url: '/system/system/viewList',
+    method: 'get'
+  })
+}
+
 // 退出方法
 export function logout() {
   return request({

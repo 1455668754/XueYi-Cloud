@@ -1,16 +1,4 @@
 import request from '@/utils/request'
-import defaultSettings from '@/settings'
-
-//系统编号
-const { systemNum } = defaultSettings
-
-// 查询首页可展示子系统模块列表
-export function viewListSystem() {
-  return request({
-    url: '/system/system/viewList',
-    method: 'get'
-  })
-}
 
 // 查询子系统模块列表
 export function listSystem(query) {
@@ -32,7 +20,7 @@ export function getSystem(systemId) {
 // 查询系统-菜单权限树结构
 export function treeSelect() {
   return request({
-    url: '/system/system/roleSystemMenuTreeSelect/'+systemNum,
+    url: '/system/system/roleSystemMenuTreeSelect',
     method: 'get'
   })
 }
@@ -75,5 +63,3 @@ export function delSystem(systemId) {
     method: 'delete'
   })
 }
-
-

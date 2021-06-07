@@ -19,13 +19,6 @@ public interface ISysEnterpriseService {
     public SysEnterprise checkLoginByEnterpriseName(String enterpriseName);
 
     /**
-     * 查询租户logo
-     *
-     * @return 租户对象
-     */
-    public SysEnterprise selectLogo();
-
-    /**
      * 查询租户信息
      *
      * @return 租户对象

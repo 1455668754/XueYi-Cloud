@@ -82,7 +82,8 @@
 
 <script>
 import enterpriseLogo from "./enterpriseLogo";
-import {changeEnterpriseName, getEnterpriseProfile, updateEnterprise} from "@/api/system/enterprise";
+import {changeEnterpriseName, updateEnterprise} from "@/api/system/enterprise";
+import { getEnterpriseProfile } from '@/api/login';
 import store from "@/store";
 
 export default {

@@ -42,32 +42,6 @@ public class SysMenuController extends BaseController {
     private TokenService tokenService;
 
     /**
-     * 获取菜单下拉树列表
-     */
-    @GetMapping("/treeSelect/{systemId}")
-    public AjaxResult treeSelect(@PathVariable("systemId") Long systemId) {
-        Long userId = SecurityUtils.getUserId();
-        SysMenu menu = new SysMenu();
-        menu.setSystemId(systemId);
-        LoginUser loginUser = tokenService.getLoginUser();
-        List<SysMenu> menus = menuService.selectMenuListByUserId(menu, loginUser.getUserid(),loginUser.getUserType());
-        return AjaxResult.success(menuService.buildMenuTreeSelect(menus));
-    }
-
-    /**
-     * 加载对应角色菜单列表树
-     */
-    @GetMapping(value = "/roleMenuTreeSelect/{roleId}/{systemId}")
-    public AjaxResult roleMenuTreeSelect(@PathVariable("roleId") Long roleId, @PathVariable("systemId") Long systemId) {
-        LoginUser loginUser = tokenService.getLoginUser();
-        List<SysMenu> menus = menuService.selectMenuList(loginUser.getUserid(), systemId,loginUser.getUserType());
-        AjaxResult ajax = AjaxResult.success();
-        ajax.put("checkedKeys", menuService.selectMenuListByRoleId(roleId, systemId));
-        ajax.put("menus", menuService.buildMenuTreeSelect(menus));
-        return ajax;
-    }
-
-    /**
      * 获取菜单列表
      */
     @PreAuthorize(hasPermi = "system:menu:list")
@@ -82,9 +56,9 @@ public class SysMenuController extends BaseController {
      * 根据菜单Id获取详细信息
      */
     @PreAuthorize(hasPermi = "system:menu:query")
-    @GetMapping(value = "/{menuId}")
-    public AjaxResult getInfo(@PathVariable Long menuId) {
-        return AjaxResult.success(menuService.selectMenuById(menuId));
+    @GetMapping(value = "/byId")
+    public AjaxResult getInfo(SysMenu menu) {
+        return AjaxResult.success(menuService.selectMenuById(menu.getMenuId()));
     }
 
     /**
@@ -126,15 +100,15 @@ public class SysMenuController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:menu:remove")
     @Log(title = "菜单管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{menuId}")
-    public AjaxResult remove(@PathVariable("menuId") Long menuId) {
-        if (menuService.hasChildByMenuId(menuId)) {
+    @DeleteMapping
+    public AjaxResult remove(@RequestBody SysMenu menu) {
+        if (menuService.hasChildByMenuId(menu.getMenuId())) {
             return AjaxResult.error("存在子菜单,不允许删除");
         }
-        if (menuService.checkMenuExistRole(menuId)) {
+        if (menuService.checkMenuExistRole(menu.getMenuId())) {
             return AjaxResult.error("菜单已分配,不允许删除");
         }
-        return toAjax(menuService.deleteMenuById(menuId));
+        return toAjax(menuService.deleteMenuById(menu.getMenuId()));
     }
 
     /**
@@ -142,10 +116,10 @@ public class SysMenuController extends BaseController {
      *
      * @return 路由信息
      */
-    @GetMapping("getRouters/{systemId}")
-    public AjaxResult getRouters(@PathVariable("systemId") Long systemId) {
+    @GetMapping("getRouters")
+    public AjaxResult getRouters(SysMenu menu) {
         LoginUser loginUser = tokenService.getLoginUser();
-        List<SysMenu> menus = menuService.selectMenuTreeByUserId(loginUser.getUserid(), systemId,loginUser.getUserType());
+        List<SysMenu> menus = menuService.selectMenuTreeByUserId(loginUser.getUserid(), menu.getSystemId(),loginUser.getUserType());
         return AjaxResult.success(menuService.buildMenus(menus));
     }
 }

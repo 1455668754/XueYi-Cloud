@@ -21,16 +21,6 @@ public interface SysEnterpriseMapper {
     public SysEnterprise checkLoginByEnterpriseName(SysSearch search);
 
     /**
-     * 查询租户logo
-     * 访问控制 e 租户查询
-     *
-     * @param search 万用组件 | null
-     * @return 租户对象
-     */
-    @DataScope(eAlias = "e")
-    public SysEnterprise selectLogo(SysSearch search);
-
-    /**
      * 查询租户信息
      * 访问控制 e 租户查询
      *

@@ -42,13 +42,6 @@
         where e.tenant_name=#{search.enterpriseName} and e.status = '0' and e.del_flag = 0
     </select>
 
-    <select id="selectLogo" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysEnterpriseResult">
-        <include refid="logoVo"/>
-        where 1 = 1
-        <!-- 数据范围过滤 -->
-        ${params.dataScope}
-    </select>
-
     <select id="selectEnterpriseById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysEnterpriseResult">
         <include refid="checkVo"/>
         where 1 = 1

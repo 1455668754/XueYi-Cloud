@@ -1,6 +1,6 @@
 import { login, logout, getInfo, refreshToken } from '@/api/login'
 import { getToken, setToken, setExpiresIn, removeToken } from '@/utils/auth'
-import {getEnterpriseProfile} from "@/api/system/enterprise";
+import {getEnterpriseProfile} from "@/api/login";
 
 const user = {
   state: {
