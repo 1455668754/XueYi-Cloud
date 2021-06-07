@@ -43,9 +43,9 @@ module.exports = {
   homePageIcon: 'xy_productCenter',
 
   /**
-   * 主登录页地址 | loginAddress='' 时则跳转至本地登录页 | 本参数目的为控制集中登录/分散登录
+   * 基础系统地址
    */
-  loginAddress: 'http://localhost/',
+  baseSystemUrl: 'http://localhost',
 
   /**
    * @type {string | array} 'production' | ['production', 'development']

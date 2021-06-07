@@ -21,9 +21,8 @@
           <img :src="avatar" class="user-avatar">
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/user/profile">
-            <el-dropdown-item>个人中心</el-dropdown-item>
-          </router-link>
+          <el-dropdown-item @click.native="jumpBaseSystem('1')">个人中心</el-dropdown-item>
+          <el-dropdown-item @click.native="jumpBaseSystem('2')">企业中心</el-dropdown-item>
           <el-dropdown-item @click.native="setting = true">
             <span>布局设置</span>
           </el-dropdown-item>
@@ -91,6 +90,16 @@ export default {
           location.href = '/index';
         })
       }).catch(() => {});
+    },
+    jumpBaseSystem(type) {
+      let url;
+      if (type === '1') {//跳转个人中心
+        url = this.$store.state.settings.baseSystemUrl + '/user/profile'
+      } else if (type === '2') {//跳转主系统企业中心
+        url = this.$store.state.settings.baseSystemUrl
+      }
+      // window.open(url, '_blank') // 在新窗口打开外链接
+      window.location.href = url;  //在本页面打开外部链接
     }
   }
 }
