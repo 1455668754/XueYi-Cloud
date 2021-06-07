@@ -1,11 +1,15 @@
 package com.xueyi.tenant.service.impl;
 
 import java.util.List;
+
+import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.tenant.domain.TenantSourceValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.tenant.mapper.TenantSourceMapper;
 import com.xueyi.tenant.domain.TenantSource;
 import com.xueyi.tenant.service.ITenantSourceService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 数据源 业务层处理
@@ -50,8 +54,14 @@ public class TenantSourceServiceImpl implements ITenantSourceService
      * @return 结果
      */
     @Override
+    @Transactional
+    @DataScope(ueAlias = "empty")
     public int insertTenantSource(TenantSource tenantSource)
     {
+        TenantSourceValue value = new TenantSourceValue();
+        value.setSourceId(tenantSource.getId());
+        tenantSource.getValues().add(value);
+        tenantSourceMapper.batchTenantSeparation(tenantSource);
         return tenantSourceMapper.insertTenantSource(tenantSource);
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author xueyi
  */
-public class TenantSource extends BaseEntity
+public class TenantSourceValue extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -54,9 +54,6 @@ public class TenantSource extends BaseEntity
     /** 状态（0正常 1停用） */
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
-
-    /** 读写分离 读 */
-    private List<TenantSourceValue> values;
 
     public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
@@ -138,14 +135,6 @@ public class TenantSource extends BaseEntity
         return status;
     }
 
-    public List<TenantSourceValue> getValues() {
-        return values;
-    }
-
-    public void setValues(List<TenantSourceValue> values) {
-        this.values = values;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -157,7 +146,6 @@ public class TenantSource extends BaseEntity
                 .append("url", getUrl())
                 .append("username", getUsername())
                 .append("password", getPassword())
-                .append("values", getValues())
                 .append("type", getType())
                 .append("sort", getSort())
                 .append("status", getStatus())

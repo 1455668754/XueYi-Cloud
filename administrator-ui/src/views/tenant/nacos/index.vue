@@ -1,36 +1,17 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="数据源名称" prop="name">
+      <el-form-item label="配置名称" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入数据源名称"
+          placeholder="请输入配置名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="数据源类型" prop="databaseType">
-        <el-select v-model="queryParams.databaseType" placeholder="请选择数据源类型" clearable size="small">
-          <el-option
-            v-for="dict in databaseTypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="数据源编码" prop="slave">
-        <el-input
-          v-model="queryParams.slave"
-          placeholder="请输入数据源编码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="读写类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择读写类型" clearable size="small">
+      <el-form-item label="配置类型" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择配置类型" clearable size="small">
           <el-option
             v-for="dict in typeOptions"
             :key="dict.dictValue"
@@ -63,7 +44,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['tenant:source:add']"
+          v-hasPermi="['tenant:nacos:add']"
         >新增
         </el-button>
       </el-col>
@@ -75,7 +56,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['tenant:source:edit']"
+          v-hasPermi="['tenant:nacos:edit']"
         >修改
         </el-button>
       </el-col>
@@ -87,7 +68,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['tenant:source:remove']"
+          v-hasPermi="['tenant:nacos:remove']"
         >删除
         </el-button>
       </el-col>
@@ -98,7 +79,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['tenant:source:export']"
+          v-hasPermi="['tenant:nacos:export']"
         >导出
         </el-button>
       </el-col>
@@ -110,15 +91,15 @@
           size="mini"
           @click="handleSort"
           v-show="sortVisible"
-          v-hasPermi="['tenant:source:edit']"
+          v-hasPermi="['tenant:nacos:edit']"
         >保存排序
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange" ref="dataTable"
-              row-key="sourceId"
+    <el-table v-loading="loading" :data="nacosList" @selection-change="handleSelectionChange" ref="dataTable"
+              row-key="dataId"
     >
       <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
       <el-table-column label="编号" align="center" prop="sourceId" class-name="allowDrag">
@@ -126,32 +107,9 @@
           <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + 1 + scope.$index }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据源名称" align="center" prop="name" class-name="allowDrag"/>
-      <el-table-column label="数据源驱动" align="center" prop="driverClassName" class-name="allowDrag"/>
-      <el-table-column label="数据源地址" align="center" prop="url" class-name="allowDrag"/>
-      <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
-          <el-tag type="success" v-else-if="scope.row.type === '1'">只读</el-tag>
-          <el-tag type="warning" v-else-if="scope.row.type === '2'">只写</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="数据源类型" align="center" prop="databaseType" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-tag type="success" v-if="scope.row.databaseType === '0'">从数据源</el-tag>
-          <el-tag type="danger" v-else-if="scope.row.databaseType === '1'">主数据源</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.status"
-            active-value="0"
-            inactive-value="1"
-            @change="handleStatusChange(scope.row)"
-          ></el-switch>
-        </template>
-      </el-table-column>
+      <el-table-column label="配置名称" align="center" prop="name" class-name="allowDrag"/>
+      <el-table-column label="配置类型" align="center" prop="type" :formatter="typeFormat" class-name="allowDrag"/>
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" class-name="allowDrag"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
         <template slot-scope="scope">
           <el-button
@@ -159,7 +117,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['tenant:source:edit']"
+            v-hasPermi="['tenant:nacos:edit']"
           >修改
           </el-button>
           <el-button
@@ -167,7 +125,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['tenant:source:remove']"
+            v-hasPermi="['tenant:nacos:remove']"
           >删除
           </el-button>
         </template>
@@ -182,36 +140,23 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改数据源对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="数据源名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入数据源名称"/>
+    <!-- 添加或修改Nacos配置对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="配置名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入配置名称"/>
         </el-form-item>
-        <el-form-item label="数据源类型">
-          <el-radio-group v-model="form.databaseType" disabled>
-            <el-radio
-              v-for="dict in databaseTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
-          </el-radio-group>
+        <el-form-item label="头部配置信息" prop="prefixStr">
+          <el-input v-model="form.prefixStr" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        <el-form-item label="数据源驱动" prop="driverClassName">
-          <el-input v-model="form.driverClassName" placeholder="请输入数据源驱动"/>
+        <el-form-item label="数据源配置信息" prop="slaveStr">
+          <el-input v-model="form.slaveStr" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        <el-form-item label="数据源地址" prop="url">
-          <el-input v-model="form.url" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" placeholder="请输入数据源地址"/>
+        <el-form-item label="尾部配置信息" prop="suffixStr">
+          <el-input v-model="form.suffixStr" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        <el-form-item label="数据源账号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入数据源账号"/>
-        </el-form-item>
-        <el-form-item label="数据源密码" prop="password">
-          <el-input v-model="form.password" :show-password="true" placeholder="请输入数据源密码"/>
-        </el-form-item>
-        <el-form-item label="读写类型">
-          <el-radio-group v-model="form.type" :disabled="form.sourceId !==null">
+        <el-form-item label="配置类型">
+          <el-radio-group v-model="form.type">
             <el-radio
               v-for="dict in typeOptions"
               :key="dict.dictValue"
@@ -221,7 +166,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态">
-          <el-radio-group v-model="form.status" :disabled="form.databaseType ==='1'">
+          <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in statusOptions"
               :key="dict.dictValue"
@@ -240,13 +185,12 @@
 </template>
 
 <script>
-import { listSource, getSource, delSource, addSource, updateSource, updateSourceSort } from '@/api/tenant/source'
+import { listNacos, getNacos, delNacos, addNacos, updateNacos, updateNacosSort } from '@/api/tenant/nacos'
 import Sortable from 'sortablejs'
-import Tenant from '@/views/system/tenant/tenant'
 
 export default {
-  name: 'Source',
-  components: { Tenant },
+  name: 'Nacos',
+  components: {},
   data() {
     return {
       // 遮罩层
@@ -262,19 +206,17 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 数据源表格数据
-      sourceList: [],
-      // 数据源表格原始数据
-      oldSourceList: [],
+      // Nacos配置表格数据
+      nacosList: [],
+      // Nacos配置表格原始数据
+      oldNacosList: [],
       // 排序保存按钮显示
       sortVisible: false,
       // 弹出层标题
       title: '',
       // 是否显示弹出层
       open: false,
-      // 数据源类型字典
-      databaseTypeOptions: [],
-      // 读写类型字典
+      // 配置类型字典
       typeOptions: [],
       // 状态字典
       statusOptions: [],
@@ -283,26 +225,22 @@ export default {
         pageNum: 1,
         pageSize: 10,
         name: null,
-        slave: null,
-        databaseType: null,
+        prefixStr: null,
+        slaveStr: null,
+        suffixStr: null,
         type: null,
+        sort: null,
         status: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        driverClassName: [
-          { required: true, message: '驱动不能为空', trigger: 'blur' }
+        name: [
+          { required: true, message: '配置名称不能为空', trigger: 'blur' }
         ],
-        url: [
-          { required: true, message: '地址不能为空', trigger: 'blur' }
-        ],
-        username: [
-          { required: true, message: '用户名不能为空', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+        type: [
+          { required: true, message: '配置类型不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -312,26 +250,31 @@ export default {
     this.getDict()
   },
   methods: {
-    /** 查询数据源列表 */
+    /** 查询Nacos配置列表 */
     getList() {
       this.loading = true
-      listSource(this.queryParams).then(response => {
-        this.sourceList = response.rows
+      listNacos(this.queryParams).then(response => {
+        this.nacosList = response.rows
         this.total = response.total
         this.loading = false
       })
     },
     /** 查询字典信息 */
     getDict() {
-      this.getDicts('sys_tenant_resource_type').then(response => {
-        this.databaseTypeOptions = response.data
-      })
-      this.getDicts('sys_tenant_read_type').then(response => {
+      this.getDicts('sys_tenant_configuration_type').then(response => {
         this.typeOptions = response.data
       })
       this.getDicts('sys_normal_disable').then(response => {
         this.statusOptions = response.data
       })
+    },
+    // 配置类型字典翻译
+    typeFormat(row, column) {
+      return this.selectDictLabel(this.typeOptions, row.type)
+    },
+    // 状态字典翻译
+    statusFormat(row, column) {
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
@@ -341,14 +284,11 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        sourceId: null,
+        dataId: null,
         name: null,
-        slave: null,
-        databaseType: '0',
-        driverClassName: 'com.mysql.cj.jdbc.Driver',
-        url: null,
-        username: null,
-        password: null,
+        prefixStr: null,
+        slaveStr: null,
+        suffixStr: null,
         type: '0',
         sort: 0,
         status: '0'
@@ -367,8 +307,8 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.sourceId)
-      this.idNames = selection.map(item => item.sourceId)
+      this.ids = selection.map(item => item.dataId)
+      this.idNames = selection.map(item => item.dataId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -376,35 +316,29 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加数据源'
+      this.title = '添加Nacos配置'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getSource({ sourceId: row.sourceId }).then(response => {
+      getNacos({ dataId: row.dataId }).then(response => {
         this.form = response.data
         this.open = true
-        this.title = '修改数据源'
-      })
-    },
-    /** 修改状态按钮操作 */
-    handleStatusChange(row) {
-      updateSource(row).then(response => {
-        this.msgSuccess('修改成功')
+        this.title = '修改Nacos配置'
       })
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs['form'].validate(valid => {
         if (valid) {
-          if (this.form.sourceId != null) {
-            updateSource(this.form).then(response => {
+          if (this.form.dataId != null) {
+            updateNacos(this.form).then(response => {
               this.msgSuccess('修改成功')
               this.open = false
               this.getList()
             })
           } else {
-            addSource(this.form).then(response => {
+            addNacos(this.form).then(response => {
               this.msgSuccess('新增成功')
               this.open = false
               this.getList()
@@ -415,15 +349,15 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const sourceIds = row.sourceId || this.ids
+      const dataIds = row.dataId || this.ids
       const names = row.name || this.idNames
       let that = this
-      this.$confirm('是否确认删除数据源"' + names + '"?', '警告', {
+      this.$confirm('是否确认删除Nacos配置"' + names + '"?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        return delSource(that.updateParamIds(sourceIds))
+        return delNacos(that.updateParamIds(dataIds))
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
@@ -432,9 +366,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('tenant/source/export', {
+      this.download('tenant/nacos/export', {
         ...this.queryParams
-      }, `tenant_source.xlsx`)
+      }, `tenant_nacos.xlsx`)
     },
     /** 保存排序按钮操作 */
     handleSort() {
@@ -443,9 +377,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let params = this.sortOrderListOnlyDynamic(this.sourceList, this.oldSourceList, 'sourceId')
+        let params = this.sortOrderListOnlyDynamic(this.nacosList, this.oldNacosList, 'dataId')
         if (params.length > 0) {
-          return updateSourceSort(this.updateParamIds(params))
+          return updateNacosSort(this.updateParamIds(params))
         }
       }).then(() => {
         this.getList()
@@ -460,8 +394,8 @@ export default {
     Sortable.create(el, {
       handle: '.allowDrag',
       onEnd: evt => {
-        const targetRow = this.sourceList.splice(evt.oldIndex, 1)[0]
-        this.sourceList.splice(evt.newIndex, 0, targetRow)
+        const targetRow = this.nacosList.splice(evt.oldIndex, 1)[0]
+        this.nacosList.splice(evt.newIndex, 0, targetRow)
         this.sortVisible = true
       }
     })

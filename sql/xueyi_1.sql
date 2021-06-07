@@ -26,7 +26,7 @@ primary key (source_id)
 -- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
 -- ----------------------------
 insert into xy_tenant_source(source_id, name, database_type, driver_class_name, url, username, password, type)
-values (0, 'master', '1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
+values (0, '公用数据源', '1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
 
 -- ----------------------------
 -- 2、Nacos配置表|管理Nacos配置信息 | 需要控制多数据源的方法写进此表 | 开启租户控制的模块一定要设置成自动配置

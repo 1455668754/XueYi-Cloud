@@ -309,6 +309,19 @@ values
                                    (20023, 2, -1, 20020, '数据源修改', '', '', 'F', '0', 'tenant:source:edit',            '#', 3, 0, ''),
                                    (20024, 2, -1, 20020, '数据源删除', '', '', 'F', '0', 'tenant:source:remove',          '#', 4, 0, ''),
                                    (20025, 2, -1, 20020, '数据源导出', '', '', 'F', '0', 'tenant:source:export',          '#', 5, 0, ''),
+              -- 二级菜单
+              (20030, 2, -1, 20000, 'Nacos配置', 'nacos',   'tenant/nacos/index',      'C', '0',  'tenant:nacos:list',      '#',   1, 0, 'Nacos配置菜单'),
+                                   -- Nacos配置按钮
+                                   (20031, 2, -1, 20030, '配置查询', '', '', 'F', '0', 'tenant:nacos:query',           '#', 1, 0, ''),
+                                   (20032, 2, -1, 20030, '配置新增', '', '', 'F', '0', 'tenant:nacos:add',             '#', 2, 0, ''),
+                                   (20033, 2, -1, 20030, '配置修改', '', '', 'F', '0', 'tenant:nacos:edit',            '#', 3, 0, ''),
+                                   (20034, 2, -1, 20030, '配置删除', '', '', 'F', '0', 'tenant:nacos:remove',          '#', 4, 0, ''),
+                                   (20035, 2, -1, 20030, '配置导出', '', '', 'F', '0', 'tenant:nacos:export',          '#', 5, 0, ''),
+              -- 二级菜单
+              (20040, 2, -1, 20000, '分离配置', 'separation',   'tenant/separation/index',      'C', '0',  'tenant:separation:list',      '#',   1, 0, '数据源菜单'),
+                                   -- 读写分离按钮 SQL
+                                   (20041, 2, -1, 20040, '分离配置查询', '', '', 'F', '0', 'tenant:separation:query',           '#', 1, 0, ''),
+                                   (20042, 2, -1, 20040, '分离配置配置', '', '', 'F', '0', 'tenant:separation:edit',            '#', 2, 0, ''),
        -- 一级菜单
        (20100, 2, -1, 0, '系统管理', 'system',     null, 'M', '0', '', 'xy_setting',      3, 0, '系统管理目录'),
               (20110, 2, -1, 20100, '字典管理', 'dict',   'system/system/dict/index',        'C', '0',  'system:dict:list',      'xy_dict',   1, 0, '字典管理菜单'),
@@ -393,7 +406,8 @@ values (1, '用户性别', 'sys_user_sex', 0, '用户性别列表'),
        (21, '填写类型', 'sys_mall_input_type', 0, '填写类型列表'),
        (22, '是否默认', 'sys_mall_custom_type', 0, '是否默认列表'),
        (23, '读写类型', 'sys_tenant_read_type', 0, '读写类型列表'),
-       (24, '数据源类型', 'sys_tenant_resource_type', 0, '数据源类型列表');
+       (24, '数据源类型', 'sys_tenant_resource_type', 0, '数据源类型列表'),
+       (25, '配置类型', 'sys_tenant_configuration_type', 0, '配置类型列表');
 
 
 -- ----------------------------
@@ -490,7 +504,10 @@ values (1, 1, '男', '0', 'sys_user_sex', '', '', 'Y', 0, '性别男'),
        (67, 2, '只读', '1', 'sys_tenant_read_type', '', '', 'N', 0, '只读'),
        (68, 3, '只写', '2', 'sys_tenant_read_type', '', '', 'N', 0, '只写'),
        (69, 1, '从数据源', '0', 'sys_tenant_resource_type', '', '', 'N', 0, '从数据源'),
-       (70, 2, '主数据源', '1', 'sys_tenant_resource_type', '', '', 'N', 0, '主数据源');
+       (70, 2, '主数据源', '1', 'sys_tenant_resource_type', '', '', 'N', 0, '主数据源'),
+       (71, 1, '自动配置', '0', 'sys_tenant_configuration_type', '', '', 'N', 0, '自动配置'),
+       (72, 2, '手动配置', '1', 'sys_tenant_configuration_type', '', '', 'N', 0, '手动配置');
+
 -- ----------------------------
 -- 8、参数配置表
 -- ----------------------------

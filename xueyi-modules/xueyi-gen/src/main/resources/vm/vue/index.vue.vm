@@ -344,6 +344,7 @@ import Editor from '@/components/Editor';
 #end
 #end
 
+
 export default {
   name: "${BusinessName}",
   components: {

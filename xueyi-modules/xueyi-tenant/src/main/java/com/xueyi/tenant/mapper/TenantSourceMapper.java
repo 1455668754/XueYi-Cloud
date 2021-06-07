@@ -1,6 +1,7 @@
 package com.xueyi.tenant.mapper;
 
 import java.util.List;
+
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.tenant.domain.TenantSource;
 
@@ -9,11 +10,9 @@ import com.xueyi.tenant.domain.TenantSource;
  *
  * @author xueyi
  */
-public interface TenantSourceMapper
-{
+public interface TenantSourceMapper {
     /**
      * 查询数据源列表
-     * 访问控制 e 租户查询
      *
      * @param tenantSource 数据源
      * @return 数据源集合
@@ -22,21 +21,44 @@ public interface TenantSourceMapper
 
     /**
      * 查询数据源
-     * 访问控制 e 租户查询
      *
      * @param tenantSource 数据源
      * @return 数据源
      */
     public TenantSource selectTenantSourceById(TenantSource tenantSource);
 
+
+    /**
+     * 查询数据源列表
+     *
+     * @param tenantSource 数据源
+     * @return 数据源集合
+     */
+    public List<TenantSource> selectTenantSeparationList(TenantSource tenantSource);
+
+    /**
+     * 查询 含读 数据源集合
+     *
+     * @param tenantSource 数据源
+     * @return 数据源集合
+     */
+    public List<TenantSource> selectContainReadList(TenantSource tenantSource);
+
+    /**
+     * 查询数据源
+     *
+     * @param tenantSource 数据源
+     * @return 数据源
+     */
+    public TenantSource selectTenantSeparationById(TenantSource tenantSource);
+
     /**
      * 新增数据源
-     * 访问控制 empty 租户更新（无前缀）
+     * 访问控制 empty 租户更新（无前缀） | 控制方法位于TenantSourceServiceImpl insertTenantSource
      *
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope( ueAlias = "empty" )
     public int insertTenantSource(TenantSource tenantSource);
 
     /**
@@ -46,7 +68,7 @@ public interface TenantSourceMapper
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope( ueAlias = "empty" )
+    @DataScope(ueAlias = "empty")
     public int updateTenantSource(TenantSource tenantSource);
 
     /**
@@ -56,7 +78,7 @@ public interface TenantSourceMapper
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope( ueAlias = "empty" )
+    @DataScope(ueAlias = "empty")
     public int updateTenantSourceSort(TenantSource tenantSource);
 
     /**
@@ -66,7 +88,7 @@ public interface TenantSourceMapper
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope( ueAlias = "empty" )
+    @DataScope(ueAlias = "empty")
     public int deleteTenantSourceById(TenantSource tenantSource);
 
     /**
@@ -76,6 +98,26 @@ public interface TenantSourceMapper
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope( ueAlias = "empty" )
+    @DataScope(ueAlias = "empty")
     public int deleteTenantSourceByIds(TenantSource tenantSource);
+
+    /**
+     * 批量新增写-读数据源
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int batchTenantSeparation(TenantSource tenantSource);
+
+    /**
+     * 通过写数据源Id删除读数据源关联信息
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int deleteTenantSeparationBySourceId(TenantSource tenantSource);
 }

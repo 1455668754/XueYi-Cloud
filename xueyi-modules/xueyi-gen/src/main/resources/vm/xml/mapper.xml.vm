@@ -138,7 +138,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectVo"/>
         where e.${pkColumn.columnName} = #{${pkColumn.javaField}}
 #elseif($table.sub)
-        select#foreach($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') e.$column.columnName#if($velocityCount != $columns.size()),#end#end#end,
+        select#foreach($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') e.$column.columnName#if($velocityCount != $columns.size()),#end#end#end
+
            #foreach($column in $subTable.columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') b.$column.columnName as sub_$column.columnName#if($velocityCount != $subTable.columns.size()),#end#end#end
 
         from ${tableName} e
