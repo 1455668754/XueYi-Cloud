@@ -137,7 +137,7 @@ primary key (tenant_id)
 -- 初始化-租户表数据
 -- ----------------------------
 insert into xy_tenant_strategy_tenant (strategy_id, tenant_id, status)
-values (0, 0, 'Y'),
+values (0, -1, 'Y'),
        (0, 1, 'Y'),
        (0, 2, 'Y');
 
@@ -168,7 +168,7 @@ create table xy_tenant (
 -- 初始化-租户信息表数据
 -- ----------------------------
 insert into xy_tenant (tenant_id, tenant_name, tenant_system_name, tenant_nick, tenant_logo)
-values (0, 'administrator', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/04/02/73c90edd-8d51-4fb9-b61e-06a0b4630d5b.jpg'),
+values (-1, 'administrator', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/04/02/73c90edd-8d51-4fb9-b61e-06a0b4630d5b.jpg'),
        (1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/04/02/73c90edd-8d51-4fb9-b61e-06a0b4630d5b.jpg'),
        (2, 'xueYi2', '雪忆管理系统', 'xueYi2', 'http://127.0.0.1:9300/statics/2021/04/02/73c90edd-8d51-4fb9-b61e-06a0b4630d5b.jpg');
 
