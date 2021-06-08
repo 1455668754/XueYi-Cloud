@@ -566,7 +566,7 @@ export default {
       this.ids = selection.map(item => item.${pkColumn.javaField})
 #foreach ($column in $columns)
 #if($column.javaField == 'name')
-      this.idNames = selection.map(item => item.${pkColumn.javaField})
+      this.idNames = selection.map(item => item.${column.javaField})
 #end
 #end
       this.single = selection.length!==1
