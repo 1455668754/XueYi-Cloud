@@ -21,10 +21,8 @@
     </resultMap>
 
     <sql id="selectVo">
-        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.create_by, e.create_time, e.update_by, e.update_time,
-               td.datasource
+        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.create_by, e.create_time, e.update_by, e.update_time
         from xy_tenant e
-                 left join xy_tenant_database td on e.tenant_id=td.tenant_id
     </sql>
 
     <sql id="checkVo">
