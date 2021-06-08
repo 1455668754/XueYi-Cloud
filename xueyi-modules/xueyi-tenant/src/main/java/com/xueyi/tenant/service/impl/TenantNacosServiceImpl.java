@@ -1,7 +1,6 @@
 package com.xueyi.tenant.service.impl;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.tenant.mapper.TenantNacosMapper;
@@ -28,7 +27,6 @@ public class TenantNacosServiceImpl implements ITenantNacosService {
     public List<TenantNacos> selectTenantNacosList(TenantNacos tenantNacos) {
         return tenantNacosMapper.selectTenantNacosList(tenantNacos);
     }
-
 
     /**
      * 查询Nacos配置

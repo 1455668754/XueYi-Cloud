@@ -86,8 +86,8 @@
     <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="写数据源名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入写数据源名称" readonly/>
+        <el-form-item label="写数据源" prop="name">
+          <el-input v-model="form.name" placeholder="请输入写数据源" readonly/>
         </el-form-item>
         <el-divider content-position="center">读数据源信息</el-divider>
         <div class="value-set">
@@ -234,12 +234,13 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.sourceId != null) {
-            this.valueCheck()
-            updateSeparation(this.form).then(response => {
-              this.msgSuccess('配置成功')
-              this.open = false
-              this.getList()
-            })
+            if (this.valueCheck()) {
+              updateSeparation(this.form).then(response => {
+                this.msgSuccess('配置成功')
+                this.open = false
+                this.getList()
+              })
+            }
           }
         }
       })
@@ -266,7 +267,15 @@ export default {
             this.form.values.splice(j--, 1)
           }
         }
+        if (this.form.values.length === 0) {
+          this.$message({
+            message: '必须配置读数据源，请添加',
+            type: 'warning'
+          })
+          return false
+        }
       }
+      return true
     }
   }
 }

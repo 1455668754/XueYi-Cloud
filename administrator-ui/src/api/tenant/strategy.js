@@ -9,11 +9,19 @@ export function listStrategy(query) {
   })
 }
 
-
 // 查询数据源策略详细
 export function getStrategy(query) {
   return request({
     url: '/tenant/strategy/byId',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询数据源策略列表（排除停用）
+export function listStrategyExclude(query) {
+  return request({
+    url: '/tenant/strategy/exclude',
     method: 'get',
     params: query
   })

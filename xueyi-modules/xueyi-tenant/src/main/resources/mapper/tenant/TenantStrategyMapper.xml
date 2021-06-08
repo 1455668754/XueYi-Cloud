@@ -35,7 +35,12 @@
         <result property="status"               column="sub_status"             />
     </resultMap>
 
+
     <sql id="selectVo">
+        select e.strategy_id, e.name, e.amount, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
+        from xy_tenant_strategy e
+    </sql>
+    <sql id="subVo">
         select e.strategy_id, e.name, e.amount, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time,
                b.source_id as sub_source_id, b.name as sub_name, tss.status as is_main, b.database_type as sub_database_type, b.slave as sub_slave, b.driver_class_name as sub_driver_class_name, b.url as sub_url, b.username as sub_username, b.password as sub_password, b.type as sub_type, b.sort as sub_sort, b.status as sub_status
         from xy_tenant_strategy e
@@ -44,18 +49,21 @@
     </sql>
 
     <select id="selectTenantStrategyList" parameterType="TenantStrategy" resultMap="TenantStrategyResult">
-        <include refid="selectVo"/>
+        <include refid="subVo"/>
         where e.del_flag = 0 and ( b.source_id is null or ( b.source_id is not null and b.del_flag = 0 ) )
-        <if test="name != null  and name != ''"> and e.name like concat('%', #{name}, '%')</if>
-        <if test="amount != null  and amount != ''"> and e.amount = #{amount}</if>
-        <if test="sort != null  and sort != ''"> and e.sort = #{sort}</if>
-        <if test="status != null  and status != ''"> and e.status = #{status}</if>
+        <if test="name != null  and name != ''">and e.name like concat('%', #{name}, '%')</if>
+        <if test="status != null  and status != ''">and e.status = #{status}</if>
         order by e.sort
     </select>
 
+    <select id="selectTenantStrategyListExclude" parameterType="TenantStrategy" resultMap="TenantStrategyResult">
+        <include refid="selectVo"/>
+        where e.status = '0' and e.del_flag = 0
+        order by e.sort
+    </select>
 
     <select id="selectTenantStrategyById" parameterType="TenantStrategy" resultMap="TenantStrategyResult">
-        <include refid="selectVo"/>
+        <include refid="subVo"/>
         where e.strategy_id = #{strategyId}
         and e.del_flag = 0 and ( b.source_id is null or ( b.source_id is not null and b.del_flag = 0 ) )
     </select>
@@ -63,31 +71,31 @@
     <insert id="insertTenantStrategy" parameterType="TenantStrategy">
         insert into xy_tenant_strategy
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null">strategy_id,</if>
-            <if test="name != null and name != ''">name,</if>
-            <if test="amount != null and amount != ''">amount,</if>
-            <if test="sort != null and sort != ''">sort,</if>
-            <if test="status != null and status != ''">status,</if>
-            <if test="createBy != null">create_by,</if>
+            <if test="Id != null">                                        strategy_id                  ,</if>
+            <if test="name != null and name != ''">                       name                         ,</if>
+            <if test="amount != null and amount != ''">                   amount                       ,</if>
+            <if test="sort != null and sort != ''">                       sort                         ,</if>
+            <if test="status != null and status != ''">                   status                       ,</if>
+            <if test="createBy != null">                                  create_by                    ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                            #{Id}              ,</if>
-            <if test="name != null and name != ''">#{name},</if>
-            <if test="amount != null and amount != ''">#{amount},</if>
-            <if test="sort != null and sort != ''">#{sort},</if>
-            <if test="status != null and status != ''">#{status},</if>
-            <if test="createBy != null">#{createBy},</if>
+            <if test="Id != null">                                        #{Id}                        ,</if>
+            <if test="name != null and name != ''">                       #{name}                      ,</if>
+            <if test="amount != null and amount != ''">                   #{amount}                    ,</if>
+            <if test="sort != null and sort != ''">                       #{sort}                      ,</if>
+            <if test="status != null and status != ''">                   #{status}                    ,</if>
+            <if test="createBy != null">                                  #{createBy}                  ,</if>
         </trim>
     </insert>
 
     <update id="updateTenantStrategy" parameterType="TenantStrategy">
         update xy_tenant_strategy
         <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null and name != ''">name = #{name},</if>
-            <if test="amount != null and amount != ''">amount = #{amount},</if>
-            <if test="sort != null and sort != ''">sort = #{sort},</if>
-            <if test="status != null and status != ''">status = #{status},</if>
-            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="name != null and name != ''">                        name = #{name}              ,</if>
+            <if test="amount != null and amount != ''">                    amount = #{amount}          ,</if>
+            <if test="sort != null and sort != ''">                        sort = #{sort}              ,</if>
+            <if test="status != null and status != ''">                    status = #{status}          ,</if>
+            <if test="updateBy != null">                                   update_by = #{updateBy}     ,</if>
         </trim>
         where strategy_id = #{strategyId} and del_flag = 0 and is_change = 0
     </update>

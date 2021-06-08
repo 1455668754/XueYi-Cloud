@@ -242,11 +242,10 @@
 <script>
 import { listSource, getSource, delSource, addSource, updateSource, updateSourceSort } from '@/api/tenant/source'
 import Sortable from 'sortablejs'
-import Tenant from '@/views/system/tenant/tenant'
 
 export default {
   name: 'Source',
-  components: { Tenant },
+  components: {},
   data() {
     return {
       // 遮罩层

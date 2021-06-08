@@ -45,6 +45,13 @@ public class TenantStrategyController extends BaseController {
         return getDataTable(list);
     }
 
+    /**
+     * 查询数据源策略列表（排除停用）
+     */
+    @GetMapping("/exclude")
+    public AjaxResult exclude(TenantStrategy tenantStrategy) {
+        return AjaxResult.success(tenantStrategyService.selectTenantStrategyListExclude(tenantStrategy));
+    }
 
     /**
      * 导出数据源策略列表
@@ -84,6 +91,9 @@ public class TenantStrategyController extends BaseController {
     @Log(title = "数据源策略", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TenantStrategy tenantStrategy) {
+        if (tenantStrategy.getIsChange()!= null && tenantStrategy.getIsChange() == 1) {
+            return AjaxResult.error("禁止操作默认策略");
+        }
         return toAjax(tenantStrategyService.updateTenantStrategy(tenantStrategy));
     }
 

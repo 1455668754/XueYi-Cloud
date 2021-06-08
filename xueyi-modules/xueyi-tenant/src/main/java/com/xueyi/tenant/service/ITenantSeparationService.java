@@ -1,7 +1,6 @@
 package com.xueyi.tenant.service;
 
 import java.util.List;
-
 import com.xueyi.tenant.domain.TenantSource;
 
 /**

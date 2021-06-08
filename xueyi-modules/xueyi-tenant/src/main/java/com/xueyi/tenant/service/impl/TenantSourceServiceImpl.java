@@ -1,7 +1,9 @@
 package com.xueyi.tenant.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.tenant.domain.TenantSourceValue;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,10 +56,15 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
     @Transactional
     @DataScope(ueAlias = "empty")
     public int insertTenantSource(TenantSource tenantSource) {
-        TenantSourceValue value = new TenantSourceValue();
-        value.setSourceId(tenantSource.getId());
-        tenantSource.getValues().add(value);
-        tenantSourceMapper.batchTenantSeparation(tenantSource);
+        if (tenantSource.getType().equals("0")) {
+            TenantSourceValue value = new TenantSourceValue();
+            value.setSourceId(tenantSource.getId());
+            List<TenantSourceValue> values = new ArrayList<>();
+            values.add(value);
+            tenantSource.setValues(values);
+            tenantSource.setSourceId(tenantSource.getId());
+            tenantSourceMapper.batchTenantSeparation(tenantSource);
+        }
         return tenantSourceMapper.insertTenantSource(tenantSource);
     }
 

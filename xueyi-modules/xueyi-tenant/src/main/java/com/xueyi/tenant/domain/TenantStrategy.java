@@ -26,6 +26,11 @@ public class TenantStrategy extends BaseEntity
     @Excel(name = "数据源数量")
     private String amount;
 
+
+    /** 主策略（Y是 N否） */
+    @Excel(name = "主策略", readConverterExp = "Y=是,N=否")
+    private String isMain;
+
     /** 是否有主数据源 */
     private Boolean hasMain;
 
@@ -61,6 +66,14 @@ public class TenantStrategy extends BaseEntity
 
     public String getAmount() {
         return amount;
+    }
+
+    public String getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(String isMain) {
+        this.isMain = isMain;
     }
 
     public Boolean getHasMain() {
@@ -101,6 +114,7 @@ public class TenantStrategy extends BaseEntity
                 .append("strategyId", getStrategyId())
                 .append("name", getName())
                 .append("amount", getAmount())
+                .append("isMain", getIsMain())
                 .append("hasMain", getHasMain())
                 .append("isChange", getIsChange())
                 .append("values", getValues())

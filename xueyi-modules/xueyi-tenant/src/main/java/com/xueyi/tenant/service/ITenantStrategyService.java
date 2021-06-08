@@ -18,6 +18,13 @@ public interface ITenantStrategyService {
      */
     public List<TenantStrategy> selectTenantStrategyList(TenantStrategy tenantStrategy);
 
+    /**
+     * 查询数据源策略列表（排除停用）
+     *
+     * @param tenantStrategy 数据源策略
+     * @return 数据源策略集合
+     */
+    public List<TenantStrategy> selectTenantStrategyListExclude(TenantStrategy tenantStrategy);
 
     /**
      * 查询数据源策略

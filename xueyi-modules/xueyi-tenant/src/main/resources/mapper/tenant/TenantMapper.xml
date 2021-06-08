@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.tenant.mapper.TenantMapper">
+
+    <resultMap type="Tenant" id="TenantResult">
+        <id     property="tenantId"                 column="tenant_id"                  />
+        <result property="tenantName"               column="tenant_name"                />
+        <result property="tenantSystemName"         column="tenant_system_name"         />
+        <result property="tenantNick"               column="tenant_nick"                />
+        <result property="tenantLogo"               column="tenant_logo"                />
+        <result property="tenantNameFrequency"      column="tenant_name_frequency"      />
+        <result property="isChange"                 column="is_change"                  />
+        <result property="sort"                     column="sort"                       />
+        <result property="status"                   column="status"                     />
+        <result property="createBy"   		        column="create_by"                  />
+        <result property="createName"   	        column="create_name"                />
+        <result property="createTime"               column="create_time"                />
+        <result property="updateBy"   		        column="update_by"                  />
+        <result property="updateName"   	        column="update_name"                />
+        <result property="updateTime"               column="update_time"                />
+        <result property="remark"                   column="remark"                     />
+        <collection property="values" javaType="java.util.List" resultMap="valuesResult"/>
+    </resultMap>
+
+    <resultMap type="TenantStrategy" id="valuesResult">
+        <id     property="strategyId"               column="sub_strategy_id"            />
+        <result property="name"                     column="sub_name"                   />
+        <result property="isMain"                   column="is_main"                    />
+        <result property="amount"                   column="sub_amount"                 />
+        <result property="sort"                     column="sub_sort"                   />
+        <result property="status"                   column="sub_status"                 />
+    </resultMap>
+
+    <sql id="selectVo">
+        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark,
+               b.strategy_id as sub_strategy_id, b.name as sub_name, tst.status as is_main, b.amount as sub_amount, b.sort as sub_sort, b.status as sub_status
+        from xy_tenant e
+        left join xy_tenant_strategy_tenant tst on tst.tenant_id = e.tenant_id
+        left join xy_tenant_strategy b on b.strategy_id = tst.strategy_id
+    </sql>
+
+    <select id="selectTenantList" parameterType="Tenant" resultMap="TenantResult">
+        <include refid="selectVo"/>
+        where e.del_flag = 0 and ( b.strategy_id is null or ( b.strategy_id is not null and b.del_flag = 0 ) )
+        <if test="tenantId != null"> and e.tenant_id like concat('%', #{tenantId}, '%')</if>
+        <if test="tenantName != null  and tenantName != ''"> and e.tenant_name like concat('%', #{tenantName}, '%')</if>
+        <if test="tenantSystemName != null  and tenantSystemName != ''"> and e.tenant_system_name like concat('%', #{tenantSystemName}, '%')</if>
+        <if test="tenantNick != null  and tenantNick != ''"> and e.tenant_nick like concat('%', #{tenantNick}, '%')</if>
+        <if test="status != null  and status != ''"> and e.status = #{status}</if>
+        order by e.sort
+    </select>
+
+    <select id="selectTenantById" parameterType="Tenant" resultMap="TenantResult">
+        <include refid="selectVo"/>
+        where e.tenant_id = #{tenantId}
+        and e.del_flag = 0 and ( b.strategy_id is null or ( b.strategy_id is not null and b.del_flag = 0 ) )
+    </select>
+
+    <insert id="insertTenant" parameterType="Tenant">
+        insert into xy_tenant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Id != null">                                             tenant_id                                      ,</if>
+            <if test="tenantName != null and tenantName != ''">                tenant_name                                    ,</if>
+            <if test="tenantSystemName != null and tenantSystemName != ''">    tenant_system_name                             ,</if>
+            <if test="tenantNick != null and tenantNick != ''">                tenant_nick                                    ,</if>
+            <if test="tenantLogo != null">                                     tenant_logo                                    ,</if>
+            <if test="tenantNameFrequency != null">                            tenant_name_frequency                          ,</if>
+            <if test="sort != null and sort != ''">                            sort                                           ,</if>
+            <if test="status != null and status != ''">                        status                                         ,</if>
+            <if test="createBy != null">                                       create_by                                      ,</if>
+            <if test="remark != null">                                         remark                                         ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Id != null">                                             #{Id}                                          ,</if>
+            <if test="tenantName != null and tenantName != ''">                #{tenantName}                                  ,</if>
+            <if test="tenantSystemName != null and tenantSystemName != ''">    #{tenantSystemName}                            ,</if>
+            <if test="tenantNick != null and tenantNick != ''">                #{tenantNick}                                  ,</if>
+            <if test="tenantLogo != null">                                     #{tenantLogo}                                  ,</if>
+            <if test="tenantNameFrequency != null">                            #{tenantNameFrequency}                         ,</if>
+            <if test="sort != null and sort != ''">                            #{sort}                                        ,</if>
+            <if test="status != null and status != ''">                        #{status}                                      ,</if>
+            <if test="createBy != null">                                       #{createBy}                                    ,</if>
+            <if test="remark != null">                                         #{remark}                                      ,</if>
+        </trim>
+    </insert>
+
+    <update id="updateTenant" parameterType="Tenant">
+        update xy_tenant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tenantName != null and tenantName != ''">                tenant_name = #{tenantName}                    ,</if>
+            <if test="tenantSystemName != null and tenantSystemName != ''">    tenant_system_name = #{tenantSystemName}       ,</if>
+            <if test="tenantNick != null and tenantNick != ''">                tenant_nick = #{tenantNick}                    ,</if>
+            <if test="tenantLogo != null">                                     tenant_logo = #{tenantLogo}                    ,</if>
+            <if test="tenantNameFrequency != null">                            tenant_name_frequency = #{tenantNameFrequency} ,</if>
+            <if test="sort != null and sort != ''">                            sort = #{sort}                                 ,</if>
+            <if test="status != null and status != ''">                        status = #{status}                             ,</if>
+            <if test="updateBy != null">                                       update_by = #{updateBy}                        ,</if>
+            <if test="remark != null">                                         remark = #{remark}                             ,</if>
+        </trim>
+        where tenant_id = #{tenantId} and is_change = 'N' and del_flag = 0
+    </update>
+
+    <update id="updateTenantSort" parameterType="Tenant">
+        update xy_tenant set sort =
+        <foreach collection="params.Ids" item="item" index="index" separator=" " open="case tenant_id" close="end">
+            when #{item.tenantId} then #{item.sort}
+        </foreach>
+        where tenant_id in
+        <foreach collection="params.Ids" item="item" index="index" separator="," open="(" close=")">
+            #{item.tenantId}
+        </foreach>
+    </update>
+
+    <delete id="deleteTenantById" parameterType="Tenant">
+        update xy_tenant
+        set del_flag = 1
+        where tenant_id = #{tenantId} and is_change = 'N' and del_flag = 0
+    </delete>
+
+    <delete id="deleteTenantByIds" parameterType="Tenant">
+        update xy_tenant
+        set del_flag = 1
+        where is_change = 'N' and del_flag = 0 and tenant_id in
+        <foreach item="tenantId" collection="params.Ids" open="(" separator="," close=")">
+            #{tenantId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteTenantStrategyByTenantIds" parameterType="Tenant">
+        delete tst from xy_tenant_strategy_tenant tst
+        left join xy_tenant t on t.tenant_id = tst.tenant_id
+        where t.is_change = 'N' and tst.tenant_id in
+        <foreach item="tenantId" collection="params.Ids" open="(" separator="," close=")">
+            #{tenantId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteTenantStrategyByTenantId" parameterType="Tenant">
+        delete tst from xy_tenant_strategy_tenant tst
+        left join xy_tenant t on t.tenant_id = tst.tenant_id
+        where t.is_change = 'N' and tst.tenant_id = #{tenantId}
+    </delete>
+
+    <insert id="batchTenantStrategy" parameterType="Tenant">
+        insert into xy_tenant_strategy_tenant(tenant_id, strategy_id, status) values
+        <foreach item="item" index="index" collection="values" separator=",">
+            (#{tenantId}, #{item.strategyId}, #{item.status})
+        </foreach>
+    </insert>
+</mapper>

@@ -94,6 +94,9 @@ public class TenantSourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
     public AjaxResult updateSort(@RequestBody TenantSource tenantSource) {
+        if (tenantSource.getDatabaseType()!= null && tenantSource.getDatabaseType().equals("1")) {
+            return AjaxResult.error("禁止操作主数据源");
+        }
         return toAjax(tenantSourceService.updateTenantSourceSort(tenantSource));
     }
 

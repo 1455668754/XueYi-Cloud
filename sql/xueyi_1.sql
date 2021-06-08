@@ -153,8 +153,9 @@ create table xy_tenant (
   tenant_name		        varchar(50)	        not null unique	                        comment '租户账号',
   tenant_system_name		varchar(50)	        not null 	                            comment '系统名称',
   tenant_nick		        varchar(50)	        not null 	                            comment '租户名称',
-  tenant_logo		        varchar(1000)	    default ''	                            comment '租户logo',
+  tenant_logo		        varchar(2000)	    default ''	                            comment '租户logo',
   tenant_name_frequency     tinyint             default 0                               comment '租户账号修改次数',
+  is_change                 char(1)             not null default 'N'	                comment '系统租户（Y是 N否）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
@@ -170,10 +171,10 @@ create table xy_tenant (
 -- ----------------------------
 -- 初始化-租户信息表数据
 -- ----------------------------
-insert into xy_tenant (tenant_id, tenant_name, tenant_system_name, tenant_nick, tenant_logo)
-values (-1, 'administrator', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/04/02/73c90edd-8d51-4fb9-b61e-06a0b4630d5b.jpg'),
-       (1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/04/02/73c90edd-8d51-4fb9-b61e-06a0b4630d5b.jpg'),
-       (2, 'xueYi2', '雪忆管理系统', 'xueYi2', 'http://127.0.0.1:9300/statics/2021/04/02/73c90edd-8d51-4fb9-b61e-06a0b4630d5b.jpg');
+insert into xy_tenant (is_change, tenant_id, tenant_name, tenant_system_name, tenant_nick, tenant_logo)
+values ('Y', -1, 'administrator', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
+       ('N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
+       ('N', 2, 'xueYi2', '雪忆管理系统', 'xueYi2', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
 
 -- ----------------------------
 -- 3、素材信息表|管理素材信息

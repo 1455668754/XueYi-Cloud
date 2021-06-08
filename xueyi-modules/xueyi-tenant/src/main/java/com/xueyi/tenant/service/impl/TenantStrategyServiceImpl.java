@@ -4,13 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-
-import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import org.springframework.transaction.annotation.Transactional;
-import com.xueyi.tenant.domain.TenantSource;
 import com.xueyi.tenant.mapper.TenantStrategyMapper;
 import com.xueyi.tenant.domain.TenantStrategy;
 import com.xueyi.tenant.service.ITenantStrategyService;
@@ -36,6 +31,15 @@ public class TenantStrategyServiceImpl implements ITenantStrategyService {
         return tenantStrategyMapper.selectTenantStrategyList(tenantStrategy);
     }
 
+    /**
+     * 查询数据源策略列表（排除停用）
+     *
+     * @param tenantStrategy 数据源策略
+     * @return 数据源策略集合
+     */
+    public List<TenantStrategy> selectTenantStrategyListExclude(TenantStrategy tenantStrategy) {
+        return tenantStrategyMapper.selectTenantStrategyListExclude(tenantStrategy);
+    }
 
     /**
      * 查询数据源策略

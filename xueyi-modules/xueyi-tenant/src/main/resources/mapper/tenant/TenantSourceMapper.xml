@@ -101,49 +101,46 @@
     <insert id="insertTenantSource" parameterType="TenantSource">
         insert into xy_tenant_source
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null">source_id,</if>
-            <if test="name != null and name != ''">name,</if>
-            <if test="databaseType != null and databaseType != ''">database_type,</if>
-            <if test="driverClassName != null and driverClassName != ''">driver_class_name,</if>
-            <if test="slave != null and slave != ''">slave,</if>
-            <if test="url != null and url != ''">url,</if>
-            <if test="username != null and username != ''">username,</if>
-            <if test="password != null and password != ''">password,</if>
-            <if test="type != null and type != ''">type,</if>
-            <if test="sort != null and sort != ''">sort,</if>
-            <if test="status != null and status != ''">status,</if>
-            <if test="createBy != null">create_by,</if>
+            <if test="Id != null">                                        source_id                    ,</if>
+            <if test="name != null and name != ''">                       name                         ,</if>
+            <if test="driverClassName != null and driverClassName != ''"> driver_class_name            ,</if>
+            <if test="slave != null and slave != ''">                     slave                        ,</if>
+            <if test="url != null and url != ''">                         url                          ,</if>
+            <if test="username != null and username != ''">               username                     ,</if>
+            <if test="password != null and password != ''">               password                     ,</if>
+            <if test="type != null and type != ''">                       type                         ,</if>
+            <if test="sort != null and sort != ''">                       sort                         ,</if>
+            <if test="status != null and status != ''">                   status                       ,</if>
+            <if test="createBy != null">                                  create_by                    ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                            #{Id}              ,</if>
-            <if test="name != null and name != ''">#{name},</if>
-            <if test="databaseType != null and databaseType != ''">#{databaseType},</if>
-            <if test="driverClassName != null and driverClassName != ''">#{driverClassName},</if>
-            <if test="slave != null and slave != ''">#{slave},</if>
-            <if test="url != null and url != ''">#{url},</if>
-            <if test="username != null and username != ''">#{username},</if>
-            <if test="password != null and password != ''">#{password},</if>
-            <if test="type != null and type != ''">#{type},</if>
-            <if test="sort != null and sort != ''">#{sort},</if>
-            <if test="status != null and status != ''">#{status},</if>
-            <if test="createBy != null">#{createBy},</if>
+            <if test="Id != null">                                        #{Id}                        ,</if>
+            <if test="name != null and name != ''">                       #{name}                      ,</if>
+            <if test="driverClassName != null and driverClassName != ''"> #{driverClassName}           ,</if>
+            <if test="slave != null and slave != ''">                     #{slave}                     ,</if>
+            <if test="url != null and url != ''">                         #{url}                       ,</if>
+            <if test="username != null and username != ''">               #{username}                  ,</if>
+            <if test="password != null and password != ''">               #{password}                  ,</if>
+            <if test="type != null and type != ''">                       #{type}                      ,</if>
+            <if test="sort != null and sort != ''">                       #{sort}                      ,</if>
+            <if test="status != null and status != ''">                   #{status}                    ,</if>
+            <if test="createBy != null">                                  #{createBy}                  ,</if>
         </trim>
     </insert>
 
     <update id="updateTenantSource" parameterType="TenantSource">
         update xy_tenant_source
         <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null and name != ''">name = #{name},</if>
-            <if test="databaseType != null and databaseType != ''">database_type = #{databaseType},</if>
-            <if test="driverClassName != null and driverClassName != ''">driver_class_name = #{driverClassName},</if>
-            <if test="slave != null and slave != ''">slave = #{slave},</if>
-            <if test="url != null and url != ''">url = #{url},</if>
-            <if test="username != null and username != ''">username = #{username},</if>
-            <if test="password != null and password != ''">password = #{password},</if>
-            <if test="type != null and type != ''">type = #{type},</if>
-            <if test="sort != null and sort != ''">sort = #{sort},</if>
-            <if test="status != null and status != ''">status = #{status},</if>
-            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="name != null and name != ''">                        name = #{name}                            ,</if>
+            <if test="driverClassName != null and driverClassName != ''">  driver_class_name = #{driverClassName}    ,</if>
+            <if test="slave != null and slave != ''">                      slave = #{slave}                          ,</if>
+            <if test="url != null and url != ''">                          url = #{url}                              ,</if>
+            <if test="username != null and username != ''">                username = #{username}                    ,</if>
+            <if test="password != null and password != ''">                password = #{password}                    ,</if>
+            <if test="type != null and type != ''">                        type = #{type}                            ,</if>
+            <if test="sort != null and sort != ''">                        sort = #{sort}                            ,</if>
+            <if test="status != null and status != ''">                    status = #{status}                        ,</if>
+            <if test="updateBy != null">                                   update_by = #{updateBy}                   ,</if>
         </trim>
         where source_id = #{sourceId} and database_type != '1' and del_flag = 0
     </update>

@@ -1,10 +1,38 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="策略名称" prop="name">
+      <el-form-item label="租户Id" prop="tenantId">
         <el-input
-          v-model="queryParams.name"
-          placeholder="请输入策略名称"
+          v-model="queryParams.tenantName"
+          placeholder="请输入租户Id"
+          type="number"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="租户账号" prop="tenantName">
+        <el-input
+          v-model="queryParams.tenantName"
+          placeholder="请输入租户账号"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="系统名称" prop="tenantSystemName">
+        <el-input
+          v-model="queryParams.tenantSystemName"
+          placeholder="请输入系统名称"
+          clearable
+          size="small"
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="租户名称" prop="tenantNick">
+        <el-input
+          v-model="queryParams.tenantNick"
+          placeholder="请输入租户名称"
           clearable
           size="small"
           @keyup.enter.native="handleQuery"
@@ -34,7 +62,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['tenant:strategy:add']"
+          v-hasPermi="['tenant:tenant:add']"
         >新增
         </el-button>
       </el-col>
@@ -46,7 +74,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['tenant:strategy:edit']"
+          v-hasPermi="['tenant:tenant:edit']"
         >修改
         </el-button>
       </el-col>
@@ -58,7 +86,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['tenant:strategy:remove']"
+          v-hasPermi="['tenant:tenant:remove']"
         >删除
         </el-button>
       </el-col>
@@ -69,7 +97,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['tenant:strategy:export']"
+          v-hasPermi="['tenant:tenant:export']"
         >导出
         </el-button>
       </el-col>
@@ -81,22 +109,42 @@
           size="mini"
           @click="handleSort"
           v-show="sortVisible"
-          v-hasPermi="['tenant:strategy:edit']"
+          v-hasPermi="['tenant:tenant:edit']"
         >保存排序
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="strategyList" @selection-change="handleSelectionChange" ref="dataTable"
-              row-key="strategyId"
+    <el-table v-loading="loading" :data="tenantList" @selection-change="handleSelectionChange" ref="dataTable"
+              row-key="tenantId"
     >
       <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-      <el-table-column label="策略Id" align="center" prop="strategyId" class-name="allowDrag"/>
-      <el-table-column label="策略名称" align="center" prop="name" class-name="allowDrag"/>
-      <el-table-column label="数据源数量" align="center" prop="amount" class-name="allowDrag"/>
-      <el-table-column label="显示顺序" align="center" prop="sort" class-name="allowDrag"/>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" class-name="allowDrag"/>
+      <el-table-column label="租户Id" align="center" prop="tenantId" class-name="allowDrag"/>
+      <el-table-column label="租户账号" align="center" prop="tenantName" class-name="allowDrag"/>
+      <el-table-column label="系统名称" align="center" prop="tenantSystemName" class-name="allowDrag"/>
+      <el-table-column label="租户名称" align="center" prop="tenantNick" class-name="allowDrag"/>
+      <el-table-column label="租户logo" align="center" prop="tenantLogo" class-name="allowDrag">
+        <template slot-scope="scope">
+          <el-image
+            style="width: 60px; height: 60px"
+            :src="scope.row.tenantLogo"
+            fit="contain"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column label="可修改次数" align="center" prop="tenantNameFrequency" class-name="allowDrag"/>
+      <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+            :disabled="scope.row.isChange === 'Y'"
+          ></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
         <template slot-scope="scope">
           <el-button
@@ -104,7 +152,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['tenant:strategy:edit']"
+            v-hasPermi="['tenant:tenant:edit']"
           >修改
           </el-button>
           <el-button
@@ -112,7 +160,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['tenant:strategy:remove']"
+            v-hasPermi="['tenant:tenant:remove']"
           >删除
           </el-button>
         </template>
@@ -127,11 +175,20 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改数据源策略对话框 -->
+    <!-- 添加或修改租户信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="策略名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入内容"/>
+        <el-form-item label="租户账号" prop="tenantName">
+          <el-input v-model="form.tenantName" placeholder="请输入租户账号"/>
+        </el-form-item>
+        <el-form-item label="系统名称" prop="tenantSystemName">
+          <el-input v-model="form.tenantSystemName" placeholder="请输入系统名称"/>
+        </el-form-item>
+        <el-form-item label="租户名称" prop="tenantNick">
+          <el-input v-model="form.tenantNick" placeholder="请输入租户名称"/>
+        </el-form-item>
+        <el-form-item label="租户账号修改次数" prop="tenantNameFrequency">
+          <el-input v-model="form.tenantNameFrequency" placeholder="请输入租户账号修改次数"/>
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -143,27 +200,30 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-divider content-position="center">数据源信息</el-divider>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+        </el-form-item>
+        <el-divider content-position="center">数据源策略信息</el-divider>
         <div class="value-set">
-          <div class="value-title">数据源：</div>
+          <div class="value-title">策略：</div>
           <div class="value-add">
-            <el-button type="primary" plain @click="valueAdd">添加数据源</el-button>
+            <el-button type="primary" plain @click="valueAdd">添加策略</el-button>
           </div>
           <el-table :data="form.values">
-            <el-table-column label="数据源名称" min-width="40%" align="center">
+            <el-table-column label="策略名称" min-width="40%" align="center">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.sourceId" placeholder="请选择" @change="valueChange(scope.row.sourceId)">
+                <el-select v-model="scope.row.strategyId" placeholder="请选择" @change="valueChange(scope.row.strategyId)">
                   <el-option
-                    v-for="item in containWriteList"
-                    :key="item.sourceId"
+                    v-for="item in strategyList"
+                    :key="item.strategyId"
                     :label="item.name"
-                    :value="item.sourceId"
+                    :value="item.strategyId"
                   >
                   </el-option>
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column label="主数据源" align="center" min-width="20%" prop="isMain">
+            <el-table-column label="主策略" align="center" min-width="20%" prop="isMain">
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.isMain"
@@ -174,7 +234,7 @@
                 ></el-switch>
               </template>
             </el-table-column>
-            <el-table-column label="数据源状态" align="center" min-width="20%" prop="status">
+            <el-table-column label="策略状态" align="center" min-width="20%" prop="status">
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.status"
@@ -191,7 +251,7 @@
                   type="text"
                   icon="el-icon-delete"
                   @click="valueDelete(scope.row)"
-                  v-hasPermi="['tenant:strategy:edit']"
+                  v-hasPermi="['tenant:tenant:edit']"
                 >删除
                 </el-button>
               </template>
@@ -208,19 +268,13 @@
 </template>
 
 <script>
-import {
-  listStrategy,
-  getStrategy,
-  delStrategy,
-  addStrategy,
-  updateStrategy,
-  updateStrategySort
-} from '@/api/tenant/strategy'
+import { listTenant, getTenant, delTenant, addTenant, updateTenant, updateTenantSort } from '@/api/tenant/tenant'
 import Sortable from 'sortablejs'
-import { writeSeparation } from '@/api/tenant/separation'
+import { listStrategyExclude } from '@/api/tenant/strategy'
+import { updateSource } from '@/api/tenant/source'
 
 export default {
-  name: 'Strategy',
+  name: 'Tenant',
   components: {},
   data() {
     return {
@@ -237,33 +291,42 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 数据源策略表格数据
+      // 租户信息表格数据
+      tenantList: [],
+      // 租户信息表格原始数据
+      oldTenantList: [],
+      // 可用策略集合
       strategyList: [],
-      // 数据源策略表格原始数据
-      oldStrategyList: [],
+      // 状态字典
+      statusOptions: [],
       // 排序保存按钮显示
       sortVisible: false,
-      // 具备写 数据源集合
-      containWriteList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
       open: false,
-      // 状态字典
-      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null,
+        tenantId: null,
+        tenantName: null,
+        tenantSystemName: null,
+        tenantNick: null,
         status: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: '策略名称不能为空', trigger: 'blur' }
+        tenantName: [
+          { required: true, message: '租户账号不能为空', trigger: 'blur' }
+        ],
+        tenantSystemName: [
+          { required: true, message: '系统名称不能为空', trigger: 'blur' }
+        ],
+        tenantNick: [
+          { required: true, message: '租户名称不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -273,11 +336,11 @@ export default {
     this.getDict()
   },
   methods: {
-    /** 查询数据源策略列表 */
+    /** 查询租户信息列表 */
     getList() {
       this.loading = true
-      listStrategy(this.queryParams).then(response => {
-        this.strategyList = response.rows
+      listTenant(this.queryParams).then(response => {
+        this.tenantList = response.rows
         this.total = response.total
         this.loading = false
       })
@@ -288,10 +351,6 @@ export default {
         this.statusOptions = response.data
       })
     },
-    // 状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
-    },
     // 取消按钮
     cancel() {
       this.open = false
@@ -300,11 +359,15 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        strategyId: null,
-        name: null,
-        amount: 0,
+        tenantId: null,
+        tenantName: null,
+        tenantSystemName: null,
+        tenantNick: null,
+        tenantLogo: null,
+        tenantNameFrequency: 1,
         sort: 0,
         status: '0',
+        remark: null,
         values: [],
         isChange: 0,
         hasMain: false
@@ -323,28 +386,28 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.strategyId)
+      this.ids = selection.map(item => item.tenantId)
       this.idNames = selection.map(item => item.name)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-    getWriteSeparation() {
-      writeSeparation().then(response => {
-        this.containWriteList = response.data
+    getStrategyList() {
+      listStrategyExclude().then(response => {
+        this.strategyList = response.data
       })
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
-      this.getWriteSeparation()
+      this.getStrategyList()
       this.open = true
-      this.title = '添加数据源策略'
+      this.title = '添加租户信息'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      this.getWriteSeparation()
-      getStrategy({ strategyId: row.strategyId }).then(response => {
+      this.getStrategyList()
+      getTenant({ tenantId: row.tenantId }).then(response => {
         this.form = response.data
         for (let i = 0; i < this.form.values.length; i++) {
           if (this.form.values[i].isMain === 'Y') {
@@ -352,29 +415,35 @@ export default {
           }
         }
         this.open = true
-        this.title = '修改数据源策略'
+        this.title = '修改租户信息'
+      })
+    },
+    /** 修改状态按钮操作 */
+    handleStatusChange(row) {
+      updateTenant(row).then(response => {
+        this.msgSuccess('修改成功')
       })
     },
     /** 提交按钮 */
     submitForm() {
       this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.valueCheck()) {
-            if (this.form.strategyId != null) {
-              if (this.form.isChange === '0') {
-                updateStrategy(this.form).then(response => {
+        if (this.valueCheck()) {
+          if (valid) {
+            if (this.form.tenantId != null) {
+              if (this.form.isChange === 'N') {
+                updateTenant(this.form).then(response => {
                   this.msgSuccess('修改成功')
                   this.open = false
                   this.getList()
                 })
               } else {
                 this.$message({
-                  message: '默认数据源不允许进行修改操作',
+                  message: '系统租户不允许进行修改操作',
                   type: 'warning'
                 })
               }
             } else {
-              addStrategy(this.form).then(response => {
+              addTenant(this.form).then(response => {
                 this.msgSuccess('新增成功')
                 this.open = false
                 this.getList()
@@ -386,15 +455,15 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const strategyIds = row.strategyId || this.ids
+      const tenantIds = row.tenantId || this.ids
       const names = row.name || this.idNames
       let that = this
-      this.$confirm('是否确认删除数据源策略"' + names + '"?', '警告', {
+      this.$confirm('是否确认删除租户"' + names + '"?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function() {
-        return delStrategy(that.updateParamIds(strategyIds))
+        return delTenant(that.updateParamIds(tenantIds))
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')
@@ -403,9 +472,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('tenant/strategy/export', {
+      this.download('tenant/tenant/export', {
         ...this.queryParams
-      }, `数据源策略数据.xlsx`)
+      }, `租户信息数据.xlsx`)
     },
     /** 保存排序按钮操作 */
     handleSort() {
@@ -414,9 +483,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let params = this.sortOrderListOnlyDynamic(this.strategyList, this.oldStrategyList, 'strategyId')
+        let params = this.sortOrderListOnlyDynamic(this.tenantList, this.oldTenantList, 'tenantId')
         if (params.length > 0) {
-          return updateStrategySort(this.updateParamIds(params))
+          return updateTenantSort(this.updateParamIds(params))
         }
       }).then(() => {
         this.getList()
@@ -427,18 +496,18 @@ export default {
     },
     valueAdd() {
       const newData = {
-        sourceId: '',
+        strategyId: '',
         isMain: 'N',
         status: '1'
       }
       this.form.values.push(newData)
     },
     valueChange(id) {
-      const writeData = this.containWriteList.filter(function(item) {
-        return item.sourceId === id
+      const writeData = this.strategyList.filter(function(item) {
+        return item.strategyId === id
       })
       let data = this.form.values.filter(function(item) {
-        return item.sourceId === id
+        return item.strategyId === id
       })
       data[0].status = writeData[0].status
     },
@@ -460,7 +529,7 @@ export default {
           increase = 1
         }
         for (let j = 0; j < this.form.values.length; j++) {
-          if (this.form.values[i].sourceId === null || this.form.values[i].sourceId === '') {
+          if (this.form.values[i].strategyId === null || this.form.values[i].strategyId === '') {
             if (this.form.values[i].isMain === 'Y') {
               this.form.hasMain = false
             }
@@ -469,7 +538,7 @@ export default {
               key--
             }
             break
-          } else if (i !== j && this.form.values[i].sourceId === this.form.values[j].sourceId) {
+          } else if (i !== j && this.form.values[i].strategyId === this.form.values[j].strategyId) {
             if (this.form.values[j].isMain === 'Y') {
               this.form.hasMain = false
             }
@@ -479,18 +548,17 @@ export default {
       }
       if (this.form.values.length === 0) {
         this.$message({
-          message: '有效数据源数量为0，请添加',
+          message: '有效策略数为0，请添加',
           type: 'warning'
         })
         return false
       } else if (key !== 1) {
         this.$message({
-          message: '主数据源有且只能有一个，请检查',
+          message: '主策略有且只能有一个，请检查',
           type: 'warning'
         })
         return false
       }
-      this.form.amount = this.form.values.length
       return true
     }
   },
@@ -499,8 +567,8 @@ export default {
     Sortable.create(el, {
       handle: '.allowDrag',
       onEnd: evt => {
-        const targetRow = this.strategyList.splice(evt.oldIndex, 1)[0]
-        this.strategyList.splice(evt.newIndex, 0, targetRow)
+        const targetRow = this.tenantList.splice(evt.oldIndex, 1)[0]
+        this.tenantList.splice(evt.newIndex, 0, targetRow)
         this.sortVisible = true
       }
     })
