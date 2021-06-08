@@ -145,7 +145,7 @@ values (0, -1, 'Y'),
        (0, 2, 'Y');
 
 -- ----------------------------
--- 2、租户信息表|管理租户账户信息
+-- 7、租户信息表|管理租户账户信息
 -- ----------------------------
 drop table if exists xy_tenant;
 create table xy_tenant (
@@ -177,7 +177,7 @@ values ('Y', -1, 'administrator', '雪忆管理系统', 'xueYi1', 'http://127.0.
        ('N', 2, 'xueYi2', '雪忆管理系统', 'xueYi2', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
 
 -- ----------------------------
--- 3、素材信息表|管理素材信息
+-- 8、素材信息表|管理素材信息
 -- ----------------------------
 drop table if exists xy_material;
 create table xy_material (
@@ -202,7 +202,7 @@ create table xy_material (
 ) engine=innodb comment = '素材信息表';
 
 -- ----------------------------
--- 4、素材分类表|管理素材信息分类
+-- 9、素材分类表|管理素材信息分类
 -- ----------------------------
 drop table if exists xy_material_folder;
 create table xy_material_folder (
@@ -223,7 +223,7 @@ create table xy_material_folder (
 ) engine=innodb comment = '素材分类表';
 
 -- ----------------------------
--- 5、子模块表|管理子系统模块
+-- 10、子模块表|管理子系统模块
 -- ----------------------------
 drop table if exists xy_system;
 create table xy_system (
@@ -249,6 +249,7 @@ create table xy_system (
 # ----------------------------
 insert into xy_system (system_id, system_name, image_url, route, remark, tenant_id)
 values (0 , '租户管理系统' , '{"materialId":"1401773330431913984","materialNick":"15d67d32-ca7e-4f41-a33c-1aa6d669109f.jpg","materialUrl":"http://127.0.0.1:9300/statics/2021/06/07/15d67d32-ca7e-4f41-a33c-1aa6d669109f.jpg","materialOriginalUrl":"http://127.0.0.1:9300/statics/2021/06/07/1d72dee2-48d8-446c-a264-61a4f3a121d8.jpg","hiddenVisible":false}' , 'http://localhost:81' , '雪忆租户管理系统', -1),
+       (1 , '商城' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , 'http://localhost:82' , '轻松打造在线商城', 0),
        (2 , '系统2' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
        (3 , '系统3' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
        (4 , '系统4' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
@@ -258,7 +259,7 @@ values (0 , '租户管理系统' , '{"materialId":"1401773330431913984","materia
        (8 , '系统8' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1);
 
 -- ----------------------------
--- 6、角色信息表
+-- 11、角色信息表
 -- ----------------------------
 drop table if exists sys_role;
 create table sys_role (
@@ -290,7 +291,7 @@ values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
        (3, 2, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员');
 
 -- ----------------------------
--- 7、角色和系统-菜单关联表  角色N-N系统-菜单
+-- 12、角色和系统-菜单关联表  角色N-N系统-菜单
 -- ----------------------------
 drop table if exists sys_role_system_menu;
 create table sys_role_system_menu (
@@ -303,7 +304,7 @@ create table sys_role_system_menu (
 
 insert into sys_role_system_menu value (1,12005,0,1);
 -- ----------------------------
--- 8、角色和部门-岗位关联表  角色N-N部门-岗位
+-- 13、角色和部门-岗位关联表  角色N-N部门-岗位
 -- ----------------------------
 drop table if exists sys_role_dept_post;
 create table sys_role_dept_post (
@@ -316,7 +317,7 @@ create table sys_role_dept_post (
 
 insert into sys_role_dept_post value (1,107,0,1);
 -- ----------------------------
--- 9、部门和角色关联表  部门N-N角色
+-- 14、部门和角色关联表  部门N-N角色
 -- ----------------------------
 drop table if exists sys_dept_role;
 create table sys_dept_role (
@@ -328,7 +329,7 @@ create table sys_dept_role (
 ) engine=innodb comment = '部门和角色关联表';
 
 -- ----------------------------
--- 10、岗位和角色关联表  岗位N-N角色
+-- 15、岗位和角色关联表  岗位N-N角色
 -- ----------------------------
 drop table if exists sys_post_role;
 create table sys_post_role (
@@ -340,7 +341,7 @@ create table sys_post_role (
 ) engine=innodb comment = '岗位和角色关联表';
 
 -- ----------------------------
--- 11、用户和角色关联表  用户N-N角色
+-- 16、用户和角色关联表  用户N-N角色
 -- ----------------------------
 drop table if exists sys_user_role;
 create table sys_user_role (
