@@ -3,6 +3,7 @@ package com.xueyi.tenant.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +30,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/source")
-public class TenantSourceController extends BaseController
-{
+public class TenantSourceController extends BaseController {
     @Autowired
     private ITenantSourceService tenantSourceService;
 
@@ -39,8 +39,7 @@ public class TenantSourceController extends BaseController
      */
     @PreAuthorize(hasPermi = "tenant:source:list")
     @GetMapping("/list")
-    public TableDataInfo list(TenantSource tenantSource)
-    {
+    public TableDataInfo list(TenantSource tenantSource) {
         startPage();
         List<TenantSource> list = tenantSourceService.selectTenantSourceList(tenantSource);
         return getDataTable(list);
@@ -53,8 +52,7 @@ public class TenantSourceController extends BaseController
     @PreAuthorize(hasPermi = "tenant:source:export")
     @Log(title = "数据源", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, TenantSource tenantSource) throws IOException
-    {
+    public void export(HttpServletResponse response, TenantSource tenantSource) throws IOException {
         List<TenantSource> list = tenantSourceService.selectTenantSourceList(tenantSource);
         ExcelUtil<TenantSource> util = new ExcelUtil<TenantSource>(TenantSource.class);
         util.exportExcel(response, list, "数据源数据");
@@ -65,8 +63,7 @@ public class TenantSourceController extends BaseController
      */
     @PreAuthorize(hasPermi = "tenant:source:query")
     @GetMapping(value = "/byId")
-    public AjaxResult getInfo(TenantSource tenantSource)
-    {
+    public AjaxResult getInfo(TenantSource tenantSource) {
         return AjaxResult.success(tenantSourceService.selectTenantSourceById(tenantSource));
     }
 
@@ -76,8 +73,7 @@ public class TenantSourceController extends BaseController
     @PreAuthorize(hasPermi = "tenant:source:add")
     @Log(title = "数据源", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TenantSource tenantSource)
-    {
+    public AjaxResult add(@RequestBody TenantSource tenantSource) {
         return toAjax(tenantSourceService.insertTenantSource(tenantSource));
     }
 
@@ -87,8 +83,7 @@ public class TenantSourceController extends BaseController
     @PreAuthorize(hasPermi = "tenant:source:edit")
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TenantSource tenantSource)
-    {
+    public AjaxResult edit(@RequestBody TenantSource tenantSource) {
         return toAjax(tenantSourceService.updateTenantSource(tenantSource));
     }
 
@@ -98,8 +93,7 @@ public class TenantSourceController extends BaseController
     @PreAuthorize(hasPermi = "tenant:source:edit")
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
-    public AjaxResult updateSort(@RequestBody TenantSource tenantSource)
-    {
+    public AjaxResult updateSort(@RequestBody TenantSource tenantSource) {
         return toAjax(tenantSourceService.updateTenantSourceSort(tenantSource));
     }
 
@@ -109,8 +103,7 @@ public class TenantSourceController extends BaseController
     @PreAuthorize(hasPermi = "tenant:source:remove")
     @Log(title = "数据源", businessType = BusinessType.DELETE)
     @DeleteMapping
-    public AjaxResult remove(@RequestBody TenantSource tenantSource)
-    {
+    public AjaxResult remove(@RequestBody TenantSource tenantSource) {
         return toAjax(tenantSourceService.deleteTenantSourceByIds(tenantSource));
     }
 }

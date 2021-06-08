@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author xueyi
  */
 @Service
-public class TenantSourceServiceImpl implements ITenantSourceService
-{
+public class TenantSourceServiceImpl implements ITenantSourceService {
     @Autowired
     private TenantSourceMapper tenantSourceMapper;
 
@@ -29,8 +28,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService
      * @return 数据源
      */
     @Override
-    public List<TenantSource> selectTenantSourceList(TenantSource tenantSource)
-    {
+    public List<TenantSource> selectTenantSourceList(TenantSource tenantSource) {
         return tenantSourceMapper.selectTenantSourceList(tenantSource);
     }
 
@@ -42,8 +40,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService
      * @return 数据源
      */
     @Override
-    public TenantSource selectTenantSourceById(TenantSource tenantSource)
-    {
+    public TenantSource selectTenantSourceById(TenantSource tenantSource) {
         return tenantSourceMapper.selectTenantSourceById(tenantSource);
     }
 
@@ -56,8 +53,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService
     @Override
     @Transactional
     @DataScope(ueAlias = "empty")
-    public int insertTenantSource(TenantSource tenantSource)
-    {
+    public int insertTenantSource(TenantSource tenantSource) {
         TenantSourceValue value = new TenantSourceValue();
         value.setSourceId(tenantSource.getId());
         tenantSource.getValues().add(value);
@@ -72,8 +68,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService
      * @return 结果
      */
     @Override
-    public int updateTenantSource(TenantSource tenantSource)
-    {
+    public int updateTenantSource(TenantSource tenantSource) {
         return tenantSourceMapper.updateTenantSource(tenantSource);
     }
 
@@ -84,7 +79,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService
      * @return 结果
      */
     @Override
-    public int updateTenantSourceSort(TenantSource tenantSource){
+    public int updateTenantSourceSort(TenantSource tenantSource) {
         return tenantSourceMapper.updateTenantSourceSort(tenantSource);
     }
 
@@ -95,8 +90,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService
      * @return 结果
      */
     @Override
-    public int deleteTenantSourceById(TenantSource tenantSource)
-    {
+    public int deleteTenantSourceById(TenantSource tenantSource) {
         return tenantSourceMapper.deleteTenantSourceById(tenantSource);
     }
 
@@ -107,8 +101,9 @@ public class TenantSourceServiceImpl implements ITenantSourceService
      * @return 结果
      */
     @Override
-    public int deleteTenantSourceByIds(TenantSource tenantSource)
-    {
+    @Transactional
+    public int deleteTenantSourceByIds(TenantSource tenantSource) {
+        tenantSourceMapper.deleteTenantSeparationByValueId(tenantSource);
         return tenantSourceMapper.deleteTenantSourceByIds(tenantSource);
     }
 }

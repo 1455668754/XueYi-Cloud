@@ -73,51 +73,49 @@ public interface TenantSourceMapper {
 
     /**
      * 修改数据源排序
-     * 访问控制 empty 租户更新（无前缀）
      *
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int updateTenantSourceSort(TenantSource tenantSource);
 
     /**
      * 删除数据源
-     * 访问控制 empty 租户更新（无前缀）
      *
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int deleteTenantSourceById(TenantSource tenantSource);
 
     /**
      * 批量删除数据源
-     * 访问控制 empty 租户更新（无前缀）
      *
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int deleteTenantSourceByIds(TenantSource tenantSource);
 
     /**
-     * 批量新增写-读数据源
-     * 访问控制 empty 租户更新（无前缀）
+     * 批量删除数据源
      *
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    public int deleteTenantSeparationByValueId(TenantSource tenantSource);
+
+    /**
+     * 批量新增写-读数据源
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
     public int batchTenantSeparation(TenantSource tenantSource);
 
     /**
      * 通过写数据源Id删除读数据源关联信息
-     * 访问控制 empty 租户更新（无前缀）
      *
      * @param tenantSource 数据源
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int deleteTenantSeparationBySourceId(TenantSource tenantSource);
 }

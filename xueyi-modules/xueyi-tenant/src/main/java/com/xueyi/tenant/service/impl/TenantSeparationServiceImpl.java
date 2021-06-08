@@ -15,8 +15,7 @@ import com.xueyi.tenant.service.ITenantSeparationService;
  * @author xueyi
  */
 @Service
-public class TenantSeparationServiceImpl implements ITenantSeparationService
-{
+public class TenantSeparationServiceImpl implements ITenantSeparationService {
     @Autowired
     private TenantSourceMapper tenantSourceMapper;
 
@@ -27,8 +26,7 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService
      * @return 数据源
      */
     @Override
-    public List<TenantSource> selectTenantSeparationList(TenantSource tenantSource)
-    {
+    public List<TenantSource> selectTenantSeparationList(TenantSource tenantSource) {
         return tenantSourceMapper.selectTenantSeparationList(tenantSource);
     }
 
@@ -39,7 +37,7 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService
      * @return 数据源集合
      */
     @Override
-    public List<TenantSource> selectContainReadList(TenantSource tenantSource){
+    public List<TenantSource> selectContainReadList(TenantSource tenantSource) {
         return tenantSourceMapper.selectContainReadList(tenantSource);
     }
 
@@ -50,8 +48,7 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService
      * @return 数据源
      */
     @Override
-    public TenantSource selectTenantSeparationById(TenantSource tenantSource)
-    {
+    public TenantSource selectTenantSeparationById(TenantSource tenantSource) {
         return tenantSourceMapper.selectTenantSeparationById(tenantSource);
     }
 
@@ -63,11 +60,9 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService
      */
     @Override
     @Transactional
-    public int updateTenantSeparation(TenantSource tenantSource)
-    {
+    public int updateTenantSeparation(TenantSource tenantSource) {
         tenantSourceMapper.deleteTenantSeparationBySourceId(tenantSource);
-        if (tenantSource.getValues().size() > 0)
-        {
+        if (tenantSource.getValues().size() > 0) {
             tenantSourceMapper.batchTenantSeparation(tenantSource);
         }
         return 1;

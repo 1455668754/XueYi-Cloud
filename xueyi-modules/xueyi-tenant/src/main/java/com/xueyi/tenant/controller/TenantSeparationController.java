@@ -29,8 +29,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/separation")
-public class TenantSeparationController extends BaseController
-{
+public class TenantSeparationController extends BaseController {
     @Autowired
     private ITenantSeparationService tenantSeparationService;
 
@@ -39,8 +38,7 @@ public class TenantSeparationController extends BaseController
      */
     @PreAuthorize(hasPermi = "tenant:separation:list")
     @GetMapping("/list")
-    public TableDataInfo list(TenantSource tenantSource)
-    {
+    public TableDataInfo list(TenantSource tenantSource) {
         startPage();
         List<TenantSource> list = tenantSeparationService.selectTenantSeparationList(tenantSource);
         return getDataTable(list);
@@ -51,8 +49,7 @@ public class TenantSeparationController extends BaseController
      */
     @PreAuthorize(hasPermi = "tenant:separation:list")
     @GetMapping("/containRead")
-    public AjaxResult containRead(TenantSource tenantSource)
-    {
+    public AjaxResult containRead(TenantSource tenantSource) {
         return AjaxResult.success(tenantSeparationService.selectContainReadList(tenantSource));
     }
 
@@ -61,8 +58,7 @@ public class TenantSeparationController extends BaseController
      */
     @PreAuthorize(hasPermi = "tenant:separation:query")
     @GetMapping(value = "/byId")
-    public AjaxResult getInfo(TenantSource tenantSource)
-    {
+    public AjaxResult getInfo(TenantSource tenantSource) {
         return AjaxResult.success(tenantSeparationService.selectTenantSeparationById(tenantSource));
     }
 
@@ -72,8 +68,7 @@ public class TenantSeparationController extends BaseController
     @PreAuthorize(hasPermi = "tenant:separation:edit")
     @Log(title = "数据源读写分离", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TenantSource tenantSource)
-    {
+    public AjaxResult edit(@RequestBody TenantSource tenantSource) {
         return toAjax(tenantSeparationService.updateTenantSeparation(tenantSource));
     }
 }

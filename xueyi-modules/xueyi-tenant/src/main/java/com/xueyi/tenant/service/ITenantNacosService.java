@@ -1,6 +1,7 @@
 package com.xueyi.tenant.service;
 
 import java.util.List;
+
 import com.xueyi.tenant.domain.TenantNacos;
 
 /**
@@ -8,8 +9,7 @@ import com.xueyi.tenant.domain.TenantNacos;
  *
  * @author xueyi
  */
-public interface ITenantNacosService
-{
+public interface ITenantNacosService {
     /**
      * 查询Nacos配置列表
      *

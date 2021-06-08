@@ -1,6 +1,7 @@
 package com.xueyi.tenant.service.impl;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.tenant.mapper.TenantNacosMapper;
@@ -13,8 +14,7 @@ import com.xueyi.tenant.service.ITenantNacosService;
  * @author xueyi
  */
 @Service
-public class TenantNacosServiceImpl implements ITenantNacosService
-{
+public class TenantNacosServiceImpl implements ITenantNacosService {
     @Autowired
     private TenantNacosMapper tenantNacosMapper;
 
@@ -25,8 +25,7 @@ public class TenantNacosServiceImpl implements ITenantNacosService
      * @return Nacos配置
      */
     @Override
-    public List<TenantNacos> selectTenantNacosList(TenantNacos tenantNacos)
-    {
+    public List<TenantNacos> selectTenantNacosList(TenantNacos tenantNacos) {
         return tenantNacosMapper.selectTenantNacosList(tenantNacos);
     }
 
@@ -38,8 +37,7 @@ public class TenantNacosServiceImpl implements ITenantNacosService
      * @return Nacos配置
      */
     @Override
-    public TenantNacos selectTenantNacosById(TenantNacos tenantNacos)
-    {
+    public TenantNacos selectTenantNacosById(TenantNacos tenantNacos) {
         return tenantNacosMapper.selectTenantNacosById(tenantNacos);
     }
 
@@ -50,8 +48,7 @@ public class TenantNacosServiceImpl implements ITenantNacosService
      * @return 结果
      */
     @Override
-    public int insertTenantNacos(TenantNacos tenantNacos)
-    {
+    public int insertTenantNacos(TenantNacos tenantNacos) {
         return tenantNacosMapper.insertTenantNacos(tenantNacos);
     }
 
@@ -62,8 +59,7 @@ public class TenantNacosServiceImpl implements ITenantNacosService
      * @return 结果
      */
     @Override
-    public int updateTenantNacos(TenantNacos tenantNacos)
-    {
+    public int updateTenantNacos(TenantNacos tenantNacos) {
         return tenantNacosMapper.updateTenantNacos(tenantNacos);
     }
 
@@ -74,7 +70,7 @@ public class TenantNacosServiceImpl implements ITenantNacosService
      * @return 结果
      */
     @Override
-    public int updateTenantNacosSort(TenantNacos tenantNacos){
+    public int updateTenantNacosSort(TenantNacos tenantNacos) {
         return tenantNacosMapper.updateTenantNacosSort(tenantNacos);
     }
 
@@ -85,8 +81,7 @@ public class TenantNacosServiceImpl implements ITenantNacosService
      * @return 结果
      */
     @Override
-    public int deleteTenantNacosById(TenantNacos tenantNacos)
-    {
+    public int deleteTenantNacosById(TenantNacos tenantNacos) {
         return tenantNacosMapper.deleteTenantNacosById(tenantNacos);
     }
 
@@ -97,8 +92,7 @@ public class TenantNacosServiceImpl implements ITenantNacosService
      * @return 结果
      */
     @Override
-    public int deleteTenantNacosByIds(TenantNacos tenantNacos)
-    {
+    public int deleteTenantNacosByIds(TenantNacos tenantNacos) {
         return tenantNacosMapper.deleteTenantNacosByIds(tenantNacos);
     }
 }

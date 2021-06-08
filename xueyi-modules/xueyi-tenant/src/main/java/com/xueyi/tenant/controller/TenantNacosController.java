@@ -3,6 +3,7 @@ package com.xueyi.tenant.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,8 +30,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/nacos")
-public class TenantNacosController extends BaseController
-{
+public class TenantNacosController extends BaseController {
     @Autowired
     private ITenantNacosService tenantNacosService;
 
@@ -39,8 +39,7 @@ public class TenantNacosController extends BaseController
      */
     @PreAuthorize(hasPermi = "tenant:nacos:list")
     @GetMapping("/list")
-    public TableDataInfo list(TenantNacos tenantNacos)
-    {
+    public TableDataInfo list(TenantNacos tenantNacos) {
         startPage();
         List<TenantNacos> list = tenantNacosService.selectTenantNacosList(tenantNacos);
         return getDataTable(list);
@@ -53,8 +52,7 @@ public class TenantNacosController extends BaseController
     @PreAuthorize(hasPermi = "tenant:nacos:export")
     @Log(title = "Nacos配置", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, TenantNacos tenantNacos) throws IOException
-    {
+    public void export(HttpServletResponse response, TenantNacos tenantNacos) throws IOException {
         List<TenantNacos> list = tenantNacosService.selectTenantNacosList(tenantNacos);
         ExcelUtil<TenantNacos> util = new ExcelUtil<TenantNacos>(TenantNacos.class);
         util.exportExcel(response, list, "Nacos配置数据");
@@ -65,8 +63,7 @@ public class TenantNacosController extends BaseController
      */
     @PreAuthorize(hasPermi = "tenant:nacos:query")
     @GetMapping(value = "/byId")
-    public AjaxResult getInfo(TenantNacos tenantNacos)
-    {
+    public AjaxResult getInfo(TenantNacos tenantNacos) {
         return AjaxResult.success(tenantNacosService.selectTenantNacosById(tenantNacos));
     }
 
@@ -76,8 +73,7 @@ public class TenantNacosController extends BaseController
     @PreAuthorize(hasPermi = "tenant:nacos:add")
     @Log(title = "Nacos配置", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TenantNacos tenantNacos)
-    {
+    public AjaxResult add(@RequestBody TenantNacos tenantNacos) {
         return toAjax(tenantNacosService.insertTenantNacos(tenantNacos));
     }
 
@@ -87,8 +83,7 @@ public class TenantNacosController extends BaseController
     @PreAuthorize(hasPermi = "tenant:nacos:edit")
     @Log(title = "Nacos配置", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TenantNacos tenantNacos)
-    {
+    public AjaxResult edit(@RequestBody TenantNacos tenantNacos) {
         return toAjax(tenantNacosService.updateTenantNacos(tenantNacos));
     }
 
@@ -98,8 +93,7 @@ public class TenantNacosController extends BaseController
     @PreAuthorize(hasPermi = "tenant:nacos:edit")
     @Log(title = "Nacos配置", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
-    public AjaxResult updateSort(@RequestBody TenantNacos tenantNacos)
-    {
+    public AjaxResult updateSort(@RequestBody TenantNacos tenantNacos) {
         return toAjax(tenantNacosService.updateTenantNacosSort(tenantNacos));
     }
 
@@ -109,8 +103,7 @@ public class TenantNacosController extends BaseController
     @PreAuthorize(hasPermi = "tenant:nacos:remove")
     @Log(title = "Nacos配置", businessType = BusinessType.DELETE)
     @DeleteMapping
-    public AjaxResult remove(@RequestBody TenantNacos tenantNacos)
-    {
+    public AjaxResult remove(@RequestBody TenantNacos tenantNacos) {
         return toAjax(tenantNacosService.deleteTenantNacosByIds(tenantNacos));
     }
 }

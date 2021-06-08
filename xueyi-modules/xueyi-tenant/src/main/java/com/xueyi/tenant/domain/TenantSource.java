@@ -47,6 +47,10 @@ public class TenantSource extends BaseEntity
     @Excel(name = "密码")
     private String password;
 
+    /** 主数据源（Y是 N否） */
+    @Excel(name = "主数据源", readConverterExp = "Y=是,N=否")
+    private String isMain;
+
     /** 读写类型(0读&写 1只读 2只写) */
     @Excel(name = "读写类型", readConverterExp = "0=读&写,1=只读,2=只写")
     private String type;
@@ -130,6 +134,14 @@ public class TenantSource extends BaseEntity
         return type;
     }
 
+    public String getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(String isMain) {
+        this.isMain = isMain;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
@@ -158,6 +170,7 @@ public class TenantSource extends BaseEntity
                 .append("username", getUsername())
                 .append("password", getPassword())
                 .append("values", getValues())
+                .append("isMain", getIsMain())
                 .append("type", getType())
                 .append("sort", getSort())
                 .append("status", getStatus())
