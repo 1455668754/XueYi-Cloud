@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.tenant.mapper.TenantStrategyMapper">
+
+    <resultMap type="TenantStrategy" id="TenantStrategyResult">
+        <result property="strategyId"    column="strategy_id"    />
+        <result property="name"    column="name"    />
+        <result property="amount"    column="amount"    />
+        <result property="sort"    column="sort"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"   		column="create_by"   />
+        <result property="createName"   	column="create_name" />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"   		column="update_by"   />
+        <result property="updateName"   	column="update_name" />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <resultMap id="TenantStrategyTenantSourceResult" type="TenantStrategy" extends="TenantStrategyResult">
+        <collection property="tenantSourceList" notNullColumn="sub_source_id" javaType="java.util.List" resultMap="TenantSourceResult" />
+    </resultMap>
+
+    <resultMap type="TenantSource" id="TenantSourceResult">
+        <result property="sourceId"    column="sub_source_id"    />
+        <result property="name"    column="sub_name"    />
+        <result property="databaseType"    column="sub_database_type"    />
+        <result property="slave"    column="sub_slave"    />
+        <result property="driverClassName"    column="sub_driver_class_name"    />
+        <result property="url"    column="sub_url"    />
+        <result property="username"    column="sub_username"    />
+        <result property="password"    column="sub_password"    />
+        <result property="type"    column="sub_type"    />
+        <result property="sort"    column="sub_sort"    />
+        <result property="status"    column="sub_status"    />
+        <result property="createBy"   		column="sub_create_by"   />
+        <result property="createName"   	column="sub_create_name" />
+        <result property="createTime"    column="sub_create_time"    />
+        <result property="updateBy"   		column="sub_update_by"   />
+        <result property="updateName"   	column="sub_update_name" />
+        <result property="updateTime"    column="sub_update_time"    />
+    </resultMap>
+
+    <sql id="selectVo">
+        select e.strategy_id, e.name, e.amount, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
+        from xy_tenant_strategy e
+    </sql>
+
+    <select id="selectTenantStrategyList" parameterType="TenantStrategy" resultMap="TenantStrategyResult">
+        <include refid="selectVo"/>
+        where 1 = 1
+        <if test="name != null  and name != ''"> and e.name like concat('%', #{name}, '%')</if>
+        <if test="amount != null  and amount != ''"> and e.amount = #{amount}</if>
+        <if test="sort != null  and sort != ''"> and e.sort = #{sort}</if>
+        <if test="status != null  and status != ''"> and e.status = #{status}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by e.sort
+    </select>
+
+
+    <select id="selectTenantStrategyById" parameterType="TenantStrategy" resultMap="TenantStrategyTenantSourceResult">
+        select e.strategy_id, e.name, e.amount, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time,
+        b.source_id as sub_source_id, b.name as sub_name, b.database_type as sub_database_type, b.slave as sub_slave, b.driver_class_name as sub_driver_class_name, b.url as sub_url, b.username as sub_username, b.password as sub_password, b.type as sub_type, b.sort as sub_sort, b.status as sub_status, b.create_by as sub_create_by, b.create_time as sub_create_time, b.update_by as sub_update_by, b.update_time as sub_update_time,
+        from xy_tenant_strategy e
+        left join xy_tenant_source b on b.source_id = e.strategy_id
+        where e.strategy_id = #{strategyId}
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <insert id="insertTenantStrategy" parameterType="TenantStrategy">
+        insert into xy_tenant_strategy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Id != null">strategy_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="amount != null and amount != ''">amount,</if>
+            <if test="sort != null and sort != ''">sort,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="createBy != null">create_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Id != null">                                            #{Id}              ,</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="amount != null and amount != ''">#{amount},</if>
+            <if test="sort != null and sort != ''">#{sort},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTenantStrategy" parameterType="TenantStrategy">
+        update xy_tenant_strategy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="amount != null and amount != ''">amount = #{amount},</if>
+            <if test="sort != null and sort != ''">sort = #{sort},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where strategy_id = #{strategyId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+
+    <update id="updateTenantStrategySort" parameterType="TenantStrategy">
+        update xy_tenant_strategy set sort =
+        <foreach collection="params.Ids" item="item" index="index" separator=" " open="case strategy_id" close="end">
+            when #{item.strategyId} then #{item.sort}
+        </foreach>
+        where strategy_id in
+        <foreach collection="params.Ids" item="item" index="index" separator="," open="(" close=")">
+            #{item.strategyId}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+
+    <delete id="deleteTenantStrategyById" parameterType="TenantStrategy">
+        update xy_tenant_strategy
+        set del_flag = 1
+        where strategy_id = #{strategyId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
+    <delete id="deleteTenantStrategyByIds" parameterType="TenantStrategy">
+        update xy_tenant_strategy
+        set del_flag = 1
+        where strategy_id in
+        <foreach item="strategyId" collection="params.Ids" open="(" separator="," close=")">
+            #{strategyId}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
+    <delete id="deleteTenantSourceByStrategyIds" parameterType="TenantStrategy">
+        delete from xy_tenant_source
+        where strategy_id in
+        <foreach item="strategyId" collection="params.Ids" open="(" separator="," close=")">
+            #{strategyId}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
+    <delete id="deleteTenantSourceByStrategyId" parameterType="TenantStrategy">
+        delete from xy_tenant_source
+        where strategy_id = #{strategyId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
+    <insert id="batchTenantSource" parameterType="TenantStrategy">
+        insert into xy_tenant_source( source_id, name, database_type, slave, driver_class_name, url, username, password, type, sort, status, create_by) values
+        <foreach item="item" index="index" collection="tenantSourceList" separator=",">
+            ( #{item.sourceId}, #{item.name}, #{item.databaseType}, #{item.slave}, #{item.driverClassName}, #{item.url}, #{item.username}, #{item.password}, #{item.type}, #{item.sort}, #{item.status}, #{createBy})
+        </foreach>
+    </insert>
+</mapper>
