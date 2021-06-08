@@ -368,7 +368,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.sourceId)
-      this.idNames = selection.map(item => item.sourceId)
+      this.idNames = selection.map(item => item.name)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -434,7 +434,7 @@ export default {
     handleExport() {
       this.download('tenant/source/export', {
         ...this.queryParams
-      }, `tenant_source.xlsx`)
+      }, `数据源数据.xlsx`)
     },
     /** 保存排序按钮操作 */
     handleSort() {

@@ -36,3 +36,12 @@ export function readSeparation(query) {
     params: query
   })
 }
+
+// 查询 含写 数据源集合
+export function writeSeparation(query) {
+  return request({
+    url: '/tenant/separation/containWrite',
+    method: 'get',
+    params: query
+  })
+}

@@ -42,6 +42,17 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService {
     }
 
     /**
+     * 查询 含写 数据源集合
+     *
+     * @param tenantSource 数据源
+     * @return 数据源集合
+     */
+    @Override
+    public List<TenantSource> selectContainWriteList(TenantSource tenantSource) {
+        return tenantSourceMapper.selectContainWriteList(tenantSource);
+    }
+
+    /**
      * 查询数据源
      *
      * @param tenantSource 数据源

@@ -687,7 +687,7 @@ export default {
     handleExport() {
       this.download('${moduleName}/${businessName}/export', {
         ...this.queryParams
-      }, `${moduleName}_${businessName}.xlsx`)
+      }, `${functionName}数据.xlsx`)
     }#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort'),
     /** 保存排序按钮操作 */
     handleSort(){

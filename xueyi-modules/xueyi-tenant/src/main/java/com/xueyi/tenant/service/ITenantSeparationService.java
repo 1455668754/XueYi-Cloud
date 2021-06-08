@@ -27,6 +27,14 @@ public interface ITenantSeparationService {
     public List<TenantSource> selectContainReadList(TenantSource tenantSource);
 
     /**
+     * 查询 含写 数据源集合
+     *
+     * @param tenantSource 数据源
+     * @return 数据源集合
+     */
+    public List<TenantSource> selectContainWriteList(TenantSource tenantSource);
+
+    /**
      * 查询数据源
      *
      * @param tenantSource 数据源

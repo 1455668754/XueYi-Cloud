@@ -26,6 +26,12 @@ public class TenantStrategy extends BaseEntity
     @Excel(name = "数据源数量")
     private String amount;
 
+    /** 是否有主数据源 */
+    private Boolean hasMain;
+
+    /** 是否可修改 */
+    private Long isChange;
+
     /** 状态（0正常 1停用） */
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
@@ -57,6 +63,22 @@ public class TenantStrategy extends BaseEntity
         return amount;
     }
 
+    public Boolean getHasMain() {
+        return hasMain;
+    }
+
+    public void setHasMain(Boolean hasMain) {
+        this.hasMain = hasMain;
+    }
+
+    public Long getIsChange() {
+        return isChange;
+    }
+
+    public void setIsChange(Long isChange) {
+        this.isChange = isChange;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
@@ -79,6 +101,8 @@ public class TenantStrategy extends BaseEntity
                 .append("strategyId", getStrategyId())
                 .append("name", getName())
                 .append("amount", getAmount())
+                .append("hasMain", getHasMain())
+                .append("isChange", getIsChange())
                 .append("values", getValues())
                 .append("sort", getSort())
                 .append("status", getStatus())

@@ -26,7 +26,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['tenant:strategy:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -37,7 +38,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['tenant:strategy:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -48,7 +50,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['tenant:strategy:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -58,7 +61,8 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['tenant:strategy:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -69,12 +73,15 @@
           @click="handleSort"
           v-show="sortVisible"
           v-hasPermi="['tenant:strategy:edit']"
-        >保存排序</el-button>
+        >保存排序
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="strategyList" @selection-change="handleSelectionChange" ref="dataTable" row-key="strategyId">
+    <el-table v-loading="loading" :data="strategyList" @selection-change="handleSelectionChange" ref="dataTable"
+              row-key="strategyId"
+    >
       <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
       <el-table-column label="策略Id" align="center" prop="strategyId" class-name="allowDrag"/>
       <el-table-column label="策略名称" align="center" prop="name" class-name="allowDrag"/>
@@ -89,14 +96,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['tenant:strategy:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tenant:strategy:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -113,7 +122,7 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="策略名称" prop="name">
-          <el-input v-model="form.name" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="form.name" placeholder="请输入内容"/>
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
@@ -121,75 +130,65 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-            >{{dict.dictLabel}}</el-radio>
+            >{{ dict.dictLabel }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="删除标志" prop="delFlag">
-          <el-input v-model="form.delFlag" placeholder="请输入删除标志" />
-        </el-form-item>
         <el-divider content-position="center">数据源信息</el-divider>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAddTenantSource">添加</el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDeleteTenantSource">删除</el-button>
-          </el-col>
-        </el-row>
-        <el-table :data="tenantSourceList" :row-class-name="rowTenantSourceIndex" @selection-change="handleTenantSourceSelectionChange" ref="tenantSource">
-          <el-table-column type="selection" width="50" align="center" />
-          <el-table-column label="序号" align="center" prop="index" width="50"/>
-          <el-table-column label="数据源名称" prop="name">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.name" placeholder="请输入数据源名称" />
-            </template>
-          </el-table-column>
-          <el-table-column label="数据源类型" prop="databaseType">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.databaseType" placeholder="请输入数据源类型" />
-            </template>
-          </el-table-column>
-          <el-table-column label="数据源编码" prop="slave">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.slave" placeholder="请输入数据源编码" />
-            </template>
-          </el-table-column>
-          <el-table-column label="驱动" prop="driverClassName">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.driverClassName" placeholder="请输入驱动" />
-            </template>
-          </el-table-column>
-          <el-table-column label="地址" prop="url">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.url" placeholder="请输入地址" />
-            </template>
-          </el-table-column>
-          <el-table-column label="用户名" prop="username">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.username" placeholder="请输入用户名" />
-            </template>
-          </el-table-column>
-          <el-table-column label="密码" prop="password">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.password" placeholder="请输入密码" />
-            </template>
-          </el-table-column>
-          <el-table-column label="读写类型" prop="type">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.type" placeholder="请输入读写类型" />
-            </template>
-          </el-table-column>
-          <el-table-column label="显示顺序" prop="sort">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.sort" placeholder="请输入显示顺序" />
-            </template>
-          </el-table-column>
-          <el-table-column label="状态" prop="status">
-            <template slot-scope="scope">
-              <el-input v-model="scope.row.status" placeholder="请输入状态" />
-            </template>
-          </el-table-column>
-        </el-table>
+        <div class="value-set">
+          <div class="value-title">数据源：</div>
+          <div class="value-add">
+            <el-button type="primary" plain @click="valueAdd">添加数据源</el-button>
+          </div>
+          <el-table :data="form.values">
+            <el-table-column label="数据源名称" min-width="40%" align="center">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.sourceId" placeholder="请选择" @change="valueChange(scope.row.sourceId)">
+                  <el-option
+                    v-for="item in containWriteList"
+                    :key="item.sourceId"
+                    :label="item.name"
+                    :value="item.sourceId"
+                  >
+                  </el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="主数据源" align="center" min-width="20%" prop="isMain">
+              <template slot-scope="scope">
+                <el-switch
+                  v-model="scope.row.isMain"
+                  active-value="Y"
+                  inactive-value="N"
+                  :disabled="form.hasMain === true && scope.row.isMain=== 'N'"
+                  @change="valueMainChange(scope.row.isMain)"
+                ></el-switch>
+              </template>
+            </el-table-column>
+            <el-table-column label="数据源状态" align="center" min-width="20%" prop="status">
+              <template slot-scope="scope">
+                <el-switch
+                  v-model="scope.row.status"
+                  active-value="0"
+                  inactive-value="1"
+                  disabled
+                ></el-switch>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" min-width="20%" align="center">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  @click="valueDelete(scope.row)"
+                  v-hasPermi="['tenant:strategy:edit']"
+                >删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -200,22 +199,27 @@
 </template>
 
 <script>
-import { listStrategy, getStrategy, delStrategy, addStrategy, updateStrategy, updateStrategySort } from "@/api/tenant/strategy";
-import Sortable from "sortablejs";
+import {
+  listStrategy,
+  getStrategy,
+  delStrategy,
+  addStrategy,
+  updateStrategy,
+  updateStrategySort
+} from '@/api/tenant/strategy'
+import Sortable from 'sortablejs'
+import { writeSeparation } from '@/api/tenant/separation'
 
 export default {
-  name: "Strategy",
-  components: {
-  },
+  name: 'Strategy',
+  components: {},
   data() {
     return {
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
-      idNames:[],
-      // 子表选中数据
-      checkedTenantSource: [],
+      idNames: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -230,10 +234,10 @@ export default {
       oldStrategyList: [],
       // 排序保存按钮显示
       sortVisible: false,
-      // 数据源表格数据
-      tenantSourceList: [],
+      // 具备写 数据源集合
+      containWriteList: [],
       // 弹出层标题
-      title: "",
+      title: '',
       // 是否显示弹出层
       open: false,
       // 状态字典
@@ -244,217 +248,267 @@ export default {
         pageSize: 10,
         name: null,
         amount: null,
-        sort: null,
-        status: null,
+        status: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         name: [
-          { required: true, message: "策略名称不能为空", trigger: "blur" }
-        ],
-        amount: [
-          { required: true, message: "数据源数量不能为空", trigger: "blur" }
-        ],
-        sort: [
-          { required: true, message: "显示顺序不能为空", trigger: "blur" }
-        ],
-        status: [
-          { required: true, message: "状态不能为空", trigger: "blur" }
-        ],
-        delFlag: [
-          { required: true, message: "删除标志不能为空", trigger: "blur" }
+          { required: true, message: '策略名称不能为空', trigger: 'blur' }
         ]
       }
-    };
+    }
   },
   created() {
-    this.getList();
-    this.getDict();
+    this.getList()
+    this.getDict()
   },
   methods: {
     /** 查询数据源策略列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       listStrategy(this.queryParams).then(response => {
-        this.strategyList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.strategyList = response.rows
+        this.total = response.total
+        this.loading = false
+      })
     },
     /** 查询字典信息 */
-    getDict(){
-      this.getDicts("sys_normal_disable").then(response => {
-        this.statusOptions = response.data;
-      });
+    getDict() {
+      this.getDicts('sys_normal_disable').then(response => {
+        this.statusOptions = response.data
+      })
     },
     // 状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     // 表单重置
     reset() {
       this.form = {
         strategyId: null,
         name: null,
-        amount: null,
-        sort: null,
-        status: "0",
-        createBy: null,
-        createTime: null,
-        updateBy: null,
-        updateTime: null,
-        delFlag: null
-      };
-      this.tenantSourceList = [];
-      this.resetForm("form");
+        amount: 0,
+        sort: 0,
+        status: '0',
+        values: [],
+        isChange: 0,
+        hasMain: false
+      }
+      this.resetForm('form')
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.strategyId)
-      this.idNames = selection.map(item => item.strategyId)
-      this.single = selection.length!==1
+      this.idNames = selection.map(item => item.name)
+      this.single = selection.length !== 1
       this.multiple = !selection.length
+    },
+    getWriteSeparation() {
+      writeSeparation().then(response => {
+        this.containWriteList = response.data
+      })
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加数据源策略";
+      this.reset()
+      this.getWriteSeparation()
+      this.open = true
+      this.title = '添加数据源策略'
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      getStrategy({strategyId: row.strategyId}).then(response => {
-        this.form = response.data;
-        this.tenantSourceList = response.data.tenantSourceList;
-        this.open = true;
-        this.title = "修改数据源策略";
-      });
+      this.reset()
+      this.getWriteSeparation()
+      getStrategy({ strategyId: row.strategyId }).then(response => {
+        this.form = response.data
+        for (let i = 0; i < this.form.values.length; i++) {
+          if (this.form.values[i].isMain === 'Y') {
+            this.form.hasMain = true
+          }
+        }
+        this.open = true
+        this.title = '修改数据源策略'
+      })
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
+      this.$refs['form'].validate(valid => {
         if (valid) {
-          this.form.tenantSourceList = this.tenantSourceList;
-          if (this.form.strategyId != null) {
-            updateStrategy(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addStrategy(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+          if (this.valueCheck()) {
+            if (this.form.strategyId != null) {
+              if (this.form.isChange === '0') {
+                updateStrategy(this.form).then(response => {
+                  this.msgSuccess('修改成功')
+                  this.open = false
+                  this.getList()
+                })
+              } else {
+                this.$message({
+                  message: '默认数据源不允许进行修改操作',
+                  type: 'warning'
+                })
+              }
+            } else {
+              addStrategy(this.form).then(response => {
+                this.msgSuccess('新增成功')
+                this.open = false
+                this.getList()
+              })
+            }
           }
         }
-      });
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const strategyIds = row.strategyId || this.ids;
-      const names = row.name || this.idNames;
-      let that = this;
-      this.$confirm('是否确认删除数据源策略"' + names + '"?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      const strategyIds = row.strategyId || this.ids
+      const names = row.name || this.idNames
+      let that = this
+      this.$confirm('是否确认删除数据源策略"' + names + '"?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(function() {
-        return delStrategy(that.updateParamIds(strategyIds));
+        return delStrategy(that.updateParamIds(strategyIds))
       }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      }).catch(() => {});
-    },
-    /** 数据源序号 */
-    rowTenantSourceIndex({ row, rowIndex }) {
-      row.index = rowIndex + 1;
-    },
-    /** 数据源添加按钮操作 */
-    handleAddTenantSource() {
-      let obj = {};
-      obj.name = "";
-      obj.databaseType = "";
-      obj.slave = "";
-      obj.driverClassName = "";
-      obj.url = "";
-      obj.username = "";
-      obj.password = "";
-      obj.type = "";
-      obj.sort = "";
-      obj.status = "";
-      this.tenantSourceList.push(obj);
-    },
-    /** 数据源删除按钮操作 */
-    handleDeleteTenantSource() {
-      if (this.checkedTenantSource.length == 0) {
-        this.$alert("请先选择要删除的数据源数据", "提示", { confirmButtonText: "确定", });
-      } else {
-        this.tenantSourceList.splice(this.checkedTenantSource[0].index - 1, 1);
-      }
-    },
-    /** 单选框选中数据 */
-    handleTenantSourceSelectionChange(selection) {
-      if (selection.length > 1) {
-        this.$refs.tenantSource.clearSelection();
-        this.$refs.tenantSource.toggleRowSelection(selection.pop());
-      } else {
-        this.checkedTenantSource = selection;
-      }
+        this.getList()
+        this.msgSuccess('删除成功')
+      }).catch(() => {
+      })
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download('tenant/strategy/export', {
         ...this.queryParams
-      }, `tenant_strategy.xlsx`)
+      }, `数据源策略数据.xlsx`)
     },
     /** 保存排序按钮操作 */
-    handleSort(){
-      this.$confirm('是否确认保存新排序?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    handleSort() {
+      this.$confirm('是否确认保存新排序?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
-        let params = this.sortOrderListOnlyDynamic(this.strategyList, this.oldStrategyList, "strategyId");
-        if(params.length>0) {
-          return updateStrategySort(this.updateParamIds(params));
+        let params = this.sortOrderListOnlyDynamic(this.strategyList, this.oldStrategyList, 'strategyId')
+        if (params.length > 0) {
+          return updateStrategySort(this.updateParamIds(params))
         }
       }).then(() => {
-        this.getList();
-        this.sortVisible = false;
-        this.msgSuccess("保存成功");
-      }).catch(() => {});
+        this.getList()
+        this.sortVisible = false
+        this.msgSuccess('保存成功')
+      }).catch(() => {
+      })
+    },
+    valueAdd() {
+      const newData = {
+        sourceId: '',
+        isMain: 'N',
+        status: '1'
+      }
+      this.form.values.push(newData)
+    },
+    valueChange(id) {
+      const writeData = this.containWriteList.filter(function(item) {
+        return item.sourceId === id
+      })
+      let data = this.form.values.filter(function(item) {
+        return item.sourceId === id
+      })
+      data[0].status = writeData[0].status
+    },
+    valueMainChange(isMain) {
+      this.form.hasMain = isMain !== 'N'
+    },
+    valueDelete(row) {
+      if (row !== undefined) {
+        const index = this.form.values.indexOf(row)
+        this.form.values.splice(index, 1)
+      }
+    },
+    valueCheck() {
+      let key = 0
+      for (let i = 0; i < this.form.values.length; i++) {
+        let increase = 0
+        if (this.form.values[i].isMain === 'Y') {
+          key++
+          increase = 1
+        }
+        for (let j = 0; j < this.form.values.length; j++) {
+          if (this.form.values[i].sourceId === null || this.form.values[i].sourceId === '' || (this.form.sourceId != null && this.form.values[i].sourceId === this.form.sourceId)) {
+            this.form.values.splice(i--, 1)
+            if (increase === 1) {
+              key--
+            }
+            break
+          } else if (i !== j && this.form.values[i].sourceId === this.form.values[j].sourceId) {
+            this.form.values.splice(j--, 1)
+          }
+        }
+
+      }
+      if (this.form.values.length === 0) {
+        this.$message({
+          message: '有效数据源数量为0，请添加',
+          type: 'warning'
+        })
+        return false
+      } else if (key !== 1) {
+        this.$message({
+          message: '主数据源有且只能有一个，请检查',
+          type: 'warning'
+        })
+        return false
+      }
+      this.form.amount = this.form.values.length
+      return true
     }
   },
   mounted() {
-    const el = this.$refs.dataTable.$el.querySelectorAll(".el-table__body-wrapper > table > tbody")[0];
+    const el = this.$refs.dataTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
     Sortable.create(el, {
-      handle: ".allowDrag",
+      handle: '.allowDrag',
       onEnd: evt => {
-        const targetRow = this.strategyList.splice(evt.oldIndex, 1)[0];
-        this.strategyList.splice(evt.newIndex, 0, targetRow);
-        this.sortVisible = true;
+        const targetRow = this.strategyList.splice(evt.oldIndex, 1)[0]
+        this.strategyList.splice(evt.newIndex, 0, targetRow)
+        this.sortVisible = true
       }
-    });
+    })
   }
-};
+}
 </script>
+
+<style lang="scss" scoped>
+.value-set {
+  .value-title {
+    float: left;
+    line-height: 40px;
+  }
+
+  .value-add {
+    float: right;
+    margin-bottom: 10px;
+  }
+}
+
+.value-input {
+  text-align: center
+}
+</style>

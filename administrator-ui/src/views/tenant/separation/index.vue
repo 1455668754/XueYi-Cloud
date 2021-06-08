@@ -95,27 +95,28 @@
           <div class="value-add">
             <el-button type="primary" plain @click="valueAdd">添加读数据源</el-button>
           </div>
-          <el-table ref="dragTable" :data="form.values" row-key="parameterValueId">
-            <el-table-column label="读数据源" min-width="30%" align="center" class-name="allowDrag">
+          <el-table :data="form.values">
+            <el-table-column label="读数据源" min-width="30%" align="center">
               <template slot-scope="scope">
                 <el-select v-model="scope.row.sourceId" placeholder="请选择">
                   <el-option
                     v-for="item in containReadList"
                     :key="item.sourceId"
                     :label="item.name"
-                    :value="item.sourceId">
+                    :value="item.sourceId"
+                  >
                   </el-option>
                 </el-select>
               </template>
             </el-table-column>
-            <el-table-column label="操作" min-width="30%" align="center" class-name="allowDrag">
+            <el-table-column label="操作" min-width="30%" align="center">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
                   @click="valueDelete(scope.row)"
-                  v-hasPermi="['product:parameter:edit']"
+                  v-hasPermi="['tenant:separation:edit']"
                 >删除
                 </el-button>
               </template>
@@ -147,7 +148,7 @@ export default {
       total: 0,
       // 数据源表格数据
       separationList: [],
-      // 具备读 数据集合
+      // 具备读 数据源集合
       containReadList: [],
       // 弹出层标题
       title: '',
@@ -219,9 +220,9 @@ export default {
     /** 配置按钮操作 */
     handleUpdate(row) {
       this.reset()
-        readSeparation({ sourceId: row.sourceId,type:row.type }).then(response => {
-          this.containReadList = response.data
-        })
+      readSeparation({ sourceId: row.sourceId, type: row.type }).then(response => {
+        this.containReadList = response.data
+      })
       getSeparation({ sourceId: row.sourceId }).then(response => {
         this.form = response.data
         this.open = true
@@ -233,7 +234,7 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.sourceId != null) {
-            this.valueCheck();
+            this.valueCheck()
             updateSeparation(this.form).then(response => {
               this.msgSuccess('配置成功')
               this.open = false
@@ -255,14 +256,14 @@ export default {
         this.form.values.splice(index, 1)
       }
     },
-    valueCheck(){
+    valueCheck() {
       for (let i = 0; i < this.form.values.length; i++) {
         for (let j = 0; j < this.form.values.length; j++) {
-          if(this.form.values[i].sourceId === null || this.form.values[i].sourceId==='' ||  this.form.values[i].sourceId===this.form.sourceId){
-            this.form.values.splice(i--, 1);
+          if (this.form.values[i].sourceId === null || this.form.values[i].sourceId === '' || this.form.values[i].sourceId === this.form.sourceId) {
+            this.form.values.splice(i--, 1)
           }
-          if( i !== j && this.form.values[i].sourceId === this.form.values[j].sourceId){
-            this.form.values.splice(j--, 1);
+          if (i !== j && this.form.values[i].sourceId === this.form.values[j].sourceId) {
+            this.form.values.splice(j--, 1)
           }
         }
       }

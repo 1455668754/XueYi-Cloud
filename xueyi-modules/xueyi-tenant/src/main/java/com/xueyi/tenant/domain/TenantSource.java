@@ -44,7 +44,6 @@ public class TenantSource extends BaseEntity
     private String username;
 
     /** 密码 */
-    @Excel(name = "密码")
     private String password;
 
     /** 主数据源（Y是 N否） */

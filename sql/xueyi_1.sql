@@ -89,6 +89,7 @@ create table xy_tenant_strategy (
   strategy_id		        bigint	            not null                                comment '策略Id',
   name                      varchar(500)	    not null default ''	                    comment '策略名称',
   amount		            int unsigned        not null default 0	                    comment '数据源数量',
+  is_change                 tinyint             not null default 0	                    comment '是否可修改（0是 1否）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
@@ -102,8 +103,8 @@ primary key (strategy_id)
 -- ----------------------------
 -- 初始化-数据源策略表数据
 -- ----------------------------
-insert into xy_tenant_strategy(strategy_id, name, amount, sort)
-values (0, '默认策略', 1, 0);
+insert into xy_tenant_strategy(strategy_id, name, amount, is_change, sort)
+values (0, '默认策略', 1, 1, 0);
 
 -- ----------------------------
 -- 5、策略-数据源关联表  策略n-n写数据源 | 数据源为写|读写的类型

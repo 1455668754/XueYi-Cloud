@@ -308,7 +308,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.dataId)
-      this.idNames = selection.map(item => item.dataId)
+      this.idNames = selection.map(item => item.name)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -368,7 +368,7 @@ export default {
     handleExport() {
       this.download('tenant/nacos/export', {
         ...this.queryParams
-      }, `tenant_nacos.xlsx`)
+      }, `Nacos配置数据.xlsx`)
     },
     /** 保存排序按钮操作 */
     handleSort() {

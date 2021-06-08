@@ -47,10 +47,17 @@ public class TenantSeparationController extends BaseController {
     /**
      * 查询 含读 数据源集合
      */
-    @PreAuthorize(hasPermi = "tenant:separation:list")
     @GetMapping("/containRead")
     public AjaxResult containRead(TenantSource tenantSource) {
         return AjaxResult.success(tenantSeparationService.selectContainReadList(tenantSource));
+    }
+
+    /**
+     * 查询 含读 数据源集合
+     */
+    @GetMapping("/containWrite")
+    public AjaxResult containWrite(TenantSource tenantSource) {
+        return AjaxResult.success(tenantSeparationService.selectContainWriteList(tenantSource));
     }
 
     /**
