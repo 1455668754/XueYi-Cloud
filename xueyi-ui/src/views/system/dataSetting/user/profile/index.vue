@@ -20,21 +20,22 @@
                 <span class="pull-left">性别</span>
                 <span class="pull-right">{{ user.sex === '0' ? '男' : user.sex === '1' ? '女' : '保密' }}</span>
               </li>
-              {{user}}
               <li class="list-group-item">
                 <svg-icon icon-class="xy_dept_profile"/>
                 <span class="pull-left">部门</span>
-                <span class="pull-right">{{ user.dept.deptName }}</span>
+                <span class="pull-right">{{ user.dept !== undefined ? user.dept.deptName : '' }}</span>
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="xy_post_profile"/>
                 <span class="pull-left">岗位</span>
-                <span class="pull-right">{{ user.post.postName }}</span>
+                <span class="pull-right">{{ user.post !== undefined ? user.post.postName : '' }}</span>
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="xy_roleGroup"/>
                 <span class="pull-left">角色组</span>
-                <span class="pull-right"><span v-for="(item,index) in user.roles">{{item.roleName}}<span v-if="index < user.roles.length-1"> | </span></span></span>
+                <span class="pull-right"><span v-for="(item,index) in user.roles">{{ item.roleName }}<span
+                  v-if="index < user.roles.length-1"
+                > | </span></span></span>
               </li>
               <li class="list-group-item">
                 <svg-icon icon-class="xy_creatTime"/>
@@ -71,29 +72,29 @@
 </template>
 
 <script>
-import userAvatar from "./userAvatar";
-import userInfo from "./userInfo";
-import resetPwd from "./resetPwd";
-import {getUserProfile} from "@/api/system/user";
+import userAvatar from './userAvatar'
+import userInfo from './userInfo'
+import resetPwd from './resetPwd'
+import { getUserProfile } from '@/api/system/user'
 
 export default {
-  name: "Profile",
-  components: {userAvatar, userInfo, resetPwd},
+  name: 'Profile',
+  components: { userAvatar, userInfo, resetPwd },
   data() {
     return {
       user: {},
-      activeTab: "userinfo"
-    };
+      activeTab: 'userinfo'
+    }
   },
   created() {
-    this.getUser();
+    this.getUser()
   },
   methods: {
     getUser() {
       getUserProfile().then(response => {
-        this.user = response.data;
-      });
+        this.user = response.data
+      })
     }
   }
-};
+}
 </script>
