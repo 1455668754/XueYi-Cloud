@@ -70,3 +70,46 @@ export function sortOrderList(newList) {
   }
   return listNew;
 }
+
+// Table合并行通用（不相邻的数据相互不受影响且行不交叉合并） 
+export function mergeTableRow(config) {
+  let data = config.data
+  const { mergeColNames, firstMergeColNames, firstMerge } = config
+  if (!mergeColNames || mergeColNames.length === 0) {
+    return data
+  }
+  mergeColNames.forEach((m) => {
+    const mList = {}
+    data = data.map((v, index) => {
+      const firstMergeVal = v[firstMerge]
+      const rowVal = firstMergeVal + '-' + v[m]
+      if (mList[rowVal] && mList[rowVal].newIndex === index) {
+        const flag = firstMergeColNames.filter((f) => { return f === m }).length !== 0
+        const mcFlag = mergeColNames.filter((mc) => { return mc === firstMerge }).length === 0
+        const span = firstMerge + '-' + firstMergeVal + '-span'
+        if ((mcFlag && flag) || (flag && data[index][span] && data[index][span].rowspan === 1)) {
+          v[m + '-' + firstMergeVal + '-span'] = {
+            rowspan: 1,
+            colspan: 1
+          }
+        } else {
+          data[mList[rowVal]['index']][m + '-' + firstMergeVal + '-span'].rowspan ++
+          v[m + '-' + firstMergeVal + '-span'] = {
+            rowspan: 0,
+            colspan: 0
+          }
+          mList[rowVal]['num']++
+          mList[rowVal]['newIndex']++
+        }
+      } else {
+        mList[rowVal] = { num: 1, index: index, newIndex: index + 1 }
+        v[m + '-' + firstMergeVal + '-span'] = {
+          rowspan: 1,
+          colspan: 1
+        }
+      }
+      return v
+    })
+  })
+  return data
+}
