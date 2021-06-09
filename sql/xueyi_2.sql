@@ -26,19 +26,19 @@ create table sys_dept (
 -- ----------------------------
 -- 初始化-部门表数据
 -- ----------------------------
-insert into sys_dept (dept_id, tenant_id, dept_code, parent_id, ancestors, dept_name, create_by)
-values (99, 2, '100', 0, '0', '雪忆科技', 1),
-       (100, 1, '100', 0, '0', '雪忆科技', 1),
-       (101, 1, '101', 100, '0,100', '深圳总公司', 1),
-       (102, 1, '102',  100, '0,100', '长沙分公司', 1),
-       (103, 1, '103',  101, '0,100,101', '研发部门', 1),
-       (104, 1, '104',  101, '0,100,101', '市场部门', 1),
-       (105, 1, '105',  101, '0,100,101', '测试部门', 1),
-       (106, 1, '106',  101, '0,100,101', '财务部门', 1),
-       (107, 1, '107',  101, '0,100,101', '运维部门', 1),
-       (108, 1, '108',  102, '0,100,102', '市场部门', 1),
-       (109, 1, '109',  102, '0,100,102', '财务部门', 1),
-       (1, -1, '0',  0, '0,100,102', '主部门', 1);
+insert into sys_dept (dept_id, tenant_id, dept_code, parent_id, ancestors, dept_name)
+values (98, -1, '98', 0, '0', '雪忆科技'),
+       (99, 2, '100', 0, '0', '雪忆科技'),
+       (100, 1, '100', 0, '0', '雪忆科技'),
+       (101, 1, '101', 100, '0,100', '深圳总公司'),
+       (102, 1, '102',  100, '0,100', '长沙分公司'),
+       (103, 1, '103',  101, '0,100,101', '研发部门'),
+       (104, 1, '104',  101, '0,100,101', '市场部门'),
+       (105, 1, '105',  101, '0,100,101', '测试部门'),
+       (106, 1, '106',  101, '0,100,101', '财务部门'),
+       (107, 1, '107',  101, '0,100,101', '运维部门'),
+       (108, 1, '108',  102, '0,100,102', '市场部门'),
+       (109, 1, '109',  102, '0,100,102', '财务部门');
        
 -- ----------------------------
 -- 2、岗位信息表
@@ -65,13 +65,13 @@ create table sys_post
 -- ----------------------------
 -- 初始化-岗位信息表数据
 -- ----------------------------
-insert into sys_post (post_id, tenant_id, dept_id, post_code, post_name, create_by)
-values (1, 1, 100, 'ceo', '董事长', 1),
-       (2, 1, 100, 'se', '项目经理', 1),
-       (3, 1, 100, 'hr', '人力资源', 1),
-       (4, 2, 100, 'hr', '人力资源', 1),
-       (5, 1, 100, 'user', '普通员工',1),
-       (6, -1, 1, 'user', '超管账户',1);
+insert into sys_post (post_id, tenant_id, dept_id, post_code, post_name)
+values (1, -1, 98, 'ceo', '超级管理员'),
+       (2, 1, 100, 'ceo', '董事长'),
+       (3, 1, 100, 'se', '项目经理'),
+       (4, 1, 100, 'hr', '人力资源'),
+       (5, 2, 99, 'hr', '人力资源'),
+       (6, 1, 100, 'user', '普通员工');
 
 -- ----------------------------
 -- 3、用户信息表
@@ -108,11 +108,11 @@ create table sys_user (
 -- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
-insert into sys_user (user_id, tenant_id, dept_id, post_id, user_code, user_name, nick_name,user_type, password, create_by, remark)
-values (1, -1, 0, 0, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 1, '系统管理员'),
-       (2, 1, 100, 1, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 1, '系统管理员'),
-       (3, 1, 100, 1, '002', 'xy', 'xy', '01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 1, '管理员'),
-       (4, 2, 100, 1, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', 1, '系统管理员');
+insert into sys_user (user_id, tenant_id, dept_id, post_id, user_code, user_name, nick_name,user_type, password, remark)
+values (-1, -1, 98, 1, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
+       (2, 1, 100, 2, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员'),
+       (3, 1, 100, 2, '002', 'xy', 'xy', '01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '管理员'),
+       (4, 2, 99, 5, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员');
 
 -- ----------------------------
 -- 4、角色信息表
@@ -414,9 +414,10 @@ values (1, '用户性别', 'sys_user_sex', 0, '用户性别列表'),
        (20, '产品类型', 'sys_mall_product_type', 0, '产品类型列表'),
        (21, '填写类型', 'sys_mall_input_type', 0, '填写类型列表'),
        (22, '是否默认', 'sys_mall_custom_type', 0, '是否默认列表'),
-       (23, '读写类型', 'sys_tenant_read_type', 0, '读写类型列表'),
-       (24, '数据源类型', 'sys_tenant_resource_type', 0, '数据源类型列表'),
-       (25, '配置类型', 'sys_tenant_configuration_type', 0, '配置类型列表');
+       (23, '邮费状态', 'sys_mall_postage_type', 0, '邮费状态列表'),
+       (24, '读写类型', 'sys_tenant_read_type', 0, '读写类型列表'),
+       (25, '数据源类型', 'sys_tenant_resource_type', 0, '数据源类型列表'),
+       (26, '配置类型', 'sys_tenant_configuration_type', 0, '配置类型列表');
 
 
 -- ----------------------------
@@ -509,13 +510,15 @@ values (1, 1, '男', '0', 'sys_user_sex', '', '', 'Y', 0, '性别男'),
        (63, 2, '必填型', '1', 'sys_mall_input_type', '', '', 'N', 0, '必填型'),
        (64, 1, '默认', '0', 'sys_mall_custom_type', '', '', 'N', 0, '默认'),
        (65, 2, '自定义', '1', 'sys_mall_custom_type', '', '', 'N', 0, '自定义'),
-       (66, 1, '读&写', '0', 'sys_tenant_read_type', '', '', 'N', 0, '读&写'),
-       (67, 2, '只读', '1', 'sys_tenant_read_type', '', '', 'N', 0, '只读'),
-       (68, 3, '只写', '2', 'sys_tenant_read_type', '', '', 'N', 0, '只写'),
-       (69, 1, '从数据源', '0', 'sys_tenant_resource_type', '', '', 'N', 0, '从数据源'),
-       (70, 2, '主数据源', '1', 'sys_tenant_resource_type', '', '', 'N', 0, '主数据源'),
-       (71, 1, '自动配置', '0', 'sys_tenant_configuration_type', '', '', 'N', 0, '自动配置'),
-       (72, 2, '手动配置', '1', 'sys_tenant_configuration_type', '', '', 'N', 0, '手动配置');
+       (66, 1, '包邮', '0', 'sys_mall_postage_type', '', '', 'N', 0, '包邮'),
+       (67, 2, '不包邮', '1', 'sys_mall_postage_type', '', '', 'N', 0, '不包邮'),
+       (68, 1, '读&写', '0', 'sys_tenant_read_type', '', '', 'N', 0, '读&写'),
+       (69, 2, '只读', '1', 'sys_tenant_read_type', '', '', 'N', 0, '只读'),
+       (70, 3, '只写', '2', 'sys_tenant_read_type', '', '', 'N', 0, '只写'),
+       (71, 1, '从数据源', '0', 'sys_tenant_resource_type', '', '', 'N', 0, '从数据源'),
+       (72, 2, '主数据源', '1', 'sys_tenant_resource_type', '', '', 'N', 0, '主数据源'),
+       (73, 1, '自动配置', '0', 'sys_tenant_configuration_type', '', '', 'N', 0, '自动配置'),
+       (74, 2, '手动配置', '1', 'sys_tenant_configuration_type', '', '', 'N', 0, '手动配置');
 
 -- ----------------------------
 -- 8、参数配置表
