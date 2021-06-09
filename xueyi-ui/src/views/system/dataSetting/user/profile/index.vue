@@ -20,6 +20,7 @@
                 <span class="pull-left">性别</span>
                 <span class="pull-right">{{ user.sex === '0' ? '男' : user.sex === '1' ? '女' : '保密' }}</span>
               </li>
+              {{user}}
               <li class="list-group-item">
                 <svg-icon icon-class="xy_dept_profile"/>
                 <span class="pull-left">部门</span>
