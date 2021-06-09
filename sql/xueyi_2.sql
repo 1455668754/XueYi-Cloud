@@ -370,7 +370,7 @@ values
                                    (20325, 2, -1, 20320, '预览代码', '#', '', 'F', '0', 'tool:gen:preview',           '#', 5, 0, ''),
                                    (20326, 2, -1, 20320, '生成代码', '#', '', 'F', '0', 'tool:gen:code',              '#', 6, 0, ''),
               -- 二级菜单
-              (20330, 2, -1, 20300, '系统接口', 'http://localhost:8080/swagger-ui.html', '', 'C', '0', 'tool:swagger:list',     'xy_swagger', 3, 0, '系统接口菜单');
+              (20330, 2, -1, 20300, '系统接口', 'http://localhost:8080/swagger-ui/index.html', '', 'C', '0', 'tool:swagger:list',     'xy_swagger', 3, 0, '系统接口菜单');
 
 -- ----------------------------
 -- 6、字典类型表
