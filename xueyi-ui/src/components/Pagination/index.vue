@@ -7,6 +7,7 @@
       :layout="layout"
       :page-sizes="pageSizes"
       :total="total"
+      :pager-count="pagerCount"
       v-bind="$attrs"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -37,6 +38,11 @@ export default {
       default() {
         return [10, 20, 30, 50]
       }
+    },
+    // 移动端页码按钮的数量端默认值5
+    pagerCount: {
+      type: Number,
+      default: document.body.clientWidth < 992 ? 5 : 7
     },
     layout: {
       type: String,
