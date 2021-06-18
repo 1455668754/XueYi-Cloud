@@ -25,6 +25,8 @@ import { sortOrderListOnlyDynamic, sortOrderList, mergeTableRow } from "@/utils/
 import Pagination from "@/components/Pagination";
 // 自定义表格工具扩展
 import RightToolbar from "@/components/RightToolbar"
+// 头部标签插件
+import VueMeta from 'vue-meta'
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -44,8 +46,6 @@ Vue.prototype.sortOrderList = sortOrderList
 Vue.prototype.sortOrderListOnlyDynamic = sortOrderListOnlyDynamic
 Vue.prototype.mergeTableRow = mergeTableRow // Table合并行通用（不相邻的数据相互不受影响且行不交叉合并）
 
-
-
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });
 }
@@ -63,7 +63,7 @@ Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 
 Vue.use(permission)
-
+Vue.use(VueMeta)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

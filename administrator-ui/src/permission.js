@@ -13,6 +13,7 @@ const whiteList = ['/login', '/auth-redirect', '/bind', '/register']
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
+    to.meta.title && store.dispatch('settings/setTitle', to.meta.title)
     /* has token*/
     if (to.path === '/login') {
       next({ path: '/' })
@@ -27,11 +28,11 @@ router.beforeEach((to, from, next) => {
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
           })
         }).catch(err => {
-            store.dispatch('LogOut').then(() => {
-              Message.error(err)
-              next({ path: '/' })
-            })
+          store.dispatch('LogOut').then(() => {
+            Message.error(err)
+            next({ path: '/' })
           })
+        })
       } else {
         next()
       }
@@ -45,7 +46,7 @@ router.beforeEach((to, from, next) => {
       if(baseSystemUrl != null && baseSystemUrl !== ''){
         window.location.href = baseSystemUrl // 否则全部重定向到指定登录页
       }else {
-        next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
+        next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到当前系统的登录页
       }
       NProgress.done()
     }
