@@ -23,9 +23,11 @@ import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, 
 import { addSystem, updateParamIds } from "@/utils/xueyi";  // 控制方法(必须)
 import { sortOrderListOnlyDynamic, sortOrderList, mergeTableRow } from "@/utils/xueyi";  // 普通方法
 import Pagination from "@/components/Pagination";
-// 自定义表格工具扩展
+// 自定义表格工具组件
 import RightToolbar from "@/components/RightToolbar"
-// 头部标签插件
+// 字典标签组件
+import DictTag from '@/components/DictTag'
+// 头部标签组件
 import VueMeta from 'vue-meta'
 
 // 全局方法挂载
@@ -59,6 +61,7 @@ Vue.prototype.msgInfo = function (msg) {
 }
 
 // 全局组件挂载
+Vue.component('DictTag', DictTag)
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 
