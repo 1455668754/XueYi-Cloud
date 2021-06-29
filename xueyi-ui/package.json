@@ -1,0 +1,64 @@
+{
+  "name": "xueyi-ui",
+  "version": "2.5.0",
+  "description": "雪忆管理系统",
+  "author": "雪忆",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "sideEffects": false,
+  "scripts": {
+    "install:administrator": "cd administrator && yarn",
+    "install:main": "cd main && yarn",
+    "install-all": "npm-run-all install:*",
+    "start:administrator": "cd administrator && yarn start",
+    "start:main": "cd main && yarn start",
+    "start-all": "npm-run-all --parallel start:*",
+    "serve-all": "npm-run-all --parallel start:*",
+    "build:administrator": "cd administrator && vue-cli-service build",
+    "build:main": "cd main && vue-cli-service build",
+    "build-all": "concurrently \"cd administrator && vue-cli-service build\" \"cd main && vue-cli-service build\""
+  },
+  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/xueyitiantang/xueyi-cloud.git"
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "npm-run-all": "^4.1.5",
+    "concurrently": "^6.2.0",
+    "vue-template-compiler": "^2.6.11",
+    "script-ext-html-webpack-plugin": "^2.1.5"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
+    "rules": {}
+  },
+  "engines": {
+    "node": ">=8.9",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
