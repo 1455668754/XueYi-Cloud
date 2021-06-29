@@ -7,10 +7,10 @@ git clone https://gitee.com/xueyitiantang/xueyi-cloud.git
 # 进入项目目录
 cd xueyi-ui
 
-# 安装依赖
-yarn install
+# 安装依赖 | 运行此步则无需运行下一步
+yarn install && npm-run-all install:*
 
-# 安装各模块依赖 | 可以运行npm 脚本 install-all
+# 只安装各模块依赖 | 可以运行npm 脚本 install-all
 npm-run-all install:*
 
 # 启动服务 | 可以运行npm 脚本 的start-all

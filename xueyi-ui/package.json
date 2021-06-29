@@ -23,9 +23,7 @@
     "type": "git",
     "url": "https://gitee.com/xueyitiantang/xueyi-cloud.git"
   },
-  "dependencies": {
-
-  },
+  "dependencies": {},
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
