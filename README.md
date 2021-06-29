@@ -1,12 +1,13 @@
 ## 平台简介
 
-主要做了如下六块：
+主要做了如下几块：
 * 多租户设计：简单配置即可转变共享多租户模式；
 * 素材管理模块：独立素材模块（文件|图片统一管理，配置，一次上传多处使用，同时删除时进行同步删除，已接管富文本上传）；
 * 部门架构管理优化：重置角色权限，部门-岗位-用户层级管理，上级禁用时同步禁用所有下级；
 * 多系统云台：建立模块组，建立多前端时可以作为通用入口，同时模块组与菜单组关联，如用统一后台多前端模式可以通过模块-菜单方式进行控制， 不同前端显示对应前端模块的菜单；
-* RBAC优化：角色-模块-菜单控制模式，同时角色-部门|角色-岗位|角色-用户多种角色授权方式，岗位继承部门角色，用户继承岗位、部门角色。
-* 分布式Id：雪花Id
+* 前端微聚合：多个前端聚合管理（仅初步实现）；
+* RBAC优化：角色-模块-菜单控制模式，同时角色-部门|角色-岗位|角色-用户多种角色授权方式，岗位继承部门角色，用户继承岗位、部门角色；
+* 分布式Id：雪花Id。
 
 基于本系统还有许多内容是希望加入进来的，但限于时间问题，后续慢慢更新进来，如遇bug，请提Issues。  
   
@@ -16,8 +17,6 @@
 * 2.物理隔离实现
 * 3.部署与基础操作视频讲解
 * 4.常规优化
-
-####  [雪忆商城版/XueYi-Mall](https://gitee.com/xueyitiantang/xueyi-mall) 自用为主，有需要可参考其设计逻辑，基础架构完全来自于cloud。
 
 走过路过，点个star :kissing_heart: 
 
@@ -32,9 +31,8 @@
 - 企业账号/员工账号/密码
 - administrator/admin/admin123
 
-演示地址：(即将上线)        
-文档地址：http://doc.xinggoushangmao.com/        
-https://doc.xueyitt.cn/（暂不可用，先用上面的）
+演示地址：https://xueyitt.cn(即将上线) 
+文档地址：https://doc.xueyitt.cn
 
 ## 雪忆微服务交流群
 
@@ -49,7 +47,7 @@ QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https:
 
 ~~~
 com.xueyi     
-├── xueyi-ui              // 前端框架 [80]
+├── xueyi-ui              // 前端框架 [80、81]
 ├── xueyi-gateway         // 网关模块 [8080]
 ├── xueyi-auth            // 认证中心 [9200]
 ├── xueyi-api             // 接口模块
@@ -63,7 +61,7 @@ com.xueyi
 │       └── xueyi-common-security                     // 安全模块
 │       └── xueyi-common-swagger                      // 系统接口
 ├── xueyi-modules         // 业务模块
-│       └── xueyi-system                              // 系统模块 [9201]
+│       └── xueyi-system                              // 系统模块 [9600]
 │               └── authority                         // 权限模块
 │               └── dict                              // 字典配置
 │               └── material                          // 素材模块
@@ -71,9 +69,10 @@ com.xueyi
 │               └── notice                            // 公告模块
 │               └── organize                          // 组织模块
 │               └── role                              // 权限关系
-│       └── xueyi-gen                                 // 代码生成 [9202]
-│       └── xueyi-job                                 // 定时任务 [9203]
+│       └── xueyi-gen                                 // 代码生成 [9400]
+│       └── xueyi-job                                 // 定时任务 [9500]
 │       └── xueyi-file                                // 文件服务 [9300]
+│       └── xueyi-tenant                              // 租管模块 [9700]
 ├── xueyi-visual          // 图形化管理模块
 │       └── xueyi-visual-monitor                      // 监控中心 [9100]
 ├──pom.xml                // 公共依赖
