@@ -14,9 +14,6 @@ public class DsShiroExpressionProcessor extends DsProcessor {
 
     private static final String ISOLATE_PREFIX = "#isolate";
 
-    @Autowired
-    private TokenService tokenService;
-
     @Override
     public boolean matches(String key) {
         return key.startsWith(ISOLATE_PREFIX);
@@ -25,6 +22,7 @@ public class DsShiroExpressionProcessor extends DsProcessor {
     @Override
     public String doDetermineDatasource(MethodInvocation invocation, String key) {
 
+        TokenService tokenService = SpringUtils.getBean(TokenService.class);
         // 获取当前的用户
         LoginUser loginUser = tokenService.getLoginUser();
         if (StringUtils.isNotNull(loginUser)) {
