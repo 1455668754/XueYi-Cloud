@@ -79,14 +79,14 @@ public class SysUserController extends BaseController {
             }
         }
         //开始进入对应的主数据库
-        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(sysEnterprise.getEnterpriseId(), userName, master);
+        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(master.getMaster(), sysEnterprise.getEnterpriseId(), userName);
         if (StringUtils.isNull(sysUser)) {
             return R.fail("账号或密码错误，请检查");
         }
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(sysEnterprise.getEnterpriseId(), sysUser.getDeptId(), sysUser.getPostId(), sysUser.getUserId(), sysUser.getUserType(), master);
+        Set<String> roles = loginService.getRolePermission(master.getMaster(), sysEnterprise.getEnterpriseId(), sysUser.getDeptId(), sysUser.getPostId(), sysUser.getUserId(), sysUser.getUserType());
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(sysEnterprise.getEnterpriseId(), sysUser.getUserId(), sysUser.getUserType(), master);
+        Set<String> permissions = loginService.getMenuPermission(master.getMaster(), sysEnterprise.getEnterpriseId(), sysUser.getUserId(), sysUser.getUserType());
         LoginUser sysUserVo = new LoginUser();
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setUserType(sysUser.getUserType());
@@ -112,10 +112,11 @@ public class SysUserController extends BaseController {
                 break;
             }
         }
+        System.out.println(master.getMaster());
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(loginUser.getEnterpriseId(), loginUser.getSysUser().getDeptId(), loginUser.getSysUser().getPostId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType(), master);
+        Set<String> roles = loginService.getRolePermission(master.getMaster(), loginUser.getEnterpriseId(), loginUser.getSysUser().getDeptId(), loginUser.getSysUser().getPostId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(loginUser.getEnterpriseId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType(), master);
+        Set<String> permissions = loginService.getMenuPermission(master.getMaster(), loginUser.getEnterpriseId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
         AjaxResult ajax = AjaxResult.success();
         ajax.put("user", userService.selectUserById(loginUser.getSysUser().getUserId()));
         ajax.put("roles", roles);

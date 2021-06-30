@@ -27,10 +27,10 @@ public interface ISysLoginService {
      *
      * @param enterpriseId 租户Id
      * @param userName     用户账号
-     * @param source       主数据源
+     * @param sourceName   数据源名称
      * @return 用户对象信息
      */
-    public SysUser checkLoginByEnterpriseIdANDUserName(Long enterpriseId, String userName, Source source);
+    public SysUser checkLoginByEnterpriseIdANDUserName(String sourceName, Long enterpriseId, String userName);
 
     /**
      * 获取角色数据权限（登录校验）
@@ -40,10 +40,10 @@ public interface ISysLoginService {
      * @param postId       岗位Id
      * @param userId       用户Id
      * @param userType     用户标识
-     * @param source       主数据源
+     * @param sourceName   数据源名称
      * @return 角色权限信息
      */
-    public Set<String> getRolePermission(Long enterpriseId, Long deptId, Long postId, Long userId, String userType, Source source);
+    public Set<String> getRolePermission(String sourceName, Long enterpriseId, Long deptId, Long postId, Long userId, String userType);
 
     /**
      * 获取菜单数据权限（登录校验）
@@ -51,8 +51,8 @@ public interface ISysLoginService {
      * @param enterpriseId 租户Id
      * @param userId       用户Id
      * @param userType     用户标识
-     * @param source       主数据源
+     * @param sourceName   数据源名称
      * @return 菜单权限信息
      */
-    public Set<String> getMenuPermission(Long enterpriseId, Long userId, String userType, Source source);
+    public Set<String> getMenuPermission(String sourceName, Long enterpriseId, Long userId, String userType);
 }

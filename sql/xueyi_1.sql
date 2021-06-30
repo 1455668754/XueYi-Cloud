@@ -89,7 +89,8 @@ primary key (strategy_id, source_id)
 -- 初始化-策略-数据源关联表数据
 -- ----------------------------
 insert into xy_tenant_strategy_source(strategy_id, source_id, status)
-values (0, 0, 'Y'),
+values (0, 0, 'N'),
+       (0, 1, 'Y'),
        (1, 1, 'N');
 
 -- ----------------------------
