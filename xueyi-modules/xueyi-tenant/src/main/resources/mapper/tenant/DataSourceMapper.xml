@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.tenant.mapper.DataSourceMapper">
+
+    <resultMap type="Source" id="sourceResult">
+        <id     property="master"                 column="master_name"                      />
+        <result property="isMain"                 column="is_main"                          />
+        <collection  property="slave"   javaType="java.util.List"   resultMap="slaveMap"    />
+    </resultMap>
+
+    <resultMap id="slaveMap" type="string">
+        <result column="slave_name"                                                         />
+    </resultMap>
+
+    <sql id="loadDataSources">
+        select ts1.slave as master_name, tss.status as is_main,ts2.slave as slave_name
+        from xy_tenant t
+        left join xy_tenant_strategy_source tss on tss.strategy_id = t.strategy_id
+        left join xy_tenant_source ts1 on ts1.source_id = tss.source_id
+        left join xy_tenant_separation tsp on tsp.write_id = tss.source_id
+        left join xy_tenant_source ts2 on ts2.source_id = tsp.write_id
+    </sql>
+
+    <select id="selectLoadDataSources" parameterType="Source" resultMap="sourceResult">
+        <include refid="loadDataSources"/>
+        where t.tenant_id = #{enterpriseId}
+        order by IF((is_main = 'Y'), 0, 1)
+    </select>
+</mapper>

@@ -1,9 +1,11 @@
 package com.xueyi.system.api.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.tenant.api.source.Source;
 
 /**
  * 用户信息
@@ -14,69 +16,46 @@ public class LoginUser implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 用户唯一标识
-     */
+    /** 用户唯一标识 */
     private String token;
 
-    /**
-     * 企业账号id
-     */
+    /** 企业账号id */
     private Long enterpriseId;
 
-    /**
-     * 企业账号
-     */
+    /** 企业账号 */
     private String enterpriseName;
 
-    /**
-     * 用户名id
-     */
+    /** 用户名id */
     private Long userid;
 
-    /**
-     * 用户名
-     */
+    /** 用户名 */
     private String username;
 
-    /**
-     * 用户标识
-     */
+    /** 用户标识 */
     private String userType;
 
-    /**
-     * 登录时间
-     */
+    /** 登录时间 */
     private Long loginTime;
 
-    /**
-     * 过期时间
-     */
+    /** 过期时间 */
     private Long expireTime;
 
-    /**
-     * 登录IP地址
-     */
+    /** 登录IP地址 */
     private String ipaddr;
 
-    /**
-     * 权限列表
-     */
+    /** 权限列表 */
     private Set<String> permissions;
 
-    /**
-     * 角色列表
-     */
+    /** 角色列表 */
     private Set<String> roles;
 
-    /**
-     * 企业账户信息
-     */
+    /** 数据库列表 */
+    private List<Source> source;
+
+    /** 企业信息 */
     private SysEnterprise sysEnterprise;
 
-    /**
-     * 用户信息
-     */
+    /** 用户信息 */
     private SysUser sysUser;
 
     public String getToken() {
@@ -165,6 +144,14 @@ public class LoginUser implements Serializable
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public List<Source> getSource() {
+        return source;
+    }
+
+    public void setSource(List<Source> source) {
+        this.source = source;
     }
 
     public SysEnterprise getSysEnterprise() {

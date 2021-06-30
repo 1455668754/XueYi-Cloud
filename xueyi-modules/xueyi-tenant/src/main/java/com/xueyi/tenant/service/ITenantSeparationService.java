@@ -1,7 +1,7 @@
 package com.xueyi.tenant.service;
 
 import java.util.List;
-import com.xueyi.tenant.domain.TenantSource;
+import com.xueyi.tenant.api.source.TenantSource;
 
 /**
  * 数据源 业务层

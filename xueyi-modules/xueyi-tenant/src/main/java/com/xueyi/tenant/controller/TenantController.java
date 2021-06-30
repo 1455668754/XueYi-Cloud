@@ -46,7 +46,6 @@ public class TenantController extends BaseController
         return getDataTable(list);
     }
 
-
     /**
      * 导出租户信息列表
      */

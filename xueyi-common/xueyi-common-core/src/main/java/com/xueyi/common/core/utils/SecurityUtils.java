@@ -1,6 +1,7 @@
 package com.xueyi.common.core.utils;
 
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.text.Convert;

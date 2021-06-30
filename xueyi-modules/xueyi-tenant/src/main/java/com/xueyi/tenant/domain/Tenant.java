@@ -18,6 +18,9 @@ public class Tenant extends BaseEntity
     /** 租户Id */
     private Long tenantId;
 
+    /** 策略Id */
+    private Long strategyId;
+
     /** 租户账号 */
     @Excel(name = "租户账号")
     private String tenantName;
@@ -45,8 +48,8 @@ public class Tenant extends BaseEntity
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
-    /** 数据源策略信息 */
-    private List<TenantStrategy> values;
+    /** 策略信息 */
+    private TenantStrategy strategy;
 
     public Long getTenantId() {
         return tenantId;
@@ -54,6 +57,14 @@ public class Tenant extends BaseEntity
 
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+    }
+
+    public Long getStrategyId() {
+        return strategyId;
+    }
+
+    public void setStrategyId(Long strategyId) {
+        this.strategyId = strategyId;
     }
 
     public void setTenantName(String tenantName) {
@@ -112,24 +123,25 @@ public class Tenant extends BaseEntity
         return status;
     }
 
-    public List<TenantStrategy> getValues() {
-        return values;
+    public TenantStrategy getStrategy() {
+        return strategy;
     }
 
-    public void setValues(List<TenantStrategy> values) {
-        this.values = values;
+    public void setStrategy(TenantStrategy strategy) {
+        this.strategy = strategy;
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+                .append("strategyId",getStrategyId())
                 .append("tenantName", getTenantName())
                 .append("tenantSystemName", getTenantSystemName())
                 .append("tenantNick", getTenantNick())
                 .append("tenantLogo", getTenantLogo())
                 .append("isChange", getIsChange())
                 .append("tenantNameFrequency", getTenantNameFrequency())
-                .append("values", getValues())
+                .append("strategy", getStrategy())
                 .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())

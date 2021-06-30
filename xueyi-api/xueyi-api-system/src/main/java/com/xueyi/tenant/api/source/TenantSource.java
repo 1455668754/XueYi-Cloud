@@ -1,4 +1,4 @@
-package com.xueyi.tenant.domain;
+package com.xueyi.tenant.api.source;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -23,8 +23,8 @@ public class TenantSource extends BaseEntity
     @Excel(name = "数据源名称")
     private String name;
 
-    /** 数据库(0从数据源 1主数据源) */
-    @Excel(name = "数据源类型", readConverterExp = "0=从数据源,1=主数据源")
+    /** 数据库(0普通数据源 1默认数据源) */
+    @Excel(name = "数据源类型", readConverterExp = "0=普通数据源,1=默认数据源")
     private String databaseType;
 
     /** 数据源编码 */

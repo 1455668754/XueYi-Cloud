@@ -18,7 +18,6 @@ public interface ITenantService
      */
     public List<Tenant> selectTenantList(Tenant tenant);
 
-
     /**
      * 查询租户信息
      *

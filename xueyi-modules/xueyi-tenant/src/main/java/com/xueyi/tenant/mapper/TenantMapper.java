@@ -80,34 +80,4 @@ public interface TenantMapper
      */
     @DataScope( ueAlias = "empty" )
     public int deleteTenantByIds(Tenant tenant);
-
-    /**
-     * 批量新增数据源策略
-     * 访问控制 empty 租户更新（无前缀）
-     *
-     * @param tenant 租户信息
-     * @return 结果
-     */
-    @DataScope( ueAlias = "empty" )
-    public int batchTenantStrategy(Tenant tenant);
-
-    /**
-     * 通过租户信息Id删除数据源策略信息
-     * 访问控制 empty 租户更新（无前缀）
-     *
-     * @param tenant 租户信息
-     * @return 结果
-     */
-    @DataScope( ueAlias = "empty" )
-    public int deleteTenantStrategyByTenantId(Tenant tenant);
-
-    /**
-     * 批量删除数据源策略
-     * 访问控制 empty 租户更新（无前缀）
-     *
-     * @param tenant 租户信息
-     * @return 结果
-     */
-    @DataScope( ueAlias = "empty" )
-    public int deleteTenantStrategyByTenantIds(Tenant tenant);
 }

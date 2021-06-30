@@ -6,11 +6,12 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
+import com.xueyi.system.api.RemoteSourceService;
+import com.xueyi.tenant.api.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,6 +57,9 @@ public class SysUserController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private RemoteSourceService remoteSourceService;
+
     /**
      * 获取当前用户信息
      */
@@ -65,20 +69,31 @@ public class SysUserController extends BaseController {
         if (StringUtils.isNull(sysEnterprise)) {
             return R.fail("账号或密码错误，请检查");
         }
-        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(sysEnterprise.getEnterpriseId(), userName);
+        //查询租户所有的主从库信息
+        List<Source> source = remoteSourceService.getLoadDataSources(sysEnterprise.getEnterpriseId()).getData();
+        Source master = null;
+        for (Source s : source) {
+            if (s.getIsMain().equals("Y")) {
+                master = s;
+                break;
+            }
+        }
+        //开始进入对应的主数据库
+        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(sysEnterprise.getEnterpriseId(), userName, master);
         if (StringUtils.isNull(sysUser)) {
             return R.fail("账号或密码错误，请检查");
         }
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(sysEnterprise.getEnterpriseId(), sysUser.getDeptId(), sysUser.getPostId(), sysUser.getUserId(), sysUser.getUserType());
+        Set<String> roles = loginService.getRolePermission(sysEnterprise.getEnterpriseId(), sysUser.getDeptId(), sysUser.getPostId(), sysUser.getUserId(), sysUser.getUserType(), master);
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(sysEnterprise.getEnterpriseId(), sysUser.getUserId(), sysUser.getUserType());
+        Set<String> permissions = loginService.getMenuPermission(sysEnterprise.getEnterpriseId(), sysUser.getUserId(), sysUser.getUserType(), master);
         LoginUser sysUserVo = new LoginUser();
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setUserType(sysUser.getUserType());
         sysUserVo.setSysEnterprise(sysEnterprise);
         sysUserVo.setRoles(roles);
         sysUserVo.setPermissions(permissions);
+        sysUserVo.setSource(source);
         return R.ok(sysUserVo);
     }
 
@@ -90,10 +105,17 @@ public class SysUserController extends BaseController {
     @GetMapping("getInfo")
     public AjaxResult getInfo() {
         LoginUser loginUser = tokenService.getLoginUser();
+        Source master = new Source();
+        for (Source s : loginUser.getSource()) {
+            if (s.getIsMain().equals("Y")) {
+                master = s;
+                break;
+            }
+        }
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(loginUser.getEnterpriseId(), loginUser.getSysUser().getDeptId(), loginUser.getSysUser().getPostId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
+        Set<String> roles = loginService.getRolePermission(loginUser.getEnterpriseId(), loginUser.getSysUser().getDeptId(), loginUser.getSysUser().getPostId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType(), master);
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(loginUser.getEnterpriseId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
+        Set<String> permissions = loginService.getMenuPermission(loginUser.getEnterpriseId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType(), master);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("user", userService.selectUserById(loginUser.getSysUser().getUserId()));
         ajax.put("roles", roles);
@@ -116,7 +138,7 @@ public class SysUserController extends BaseController {
      * 根据用户Id获取详细信息
      */
     @PreAuthorize(hasPermi = "system:user:query")
-    @GetMapping(value = {"/","/{userId}"})
+    @GetMapping(value = {"/", "/{userId}"})
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
         return AjaxResult.success(userService.selectUserById(userId));
     }

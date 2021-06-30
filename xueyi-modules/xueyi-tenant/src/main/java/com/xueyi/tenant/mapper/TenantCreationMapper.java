@@ -2,7 +2,7 @@ package com.xueyi.tenant.mapper;
 
 import com.xueyi.tenant.domain.Tenant;
 
-public interface NewTenantMapper {
+public interface TenantCreationMapper {
 
     /**
      * 创建新租户部门

@@ -37,5 +37,10 @@
             <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
         </dependency>
 
+        <!-- RuoYi Common Security -->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-common-security</artifactId>
+        </dependency>
     </dependencies>
 </project>

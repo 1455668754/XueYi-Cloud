@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author xueyi
  */
 @Service
+@DS("#isolate")
 public class SysPostServiceImpl implements ISysPostService {
 
     @Autowired

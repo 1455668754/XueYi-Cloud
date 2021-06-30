@@ -9,7 +9,7 @@ cd xueyi-ui
 
 # 安装依赖 | 执行此步则无需执行下一步(上下两条任选一条进行执行)
 yarn install && npm-run-all install:*
-yarn install ; npm run install-all
+yarn install; npm run install-all
 
 # 只安装各模块依赖 | 可以运行npm 脚本 install-all
 npm-run-all install:*

@@ -1,6 +1,8 @@
 package com.xueyi.system.organize.service.impl;
 
 import java.util.List;
+
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,7 @@ import com.xueyi.system.organize.service.ISysUserService;
  * @author xueyi
  */
 @Service
+@DS("#isolate")
 public class SysUserServiceImpl implements ISysUserService {
     private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
 

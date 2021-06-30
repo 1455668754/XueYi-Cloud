@@ -2,9 +2,7 @@ package com.xueyi.tenant.mapper;
 
 import java.util.List;
 
-import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.tenant.domain.TenantStrategy;
-import com.xueyi.tenant.domain.TenantSource;
 
 /**
  * 数据源策略 数据层

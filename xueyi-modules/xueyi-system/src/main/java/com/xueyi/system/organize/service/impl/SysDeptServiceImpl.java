@@ -1,7 +1,9 @@
 package com.xueyi.system.organize.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.CustomException;
+import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.api.utilTool.SysSearch;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
  * @author xueyi
  */
 @Service
+@DS("#isolate")
 public class SysDeptServiceImpl implements ISysDeptService {
 
     @Autowired

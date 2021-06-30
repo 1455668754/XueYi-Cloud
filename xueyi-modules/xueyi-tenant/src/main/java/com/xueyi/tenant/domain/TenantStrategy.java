@@ -1,6 +1,8 @@
 package com.xueyi.tenant.domain;
 
 import java.util.List;
+
+import com.xueyi.tenant.api.source.TenantSource;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xueyi.common.core.annotation.Excel;
@@ -22,14 +24,13 @@ public class TenantStrategy extends BaseEntity
     @Excel(name = "策略名称")
     private String name;
 
+    /** 租户数量 */
+    @Excel(name = "租户数量")
+    private String tenantAmount;
+
     /** 数据源数量 */
     @Excel(name = "数据源数量")
-    private String amount;
-
-
-    /** 主策略（Y是 N否） */
-    @Excel(name = "主策略", readConverterExp = "Y=是,N=否")
-    private String isMain;
+    private String sourceAmount;
 
     /** 是否有主数据源 */
     private Boolean hasMain;
@@ -60,20 +61,20 @@ public class TenantStrategy extends BaseEntity
         return name;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public String getTenantAmount() {
+        return tenantAmount;
     }
 
-    public String getAmount() {
-        return amount;
+    public void setTenantAmount(String tenantAmount) {
+        this.tenantAmount = tenantAmount;
     }
 
-    public String getIsMain() {
-        return isMain;
+    public String getSourceAmount() {
+        return sourceAmount;
     }
 
-    public void setIsMain(String isMain) {
-        this.isMain = isMain;
+    public void setSourceAmount(String sourceAmount) {
+        this.sourceAmount = sourceAmount;
     }
 
     public Boolean getHasMain() {
@@ -113,8 +114,8 @@ public class TenantStrategy extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
                 .append("strategyId", getStrategyId())
                 .append("name", getName())
-                .append("amount", getAmount())
-                .append("isMain", getIsMain())
+                .append("tenantAmount", getTenantAmount())
+                .append("sourceAmount", getSourceAmount())
                 .append("hasMain", getHasMain())
                 .append("isChange", getIsChange())
                 .append("values", getValues())

@@ -1,7 +1,9 @@
 package com.xueyi.tenant.service;
 
 import java.util.List;
-import com.xueyi.tenant.domain.TenantSource;
+
+import com.xueyi.tenant.api.source.Source;
+import com.xueyi.tenant.api.source.TenantSource;
 
 /**
  * 数据源 业务层
@@ -12,11 +14,18 @@ public interface ITenantSourceService {
     /**
      * 查询数据源列表
      *
+     * @param source 数据源组
+     * @return 数据源组集合
+     */
+    public List<Source> selectLoadDataSources(Source source);
+
+    /**
+     * 查询数据源列表
+     *
      * @param tenantSource 数据源
      * @return 数据源集合
      */
     public List<TenantSource> selectTenantSourceList(TenantSource tenantSource);
-
 
     /**
      * 查询数据源

@@ -1,7 +1,9 @@
 package com.xueyi.system.authority.service;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.tenant.api.source.Source;
 
 import java.util.Set;
 
@@ -25,9 +27,10 @@ public interface ISysLoginService {
      *
      * @param enterpriseId 租户Id
      * @param userName     用户账号
+     * @param source       主数据源
      * @return 用户对象信息
      */
-    public SysUser checkLoginByEnterpriseIdANDUserName(Long enterpriseId, String userName);
+    public SysUser checkLoginByEnterpriseIdANDUserName(Long enterpriseId, String userName, Source source);
 
     /**
      * 获取角色数据权限（登录校验）
@@ -37,9 +40,10 @@ public interface ISysLoginService {
      * @param postId       岗位Id
      * @param userId       用户Id
      * @param userType     用户标识
+     * @param source       主数据源
      * @return 角色权限信息
      */
-    public Set<String> getRolePermission(Long enterpriseId, Long deptId, Long postId, Long userId, String userType);
+    public Set<String> getRolePermission(Long enterpriseId, Long deptId, Long postId, Long userId, String userType, Source source);
 
     /**
      * 获取菜单数据权限（登录校验）
@@ -47,7 +51,8 @@ public interface ISysLoginService {
      * @param enterpriseId 租户Id
      * @param userId       用户Id
      * @param userType     用户标识
+     * @param source       主数据源
      * @return 菜单权限信息
      */
-    public Set<String> getMenuPermission(Long enterpriseId, Long userId, String userType);
+    public Set<String> getMenuPermission(Long enterpriseId, Long userId, String userType, Source source);
 }

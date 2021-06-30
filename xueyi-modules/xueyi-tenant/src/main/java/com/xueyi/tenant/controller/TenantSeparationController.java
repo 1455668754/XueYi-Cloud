@@ -1,15 +1,11 @@
 package com.xueyi.tenant.controller;
 
 import java.util.List;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 
-import com.xueyi.tenant.domain.TenantSource;
+import com.xueyi.tenant.api.source.TenantSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +15,6 @@ import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.tenant.service.ITenantSeparationService;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.page.TableDataInfo;
 
 /**

@@ -1,11 +1,9 @@
-package com.xueyi.tenant.domain;
+package com.xueyi.tenant.api.source;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.web.domain.BaseEntity;
-
-import java.util.List;
 
 /**
  * 数据源对象 xy_tenant_source

@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.xueyi.common.datasource.config.MyDynamicDataSourceConfig,\
+  com.xueyi.common.datasource.provider.dynamicDataSourceLoading

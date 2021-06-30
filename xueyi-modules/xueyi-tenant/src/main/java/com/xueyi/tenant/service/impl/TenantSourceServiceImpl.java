@@ -3,13 +3,14 @@ package com.xueyi.tenant.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.tenant.domain.TenantSourceValue;
+import com.xueyi.tenant.api.source.Source;
+import com.xueyi.tenant.api.source.TenantSourceValue;
+import com.xueyi.tenant.mapper.DataSourceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.tenant.mapper.TenantSourceMapper;
-import com.xueyi.tenant.domain.TenantSource;
+import com.xueyi.tenant.api.source.TenantSource;
 import com.xueyi.tenant.service.ITenantSourceService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class TenantSourceServiceImpl implements ITenantSourceService {
     @Autowired
     private TenantSourceMapper tenantSourceMapper;
+
+    @Autowired
+    private DataSourceMapper sourceMapper;
+
+    /**
+     * 查询数据源列表
+     *
+     * @param source 数据源组
+     * @return 数据源组集合
+     */
+    public List<Source> selectLoadDataSources(Source source){
+        return sourceMapper.selectLoadDataSources(source);
+    }
 
     /**
      * 查询数据源列表
@@ -64,6 +78,11 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
             tenantSource.setValues(values);
             tenantSource.setSourceId(tenantSource.getId());
             tenantSourceMapper.batchTenantSeparation(tenantSource);
+        }
+        if(tenantSource.getType().equals("2")){
+            tenantSource.setSlave("slave"+tenantSource.getId().toString());
+        }else{
+            tenantSource.setSlave("master"+tenantSource.getId().toString());
         }
         return tenantSourceMapper.insertTenantSource(tenantSource);
     }

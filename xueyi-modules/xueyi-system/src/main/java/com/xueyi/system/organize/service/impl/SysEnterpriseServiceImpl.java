@@ -1,5 +1,6 @@
 package com.xueyi.system.organize.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;

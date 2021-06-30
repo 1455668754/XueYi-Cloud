@@ -5,7 +5,7 @@ drop table if exists xy_tenant_source;
 create table xy_tenant_source (
   source_id		            bigint	            not null                                comment '数据源Id',
   name		                varchar(50)	        not null                                comment '数据源名称',
-  database_type             char(1)	            not null default '0'	                comment '数据源类型（0从数据源 1主数据源）',
+  database_type             char(1)	            not null default '0'	                comment '数据源类型（0普通数据源 1默认数据源）',
   slave		                varchar(500)	    not null default ''	                    comment '数据源编码',
   driver_class_name		    varchar(500)	    not null default ''	                    comment '驱动',
   url	                    varchar(500)	    not null default ''	                    comment '地址',
@@ -25,47 +25,11 @@ primary key (source_id)
 -- ----------------------------
 -- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
 -- ----------------------------
-insert into xy_tenant_source(source_id, name, database_type, driver_class_name, url, username, password, type)
-values (0, '公用数据源', '1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
-
+insert into xy_tenant_source(source_id, name, database_type, slave, driver_class_name, url, username, password, type)
+values (0, '默认数据源', '1', 'master', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0'),
+       (1, '数据源一号', '0', 'slave_1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud2?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
 -- ----------------------------
--- 2、Nacos配置表|管理Nacos配置信息 | 需要控制多数据源的方法写进此表 | 开启租户控制的模块一定要设置成自动配置
--- ----------------------------
-drop table if exists xy_tenant_nacos;
-create table xy_tenant_nacos (
-  data_id		            bigint	            not null                                comment '配置Id',
-  name                      varchar(500)	    not null default ''	                    comment '配置名称',
-  prefix_str		        text	    	                                            comment '头部配置信息',
-  slave_str		            text	    	                                            comment '数据源配置信息',
-  suffix_str		        text	    	                                            comment '尾部配置信息',
-  type		                char(1)	            not null default '0'	                comment '配置类型（0自动配置 1手动配置）',
-  sort                      int unsigned        not null default 0                      comment '显示顺序',
-  status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
-  create_by                 bigint              default null                            comment '创建者',
-  create_time               datetime            default current_timestamp               comment '创建时间',
-  update_by                 bigint              default null                            comment '更新者',
-  update_time               datetime            on update current_timestamp             comment '更新时间',
-  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-primary key (data_id)
-) engine=innodb comment = 'Nacos配置表';
-
--- ----------------------------
--- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
--- ----------------------------
-insert into xy_tenant_nacos(data_id, name, type, sort)
-values (1, 'application-dev.yml', '1', 0),
-       (2, 'xueyi-gateway-dev.yml', '1', 1),
-       (3, 'xueyi-auth-dev.yml', '1', 2),
-       (4, 'xueyi-monitor-dev.yml', '1', 3),
-       (5, 'xueyi-tenant-dev.yml', '1', 4),
-       (6, 'xueyi-system-dev.yml', '0', 5),
-       (7, 'xueyi-gen-dev.yml', '1', 6),
-       (8, 'xueyi-job-dev.yml', '1', 7),
-       (9, 'xueyi-file-dev.yml', '1', 8),
-       (10, 'sentinel-xueyi-gateway', '1', 9);
-
--- ----------------------------
--- 3、读写分离关联表  写1-n读
+-- 3、主从库关联表  写1-n读
 -- ----------------------------
 drop table if exists xy_tenant_separation;
 create table xy_tenant_separation (
@@ -73,13 +37,14 @@ create table xy_tenant_separation (
   read_id		            bigint	            not null                                comment '读数据源Id',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (write_id, read_id)
-) engine=innodb comment = '读写分离关联表';
+) engine=innodb comment = '主从库关联表';
 
 -- ----------------------------
--- 初始化-读写分离关联表数据
+-- 初始化-主从库关联表数据
 -- ----------------------------
 insert into xy_tenant_separation(write_id, read_id)
-values (0, 0);
+values (0, 0),
+       (1, 1);
 
 -- ----------------------------
 -- 4、数据源策略表|管理数据源策略信息
@@ -88,8 +53,9 @@ drop table if exists xy_tenant_strategy;
 create table xy_tenant_strategy (
   strategy_id		        bigint	            not null                                comment '策略Id',
   name                      varchar(500)	    not null default ''	                    comment '策略名称',
-  amount		            int unsigned        not null default 0	                    comment '数据源数量',
-  is_change                 tinyint             not null default 0	                    comment '是否可修改（0是 1否）',
+  tenant_amount		        int unsigned        not null default 0	                    comment '租户数量',
+  source_amount		        int unsigned        not null default 0	                    comment '数据源数量',
+  is_change                 tinyint             not null default 0	                    comment '可修改（0是 1否）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
@@ -103,11 +69,12 @@ primary key (strategy_id)
 -- ----------------------------
 -- 初始化-数据源策略表数据
 -- ----------------------------
-insert into xy_tenant_strategy(strategy_id, name, amount, is_change, sort)
-values (0, '默认策略', 1, 1, 0);
+insert into xy_tenant_strategy(strategy_id, name, tenant_amount, source_amount, is_change, sort)
+values (0, '默认策略', 2, 1, 1, 0),
+       (1, '策略一号', 1, 1, 0, 0);
 
 -- ----------------------------
--- 5、策略-数据源关联表  策略n-n写数据源 | 数据源为写|读写的类型
+-- 5、策略-数据源关联表  策略n-n写数据源 | 数据源仅为写|读写的类型
 -- ----------------------------
 drop table if exists xy_tenant_strategy_source;
 create table xy_tenant_strategy_source (
@@ -122,27 +89,8 @@ primary key (strategy_id, source_id)
 -- 初始化-策略-数据源关联表数据
 -- ----------------------------
 insert into xy_tenant_strategy_source(strategy_id, source_id, status)
-values (0, 0, 'Y');
-
--- ----------------------------
--- 6、策略-租户关联表  策略N-N租户
--- ----------------------------
-drop table if exists xy_tenant_strategy_tenant;
-create table xy_tenant_strategy_tenant (
-  strategy_id		        bigint	            not null                                comment '策略Id',
-  tenant_id		            bigint	            not null                                comment '租户Id',
-  status		            char(1)	            not null default 'N'	                comment '主策略（Y是 N否）',
-  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-primary key (tenant_id)
-) engine=innodb comment = '策略-租户关联表';
-
--- ----------------------------
--- 初始化-租户表数据
--- ----------------------------
-insert into xy_tenant_strategy_tenant (strategy_id, tenant_id, status)
-values (0, -1, 'Y'),
-       (0, 1, 'Y'),
-       (0, 2, 'Y');
+values (0, 0, 'Y'),
+       (1, 1, 'N');
 
 -- ----------------------------
 -- 7、租户信息表|管理租户账户信息
@@ -150,6 +98,7 @@ values (0, -1, 'Y'),
 drop table if exists xy_tenant;
 create table xy_tenant (
   tenant_id		            bigint	            not null                                comment '租户Id',
+  strategy_id		        bigint	            not null                                comment '策略Id',
   tenant_name		        varchar(50)	        not null unique	                        comment '租户账号',
   tenant_system_name		varchar(50)	        not null 	                            comment '系统名称',
   tenant_nick		        varchar(50)	        not null 	                            comment '租户名称',
@@ -171,10 +120,10 @@ create table xy_tenant (
 -- ----------------------------
 -- 初始化-租户信息表数据
 -- ----------------------------
-insert into xy_tenant (is_change, tenant_id, tenant_name, tenant_system_name, tenant_nick, tenant_logo)
-values ('Y', -1, 'administrator', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
-       ('N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
-       ('N', 2, 'xueYi2', '雪忆管理系统', 'xueYi2', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
+insert into xy_tenant (is_change, strategy_id, tenant_id, tenant_name, tenant_system_name, tenant_nick, tenant_logo)
+values ('Y', 0, -1, 'administrator', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
+       ('N', 0, 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
+       ('N', 1, 2, 'xueYi2', '雪忆管理系统', 'xueYi2', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
 
 -- ----------------------------
 -- 8、素材信息表|管理素材信息

@@ -6,6 +6,7 @@
 
     <resultMap type="Tenant" id="TenantResult">
         <id     property="tenantId"                 column="tenant_id"                  />
+        <result property="strategyId"               column="strategy_id"                />
         <result property="tenantName"               column="tenant_name"                />
         <result property="tenantSystemName"         column="tenant_system_name"         />
         <result property="tenantNick"               column="tenant_nick"                />
@@ -21,24 +22,20 @@
         <result property="updateName"   	        column="update_name"                />
         <result property="updateTime"               column="update_time"                />
         <result property="remark"                   column="remark"                     />
-        <collection property="values" javaType="java.util.List" resultMap="valuesResult"/>
+        <association property="strategy"    column="sub_strategy_id" javaType="TenantStrategy" resultMap="strategyResult" />
     </resultMap>
 
-    <resultMap type="TenantStrategy" id="valuesResult">
+    <resultMap type="TenantStrategy" id="strategyResult">
         <id     property="strategyId"               column="sub_strategy_id"            />
         <result property="name"                     column="sub_name"                   />
-        <result property="isMain"                   column="is_main"                    />
-        <result property="amount"                   column="sub_amount"                 />
-        <result property="sort"                     column="sub_sort"                   />
         <result property="status"                   column="sub_status"                 />
     </resultMap>
 
     <sql id="selectVo">
-        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark,
-               b.strategy_id as sub_strategy_id, b.name as sub_name, tst.status as is_main, b.amount as sub_amount, b.sort as sub_sort, b.status as sub_status
+        select e.tenant_id, e.strategy_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark,
+               b.strategy_id as sub_strategy_id, b.name as sub_name, b.status as sub_status
         from xy_tenant e
-        left join xy_tenant_strategy_tenant tst on tst.tenant_id = e.tenant_id
-        left join xy_tenant_strategy b on b.strategy_id = tst.strategy_id
+        left join xy_tenant_strategy b on b.strategy_id = e.strategy_id
     </sql>
 
     <select id="selectTenantList" parameterType="Tenant" resultMap="TenantResult">
@@ -62,6 +59,7 @@
         insert into xy_tenant
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="Id != null">                                             tenant_id                                      ,</if>
+            <if test="strategyId != null">                                     strategy_id                                    ,</if>
             <if test="tenantName != null and tenantName != ''">                tenant_name                                    ,</if>
             <if test="tenantSystemName != null and tenantSystemName != ''">    tenant_system_name                             ,</if>
             <if test="tenantNick != null and tenantNick != ''">                tenant_nick                                    ,</if>
@@ -74,6 +72,7 @@
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="Id != null">                                             #{Id}                                          ,</if>
+            <if test="strategyId != null">                                     #{strategyId}                                  ,</if>
             <if test="tenantName != null and tenantName != ''">                #{tenantName}                                  ,</if>
             <if test="tenantSystemName != null and tenantSystemName != ''">    #{tenantSystemName}                            ,</if>
             <if test="tenantNick != null and tenantNick != ''">                #{tenantNick}                                  ,</if>
@@ -127,26 +126,4 @@
             #{tenantId}
         </foreach>
     </delete>
-
-    <delete id="deleteTenantStrategyByTenantIds" parameterType="Tenant">
-        delete tst from xy_tenant_strategy_tenant tst
-        left join xy_tenant t on t.tenant_id = tst.tenant_id
-        where t.is_change = 'N' and tst.tenant_id in
-        <foreach item="tenantId" collection="params.Ids" open="(" separator="," close=")">
-            #{tenantId}
-        </foreach>
-    </delete>
-
-    <delete id="deleteTenantStrategyByTenantId" parameterType="Tenant">
-        delete tst from xy_tenant_strategy_tenant tst
-        left join xy_tenant t on t.tenant_id = tst.tenant_id
-        where t.is_change = 'N' and tst.tenant_id = #{tenantId}
-    </delete>
-
-    <insert id="batchTenantStrategy" parameterType="Tenant">
-        insert into xy_tenant_strategy_tenant(tenant_id, strategy_id, status) values
-        <foreach item="item" index="index" collection="values" separator=",">
-            (#{tenantId}, #{item.strategyId}, #{item.status})
-        </foreach>
-    </insert>
 </mapper>

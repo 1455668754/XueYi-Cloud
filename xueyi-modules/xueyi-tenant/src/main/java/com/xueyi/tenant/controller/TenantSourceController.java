@@ -1,22 +1,17 @@
 package com.xueyi.tenant.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
-
+import com.xueyi.common.core.domain.R;
+import com.xueyi.tenant.api.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.tenant.domain.TenantSource;
+import com.xueyi.tenant.api.source.TenantSource;
 import com.xueyi.tenant.service.ITenantSourceService;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
@@ -35,6 +30,17 @@ public class TenantSourceController extends BaseController {
     private ITenantSourceService tenantSourceService;
 
     /**
+     * 获取当前用户信息
+     */
+    @GetMapping("/loadDataSources/{enterpriseId}")
+    public R<List<Source>> info(@PathVariable("enterpriseId") Long enterpriseId) {
+        Source source = new Source();
+        source.setEnterpriseId(enterpriseId);
+        List<Source> sources=tenantSourceService.selectLoadDataSources(source);
+        return R.ok(sources);
+    }
+
+    /**
      * 查询数据源列表
      */
     @PreAuthorize(hasPermi = "tenant:source:list")
@@ -44,7 +50,6 @@ public class TenantSourceController extends BaseController {
         List<TenantSource> list = tenantSourceService.selectTenantSourceList(tenantSource);
         return getDataTable(list);
     }
-
 
     /**
      * 导出数据源列表

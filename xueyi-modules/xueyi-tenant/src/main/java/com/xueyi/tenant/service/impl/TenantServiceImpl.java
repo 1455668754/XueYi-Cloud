@@ -3,7 +3,7 @@ package com.xueyi.tenant.service.impl;
 import java.util.List;
 
 import cn.hutool.core.util.IdUtil;
-import com.xueyi.tenant.mapper.NewTenantMapper;
+import com.xueyi.tenant.mapper.TenantCreationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -23,7 +23,7 @@ public class TenantServiceImpl implements ITenantService {
     private TenantMapper tenantMapper;
 
     @Autowired
-    private NewTenantMapper newTenantMapper;
+    private TenantCreationMapper tenantCreationMapper;
 
     /**
      * 查询租户信息列表
@@ -58,20 +58,17 @@ public class TenantServiceImpl implements ITenantService {
     @DataScope(ueAlias = "empty")
     public int insertTenant(Tenant tenant) {
         int rows = tenantMapper.insertTenant(tenant);
-        /**获取生成雪花Id，并赋值给主键，加入至子表对应外键中*/
+        /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
         tenant.setTenantId(tenant.getId());
-        if (tenant.getValues().size() > 0) {
-            tenantMapper.batchTenantStrategy(tenant);
-        }
 
         //新建租户时同步新建信息
         //1.新建租户的部门|岗位|超管用户信息
         tenant.getParams().put("deptId", IdUtil.getSnowflake(0, 0).nextId());
         tenant.getParams().put("postId", IdUtil.getSnowflake(0, 0).nextId());
         tenant.getParams().put("userId", IdUtil.getSnowflake(0, 0).nextId());
-        newTenantMapper.createDeptByTenantId(tenant);
-        newTenantMapper.createPostByTenantId(tenant);
-        newTenantMapper.createUserByTenantId(tenant);
+        tenantCreationMapper.createDeptByTenantId(tenant);
+        tenantCreationMapper.createPostByTenantId(tenant);
+        tenantCreationMapper.createUserByTenantId(tenant);
 
         return rows;
     }
@@ -83,12 +80,7 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int updateTenant(Tenant tenant) {
-        tenantMapper.deleteTenantStrategyByTenantId(tenant);
-        if (tenant.getValues().size() > 0) {
-            tenantMapper.batchTenantStrategy(tenant);
-        }
         return tenantMapper.updateTenant(tenant);
     }
 
@@ -110,9 +102,7 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int deleteTenantById(Tenant tenant) {
-        tenantMapper.deleteTenantStrategyByTenantId(tenant);
         return tenantMapper.deleteTenantById(tenant);
     }
 
@@ -123,9 +113,7 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    @Transactional
     public int deleteTenantByIds(Tenant tenant) {
-        tenantMapper.deleteTenantStrategyByTenantIds(tenant);
         return tenantMapper.deleteTenantByIds(tenant);
     }
 }

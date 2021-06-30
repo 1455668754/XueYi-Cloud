@@ -1,5 +1,6 @@
 package com.xueyi.system.authority.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.authority.SysRole;
 import com.xueyi.system.api.organize.SysEnterprise;
@@ -10,6 +11,7 @@ import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
+import com.xueyi.tenant.api.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,10 +57,12 @@ public class SysLoginServiceImpl implements ISysLoginService {
      *
      * @param enterpriseId 租户Id
      * @param userName     用户账号
+     * @param source       主数据源
      * @return 用户对象信息
      */
     @Override
-    public SysUser checkLoginByEnterpriseIdANDUserName(Long enterpriseId, String userName) {
+    @DS("#source.master")
+    public SysUser checkLoginByEnterpriseIdANDUserName(Long enterpriseId, String userName, Source source) {
         SysSearch search = new SysSearch();
         search.getSearch().put("enterpriseId", enterpriseId);
         search.getSearch().put("userName", userName);
@@ -71,10 +75,12 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @param enterpriseId 租户Id
      * @param userId       用户Id
      * @param userType     用户标识
+     * @param source       主数据源
      * @return 角色权限信息
      */
     @Override
-    public Set<String> getRolePermission(Long enterpriseId, Long deptId, Long postId, Long userId, String userType) {
+    @DS("#source.master")
+    public Set<String> getRolePermission(Long enterpriseId, Long deptId, Long postId, Long userId, String userType, Source source) {
         Set<String> roles = new HashSet<String>();
         // 管理员拥有所有权限
         if (SysUser.isAdmin(userType)) {
@@ -114,16 +120,18 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @param enterpriseId 租户Id
      * @param userId       用户Id
      * @param userType     用户标识
+     * @param source       主数据源
      * @return 菜单权限信息
      */
     @Override
-    public Set<String> getMenuPermission(Long enterpriseId, Long userId, String userType) {
+    @DS("#source.master")
+    public Set<String> getMenuPermission(Long enterpriseId, Long userId, String userType, Source source) {
         Set<String> perms = new HashSet<String>();
         // 管理员拥有所有权限
         if (SysUser.isAdmin(userType)) {
             perms.add("*:*:*");
         } else {
-            perms.addAll(checkLoginMenuPerms(enterpriseId,userId));
+            perms.addAll(checkLoginMenuPerms(enterpriseId, userId));
         }
         return perms;
     }
