@@ -26,11 +26,11 @@ public interface SysRoleMapper {
      * 查询所有角色
      * 访问控制 r 租户查询
      *
-     * @param search 万用组件 | null
+     * @param role 角色信息 | null
      * @return 角色列表
      */
     @DataScope(eAlias = "r")
-    public List<SysRole> selectRoleAll(SysSearch search);
+    public List<SysRole> selectRoleAll(SysRole role);
 
     /**
      * 根据用户Id查询角色
@@ -57,11 +57,11 @@ public interface SysRoleMapper {
      * 通过角色Id查询角色
      * 访问控制 r 租户查询
      *
-     * @param search 万用组件 | roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 角色对象信息
      */
     @DataScope(eAlias = "r")
-    public SysRole selectRoleById(SysSearch search);
+    public SysRole selectRoleById(SysRole role);
 
     /**
      * 新增角色信息
@@ -86,68 +86,68 @@ public interface SysRoleMapper {
     /**
      * 修改角色状态
      *
-     * @param search 万用组件 | roleId 角色Id | status 角色状态
+     * @param role 角色信息 | roleId 角色Id | status 角色状态
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int updateRoleStatus(SysSearch search);
+    public int updateRoleStatus(SysRole role);
 
     /**
      * 修改角色数据范围
      *
-     * @param search 万用组件 | roleId 角色Id | dataScope 数据范围
+     * @param role 角色信息 | roleId 角色Id | dataScope 数据范围
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int updateRoleDataScope(SysSearch search);
+    public int updateRoleDataScope(SysRole role);
 
     /**
      * 通过角色Id删除角色
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int deleteRoleById(SysSearch search);
+    public int deleteRoleById(SysRole role);
 
     /**
      * 批量删除角色信息
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | roleIds 需要删除的角色Id(Long[])
+     * @param role 角色信息 | params.Ids 需要删除的角色Ids组
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int deleteRoleByIds(SysSearch search);
+    public int deleteRoleByIds(SysRole role);
 
     /**
      * 校验角色编码是否唯一
      * 访问控制 r 租户查询
      *
-     * @param search 万用组件 | roleCode 角色编码
+     * @param role 角色信息 | roleCode 角色编码
      * @return 角色信息
      */
     @DataScope(eAlias = "r")
-    public SysRole checkRoleCodeUnique(SysSearch search);
+    public SysRole checkRoleCodeUnique(SysRole role);
 
     /**
      * 校验角色名称是否唯一
      * 访问控制 r 租户查询
      *
-     * @param search 万用组件 | roleName 角色名称
+     * @param role 角色信息 | roleName 角色名称
      * @return 角色信息
      */
     @DataScope(eAlias = "r")
-    public SysRole checkRoleNameUnique(SysSearch search);
+    public SysRole checkRoleNameUnique(SysRole role);
 
     /**
      * 校验角色权限是否唯一
      * 访问控制 r 租户查询
      *
-     * @param search 万用组件 | roleKey 角色权限
+     * @param role 角色信息 | roleKey 角色权限
      * @return 角色信息
      */
     @DataScope(eAlias = "r")
-    public SysRole checkRoleKeyUnique(SysSearch search);
+    public SysRole checkRoleKeyUnique(SysRole role);
 }

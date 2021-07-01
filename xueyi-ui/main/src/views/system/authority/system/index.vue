@@ -202,8 +202,8 @@
 </template>
 <script>
 
-import {listSystem, getSystem, delSystem, addSystem, updateSystem, changeSystemStatus} from "@/api/system/system";
-import ImageBox from "@/components/XyComponents/ImageBox";
+import {listSystem, getSystem, delSystem, addSystem, updateSystem, changeSystemStatus} from "@/api/system/system"
+import ImageBox from "@/components/XyComponents/ImageBox"
 
 export default {
   name: "System",
@@ -234,7 +234,7 @@ export default {
         {key: 2, label: `跳转类型`, visible: true},
         {key: 3, label: `跳转路由`, visible: true},
         {key: 4, label: `状态`, visible: true},
-        {key: 5, label: `系统简介`, visible: true},
+        {key: 5, label: `系统简介`, visible: true}
       ],
       // 查询参数
       queryParams: {
@@ -243,7 +243,7 @@ export default {
         systemName: null,
         type: null,
         route: null,
-        status: null,
+        status: null
       },
       // 跳转类型字典
       typeOptions: [],
@@ -270,39 +270,39 @@ export default {
           {required: true, message: "系统简介不能为空", trigger: "blur"}
         ]
       }
-    };
+    }
   },
   created() {
-    this.getList();
-    this.getDict();
+    this.getList()
+    this.getDict()
   },
   methods: {
     /** 查询子系统模块列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       listSystem(this.queryParams).then(response => {
-        this.list = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.list = response.rows
+        this.total = response.total
+        this.loading = false
+      })
     },
     /** 查询字典 */
     getDict() {
       this.getDicts("sys_jump_type").then(response => {
-        this.typeOptions = response.data;
-      });
+        this.typeOptions = response.data
+      })
       this.getDicts("sys_show_hide").then(response => {
-        this.statusOptions = response.data;
-      });
+        this.statusOptions = response.data
+      })
     },
     /** 字典内容转化 */
     typeFormat(row, column) {
-      return this.selectDictLabel(this.typeOptions, row.type);
+      return this.selectDictLabel(this.typeOptions, row.type)
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     // 表单重置
     reset() {
@@ -315,18 +315,18 @@ export default {
         sort: null,
         status: "0",
         remark: null
-      };
-      this.resetForm("form");
+      }
+      this.resetForm("form")
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm("queryForm")
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
@@ -337,18 +337,18 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加子系统模块";
+      this.reset()
+      this.open = true
+      this.title = "添加子系统模块"
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      this.reset()
       getSystem({systemId: row.systemId}).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改子系统模块";
-      });
+        this.form = response.data
+        this.open = true
+        this.title = "修改子系统模块"
+      })
     },
     /** 提交按钮 */
     submitForm() {
@@ -356,53 +356,53 @@ export default {
         if (valid) {
           if (this.form.systemId != null) {
             updateSystem(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess("修改成功")
+              this.open = false
+              this.getList()
+            })
           } else {
             addSystem(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess("新增成功")
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     // 模块状态修改
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用";
+      let text = row.status === "0" ? "启用" : "停用"
       this.$confirm('确认要"' + text + '""' + row.systemName + '"模块吗?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return changeSystemStatus({systemId: row.systemId, status: row.status});
+        return changeSystemStatus({systemId: row.systemId, status: row.status})
       }).then(() => {
-        this.msgSuccess(text + "成功");
+        this.msgSuccess(text + "成功")
       }).catch(function () {
-        row.status = row.status === 0 ? 1 : 0;
+        row.status = row.status === 0 ? 1 : 0
       }).catch((err) => {
-      });
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const systemIds = row.systemId || this.ids;
-      const name = row.name || this.idNames;
-      let $this = this;
-      this.$confirm('是否确认删除子系统模块"' + name + '"?', "警告", {
+      const systemIds = row.systemId || this.ids
+      const name = row.name || this.idNames
+      let $this = this
+      this.$confirm('是否确认删除模块"' + name + '"?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delSystem($this.updateParamIds(systemIds));
+        return delSystem($this.updateParamIds(systemIds))
       }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
+        this.getList()
+        this.msgSuccess("删除成功")
       }).catch((err) => {
       })
     }
   }
-};
+}
 </script>

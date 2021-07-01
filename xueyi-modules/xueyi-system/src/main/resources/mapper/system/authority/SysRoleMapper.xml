@@ -54,7 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE dr.dept_id = #{search.deptId} or pr.post_id = #{search.postId} or ur.user_id = #{search.userId} and r.del_flag = 0 and r.tenant_id = #{search.enterpriseId}
 	</select>
 
-	<select id="selectRoleAll" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleResult">
+	<select id="selectRoleAll" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="selectAllVo"/>
 		WHERE r.status = '0'
 		<!-- 数据范围过滤 -->
@@ -94,9 +94,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by r.sort
 	</select>
 
-	<select id="selectRoleById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleResult">
+	<select id="selectRoleById" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="selectVo"/>
-		where r.role_id = #{search.roleId}
+		where r.role_id = #{roleId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</select>
@@ -152,64 +152,64 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</update>
 
-	<update id="updateRoleStatus" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<update id="updateRoleStatus" parameterType="SysRole">
 		update sys_role
 		<trim prefix="SET" suffixOverrides=",">
-			<if test="search.status != null and search.status != ''">				status = #{search.status}					,</if>
+			<if test="status != null and status != ''">				status = #{status}					,</if>
 		</trim>
-		where role_id = #{search.roleId}
+		where role_id = #{roleId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</update>
 
-	<update id="updateRoleDataScope" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<update id="updateRoleDataScope" parameterType="SysRole">
 		update sys_role
 		<trim prefix="SET" suffixOverrides=",">
-			<if test="search.dataScope != null and search.dataScope != ''">			data_scope = #{search.dataScope}			,</if>
+			<if test="dataScope != null and dataScope != ''">			data_scope = #{dataScope}			,</if>
 		</trim>
-		where role_id = #{search.roleId}
+		where role_id = #{roleId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</update>
 
-	<delete id="deleteRoleById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<delete id="deleteRoleById" parameterType="SysRole">
 		update sys_role
 		set del_flag = 1
-		where role_id = #{search.roleId}
+		where role_id = #{roleId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</delete>
 
-	<delete id="deleteRoleByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<delete id="deleteRoleByIds" parameterType="SysRole">
 		update sys_role
 		set del_flag = 1
 		where role_id in
-		<foreach collection="search.roleIds" item="roleId" open="(" separator="," close=")">
+		<foreach item="roleId" collection="params.Ids" open="(" separator="," close=")">
 			#{roleId}
 		</foreach>
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</delete>
 
-	<select id="checkRoleCodeUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleResult">
+	<select id="checkRoleCodeUnique" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="checkVo"/>
-		where r.role_key=#{search.roleCode}
+		where r.role_key=#{roleCode}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1
 	</select>
 
-	<select id="checkRoleNameUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleResult">
+	<select id="checkRoleNameUnique" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="checkVo"/>
-		where r.role_name=#{search.roleName}
+		where r.role_name=#{roleName}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1
 	</select>
 
-	<select id="checkRoleKeyUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleResult">
+	<select id="checkRoleKeyUnique" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="checkVo"/>
-		where r.role_key=#{search.roleKey}
+		where r.role_key=#{roleKey}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1

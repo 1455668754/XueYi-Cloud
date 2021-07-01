@@ -1,29 +1,21 @@
 package com.xueyi.system.authority.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.xueyi.system.api.organize.SysUser;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.authority.SysRole;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.utils.vo.MetaVo;
 import com.xueyi.system.utils.vo.RouterVo;
-import com.xueyi.system.utils.vo.TreeSelect;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
-import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysMenuService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,76 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class SysMenuServiceImpl implements ISysMenuService {
-    public static final String PREMISSION_STRING = "perms[\"{0}\"]";
 
     @Autowired
     private SysMenuMapper menuMapper;
 
     @Autowired
-    private SysRoleMapper roleMapper;
-
-    @Autowired
     private SysRoleSystemMenuMapper roleSystemMenuMapper;
-
-//    /**
-//     * 根据用户查询系统菜单列表
-//     *
-//     * @param userId   用户Id
-//     * @param systemId 系统Id
-//     * @param userType 用户标识
-//     * @return 菜单列表
-//     */
-//    @Override
-//    public List<SysMenu> selectMenuList(Long userId, Long systemId, String userType) {
-//        SysMenu menu = new SysMenu();
-//        menu.setSystemId(systemId);
-//        return selectMenuListByUserId(menu, userId, userType);
-//    }
-
-//    /**
-//     * 根据用户查询系统菜单列表
-//     *
-//     * @param menus  菜单列表List<SysMenu>
-//     * @param menuId 菜单Id
-//     * @return 菜单列表
-//     */
-//    @Override
-//    public List<SysMenu> selectMenuListExcludeChild(List<SysMenu> menus, Long menuId) {
-//        List<SysMenu> childList = getChildPerms(menus, menuId);
-//        List<Long> list = new ArrayList<Long>();
-//        for (SysMenu menu : childList) {
-//            list.add(menu.getMenuId());
-//        }
-//        Iterator<SysMenu> it = menus.iterator();
-//        while (it.hasNext()) {
-//            SysMenu m = (SysMenu) it.next();
-//            if (m.getMenuId().longValue() == menuId.longValue() || ArrayUtils.contains(list.toArray(), m.getMenuId())) {
-//                it.remove();
-//            }
-//        }
-//        return menus;
-//    }
-
-
-//    /**
-//     * 根据用户Id查询权限
-//     *
-//     * @param userId 用户Id
-//     * @return 权限列表
-//     */
-//    @Override
-//    public Set<String> selectMenuPermsByUserId(Long userId) {
-//        SysSearch search = new SysSearch();
-//        search.getSearch().put("userId", userId);
-//        List<String> perms = menuMapper.selectMenuPermsByUserId(search);
-//        Set<String> permsSet = new HashSet<>();
-//        for (String perm : perms) {
-//            if (StringUtils.isNotEmpty(perm)) {
-//                permsSet.addAll(Arrays.asList(perm.trim().split(",")));
-//            }
-//        }
-//        return permsSet;
-//    }
 
     /**
      * 根据用户Id查询菜单
@@ -128,24 +56,6 @@ public class SysMenuServiceImpl implements ISysMenuService {
         }
         return getChildPerms(menus, 0L);
     }
-
-//    /**
-//     * 根据角色Id查询菜单树信息
-//     *
-//     * @param roleId   角色Id
-//     * @param systemId 系统Id
-//     * @return 选中菜单列表
-//     */
-//    @Override
-//    public List<Integer> selectMenuListByRoleId(Long roleId, Long systemId) {
-//        SysSearch search = new SysSearch();
-//        search.getSearch().put("roleId", roleId);
-//        search.setSystemId(systemId);
-//        SysRole role = roleMapper.selectRoleById(search);
-//        search.getSearch().put("roleId", roleId);
-//        search.getSearch().put("menuCheckStrictly", role.isMenuCheckStrictly());
-//        return menuMapper.selectMenuListByRoleId(search);
-//    }
 
     /**
      * 构建前端路由所需要的菜单
@@ -183,66 +93,6 @@ public class SysMenuServiceImpl implements ISysMenuService {
         }
         return routers;
     }
-
-    /**
-     * 构建前端所需要树结构
-     *
-     * @param menus 菜单列表
-     * @return 树结构列表
-     */
-    @Override
-    public List<SysMenu> buildMenuTree(List<SysMenu> menus) {
-        List<SysMenu> returnList = new ArrayList<SysMenu>();
-        List<Long> tempList = new ArrayList<Long>();
-        for (SysMenu dept : menus) {
-            tempList.add(dept.getMenuId());
-        }
-        for (Iterator<SysMenu> iterator = menus.iterator(); iterator.hasNext(); ) {
-            SysMenu menu = (SysMenu) iterator.next();
-            // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(menu.getParentId())) {
-                recursionFn(menus, menu);
-                returnList.add(menu);
-            }
-        }
-        if (returnList.isEmpty()) {
-            returnList = menus;
-        }
-        return returnList;
-    }
-
-//    /**
-//     * 构建前端所需要下拉树结构
-//     *
-//     * @param menus 菜单列表
-//     * @return 下拉树结构列表
-//     */
-//    @Override
-//    public List<TreeSelect> buildMenuTreeSelect(List<SysMenu> menus) {
-//        List<SysMenu> menuTrees = buildMenuTree(menus);
-//        return menuTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
-//    }
-
-//    /**
-//     * 查询系统菜单列表
-//     *
-//     * @param menu     菜单信息
-//     * @param userId   用户Id
-//     * @param userType 用户标识
-//     * @return 菜单列表
-//     */
-//    @Override
-//    public List<SysMenu> selectMenuListByUserId(SysMenu menu, Long userId, String userType) {
-//        List<SysMenu> menus;
-//        // 管理员显示所有菜单信息
-//        if (SysUser.isAdmin(userType)) {
-//            menus = menuMapper.selectMenuList(menu);//@param menu 菜单信息
-//        } else {
-//            menu.getParams().put("userId", userId);
-//            menus = menuMapper.selectMenuListByUserId(menu);//@param menu 菜单信息 | params中携带userId
-//        }
-//        return menus;
-//    }
 
     /**
      * 根据菜单Id查询信息
@@ -296,12 +146,12 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    public boolean checkMenuNameUnique(SysMenu menu){
+    public boolean checkMenuNameUnique(SysMenu menu) {
         if (StringUtils.isNull(menu.getMenuId())) {
             menu.setMenuId(-1L);
         }
         SysMenu info = menuMapper.checkMenuNameUnique(menu);
-        if(StringUtils.isNotNull(info) && info.getMenuId().longValue() != menu.getMenuId().longValue()){
+        if (StringUtils.isNotNull(info) && info.getMenuId().longValue() != menu.getMenuId().longValue()) {
             return false;
         }
         return true;

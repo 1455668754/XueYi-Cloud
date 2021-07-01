@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.utilTool.SysSearch;
-
 import com.xueyi.system.authority.domain.SysMenu;
 
 /**
@@ -22,16 +21,6 @@ public interface SysMenuMapper {
      */
     public List<String> checkLoginMenuPermission(SysSearch search);
 
-//    /**
-//     * 根据用户Id查询权限
-//     * 访问控制 m 租户查询
-//     *
-//     * @param search 万用组件 | userId 用户Id
-//     * @return 权限列表
-//     */
-//    @DataScope(edAlias = "m")
-//    public List<String> selectMenuPermsByUserId(SysSearch search);
-
     /**
      * 查询系统全部菜单列表
      * 访问控制 m 租户查询
@@ -41,27 +30,6 @@ public interface SysMenuMapper {
      */
     @DataScope(edAlias = "m")
     public List<SysMenu> selectMenuListAll(SysMenu menu);
-
-//    /**
-//     * 查询系统菜单列表
-//     * 访问控制 m 租户查询
-//     *
-//     * @param menu 菜单信息
-//     * @return 菜单列表
-//     */
-//    @DataScope(SedAlias = "m")
-//    public List<SysMenu> selectMenuList(SysMenu menu);
-
-
-//    /**
-//     * 根据用户查询系统菜单列表
-//     * 访问控制 m 租户查询
-//     *
-//     * @param menu 菜单信息 | params中携带userId
-//     * @return 菜单列表
-//     */
-//    @DataScope(SedAlias = "m")
-//    public List<SysMenu> selectMenuListByUserId(SysMenu menu);
 
     /**
      * 根据用户Id查询菜单
@@ -82,16 +50,6 @@ public interface SysMenuMapper {
      */
     @DataScope(SedAlias = "m")
     public List<SysMenu> selectMenuTreeByUserId(SysMenu menu);
-
-//    /**
-//     * 根据角色Id查询菜单树信息
-//     * 访问控制 m 租户查询
-//     *
-//     * @param search 万用组件 | systemId 系统Id | roleId 角色Id | menuCheckStrictly 菜单树选择项是否关联显示
-//     * @return 选中菜单列表
-//     */
-//    @DataScope(SedAlias = "m")
-//    public List<Integer> selectMenuListByRoleId(SysSearch search);
 
     /**
      * 根据菜单Id查询信息
@@ -153,4 +111,3 @@ public interface SysMenuMapper {
     @DataScope(edAlias = "m")
     public int hasChildByMenuId(SysMenu menu);
 }
-

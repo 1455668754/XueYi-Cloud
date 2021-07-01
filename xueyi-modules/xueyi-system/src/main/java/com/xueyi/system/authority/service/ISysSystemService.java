@@ -2,7 +2,6 @@ package com.xueyi.system.authority.service;
 
 import com.xueyi.system.api.authority.SysSystem;
 import com.xueyi.system.authority.domain.SystemMenuVo;
-import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.utils.vo.TreeSelect;
 
 import java.util.List;

@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.exception.CustomException;
-import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.authority.SysRole;
@@ -50,8 +48,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public List<SysRole> selectRoleAll() {
-        SysSearch search = new SysSearch();
-        return roleMapper.selectRoleAll(search);
+        return roleMapper.selectRoleAll(new SysRole());
     }
 
     /**
@@ -69,14 +66,12 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 通过角色Id查询角色
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 角色对象信息
      */
     @Override
-    public SysRole selectRoleById(Long roleId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", roleId);
-        return roleMapper.selectRoleById(search);//@param search 万用组件 | roleId 角色Id
+    public SysRole selectRoleById(SysRole role) {
+        return roleMapper.selectRoleById(role);
     }
 
     /**
@@ -86,7 +81,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 系统-菜单对象信息集合
      */
     @Override
-    public List<SysRoleSystemMenu> selectMenuScopeById(Long roleId){
+    public List<SysRoleSystemMenu> selectMenuScopeById(Long roleId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", roleId);
         return roleSystemMenuMapper.selectSystemMenuListOnlyChild(search);//@param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
@@ -99,7 +94,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 部门-岗位对象信息集合
      */
     @Override
-    public List<SysRoleDeptPost> selectDataScopeById(Long roleId){
+    public List<SysRoleDeptPost> selectDataScopeById(Long roleId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", roleId);
         return roleDeptPostMapper.selectDeptPostList(search);//@param search 万用组件 | roleId 角色Id | deptPostId 部门-岗位Id
@@ -150,16 +145,12 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 修改角色状态
      *
-     * @param roleId 角色Id
-     * @param status 角色状态
+     * @param role 角色信息 | roleId 角色Id | status 角色状态
      * @return 结果
      */
     @Override
-    public int updateRoleStatus(Long roleId, String status) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", roleId);
-        search.getSearch().put("status", status);
-        return roleMapper.updateRoleStatus(search);//@param search 万用组件 | roleId 角色Id | status 角色状态
+    public int updateRoleStatus(SysRole role) {
+        return roleMapper.updateRoleStatus(role);
     }
 
     /**
@@ -193,15 +184,14 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     @Transactional
     public int authDataScope(SysRole role) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", role.getRoleId());
-        search.getSearch().put("dataScope", role.getDataScope());
+
         int r;
         // 1.更新角色数据权限范围
-        r = roleMapper.updateRoleDataScope(search);//@param search 万用组件 | roleId 角色Id | dataScope 数据范围
+        r = roleMapper.updateRoleDataScope(role);
         // 2.删除角色和部门-岗位关联
+        SysSearch search = new SysSearch();
+        search.getSearch().put("roleId", role.getRoleId());
         r = r + roleDeptPostMapper.deleteRoleDeptPostByRoleId(search);//@param search 查询组件 | roleId 角色Id
-
         // 3.批量新增角色和部门-岗位关联(仅设置为自定义数据时执行)
         if (role.getDeptPostIds().length > 0 && role.getDataScope().equals("2")) {
             search.getSearch().put("deptPostIds", role.getDeptPostIds());
@@ -214,17 +204,17 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 通过角色Id删除角色
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 结果
      */
     @Override
     @Transactional
-    public int deleteRoleById(Long roleId) {
+    public int deleteRoleById(SysRole role) {
         int r;
         SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", roleId);
+        search.getSearch().put("roleId", role.getRoleId());
         // 1.通过角色Id删除角色
-        r = roleMapper.deleteRoleById(search);//@param search 万用组件 | roleId 角色Id
+        r = roleMapper.deleteRoleById(role);
         if (r > 0) {
             // 1.删除角色和系统-菜单关联
             r = r + roleSystemMenuMapper.deleteRoleSystemMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
@@ -243,17 +233,17 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 批量删除角色信息
      *
-     * @param roleIds 需要删除的角色Ids
+     * @param role 角色信息 | params.Ids 需要删除的角色Ids组
      * @return 结果
      */
     @Override
     @Transactional
-    public int deleteRoleByIds(Long[] roleIds) {
+    public int deleteRoleByIds(SysRole role) {
         int rs;
         SysSearch search = new SysSearch();
-        search.getSearch().put("roleIds", roleIds);
+        search.getSearch().put("roleIds", role.getParams().get("Ids"));
         // 1.批量删除角色信息
-        rs = roleMapper.deleteRoleByIds(search);
+        rs = roleMapper.deleteRoleByIds(role);
         if (rs > 0) {
             // 1.批量删除角色和系统-菜单关联
             rs = rs + roleSystemMenuMapper.deleteRoleSystemMenuByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
@@ -272,19 +262,16 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 校验角色编码是否唯一
      *
-     * @param roleId   角色Id
-     * @param roleCode 角色编码
+     * @param role 角色信息 | roleId   角色Id | roleCode 角色编码
      * @return 结果
      */
     @Override
-    public String checkRoleCodeUnique(Long roleId, String roleCode) {
-        if (StringUtils.isNull(roleId)) {
-            roleId = -1L;
+    public String checkRoleCodeUnique(SysRole role) {
+        if (StringUtils.isNull(role.getRoleId())) {
+            role.setRoleId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleCode", roleCode);
-        SysRole info = roleMapper.checkRoleCodeUnique(search);//@param search 万用组件 | roleCode 角色编码
-        if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != roleId.longValue()) {
+        SysRole info = roleMapper.checkRoleCodeUnique(role);
+        if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != role.getRoleId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -293,19 +280,16 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 校验角色名称是否唯一
      *
-     * @param roleId   角色Id
-     * @param roleName 角色名称
+     * @param role 角色信息 | roleId   角色Id | roleName 角色名称
      * @return 结果
      */
     @Override
-    public String checkRoleNameUnique(Long roleId, String roleName) {
-        if (StringUtils.isNull(roleId)) {
-            roleId = -1L;
+    public String checkRoleNameUnique(SysRole role) {
+        if (StringUtils.isNull(role.getRoleId())) {
+            role.setRoleId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleName", roleName);
-        SysRole info = roleMapper.checkRoleNameUnique(search);//@param search 万用组件 | roleName 角色名称
-        if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != roleId.longValue()) {
+        SysRole info = roleMapper.checkRoleNameUnique(role);
+        if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != role.getRoleId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -314,18 +298,15 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 校验角色权限是否唯一
      *
-     * @param roleId  角色Id
-     * @param roleKey 角色权限
+     * @param role 角色信息 | roleId  角色Id | roleKey 角色权限
      * @return 结果
      */
-    public String checkRoleKeyUnique(Long roleId, String roleKey) {
-        if (StringUtils.isNull(roleId)) {
-            roleId = -1L;
+    public String checkRoleKeyUnique(SysRole role) {
+        if (StringUtils.isNull(role.getRoleId())) {
+            role.setRoleId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleKey", roleKey);
-        SysRole info = roleMapper.checkRoleKeyUnique(search);//@param search 万用组件 | roleKey 角色权限
-        if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != roleId.longValue()) {
+        SysRole info = roleMapper.checkRoleKeyUnique(role);
+        if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != role.getRoleId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;

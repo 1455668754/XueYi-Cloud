@@ -41,17 +41,6 @@ public class SysMenuController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
-//    /**
-//     * 获取菜单列表
-//     */
-//    @PreAuthorize(hasPermi = "system:menu:list")
-//    @GetMapping("/list")
-//    public AjaxResult list(SysMenu menu) {
-//        LoginUser loginUser = tokenService.getLoginUser();
-//        List<SysMenu> menus = menuService.selectMenuListByUserId(menu, loginUser.getUserid(),loginUser.getUserType());
-//        return AjaxResult.success(menus);
-//    }
-
     /**
      * 根据菜单Id获取详细信息
      */
@@ -119,7 +108,7 @@ public class SysMenuController extends BaseController {
     @GetMapping("getRouters")
     public AjaxResult getRouters(SysMenu menu) {
         LoginUser loginUser = tokenService.getLoginUser();
-        List<SysMenu> menus = menuService.selectMenuTreeByUserId(loginUser.getUserid(), menu.getSystemId(),loginUser.getUserType());
+        List<SysMenu> menus = menuService.selectMenuTreeByUserId(loginUser.getUserid(), menu.getSystemId(), loginUser.getUserType());
         return AjaxResult.success(menuService.buildMenus(menus));
     }
 }

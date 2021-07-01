@@ -1,9 +1,7 @@
 package com.xueyi.system.authority.service;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.api.organize.SysUser;
-import com.xueyi.tenant.api.source.Source;
 
 import java.util.Set;
 

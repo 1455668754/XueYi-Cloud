@@ -1,7 +1,6 @@
 package com.xueyi.system.authority.service;
 
 import java.util.List;
-import java.util.Set;
 
 import com.xueyi.system.api.authority.SysRole;
 import com.xueyi.system.role.domain.SysRoleDeptPost;
@@ -34,10 +33,10 @@ public interface ISysRoleService {
     /**
      * 通过角色Id查询角色
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 角色对象信息
      */
-    public SysRole selectRoleById(Long roleId);
+    public SysRole selectRoleById(SysRole role);
 
     /**
      * 根据角色Id获取菜单范围信息
@@ -45,7 +44,7 @@ public interface ISysRoleService {
      * @param roleId 角色Id
      * @return 系统-菜单对象信息集合
      */
-    public List<SysRoleSystemMenu>  selectMenuScopeById(Long roleId);
+    public List<SysRoleSystemMenu> selectMenuScopeById(Long roleId);
 
     /**
      * 根据角色Id获取数据范围信息
@@ -82,11 +81,10 @@ public interface ISysRoleService {
     /**
      * 修改角色状态
      *
-     * @param roleId 角色Id
-     * @param status 角色状态
+     * @param role 角色信息 | roleId 角色Id | status 角色状态
      * @return 结果
      */
-    public int updateRoleStatus(Long roleId, String status);
+    public int updateRoleStatus(SysRole role);
 
     /**
      * 修改菜单权限信息
@@ -107,43 +105,40 @@ public interface ISysRoleService {
     /**
      * 通过角色Id删除角色
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 结果
      */
-    public int deleteRoleById(Long roleId);
+    public int deleteRoleById(SysRole role);
 
     /**
      * 批量删除角色信息
      *
-     * @param roleIds 需要删除的角色ID
+     * @param role 角色信息 | params.Ids 需要删除的角色Ids组
      * @return 结果
      */
-    public int deleteRoleByIds(Long[] roleIds);
+    public int deleteRoleByIds(SysRole role);
 
     /**
      * 校验角色编码是否唯一
      *
-     * @param roleId   角色Id
-     * @param roleCode 角色编码
+     * @param role 角色信息 | roleId   角色Id | roleCode 角色编码
      * @return 结果
      */
-    public String checkRoleCodeUnique(Long roleId, String roleCode);
+    public String checkRoleCodeUnique(SysRole role);
 
     /**
      * 校验角色名称是否唯一
      *
-     * @param roleId   角色Id
-     * @param roleName 角色名称
+     * @param role 角色信息 | roleId   角色Id | roleName 角色名称
      * @return 结果
      */
-    public String checkRoleNameUnique(Long roleId, String roleName);
+    public String checkRoleNameUnique(SysRole role);
 
     /**
      * 校验角色权限是否唯一
      *
-     * @param roleId  角色Id
-     * @param roleKey 角色权限
+     * @param role 角色信息 | roleId  角色Id | roleKey 角色权限
      * @return 结果
      */
-    public String checkRoleKeyUnique(Long roleId, String roleKey);
+    public String checkRoleKeyUnique(SysRole role);
 }

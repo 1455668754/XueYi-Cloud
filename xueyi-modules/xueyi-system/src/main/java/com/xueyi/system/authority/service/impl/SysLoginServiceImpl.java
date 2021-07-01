@@ -11,7 +11,6 @@ import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
-import com.xueyi.tenant.api.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

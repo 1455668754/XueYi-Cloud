@@ -120,10 +120,10 @@ public class SysSystemServiceImpl implements ISysSystemService {
     public List<TreeSelect> buildSystemMenuTreeSelect(SysSystem sysSystem) {
         SysSystem checkSystem = new SysSystem();
         SysMenu checkMenu = new SysMenu();
-        if(sysSystem.getSearchValue().equals("0")){
+        if (sysSystem.getSearchValue().equals("0")) {
             checkSystem.setStatus("0");
             checkMenu.setStatus("0");
-        }else if(sysSystem.getSearchValue().equals("1") && sysSystem.getId() != null && sysSystem.getId() != 0L){
+        } else if (sysSystem.getSearchValue().equals("1") && sysSystem.getId() != null && sysSystem.getId() != 0L) {
             checkMenu.setMenuId(sysSystem.getId());
         }
         //查询系统信息列表

@@ -3,6 +3,7 @@ package com.xueyi.system.authority.controller;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,9 +51,9 @@ public class SysRoleController extends BaseController {
      * 根据角色Id获取详细信息
      */
     @PreAuthorize(hasPermi = "system:role:query")
-    @GetMapping(value = "/{roleId}")
-    public AjaxResult getInfo(@PathVariable Long roleId) {
-        return AjaxResult.success(roleService.selectRoleById(roleId));
+    @GetMapping(value = "/byId")
+    public AjaxResult getInfo(SysRole role) {
+        return AjaxResult.success(roleService.selectRoleById(role));
     }
 
     /**
@@ -80,11 +81,11 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysRole role) {
-        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleCodeUnique(role.getRoleId(), role.getRoleCode()))) {
+        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleCodeUnique(role))) {
             return AjaxResult.error("新增角色'" + role.getRoleName() + "'失败，角色编码已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role.getRoleId(), role.getRoleName()))) {
+        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role))) {
             return AjaxResult.error("新增角色'" + role.getRoleName() + "'失败，角色名称已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role.getRoleId(), role.getRoleKey()))) {
+        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role))) {
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         return toAjax(roleService.insertRole(role));
@@ -97,11 +98,11 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysRole role) {
-        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleCodeUnique(role.getRoleId(), role.getRoleCode()))) {
+        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleCodeUnique(role))) {
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色编码已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role.getRoleId(), role.getRoleName()))) {
+        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role))) {
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色名称已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role.getRoleId(), role.getRoleKey()))) {
+        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role))) {
             return AjaxResult.error("修改角色'" + role.getRoleName() + "'失败，角色权限已存在");
         }
         return toAjax(roleService.updateRole(role));
@@ -134,7 +135,7 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysRole role) {
-        return toAjax(roleService.updateRoleStatus(role.getRoleId(), role.getStatus()));
+        return toAjax(roleService.updateRoleStatus(role));
     }
 
     /**
@@ -142,9 +143,9 @@ public class SysRoleController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:role:remove")
     @Log(title = "角色管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{roleIds}")
-    public AjaxResult remove(@PathVariable Long[] roleIds) {
-        return toAjax(roleService.deleteRoleByIds(roleIds));
+    @DeleteMapping
+    public AjaxResult remove(@RequestBody SysRole role) {
+        return toAjax(roleService.deleteRoleByIds(role));
     }
 
 
@@ -165,8 +166,7 @@ public class SysRoleController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:role:query")
     @GetMapping("/optionSelect")
-    public AjaxResult optionSelect()
-    {
+    public AjaxResult optionSelect() {
         return AjaxResult.success(roleService.selectRoleAll());
     }
 }

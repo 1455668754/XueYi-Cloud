@@ -10,10 +10,11 @@ export function listRole(query) {
 }
 
 // 查询角色详细
-export function getRole(roleId) {
+export function getRole(query) {
   return request({
-    url: '/system/role/' + roleId,
-    method: 'get'
+    url: '/system/role/byId',
+    method: 'get',
+    params: query
   })
 }
 
@@ -54,7 +55,7 @@ export function getDataScope(roleId) {
 // 角色菜单权限
 export function menuScope(data) {
   return request({
-    url: '/system/role/menuScope/',
+    url: '/system/role/menuScope',
     method: 'put',
     data: data
   })
@@ -63,18 +64,14 @@ export function menuScope(data) {
 // 角色数据权限
 export function dataScope(data) {
   return request({
-    url: '/system/role/dataScope/',
+    url: '/system/role/dataScope',
     method: 'put',
     data: data
   })
 }
 
 // 角色状态修改
-export function changeRoleStatus(roleId, status) {
-  const data = {
-    roleId,
-    status
-  }
+export function changeRoleStatus(data) {
   return request({
     url: '/system/role/changeStatus',
     method: 'put',
@@ -83,10 +80,11 @@ export function changeRoleStatus(roleId, status) {
 }
 
 // 删除角色
-export function delRole(roleId) {
+export function delRole(data) {
   return request({
-    url: '/system/role/' + roleId,
-    method: 'delete'
+    url: '/system/role',
+    method: 'delete',
+    data: data
   })
 }
 

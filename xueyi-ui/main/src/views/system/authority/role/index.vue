@@ -336,6 +336,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      idNames: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -487,7 +488,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return changeRoleStatus(row.roleId, row.status)
+        return changeRoleStatus({roleId: row.roleId, status: row.status})
       }).then(() => {
         this.msgSuccess(text + "成功")
       }).catch(function () {
@@ -548,6 +549,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.roleId)
+      this.idNames = selection.map(item => item.name)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -582,8 +584,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const roleId = row.roleId || this.ids
-      getRole(roleId).then(response => {
+      getRole({roleId: row.roleId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = "修改角色"
@@ -670,12 +671,14 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const roleIds = row.roleId || this.ids
-      this.$confirm('是否确认删除选中的角色?', "警告", {
+      const name = row.name || this.idNames
+      let $this = this
+      this.$confirm('是否确认删除角色"' + name + '"?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delRole(roleIds)
+        return delRole($this.updateParamIds(roleIds))
       }).then(() => {
         this.getList()
         this.msgSuccess("删除成功")
