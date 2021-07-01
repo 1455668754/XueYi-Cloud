@@ -22,15 +22,15 @@ public interface SysMenuMapper {
      */
     public List<String> checkLoginMenuPermission(SysSearch search);
 
-    /**
-     * 根据用户Id查询权限
-     * 访问控制 m 租户查询
-     *
-     * @param search 万用组件 | userId 用户Id
-     * @return 权限列表
-     */
-    @DataScope(edAlias = "m")
-    public List<String> selectMenuPermsByUserId(SysSearch search);
+//    /**
+//     * 根据用户Id查询权限
+//     * 访问控制 m 租户查询
+//     *
+//     * @param search 万用组件 | userId 用户Id
+//     * @return 权限列表
+//     */
+//    @DataScope(edAlias = "m")
+//    public List<String> selectMenuPermsByUserId(SysSearch search);
 
     /**
      * 查询系统全部菜单列表
@@ -42,66 +42,66 @@ public interface SysMenuMapper {
     @DataScope(edAlias = "m")
     public List<SysMenu> selectMenuListAll(SysMenu menu);
 
-    /**
-     * 查询系统菜单列表
-     * 访问控制 m 租户查询
-     *
-     * @param menu 菜单信息
-     * @return 菜单列表
-     */
-    @DataScope(SedAlias = "m")
-    public List<SysMenu> selectMenuList(SysMenu menu);
+//    /**
+//     * 查询系统菜单列表
+//     * 访问控制 m 租户查询
+//     *
+//     * @param menu 菜单信息
+//     * @return 菜单列表
+//     */
+//    @DataScope(SedAlias = "m")
+//    public List<SysMenu> selectMenuList(SysMenu menu);
 
 
-    /**
-     * 根据用户查询系统菜单列表
-     * 访问控制 m 租户查询
-     *
-     * @param menu 菜单信息 | params中携带userId
-     * @return 菜单列表
-     */
-    @DataScope(SedAlias = "m")
-    public List<SysMenu> selectMenuListByUserId(SysMenu menu);
-
-    /**
-     * 根据用户Id查询菜单
-     * 访问控制 m 租户查询
-     *
-     * @param search 万用组件 | systemId 系统Id
-     * @return 菜单列表
-     */
-    @DataScope(SedAlias = "m")
-    public List<SysMenu> selectMenuTreeAll(SysSearch search);
+//    /**
+//     * 根据用户查询系统菜单列表
+//     * 访问控制 m 租户查询
+//     *
+//     * @param menu 菜单信息 | params中携带userId
+//     * @return 菜单列表
+//     */
+//    @DataScope(SedAlias = "m")
+//    public List<SysMenu> selectMenuListByUserId(SysMenu menu);
 
     /**
      * 根据用户Id查询菜单
      * 访问控制 m 租户查询
      *
-     * @param search 万用组件 | username 用户Id | systemId 系统Id
+     * @param menu 菜单信息 | systemId 系统Id
      * @return 菜单列表
      */
     @DataScope(SedAlias = "m")
-    public List<SysMenu> selectMenuTreeByUserId(SysSearch search);
+    public List<SysMenu> selectMenuTreeAll(SysMenu menu);
 
     /**
-     * 根据角色Id查询菜单树信息
+     * 根据用户Id查询菜单
      * 访问控制 m 租户查询
      *
-     * @param search 万用组件 | systemId 系统Id | roleId 角色Id | menuCheckStrictly 菜单树选择项是否关联显示
-     * @return 选中菜单列表
+     * @param menu 菜单信息 | params.userId 用户Id | systemId 系统Id
+     * @return 菜单列表
      */
     @DataScope(SedAlias = "m")
-    public List<Integer> selectMenuListByRoleId(SysSearch search);
+    public List<SysMenu> selectMenuTreeByUserId(SysMenu menu);
+
+//    /**
+//     * 根据角色Id查询菜单树信息
+//     * 访问控制 m 租户查询
+//     *
+//     * @param search 万用组件 | systemId 系统Id | roleId 角色Id | menuCheckStrictly 菜单树选择项是否关联显示
+//     * @return 选中菜单列表
+//     */
+//    @DataScope(SedAlias = "m")
+//    public List<Integer> selectMenuListByRoleId(SysSearch search);
 
     /**
      * 根据菜单Id查询信息
      * 访问控制 m 租户查询
      *
-     * @param search 万用组件 | menuId 菜单Id
+     * @param menu 菜单信息 | menuId 菜单Id
      * @return 菜单信息
      */
     @DataScope(edAlias = "m")
-    public SysMenu selectMenuById(SysSearch search);
+    public SysMenu selectMenuById(SysMenu menu);
 
     /**
      * 新增菜单信息
@@ -127,30 +127,30 @@ public interface SysMenuMapper {
      * 删除菜单管理信息
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | menuId 菜单Id
+     * @param menu 菜单信息 | menuId 菜单Id
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int deleteMenuById(SysSearch search);
+    public int deleteMenuById(SysMenu menu);
 
     /**
      * 校验菜单名称是否唯一
      * 访问控制 m 租户查询
      *
-     * @param search 万用组件 | menuName 菜单名称 | parentId 父菜单Id
+     * @param menu 菜单信息 | menuName 菜单名称 | parentId 父菜单Id
      * @return 结果
      */
     @DataScope(eAlias = "m")
-    public SysMenu checkMenuNameUnique(SysSearch search);
+    public SysMenu checkMenuNameUnique(SysMenu menu);
 
     /**
      * 检验是否存在菜单子节点
      * 访问控制 m 租户查询
      *
-     * @param search 万用组件 | menuId 菜单Id
+     * @param menu 菜单信息 | menuId 菜单Id
      * @return 结果
      */
     @DataScope(edAlias = "m")
-    public int hasChildByMenuId(SysSearch search);
+    public int hasChildByMenuId(SysMenu menu);
 }
 

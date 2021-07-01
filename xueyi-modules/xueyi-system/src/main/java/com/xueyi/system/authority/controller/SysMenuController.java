@@ -41,16 +41,16 @@ public class SysMenuController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
-    /**
-     * 获取菜单列表
-     */
-    @PreAuthorize(hasPermi = "system:menu:list")
-    @GetMapping("/list")
-    public AjaxResult list(SysMenu menu) {
-        LoginUser loginUser = tokenService.getLoginUser();
-        List<SysMenu> menus = menuService.selectMenuListByUserId(menu, loginUser.getUserid(),loginUser.getUserType());
-        return AjaxResult.success(menus);
-    }
+//    /**
+//     * 获取菜单列表
+//     */
+//    @PreAuthorize(hasPermi = "system:menu:list")
+//    @GetMapping("/list")
+//    public AjaxResult list(SysMenu menu) {
+//        LoginUser loginUser = tokenService.getLoginUser();
+//        List<SysMenu> menus = menuService.selectMenuListByUserId(menu, loginUser.getUserid(),loginUser.getUserType());
+//        return AjaxResult.success(menus);
+//    }
 
     /**
      * 根据菜单Id获取详细信息
@@ -58,7 +58,7 @@ public class SysMenuController extends BaseController {
     @PreAuthorize(hasPermi = "system:menu:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(SysMenu menu) {
-        return AjaxResult.success(menuService.selectMenuById(menu.getMenuId()));
+        return AjaxResult.success(menuService.selectMenuById(menu));
     }
 
     /**
@@ -68,7 +68,7 @@ public class SysMenuController extends BaseController {
     @Log(title = "菜单管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysMenu menu) {
-        if (!menuService.checkMenuNameUnique(menu.getMenuId(), menu.getParentId(), menu.getMenuName())) {
+        if (!menuService.checkMenuNameUnique(menu)) {
             return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
         } else if (UserConstants.YES_FRAME.equals(menu.getIsFrame())
                 && !StringUtils.startsWithAny(menu.getPath(), Constants.HTTP, Constants.HTTPS)) {
@@ -84,7 +84,7 @@ public class SysMenuController extends BaseController {
     @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysMenu menu) {
-        if (!menuService.checkMenuNameUnique(menu.getMenuId(), menu.getParentId(), menu.getMenuName())) {
+        if (!menuService.checkMenuNameUnique(menu)) {
             return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
         } else if (UserConstants.YES_FRAME.equals(menu.getIsFrame())
                 && !StringUtils.startsWithAny(menu.getPath(), Constants.HTTP, Constants.HTTPS)) {
@@ -102,13 +102,13 @@ public class SysMenuController extends BaseController {
     @Log(title = "菜单管理", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysMenu menu) {
-        if (menuService.hasChildByMenuId(menu.getMenuId())) {
+        if (menuService.hasChildByMenuId(menu)) {
             return AjaxResult.error("存在子菜单,不允许删除");
         }
-        if (menuService.checkMenuExistRole(menu.getMenuId())) {
+        if (menuService.checkMenuExistRole(menu)) {
             return AjaxResult.error("菜单已分配,不允许删除");
         }
-        return toAjax(menuService.deleteMenuById(menu.getMenuId()));
+        return toAjax(menuService.deleteMenuById(menu));
     }
 
     /**

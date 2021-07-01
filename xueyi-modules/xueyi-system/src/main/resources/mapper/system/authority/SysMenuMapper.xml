@@ -84,34 +84,34 @@
 		and u.status = 0 and u.tenant_id = #{search.enterpriseId}
 	</select>
 
-	<select id="selectMenuPermsByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">
-		<include refid="selectPermsVo"/>
-		where m.status = 0 and r.status = 0 and u.user_id = #{search.userId}
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
-	</select>
+<!--	<select id="selectMenuPermsByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">-->
+<!--		<include refid="selectPermsVo"/>-->
+<!--		where m.status = 0 and r.status = 0 and u.user_id = #{search.userId}-->
+<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
+<!--		${params.dataScope}-->
+<!--	</select>-->
 
-	<select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
+<!--	<select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">-->
+<!--		<include refid="selectTreeVo"/>-->
+<!--		where u.user_id = #{params.userId}-->
+<!--		<if test="menuName != null and menuName != ''">-->
+<!--			AND m.menu_name like concat('%', #{menuName}, '%')-->
+<!--		</if>-->
+<!--		<if test="visible != null and visible != ''">-->
+<!--			AND m.visible = #{visible}-->
+<!--		</if>-->
+<!--		<if test="status != null and status != ''">-->
+<!--			AND m.status = #{status}-->
+<!--		</if>-->
+<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
+<!--		${params.dataScope}-->
+<!--		order by m.parent_id, m.sort-->
+<!--	</select>-->
+
+
+	<select id="selectMenuTreeByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectTreeVo"/>
-		where u.user_id = #{params.userId}
-		<if test="menuName != null and menuName != ''">
-			AND m.menu_name like concat('%', #{menuName}, '%')
-		</if>
-		<if test="visible != null and visible != ''">
-			AND m.visible = #{visible}
-		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
-		</if>
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
-		order by m.parent_id, m.sort
-	</select>
-
-
-	<select id="selectMenuTreeByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
-		<include refid="selectTreeVo"/>
-		where m.menu_type in ('M', 'C') and m.status = 0 and r.status = 0 and u.user_id = #{search.userId}
+		where m.menu_type in ('M', 'C') and m.status = 0 and r.status = 0 and u.user_id = #{params.userId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		order by m.parent_id, m.sort
@@ -126,24 +126,24 @@
 		order by m.parent_id, m.sort
 	</select>
 
-	<select id="selectMenuList" parameterType="SysMenu" resultMap="SysMenuResult">
-		<include refid="selectVo"/>
-		where 1 = 1
-		<if test="menuName != null and menuName != ''">
-			AND m.menu_name like concat('%', #{menuName}, '%')
-		</if>
-		<if test="visible != null and visible != ''">
-			AND m.visible = #{visible}
-		</if>
-		<if test="status != null and status != ''">
-			AND m.status = #{status}
-		</if>
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
-		order by m.parent_id, m.sort
-	</select>
+<!--	<select id="selectMenuList" parameterType="SysMenu" resultMap="SysMenuResult">-->
+<!--		<include refid="selectVo"/>-->
+<!--		where 1 = 1-->
+<!--		<if test="menuName != null and menuName != ''">-->
+<!--			AND m.menu_name like concat('%', #{menuName}, '%')-->
+<!--		</if>-->
+<!--		<if test="visible != null and visible != ''">-->
+<!--			AND m.visible = #{visible}-->
+<!--		</if>-->
+<!--		<if test="status != null and status != ''">-->
+<!--			AND m.status = #{status}-->
+<!--		</if>-->
+<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
+<!--		${params.dataScope}-->
+<!--		order by m.parent_id, m.sort-->
+<!--	</select>-->
 
-	<select id="selectMenuTreeAll" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
+	<select id="selectMenuTreeAll" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectDistinctVo"/>
 		where m.menu_type in ('M', 'C') and m.status = 0
 		<!-- 数据范围过滤 -->
@@ -151,23 +151,23 @@
 		order by m.parent_id, m.sort
 	</select>
 
-	<select id="selectMenuListByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="Integer">
-		select m.menu_id
-		from sys_menu m
-		left join sys_role_system_menu rm on m.menu_id = rm.system_menu_id
-		where rm.role_id = #{search.roleId}
-		<if test="search.menuCheckStrictly">
-			and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_system_menu rm on m.menu_id =
-			rm.system_menu_id and rm.role_id = #{search.roleId})
-		</if>
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
-		order by m.parent_id, m.sort
-	</select>
+<!--	<select id="selectMenuListByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="Integer">-->
+<!--		select m.menu_id-->
+<!--		from sys_menu m-->
+<!--		left join sys_role_system_menu rm on m.menu_id = rm.system_menu_id-->
+<!--		where rm.role_id = #{search.roleId}-->
+<!--		<if test="search.menuCheckStrictly">-->
+<!--			and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_system_menu rm on m.menu_id =-->
+<!--			rm.system_menu_id and rm.role_id = #{search.roleId})-->
+<!--		</if>-->
+<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
+<!--		${params.dataScope}-->
+<!--		order by m.parent_id, m.sort-->
+<!--	</select>-->
 
-	<select id="selectMenuById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
+	<select id="selectMenuById" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectVo"/>
-		where m.menu_id = #{search.menuId}
+		where m.menu_id = #{menuId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
@@ -239,25 +239,25 @@
 	</update>
 
 
-	<delete id="deleteMenuById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<delete id="deleteMenuById" parameterType="SysMenu">
 		update sys_menu
 		set del_flag = 1
-		where menu_id = #{search.menuId}
+		where menu_id = #{menuId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</delete>
 
-	<select id="checkMenuNameUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysMenuResult">
+	<select id="checkMenuNameUnique" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="checkVo"/>
-		where m.menu_name=#{search.menuName} and m.parent_id = #{search.parentId}
+		where m.menu_name=#{menuName} and m.parent_id = #{parentId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1
 	</select>
 
-	<select id="hasChildByMenuId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="Integer">
+	<select id="hasChildByMenuId" parameterType="SysMenu" resultType="Integer">
 		<include refid="countVo"/>
-		where m.parent_id = #{search.menuId}
+		where m.parent_id = #{menuId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
