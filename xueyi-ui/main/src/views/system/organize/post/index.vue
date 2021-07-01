@@ -437,7 +437,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return changePostStatus(row.postId, row.deptId, row.status)
+        return changePostStatus({postId: row.postId, deptId: row.deptId, status: row.status})
       }).then(() => {
         this.msgSuccess(msg + "成功")
       }).catch(function () {

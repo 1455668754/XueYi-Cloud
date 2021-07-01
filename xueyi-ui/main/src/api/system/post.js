@@ -18,10 +18,11 @@ export function treeSelect() {
 }
 
 // 查询岗位详细
-export function getPost(postId) {
+export function getPost(query) {
   return request({
     url: '/system/post/byId',
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 
@@ -53,12 +54,7 @@ export function changePostRole(data) {
 }
 
 // 岗位状态修改
-export function changePostStatus(postId, deptId, status) {
-  const data = {
-    postId,
-    deptId,
-    status
-  }
+export function changePostStatus(data) {
   return request({
     url: '/system/post/changeStatus',
     method: 'put',
@@ -67,9 +63,10 @@ export function changePostStatus(postId, deptId, status) {
 }
 
 // 删除岗位
-export function delPost(postId) {
+export function delPost(data) {
   return request({
-    url: '/system/post/' + postId,
-    method: 'delete'
+    url: '/system/post',
+    method: 'delete',
+    data: data
   })
 }

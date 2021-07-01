@@ -19,10 +19,11 @@ export function listDeptExcludeChild(query) {
 }
 
 // 查询部门详细
-export function getDept(deptId) {
+export function getDept(query) {
   return request({
     url: '/system/dept/byId',
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 
@@ -62,12 +63,7 @@ export function changeDeptRole(data) {
 }
 
 // 部门状态修改
-export function changeDeptStatus(deptId, parentId, status) {
-  const data = {
-    deptId,
-    parentId,
-    status
-  }
+export function changeDeptStatus(data) {
   return request({
     url: '/system/dept/changeStatus',
     method: 'put',
@@ -76,9 +72,10 @@ export function changeDeptStatus(deptId, parentId, status) {
 }
 
 // 删除部门
-export function delDept(deptId) {
+export function delDept(data) {
   return request({
-    url: '/system/dept/' + deptId,
-    method: 'delete'
+    url: '/system/dept',
+    method: 'delete',
+    data: data
   })
 }
