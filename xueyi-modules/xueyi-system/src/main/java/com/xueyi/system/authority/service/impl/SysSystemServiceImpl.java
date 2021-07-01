@@ -114,14 +114,22 @@ public class SysSystemServiceImpl implements ISysSystemService {
     }
 
     /**
-     * 加载对应角色系统-菜单列表树
+     * 加载对应角色系统-菜单列表树 | searchValue === 0 仅查询所有正常模块&&菜单 | searchValue === 1 查询所有模块&&菜单 | Id exclude的菜单Id
      */
     @Override
-    public List<TreeSelect> buildSystemMenuTreeSelect() {
+    public List<TreeSelect> buildSystemMenuTreeSelect(SysSystem sysSystem) {
+        SysSystem checkSystem = new SysSystem();
+        SysMenu checkMenu = new SysMenu();
+        if(sysSystem.getSearchValue().equals("0")){
+            checkSystem.setStatus("0");
+            checkMenu.setStatus("0");
+        }else if(sysSystem.getSearchValue().equals("1") && sysSystem.getId() != null && sysSystem.getId() != 0L){
+            checkMenu.setMenuId(sysSystem.getId());
+        }
         //查询系统信息列表
-        List<SysSystem> systemList = systemMapper.selectSystemList(new SysSystem());
+        List<SysSystem> systemList = systemMapper.selectSystemList(checkSystem);
         //查询菜单信息列表
-        List<SysMenu> menuList = menuMapper.selectMenuListAll(new SysMenu());
+        List<SysMenu> menuList = menuMapper.selectMenuListAll(checkMenu);
         //将菜单列表中的顶级菜单的父级变更为对应系统ID，为下一步的系统-菜单列表组件提供有效参数
         for (SysMenu sysMenu : menuList) {
             if (sysMenu.getParentId().equals(0L)) {
@@ -137,6 +145,8 @@ public class SysSystemServiceImpl implements ISysSystemService {
         systemMenuVo.setName("默认系统");
         systemMenuVo.setStatus("0");
         systemMenuVo.setType("0");
+        systemMenuVo.setSystemId(0L);
+        systemMenuVo.setIsMain("1");
         systemMenuList.add(systemMenuVo);
         //遍历系统列表并添加进系统-菜单树中
         for (SysSystem system : systemList) {
@@ -146,6 +156,8 @@ public class SysSystemServiceImpl implements ISysSystemService {
             systemMenuVo.setName(system.getSystemName());
             systemMenuVo.setStatus(system.getStatus());
             systemMenuVo.setType("0");
+            systemMenuVo.setSystemId(system.getSystemId());
+            systemMenuVo.setIsMain("1");
             systemMenuList.add(systemMenuVo);
         }
         //遍历菜单列表并添加进系统-菜单组装列表中
@@ -155,6 +167,11 @@ public class SysSystemServiceImpl implements ISysSystemService {
             systemMenuVo.setFUid(menu.getParentId());
             systemMenuVo.setName(menu.getMenuName());
             systemMenuVo.setStatus(menu.getStatus());
+            systemMenuVo.setPerms(menu.getPerms());
+            systemMenuVo.setIcon(menu.getIcon());
+            systemMenuVo.setComponent(menu.getComponent());
+            systemMenuVo.setSystemId(menu.getSystemId());
+            systemMenuVo.setIsMain(menu.getIsMain());
             systemMenuVo.setType("1");
             systemMenuList.add(systemMenuVo);
         }

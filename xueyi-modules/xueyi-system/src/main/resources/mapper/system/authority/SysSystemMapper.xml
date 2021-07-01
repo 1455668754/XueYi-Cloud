@@ -10,6 +10,7 @@
         <result property="imageUrl"         column="image_url"   />
         <result property="type"             column="type"        />
         <result property="route"            column="route"       />
+        <result property="isMain"           column="is_main"     />
         <result property="sort"       		column="sort"        />
         <result property="status"       	column="status"      />
         <result property="createBy"   		column="create_by"   />

@@ -6,7 +6,7 @@
 
 	<resultMap type="SysMenu" id="SysMenuResult">
 		<id     property="menuId"           column="menu_id"        />
-		<result property="SystemId"         column="system_id"      />
+		<result property="systemId"         column="system_id"      />
 		<result property="menuName"         column="menu_name"      />
 		<result property="parentName"       column="parent_name"    />
 		<result property="parentId"         column="parent_id"      />
@@ -18,6 +18,7 @@
 		<result property="visible"          column="visible"        />
 		<result property="perms"            column="perms"          />
 		<result property="icon"             column="icon"           />
+		<result property="isMain"           column="is_main"     	/>
 		<result property="sort"             column="sort"           />
 		<result property="status"           column="status"         />
 		<result property="createBy"   		column="create_by"      />
@@ -30,8 +31,7 @@
 	</resultMap>
 
 	<sql id="selectVo">
-		select m.menu_id, m.system_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status,
-			   ifnull(perms, '') as perms, m.icon, m.create_time
+		select m.menu_id, m.system_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, ifnull(perms, '') as perms, m.icon, m.create_time
 		from sys_menu m
 	</sql>
 
@@ -119,8 +119,12 @@
 
 
 	<select id="selectMenuListAll" parameterType="SysMenu" resultMap="SysMenuResult">
-		<include refid="selectVo"/>
-		where m.status = '0'
+		select m.menu_id, m.system_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, if(m.tenant_id = 0 and ( -1 != #{enterpriseId} or 0 != #{enterpriseId} ),'1','0') as is_main,
+		ifnull(perms, '') as perms, m.icon, m.create_time
+		from sys_menu m
+		where 1 = 1
+		<if test="menuId != null">	AND m.menu_id != #{menuId}	</if>
+		<if test="status != null and status != ''">	AND m.status = #{status}	</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		order by m.parent_id, m.sort

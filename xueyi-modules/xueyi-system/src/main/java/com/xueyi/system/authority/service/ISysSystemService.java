@@ -72,9 +72,9 @@ public interface ISysSystemService {
     public int deleteSystemByIds(SysSystem sysSystem);
 
     /**
-     * 加载对应角色系统-菜单列表树
+     * 加载对应角色系统-菜单列表树 | searchValue === 0 仅查询所有正常模块&&菜单 | searchValue === 1 查询所有模块&&菜单
      */
-    public List<TreeSelect> buildSystemMenuTreeSelect();
+    public List<TreeSelect> buildSystemMenuTreeSelect(SysSystem sysSystem);
 
     /**
      * 构建前端所需要树结构

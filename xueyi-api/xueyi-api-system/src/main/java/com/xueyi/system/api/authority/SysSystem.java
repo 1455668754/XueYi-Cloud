@@ -14,9 +14,6 @@ public class SysSystem extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 系统Id */
-    private Long systemId;
-
     /** 系统名称 */
     @Excel(name = "系统名称")
     private String systemName;
@@ -37,15 +34,8 @@ public class SysSystem extends BaseEntity
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
-    public void setSystemId(Long systemId)
-    {
-        this.systemId = systemId;
-    }
-
-    public Long getSystemId()
-    {
-        return systemId;
-    }
+    /** 系统默认（0非默认 1默认） */
+    private String isMain;
 
     public void setSystemName(String systemName)
     {
@@ -95,6 +85,14 @@ public class SysSystem extends BaseEntity
         return status;
     }
 
+    public String getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(String isMain) {
+        this.isMain = isMain;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -103,6 +101,7 @@ public class SysSystem extends BaseEntity
                 .append("imageUrl", getImageUrl())
                 .append("type", getType())
                 .append("route", getRoute())
+                .append("isMain", getIsMain())
                 .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())

@@ -26,7 +26,6 @@ public class dynamicDataSourceLoading {
 
     @Bean
     public DynamicDataSourceProvider jdbcDynamicDataSourceProvider() {
-        System.out.println(Driver+Url+UserName+PassWord);
         return new AbstractJdbcDataSourceProvider(Driver, Url, UserName, PassWord) {
             @Override
             protected Map<String, DataSourceProperty> executeStmt(Statement statement) throws SQLException {

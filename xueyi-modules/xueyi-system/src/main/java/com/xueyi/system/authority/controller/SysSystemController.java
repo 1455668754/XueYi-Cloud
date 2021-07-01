@@ -9,12 +9,10 @@ import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.authority.SysSystem;
 import com.xueyi.system.api.model.LoginUser;
-import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.service.ISysSystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,11 +51,11 @@ public class SysSystemController extends BaseController {
     }
 
     /**
-     * 加载对应角色系统-菜单列表树
+     * 加载对应角色系统-菜单列表树 | searchValue === 0 仅查询所有正常模块&&菜单 | searchValue === 1 查询所有模块&&菜单
      */
     @GetMapping(value = "/roleSystemMenuTreeSelect")
-    public AjaxResult roleSystemMenuTreeSelect() {
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect());
+    public AjaxResult roleSystemMenuTreeSelect(SysSystem sysSystem) {
+        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(sysSystem));
     }
 
     /**
@@ -95,8 +93,7 @@ public class SysSystemController extends BaseController {
     @PreAuthorize(hasPermi = "system:system:edit")
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
-    public AjaxResult changeStatus(@RequestBody SysSystem sysSystem)
-    {
+    public AjaxResult changeStatus(@RequestBody SysSystem sysSystem) {
         return toAjax(systemService.updateSystemStatus(sysSystem));
     }
 

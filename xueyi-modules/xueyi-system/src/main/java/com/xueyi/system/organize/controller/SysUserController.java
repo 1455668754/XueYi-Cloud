@@ -112,7 +112,6 @@ public class SysUserController extends BaseController {
                 break;
             }
         }
-        System.out.println(master.getMaster());
         // 角色集合
         Set<String> roles = loginService.getRolePermission(master.getMaster(), loginUser.getEnterpriseId(), loginUser.getSysUser().getDeptId(), loginUser.getSysUser().getPostId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
         // 权限集合

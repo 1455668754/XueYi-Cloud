@@ -19,10 +19,11 @@ export function getSystem(query) {
 }
 
 // 查询系统-菜单权限树结构
-export function treeSelect() {
+export function treeSelect(query) {
   return request({
     url: '/system/system/roleSystemMenuTreeSelect',
-    method: 'get'
+    method: 'get',
+    params: query
   })
 }
 

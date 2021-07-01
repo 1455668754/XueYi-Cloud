@@ -27,11 +27,9 @@ public class DsShiroExpressionProcessor extends DsProcessor {
         TokenService tokenService = SpringUtils.getBean(TokenService.class);
         // 获取当前的用户
         LoginUser loginUser = tokenService.getLoginUser();
-        System.out.println(loginUser);
         if (StringUtils.isNotNull(loginUser)) {
             List<Source> sources = loginUser.getSource();
             for (Source source: sources){
-                System.out.println(source.getMaster());
                 if (source.getIsMain().equals("Y")){
                     return source.getMaster();
                 }

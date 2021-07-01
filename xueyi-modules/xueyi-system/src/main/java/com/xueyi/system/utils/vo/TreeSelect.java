@@ -38,6 +38,21 @@ public class TreeSelect implements Serializable {
      */
     private String type;
 
+    /** 权限字符串 | 模块&&菜单专属 */
+    private String perms;
+
+    /** 菜单图标 | 模块&&菜单专属 */
+    private String icon;
+
+    /** 组件路径 | 模块&&菜单专属 */
+    private String component;
+
+    /** 系统Id | 模块&&菜单专属 */
+    private Long systemId;
+
+    /** 系统默认（0非默认 1默认） | 模块&&菜单专属 */
+    private String isMain;
+
     /**
      * 子节点
      */
@@ -75,6 +90,11 @@ public class TreeSelect implements Serializable {
         this.label = systemMenuVo.getName();
         this.status = systemMenuVo.getStatus();
         this.type = systemMenuVo.getType();
+        this.perms = systemMenuVo.getPerms();
+        this.icon = systemMenuVo.getIcon();
+        this.component = systemMenuVo.getComponent();
+        this.systemId = systemMenuVo.getSystemId();
+        this.isMain = systemMenuVo.getIsMain();
         this.children = systemMenuVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
@@ -108,6 +128,46 @@ public class TreeSelect implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getPerms() {
+        return perms;
+    }
+
+    public void setPerms(String perms) {
+        this.perms = perms;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    public Long getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(Long systemId) {
+        this.systemId = systemId;
+    }
+
+    public String getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(String isMain) {
+        this.isMain = isMain;
     }
 
     public List<TreeSelect> getChildren() {

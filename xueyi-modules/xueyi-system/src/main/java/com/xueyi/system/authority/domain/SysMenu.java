@@ -18,11 +18,8 @@ public class SysMenu extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 菜单ID */
+    /** 菜单Id */
     private Long menuId;
-
-    /** 系统Id */
-    private Long SystemId;
 
     /** 菜单名称 */
     private String menuName;
@@ -30,7 +27,7 @@ public class SysMenu extends BaseEntity
     /** 父菜单名称 */
     private String parentName;
 
-    /** 父菜单ID */
+    /** 父菜单Id */
     private Long parentId;
 
     /** 路由地址 */
@@ -60,6 +57,9 @@ public class SysMenu extends BaseEntity
     /** 菜单图标 */
     private String icon;
 
+    /** 系统默认（0非默认 1默认） */
+    private String isMain;
+
     /** 子菜单 */
     private List<SysMenu> children = new ArrayList<SysMenu>();
 
@@ -71,14 +71,6 @@ public class SysMenu extends BaseEntity
     public void setMenuId(Long menuId)
     {
         this.menuId = menuId;
-    }
-
-    public Long getSystemId() {
-        return SystemId;
-    }
-
-    public void setSystemId(Long systemId) {
-        SystemId = systemId;
     }
 
     @NotBlank(message = "菜单名称不能为空")
@@ -207,6 +199,14 @@ public class SysMenu extends BaseEntity
         this.icon = icon;
     }
 
+    public String getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(String isMain) {
+        this.isMain = isMain;
+    }
+
     public List<SysMenu> getChildren()
     {
         return children;
@@ -221,7 +221,7 @@ public class SysMenu extends BaseEntity
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("menuId", getMenuId())
-                .append("SystemId", getSystemId())
+                .append("systemId", getSystemId())
                 .append("menuName", getMenuName())
                 .append("parentId", getParentId())
                 .append("path", getPath())
@@ -232,6 +232,7 @@ public class SysMenu extends BaseEntity
                 .append("visible", getVisible())
                 .append("perms", getPerms())
                 .append("icon", getIcon())
+                .append("isMain", getIsMain())
                 .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())

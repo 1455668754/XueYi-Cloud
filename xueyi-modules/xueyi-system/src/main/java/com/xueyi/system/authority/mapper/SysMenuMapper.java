@@ -36,7 +36,7 @@ public interface SysMenuMapper {
      * 查询系统全部菜单列表
      * 访问控制 m 租户查询
      *
-     * @param menu 菜单信息
+     * @param menu 菜单信息 | status 菜单状态
      * @return 菜单列表
      */
     @DataScope(edAlias = "m")

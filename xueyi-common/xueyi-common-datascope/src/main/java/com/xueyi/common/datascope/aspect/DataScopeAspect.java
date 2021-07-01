@@ -149,7 +149,6 @@ public class DataScopeAspect {
                 }
                 // 2.自定数据权限
                 else if (DATA_SCOPE_CUSTOM.equals(dataScope) && (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias))) {
-                    System.out.println(1);
                     if(StringUtils.isNotBlank(deptAlias) && StringUtils.isNotBlank(postAlias)){
                         sqlString.append(StringUtils.format(
                                 " OR ( {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ) ", deptAlias,
