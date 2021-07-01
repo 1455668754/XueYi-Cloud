@@ -84,31 +84,6 @@
 		and u.status = 0 and u.tenant_id = #{search.enterpriseId}
 	</select>
 
-<!--	<select id="selectMenuPermsByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">-->
-<!--		<include refid="selectPermsVo"/>-->
-<!--		where m.status = 0 and r.status = 0 and u.user_id = #{search.userId}-->
-<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
-<!--		${params.dataScope}-->
-<!--	</select>-->
-
-<!--	<select id="selectMenuListByUserId" parameterType="SysMenu" resultMap="SysMenuResult">-->
-<!--		<include refid="selectTreeVo"/>-->
-<!--		where u.user_id = #{params.userId}-->
-<!--		<if test="menuName != null and menuName != ''">-->
-<!--			AND m.menu_name like concat('%', #{menuName}, '%')-->
-<!--		</if>-->
-<!--		<if test="visible != null and visible != ''">-->
-<!--			AND m.visible = #{visible}-->
-<!--		</if>-->
-<!--		<if test="status != null and status != ''">-->
-<!--			AND m.status = #{status}-->
-<!--		</if>-->
-<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
-<!--		${params.dataScope}-->
-<!--		order by m.parent_id, m.sort-->
-<!--	</select>-->
-
-
 	<select id="selectMenuTreeByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectTreeVo"/>
 		where m.menu_type in ('M', 'C') and m.status = 0 and r.status = 0 and u.user_id = #{params.userId}
@@ -116,7 +91,6 @@
 		${params.dataScope}
 		order by m.parent_id, m.sort
 	</select>
-
 
 	<select id="selectMenuListAll" parameterType="SysMenu" resultMap="SysMenuResult">
 		select m.menu_id, m.system_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, if(m.tenant_id = 0 and ( -1 != #{enterpriseId} or 0 != #{enterpriseId} ),'1','0') as is_main,
@@ -130,23 +104,6 @@
 		order by m.parent_id, m.sort
 	</select>
 
-<!--	<select id="selectMenuList" parameterType="SysMenu" resultMap="SysMenuResult">-->
-<!--		<include refid="selectVo"/>-->
-<!--		where 1 = 1-->
-<!--		<if test="menuName != null and menuName != ''">-->
-<!--			AND m.menu_name like concat('%', #{menuName}, '%')-->
-<!--		</if>-->
-<!--		<if test="visible != null and visible != ''">-->
-<!--			AND m.visible = #{visible}-->
-<!--		</if>-->
-<!--		<if test="status != null and status != ''">-->
-<!--			AND m.status = #{status}-->
-<!--		</if>-->
-<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
-<!--		${params.dataScope}-->
-<!--		order by m.parent_id, m.sort-->
-<!--	</select>-->
-
 	<select id="selectMenuTreeAll" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectDistinctVo"/>
 		where m.menu_type in ('M', 'C') and m.status = 0
@@ -154,20 +111,6 @@
 		${params.dataScope}
 		order by m.parent_id, m.sort
 	</select>
-
-<!--	<select id="selectMenuListByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="Integer">-->
-<!--		select m.menu_id-->
-<!--		from sys_menu m-->
-<!--		left join sys_role_system_menu rm on m.menu_id = rm.system_menu_id-->
-<!--		where rm.role_id = #{search.roleId}-->
-<!--		<if test="search.menuCheckStrictly">-->
-<!--			and m.menu_id not in (select m.parent_id from sys_menu m inner join sys_role_system_menu rm on m.menu_id =-->
-<!--			rm.system_menu_id and rm.role_id = #{search.roleId})-->
-<!--		</if>-->
-<!--		&lt;!&ndash; 数据范围过滤 &ndash;&gt;-->
-<!--		${params.dataScope}-->
-<!--		order by m.parent_id, m.sort-->
-<!--	</select>-->
 
 	<select id="selectMenuById" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectVo"/>
@@ -241,7 +184,6 @@
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</update>
-
 
 	<delete id="deleteMenuById" parameterType="SysMenu">
 		update sys_menu

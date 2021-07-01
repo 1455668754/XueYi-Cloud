@@ -3,8 +3,6 @@ package com.xueyi.system.organize.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.utilTool.SysSearch;
-
 import com.xueyi.system.api.organize.SysDept;
 
 /**
@@ -27,21 +25,21 @@ public interface SysDeptMapper {
      * 根据部门Id查询信息
      * 访问控制 d 租户查询
      *
-     * @param search 万用组件 | deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 部门信息
      */
     @DataScope(eAlias = "d")
-    public SysDept selectDeptById(SysSearch search);
+    public SysDept selectDeptById(SysDept dept);
 
     /**
      * 根据Id查询所有子部门
      * 访问控制 d 租户查询
      *
-     * @param search 万用组件 | deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 部门列表
      */
     @DataScope(eAlias = "d")
-    public List<SysDept> selectChildrenDeptById(SysSearch search);
+    public List<SysDept> selectChildrenDeptById(SysDept dept);
 
     /**
      * 新增部门信息
@@ -67,79 +65,79 @@ public interface SysDeptMapper {
      * 修改保存部门状态
      * 访问控制 d 租户查询
      *
-     * @param search 万用组件 | deptId 部门Id | status 部门状态
+     * @param dept 部门信息 | deptId 部门Id | status 部门状态
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int updateDeptStatus(SysSearch search);
+    public int updateDeptStatus(SysDept dept);
 
     /**
      * 修改子元素关系
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | depts 子元素(List<SysDept>)
+     * @param dept 部门信息 | params.depts 子元素(List<SysDept>)
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int updateDeptChildren(SysSearch search);
+    public int updateDeptChildren(SysDept dept);
 
     /**
      * 删除部门管理信息
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int deleteDeptById(SysSearch search);
+    public int deleteDeptById(SysDept dept);
 
     /**
      * 校验是否存在子节点
      * 访问控制 d 租户查询
      *
-     * @param search 万用组件 | deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 结果
      */
     @DataScope(eAlias = "d")
-    public int hasChildByDeptId(SysSearch search);
+    public int hasChildByDeptId(SysDept dept);
 
     /**
      * 校验部门编码是否唯一
      * 访问控制 d 租户查询
      *
-     * @param search 万用组件 | deptCode 部门编码
+     * @param dept 部门信息 | deptCode 部门编码
      * @return 结果
      */
     @DataScope(eAlias = "d")
-    public SysDept checkDeptCodeUnique(SysSearch search);
+    public SysDept checkDeptCodeUnique(SysDept dept);
 
     /**
      * 校验部门名称是否唯一
      * 访问控制 d 租户查询
      *
-     * @param search 万用组件 | parentId 父部门Id | deptName 部门名称
+     * @param dept 部门信息 | parentId 父部门Id | deptName 部门名称
      * @return 结果
      */
     @DataScope(eAlias = "d")
-    public SysDept checkDeptNameUnique(SysSearch search);
+    public SysDept checkDeptNameUnique(SysDept dept);
 
     /**
      * 校验是否为父级的子级
      * 访问控制 d 租户查询
      *
-     * @param search 万用组件 | deptId 子级Id | parentId 父级Id
+     * @param dept 部门信息 | deptId 子级Id | parentId 父级Id
      * @return 结果
      */
     @DataScope(eAlias = "d")
-    public SysDept checkIsChild(SysSearch search);
+    public SysDept checkIsChild(SysDept dept);
 
     /**
      * 校验已启用子部门数量(正常状态)
      * 访问控制 d 租户查询
      *
-     * @param search 万用组件 | deptId 子级Id
+     * @param dept 部门信息 | deptId 子级Id
      * @return 子部门数
      */
     @DataScope(eAlias = "d")
-    public int checkNormalChildrenCount(SysSearch search);
+    public int checkNormalChildrenCount(SysDept dept);
 }

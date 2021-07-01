@@ -24,10 +24,10 @@ public interface ISysPostService {
     /**
      * 通过岗位Id查询岗位信息
      *
-     * @param postId 岗位Id
+     * @param post 岗位信息 | postId 岗位Id
      * @return 角色对象信息
      */
-    public SysPost selectPostById(Long postId);
+    public SysPost selectPostById(SysPost post);
 
     /**
      * 新增保存岗位信息
@@ -48,72 +48,67 @@ public interface ISysPostService {
     /**
      * 修改保存部门-角色信息
      *
-     * @param postId  岗位Id
-     * @param roleIds 角色组Ids
+     * @param post 岗位信息 | postId  岗位Id | roleIds 角色组Ids
      * @return 结果
      */
-    public int updatePostRole(Long postId, Long[] roleIds);
+    public int updatePostRole(SysPost post);
 
     /**
      * 修改保存岗位状态
      *
-     * @param postId 岗位Id
-     * @param status 部门状态
+     * @param post 岗位信息 | postId 岗位Id | status 部门状态
      * @return 结果
      */
-    public int updatePostStatus(Long postId, String status);
+    public int updatePostStatus(SysPost post);
 
     /**
      * 删除岗位信息
      *
-     * @param postId 岗位Id
+     * @param post 岗位信息 | postId 岗位Id
      * @return 结果
      */
-    public int deletePostById(Long postId);
+    public int deletePostById(SysPost post);
 
     /**
      * 批量删除岗位信息
      *
-     * @param postIds 需要删除的岗位Id
+     * @param post 岗位信息 | params.Ids 需要删除的岗位Ids组
      * @return 结果
      * @throws Exception 异常
      */
-    public int deletePostByIds(Long[] postIds);
+    public int deletePostByIds(SysPost post);
 
     /**
      * 校验岗位是否存在用户
      *
-     * @param postId 岗位Id
+     * @param post 岗位信息 | postId 岗位Id
      * @return 结果 true 存在 false 不存在
      */
-    public boolean checkPostExistUser(Long postId);
+    public boolean checkPostExistUser(SysPost post);
 
     /**
      * 校验岗位编码
      *
-     * @param postId   岗位Id
-     * @param postCode 岗位编码
+     * @param post 岗位信息 | postId   岗位Id | postCode 岗位编码
      * @return 结果
      */
-    public String checkPostCodeUnique(Long postId, String postCode);
+    public String checkPostCodeUnique(SysPost post);
 
     /**
      * 校验岗位名称
      *
-     * @param postId   岗位Id
-     * @param deptId   部门Id
-     * @param postName 岗位名称
+     * @param post 岗位信息 | postId   岗位Id | deptId   部门Id | postName 岗位名称
      * @return 结果
      */
-    public String checkPostNameUnique(Long postId, Long deptId, String postName);
+    public String checkPostNameUnique(SysPost post);
 
     /**
      * 校验岗位状态
      *
-     * @param postId 岗位Id
+     * @param post 岗位信息 | postId 岗位Id
      * @return 结果
      */
-    public String checkPostStatus(Long postId);
+    public String checkPostStatus(SysPost post);
 
     /**
      * 构建前端所需要下拉树结构

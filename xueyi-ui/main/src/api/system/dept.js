@@ -10,17 +10,18 @@ export function listDept(query) {
 }
 
 // 查询部门列表（排除节点）
-export function listDeptExcludeChild(deptId) {
+export function listDeptExcludeChild(query) {
   return request({
-    url: '/system/dept/list/exclude/' + deptId,
-    method: 'get'
+    url: '/system/dept/list/exclude',
+    method: 'get',
+    params: query
   })
 }
 
 // 查询部门详细
 export function getDept(deptId) {
   return request({
-    url: '/system/dept/' + deptId,
+    url: '/system/dept/byId',
     method: 'get'
   })
 }

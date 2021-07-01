@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.system.api.organize.SysDept;
 import com.xueyi.system.organize.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -56,9 +57,9 @@ public class SysPostController extends BaseController {
      * 根据岗位Id获取详细信息
      */
     @PreAuthorize(hasPermi = "system:post:query")
-    @GetMapping(value = "/{postId}")
-    public AjaxResult getInfo(@PathVariable Long postId) {
-        return AjaxResult.success(postService.selectPostById(postId));
+    @GetMapping(value = "/byId")
+    public AjaxResult getInfo(SysPost post) {
+        return AjaxResult.success(postService.selectPostById(post));
     }
 
     /**
@@ -68,9 +69,9 @@ public class SysPostController extends BaseController {
     @Log(title = "岗位管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysPost post) {
-        if (UserConstants.NOT_UNIQUE.equals(postService.checkPostNameUnique(post.getPostId(),post.getDeptId(),post.getPostName()))) {
+        if (UserConstants.NOT_UNIQUE.equals(postService.checkPostNameUnique(post))) {
             return AjaxResult.error("新增岗位'" + post.getPostName() + "'失败，岗位名称已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(postService.checkPostCodeUnique(post.getPostId(),post.getPostCode()))) {
+        } else if (UserConstants.NOT_UNIQUE.equals(postService.checkPostCodeUnique(post))) {
             return AjaxResult.error("新增岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
         return toAjax(postService.insertPost(post));
@@ -83,9 +84,9 @@ public class SysPostController extends BaseController {
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysPost post) {
-        if (UserConstants.NOT_UNIQUE.equals(postService.checkPostNameUnique(post.getPostId(),post.getDeptId(),post.getPostName()))) {
+        if (UserConstants.NOT_UNIQUE.equals(postService.checkPostNameUnique(post))) {
             return AjaxResult.error("修改岗位'" + post.getPostName() + "'失败，岗位名称已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(postService.checkPostCodeUnique(post.getPostId(),post.getPostCode()))) {
+        } else if (UserConstants.NOT_UNIQUE.equals(postService.checkPostCodeUnique(post))) {
             return AjaxResult.error("修改岗位'" + post.getPostName() + "'失败，岗位编码已存在");
         }
         return toAjax(postService.updatePost(post));
@@ -98,7 +99,7 @@ public class SysPostController extends BaseController {
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changePostRole")
     public AjaxResult editPostRole(@Validated @RequestBody SysPost post) {
-        return toAjax(postService.updatePostRole(post.getPostId(), post.getRoleIds()));
+        return toAjax(postService.updatePostRole(post));
     }
 
     /**
@@ -108,11 +109,13 @@ public class SysPostController extends BaseController {
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysPost post) {
+        SysDept dept = new SysDept();
+        dept.setDeptId(post.getDeptId());
         if (StringUtils.equals(UserConstants.POST_NORMAL, post.getStatus())
-                && UserConstants.DEPT_DISABLE.equals(deptService.checkDeptStatus(post.getDeptId()))) {
+                && UserConstants.DEPT_DISABLE.equals(deptService.checkDeptStatus(dept))) {
             return AjaxResult.error("启用失败，该岗位的归属部门已被禁用！");
         }
-        return toAjax(postService.updatePostStatus(post.getPostId(),post.getStatus()));
+        return toAjax(postService.updatePostStatus(post));
     }
 
     /**
@@ -120,12 +123,12 @@ public class SysPostController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:post:remove")
     @Log(title = "岗位管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{postId}")
-    public AjaxResult remove(@PathVariable Long postId) {
-        if (postService.checkPostExistUser(postId)) {
+    @DeleteMapping
+    public AjaxResult remove(@RequestBody SysPost post) {
+        if (postService.checkPostExistUser(post)) {
             return AjaxResult.error("岗位存在用户,不允许删除");
         }
-        return toAjax(postService.deletePostById(postId));
+        return toAjax(postService.deletePostById(post));
     }
 
     /**

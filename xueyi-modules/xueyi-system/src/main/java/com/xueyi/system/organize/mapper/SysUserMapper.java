@@ -95,19 +95,19 @@ public interface SysUserMapper {
      * 根据岗位Id修改用户状态（just禁用）
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | postId 岗位Id | status 用户状态
+     * @param user 用户信息 | postId 岗位Id | status 用户状态
      */
     @DataScope(ueAlias = "empty")
-    public int updateUserStatusByPostId(SysSearch search);
+    public int updateUserStatusByPostId(SysUser user);
 
     /**
      * 根据部门Id修改用户状态（just禁用）
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | deptId 部门Id | status 用户状态
+     * @param user 用户信息 | deptId 部门Id | status 用户状态
      */
     @DataScope(ueAlias = "empty")
-    public int updateUserStatusByDeptId(SysSearch search);
+    public int updateUserStatusByDeptId(SysUser user);
 
     /**
      * 修改用户头像
@@ -153,21 +153,21 @@ public interface SysUserMapper {
      * 校验部门是否存在用户
      * 访问控制 u 租户查询
      *
-     * @param search 万用组件 | deptId 部门Id
+     * @param user 用户信息 | deptId 部门Id
      * @return 结果
      */
     @DataScope(eAlias = "u")
-    public int checkDeptExistUser(SysSearch search);
+    public int checkDeptExistUser(SysUser user);
 
     /**
      * 校验岗位是否存在用户
      * 访问控制 u 租户查询
      *
-     * @param search 万用组件 | postId 岗位Id
+     * @param user 用户信息 | postId 岗位Id
      * @return 结果
      */
     @DataScope(eAlias = "u")
-    public int checkPostExistUser(SysSearch search);
+    public int checkPostExistUser(SysUser user);
 
     /**
      * 校验用户编码是否唯一

@@ -23,10 +23,10 @@ public interface ISysDeptService {
     /**
      * 根据部门Id查询信息
      *
-     * @param deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 部门信息
      */
-    public SysDept selectDeptById(Long deptId);
+    public SysDept selectDeptById(SysDept dept);
 
     /**
      * 新增保存部门信息
@@ -47,96 +47,90 @@ public interface ISysDeptService {
     /**
      * 修改保存部门-角色信息
      *
-     * @param deptId  部门Id
-     * @param roleIds 角色组Ids
+     * @param dept 部门信息 | deptId  部门Id | roleIds 角色组Ids
      * @return 结果
      */
-    public int updateDeptRole(Long deptId, Long[] roleIds);
+    public int updateDeptRole(SysDept dept);
 
     /**
      * 修改保存部门状态
      *
-     * @param deptId 部门Id
-     * @param status 部门状态
+     * @param dept 部门信息 | deptId 部门Id | status 部门状态
      * @return 结果
      */
-    public int updateDeptStatus(Long deptId, String status);
+    public int updateDeptStatus(SysDept dept);
 
     /**
      * 删除部门管理信息
      *
-     * @param deptId 部门ID
+     * @param dept 部门信息 | deptId 部门Id
      * @return 结果
      */
-    public int deleteDeptById(Long deptId);
+    public int deleteDeptById(SysDept dept);
 
     /**
      * 校验是否存在部门子节点
      *
-     * @param deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 结果
      */
-    public boolean hasChildByDeptId(Long deptId);
+    public boolean hasChildByDeptId(SysDept dept);
 
     /**
      * 校验部门是否存在岗位
      *
-     * @param deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 结果 true 存在 false 不存在
      */
-    public boolean checkDeptExistPost(Long deptId);
+    public boolean checkDeptExistPost(SysDept dept);
 
     /**
      * 校验部门是否存在用户
      *
-     * @param deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 结果 true 存在 false 不存在
      */
-    public boolean checkDeptExistUser(Long deptId);
+    public boolean checkDeptExistUser(SysDept dept);
 
     /**
      * 校验部门编码是否唯一
      *
-     * @param deptId   部门Id
-     * @param deptCode 部门编码
+     * @param dept 部门信息 | deptId   部门Id | deptCode 部门编码
      * @return 结果
      */
-    public String checkDeptCodeUnique(Long deptId, String deptCode);
+    public String checkDeptCodeUnique(SysDept dept);
 
     /**
      * 校验部门名称是否唯一
      *
-     * @param deptId   部门Id
-     * @param parentId 父级Id
-     * @param deptName 部门名称
+     * @param dept 部门信息 | deptId   部门Id | parentId 父级Id | deptName 部门名称
      * @return 结果
      */
-    public String checkDeptNameUnique(Long deptId, Long parentId, String deptName);
+    public String checkDeptNameUnique(SysDept dept);
 
     /**
      * 校验是否为父级的子级
      *
-     * @param deptId   子级Id
-     * @param parentId 父级Id
+     * @param dept 部门信息 | deptId   子级Id | parentId 父级Id
      * @return 结果
      */
-    public String checkIsChild(Long deptId, Long parentId);
+    public String checkIsChild(SysDept dept);
 
     /**
      * 校验已启用子部门数量(正常状态)
      *
-     * @param deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 子部门数
      */
-    public int checkNormalChildrenCount(Long deptId);
+    public int checkNormalChildrenCount(SysDept dept);
 
     /**
      * 校验部门状态
      *
-     * @param deptId 部门Id
+     * @param dept 部门信息 | deptId 部门Id
      * @return 结果
      */
-    public String checkDeptStatus(Long deptId);
+    public String checkDeptStatus(SysDept dept);
 
     /**
      * 构建前端所需要树结构

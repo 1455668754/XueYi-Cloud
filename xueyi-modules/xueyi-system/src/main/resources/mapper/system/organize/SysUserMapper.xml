@@ -228,13 +228,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</update>
 
-	<update id="updateUserStatus" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<update id="updateUserStatus" parameterType="SysUser">
 		update sys_user
 		<trim prefix="SET" suffixOverrides=",">
-			<if test="search.status != null and search.status != ''">	      status = #{search.status}	     ,</if>
+			<if test="status != null and status != ''">	                      status = #{status}	     	 ,</if>
 			<if test="updateBy != null">		                              update_by = #{updateBy}		 ,</if>
 		</trim>
-		where user_id = #{search.userId}
+		where user_id = #{userId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</update>
@@ -296,16 +296,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</delete>
 
-	<select id="checkDeptExistUser" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="int">
+	<select id="checkDeptExistUser" parameterType="SysUser" resultType="int">
 		<include refid="countVo"/>
-		where u.dept_id = #{search.deptId}
+		where u.dept_id = #{deptId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
 
-	<select id="checkPostExistUser" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="int">
+	<select id="checkPostExistUser" parameterType="SysUser" resultType="int">
 		<include refid="countVo"/>
-		where u.post_id = #{search.postId}
+		where u.post_id = #{postId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>

@@ -132,9 +132,9 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public int insertUser(SysUser user) {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
-        SysSearch search = new SysSearch();
-        search.getSearch().put("postId", user.getPostId());
-        SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+        SysPost post = new SysPost();
+        post.setPostId(user.getPostId());
+        SysPost info = postMapper.selectPostById(post);
         user.setDeptId(info.getDeptId());
         if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
             user.setStatus(UserConstants.USER_DISABLE);
@@ -155,9 +155,9 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public int updateUser(SysUser user) {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
-        SysSearch search = new SysSearch();
-        search.getSearch().put("postId", user.getPostId());
-        SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+        SysPost post = new SysPost();
+        post.setPostId(user.getPostId());
+        SysPost info = postMapper.selectPostById(post);
         user.setDeptId(info.getDeptId());
         if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
             user.setStatus(UserConstants.USER_DISABLE);

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.organize.SysDept;
+import com.xueyi.system.api.organize.SysUser;
 import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
@@ -59,14 +60,12 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 通过岗位Id查询岗位信息
      *
-     * @param postId 岗位Id
+     * @param post 岗位信息 | postId 岗位Id
      * @return 角色对象信息
      */
     @Override
-    public SysPost selectPostById(Long postId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("postId", postId);
-        return postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+    public SysPost selectPostById(SysPost post) {
+        return postMapper.selectPostById(post);
     }
 
     /**
@@ -78,10 +77,10 @@ public class SysPostServiceImpl implements ISysPostService {
     @Override
     public int insertPost(SysPost post) {
         // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
-        SysSearch search = new SysSearch();
-        search.getSearch().put("deptId", post.getDeptId());
         if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
-            SysDept info = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
+            SysDept dept = new SysDept();
+            dept.setDeptId(post.getDeptId());
+            SysDept info = deptMapper.selectDeptById(dept);
             if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
                 post.setStatus(UserConstants.POST_DISABLE);
                 try {
@@ -90,7 +89,7 @@ public class SysPostServiceImpl implements ISysPostService {
                 }
             }
         }
-        return postMapper.insertPost(post);//@param post 岗位信息
+        return postMapper.insertPost(post);
     }
 
     /**
@@ -103,41 +102,40 @@ public class SysPostServiceImpl implements ISysPostService {
     @Transactional
     public int updatePost(SysPost post) {
         // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
-        SysSearch search = new SysSearch();
-        search.getSearch().put("deptId", post.getDeptId());
         if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
-            SysDept info = deptMapper.selectDeptById(search);//@param search 万用组件 | deptId 部门Id
+            SysDept dept = new SysDept();
+            dept.setDeptId(post.getDeptId());
+            SysDept info = deptMapper.selectDeptById(dept);
             if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
                 post.setStatus(UserConstants.POST_DISABLE);
                 try {
                     throw new CustomException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
                 } catch (Exception ignored) {
                 }
-                updatePostStatus(post.getPostId(), post.getStatus());//修改保存岗位状态
+                updatePostStatus(post);//修改保存岗位状态
             }
         }
         // 执行岗位状态变更
-        return postMapper.updatePost(post);//@param post 岗位信息
+        return postMapper.updatePost(post);
     }
 
     /**
      * 修改保存部门-角色信息
      *
-     * @param postId  岗位Id
-     * @param roleIds 角色组Ids
+     * @param post 岗位信息 | postId  岗位Id | roleIds 角色组Ids
      * @return 结果
      */
     @Override
     @Transactional
-    public int updatePostRole(Long postId, Long[] roleIds) {
+    public int updatePostRole(SysPost post) {
         // 执行部门-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
         SysSearch search = new SysSearch();
         // 删除原有的postRole信息
-        search.getSearch().put("postId", postId);
+        search.getSearch().put("postId", post.getPostId());
         int rows = postRoleMapper.deletePostRoleByPostId(search);//@param search 查询组件 | postId 岗位Id
-        if (roleIds.length > 0) {
+        if (post.getRoleIds().length > 0) {
             // 改变为最新的postRole信息
-            search.getSearch().put("roleIds", roleIds);
+            search.getSearch().put("roleIds", post.getRoleIds());
             rows = rows + postRoleMapper.batchPostRole(search);//@param search 万用组件 | postId 岗位Id | roleIds 角色Ids
         }
         return rows;
@@ -146,23 +144,22 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 修改保存岗位状态
      *
-     * @param postId 岗位Id
-     * @param status 部门状态
+     * @param post 岗位信息 | postId 岗位Id | status 部门状态
      * @return 结果
      */
     @Override
     @Transactional
-    public int updatePostStatus(Long postId, String status) {
+    public int updatePostStatus(SysPost post) {
         //操作逻辑：当欲设置禁用时，同步执行禁用本岗位所属用户
         int rows;
-        SysSearch sear = new SysSearch();
-        sear.getSearch().put("postId", postId);
-        sear.getSearch().put("status", status);
+        SysUser user = new SysUser();
+        user.setPostId(post.getPostId());
+        user.setStatus(post.getStatus());
         // 变更岗位状态
-        rows = postMapper.updatePostStatus(sear);//@param search 万用组件 | postId 岗位Id | status 岗位状态
+        rows = postMapper.updatePostStatus(post);
         // 欲停用时停用本岗位所有用户的状态
-        if (rows > 0 && UserConstants.POST_DISABLE.equals(status)) {
-            rows = rows + userMapper.updateUserStatusByPostId(sear);//@param search 万用组件 | postId 岗位Id | status 用户状态
+        if (rows > 0 && UserConstants.POST_DISABLE.equals(post.getStatus())) {
+            rows = rows + userMapper.updateUserStatusByPostId(user);
         }
         return rows;
     }
@@ -170,16 +167,16 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 删除岗位信息
      *
-     * @param postId 岗位Id
+     * @param post 岗位信息 | postId 岗位Id
      * @return 结果
      */
     @Override
     @Transactional
-    public int deletePostById(Long postId) {
+    public int deletePostById(SysPost post) {
         int rows;
         SysSearch search = new SysSearch();
-        search.getSearch().put("postId", postId);
-        rows = postMapper.deletePostById(search);//@param search 万用组件 | postId 岗位Id
+        search.getSearch().put("postId", post.getPostId());
+        rows = postMapper.deletePostById(post);
         if (rows > 0) {
             rows = rows + postRoleMapper.deletePostRoleByPostId(search);//@param search 查询组件 | postId 岗位Id
         }
@@ -189,15 +186,15 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 批量删除岗位信息
      *
-     * @param postIds 需要删除的岗位Ids
+     * @param post 岗位信息 | params.Ids 需要删除的岗位Ids组
      * @return 结果
      */
     @Override
-    public int deletePostByIds(Long[] postIds) {
+    public int deletePostByIds(SysPost post) {
         int rows;
         SysSearch search = new SysSearch();
-        search.getSearch().put("postIds", postIds);
-        rows = postMapper.deletePostByIds(search);//@param search 万用组件 | postIds 需要删除的岗位Ids(Long[])
+        search.getSearch().put("postIds", post.getParams().get("Ids"));
+        rows = postMapper.deletePostByIds(post);
         if (rows > 0) {
             rows = rows + postRoleMapper.deletePostRoleByIds(search);//@param search 查询组件 | postIds 需要删除的岗位Ids(Long[])
         }
@@ -207,33 +204,30 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 校验岗位是否存在用户
      *
-     * @param postId 岗位Id
+     * @param post 岗位信息 | postId 岗位Id
      * @return 结果 true 存在 false 不存在
      */
     @Override
-    public boolean checkPostExistUser(Long postId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("postId", postId);
-        int result = userMapper.checkPostExistUser(search);//@param search 万用组件 | postId 岗位Id
+    public boolean checkPostExistUser(SysPost post) {
+        SysUser user = new SysUser();
+        user.setPostId(post.getPostId());
+        int result = userMapper.checkPostExistUser(user);
         return result > 0;
     }
 
     /**
      * 校验岗位编码是否唯一
      *
-     * @param postId   岗位Id
-     * @param postCode 岗位编码
+     * @param post 岗位信息 | postId   岗位Id | postCode 岗位编码
      * @return 结果
      */
     @Override
-    public String checkPostCodeUnique(Long postId, String postCode) {
-        if (StringUtils.isNull(postId)) {
-            postId = -1L;
+    public String checkPostCodeUnique(SysPost post) {
+        if (StringUtils.isNull(post.getPostId())) {
+            post.setPostId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("postCode", postCode);
-        SysPost info = postMapper.checkPostCodeUnique(search);//@param search 万用组件 | postCode 岗位编码
-        if (StringUtils.isNotNull(info) && info.getPostId().longValue() != postId.longValue()) {
+        SysPost info = postMapper.checkPostCodeUnique(post);
+        if (StringUtils.isNotNull(info) && info.getPostId().longValue() != post.getPostId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -242,21 +236,16 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 校验岗位名称是否唯一
      *
-     * @param postId   岗位Id
-     * @param deptId   部门Id
-     * @param postName 岗位名称
+     * @param post 岗位信息 | postId   岗位Id | deptId   部门Id | postName 岗位名称
      * @return 结果
      */
     @Override
-    public String checkPostNameUnique(Long postId, Long deptId, String postName) {
-        if (StringUtils.isNull(postId)) {
-            postId = -1L;
+    public String checkPostNameUnique(SysPost post) {
+        if (StringUtils.isNull(post.getPostId())) {
+            post.setPostId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("deptId", deptId);
-        search.getSearch().put("postName", postName);
-        SysPost info = postMapper.checkPostNameUnique(search);//@param search 万用组件 | deptId 部门Id | postName 岗位名称
-        if (StringUtils.isNotNull(info) && info.getPostId().longValue() != postId.longValue()) {
+        SysPost info = postMapper.checkPostNameUnique(post);
+        if (StringUtils.isNotNull(info) && info.getPostId().longValue() != post.getPostId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -265,15 +254,13 @@ public class SysPostServiceImpl implements ISysPostService {
     /**
      * 校验岗位状态
      *
-     * @param postId 岗位Id
+     * @param post 岗位信息 | postId 岗位Id
      * @return 结果
      */
     @Override
-    public String checkPostStatus(Long postId){
-        if (StringUtils.isNotNull(postId)) {
-            SysSearch search = new SysSearch();
-            search.getSearch().put("postId", postId);
-            SysPost info = postMapper.selectPostById(search);//@param search 万用组件 | postId 岗位Id
+    public String checkPostStatus(SysPost post) {
+        if (StringUtils.isNotNull(post.getPostId())) {
+            SysPost info = postMapper.selectPostById(post);
             if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
                 return UserConstants.POST_DISABLE;
             }
@@ -283,6 +270,7 @@ public class SysPostServiceImpl implements ISysPostService {
 
     /**
      * 构建前端所需要下拉树结构
+     *
      * @return 下拉树结构列表
      */
     @Override
@@ -291,20 +279,20 @@ public class SysPostServiceImpl implements ISysPostService {
         List<SysPost> postList = postMapper.selectPostList(new SysPost());
         List<deptPostVo> deptPostList = new TreeList<>();
         deptPostVo deptPost;
-        for (SysDept dept:deptList) {
+        for (SysDept dept : deptList) {
             deptPost = new deptPostVo();
             deptPost.setUid(dept.getDeptId());
             deptPost.setFUid(dept.getParentId());
-            deptPost.setName("部门|"+dept.getDeptName());
+            deptPost.setName("部门|" + dept.getDeptName());
             deptPost.setStatus(dept.getStatus());
             deptPost.setType("0");
             deptPostList.add(deptPost);
         }
-        for (SysPost post:postList) {
+        for (SysPost post : postList) {
             deptPost = new deptPostVo();
             deptPost.setUid(post.getPostId());
             deptPost.setFUid(post.getDeptId());
-            deptPost.setName("岗位|"+post.getPostName());
+            deptPost.setName("岗位|" + post.getPostName());
             deptPost.setStatus(post.getStatus());
             deptPost.setType("1");
             deptPostList.add(deptPost);
@@ -323,7 +311,7 @@ public class SysPostServiceImpl implements ISysPostService {
     public List<deptPostVo> buildDeptPostTree(List<deptPostVo> deptPostList) {
         List<deptPostVo> returnList = new ArrayList<deptPostVo>();
         List<Long> tempList = new ArrayList<Long>();
-        for (deptPostVo deptPostVo: deptPostList) {
+        for (deptPostVo deptPostVo : deptPostList) {
             tempList.add(deptPostVo.getUid());
         }
         for (Iterator<deptPostVo> iterator = deptPostList.iterator(); iterator.hasNext(); ) {

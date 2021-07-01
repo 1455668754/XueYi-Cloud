@@ -156,7 +156,8 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" :normalizer="normalizer" placeholder="请选择归属部门"/>
+              <treeselect v-model="form.deptId" :options="deptOptions" :show-count="true" :normalizer="normalizer"
+                          placeholder="请选择归属部门"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -243,11 +244,11 @@
 </template>
 
 <script>
-import {listPost, getPost, delPost, addPost, updatePost, changePostRole, changePostStatus} from "@/api/system/post";
-import {treeSelect} from "@/api/system/dept";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import {optionSelect} from "@/api/system/role";
+import {listPost, getPost, delPost, addPost, updatePost, changePostRole, changePostStatus} from "@/api/system/post"
+import {treeSelect} from "@/api/system/dept"
+import Treeselect from "@riophae/vue-treeselect"
+import "@riophae/vue-treeselect/dist/vue-treeselect.css"
+import {optionSelect} from "@/api/system/role"
 
 export default {
   name: "Post",
@@ -309,72 +310,72 @@ export default {
       defaultProps: {
         children: "children",
         label: "label"
-      },
-    };
+      }
+    }
   },
   watch: {
     // 根据名称筛选部门树
     deptName(val) {
-      this.$refs.tree.filter(val);
+      this.$refs.tree.filter(val)
     }
   },
   created() {
-    this.getList();
-    this.getTreeSelect();
+    this.getList()
+    this.getTreeSelect()
     this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
+      this.statusOptions = response.data
+    })
   },
   methods: {
     /** 查询岗位列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       listPost(this.queryParams).then(response => {
-        this.postList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.postList = response.rows
+        this.total = response.total
+        this.loading = false
+      })
     },
     /** 查询部门下拉树结构 */
     getTreeSelect() {
       treeSelect().then(response => {
-        this.deptOptions = response.data;
-      });
+        this.deptOptions = response.data
+      })
     },
     /** 转换部门数据结构 */
     normalizer(node) {
       if (node.children && !node.children.length) {
-        delete node.children;
+        delete node.children
       }
       return {
         id: node.id,
         label: node.label,
         children: node.children,
         isDisabled: node.status === '1'
-      };
+      }
     },
     // 筛选节点
     filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
     },
     // 节点单击事件
     handleNodeClick(data) {
-      this.queryParams.deptId = data.id;
-      this.getList();
+      this.queryParams.deptId = data.id
+      this.getList()
     },
     // 岗位状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     roleCancel() {
-      this.roleOpen = false;
-      this.reset();
+      this.roleOpen = false
+      this.reset()
     },
     // 表单重置
     reset() {
@@ -386,62 +387,62 @@ export default {
         status: "0",
         remark: undefined,
         roleIds: []
-      };
-      this.resetForm("form");
+      }
+      this.resetForm("form")
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm("queryForm")
+      this.handleQuery()
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加岗位";
+      this.reset()
+      this.open = true
+      this.title = "添加岗位"
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
+      this.reset()
       getPost(row.postId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改岗位";
-      });
+        this.form = response.data
+        this.open = true
+        this.title = "修改岗位"
+      })
     },
     /** 岗位权限按钮操作 */
     handleRoleUpdate(row) {
-      this.reset();
-      getPost(row.postId).then(response => {
-        this.form = response.data;
+      this.reset()
+      getPost({postId: row.postId}).then(response => {
+        this.form = response.data
         this.form.roleIds = Array.from(this.form.roles, x => x.roleId)
-        this.roleOpen = true;
-        this.title = "设置岗位权限";
-      });
+        this.roleOpen = true
+        this.title = "设置岗位权限"
+      })
       optionSelect().then(response => {
-        this.roleOptions = response.data;
-      });
+        this.roleOptions = response.data
+      })
     },
     /** 岗位状态修改 */
     handleStatusChange(row) {
-      let msg = row.status === "0" ? "启用" : "停用";
-      let text = row.status === "0" ? '启用岗位"' + row.postName + '"吗?' : '停用岗位"' + row.postName + '"吗?停用岗位会同步停用所有归属用户，且归属用户将无法启用！';
+      let msg = row.status === "0" ? "启用" : "停用"
+      let text = row.status === "0" ? '启用岗位"' + row.postName + '"吗?' : '停用岗位"' + row.postName + '"吗?停用岗位会同步停用所有归属用户，且归属用户将无法启用！'
       this.$confirm('确认要' + text, "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return changePostStatus(row.postId, row.deptId, row.status);
+        return changePostStatus(row.postId, row.deptId, row.status)
       }).then(() => {
-        this.msgSuccess(msg + "成功");
+        this.msgSuccess(msg + "成功")
       }).catch(function () {
-        row.status = row.status === "0" ? "1" : "0";
-      });
+        row.status = row.status === "0" ? "1" : "0"
+      })
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -449,28 +450,28 @@ export default {
         if (valid) {
           if (this.form.postId !== undefined) {
             updatePost(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess("修改成功")
+              this.open = false
+              this.getList()
+            })
           } else {
             addPost(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess("新增成功")
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     /** 岗位权限提交按钮 */
     submitRoleForm: function () {
       if (this.form.postId !== undefined) {
         changePostRole(this.form).then(response => {
-          this.msgSuccess("岗位权限修改成功");
-          this.roleOpen = false;
-          this.getList();
-        });
+          this.msgSuccess("岗位权限修改成功")
+          this.roleOpen = false
+          this.getList()
+        })
       }
     },
     /** 删除按钮操作 */
@@ -480,11 +481,12 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delPost(row.postId);
+        return delPost({postId: row.postId})
       }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      }).catch(() => {});
+        this.getList()
+        this.msgSuccess("删除成功")
+      }).catch(() => {
+      })
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -493,5 +495,5 @@ export default {
       }, `post_${new Date().getTime()}.xlsx`)
     }
   }
-};
+}
 </script>

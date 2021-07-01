@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.organize.SysEnterprise;
+import com.xueyi.system.api.organize.SysPost;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
@@ -218,8 +219,10 @@ public class SysUserController extends BaseController {
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysUser user) {
         userService.checkUserAllowed(user.getUserType());
+        SysPost post = new SysPost();
+        post.setPostId(user.getPostId());
         if (StringUtils.equals(UserConstants.USER_NORMAL, user.getStatus())
-                && UserConstants.POST_DISABLE.equals(postService.checkPostStatus(user.getPostId()))) {
+                && UserConstants.POST_DISABLE.equals(postService.checkPostStatus(post))) {
             return AjaxResult.error("启用失败，该用户的归属岗位已被禁用！");
         }
         return toAjax(userService.updateUserStatus(user.getUserId(), user.getStatus()));

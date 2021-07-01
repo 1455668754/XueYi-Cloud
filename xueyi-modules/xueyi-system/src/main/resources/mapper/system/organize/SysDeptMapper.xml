@@ -77,17 +77,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by d.sort
 	</select>
 
-	<select id="selectDeptById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysDeptResult">
+	<select id="selectDeptById" parameterType="SysDept" resultMap="SysDeptResult">
 		<include refid="selectVo"/>
-		where d.dept_id = #{search.deptId}
+		where d.dept_id = #{deptId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
 
-	<select id="selectChildrenDeptById" parameterType="com.xueyi.system.api.utilTool.SysSearch"
-			resultMap="SysDeptResult">
+	<select id="selectChildrenDeptById" parameterType="SysDept" resultMap="SysDeptResult">
 		<include refid="selectVo"/>
-		where find_in_set(#{search.deptId}, d.ancestors)
+		where find_in_set(#{deptId}, d.ancestors)
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
@@ -146,25 +145,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</update>
 
-	<update id="updateDeptStatus" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<update id="updateDeptStatus" parameterType="SysDept">
 		update sys_dept
 		<trim prefix="SET" suffixOverrides=",">
-			<if test="search.status != null and search.status != ''">	status = #{search.status}	,</if>
+			<if test="status != null and status != ''">					status = #{status}			,</if>
 			<if test="updateBy != null">		                        update_by = #{updateBy}		,</if>
 		</trim>
-		where dept_id = #{search.deptId}
+		where dept_id = #{deptId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</update>
 
-	<update id="updateDeptChildren" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<update id="updateDeptChildren" parameterType="SysDept">
 		update sys_dept set ancestors =
-		<foreach collection="search.depts" item="item" index="index"
+		<foreach collection="params.depts" item="item" index="index"
 				 separator=" " open="case dept_id" close="end">
 			when #{item.deptId} then #{item.ancestors}
 		</foreach>
 		where dept_id in
-		<foreach collection="search.depts" item="item" index="index"
+		<foreach collection="params.depts" item="item" index="index"
 				 separator="," open="(" close=")">
 			#{item.deptId}
 		</foreach>
@@ -172,49 +171,48 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</update>
 
-	<delete id="deleteDeptById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<delete id="deleteDeptById" parameterType="SysDept">
 		update sys_dept
 		set del_flag = 1
-		where dept_id = #{search.deptId}
+		where dept_id = #{deptId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</delete>
 
-	<select id="hasChildByDeptId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="int">
+	<select id="hasChildByDeptId" parameterType="SysDept" resultType="int">
 		<include refid="countVo"/>
-		where d.parent_id = #{search.deptId}
+		where d.parent_id = #{deptId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
 
-	<select id="checkDeptCodeUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysDeptResult">
+	<select id="checkDeptCodeUnique" parameterType="SysDept" resultMap="SysDeptResult">
 		<include refid="checkVo"/>
-		where d.dept_code=#{search.deptCode}
+		where d.dept_code=#{deptCode}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1
 	</select>
 
-	<select id="checkDeptNameUnique" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysDeptResult">
+	<select id="checkDeptNameUnique" parameterType="SysDept" resultMap="SysDeptResult">
 		<include refid="checkVo"/>
-		where d.dept_name=#{search.deptName} and d.parent_id = #{search.parentId}
+		where d.dept_name=#{deptName} and d.parent_id = #{parentId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1
 	</select>
 
-	<select id="checkIsChild" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysDeptResult">
+	<select id="checkIsChild" parameterType="SysDept" resultMap="SysDeptResult">
 		<include refid="checkVo"/>
-		where d.dept_id = #{search.parentId} and find_in_set(#{search.deptId},d.ancestors)
+		where d.dept_id = #{parentId} and find_in_set(#{deptId},d.ancestors)
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1
 	</select>
 
-	<select id="checkNormalChildrenCount" parameterType="com.xueyi.system.api.utilTool.SysSearch"
-			resultType="java.lang.Integer">
+	<select id="checkNormalChildrenCount" parameterType="SysDept" resultType="java.lang.Integer">
 		<include refid="countVo"/>
-		where d.status = 0 and find_in_set(#{search.deptId}, d.ancestors)
+		where d.status = 0 and find_in_set(#{deptId}, d.ancestors)
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>

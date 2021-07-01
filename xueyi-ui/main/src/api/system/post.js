@@ -20,7 +20,7 @@ export function treeSelect() {
 // 查询岗位详细
 export function getPost(postId) {
   return request({
-    url: '/system/post/' + postId,
+    url: '/system/post/byId',
     method: 'get'
   })
 }
