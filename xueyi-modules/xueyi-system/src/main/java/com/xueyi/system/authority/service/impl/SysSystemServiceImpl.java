@@ -8,8 +8,6 @@ import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysSystemMapper;
 import com.xueyi.system.authority.service.ISysSystemService;
-import com.xueyi.system.api.utilTool.SysSearch;
-import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,31 +34,29 @@ public class SysSystemServiceImpl implements ISysSystemService {
     /**
      * 查询首页可展示子系统模块列表
      *
-     * @param userId 当前用户Id
-     * @param userType     用户标识
+     * @param userId   当前用户Id
+     * @param userType 用户标识
      * @return 子系统模块集合
      */
     @Override
-    public List<SysSystem> selectSystemViewList(Long userId,String userType) {
-        if(SysUser.isAdmin(userType)){
-            return systemMapper.selectSystemViewAdminList(new SysSearch());//@param search 查询组件 | null
+    public List<SysSystem> selectSystemViewList(Long userId, String userType) {
+        SysSystem sysSystem = new SysSystem();
+        if (SysUser.isAdmin(userType)) {
+            return systemMapper.selectSystemViewAdminList(sysSystem);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        return systemMapper.selectSystemViewList(search);//@param search 查询组件 | userId 当前用户Id
+        sysSystem.getParams().put("userId", userId);
+        return systemMapper.selectSystemViewList(sysSystem);
     }
 
     /**
      * 查询子系统模块
      *
-     * @param systemId 子系统模块Id
+     * @param sysSystem 子系统模块 | systemId 子系统模块Id
      * @return 子系统模块
      */
     @Override
-    public SysSystem selectSystemById(Long systemId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("systemId", systemId);
-        return systemMapper.selectSystemById(search);//@param search 查询组件 | systemId 子系统模块Id
+    public SysSystem selectSystemById(SysSystem sysSystem) {
+        return systemMapper.selectSystemById(sysSystem);
     }
 
     /**
@@ -109,14 +105,12 @@ public class SysSystemServiceImpl implements ISysSystemService {
     /**
      * 批量删除子系统模块
      *
-     * @param systemIds 需要删除的子系统模块Id
+     * @param sysSystem 子系统模块 | params.Ids 需要删除的子系统模块Ids组
      * @return 结果
      */
     @Override
-    public int deleteSystemByIds(Long[] systemIds) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("systemIds", systemIds);
-        return systemMapper.deleteSystemByIds(search);//@param search 查询组件 | systemIds 需要删除的数据Ids
+    public int deleteSystemByIds(SysSystem sysSystem) {
+        return systemMapper.deleteSystemByIds(sysSystem);
     }
 
     /**
@@ -155,7 +149,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
             systemMenuList.add(systemMenuVo);
         }
         //遍历菜单列表并添加进系统-菜单组装列表中
-        for (SysMenu menu:menuList) {
+        for (SysMenu menu : menuList) {
             systemMenuVo = new SystemMenuVo();
             systemMenuVo.setUid(menu.getMenuId());
             systemMenuVo.setFUid(menu.getParentId());
@@ -178,7 +172,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     public List<SystemMenuVo> buildSystemMenuTree(List<SystemMenuVo> systemMenuList) {
         List<SystemMenuVo> returnList = new ArrayList<SystemMenuVo>();
         List<Long> tempList = new ArrayList<Long>();
-        for (SystemMenuVo systemMenuVo: systemMenuList) {
+        for (SystemMenuVo systemMenuVo : systemMenuList) {
             tempList.add(systemMenuVo.getUid());
         }
         for (Iterator<SystemMenuVo> iterator = systemMenuList.iterator(); iterator.hasNext(); ) {

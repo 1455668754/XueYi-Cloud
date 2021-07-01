@@ -2,7 +2,6 @@ package com.xueyi.system.authority.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.authority.SysSystem;
-import com.xueyi.system.api.utilTool.SysSearch;
 
 import java.util.List;
 
@@ -17,31 +16,31 @@ public interface SysSystemMapper {
      * 查询子系统模块列表|超管
      * 访问控制 s 租户查询
      *
-     * @param search 查询组件 | null
+     * @param sysSystem 子系统模块 | null
      * @return 子系统模块集合
      */
     @DataScope(edAlias = "s")
-    public List<SysSystem> selectSystemViewAdminList(SysSearch search);
+    public List<SysSystem> selectSystemViewAdminList(SysSystem sysSystem);
 
     /**
      * 查询子系统模块列表
      * 访问控制 s 租户查询
      *
-     * @param search 查询组件 | userId 当前用户Id
+     * @param sysSystem 子系统模块 | params.userId 当前用户Id
      * @return 子系统模块集合
      */
     @DataScope(edAlias = "s")
-    public List<SysSystem> selectSystemViewList(SysSearch search);
+    public List<SysSystem> selectSystemViewList(SysSystem sysSystem);
 
     /**
      * 查询子系统模块
      * 访问控制 s 租户查询
      *
-     * @param search 查询组件 | systemId 子系统模块Id
+     * @param sysSystem 子系统模块 | systemId 子系统模块Id
      * @return 子系统模块
      */
     @DataScope(eAlias = "s")
-    public SysSystem selectSystemById(SysSearch search);
+    public SysSystem selectSystemById(SysSystem sysSystem);
 
     /**
      * 查询子系统模块列表
@@ -87,10 +86,10 @@ public interface SysSystemMapper {
      * 批量删除子系统模块
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 查询组件 | systemIds 需要删除的数据Ids
+     * @param sysSystem 子系统模块 | params.Ids 需要删除的子系统模块Ids组
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int deleteSystemByIds(SysSearch search);
+    public int deleteSystemByIds(SysSystem sysSystem);
 }
 

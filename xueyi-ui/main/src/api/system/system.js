@@ -10,10 +10,11 @@ export function listSystem(query) {
 }
 
 // 查询子系统模块详细
-export function getSystem(systemId) {
+export function getSystem(query) {
   return request({
-    url: '/system/system/' + systemId,
-    method: 'get'
+    url: '/system/system/byId',
+    method: 'get',
+    params: query
   })
 }
 
@@ -44,11 +45,7 @@ export function updateSystem(data) {
 }
 
 // 子系统模块状态修改
-export function changeSystemStatus(systemId, status) {
-  const data = {
-    systemId,
-    status
-  }
+export function changeSystemStatus(data) {
   return request({
     url: '/system/system/changeStatus',
     method: 'put',
@@ -57,9 +54,10 @@ export function changeSystemStatus(systemId, status) {
 }
 
 // 删除子系统模块
-export function delSystem(systemId) {
+export function delSystem(data) {
   return request({
-    url: '/system/system/' + systemId,
-    method: 'delete'
+    url: '/system/system/',
+    method: 'delete',
+    data: data
   })
 }

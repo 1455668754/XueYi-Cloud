@@ -64,9 +64,9 @@ public class SysSystemController extends BaseController {
      * 获取子系统模块详细信息
      */
     @PreAuthorize(hasPermi = "system:system:query")
-    @GetMapping(value = "/{systemId}")
-    public AjaxResult getInfo(@PathVariable("systemId") Long systemId) {
-        return AjaxResult.success(systemService.selectSystemById(systemId));
+    @GetMapping(value = "/byId")
+    public AjaxResult getInfo(SysSystem sysSystem) {
+        return AjaxResult.success(systemService.selectSystemById(sysSystem));
     }
 
     /**
@@ -105,9 +105,9 @@ public class SysSystemController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:system:remove")
     @Log(title = "模块管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{systemIds}")
-    public AjaxResult remove(@PathVariable Long[] systemIds) {
-        return toAjax(systemService.deleteSystemByIds(systemIds));
+    @DeleteMapping
+    public AjaxResult remove(@RequestBody SysSystem sysSystem) {
+        return toAjax(systemService.deleteSystemByIds(sysSystem));
     }
 }
 

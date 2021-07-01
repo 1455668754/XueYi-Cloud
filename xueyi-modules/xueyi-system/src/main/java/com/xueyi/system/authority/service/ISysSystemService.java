@@ -26,10 +26,10 @@ public interface ISysSystemService {
     /**
      * 查询子系统模块
      *
-     * @param systemId 子系统模块Id
+     * @param sysSystem 子系统模块 | systemId 子系统模块Id
      * @return 子系统模块
      */
-    public SysSystem selectSystemById(Long systemId);
+    public SysSystem selectSystemById(SysSystem sysSystem);
 
     /**
      * 查询子系统模块列表
@@ -66,10 +66,10 @@ public interface ISysSystemService {
     /**
      * 批量删除子系统模块
      *
-     * @param systemIds 需要删除的子系统模块Id
+     * @param sysSystem 子系统模块 | params.Ids 需要删除的子系统模块Ids组
      * @return 结果
      */
-    public int deleteSystemByIds(Long[] systemIds);
+    public int deleteSystemByIds(SysSystem sysSystem);
 
     /**
      * 加载对应角色系统-菜单列表树

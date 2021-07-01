@@ -37,7 +37,7 @@
                  left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
     </sql>
 
-    <select id="selectSystemViewAdminList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysSystemResult">
+    <select id="selectSystemViewAdminList" parameterType="SysSystem" resultMap="SysSystemResult">
         <include refid="RouteVo"/>
         where s.status = '0'
         <!-- 数据范围过滤 -->
@@ -45,9 +45,9 @@
         order by s.sort
     </select>
 
-    <select id="selectSystemViewList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysSystemResult">
+    <select id="selectSystemViewList" parameterType="SysSystem" resultMap="SysSystemResult">
         <include refid="RouteVo"/>
-        where u.user_id = #{search.userId} and s.status = '0'
+        where u.user_id = #{params.userId} and s.status = '0'
         <!-- 数据范围过滤 -->
         ${params.dataScope}
         order by s.sort
@@ -66,9 +66,9 @@
         order by s.sort
     </select>
 
-    <select id="selectSystemById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysSystemResult">
+    <select id="selectSystemById" parameterType="SysSystem" resultMap="SysSystemResult">
         <include refid="selectVo"/>
-        where s.system_id = #{search.systemId}
+        where s.system_id = #{systemId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
@@ -128,10 +128,10 @@
         ${params.updateScope}
     </update>
 
-    <delete id="deleteSystemByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+    <delete id="deleteSystemByIds" parameterType="SysSystem">
         update xy_system set del_flag = 1
         where system_id in
-        <foreach item="systemId" collection="search.systemIds" open="(" separator="," close=")">
+        <foreach item="systemId" collection="params.Ids" open="(" separator="," close=")">
             #{systemId}
         </foreach>
         <!-- 数据范围过滤 -->

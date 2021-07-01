@@ -216,6 +216,7 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      idNames: [],
       // 总条数
       total: 0,
       // 表格数据
@@ -330,6 +331,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.systemId)
+      this.idNames = selection.map(item => item.name)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -342,8 +344,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const systemId = row.systemId || this.ids
-      getSystem(systemId).then(response => {
+      getSystem({systemId: row.systemId}).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改子系统模块";
@@ -377,26 +378,30 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return changeSystemStatus(row.systemId, row.status);
+        return changeSystemStatus({systemId: row.systemId, status: row.status});
       }).then(() => {
         this.msgSuccess(text + "成功");
       }).catch(function () {
         row.status = row.status === 0 ? 1 : 0;
-      }).catch((err)=>{});
+      }).catch((err) => {
+      });
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const systemIds = row.systemId || this.ids;
-      this.$confirm('是否确认删除子系统模块编号为"' + systemIds + '"的数据项?', "警告", {
+      const name = row.name || this.idNames;
+      let $this = this;
+      this.$confirm('是否确认删除子系统模块"' + name + '"?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delSystem(systemIds);
+        return delSystem($this.updateParamIds(systemIds));
       }).then(() => {
         this.getList();
         this.msgSuccess("删除成功");
-      }).catch((err)=>{})
+      }).catch((err) => {
+      })
     }
   }
 };
