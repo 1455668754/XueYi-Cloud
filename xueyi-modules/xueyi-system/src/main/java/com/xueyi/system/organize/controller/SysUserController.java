@@ -6,8 +6,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.security.service.TokenService;
+import com.xueyi.system.api.authority.SysRole;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.api.organize.SysPost;
+import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
@@ -66,7 +68,9 @@ public class SysUserController extends BaseController {
      */
     @GetMapping("/info/{enterpriseName}/{userName}")
     public R<LoginUser> info(@PathVariable("enterpriseName") String enterpriseName, @PathVariable("userName") String userName) {
-        SysEnterprise sysEnterprise = loginService.checkLoginByEnterpriseName(enterpriseName);
+        SysEnterprise checkEnterprise = new SysEnterprise();
+        checkEnterprise.setEnterpriseName(enterpriseName);
+        SysEnterprise sysEnterprise = loginService.checkLoginByEnterpriseName(checkEnterprise);
         if (StringUtils.isNull(sysEnterprise)) {
             return R.fail("账号或密码错误，请检查");
         }
@@ -80,14 +84,25 @@ public class SysUserController extends BaseController {
             }
         }
         //开始进入对应的主数据库
-        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(master.getMaster(), sysEnterprise.getEnterpriseId(), userName);
+        SysUser checkUser = new SysUser();
+        checkUser.setEnterpriseId(sysEnterprise.getEnterpriseId());
+        checkUser.setUserName(userName);
+        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(master.getMaster(), checkUser);
         if (StringUtils.isNull(sysUser)) {
             return R.fail("账号或密码错误，请检查");
         }
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(master.getMaster(), sysEnterprise.getEnterpriseId(), sysUser.getDeptId(), sysUser.getPostId(), sysUser.getUserId(), sysUser.getUserType());
+        SysRole checkRole = new SysRole();
+        checkRole.setEnterpriseId(sysEnterprise.getEnterpriseId());
+        checkRole.getParams().put("deptId", sysUser.getDeptId());
+        checkRole.getParams().put("postId", sysUser.getPostId());
+        checkRole.getParams().put("userId", sysUser.getUserId());
+        Set<String> roles = loginService.getRolePermission(master.getMaster(), checkRole, sysUser.getUserType());
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(master.getMaster(), sysEnterprise.getEnterpriseId(), sysUser.getUserId(), sysUser.getUserType());
+        SysMenu checkMenu = new SysMenu();
+        checkMenu.setEnterpriseId(sysEnterprise.getEnterpriseId());
+        checkMenu.getParams().put("userId", sysUser.getUserId());
+        Set<String> permissions = loginService.getMenuPermission(master.getMaster(), checkMenu, sysUser.getUserType());
         LoginUser sysUserVo = new LoginUser();
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setUserType(sysUser.getUserType());
@@ -114,11 +129,21 @@ public class SysUserController extends BaseController {
             }
         }
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(master.getMaster(), loginUser.getEnterpriseId(), loginUser.getSysUser().getDeptId(), loginUser.getSysUser().getPostId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
+        SysRole checkRole = new SysRole();
+        checkRole.setEnterpriseId(loginUser.getEnterpriseId());
+        checkRole.getParams().put("deptId", loginUser.getSysUser().getDeptId());
+        checkRole.getParams().put("postId", loginUser.getSysUser().getPostId());
+        checkRole.getParams().put("userId", loginUser.getSysUser().getUserId());
+        Set<String> roles = loginService.getRolePermission(master.getMaster(), checkRole, loginUser.getSysUser().getUserType());
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(master.getMaster(), loginUser.getEnterpriseId(), loginUser.getSysUser().getUserId(), loginUser.getSysUser().getUserType());
+        SysMenu checkMenu = new SysMenu();
+        checkMenu.setEnterpriseId(loginUser.getEnterpriseId());
+        checkMenu.getParams().put("userId", loginUser.getSysUser().getUserId());
+        Set<String> permissions = loginService.getMenuPermission(master.getMaster(), checkMenu, loginUser.getSysUser().getUserType());
         AjaxResult ajax = AjaxResult.success();
-        ajax.put("user", userService.selectUserById(loginUser.getSysUser().getUserId()));
+        SysUser user = new SysUser();
+        user.setUserId(loginUser.getSysUser().getUserId());
+        ajax.put("user", userService.selectUserById(user));
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
         return ajax;
@@ -141,7 +166,9 @@ public class SysUserController extends BaseController {
     @PreAuthorize(hasPermi = "system:user:query")
     @GetMapping(value = {"/", "/{userId}"})
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
-        return AjaxResult.success(userService.selectUserById(userId));
+        SysUser user = new SysUser();
+        user.setUserId(userId);
+        return AjaxResult.success(userService.selectUserById(user));
     }
 
     /**
@@ -151,15 +178,15 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user) {
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserCodeUnique(user.getUserId(), user.getUserCode()))) {
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserCodeUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，用户编码已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserId(), user.getUserName()))) {
+        } else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，用户账号已存在");
         } else if (StringUtils.isNotEmpty(user.getPhone())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user.getUserId(), user.getPhone()))) {
+                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
         } else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user.getUserId(), user.getEmail()))) {
+                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
@@ -173,16 +200,16 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysUser user) {
-        userService.checkUserAllowed(user.getUserType());
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserCodeUnique(user.getUserId(), user.getUserCode()))) {
+        userService.checkUserAllowed(user);
+        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserCodeUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户编码已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user.getUserId(), user.getUserName()))) {
+        } else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户账号已存在");
         } else if (StringUtils.isNotEmpty(user.getPhone())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user.getUserId(), user.getPhone()))) {
+                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
         } else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user.getUserId(), user.getEmail()))) {
+                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         return toAjax(userService.updateUser(user));
@@ -195,7 +222,7 @@ public class SysUserController extends BaseController {
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeUserRole")
     public AjaxResult editUserRole(@Validated @RequestBody SysUser user) {
-        userService.checkUserAllowed(user.getUserType());
+        userService.checkUserAllowed(user);
         return toAjax(userService.updateUserRole(user.getUserId(), user.getRoleIds()));
     }
 
@@ -206,9 +233,9 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/resetPwd")
     public AjaxResult resetPwd(@RequestBody SysUser user) {
-        userService.checkUserAllowed(user.getUserType());
+        userService.checkUserAllowed(user);
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        return toAjax(userService.resetUserPwd(user.getUserId(), user.getPassword()));
+        return toAjax(userService.resetUserPwd(user));
     }
 
     /**
@@ -218,14 +245,14 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysUser user) {
-        userService.checkUserAllowed(user.getUserType());
+        userService.checkUserAllowed(user);
         SysPost post = new SysPost();
         post.setPostId(user.getPostId());
         if (StringUtils.equals(UserConstants.USER_NORMAL, user.getStatus())
                 && UserConstants.POST_DISABLE.equals(postService.checkPostStatus(post))) {
             return AjaxResult.error("启用失败，该用户的归属岗位已被禁用！");
         }
-        return toAjax(userService.updateUserStatus(user.getUserId(), user.getStatus()));
+        return toAjax(userService.updateUserStatus(user));
     }
 
     /**
@@ -233,9 +260,9 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:user:remove")
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{userIds}")
-    public AjaxResult remove(@PathVariable Long[] userIds) {
-        return toAjax(userService.deleteUserByIds(userIds));
+    @DeleteMapping
+    public AjaxResult remove(@RequestBody SysUser user) {
+        return toAjax(userService.deleteUserByIds(user));
     }
 
     /**

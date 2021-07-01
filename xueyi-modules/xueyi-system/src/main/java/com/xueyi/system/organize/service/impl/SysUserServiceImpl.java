@@ -64,55 +64,46 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 登录日志用户检验
      *
-     * @param enterpriseId 租户Id
-     * @param userName     用户账号
-     * @param
+     * @param user 用户信息 | enterpriseId 租户Id | userName 用户账号
      * @return 用户对象信息
      */
-    public SysUser checkUserByUserName(Long enterpriseId, String userName) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("enterpriseId", enterpriseId);
-        search.getSearch().put("userName", userName);
-        return userMapper.checkUserByUserName(search);//@param search 万用组件 | enterpriseId 租户Id | userName 用户账号
+    public SysUser checkUserByUserName(SysUser user) {
+        return userMapper.checkUserByUserName(user);
     }
 
     /**
      * 通过用户账号查询用户
      *
-     * @param userName 用户名
+     * @param user 用户信息 | userName 用户名
      * @return 用户对象信息
      */
     @Override
-    public SysUser selectUserByUserName(String userName) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userName", userName);
-        return userMapper.selectUserByUserName(search);//@param search 万用组件 | userName 用户名
+    public SysUser selectUserByUserName(SysUser user) {
+        return userMapper.selectUserByUserName(user);
     }
 
     /**
      * 通过用户Id查询用户
      *
-     * @param userId 用户Id
+     * @param user 用户信息 | userId 用户Id
      * @return 用户对象信息
      */
     @Override
-    public SysUser selectUserById(Long userId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        return userMapper.selectUserById(search);//@param search 万用组件 | userId 用户Id
+    public SysUser selectUserById(SysUser user) {
+        return userMapper.selectUserById(user);
     }
 
     /**
      * 查询用户所属角色组
      *
-     * @param userName 用户名
+     * @param user 用户信息 | userName 用户名
      * @return 结果
      */
     @Override
-    public String selectUserRoleGroup(String userName) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userName", userName);
-        List<SysRole> list = roleMapper.selectRolesByUserName(search);
+    public String selectUserRoleGroup(SysUser user) {
+        SysRole checkRole = new SysRole();
+        checkRole.getParams().put("userName", user.getUserName());
+        List<SysRole> list = roleMapper.selectRolesByUserName(checkRole);
         StringBuffer idsStr = new StringBuffer();
         for (SysRole role : list) {
             idsStr.append(role.getRoleName()).append(",");
@@ -195,16 +186,12 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 修改用户状态
      *
-     * @param userId 用户Id
-     * @param status 用户状态
+     * @param user 用户信息 | userId 用户Id | status 用户状态
      * @return 结果
      */
     @Override
-    public int updateUserStatus(Long userId, String status) {
-        SysSearch sear = new SysSearch();
-        sear.getSearch().put("userId", userId);
-        sear.getSearch().put("status", status);
-        return userMapper.updateUserStatus(sear);//@param search 万用组件 | userId 用户Id | status 用户状态
+    public int updateUserStatus(SysUser user) {
+        return userMapper.updateUserStatus(user);
     }
 
     /**
@@ -221,46 +208,38 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 修改用户头像
      *
-     * @param userId 用户Id
-     * @param avatar 头像地址
+     * @param user 用户信息 | userId 用户Id | avatar 头像地址
      * @return 结果
      */
     @Override
-    public boolean updateUserAvatar(Long userId, String avatar) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        search.getSearch().put("avatar", avatar);
-        return userMapper.updateUserAvatar(search) > 0;//@param search 万用组件 | userId 用户Id | avatar 头像地址
+    public boolean updateUserAvatar(SysUser user) {
+        return userMapper.updateUserAvatar(user) > 0;
     }
 
     /**
      * 重置用户密码
      *
-     * @param userId   用户Id
-     * @param password 密码
+     * @param user 用户信息 | userId 用户Id | password 密码
      * @return 结果
      */
     @Override
-    public int resetUserPwd(Long userId, String password) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        search.getSearch().put("password", password);
-        return userMapper.resetUserPwd(search);//@param search 万用组件 | userId 用户Id | password 密码
+    public int resetUserPwd(SysUser user) {
+        return userMapper.resetUserPwd(user);
     }
 
     /**
      * 通过用户Id删除用户
      *
-     * @param userId 用户Id
+     * @param user 用户信息 | userId 用户Id
      * @return 结果
      */
     @Override
     @Transactional
-    public int deleteUserById(Long userId) {
+    public int deleteUserById(SysUser user) {
         int rows;
         SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        rows = userMapper.deleteUserById(search);//@param search 万用组件 | userId 用户Id
+        search.getSearch().put("userId", user.getUserId());
+        rows = userMapper.deleteUserById(user);
         if (rows > 0) {
             rows = rows + userRoleMapper.deleteUserRoleByUserId(search);//@param search 查询组件 | userId 用户Id
         }
@@ -270,16 +249,16 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 批量删除用户信息
      *
-     * @param userIds 用户Ids
+     * @param user 用户信息 | params.Ids 需要删除的用户Ids组
      * @return 结果
      */
     @Override
     @Transactional
-    public int deleteUserByIds(Long[] userIds) {
+    public int deleteUserByIds(SysUser user) {
         int rows;
         SysSearch search = new SysSearch();
-        search.getSearch().put("userIds", userIds);
-        rows = userMapper.deleteUserByIds(search);//@param search 万用组件 | userIds 需要删除的用户Ids(Long[])
+        search.getSearch().put("userIds", user.getParams().get("Ids"));
+        rows = userMapper.deleteUserByIds(user);
         if (rows > 0) {
             rows = rows + userRoleMapper.deleteUserRoleByIds(search);//@param search 查询组件 | userIds 需要删除的用户Ids(Long[])
         }
@@ -308,8 +287,9 @@ public class SysUserServiceImpl implements ISysUserService {
         for (SysUser user : userList) {
             try {
                 // 验证是否存在这个用户
-                search.getSearch().put("userName", user.getUserName());
-                SysUser u = userMapper.selectUserByUserName(search);
+                SysUser checkUser = new SysUser();
+                checkUser.setUserName(user.getUserName());
+                SysUser u = userMapper.selectUserByUserName(checkUser);
                 if (StringUtils.isNull(u)) {
                     user.setPassword(SecurityUtils.encryptPassword(password));
                     this.insertUser(user);
@@ -342,19 +322,16 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 校验用户编码是否唯一
      *
-     * @param userId   用户Id
-     * @param userCode 用户编码
+     * @param user 用户信息 | userId 用户Id | userCode 用户编码
      * @return 结果
      */
     @Override
-    public String checkUserCodeUnique(Long userId, String userCode) {
-        if (StringUtils.isNull(userId)) {
-            userId = -1L;
+    public String checkUserCodeUnique(SysUser user) {
+        if (StringUtils.isNull(user.getUserId())) {
+            user.setUserId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userCode", userCode);
-        SysUser info = userMapper.checkUserCodeUnique(search);//@param search 万用组件 | userCode 用户编码
-        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue()) {
+        SysUser info = userMapper.checkUserCodeUnique(user);
+        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != user.getUserId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -363,19 +340,16 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 校验用户名称是否唯一
      *
-     * @param userId   用户Id
-     * @param userName 用户名称
+     * @param user 用户信息 | userId 用户Id | userName 用户名称
      * @return 结果
      */
     @Override
-    public String checkUserNameUnique(Long userId, String userName) {
-        if (StringUtils.isNull(userId)) {
-            userId = -1L;
+    public String checkUserNameUnique(SysUser user) {
+        if (StringUtils.isNull(user.getUserId())) {
+            user.setUserId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userName", userName);
-        SysUser info = userMapper.checkUserNameUnique(search);//@param search 万用组件 | userName 用户名称
-        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue()) {
+        SysUser info = userMapper.checkUserNameUnique(user);
+        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != user.getUserId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -384,19 +358,16 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 校验手机号码是否唯一
      *
-     * @param userId 用户Id
-     * @param phone  手机号码
+     * @param user 用户信息 | userId 用户Id | phone 手机号码
      * @return 结果
      */
     @Override
-    public String checkPhoneUnique(Long userId, String phone) {
-        if (StringUtils.isNull(userId)) {
-            userId = -1L;
+    public String checkPhoneUnique(SysUser user) {
+        if (StringUtils.isNull(user.getUserId())) {
+            user.setUserId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("phone", phone);
-        SysUser info = userMapper.checkPhoneUnique(search);//@param search 万用组件 | phone 手机号码
-        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue()) {
+        SysUser info = userMapper.checkPhoneUnique(user);
+        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != user.getUserId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -405,19 +376,16 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 校验email是否唯一
      *
-     * @param userId 用户Id
-     * @param email  email
+     * @param user 用户信息 | userId 用户Id | email email
      * @return 结果
      */
     @Override
-    public String checkEmailUnique(Long userId, String email) {
-        if (StringUtils.isNull(userId)) {
-            userId = -1L;
+    public String checkEmailUnique(SysUser user) {
+        if (StringUtils.isNull(user.getUserId())) {
+            user.setUserId(-1L);
         }
-        SysSearch search = new SysSearch();
-        search.getSearch().put("email", email);
-        SysUser info = userMapper.checkEmailUnique(search);//@param search 万用组件 | email 用户邮箱
-        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != userId.longValue()) {
+        SysUser info = userMapper.checkEmailUnique(user);
+        if (StringUtils.isNotNull(info) && info.getUserId().longValue() != user.getUserId().longValue()) {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
@@ -426,11 +394,11 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 校验用户是否允许操作
      *
-     * @param userType 用户标识
+     * @param user 用户信息 | userType 用户标识
      */
     @Override
-    public void checkUserAllowed(String userType) {
-        if (SysUser.isAdmin(userType)) {
+    public void checkUserAllowed(SysUser user) {
+        if (SysUser.isAdmin(user.getUserType())) {
             throw new CustomException("不允许操作超级管理员用户");
         }
     }
