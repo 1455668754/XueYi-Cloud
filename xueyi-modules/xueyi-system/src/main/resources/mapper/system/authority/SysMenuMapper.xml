@@ -76,12 +76,12 @@
 	</sql>
 
 	<!--未登录用户的登录校验方法，不允许加访问控制-->
-	<select id="checkLoginMenuPermission" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultType="String">
+	<select id="checkLoginMenuPermission" parameterType="SysMenu" resultType="String">
 		<include refid="selectPermsVo"/>
-		where u.user_id = #{search.userId}
-		and m.status = 0 and ( m.tenant_id = #{search.enterpriseId} or m.tenant_id = 0 )
-		and r.status = 0 and r.tenant_id = #{search.enterpriseId}
-		and u.status = 0 and u.tenant_id = #{search.enterpriseId}
+		where u.user_id = #{params.userId}
+		and m.status = 0 and ( m.tenant_id = #{enterpriseId} or m.tenant_id = 0 )
+		and r.status = 0 and r.tenant_id = #{enterpriseId}
+		and u.status = 0 and u.tenant_id = #{enterpriseId}
 	</select>
 
 	<select id="selectMenuTreeByUserId" parameterType="SysMenu" resultMap="SysMenuResult">

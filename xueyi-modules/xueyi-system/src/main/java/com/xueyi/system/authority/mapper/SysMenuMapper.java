@@ -16,10 +16,10 @@ public interface SysMenuMapper {
      * 根据用户Id查询权限（登录校验）
      * 登陆前验证，无需切片控制(service/impl层在com.xueyi.authority.service)
      *
-     * @param search 万用组件 | userId 用户Id | enterpriseId 租户Id
+     * @param menu 菜单信息 | params.userId 用户Id | enterpriseId 租户Id
      * @return 权限列表
      */
-    public List<String> checkLoginMenuPermission(SysSearch search);
+    public List<String> checkLoginMenuPermission(SysMenu menu);
 
     /**
      * 查询系统全部菜单列表

@@ -17,10 +17,10 @@ public interface SysRoleMapper {
      * 根据用户Id查询角色权限信息（登录校验）
      * 登陆前验证，无需切片控制(service/impl层在com.xueyi.authority.service)
      *
-     * @param search 万用组件 | userId 用户Id | enterpriseId 租户Id
+     * @param role 角色信息 | params.deptId 部门Id | params.postId 岗位Id | params.userId 用户Id | enterpriseId 租户Id
      * @return 权限列表
      */
-    public List<SysRole> checkLoginRolePermission(SysSearch search);
+    public List<SysRole> checkLoginRolePermission(SysRole role);
 
     /**
      * 查询所有角色
@@ -36,12 +36,11 @@ public interface SysRoleMapper {
      * 根据用户Id查询角色
      * 访问控制 r 租户查询
      *
-     * @param search 万用组件 | userName 用户名
+     * @param role 角色信息 | params.userName 用户名
      * @return 角色列表
      */
     @DataScope(eAlias = "r")
-    public List<SysRole> selectRolesByUserName(SysSearch search);
-
+    public List<SysRole> selectRolesByUserName(SysRole role);
 
     /**
      * 根据条件分页查询角色数据

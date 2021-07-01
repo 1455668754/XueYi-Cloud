@@ -15,30 +15,30 @@ public interface SysEnterpriseMapper {
      * 通过企业账号查询租户信息
      * 登陆前验证，无需切片控制(service/impl层在com.xueyi.authority.service)
      *
-     * @param search 万用组件 | enterpriseName 企业账号
+     * @param enterprise 租户对象 | enterpriseName 企业账号
      * @return 租户对象信息
      */
-    public SysEnterprise checkLoginByEnterpriseName(SysSearch search);
+    public SysEnterprise checkLoginByEnterpriseName(SysEnterprise enterprise);
 
     /**
      * 查询租户信息
      * 访问控制 e 租户查询
      *
-     * @param search 万用组件 | null
+     * @param enterprise 租户对象 | null
      * @return 租户对象
      */
     @DataScope(eAlias = "e")
-    public SysEnterprise selectEnterpriseById(SysSearch search);
+    public SysEnterprise selectEnterpriseById(SysEnterprise enterprise);
 
     /**
      * 更新Logo
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | logoUrl logo地址
+     * @param enterprise 租户对象 | logo logo地址
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int updateLogo(SysSearch search);
+    public int updateLogo(SysEnterprise enterprise);
 
     /**
      * 更新租户信息

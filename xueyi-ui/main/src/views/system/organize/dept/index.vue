@@ -411,7 +411,7 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return changeDeptStatus(row.deptId, row.parentId, row.status)
+        return changeDeptStatus({deptId: row.deptId, parentId: row.parentId, status: row.status})
       }).then(() => {
         this.msgSuccess(msg + "成功")
       }).catch(function () {

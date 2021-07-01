@@ -74,7 +74,9 @@ public class SysEnterpriseController extends BaseController {
                 return AjaxResult.error("文件服务异常，请稍后再试");
             }
             String url = fileResult.getData().getUrl();
-            if (enterpriseService.updateLogo(url) > 0)
+            SysEnterprise enterprise = new SysEnterprise();
+            enterprise.setLogo(url);
+            if (enterpriseService.updateLogo(enterprise) > 0)
             {
                 String oldLogoUrl = loginUser.getSysEnterprise().getLogo();
                 if(StringUtils.isNotEmpty(oldLogoUrl)){

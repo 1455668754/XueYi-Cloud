@@ -250,7 +250,8 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="部门|岗位" prop="postId">
-              <treeselect v-model="form.postId" :options="deptPostOptions" :disable-branch-nodes="true" :normalizer="normalizer" :show-count="true" placeholder="请选择归属部门"/>
+              <treeselect v-model="form.postId" :options="deptPostOptions" :disable-branch-nodes="true"
+                          :normalizer="normalizer" :show-count="true" placeholder="请选择归属部门"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -260,12 +261,13 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户名称" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入用户名称" maxlength="30" />
+              <el-input v-model="form.nickName" placeholder="请输入用户名称" maxlength="30"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户账号" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入用户账号" :readonly="form.userId !== undefined" maxlength="30"/>
+              <el-input v-model="form.userName" placeholder="请输入用户账号" :readonly="form.userId !== undefined"
+                        maxlength="30"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -405,12 +407,12 @@ import {
   resetUserPwd,
   changeUserStatus,
   changeUserRole
-} from "@/api/system/user";
-import {getToken} from "@/utils/auth";
-import {treeSelect} from "@/api/system/post";
-import Treeselect from "@riophae/vue-treeselect";
-import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import {optionSelect} from "@/api/system/role";
+} from "@/api/system/user"
+import {getToken} from "@/utils/auth"
+import {treeSelect} from "@/api/system/post"
+import Treeselect from "@riophae/vue-treeselect"
+import "@riophae/vue-treeselect/dist/vue-treeselect.css"
+import {optionSelect} from "@/api/system/role"
 
 export default {
   name: "User",
@@ -422,7 +424,7 @@ export default {
       // 选中数组
       ids: [],
       // 选中数组名称
-      idsText:[],
+      idsText: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -513,8 +515,8 @@ export default {
           {required: true, message: "用户名称不能为空", trigger: "blur"}
         ],
         password: [
-          { required: true, message: "用户密码不能为空", trigger: "blur" },
-          { min: 6, max: 20, message: '用户密码长度必须介于 6 和 20 之间', trigger: 'blur' }
+          {required: true, message: "用户密码不能为空", trigger: "blur"},
+          {min: 6, max: 20, message: '用户密码长度必须介于 6 和 20 之间', trigger: 'blur'}
         ],
         email: [
           {
@@ -531,81 +533,81 @@ export default {
           }
         ]
       }
-    };
+    }
   },
   watch: {
     // 根据名称筛选部门树
     deptName(val) {
-      this.$refs.tree.filter(val);
+      this.$refs.tree.filter(val)
     }
   },
   created() {
-    this.getList();
-    this.getTreeSelect();
+    this.getList()
+    this.getTreeSelect()
     this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data;
-    });
+      this.statusOptions = response.data
+    })
     this.getDicts("sys_user_sex").then(response => {
-      this.sexOptions = response.data;
-    });
+      this.sexOptions = response.data
+    })
     this.getConfigKey("sys.user.initPassword").then(response => {
-      this.initPassword = response.msg;
-    });
+      this.initPassword = response.msg
+    })
   },
   methods: {
     /** 查询用户列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       listUser(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.userList = response.rows;
-          this.total = response.total;
-          this.loading = false;
+          this.userList = response.rows
+          this.total = response.total
+          this.loading = false
         }
-      );
+      )
     },
     /** 查询部门-岗位下拉树结构 */
     getTreeSelect() {
       treeSelect().then(response => {
-        this.deptPostOptions = response.data;
-      });
+        this.deptPostOptions = response.data
+      })
     },
     /** 转换部门-岗位数据结构 */
     normalizer(node) {
       if (node.children && !node.children.length) {
-        delete node.children;
+        delete node.children
       }
       return {
         id: node.id,
         label: node.label,
         children: node.children,
         isDisabled: node.status === '1'
-      };
+      }
     },
     // 筛选节点
     filterNode(value, data) {
-      if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
     },
     // 节点单击事件
     handleNodeClick(data) {
       if (data.type === '0') {
-        this.queryParams.deptId = data.id;
-        this.queryParams.postId = undefined;
+        this.queryParams.deptId = data.id
+        this.queryParams.postId = undefined
 
       } else if (data.type === '1') {
-        this.queryParams.postId = data.id;
-        this.queryParams.deptId = undefined;
+        this.queryParams.postId = data.id
+        this.queryParams.deptId = undefined
       }
-      this.getList();
+      this.getList()
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     roleCancel() {
-      this.roleOpen = false;
-      this.reset();
+      this.roleOpen = false
+      this.reset()
     },
     // 表单重置
     reset() {
@@ -623,46 +625,46 @@ export default {
         status: "0",
         remark: undefined,
         roleIds: []
-      };
-      this.resetForm("form");
+      }
+      this.resetForm("form")
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.dateRange = []
+      this.resetForm("queryForm")
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.userId);
-      this.idsText = selection.map(item => item.nickName);
-      this.single = selection.length !== 1;
-      this.multiple = !selection.length;
+      this.ids = selection.map(item => item.userId)
+      this.idsText = selection.map(item => item.nickName)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.getTreeSelect();
-      this.open = true;
-      this.title = "添加用户";
-      this.form.password = this.initPassword;
+      this.reset()
+      this.getTreeSelect()
+      this.open = true
+      this.title = "添加用户"
+      this.form.password = this.initPassword
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      this.getTreeSelect();
-      const userId = row.userId || this.ids;
+      this.reset()
+      this.getTreeSelect()
+      const userId = row.userId || this.ids
       getUser(userId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改用户";
-        this.form.password = "";
-      });
+        this.form = response.data
+        this.open = true
+        this.title = "修改用户"
+        this.form.password = ""
+      })
     },
     /** 重置密码按钮操作 */
     handleResetPwd(row) {
@@ -671,41 +673,41 @@ export default {
         cancelButtonText: "取消",
         closeOnClickModal: false,
         inputPattern: /^.{6,20}$/,
-        inputErrorMessage: "用户密码长度必须介于 6 和 20 之间",
+        inputErrorMessage: "用户密码长度必须介于 6 和 20 之间"
       }).then(({value}) => {
         resetUserPwd(row.userId, value).then(response => {
-          this.msgSuccess("修改成功，新密码是：" + value);
-        });
+          this.msgSuccess("修改成功，新密码是：" + value)
+        })
       }).catch(() => {
-      });
+      })
     },
     /** 用户权限按钮操作 */
     handleRoleUpdate(row) {
-      this.reset();
+      this.reset()
       getUser(row.userId).then(response => {
-        this.form = response.data;
+        this.form = response.data
         this.form.roleIds = Array.from(this.form.roles, x => x.roleId)
-        this.roleOpen = true;
-        this.title = "设置用户权限";
-      });
+        this.roleOpen = true
+        this.title = "设置用户权限"
+      })
       optionSelect().then(response => {
-        this.roleOptions = response.data;
-      });
+        this.roleOptions = response.data
+      })
     },
     /** 用户状态修改 */
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用";
+      let text = row.status === "0" ? "启用" : "停用"
       this.$confirm('确认要"' + text + '""' + row.userName + '"用户吗?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return changeUserStatus(row.userId, row.status);
+        return changeUserStatus(row.userId, row.status)
       }).then(() => {
-        this.msgSuccess(text + "成功");
+        this.msgSuccess(text + "成功")
       }).catch(function () {
-        row.status = row.status === "0" ? "1" : "0";
-      });
+        row.status = row.status === "0" ? "1" : "0"
+      })
     },
     /** 提交按钮 */
     submitForm: function () {
@@ -713,44 +715,46 @@ export default {
         if (valid) {
           if (this.form.userId !== undefined) {
             updateUser(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess("修改成功")
+              this.open = false
+              this.getList()
+            })
           } else {
             addUser(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess("新增成功")
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     /** 用户权限提交按钮 */
     submitRoleForm: function () {
       if (this.form.userId !== undefined) {
         changeUserRole(this.form).then(response => {
-          this.msgSuccess("用户权限修改成功");
-          this.roleOpen = false;
-          this.getList();
-        });
+          this.msgSuccess("用户权限修改成功")
+          this.roleOpen = false
+          this.getList()
+        })
       }
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const userIds = row.userId || this.ids;
-      const text = row.nickName || this.idsText;
+      const userIds = row.userId || this.ids
+      const text = row.nickName || this.idsText
+      let $this = this
       this.$confirm('是否确认删除用户"' + text + '"?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(function () {
-        return delUser(userIds);
+        return delUser($this.updateParamIds(userIds))
       }).then(() => {
-        this.getList();
-        this.msgSuccess("删除成功");
-      }).catch(() => {});
+        this.getList()
+        this.msgSuccess("删除成功")
+      }).catch(() => {
+      })
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -760,8 +764,8 @@ export default {
     },
     /** 导入按钮操作 */
     handleImport() {
-      this.upload.title = "用户导入";
-      this.upload.open = true;
+      this.upload.title = "用户导入"
+      this.upload.open = true
     },
     /** 下载模板操作 */
     importTemplate() {
@@ -771,20 +775,20 @@ export default {
     },
     // 文件上传中处理
     handleFileUploadProgress(event, file, fileList) {
-      this.upload.isUploading = true;
+      this.upload.isUploading = true
     },
     // 文件上传成功处理
     handleFileSuccess(response, file, fileList) {
-      this.upload.open = false;
-      this.upload.isUploading = false;
-      this.$refs.upload.clearFiles();
-      this.$alert(response.msg, "导入结果", {dangerouslyUseHTMLString: true});
-      this.getList();
+      this.upload.open = false
+      this.upload.isUploading = false
+      this.$refs.upload.clearFiles()
+      this.$alert(response.msg, "导入结果", {dangerouslyUseHTMLString: true})
+      this.getList()
     },
     // 提交上传文件
     submitFileForm() {
-      this.$refs.upload.submit();
+      this.$refs.upload.submit()
     }
   }
-};
+}
 </script>

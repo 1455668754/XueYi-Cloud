@@ -1,6 +1,5 @@
 package com.xueyi.system.organize.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
@@ -22,14 +21,12 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     /**
      * 通过企业账号查询租户信息
      *
-     * @param enterpriseName 企业账号
+     * @param enterprise 租户对象 | enterpriseName 企业账号
      * @return 租户对象
      */
     @Override
-    public SysEnterprise checkLoginByEnterpriseName(String enterpriseName) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("enterpriseName", enterpriseName);
-        return enterpriseMapper.checkLoginByEnterpriseName(search);//@param search 万用组件 | enterpriseName 企业账号
+    public SysEnterprise checkLoginByEnterpriseName(SysEnterprise enterprise) {
+        return enterpriseMapper.checkLoginByEnterpriseName(enterprise);
     }
 
     /**
@@ -39,20 +36,18 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public SysEnterprise selectEnterpriseById() {
-        return enterpriseMapper.selectEnterpriseById(new SysSearch());//@param search 万用组件 | null
+        return enterpriseMapper.selectEnterpriseById(new SysEnterprise());
     }
 
     /**
      * 更新Logo
      *
-     * @param logoUrl logo地址
+     * @param enterprise 租户对象 | logo logo地址
      * @return 结果
      */
     @Override
-    public int updateLogo(String logoUrl) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("logoUrl", logoUrl);
-        return enterpriseMapper.updateLogo(search);
+    public int updateLogo(SysEnterprise enterprise) {
+        return enterpriseMapper.updateLogo(enterprise);
     }
 
     /**
@@ -85,6 +80,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public String checkEnterpriseNameUnique(SysEnterprise enterprise) {
-        return enterpriseMapper.checkEnterpriseNameUnique(enterprise) == null ? UserConstants.UNIQUE:UserConstants.NOT_UNIQUE;
+        return enterpriseMapper.checkEnterpriseNameUnique(enterprise) == null ? UserConstants.UNIQUE : UserConstants.NOT_UNIQUE;
     }
 }

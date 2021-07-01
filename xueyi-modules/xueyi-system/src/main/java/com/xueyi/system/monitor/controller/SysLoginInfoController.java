@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.system.api.authority.SysRole;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.api.organize.SysUser;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
@@ -86,9 +87,15 @@ public class SysLoginInfoController extends BaseController {
 
         // 封装对象
         SysLoginInfo loginInfo = new SysLoginInfo();
-        SysEnterprise enterprise = enterpriseService.checkLoginByEnterpriseName(enterpriseName);
+        SysEnterprise checkEnterprise = new SysEnterprise();
+        checkEnterprise.setEnterpriseName(enterpriseName);
+        SysEnterprise enterprise = enterpriseService.checkLoginByEnterpriseName(checkEnterprise);
+
+        SysUser checkUser = new SysUser();
+        checkUser.setEnterpriseId(enterprise.getEnterpriseId());
+        checkUser.setUserName(userName);
         if(enterprise != null && StringUtils.isNotNull(enterprise.getEnterpriseId())){
-            SysUser user = userService.checkUserByUserName(enterprise.getEnterpriseId(), userName);
+            SysUser user = userService.checkUserByUserName(checkUser);
             loginInfo.setUserId(user.getUserId());
             loginInfo.setEnterpriseId(enterprise.getEnterpriseId());
         }else {

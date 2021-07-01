@@ -22,36 +22,34 @@ public interface ISysUserService {
     /**
      * 登录日志用户检验
      *
-     * @param enterpriseId 租户Id
-     * @param userName     用户账号
-     * @param
+     * @param user 用户信息 | enterpriseId 租户Id | userName 用户账号
      * @return 用户对象信息
      */
-    public SysUser checkUserByUserName(Long enterpriseId, String userName);
+    public SysUser checkUserByUserName(SysUser user);
 
     /**
      * 通过用户名查询用户
      *
-     * @param userName 用户名
+     * @param user 用户信息 | userName 用户名
      * @return 用户对象信息
      */
-    public SysUser selectUserByUserName(String userName);
+    public SysUser selectUserByUserName(SysUser user);
 
     /**
      * 通过用户Id查询用户
      *
-     * @param userId 用户Id
+     * @param user 用户信息 | userId 用户Id
      * @return 用户对象信息
      */
-    public SysUser selectUserById(Long userId);
+    public SysUser selectUserById(SysUser user);
 
     /**
      * 根据用户Id查询用户所属角色组
      *
-     * @param userName 用户名
+     * @param user 用户信息 | userName 用户名
      * @return 结果
      */
-    public String selectUserRoleGroup(String userName);
+    public String selectUserRoleGroup(SysUser user);
 
     /**
      * 新增用户信息
@@ -81,11 +79,10 @@ public interface ISysUserService {
     /**
      * 修改用户状态
      *
-     * @param userId 用户Id
-     * @param status 用户状态
+     * @param user 用户信息 | userId 用户Id | status 用户状态
      * @return 结果
      */
-    public int updateUserStatus(Long userId, String status);
+    public int updateUserStatus(SysUser user);
 
     /**
      * 修改用户基本信息
@@ -98,36 +95,34 @@ public interface ISysUserService {
     /**
      * 修改用户头像
      *
-     * @param userId 用户Id
-     * @param avatar 头像地址
+     * @param user 用户信息 | userId 用户Id | avatar 头像地址
      * @return 结果
      */
-    public boolean updateUserAvatar(Long userId, String avatar);
+    public boolean updateUserAvatar(SysUser user);
 
     /**
      * 重置用户密码
      *
-     * @param userId   用户Id
-     * @param password 密码
+     * @param user 用户信息 | userId 用户Id | password 密码
      * @return 结果
      */
-    public int resetUserPwd(Long userId, String password);
+    public int resetUserPwd(SysUser user);
 
     /**
      * 通过用户Id删除用户
      *
-     * @param userId 用户Id
+     * @param user 用户信息 | userId 用户Id
      * @return 结果
      */
-    public int deleteUserById(Long userId);
+    public int deleteUserById(SysUser user);
 
     /**
      * 批量删除用户信息
      *
-     * @param userIds 需要删除的用户ID
+     * @param user 用户信息 | params.Ids 需要删除的用户Ids组
      * @return 结果
      */
-    public int deleteUserByIds(Long[] userIds);
+    public int deleteUserByIds(SysUser user);
 
     /**
      * 导入用户数据
@@ -142,43 +137,39 @@ public interface ISysUserService {
     /**
      * 校验用户编码是否唯一
      *
-     * @param userId   用户Id
-     * @param userCode 用户编码
+     * @param user 用户信息 | userId 用户Id | userCode 用户编码
      * @return 结果
      */
-    public String checkUserCodeUnique(Long userId, String userCode);
+    public String checkUserCodeUnique(SysUser user);
 
     /**
      * 校验用户名称是否唯一
      *
-     * @param userId   用户Id
-     * @param userName 用户名称
+     * @param user 用户信息 | userId 用户Id | userName 用户名称
      * @return 结果
      */
-    public String checkUserNameUnique(Long userId, String userName);
+    public String checkUserNameUnique(SysUser user);
 
     /**
      * 校验手机号码是否唯一
      *
-     * @param userId 用户Id
-     * @param phone  手机号码
+     * @param user 用户信息 | userId 用户Id | phone 手机号码
      * @return 结果
      */
-    public String checkPhoneUnique(Long userId, String phone);
+    public String checkPhoneUnique(SysUser user);
 
     /**
      * 校验email是否唯一
      *
-     * @param userId 用户Id
-     * @param email  email
+     * @param user 用户信息 | userId 用户Id | email email
      * @return 结果
      */
-    public String checkEmailUnique(Long userId, String email);
+    public String checkEmailUnique(SysUser user);
 
     /**
      * 校验用户是否允许操作
      *
-     * @param userType 用户标识
+     * @param user 用户信息 | userType 用户标识
      */
-    public void checkUserAllowed(String userType);
+    public void checkUserAllowed(SysUser user);
 }
