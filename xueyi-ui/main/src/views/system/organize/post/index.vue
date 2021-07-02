@@ -409,7 +409,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getPost(row.postId).then(response => {
+      getPost({postId:row.postId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = "修改岗位"

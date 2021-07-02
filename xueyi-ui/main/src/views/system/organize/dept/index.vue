@@ -374,7 +374,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getDept(row.deptId).then(response => {
+      getDept({deptId: row.deptId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = "修改部门"
