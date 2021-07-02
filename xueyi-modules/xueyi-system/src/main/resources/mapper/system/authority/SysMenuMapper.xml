@@ -30,6 +30,11 @@
 		<result property="remark"           column="remark"         />
 	</resultMap>
 
+	<resultMap type="SysRoleSystemMenu" id="SysRoleSystemMenuResult">
+		<id     property="roleId"           column="role_id"            />
+		<result property="systemMenuId"     column="system_menu_id"     />
+	</resultMap>
+
 	<sql id="selectVo">
 		select m.menu_id, m.system_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, ifnull(perms, '') as perms, m.icon, m.create_time
 		from sys_menu m
@@ -38,12 +43,6 @@
 	<sql id="selectPermsVo">
 		select distinct m.perms
 		from sys_menu m
-				 left join sys_role_system_menu rsm on rsm.system_menu_id = m.menu_id
-				 left join sys_dept_role dr on dr.role_id = rsm.role_id
-				 left join sys_post_role pr on pr.role_id = rsm.role_id
-				 left join sys_user_role ur on ur.role_id = rsm.role_id
-				 left join sys_user u on u.dept_id = dr.dept_id or u.post_id = pr.post_id or u.user_id = ur.user_id
-				 left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
 	</sql>
 
 	<sql id="selectDistinctVo">
@@ -64,6 +63,11 @@
 				 left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
 	</sql>
 
+	<sql id="selectOnlyChildVo">
+		select m.menu_id,m.system_id
+		from sys_menu m
+				 left join sys_menu m2 on m2.parent_id = m.menu_id
+	</sql>
 	<sql id="checkVo">
 		select m.menu_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status,
 			   ifnull(perms, '') as perms
@@ -78,10 +82,18 @@
 	<!--未登录用户的登录校验方法，不允许加访问控制-->
 	<select id="checkLoginMenuPermission" parameterType="SysMenu" resultType="String">
 		<include refid="selectPermsVo"/>
-		where u.user_id = #{params.userId}
-		and m.status = 0 and ( m.tenant_id = #{enterpriseId} or m.tenant_id = 0 )
-		and r.status = 0 and r.tenant_id = #{enterpriseId}
-		and u.status = 0 and u.tenant_id = #{enterpriseId}
+		where  m.status = 0 and ( m.tenant_id = #{enterpriseId} or m.tenant_id = 0 ) and m.del_flag = 0
+		and m.menu_id in
+		<foreach collection="params.roleSystemPerms" index="index" item="item" open="(" separator="," close=")">
+			#{item.systemMenuId}
+		</foreach>
+	</select>
+
+	<select id="selectSystemMenuListOnlyChild" parameterType="SysMenu" resultType="SysMenuResult">
+		<include refid="selectOnlyChildVo"/>
+		where m2.menu_id is null
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
 	</select>
 
 	<select id="selectMenuTreeByUserId" parameterType="SysMenu" resultMap="SysMenuResult">

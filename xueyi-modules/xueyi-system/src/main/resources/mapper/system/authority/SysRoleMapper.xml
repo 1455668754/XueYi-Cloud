@@ -49,6 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from sys_role r
 	</sql>
 
+	<!--未登录用户的登录校验方法，不允许加访问控制-->
 	<select id="checkLoginRolePermission" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="permVo"/>
 		WHERE dr.dept_id = #{params.deptId} or pr.post_id = #{params.postId} or ur.user_id = #{params.userId} and r.del_flag = 0 and r.tenant_id = #{enterpriseId}

@@ -5,6 +5,7 @@ import java.util.List;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.role.domain.SysRoleSystemMenu;
 
 /**
  * 菜单表 数据层
@@ -16,11 +17,20 @@ public interface SysMenuMapper {
      * 根据用户Id查询权限（登录校验）
      * 登陆前验证，无需切片控制(service/impl层在com.xueyi.authority.service)
      *
-     * @param menu 菜单信息 | params.userId 用户Id | enterpriseId 租户Id
+     * @param menu 菜单信息 | params.roleSystemPerms 菜单Id组（List<SysRoleSystemMenu>） | enterpriseId 租户Id
      * @return 权限列表
      */
     public List<String> checkLoginMenuPermission(SysMenu menu);
 
+    /**
+     * 获取菜单范围信息 - 取出尾级模块|菜单
+     * 访问控制 m 租户查询
+     *
+     * @param menu 菜单信息 | null
+     * @return 菜单列表
+     */
+    @DataScope(edAlias = "m")
+    public List<SysMenu> selectSystemMenuListOnlyChild(SysMenu menu);
     /**
      * 查询系统全部菜单列表
      * 访问控制 m 租户查询

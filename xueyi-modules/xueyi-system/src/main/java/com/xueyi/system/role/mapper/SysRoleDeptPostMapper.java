@@ -17,7 +17,7 @@ public interface SysRoleDeptPostMapper {
      * 查询部门-岗位集合
      * 访问控制 rdp 租户查询
      *
-     * @param search 万用组件 | roleId 角色Id | deptPostId 部门-岗位Id
+     * @param search 万用组件 | roleId 角色Id
      * @return 结果
      */
     @DataScope(eAlias = "rdp")

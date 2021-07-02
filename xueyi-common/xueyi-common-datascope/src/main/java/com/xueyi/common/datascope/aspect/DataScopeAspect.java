@@ -149,15 +149,15 @@ public class DataScopeAspect {
                 }
                 // 2.自定数据权限
                 else if (DATA_SCOPE_CUSTOM.equals(dataScope) && (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias))) {
-                    if(StringUtils.isNotBlank(deptAlias) && StringUtils.isNotBlank(postAlias)){
+                    if (StringUtils.isNotBlank(deptAlias) && StringUtils.isNotBlank(postAlias)) {
                         sqlString.append(StringUtils.format(
                                 " OR ( {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ) ", deptAlias,
                                 role.getRoleId(), postAlias, role.getRoleId()));
-                    }else if(StringUtils.isNotBlank(deptAlias)){
+                    } else if (StringUtils.isNotBlank(deptAlias)) {
                         sqlString.append(StringUtils.format(
                                 " OR {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ", deptAlias,
                                 role.getRoleId(), postAlias, role.getRoleId()));
-                    }else if(StringUtils.isNotBlank(postAlias)){
+                    } else if (StringUtils.isNotBlank(postAlias)) {
                         sqlString.append(StringUtils.format(
                                 " OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ", deptAlias,
                                 role.getRoleId(), postAlias, role.getRoleId()));
@@ -185,30 +185,30 @@ public class DataScopeAspect {
                     }
                 }
             }
-        }
 
-        // 租户控制
-        if (StringUtils.isNotBlank(SedAlias) || StringUtils.isNotBlank(WedAlias) || StringUtils.isNotBlank(SWedAlias) || StringUtils.isNotBlank(SWLedAlias)){
-            //控制数据权限 分离
-            if (StringUtils.isNotBlank(deptAlias)) {
-                sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", deptAlias, enterprise.getEnterpriseId(), deptAlias));
-            }
-            if (StringUtils.isNotBlank(postAlias)) {
-                sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", postAlias, enterprise.getEnterpriseId(), postAlias));
-            }
-            if (StringUtils.isNotBlank(userAlias)) {
-                sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", userAlias, enterprise.getEnterpriseId(), userAlias));
-            }
-        }else{
-            //控制数据权限 分离
-            if (StringUtils.isNotBlank(deptAlias)) {
-                sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", deptAlias, enterprise.getEnterpriseId()));
-            }
-            if (StringUtils.isNotBlank(postAlias)) {
-                sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", postAlias, enterprise.getEnterpriseId()));
-            }
-            if (StringUtils.isNotBlank(userAlias)) {
-                sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", userAlias, enterprise.getEnterpriseId()));
+            // 租户控制
+            if (StringUtils.isNotBlank(SedAlias) || StringUtils.isNotBlank(WedAlias) || StringUtils.isNotBlank(SWedAlias) || StringUtils.isNotBlank(SWLedAlias)) {
+                //控制数据权限 分离
+                if (StringUtils.isNotBlank(deptAlias)) {
+                    sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", deptAlias, enterprise.getEnterpriseId(), deptAlias));
+                }
+                if (StringUtils.isNotBlank(postAlias)) {
+                    sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", postAlias, enterprise.getEnterpriseId(), postAlias));
+                }
+                if (StringUtils.isNotBlank(userAlias)) {
+                    sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", userAlias, enterprise.getEnterpriseId(), userAlias));
+                }
+            } else {
+                //控制数据权限 分离
+                if (StringUtils.isNotBlank(deptAlias)) {
+                    sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", deptAlias, enterprise.getEnterpriseId()));
+                }
+                if (StringUtils.isNotBlank(postAlias)) {
+                    sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", postAlias, enterprise.getEnterpriseId()));
+                }
+                if (StringUtils.isNotBlank(userAlias)) {
+                    sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", userAlias, enterprise.getEnterpriseId()));
+                }
             }
         }
 
@@ -339,11 +339,9 @@ public class DataScopeAspect {
     /**
      * 拼接权限sql前先清空params.dataScope参数防止注入
      */
-    private void clearDataScope(final JoinPoint joinPoint)
-    {
+    private void clearDataScope(final JoinPoint joinPoint) {
         Object params = joinPoint.getArgs()[0];
-        if (StringUtils.isNotNull(params) && params instanceof BaseEntity)
-        {
+        if (StringUtils.isNotNull(params) && params instanceof BaseEntity) {
             BaseEntity baseEntity = (BaseEntity) params;
             baseEntity.getParams().put(DATA_SCOPE, "");
             baseEntity.getParams().put(UPDATE_SCOPE, "");

@@ -3,6 +3,7 @@ package com.xueyi.system.authority.service;
 import java.util.List;
 
 import com.xueyi.system.api.authority.SysRole;
+import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.role.domain.SysRoleDeptPost;
 import com.xueyi.system.role.domain.SysRoleSystemMenu;
 
@@ -45,6 +46,13 @@ public interface ISysRoleService {
      * @return 系统-菜单对象信息集合
      */
     public List<SysRoleSystemMenu> selectMenuScopeById(SysRole role);
+
+    /**
+     * 根据角色Id获取菜单范围信息 - 获取尾级模块|菜单
+     *
+     * @return 结果
+     */
+    public List<SysMenu> selectSystemMenuListOnlyChild();
 
     /**
      * 根据角色Id获取数据范围信息

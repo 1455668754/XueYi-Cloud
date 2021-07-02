@@ -12,6 +12,7 @@ import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
+import com.xueyi.system.role.domain.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -123,7 +124,9 @@ public class SysLoginServiceImpl implements ISysLoginService {
             SysSearch search = new SysSearch();
             search.setEnterpriseId(menu.getEnterpriseId());
             search.getSearch().put("userId", menu.getParams().get("userId"));
-            List<Long> roleSystemPerms = roleSystemMenuMapper.selectSystemMenuPermsList(search);
+            List<SysRoleSystemMenu> roleSystemPerms = roleSystemMenuMapper.selectSystemMenuPermsList(search);
+            System.out.println(roleSystemPerms.size());
+            System.out.println(roleSystemPerms.get(0));
             menu.getParams().put("roleSystemPerms", roleSystemPerms);
             perms.addAll(checkLoginMenuPerms(menu));
         }

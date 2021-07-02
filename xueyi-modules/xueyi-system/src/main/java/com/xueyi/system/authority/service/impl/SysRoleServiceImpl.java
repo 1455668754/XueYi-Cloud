@@ -2,6 +2,9 @@ package com.xueyi.system.authority.service.impl;
 
 import java.util.*;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.role.domain.SysRoleDeptPost;
 import com.xueyi.system.role.domain.SysRoleSystemMenu;
@@ -22,9 +25,13 @@ import com.xueyi.system.authority.service.ISysRoleService;
  * @author xueyi
  */
 @Service
+@DS("#isolate")
 public class SysRoleServiceImpl implements ISysRoleService {
     @Autowired
     private SysRoleMapper roleMapper;
+
+    @Autowired
+    private SysMenuMapper menuMapper;
 
     @Autowired
     private SysRoleSystemMenuMapper roleSystemMenuMapper;
@@ -84,7 +91,19 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public List<SysRoleSystemMenu> selectMenuScopeById(SysRole role) {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", role.getRoleId());
-        return roleSystemMenuMapper.selectSystemMenuListOnlyChild(search);//@param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
+        search.getSearch().put("menus", selectSystemMenuListOnlyChild());
+        return roleSystemMenuMapper.selectMenuScopeByIdExclude(search);//@param search 万用组件 | roleId 角色Id | menus 菜单组（List<SysMenu>） has menuId | systemId
+    }
+
+    /**
+     * 根据角色Id获取菜单范围信息 - 获取尾级模块|菜单
+     *
+     * @return 结果
+     */
+    @Override
+    @DS("#main")
+    public List<SysMenu> selectSystemMenuListOnlyChild() {
+        return menuMapper.selectSystemMenuListOnlyChild(new SysMenu());
     }
 
     /**
@@ -97,7 +116,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public List<SysRoleDeptPost> selectDataScopeById(SysRole role) {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", role.getRoleId());
-        return roleDeptPostMapper.selectDeptPostList(search);//@param search 万用组件 | roleId 角色Id | deptPostId 部门-岗位Id
+        return roleDeptPostMapper.selectDeptPostList(search);//@param search 万用组件 | roleId 角色Id
     }
 
     /**
