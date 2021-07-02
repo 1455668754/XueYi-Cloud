@@ -30,11 +30,6 @@
 		<result property="remark"           column="remark"         />
 	</resultMap>
 
-	<resultMap type="SysRoleSystemMenu" id="SysRoleSystemMenuResult">
-		<id     property="roleId"           column="role_id"            />
-		<result property="systemMenuId"     column="system_menu_id"     />
-	</resultMap>
-
 	<sql id="selectVo">
 		select m.menu_id, m.system_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, ifnull(perms, '') as perms, m.icon, m.create_time
 		from sys_menu m
@@ -45,22 +40,10 @@
 		from sys_menu m
 	</sql>
 
-	<sql id="selectDistinctVo">
-		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
-						ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.sort, m.create_time
-		from sys_menu m
-	</sql>
-
 	<sql id="selectTreeVo">
 		select distinct m.menu_id, m.parent_id, m.menu_name, m.path, m.component, m.visible, m.status,
 						ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.sort, m.create_time
 		from sys_menu m
-				 left join sys_role_system_menu rsm on rsm.system_menu_id = m.menu_id
-				 left join sys_dept_role dr on dr.role_id = rsm.role_id
-				 left join sys_post_role pr on pr.role_id = rsm.role_id
-				 left join sys_user_role ur on ur.role_id = rsm.role_id
-				 left join sys_user u on u.dept_id = dr.dept_id or u.post_id = pr.post_id or u.user_id = ur.user_id
-				 left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
 	</sql>
 
 	<sql id="selectOnlyChildVo">
@@ -68,6 +51,7 @@
 		from sys_menu m
 				 left join sys_menu m2 on m2.parent_id = m.menu_id
 	</sql>
+
 	<sql id="checkVo">
 		select m.menu_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status,
 			   ifnull(perms, '') as perms
@@ -83,13 +67,18 @@
 	<select id="checkLoginMenuPermission" parameterType="SysMenu" resultType="String">
 		<include refid="selectPermsVo"/>
 		where  m.status = 0 and ( m.tenant_id = #{enterpriseId} or m.tenant_id = 0 ) and m.del_flag = 0
-		and m.menu_id in
-		<foreach collection="params.roleSystemPerms" index="index" item="item" open="(" separator="," close=")">
-			#{item.systemMenuId}
-		</foreach>
+		<if test="null != params.roleSystemPerms and params.roleSystemPerms.size > 0">
+			and m.menu_id in
+			<foreach collection="params.roleSystemPerms" index="index" item="item" open="(" separator="," close=")">
+				#{item.systemMenuId}
+			</foreach>
+		</if>
+		<if test="null == params.roleSystemPerms or params.roleSystemPerms.size == 0">
+			and 1 != 1
+		</if>
 	</select>
 
-	<select id="selectSystemMenuListOnlyChild" parameterType="SysMenu" resultType="SysMenuResult">
+	<select id="selectSystemMenuListOnlyChild" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectOnlyChildVo"/>
 		where m2.menu_id is null
 		<!-- 数据范围过滤 -->
@@ -98,7 +87,24 @@
 
 	<select id="selectMenuTreeByUserId" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectTreeVo"/>
-		where m.menu_type in ('M', 'C') and m.status = 0 and r.status = 0 and u.user_id = #{params.userId}
+		where m.menu_type in ('M', 'C') and m.status = 0
+		<if test="null != params.roleSystemPerms and params.roleSystemPerms.size > 0">
+			and m.menu_id in
+			<foreach collection="params.roleSystemPerms" index="index" item="item" open="(" separator="," close=")">
+				#{item.systemMenuId}
+			</foreach>
+		</if>
+		<if test="null == params.roleSystemPerms or params.roleSystemPerms.size == 0">
+			and 1 != 1
+		</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
+	<select id="selectMenuTreeAll" parameterType="SysMenu" resultMap="SysMenuResult">
+		<include refid="selectTreeVo"/>
+		where m.menu_type in ('M', 'C') and m.status = 0
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		order by m.parent_id, m.sort
@@ -111,14 +117,6 @@
 		where 1 = 1
 		<if test="menuId != null">	AND m.menu_id != #{menuId}	</if>
 		<if test="status != null and status != ''">	AND m.status = #{status}	</if>
-		<!-- 数据范围过滤 -->
-		${params.dataScope}
-		order by m.parent_id, m.sort
-	</select>
-
-	<select id="selectMenuTreeAll" parameterType="SysMenu" resultMap="SysMenuResult">
-		<include refid="selectDistinctVo"/>
-		where m.menu_type in ('M', 'C') and m.status = 0
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		order by m.parent_id, m.sort

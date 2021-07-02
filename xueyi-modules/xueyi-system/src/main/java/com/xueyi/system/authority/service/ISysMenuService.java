@@ -2,7 +2,9 @@ package com.xueyi.system.authority.service;
 
 import java.util.List;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.role.domain.SysRoleSystemMenu;
 import com.xueyi.system.utils.vo.RouterVo;
 
 /**
@@ -21,6 +23,14 @@ public interface ISysMenuService {
      * @return 菜单列表
      */
     public List<SysMenu> selectMenuTreeByUserId(Long userId, Long systemId, String userType);
+
+    /**
+     * 根据用户Id查询模块&&菜单
+     *
+     * @param userId 用户Id
+     * @return 模块&&菜单列表
+     */
+    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(Long userId);
 
     /**
      * 构建前端路由所需要的菜单

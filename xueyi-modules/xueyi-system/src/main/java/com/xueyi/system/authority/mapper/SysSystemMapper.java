@@ -26,7 +26,7 @@ public interface SysSystemMapper {
      * 查询子系统模块列表
      * 访问控制 s 租户查询
      *
-     * @param sysSystem 子系统模块 | params.userId 当前用户Id
+     * @param sysSystem 子系统模块 | params.roleSystemPerms 菜单Id组（List<SysRoleSystemMenu>）
      * @return 子系统模块集合
      */
     @DataScope(edAlias = "s")

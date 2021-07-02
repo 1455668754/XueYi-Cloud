@@ -11,8 +11,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * 获取并返回租户的数据源策略
+ *
+ * @author xueyi
+ */
 @Component
-public class DsShiroExpressionProcessor extends DsProcessor {
+public class DsIsolateExpressionProcessor extends DsProcessor {
 
     private static final String ISOLATE_PREFIX = "#isolate";
 

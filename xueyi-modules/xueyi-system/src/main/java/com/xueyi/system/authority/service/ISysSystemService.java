@@ -1,7 +1,9 @@
 package com.xueyi.system.authority.service;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.authority.SysSystem;
 import com.xueyi.system.authority.domain.SystemMenuVo;
+import com.xueyi.system.role.domain.SysRoleSystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;
 
 import java.util.List;
@@ -21,6 +23,14 @@ public interface ISysSystemService {
      * @return 子系统模块集合
      */
     public List<SysSystem> selectSystemViewList(Long userId, String userType);
+
+    /**
+     * 根据用户Id查询模块&&菜单
+     *
+     * @param userId 用户Id
+     * @return 模块&&菜单列表
+     */
+    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(Long userId);
 
     /**
      * 查询子系统模块

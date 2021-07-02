@@ -1,13 +1,17 @@
 package com.xueyi.system.authority.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.authority.SysSystem;
 import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysSystemMapper;
 import com.xueyi.system.authority.service.ISysSystemService;
+import com.xueyi.system.role.domain.SysRoleSystemMenu;
+import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
  * @author xueyi
  */
 @Service
+@DS("#main")
 public class SysSystemServiceImpl implements ISysSystemService {
 
     @Autowired
@@ -30,6 +35,12 @@ public class SysSystemServiceImpl implements ISysSystemService {
 
     @Autowired
     private SysSystemMapper systemMapper;
+
+    @Autowired
+    private SysRoleSystemMenuMapper roleSystemMenuMapper;
+
+    @Autowired
+    private ISysSystemService systemService;
 
     /**
      * 查询首页可展示子系统模块列表
@@ -40,12 +51,26 @@ public class SysSystemServiceImpl implements ISysSystemService {
      */
     @Override
     public List<SysSystem> selectSystemViewList(Long userId, String userType) {
-        SysSystem sysSystem = new SysSystem();
         if (SysUser.isAdmin(userType)) {
-            return systemMapper.selectSystemViewAdminList(sysSystem);
+            return systemMapper.selectSystemViewAdminList(new SysSystem());
         }
-        sysSystem.getParams().put("userId", userId);
+        SysSystem sysSystem = new SysSystem();
+        sysSystem.getParams().put("roleSystemPerms", systemService.selectSystemMenuListByUserId(userId));
         return systemMapper.selectSystemViewList(sysSystem);
+    }
+
+    /**
+     * 根据用户Id查询模块&&菜单
+     *
+     * @param userId 用户Id
+     * @return 模块&&菜单列表
+     */
+    @Override
+    @DS("#isolate")
+    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(Long userId) {
+        SysSearch search = new SysSearch();
+        search.getSearch().put("userId", userId);
+        return roleSystemMenuMapper.selectSystemMenuListByUserId(search);//@param search 万用组件 | userId 用户Id
     }
 
     /**

@@ -55,7 +55,7 @@ public interface SysMenuMapper {
      * 根据用户Id查询菜单
      * 访问控制 m 租户查询
      *
-     * @param menu 菜单信息 | params.userId 用户Id | systemId 系统Id
+     * @param menu 菜单信息 | params.roleSystemPerms 菜单Id组（List<SysRoleSystemMenu>） | systemId 系统Id
      * @return 菜单列表
      */
     @DataScope(SedAlias = "m")

@@ -36,6 +36,13 @@
         and u.status = 0 and u.tenant_id = #{enterpriseId}
     </select>
 
+    <select id="selectSystemMenuListByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">
+        <include refid="selectPermsVo"/>
+        where r.status = 0 and u.user_id = #{search.userId}
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
     <select id="selectSystemMenuList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">
         <include refid="selectVo"/>
         where 1 = 1
@@ -51,14 +58,20 @@
 
     <select id="selectMenuScopeByIdExclude" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">
         <include refid="selectVo"/>
-        where rsm.role_id = #{search.roleId} and rsm.system_menu_id in
-        <foreach collection="search.menus" index="index" item="item" open="(" separator="," close=")">
-            #{item.menuId}
-        </foreach>
-        and rsm.system_menu_id not in
-        <foreach collection="search.menus" index="index" item="item" open="(" separator="," close=")">
-            #{item.systemId}
-        </foreach>
+        where rsm.role_id = #{search.roleId}
+        <if test="null != search.menus and search.menus.size > 0">
+            and rsm.system_menu_id in
+            <foreach collection="search.menus" index="index" item="item" open="(" separator="," close=")">
+                #{item.menuId}
+            </foreach>
+            and rsm.system_menu_id not in
+            <foreach collection="search.menus" index="index" item="item" open="(" separator="," close=")">
+                #{item.systemId}
+            </foreach>
+        </if>
+        <if test="null == search.menus or search.menus.size == 0">
+            and 1 != 1
+        </if>
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>

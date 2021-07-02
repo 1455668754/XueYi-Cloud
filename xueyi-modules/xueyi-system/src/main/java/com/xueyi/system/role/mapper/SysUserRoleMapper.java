@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.utilTool.SysSearch;
-
 import com.xueyi.system.role.domain.SysUserRole;
 
 /**

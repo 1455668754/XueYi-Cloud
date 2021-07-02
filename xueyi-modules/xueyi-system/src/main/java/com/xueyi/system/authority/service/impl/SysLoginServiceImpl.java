@@ -43,6 +43,10 @@ public class SysLoginServiceImpl implements ISysLoginService {
 
     @Autowired
     private SysRoleSystemMenuMapper roleSystemMenuMapper;
+
+    @Autowired
+    private ISysLoginService loginService;
+
     /**
      * 通过企业账号查询租户信息（登录校验）
      *
@@ -94,6 +98,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @param role 角色信息 | params.deptId 部门Id | params.postId 岗位Id | params.userId 用户Id | enterpriseId 租户Id
      * @return 权限列表
      */
+    @Override
     public Set<String> checkLoginRolePerms(SysRole role) {
         List<SysRole> perms = roleMapper.checkLoginRolePermission(role);
         Set<String> permsSet = new HashSet<>();
@@ -125,10 +130,8 @@ public class SysLoginServiceImpl implements ISysLoginService {
             search.setEnterpriseId(menu.getEnterpriseId());
             search.getSearch().put("userId", menu.getParams().get("userId"));
             List<SysRoleSystemMenu> roleSystemPerms = roleSystemMenuMapper.selectSystemMenuPermsList(search);
-            System.out.println(roleSystemPerms.size());
-            System.out.println(roleSystemPerms.get(0));
             menu.getParams().put("roleSystemPerms", roleSystemPerms);
-            perms.addAll(checkLoginMenuPerms(menu));
+            perms.addAll(loginService.checkLoginMenuPerms(menu));
         }
         return perms;
     }
@@ -139,6 +142,8 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @param menu 菜单信息 | params.userId 用户Id | enterpriseId 租户Id
      * @return 权限列表
      */
+    @Override
+    @DS("main")
     public Set<String> checkLoginMenuPerms(SysMenu menu) {
         List<String> perms = menuMapper.checkLoginMenuPermission(menu);
         Set<String> permsSet = new HashSet<>();

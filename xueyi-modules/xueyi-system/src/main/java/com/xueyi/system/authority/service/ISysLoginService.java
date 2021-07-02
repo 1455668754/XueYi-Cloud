@@ -42,6 +42,14 @@ public interface ISysLoginService {
     public Set<String> getRolePermission(String sourceName, SysRole role, String userType);
 
     /**
+     * 根据用户Id查询角色（登录校验）
+     *
+     * @param role 角色信息 | params.deptId 部门Id | params.postId 岗位Id | params.userId 用户Id | enterpriseId 租户Id
+     * @return 权限列表
+     */
+    public Set<String> checkLoginRolePerms(SysRole role);
+
+    /**
      * 获取菜单数据权限（登录校验）
      *
      * @param menu 菜单信息 | params.userId 用户Id | enterpriseId 租户Id
@@ -50,4 +58,12 @@ public interface ISysLoginService {
      * @return 菜单权限信息
      */
     public Set<String> getMenuPermission(String sourceName, SysMenu menu, String userType);
+
+    /**
+     * 根据用户Id查询权限（登录校验）
+     *
+     * @param menu 菜单信息 | params.userId 用户Id | enterpriseId 租户Id
+     * @return 权限列表
+     */
+    public Set<String> checkLoginMenuPerms(SysMenu menu);
 }

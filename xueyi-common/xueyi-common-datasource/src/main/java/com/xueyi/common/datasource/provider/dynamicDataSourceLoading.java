@@ -13,6 +13,11 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 从数据库中获取数据库连接信息
+ *
+ * @author xueyi
+ */
 @Configuration
 public class dynamicDataSourceLoading {
     @Value("${spring.datasource.dynamic.datasource.master.driver-class-name}")

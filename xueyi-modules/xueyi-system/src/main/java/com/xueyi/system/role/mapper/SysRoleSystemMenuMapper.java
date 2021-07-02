@@ -13,14 +13,23 @@ import java.util.List;
  */
 public interface SysRoleSystemMenuMapper {
     /**
-     * 查询系统-菜单集合
+     * 获取菜单数据权限（登录校验）
      * 访问控制 rsm 租户查询
      *
      * @param search 万用组件 | userId 用户Id | enterpriseId 租户Id
      * @return 结果
      */
-    @DataScope(eAlias = "rsm")
     public List<SysRoleSystemMenu> selectSystemMenuPermsList(SysSearch search);
+
+    /**
+     * 根据用户Id查询模块|菜单（构建前端路由 | 前端产品中心）
+     * 访问控制 rsm 租户查询
+     *
+     * @param search 万用组件 | userId 用户Id | systemId 系统Id
+     * @return 结果
+     */
+    @DataScope(eAlias = "rsm")
+    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(SysSearch search);
 
     /**
      * 查询系统-菜单集合
@@ -33,9 +42,8 @@ public interface SysRoleSystemMenuMapper {
     public List<SysRoleSystemMenu> selectSystemMenuList(SysSearch search);
 
     /**
-     * 查询系统-菜单集合
+     * 查询系统-菜单集合 | 仅获取没有子集的菜单或者系统信息
      * 访问控制 rsm 租户查询
-     * 仅获取没有子集的菜单或者系统信息
      *
      * @param search 万用组件 | roleId 角色Id | menus 菜单组（List<SysMenu>） has menuId | systemId
      * @return 结果
