@@ -48,6 +48,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Autowired
     private SysUserRoleMapper userRoleMapper;
 
+    @Autowired
+    private ISysRoleService roleService;
+
     /**
      * 查询所有角色
      *
@@ -91,7 +94,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public List<SysRoleSystemMenu> selectMenuScopeById(SysRole role) {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", role.getRoleId());
-        search.getSearch().put("menus", selectSystemMenuListOnlyChild());
+        search.getSearch().put("menus", roleService.selectSystemMenuListOnlyChild());
         return roleSystemMenuMapper.selectMenuScopeByIdExclude(search);//@param search 万用组件 | roleId 角色Id | menus 菜单组（List<SysMenu>） has menuId | systemId
     }
 

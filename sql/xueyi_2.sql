@@ -318,19 +318,10 @@ values
                                    (20024, 2, -1, 20020, '数据源配置删除', '', '', 'F', '0', 'tenant:source:remove',          '#', 4, 0, ''),
                                    (20025, 2, -1, 20020, '数据源配置导出', '', '', 'F', '0', 'tenant:source:export',          '#', 5, 0, ''),
               -- 二级菜单
-              (20030, 2, -1, 20000, 'Nacos配置', 'nacos',   'tenant/nacos/index',      'C', '0',  'tenant:nacos:list',      '#',   1, 0, 'Nacos配置菜单'),
-                                   -- Nacos配置按钮
-                                   (20031, 2, -1, 20030, '配置查询', '', '', 'F', '0', 'tenant:nacos:query',           '#', 1, 0, ''),
-                                   (20032, 2, -1, 20030, '配置新增', '', '', 'F', '0', 'tenant:nacos:add',             '#', 2, 0, ''),
-                                   (20033, 2, -1, 20030, '配置修改', '', '', 'F', '0', 'tenant:nacos:edit',            '#', 3, 0, ''),
-                                   (20034, 2, -1, 20030, '配置删除', '', '', 'F', '0', 'tenant:nacos:remove',          '#', 4, 0, ''),
-                                   (20035, 2, -1, 20030, '配置导出', '', '', 'F', '0', 'tenant:nacos:export',          '#', 5, 0, ''),
-              -- 二级菜单
-              (20040, 2, -1, 20000, '读写分离配置', 'separation',   'tenant/separation/index',      'C', '0',  'tenant:separation:list',      '#',   1, 0, '数据源菜单'),
+              (20030, 2, -1, 20000, '主从配置', 'separation',   'tenant/separation/index',      'C', '0',  'tenant:separation:list',      '#',   1, 0, '主从配置菜单'),
                                    -- 读写分离按钮 SQL
-                                   (20041, 2, -1, 20040, '读写分离配置查询', '', '', 'F', '0', 'tenant:separation:query',           '#', 1, 0, ''),
-                                   (20042, 2, -1, 20040, '读写分离配置配置', '', '', 'F', '0', 'tenant:separation:edit',            '#', 2, 0, ''),
-
+                                   (20031, 2, -1, 20030, '主从配置查询', '', '', 'F', '0', 'tenant:separation:query',           '#', 1, 0, ''),
+                                   (20032, 2, -1, 20030, '主从配置配置', '', '', 'F', '0', 'tenant:separation:edit',            '#', 2, 0, ''),
        -- 一级菜单
        (20100, 2, -1, 0, '系统管理', 'system',     null, 'M', '0', '', 'xy_setting',      3, 0, '系统管理目录'),
               (20110, 2, -1, 20100, '字典管理', 'dict',   'system/system/dict/index',        'C', '0',  'system:dict:list',      'xy_dict',   1, 0, '字典管理菜单'),

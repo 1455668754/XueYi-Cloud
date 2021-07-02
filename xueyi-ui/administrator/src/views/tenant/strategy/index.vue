@@ -94,8 +94,11 @@
       <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
       <el-table-column label="策略Id" align="center" prop="strategyId" class-name="allowDrag"/>
       <el-table-column label="策略名称" align="center" prop="name" class-name="allowDrag"/>
-      <el-table-column label="数据源数量" align="center" prop="amount" class-name="allowDrag"/>
-      <el-table-column label="显示顺序" align="center" prop="sort" class-name="allowDrag"/>
+      <el-table-column label="数据源数量" align="center" prop="sourceAmount" class-name="allowDrag">
+        <template slot-scope="scope">
+          <el-tag>{{ scope.row.sourceAmount }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" class-name="allowDrag"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
         <template slot-scope="scope">
@@ -302,7 +305,7 @@ export default {
       this.form = {
         strategyId: null,
         name: null,
-        amount: 0,
+        sourceAmount: 0,
         sort: 0,
         status: '0',
         values: [],

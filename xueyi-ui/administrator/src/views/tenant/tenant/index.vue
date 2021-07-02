@@ -117,13 +117,21 @@
     </el-row>
 
     <el-table v-loading="loading" :data="tenantList" @selection-change="handleSelectionChange" ref="dataTable"
-              row-key="tenantId"
-    >
+              row-key="tenantId">
       <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-      <el-table-column label="租户Id" align="center" prop="tenantId" class-name="allowDrag"/>
+      <el-table-column label="租户Id" align="center" prop="tenantId" class-name="allowDrag">
+        <template slot-scope="scope">
+          <el-tag type="danger">{{ scope.row.tenantId }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="租户账号" align="center" prop="tenantName" class-name="allowDrag"/>
       <el-table-column label="系统名称" align="center" prop="tenantSystemName" class-name="allowDrag"/>
       <el-table-column label="租户名称" align="center" prop="tenantNick" class-name="allowDrag"/>
+      <el-table-column label="数据策略" align="center" prop="strategy.name" class-name="allowDrag">
+        <template slot-scope="scope">
+          <el-tag type="success">{{ scope.row.strategy.name }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="租户logo" align="center" prop="tenantLogo" class-name="allowDrag">
         <template slot-scope="scope">
           <el-image
@@ -133,7 +141,6 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="可修改次数" align="center" prop="tenantNameFrequency" class-name="allowDrag"/>
       <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
         <template slot-scope="scope">
           <el-switch
@@ -161,6 +168,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tenant:tenant:remove']"
+            v-if="scope.row.isChange === 'N'"
           >删除
           </el-button>
         </template>
@@ -177,87 +185,64 @@
 
     <!-- 添加或修改租户信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="租户账号" prop="tenantName">
-          <el-input v-model="form.tenantName" placeholder="请输入租户账号"/>
-        </el-form-item>
-        <el-form-item label="系统名称" prop="tenantSystemName">
-          <el-input v-model="form.tenantSystemName" placeholder="请输入系统名称"/>
-        </el-form-item>
-        <el-form-item label="租户名称" prop="tenantNick">
-          <el-input v-model="form.tenantNick" placeholder="请输入租户名称"/>
-        </el-form-item>
-        <el-form-item label="租户账号修改次数" prop="tenantNameFrequency">
-          <el-input v-model="form.tenantNameFrequency" placeholder="请输入租户账号修改次数"/>
-        </el-form-item>
-        <el-form-item label="状态">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
-        </el-form-item>
-        <el-divider content-position="center">数据源策略信息</el-divider>
-        <div class="value-set">
-          <div class="value-title">策略：</div>
-          <div class="value-add">
-            <el-button type="primary" plain @click="valueAdd">添加策略</el-button>
-          </div>
-          <el-table :data="form.values">
-            <el-table-column label="策略名称" min-width="40%" align="center">
-              <template slot-scope="scope">
-                <el-select v-model="scope.row.strategyId" placeholder="请选择" @change="valueChange(scope.row.strategyId)">
-                  <el-option
-                    v-for="item in strategyList"
-                    :key="item.strategyId"
-                    :label="item.name"
-                    :value="item.strategyId"
-                  >
-                  </el-option>
-                </el-select>
-              </template>
-            </el-table-column>
-            <el-table-column label="主策略" align="center" min-width="20%" prop="isMain">
-              <template slot-scope="scope">
-                <el-switch
-                  v-model="scope.row.isMain"
-                  active-value="Y"
-                  inactive-value="N"
-                  :disabled="form.hasMain === true && scope.row.isMain=== 'N'"
-                  @change="valueMainChange(scope.row.isMain)"
-                ></el-switch>
-              </template>
-            </el-table-column>
-            <el-table-column label="策略状态" align="center" min-width="20%" prop="status">
-              <template slot-scope="scope">
-                <el-switch
-                  v-model="scope.row.status"
-                  active-value="0"
-                  inactive-value="1"
-                  disabled
-                ></el-switch>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" min-width="20%" align="center">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="text"
-                  icon="el-icon-delete"
-                  @click="valueDelete(scope.row)"
-                  v-hasPermi="['tenant:tenant:edit']"
-                >删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="租户账号" prop="tenantName">
+              <el-input v-model="form.tenantName" placeholder="请输入租户账号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="策略名称" prop="tenantName">
+              <el-select v-model="form.strategyId" placeholder="请选择" :disabled="form.tenantId != undefined">
+                <el-option
+                  v-for="item in strategyList"
+                  :key="item.strategyId"
+                  :label="item.name"
+                  :value="item.strategyId"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="租户名称" prop="tenantNick">
+              <el-input v-model="form.tenantNick" placeholder="请输入租户名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="系统名称" prop="tenantSystemName">
+              <el-input v-model="form.tenantSystemName" placeholder="请输入系统名称"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="状态">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{ dict.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="可修改次数" prop="tenantNameFrequency">
+              <el-input-number v-model="form.tenantNameFrequency" controls-position="right" :min="0" :precision="0"
+                               :max="100" size="small"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -268,10 +253,9 @@
 </template>
 
 <script>
-import { listTenant, getTenant, delTenant, addTenant, updateTenant, updateTenantSort } from '@/api/tenant/tenant'
+import {listTenant, getTenant, delTenant, addTenant, updateTenant, updateTenantSort} from '@/api/tenant/tenant'
 import Sortable from 'sortablejs'
-import { listStrategyExclude } from '@/api/tenant/strategy'
-import { updateSource } from '@/api/tenant/source'
+import {listStrategyExclude} from '@/api/tenant/strategy'
 
 export default {
   name: 'Tenant',
@@ -320,13 +304,13 @@ export default {
       // 表单校验
       rules: {
         tenantName: [
-          { required: true, message: '租户账号不能为空', trigger: 'blur' }
+          {required: true, message: '租户账号不能为空', trigger: 'blur'}
         ],
         tenantSystemName: [
-          { required: true, message: '系统名称不能为空', trigger: 'blur' }
+          {required: true, message: '系统名称不能为空', trigger: 'blur'}
         ],
         tenantNick: [
-          { required: true, message: '租户名称不能为空', trigger: 'blur' }
+          {required: true, message: '租户名称不能为空', trigger: 'blur'}
         ]
       }
     }
@@ -360,6 +344,7 @@ export default {
     reset() {
       this.form = {
         tenantId: null,
+        strategyId: null,
         tenantName: null,
         tenantSystemName: null,
         tenantNick: null,
@@ -391,6 +376,7 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
+    /** 获取可用策略组 */
     getStrategyList() {
       listStrategyExclude().then(response => {
         this.strategyList = response.data
@@ -407,13 +393,8 @@ export default {
     handleUpdate(row) {
       this.reset()
       this.getStrategyList()
-      getTenant({ tenantId: row.tenantId }).then(response => {
+      getTenant({tenantId: row.tenantId}).then(response => {
         this.form = response.data
-        for (let i = 0; i < this.form.values.length; i++) {
-          if (this.form.values[i].isMain === 'Y') {
-            this.form.hasMain = true
-          }
-        }
         this.open = true
         this.title = '修改租户信息'
       })
@@ -427,28 +408,26 @@ export default {
     /** 提交按钮 */
     submitForm() {
       this.$refs['form'].validate(valid => {
-        if (this.valueCheck()) {
-          if (valid) {
-            if (this.form.tenantId != null) {
-              if (this.form.isChange === 'N') {
-                updateTenant(this.form).then(response => {
-                  this.msgSuccess('修改成功')
-                  this.open = false
-                  this.getList()
-                })
-              } else {
-                this.$message({
-                  message: '系统租户不允许进行修改操作',
-                  type: 'warning'
-                })
-              }
-            } else {
-              addTenant(this.form).then(response => {
-                this.msgSuccess('新增成功')
+        if (valid) {
+          if (this.form.tenantId != null) {
+            if (this.form.isChange === 'N') {
+              updateTenant(this.form).then(response => {
+                this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               })
+            } else {
+              this.$message({
+                message: '系统租户不允许进行修改操作',
+                type: 'warning'
+              })
             }
+          } else {
+            addTenant(this.form).then(response => {
+              this.msgSuccess('新增成功')
+              this.open = false
+              this.getList()
+            })
           }
         }
       })
@@ -462,7 +441,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delTenant(that.updateParamIds(tenantIds))
       }).then(() => {
         this.getList()
@@ -493,73 +472,6 @@ export default {
         this.msgSuccess('保存成功')
       }).catch(() => {
       })
-    },
-    valueAdd() {
-      const newData = {
-        strategyId: '',
-        isMain: 'N',
-        status: '1'
-      }
-      this.form.values.push(newData)
-    },
-    valueChange(id) {
-      const writeData = this.strategyList.filter(function(item) {
-        return item.strategyId === id
-      })
-      let data = this.form.values.filter(function(item) {
-        return item.strategyId === id
-      })
-      data[0].status = writeData[0].status
-    },
-    valueMainChange(isMain) {
-      this.form.hasMain = isMain !== 'N'
-    },
-    valueDelete(row) {
-      if (row !== undefined) {
-        const index = this.form.values.indexOf(row)
-        this.form.values.splice(index, 1)
-      }
-    },
-    valueCheck() {
-      let key = 0
-      for (let i = 0; i < this.form.values.length; i++) {
-        let increase = 0
-        if (this.form.values[i].isMain === 'Y') {
-          key++
-          increase = 1
-        }
-        for (let j = 0; j < this.form.values.length; j++) {
-          if (this.form.values[i].strategyId === null || this.form.values[i].strategyId === '') {
-            if (this.form.values[i].isMain === 'Y') {
-              this.form.hasMain = false
-            }
-            this.form.values.splice(i--, 1)
-            if (increase === 1) {
-              key--
-            }
-            break
-          } else if (i !== j && this.form.values[i].strategyId === this.form.values[j].strategyId) {
-            if (this.form.values[j].isMain === 'Y') {
-              this.form.hasMain = false
-            }
-            this.form.values.splice(j--, 1)
-          }
-        }
-      }
-      if (this.form.values.length === 0) {
-        this.$message({
-          message: '有效策略数为0，请添加',
-          type: 'warning'
-        })
-        return false
-      } else if (key !== 1) {
-        this.$message({
-          message: '主策略有且只能有一个，请检查',
-          type: 'warning'
-        })
-        return false
-      }
-      return true
     }
   },
   mounted() {
@@ -575,21 +487,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.value-set {
-  .value-title {
-    float: left;
-    line-height: 40px;
-  }
-
-  .value-add {
-    float: right;
-    margin-bottom: 10px;
-  }
-}
-
-.value-input {
-  text-align: center
-}
-</style>
