@@ -41,26 +41,26 @@ public interface ISysRoleService {
     /**
      * 根据角色Id获取菜单范围信息
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 系统-菜单对象信息集合
      */
-    public List<SysRoleSystemMenu> selectMenuScopeById(Long roleId);
+    public List<SysRoleSystemMenu> selectMenuScopeById(SysRole role);
 
     /**
      * 根据角色Id获取数据范围信息
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 部门-岗位对象信息集合
      */
-    public List<SysRoleDeptPost> selectDataScopeById(Long roleId);
+    public List<SysRoleDeptPost> selectDataScopeById(SysRole role);
 
     /**
      * 通过角色Id查询角色使用数量
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 结果
      */
-    public int useCountByRoleId(Long roleId);
+    public int useCountByRoleId(SysRole role);
 
     /**
      * 新增保存角色信息

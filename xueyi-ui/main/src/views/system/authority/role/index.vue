@@ -470,13 +470,13 @@ export default {
     },
     /** 根据角色Id查询系统-菜单树结构 */
     getMenuScope(roleId) {
-      return getMenuScope(roleId).then(response => {
+      return getMenuScope({roleId: roleId}).then(response => {
         return response
       })
     },
     /** 根据角色Id查询部门-岗位树结构 */
     getDataScope(roleId) {
-      return getDataScope(roleId).then(response => {
+      return getDataScope({roleId: roleId}).then(response => {
         return response
       })
     },
@@ -601,7 +601,7 @@ export default {
       this.reset()
       this.getSystemMenuTreeSelect()
       const menuScope = this.getMenuScope(row.roleId)
-      getRole(row.roleId).then(response => {
+      getRole({roleId: row.roleId}).then(response => {
         this.form = response.data
         menuScope.then(res => {
           this.$refs.systemMenu.setCheckedKeys(Array.from(res.data, x => x.systemMenuId))
@@ -615,7 +615,7 @@ export default {
       this.reset()
       this.getDeptPostTreeSelect()
       const dataScope = this.getDataScope(row.roleId)
-      getRole(row.roleId).then(response => {
+      getRole({roleId: row.roleId}).then(response => {
         this.form = response.data
         this.openDataScope = true
         this.$nextTick(() => {

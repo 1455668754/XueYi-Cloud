@@ -37,34 +37,36 @@ export function updateRole(data) {
 }
 
 // 角色菜单权限获取
-export function getMenuScope(roleId) {
+export function getMenuScope(query) {
   return request({
-    url: '/system/role/menuScope/'+roleId,
-    method: 'get'
+    url: '/system/role/menuScope',
+    method: 'get',
+    params: query
   })
 }
 
 // 角色数据权限获取
-export function getDataScope(roleId) {
+export function getDataScope(query) {
   return request({
-    url: '/system/role/dataScope/'+roleId,
-    method: 'get'
+    url: '/system/role/dataScope',
+    method: 'get',
+    params: query
   })
 }
 
-// 角色菜单权限
+// 修改保存角色菜单权限
 export function menuScope(data) {
   return request({
-    url: '/system/role/menuScope/',
+    url: '/system/role/menuScope/save',
     method: 'put',
     data: data
   })
 }
 
-// 角色数据权限
+// 修改保存角色数据权限
 export function dataScope(data) {
   return request({
-    url: '/system/role/dataScope/',
+    url: '/system/role/dataScope/save',
     method: 'put',
     data: data
   })

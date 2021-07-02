@@ -77,39 +77,39 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 根据角色Id获取菜单范围信息
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 系统-菜单对象信息集合
      */
     @Override
-    public List<SysRoleSystemMenu> selectMenuScopeById(Long roleId) {
+    public List<SysRoleSystemMenu> selectMenuScopeById(SysRole role) {
         SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", roleId);
+        search.getSearch().put("roleId", role.getRoleId());
         return roleSystemMenuMapper.selectSystemMenuListOnlyChild(search);//@param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
     }
 
     /**
      * 根据角色Id获取数据范围信息
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 部门-岗位对象信息集合
      */
     @Override
-    public List<SysRoleDeptPost> selectDataScopeById(Long roleId) {
+    public List<SysRoleDeptPost> selectDataScopeById(SysRole role) {
         SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", roleId);
+        search.getSearch().put("roleId", role.getRoleId());
         return roleDeptPostMapper.selectDeptPostList(search);//@param search 万用组件 | roleId 角色Id | deptPostId 部门-岗位Id
     }
 
     /**
      * 通过角色Id查询角色使用数量
      *
-     * @param roleId 角色Id
+     * @param role 角色信息 | roleId 角色Id
      * @return 结果
      */
     @Override
-    public int useCountByRoleId(Long roleId) {
+    public int useCountByRoleId(SysRole role) {
         SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", roleId);
+        search.getSearch().put("roleId", role.getRoleId());
         int cr;
         // 1.通过角色Id查询部门-角色使用数量
         cr = deptRoleMapper.countDeptRoleByRoleId(search);//@param search 万用组件 | roleId 角色Id

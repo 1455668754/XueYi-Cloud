@@ -60,18 +60,18 @@ public class SysRoleController extends BaseController {
      * 根据角色Id获取菜单范围信息
      */
     @PreAuthorize(hasPermi = "system:role:query")
-    @GetMapping(value = "/menuScope/{roleId}")
-    public AjaxResult getMenuScope(@PathVariable Long roleId) {
-        return AjaxResult.success(roleService.selectMenuScopeById(roleId));
+    @GetMapping(value = "/menuScope")
+    public AjaxResult getMenuScope(SysRole role) {
+        return AjaxResult.success(roleService.selectMenuScopeById(role));
     }
 
     /**
      * 根据角色Id获取数据范围信息
      */
     @PreAuthorize(hasPermi = "system:role:query")
-    @GetMapping(value = "/dataScope/{roleId}")
-    public AjaxResult getDataScope(@PathVariable Long roleId) {
-        return AjaxResult.success(roleService.selectDataScopeById(roleId));
+    @GetMapping(value = "/dataScope")
+    public AjaxResult getDataScope(SysRole role) {
+        return AjaxResult.success(roleService.selectDataScopeById(role));
     }
 
     /**
@@ -113,7 +113,7 @@ public class SysRoleController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:role:edit")
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/menuScope")
+    @PutMapping("/menuScope/save")
     public AjaxResult menuScope(@RequestBody SysRole role) {
         return toAjax(roleService.authMenuScope(role));
     }
@@ -123,7 +123,7 @@ public class SysRoleController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:role:edit")
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/dataScope")
+    @PutMapping("/dataScope/save")
     public AjaxResult dataScope(@RequestBody SysRole role) {
         return toAjax(roleService.authDataScope(role));
     }
