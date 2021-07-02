@@ -27,7 +27,7 @@ public class RemoteLogFallbackFactory implements FallbackFactory<RemoteLogServic
             }
 
             @Override
-            public R<Boolean> saveLoginInfo(String enterpriseName, String userName, String status, String message) {
+            public R<Boolean> saveLoginInfo(Long enterpriseId, String enterpriseName, Long userId, String userName, String status, String message) {
                 return null;
             }
         };

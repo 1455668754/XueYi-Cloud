@@ -42,12 +42,6 @@ public class SysLoginInfoController extends BaseController {
     @Autowired
     private ISysLoginInfoService loginInfoService;
 
-    @Autowired
-    private ISysEnterpriseService enterpriseService;
-
-    @Autowired
-    private ISysUserService userService;
-
     @PreAuthorize(hasPermi = "system:loginInfo:list")
     @GetMapping("/list")
     public TableDataInfo list(SysLoginInfo loginInfo) {
@@ -81,26 +75,13 @@ public class SysLoginInfoController extends BaseController {
     }
 
     @PostMapping
-    public AjaxResult add(@RequestParam("enterpriseName") String enterpriseName, @RequestParam("userName") String userName, @RequestParam("status") String status,
+    public AjaxResult add(@RequestParam("enterpriseId") Long enterpriseId, @RequestParam("enterpriseName") String enterpriseName, @RequestParam("userId") Long userId, @RequestParam("userName") String userName, @RequestParam("status") String status,
                           @RequestParam("message") String message) {
         String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
-
         // 封装对象
         SysLoginInfo loginInfo = new SysLoginInfo();
-        SysEnterprise checkEnterprise = new SysEnterprise();
-        checkEnterprise.setEnterpriseName(enterpriseName);
-        SysEnterprise enterprise = enterpriseService.checkLoginByEnterpriseName(checkEnterprise);
-
-        SysUser checkUser = new SysUser();
-        checkUser.setEnterpriseId(enterprise.getEnterpriseId());
-        checkUser.setUserName(userName);
-        if(enterprise != null && StringUtils.isNotNull(enterprise.getEnterpriseId())){
-            SysUser user = userService.checkUserByUserName(checkUser);
-            loginInfo.setUserId(user.getUserId());
-            loginInfo.setEnterpriseId(enterprise.getEnterpriseId());
-        }else {
-            loginInfo.setEnterpriseId(0L);
-        }
+        loginInfo.setUserId(userId);
+        loginInfo.setEnterpriseId(enterpriseId);
         loginInfo.setEnterpriseName(enterpriseName);
         loginInfo.setUserName(userName);
         loginInfo.setIpaddr(ip);

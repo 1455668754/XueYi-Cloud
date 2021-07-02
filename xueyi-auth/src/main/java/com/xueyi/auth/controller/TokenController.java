@@ -40,12 +40,10 @@ public class TokenController {
     public R<?> logout(HttpServletRequest request) {
         LoginUser loginUser = tokenService.getLoginUser(request);
         if (StringUtils.isNotNull(loginUser)) {
-            String enterpriseName = loginUser.getEnterpriseName();
-            String username = loginUser.getUsername();
             // 删除用户缓存记录
             tokenService.delLoginUser(loginUser.getToken());
             // 记录用户退出日志
-            sysLoginService.logout(enterpriseName,username);
+            sysLoginService.logout(loginUser.getEnterpriseId(),loginUser.getEnterpriseName(),loginUser.getUserid(),loginUser.getUsername());
         }
         return R.ok();
     }

@@ -12,6 +12,7 @@ import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
+import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,8 @@ public class SysLoginServiceImpl implements ISysLoginService {
     @Autowired
     private SysMenuMapper menuMapper;
 
+    @Autowired
+    private SysRoleSystemMenuMapper roleSystemMenuMapper;
     /**
      * 通过企业账号查询租户信息（登录校验）
      *
@@ -117,6 +120,11 @@ public class SysLoginServiceImpl implements ISysLoginService {
         if (SysUser.isAdmin(userType)) {
             perms.add("*:*:*");
         } else {
+            SysSearch search = new SysSearch();
+            search.setEnterpriseId(menu.getEnterpriseId());
+            search.getSearch().put("userId", menu.getParams().get("userId"));
+            List<Long> roleSystemPerms = roleSystemMenuMapper.selectSystemMenuPermsList(search);
+            menu.getParams().put("roleSystemPerms", roleSystemPerms);
             perms.addAll(checkLoginMenuPerms(menu));
         }
         return perms;
