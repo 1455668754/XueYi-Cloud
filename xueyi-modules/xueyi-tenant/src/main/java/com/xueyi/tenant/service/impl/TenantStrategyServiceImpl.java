@@ -17,6 +17,7 @@ import com.xueyi.tenant.service.ITenantStrategyService;
  */
 @Service
 public class TenantStrategyServiceImpl implements ITenantStrategyService {
+
     @Autowired
     private TenantStrategyMapper tenantStrategyMapper;
 

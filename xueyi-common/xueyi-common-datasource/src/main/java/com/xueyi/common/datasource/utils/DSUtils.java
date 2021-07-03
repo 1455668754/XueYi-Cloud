@@ -10,18 +10,15 @@ import org.springframework.beans.BeansException;
 
 import javax.sql.DataSource;
 
-public class DSUtils
-{
+public class DSUtils {
     /**
      * 添加一个数据源到数据源库中
      *
      * @param tenantSource 数据源对象
      * @return 结果
      */
-    public static int addDs(TenantSource tenantSource)
-    {
-        try
-        {
+    public static int addDs(TenantSource tenantSource) {
+        try {
             DefaultDataSourceCreator dataSourceCreator = SpringUtils.getBean(DefaultDataSourceCreator.class);
             DataSourceProperty dataSourceProperty = new DataSourceProperty();
             BeanUtils.copyProperties(tenantSource, dataSourceProperty);
@@ -30,9 +27,7 @@ public class DSUtils
             dataSource = dataSourceCreator.createDataSource(dataSourceProperty);
             ds.addDataSource(tenantSource.getSlave(), dataSource);
             return 1;
-        }
-        catch (BeansException e)
-        {
+        } catch (BeansException e) {
             e.printStackTrace();
             return -1;
         }
@@ -44,16 +39,12 @@ public class DSUtils
      * @param slave 数据源编码
      * @return 结果
      */
-    public static int delDs(String slave)
-    {
-        try
-        {
+    public static int delDs(String slave) {
+        try {
             DynamicRoutingDataSource ds = (DynamicRoutingDataSource) SpringUtils.getBean(DataSource.class);
             ds.removeDataSource(slave);
             return 1;
-        }
-        catch (BeansException e)
-        {
+        } catch (BeansException e) {
             e.printStackTrace();
             return -1;
         }
@@ -62,8 +53,7 @@ public class DSUtils
     /**
      * 获取当前数据源库中所有数据源
      */
-    public static void getCurrentAllDataSources()
-    {
+    public static void getCurrentAllDataSources() {
         DynamicRoutingDataSource ds = (DynamicRoutingDataSource) SpringUtils.getBean(DataSource.class);
         ds.getCurrentDataSources().keySet().forEach(s ->
         {

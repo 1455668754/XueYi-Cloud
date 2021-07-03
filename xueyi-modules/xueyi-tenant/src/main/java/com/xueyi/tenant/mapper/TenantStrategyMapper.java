@@ -29,7 +29,7 @@ public interface TenantStrategyMapper {
     /**
      * 查询数据源策略
      *
-     * @param tenantStrategy 数据源策略
+     * @param tenantStrategy 数据源策略 | strategyId 策略Id
      * @return 数据源策略
      */
     public TenantStrategy selectTenantStrategyById(TenantStrategy tenantStrategy);

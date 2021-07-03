@@ -16,6 +16,7 @@ import com.xueyi.tenant.service.ITenantSeparationService;
  */
 @Service
 public class TenantSeparationServiceImpl implements ITenantSeparationService {
+
     @Autowired
     private TenantSourceMapper tenantSourceMapper;
 

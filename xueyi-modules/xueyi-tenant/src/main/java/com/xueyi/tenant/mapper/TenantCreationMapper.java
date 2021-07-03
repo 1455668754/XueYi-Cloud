@@ -9,7 +9,6 @@ import com.xueyi.tenant.domain.Tenant;
  *
  * @author xueyi
  */
-@DS("#isolate")
 public interface TenantCreationMapper {
 
     /**

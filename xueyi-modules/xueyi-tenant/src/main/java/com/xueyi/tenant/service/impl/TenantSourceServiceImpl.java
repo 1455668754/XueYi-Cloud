@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class TenantSourceServiceImpl implements ITenantSourceService {
+
     @Autowired
     private TenantSourceMapper tenantSourceMapper;
 
