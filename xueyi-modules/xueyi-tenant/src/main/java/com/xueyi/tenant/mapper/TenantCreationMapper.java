@@ -1,7 +1,15 @@
 package com.xueyi.tenant.mapper;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.tenant.domain.Tenant;
 
+
+/**
+ * 租户新增同步创建信息 数据层
+ *
+ * @author xueyi
+ */
+@DS("#isolate")
 public interface TenantCreationMapper {
 
     /**

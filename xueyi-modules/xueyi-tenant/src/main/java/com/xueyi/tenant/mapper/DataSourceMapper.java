@@ -4,6 +4,11 @@ import com.xueyi.tenant.api.source.Source;
 
 import java.util.List;
 
+/**
+ * 数据源信息 数据层
+ *
+ * @author xueyi
+ */
 public interface DataSourceMapper {
     /**
      * 查询数据源列表
