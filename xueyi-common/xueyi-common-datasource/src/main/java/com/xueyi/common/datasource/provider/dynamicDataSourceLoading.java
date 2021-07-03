@@ -34,7 +34,7 @@ public class dynamicDataSourceLoading {
         return new AbstractJdbcDataSourceProvider(Driver, Url, UserName, PassWord) {
             @Override
             protected Map<String, DataSourceProperty> executeStmt(Statement statement) throws SQLException {
-                ResultSet rs = statement.executeQuery("select slave,username,password,url,driver_class_name from xy_tenant_source");
+                ResultSet rs = statement.executeQuery("select s.slave,s.username,s.password,s.url,s.driver_class_name from xy_tenant_source s where s.del_flag = 0");
                 Map<String, DataSourceProperty> map = new HashMap<String, DataSourceProperty>();
                 while (rs.next()) {
                     String name = rs.getString("slave");
