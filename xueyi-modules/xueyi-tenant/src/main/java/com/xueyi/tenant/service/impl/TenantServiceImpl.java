@@ -2,6 +2,7 @@ package com.xueyi.tenant.service.impl;
 
 import java.util.List;
 
+import com.xueyi.common.core.exception.CustomException;
 import com.xueyi.tenant.api.source.TenantSource;
 import com.xueyi.tenant.domain.TenantStrategy;
 import com.xueyi.tenant.mapper.TenantStrategyMapper;
@@ -60,7 +61,6 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    @Transactional
     @DataScope(ueAlias = "empty")
     public int insertTenant(Tenant tenant) {
         /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
@@ -74,9 +74,12 @@ public class TenantServiceImpl implements ITenantService {
                 //新建租户时同步新建信息
                 //1.新建租户的部门|岗位|超管用户信息
                 tenantCreationService.organizeCreation(sourceName, tenant);
-
                 return tenantMapper.insertTenant(tenant);
             }
+        }
+        try {
+            throw new CustomException(String.format("创建失败，%1$s未设置主数据源,无法应用该策略", strategy.getName()));
+        } catch (Exception ignored) {
         }
         return 0;
     }

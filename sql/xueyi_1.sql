@@ -125,7 +125,7 @@ primary key (strategy_id, source_id)
 insert into xy_tenant_strategy_source(strategy_id, source_id, status)
 values (0, 0, 'N'),
        (0, 1, 'Y'),
-       (1, 1, 'N');
+       (1, 1, 'Y');
 
 -- ----------------------------
 -- 6、子模块表|管理子系统模块

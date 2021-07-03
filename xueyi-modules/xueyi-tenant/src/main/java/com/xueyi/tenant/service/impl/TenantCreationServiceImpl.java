@@ -28,7 +28,6 @@ public class TenantCreationServiceImpl implements ITenantCreationService {
      * @return 结果
      */
     @Override
-    @Transactional
     @DS("#sourceName")
     public int organizeCreation(String sourceName, Tenant tenant) {
         int rows = 0;
