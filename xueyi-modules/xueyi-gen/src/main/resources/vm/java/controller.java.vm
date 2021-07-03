@@ -32,8 +32,8 @@ import com.xueyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/${businessName}")
-public class ${ClassName}Controller extends BaseController
-{
+public class ${ClassName}Controller extends BaseController {
+
     @Autowired
     private I${ClassName}Service ${className}Service;
 

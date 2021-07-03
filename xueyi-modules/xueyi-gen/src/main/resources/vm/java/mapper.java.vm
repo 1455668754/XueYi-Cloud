@@ -38,8 +38,8 @@ import ${packageName}.domain.${subClassName};
  *
  * @author ${author}
  */
-public interface ${ClassName}Mapper
-    {
+public interface ${ClassName}Mapper {
+
     /**
      * 查询${functionName}列表
      * 访问控制 e 租户查询
@@ -83,7 +83,7 @@ public interface ${ClassName}Mapper
      * 查询${functionName}
      * 访问控制 e 租户查询
      *
-     * @param ${className} ${functionName}
+     * @param ${className} ${functionName} | ${pkColumn.javaField} ${functionName}Id
      * @return ${functionName}
      */
     @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
@@ -157,7 +157,7 @@ public interface ${ClassName}Mapper
      * 删除${functionName}
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param ${className} ${functionName}
+     * @param ${className} ${functionName} | ${pkColumn.javaField} ${functionName}Id
      * @return 结果
      */
     @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
@@ -169,7 +169,7 @@ public interface ${ClassName}Mapper
      * 批量删除${functionName}
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param ${className} ${functionName}
+     * @param ${className} ${functionName} | params.Ids 需要删除的${functionName}Ids组
      * @return 结果
      */
     @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end

@@ -31,7 +31,7 @@ public interface I${ClassName}Service
     /**
      * 查询${functionName}
      * 
-     * @param ${className} ${functionName}
+     * @param ${className} ${functionName} | ${pkColumn.javaField} ${functionName}Id
      * @return ${functionName}
      */
     public ${ClassName} select${ClassName}ById(${ClassName} ${className});
@@ -69,7 +69,7 @@ public interface I${ClassName}Service
     /**
      * 删除${functionName}信息
      *
-     * @param ${className} ${functionName}
+     * @param ${className} ${functionName} | ${pkColumn.javaField} ${functionName}Id
      * @return 结果
      */
     public int delete${ClassName}ById(${ClassName} ${className});
@@ -78,7 +78,7 @@ public interface I${ClassName}Service
     /**
      * 批量删除${functionName}
      * 
-     * @param ${className} ${functionName}
+     * @param ${className} ${functionName} | params.Ids 需要删除的${functionName}Ids组
      * @return 结果
      */
     public int delete${ClassName}ByIds(${ClassName} ${className});
