@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.tenant.api.source.Source;
 import com.xueyi.tenant.api.source.TenantSourceValue;
 import com.xueyi.tenant.mapper.DataSourceMapper;
@@ -84,6 +85,8 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
         }else{
             tenantSource.setSlave("master"+tenantSource.getId().toString());
         }
+        // 将数据新增的的数据源添加到数据源库
+        DSUtils.addDs(tenantSource);
         return tenantSourceMapper.insertTenantSource(tenantSource);
     }
 
@@ -95,7 +98,15 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      */
     @Override
     public int updateTenantSource(TenantSource tenantSource) {
-        return tenantSourceMapper.updateTenantSource(tenantSource);
+        int res = tenantSourceMapper.updateTenantSource(tenantSource);
+        if (res > 0)
+        {
+            // 根据数据源编码从数据源库中删除数据源
+            DSUtils.delDs(tenantSource.getSlave());
+            // 再将数据源添加到数据源库中
+            DSUtils.addDs(tenantSource);
+        }
+        return res;
     }
 
     /**
@@ -117,7 +128,13 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      */
     @Override
     public int deleteTenantSourceById(TenantSource tenantSource) {
-        return tenantSourceMapper.deleteTenantSourceById(tenantSource);
+        int res = tenantSourceMapper.deleteTenantSourceById(tenantSource);
+        if (res > 0)
+        {
+            // 根据数据源编码从数据源库中删除数据源
+            DSUtils.delDs(tenantSource.getSlave());
+        }
+        return res;
     }
 
     /**
