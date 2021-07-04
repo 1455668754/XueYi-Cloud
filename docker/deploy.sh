@@ -17,10 +17,11 @@ port(){
 	firewall-cmd --add-port=3306/tcp --permanent
 	firewall-cmd --add-port=9100/tcp --permanent
 	firewall-cmd --add-port=9200/tcp --permanent
-	firewall-cmd --add-port=9201/tcp --permanent
-	firewall-cmd --add-port=9202/tcp --permanent
-	firewall-cmd --add-port=9203/tcp --permanent
 	firewall-cmd --add-port=9300/tcp --permanent
+	firewall-cmd --add-port=9400/tcp --permanent
+	firewall-cmd --add-port=9500/tcp --permanent
+	firewall-cmd --add-port=9600/tcp --permanent
+	firewall-cmd --add-port=9700/tcp --permanent
 	service firewalld restart
 }
 
@@ -31,7 +32,12 @@ base(){
 
 # 启动程序模块（必须）
 modules(){
-	docker-compose up -d xueyi-gateway xueyi-auth xueyi-modules-system
+	docker-compose up -d xueyi-gateway xueyi-auth xueyi-modules-system xueyi-modules-tenant
+}
+
+# 启动程序模块 | 次要 | 根据需求启动
+monitor(){
+	docker-compose up -d xueyi-modules-file xueyi-modules-gen xueyi-modules-job xueyi-visual-monitor
 }
 
 # 关闭所有环境/模块
