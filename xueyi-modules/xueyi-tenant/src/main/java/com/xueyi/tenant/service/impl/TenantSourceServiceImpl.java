@@ -3,6 +3,7 @@ package com.xueyi.tenant.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.tenant.api.source.Source;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author xueyi
  */
 @Service
+@DS("#main")
 public class TenantSourceServiceImpl implements ITenantSourceService {
 
     @Autowired

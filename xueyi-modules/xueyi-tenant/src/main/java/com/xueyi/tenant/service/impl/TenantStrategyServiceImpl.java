@@ -2,6 +2,7 @@ package com.xueyi.tenant.service.impl;
 
 import java.util.List;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -16,6 +17,7 @@ import com.xueyi.tenant.service.ITenantStrategyService;
  * @author xueyi
  */
 @Service
+@DS("#main")
 public class TenantStrategyServiceImpl implements ITenantStrategyService {
 
     @Autowired
