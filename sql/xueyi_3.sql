@@ -22,23 +22,6 @@ create table sys_dept (
   tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
   primary key (dept_id)
 ) engine=innodb comment = '部门表';
-
--- ----------------------------
--- 初始化-部门表数据
--- ----------------------------
-insert into sys_dept (dept_id, tenant_id, dept_code, parent_id, ancestors, dept_name)
-values (98, -1, '98', 0, '0', '雪忆科技'),
-       (99, 2, '100', 0, '0', '雪忆科技'),
-       (100, 1, '100', 0, '0', '雪忆科技'),
-       (101, 1, '101', 100, '0,100', '深圳总公司'),
-       (102, 1, '102',  100, '0,100', '长沙分公司'),
-       (103, 1, '103',  101, '0,100,101', '研发部门'),
-       (104, 1, '104',  101, '0,100,101', '市场部门'),
-       (105, 1, '105',  101, '0,100,101', '测试部门'),
-       (106, 1, '106',  101, '0,100,101', '财务部门'),
-       (107, 1, '107',  101, '0,100,101', '运维部门'),
-       (108, 1, '108',  102, '0,100,102', '市场部门'),
-       (109, 1, '109',  102, '0,100,102', '财务部门');
        
 -- ----------------------------
 -- 2、岗位信息表
@@ -61,17 +44,6 @@ create table sys_post
   tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
   primary key (post_id)
 ) engine=innodb comment = '岗位信息表';
-
--- ----------------------------
--- 初始化-岗位信息表数据
--- ----------------------------
-insert into sys_post (post_id, tenant_id, dept_id, post_code, post_name)
-values (1, -1, 98, 'ceo', '超级管理员'),
-       (2, 1, 100, 'ceo', '董事长'),
-       (3, 1, 100, 'se', '项目经理'),
-       (4, 1, 100, 'hr', '人力资源'),
-       (5, 2, 99, 'hr', '人力资源'),
-       (6, 1, 100, 'user', '普通员工');
 
 -- ----------------------------
 -- 3、用户信息表
@@ -106,15 +78,6 @@ create table sys_user (
 ) engine=innodb comment = '用户信息表';
 
 -- ----------------------------
--- 初始化-用户信息表数据
--- ----------------------------
-insert into sys_user (user_id, tenant_id, dept_id, post_id, user_code, user_name, nick_name,user_type, password, remark)
-values (-1, -1, 98, 1, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
-       (2, 1, 100, 2, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员'),
-       (3, 1, 100, 2, '002', 'xy', 'xy', '01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '管理员'),
-       (4, 2, 99, 5, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员');
-
--- ----------------------------
 -- 4、角色信息表
 -- ----------------------------
 drop table if exists sys_role;
@@ -139,14 +102,6 @@ create table sys_role (
 ) engine=innodb comment = '角色信息表';
 
 -- ----------------------------
--- 初始化-角色信息表数据
--- ----------------------------
-insert into sys_role (role_id, tenant_id, role_code, role_name, role_key, menu_check_strictly, dept_check_strictly, create_by, remark)
-values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
-       (2, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色'),
-       (3, 2, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员');
-
--- ----------------------------
 -- 5、角色和系统-菜单关联表  角色N-N系统-菜单
 -- ----------------------------
 drop table if exists sys_role_system_menu;
@@ -159,11 +114,6 @@ create table sys_role_system_menu (
 ) engine=innodb comment = '角色和系统-菜单关联表';
 
 -- ----------------------------
--- 初始化-角色和系统-菜单关联表数据
--- ----------------------------
-insert into sys_role_system_menu value (1,12005,0,1);
-
--- ----------------------------
 -- 6、角色和部门-岗位关联表  角色N-N部门-岗位
 -- ----------------------------
 drop table if exists sys_role_dept_post;
@@ -174,10 +124,6 @@ create table sys_role_dept_post (
   tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(role_id, dept_post_id)
 ) engine=innodb comment = '角色和部门-岗位关联表';
--- ----------------------------
--- 初始化-角色和部门-岗位关联表数据
--- ----------------------------
-insert into sys_role_dept_post value (1,107,0,1);
 
 -- ----------------------------
 -- 7、部门和角色关联表  部门N-N角色
@@ -214,12 +160,6 @@ create table sys_user_role (
   tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(user_id, role_id)
 ) engine=innodb comment = '用户和角色关联表';
-
--- ----------------------------
--- 初始化-用户和角色关联表数据
--- ----------------------------
-insert into sys_user_role values (1, 1, 0, 1);
-insert into sys_user_role values (2, 2, 0, 1);
 
 -- ----------------------------
 -- 10、素材信息表|管理素材信息
