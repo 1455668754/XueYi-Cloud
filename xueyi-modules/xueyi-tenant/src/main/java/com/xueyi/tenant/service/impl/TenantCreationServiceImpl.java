@@ -7,6 +7,7 @@ import com.xueyi.tenant.mapper.TenantCreationMapper;
 import com.xueyi.tenant.service.ITenantCreationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -29,6 +30,7 @@ public class TenantCreationServiceImpl implements ITenantCreationService {
      */
     @Override
     @DS("#sourceName")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)      // 事务传播特性设置为 REQUIRES_NEW 开启新的事务
     public int organizeCreation(String sourceName, Tenant tenant) {
         int rows = 0;
         tenant.getParams().put("deptId", IdUtil.getSnowflake(0, 0).nextId());

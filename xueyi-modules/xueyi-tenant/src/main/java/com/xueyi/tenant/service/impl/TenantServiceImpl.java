@@ -7,6 +7,7 @@ import com.xueyi.tenant.api.source.TenantSource;
 import com.xueyi.tenant.domain.TenantStrategy;
 import com.xueyi.tenant.mapper.TenantStrategyMapper;
 import com.xueyi.tenant.service.ITenantCreationService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -61,6 +62,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
+    @Transactional
+    @GlobalTransactional        // 第一个开启事务的需要添加seata全局事务注解
     @DataScope(ueAlias = "empty")
     public int insertTenant(Tenant tenant) {
         /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
