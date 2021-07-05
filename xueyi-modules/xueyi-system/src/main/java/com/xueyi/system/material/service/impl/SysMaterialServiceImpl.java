@@ -1,5 +1,6 @@
 package com.xueyi.system.material.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.material.SysMaterial;
 import com.xueyi.system.material.mapper.SysMaterialMapper;
 import com.xueyi.system.material.service.ISysMaterialService;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author xueyi
  */
 @Service
+@DS("#isolate")
 public class SysMaterialServiceImpl implements ISysMaterialService {
 
     @Autowired

@@ -1,5 +1,6 @@
 package com.xueyi.system.material.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.material.SysMaterialFolder;
 import com.xueyi.system.material.mapper.SysMaterialFolderMapper;
 import com.xueyi.system.material.service.ISysMaterialFolderService;
@@ -15,6 +16,7 @@ import java.util.List;
  * @author xueyi
  */
 @Service
+@DS("#isolate")
 public class SysMaterialFolderServiceImpl implements ISysMaterialFolderService {
 
     @Autowired

@@ -50,7 +50,6 @@ public class SysMaterialController extends BaseController {
     /**
      * 查询素材信息列表
      */
-//    @PreAuthorize(hasPermi = "system:material:query")
     @GetMapping("/list")
     public AjaxResult list(SysMaterialFolder folder) {
         //1.判断是否有folderId传进来,如无则代表前端传值错误,直接做空返回
