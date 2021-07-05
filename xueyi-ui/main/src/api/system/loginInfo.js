@@ -10,10 +10,11 @@ export function list(query) {
 }
 
 // 删除登录日志
-export function delLoginInfo(infoId) {
+export function delLoginInfo(data) {
   return request({
-    url: '/system/loginInfo/' + infoId,
-    method: 'delete'
+    url: '/system/loginInfo',
+    method: 'delete',
+    data: data
   })
 }
 

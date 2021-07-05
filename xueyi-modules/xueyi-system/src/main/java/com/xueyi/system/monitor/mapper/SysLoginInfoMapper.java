@@ -33,19 +33,19 @@ public interface SysLoginInfoMapper {
      * 批量删除系统登录日志
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | @param infoIds 需要删除的登录日志Id(Long[])
+     * @param loginInfo 访问日志对象 | params.Ids 需要删除的登录日志Ids组
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int deleteLoginInfoByIds(SysSearch search);
+    public int deleteLoginInfoByIds(SysLoginInfo loginInfo);
 
     /**
      * 清空系统登录日志
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param search 万用组件 | null
+     * @param loginInfo 访问日志对象 | null
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int cleanLoginInfo(SysSearch search);
+    public int cleanLoginInfo(SysLoginInfo loginInfo);
 }

@@ -2,6 +2,7 @@ package com.xueyi.system.monitor.service.impl;
 
 import java.util.List;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import com.xueyi.system.monitor.service.ISysLoginInfoService;
  * @author xueyi
  */
 @Service
+@DS("#isolate")
 public class SysLoginInfoServiceImpl implements ISysLoginInfoService {
 
     @Autowired
@@ -22,11 +24,12 @@ public class SysLoginInfoServiceImpl implements ISysLoginInfoService {
 
     /**
      * 新增系统登录日志
-     *
+     * @param sourceName 数据源名称
      * @param loginInfo 访问日志对象
      */
     @Override
-    public int insertLoginInfo(SysLoginInfo loginInfo) {
+    @DS("#sourceName")
+    public int insertLoginInfo(String sourceName, SysLoginInfo loginInfo) {
         return loginInfoMapper.insertLoginInfo(loginInfo);
     }
 
@@ -44,14 +47,12 @@ public class SysLoginInfoServiceImpl implements ISysLoginInfoService {
     /**
      * 批量删除系统登录日志
      *
-     * @param infoIds 需要删除的登录日志Id
+     * @param loginInfo 访问日志对象 | params.Ids 需要删除的登录日志Ids组
      * @return 结果
      */
     @Override
-    public int deleteLoginInfoByIds(Long[] infoIds) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("infoIds", infoIds);
-        return loginInfoMapper.deleteLoginInfoByIds(search);
+    public int deleteLoginInfoByIds(SysLoginInfo loginInfo) {
+        return loginInfoMapper.deleteLoginInfoByIds(loginInfo);
     }
 
     /**
@@ -59,6 +60,6 @@ public class SysLoginInfoServiceImpl implements ISysLoginInfoService {
      */
     @Override
     public void cleanLoginInfo() {
-        loginInfoMapper.cleanLoginInfo(new SysSearch());
+        loginInfoMapper.cleanLoginInfo(new SysLoginInfo());
     }
 }

@@ -11,13 +11,7 @@ import com.xueyi.system.api.organize.SysUser;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.organize.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.ip.IpUtils;
@@ -61,9 +55,9 @@ public class SysLoginInfoController extends BaseController {
 
     @PreAuthorize(hasPermi = "system:loginInfo:remove")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{infoIds}")
-    public AjaxResult remove(@PathVariable Long[] infoIds) {
-        return toAjax(loginInfoService.deleteLoginInfoByIds(infoIds));
+    @DeleteMapping
+    public AjaxResult remove(@RequestBody SysLoginInfo loginInfo) {
+        return toAjax(loginInfoService.deleteLoginInfoByIds(loginInfo));
     }
 
     @PreAuthorize(hasPermi = "system:loginInfo:remove")
@@ -75,7 +69,7 @@ public class SysLoginInfoController extends BaseController {
     }
 
     @PostMapping
-    public AjaxResult add(@RequestParam("enterpriseId") Long enterpriseId, @RequestParam("enterpriseName") String enterpriseName, @RequestParam("userId") Long userId, @RequestParam("userName") String userName, @RequestParam("status") String status,
+    public AjaxResult add(@RequestParam("sourceName") String sourceName, @RequestParam("enterpriseId") Long enterpriseId, @RequestParam("enterpriseName") String enterpriseName, @RequestParam("userId") Long userId, @RequestParam("userName") String userName, @RequestParam("status") String status,
                           @RequestParam("message") String message) {
         String ip = IpUtils.getIpAddr(ServletUtils.getRequest());
         // 封装对象
@@ -92,6 +86,6 @@ public class SysLoginInfoController extends BaseController {
         } else if (Constants.LOGIN_FAIL.equals(status)) {
             loginInfo.setStatus("1");
         }
-        return toAjax(loginInfoService.insertLoginInfo(loginInfo));
+        return toAjax(loginInfoService.insertLoginInfo(sourceName, loginInfo));
     }
 }

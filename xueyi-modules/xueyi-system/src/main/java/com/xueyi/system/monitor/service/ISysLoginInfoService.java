@@ -13,9 +13,10 @@ public interface ISysLoginInfoService {
     /**
      * 新增系统登录日志
      *
-     * @param loginInfo 访问日志对象
+     * @param sourceName 数据源名称
+     * @param loginInfo  访问日志对象
      */
-    public int insertLoginInfo(SysLoginInfo loginInfo);
+    public int insertLoginInfo(String sourceName, SysLoginInfo loginInfo);
 
     /**
      * 查询系统登录日志集合
@@ -28,10 +29,10 @@ public interface ISysLoginInfoService {
     /**
      * 批量删除系统登录日志
      *
-     * @param infoIds 需要删除的登录日志Id
+     * @param loginInfo 访问日志对象 | params.Ids 需要删除的登录日志Ids组
      * @return 结果
      */
-    public int deleteLoginInfoByIds(Long[] infoIds);
+    public int deleteLoginInfoByIds(SysLoginInfo loginInfo);
 
     /**
      * 清空系统登录日志

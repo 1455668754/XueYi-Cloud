@@ -75,7 +75,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:loginInfo:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -85,7 +86,8 @@
           size="mini"
           @click="handleClean"
           v-hasPermi="['system:loginInfo:remove']"
-        >清空</el-button>
+        >清空
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -95,22 +97,26 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:loginInfo:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange" :default-sort="defaultSort" @sort-change="handleSortChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="用户账号 | 用户名称" align="center":show-overflow-tooltip="true" sortable="custom" :sort-orders="['descending', 'ascending']" >
+    <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange"
+              :default-sort="defaultSort" @sort-change="handleSortChange">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="用户账号 | 用户名称" align="center" :show-overflow-tooltip="true" sortable="custom"
+                       :sort-orders="['descending', 'ascending']">
         <template slot-scope="scope">
           <span>{{ scope.row.userName }} | {{ scope.row.userNick }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="地址" align="center" prop="ipaddr" width="130" :show-overflow-tooltip="true" />
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
-      <el-table-column label="描述" align="center" prop="msg" />
-      <el-table-column label="访问时间" align="center" prop="accessTime" sortable="custom" :sort-orders="['descending', 'ascending']" width="180">
+      <el-table-column label="地址" align="center" prop="ipaddr" width="130" :show-overflow-tooltip="true"/>
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
+      <el-table-column label="描述" align="center" prop="msg"/>
+      <el-table-column label="访问时间" align="center" prop="accessTime" sortable="custom"
+                       :sort-orders="['descending', 'ascending']" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.accessTime) }}</span>
         </template>
@@ -128,7 +134,7 @@
 </template>
 
 <script>
-import { list, delLoginInfo, cleanLoginInfo } from "@/api/system/loginInfo";
+import {list, delLoginInfo, cleanLoginInfo} from "@/api/system/loginInfo"
 
 export default {
   name: "LoginInfo",
@@ -161,40 +167,40 @@ export default {
         userNick: undefined,
         status: undefined
       }
-    };
+    }
   },
   created() {
-    this.getList();
+    this.getList()
     this.getDicts("sys_common_status").then(response => {
-      this.statusOptions = response.data;
-    });
+      this.statusOptions = response.data
+    })
   },
   methods: {
     /** 查询登录日志列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       list(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.list = response.rows;
-          this.total = response.total;
-          this.loading = false;
+          this.list = response.rows
+          this.total = response.total
+          this.loading = false
         }
-      );
+      )
     },
     // 登录状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.dateRange = [];
-      this.resetForm("queryForm");
+      this.dateRange = []
+      this.resetForm("queryForm")
       this.$refs.tables.sort(this.defaultSort.prop, this.defaultSort.order)
-      this.handleQuery();
+      this.handleQuery()
     },
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
@@ -203,44 +209,47 @@ export default {
     },
     /** 排序触发事件 */
     handleSortChange(column, prop, order) {
-      this.queryParams.orderByColumn = column.prop;
-      this.queryParams.isAsc = column.order;
-      this.getList();
+      this.queryParams.orderByColumn = column.prop
+      this.queryParams.isAsc = column.order
+      this.getList()
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const infoIds = row.infoId || this.ids;
+      const infoIds = row.infoId || this.ids
+      let $this = this
       this.$confirm('是否确认删除访问编号为"' + infoIds + '"的数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delLoginInfo(infoIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(() => {});
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delLoginInfo($this.updateParamIds(infoIds))
+      }).then(() => {
+        this.getList()
+        this.msgSuccess("删除成功")
+      }).catch(() => {
+      })
     },
     /** 清空按钮操作 */
     handleClean() {
-        this.$confirm('是否确认清空所有登录日志数据项?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return cleanLoginInfo();
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("清空成功");
-        }).catch(() => {});
+      this.$confirm('是否确认清空所有登录日志?', "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return cleanLoginInfo()
+      }).then(() => {
+        this.getList()
+        this.msgSuccess("清空成功")
+      }).catch(() => {
+      })
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download('system/loginInfo/export', {
         ...this.queryParams
-      }, `loginInfo_${new Date().getTime()}.xlsx`)
+      }, `登录日志${new Date().getTime()}.xlsx`)
     }
   }
-};
+}
 </script>
 

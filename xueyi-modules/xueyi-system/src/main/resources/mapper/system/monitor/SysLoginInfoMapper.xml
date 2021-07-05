@@ -56,18 +56,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by li.info_id desc
 	</select>
 
-	<delete id="deleteLoginInfoByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+	<delete id="deleteLoginInfoByIds" parameterType="SysLoginInfo">
 		update sys_logininfor
 		set del_flag = 1
  		where info_id in
- 		<foreach collection="search.infoIds" item="infoId" open="(" separator="," close=")">
+ 		<foreach collection="params.Ids" item="infoId" open="(" separator="," close=")">
  			#{infoId}
         </foreach>
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
  	</delete>
 
-    <update id="cleanLoginInfo" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+    <update id="cleanLoginInfo" parameterType="SysLoginInfo">
 		update sys_logininfor
 		set del_flag = 1
 		where 1 = 1
