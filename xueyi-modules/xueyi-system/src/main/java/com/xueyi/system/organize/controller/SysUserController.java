@@ -48,6 +48,7 @@ import com.xueyi.system.api.model.LoginUser;
 @RestController
 @RequestMapping("/user")
 public class SysUserController extends BaseController {
+
     @Autowired
     private ISysLoginService loginService;
 
@@ -104,6 +105,7 @@ public class SysUserController extends BaseController {
         checkMenu.getParams().put("userId", sysUser.getUserId());
         Set<String> permissions = loginService.getMenuPermission(master.getMaster(), checkMenu, sysUser.getUserType());
         LoginUser sysUserVo = new LoginUser();
+        sysUserVo.setMainSource(master.getMaster());
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setUserType(sysUser.getUserType());
         sysUserVo.setSysEnterprise(sysEnterprise);
@@ -121,25 +123,18 @@ public class SysUserController extends BaseController {
     @GetMapping("getInfo")
     public AjaxResult getInfo() {
         LoginUser loginUser = tokenService.getLoginUser();
-        Source master = new Source();
-        for (Source s : loginUser.getSource()) {
-            if (s.getIsMain().equals("Y")) {
-                master = s;
-                break;
-            }
-        }
         // 角色集合
         SysRole checkRole = new SysRole();
         checkRole.setEnterpriseId(loginUser.getEnterpriseId());
         checkRole.getParams().put("deptId", loginUser.getSysUser().getDeptId());
         checkRole.getParams().put("postId", loginUser.getSysUser().getPostId());
         checkRole.getParams().put("userId", loginUser.getSysUser().getUserId());
-        Set<String> roles = loginService.getRolePermission(master.getMaster(), checkRole, loginUser.getSysUser().getUserType());
+        Set<String> roles = loginService.getRolePermission(loginUser.getMainSource(), checkRole, loginUser.getSysUser().getUserType());
         // 权限集合
         SysMenu checkMenu = new SysMenu();
         checkMenu.setEnterpriseId(loginUser.getEnterpriseId());
         checkMenu.getParams().put("userId", loginUser.getSysUser().getUserId());
-        Set<String> permissions = loginService.getMenuPermission(master.getMaster(), checkMenu, loginUser.getSysUser().getUserType());
+        Set<String> permissions = loginService.getMenuPermission(loginUser.getMainSource(), checkMenu, loginUser.getSysUser().getUserType());
         AjaxResult ajax = AjaxResult.success();
         SysUser user = new SysUser();
         user.setUserId(loginUser.getSysUser().getUserId());

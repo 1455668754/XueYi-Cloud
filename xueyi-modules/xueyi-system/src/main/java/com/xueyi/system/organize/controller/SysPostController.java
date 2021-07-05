@@ -35,6 +35,7 @@ import com.xueyi.system.organize.service.ISysPostService;
 @RestController
 @RequestMapping("/post")
 public class SysPostController extends BaseController {
+
     @Autowired
     private ISysPostService postService;
 

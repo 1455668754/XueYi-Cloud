@@ -49,6 +49,9 @@ public class LoginUser implements Serializable
     /** 角色列表 */
     private Set<String> roles;
 
+    /** 主数据源 */
+    private String mainSource;
+
     /** 数据库列表 */
     private List<Source> source;
 
@@ -144,6 +147,14 @@ public class LoginUser implements Serializable
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public String getMainSource() {
+        return mainSource;
+    }
+
+    public void setMainSource(String mainSource) {
+        this.mainSource = mainSource;
     }
 
     public List<Source> getSource() {

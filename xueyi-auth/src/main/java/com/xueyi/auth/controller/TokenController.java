@@ -43,7 +43,7 @@ public class TokenController {
             // 删除用户缓存记录
             tokenService.delLoginUser(loginUser.getToken());
             // 记录用户退出日志
-            sysLoginService.logout(loginUser.getEnterpriseId(),loginUser.getEnterpriseName(),loginUser.getUserid(),loginUser.getUsername());
+            sysLoginService.logout(loginUser.getMainSource(), loginUser.getEnterpriseId(),loginUser.getEnterpriseName(),loginUser.getUserid(),loginUser.getUsername());
         }
         return R.ok();
     }
