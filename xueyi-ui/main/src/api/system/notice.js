@@ -10,10 +10,11 @@ export function listNotice(query) {
 }
 
 // 查询公告详细
-export function getNotice(noticeId) {
+export function getNotice(query) {
   return request({
-    url: '/system/notice/' + noticeId,
-    method: 'get'
+    url: '/system/notice',
+    method: 'get',
+    params: query
   })
 }
 
@@ -36,9 +37,10 @@ export function updateNotice(data) {
 }
 
 // 删除公告
-export function delNotice(noticeId) {
+export function delNotice(data) {
   return request({
-    url: '/system/notice/' + noticeId,
-    method: 'delete'
+    url: '/system/notice',
+    method: 'delete',
+    data: data
   })
 }

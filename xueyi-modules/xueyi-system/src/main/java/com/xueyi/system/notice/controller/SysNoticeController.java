@@ -48,10 +48,10 @@ public class SysNoticeController extends BaseController
      * 根据通知公告编号获取详细信息
      */
     @PreAuthorize(hasPermi = "system:notice:query")
-    @GetMapping(value = "/{noticeId}")
-    public AjaxResult getInfo(@PathVariable Long noticeId)
+    @GetMapping(value = "/byId")
+    public AjaxResult getInfo(SysNotice notice)
     {
-        return AjaxResult.success(noticeService.selectNoticeById(noticeId));
+        return AjaxResult.success(noticeService.selectNoticeById(notice));
     }
 
     /**
@@ -81,9 +81,9 @@ public class SysNoticeController extends BaseController
      */
     @PreAuthorize(hasPermi = "system:notice:remove")
     @Log(title = "通知公告", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{noticeIds}")
-    public AjaxResult remove(@PathVariable Long[] noticeIds)
+    @DeleteMapping
+    public AjaxResult remove(@Validated @RequestBody SysNotice notice)
     {
-        return toAjax(noticeService.deleteNoticeByIds(noticeIds));
+        return toAjax(noticeService.deleteNoticeByIds(notice));
     }
 }

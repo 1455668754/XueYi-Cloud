@@ -35,7 +35,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:notice:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -46,7 +47,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:notice:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -57,16 +59,17 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:notice:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="selection" width="55" align="center"/>
       <el-table-column label="序号" align="center">
         <template slot-scope="scope">
-          <span>{{queryParams.pageSize*(queryParams.pageNum-1)+scope.$index+1}}</span>
+          <span>{{ queryParams.pageSize * (queryParams.pageNum - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -103,14 +106,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:notice:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:notice:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -129,7 +134,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="公告标题" prop="noticeTitle">
-              <el-input v-model="form.noticeTitle" placeholder="请输入公告标题" />
+              <el-input v-model="form.noticeTitle" placeholder="请输入公告标题"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -151,7 +156,8 @@
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                >{{dict.dictLabel}}</el-radio>
+                >{{ dict.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -171,8 +177,8 @@
 </template>
 
 <script>
-import { listNotice, getNotice, delNotice, addNotice, updateNotice, exportNotice } from "@/api/system/notice";
-import Editor from '@/components/XyComponents/Editor';
+import {listNotice, getNotice, delNotice, addNotice, updateNotice, exportNotice} from "@/api/system/notice"
+import Editor from '@/components/XyComponents/Editor'
 
 export default {
   name: "Notice",
@@ -186,7 +192,7 @@ export default {
       // 选中数组
       ids: [],
       // 选中数组名称
-      idTitles:[],
+      idTitles: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -217,45 +223,45 @@ export default {
       // 表单校验
       rules: {
         noticeTitle: [
-          { required: true, message: "公告标题不能为空", trigger: "blur" }
+          {required: true, message: "公告标题不能为空", trigger: "blur"}
         ],
         noticeType: [
-          { required: true, message: "公告类型不能为空", trigger: "change" }
+          {required: true, message: "公告类型不能为空", trigger: "change"}
         ]
       }
-    };
+    }
   },
   created() {
-    this.getList();
+    this.getList()
     this.getDicts("sys_notice_status").then(response => {
-      this.statusOptions = response.data;
-    });
+      this.statusOptions = response.data
+    })
     this.getDicts("sys_notice_type").then(response => {
-      this.typeOptions = response.data;
-    });
+      this.typeOptions = response.data
+    })
   },
   methods: {
     /** 查询公告列表 */
     getList() {
-      this.loading = true;
+      this.loading = true
       listNotice(this.queryParams).then(response => {
-        this.noticeList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-      });
+        this.noticeList = response.rows
+        this.total = response.total
+        this.loading = false
+      })
     },
     // 公告状态字典翻译
     statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status);
+      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 公告状态字典翻译
     typeFormat(row, column) {
-      return this.selectDictLabel(this.typeOptions, row.noticeType);
+      return this.selectDictLabel(this.typeOptions, row.noticeType)
     },
     // 取消按钮
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     // 表单重置
     reset() {
@@ -265,77 +271,78 @@ export default {
         noticeType: undefined,
         noticeContent: undefined,
         status: "0"
-      };
-      this.resetForm("form");
+      }
+      this.resetForm("form")
     },
     /** 搜索按钮操作 */
     handleQuery() {
-      this.queryParams.pageNum = 1;
-      this.getList();
+      this.queryParams.pageNum = 1
+      this.getList()
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.resetForm("queryForm");
-      this.handleQuery();
+      this.resetForm("queryForm")
+      this.handleQuery()
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.noticeId)
       this.idTitles = selection.map(item => item.noticeTitle)
-      this.single = selection.length!=1
+      this.single = selection.length != 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
-      this.open = true;
-      this.title = "添加公告";
+      this.reset()
+      this.open = true
+      this.title = "添加公告"
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
-      this.reset();
-      const noticeId = row.noticeId || this.ids
-      getNotice(noticeId).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改公告";
-      });
+      this.reset()
+      getNotice({noticeId: row.noticeId}).then(response => {
+        this.form = response.data
+        this.open = true
+        this.title = "修改公告"
+      })
     },
     /** 提交按钮 */
-    submitForm: function() {
+    submitForm: function () {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.noticeId != undefined) {
             updateNotice(this.form).then(response => {
-              this.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess("修改成功")
+              this.open = false
+              this.getList()
+            })
           } else {
             addNotice(this.form).then(response => {
-              this.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
+              this.msgSuccess("新增成功")
+              this.open = false
+              this.getList()
+            })
           }
         }
-      });
+      })
     },
     /** 删除按钮操作 */
     handleDelete(row) {
       const noticeIds = row.noticeId || this.ids
       const noticeTitles = row.noticeTitle || this.idTitles
+      let $this = this
       this.$confirm('是否确认删除公告"' + noticeTitles + '"?', "警告", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
-          return delNotice(noticeIds);
-        }).then(() => {
-          this.getList();
-          this.msgSuccess("删除成功");
-        }).catch(() => {});
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(function () {
+        return delNotice($this.updateParamIds(noticeIds))
+      }).then(() => {
+        this.getList()
+        this.msgSuccess("删除成功")
+      }).catch(() => {
+      })
     }
   }
-};
+}
 </script>

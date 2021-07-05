@@ -9,15 +9,15 @@ import com.xueyi.system.notice.domain.SysNotice;
  *
  * @author ruoyi
  */
-public interface ISysNoticeService
-{
+public interface ISysNoticeService {
+
     /**
      * 查询公告信息
      *
-     * @param noticeId 公告ID
+     * @param notice 公告信息 | noticeId 公告Id
      * @return 公告信息
      */
-    public SysNotice selectNoticeById(Long noticeId);
+    public SysNotice selectNoticeById(SysNotice notice);
 
     /**
      * 查询公告列表
@@ -46,16 +46,16 @@ public interface ISysNoticeService
     /**
      * 删除公告信息
      *
-     * @param noticeId 公告ID
+     * @param notice 公告信息 | noticeId 公告Id
      * @return 结果
      */
-    public int deleteNoticeById(Long noticeId);
+    public int deleteNoticeById(SysNotice notice);
 
     /**
      * 批量删除公告信息
      *
-     * @param noticeIds 需要删除的公告ID
+     * @param notice 公告信息 | params.Ids 需要删除的公告Ids组
      * @return 结果
      */
-    public int deleteNoticeByIds(Long[] noticeIds);
+    public int deleteNoticeByIds(SysNotice notice);
 }

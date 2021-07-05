@@ -26,9 +26,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         left join sys_user u on u.user_id = n.create_by
     </sql>
 
-    <select id="selectNoticeById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysNoticeResult">
+    <select id="selectNoticeById" parameterType="SysNotice" resultMap="SysNoticeResult">
         <include refid="selectVo"/>
-        where n.notice_id = #{search.noticeId}
+        where n.notice_id = #{noticeId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
@@ -86,19 +86,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ${params.updateScope}
     </update>
 
-    <delete id="deleteNoticeById" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+    <delete id="deleteNoticeById" parameterType="SysNotice">
         update sys_notice
         set del_flag = 1
-        where notice_id = #{search.noticeId}
+        where notice_id = #{noticeId}
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>
 
-    <delete id="deleteNoticeByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+    <delete id="deleteNoticeByIds" parameterType="SysNotice">
         update sys_notice
         set del_flag = 1
         where notice_id in
-        <foreach item="noticeId" collection="search.noticeIds" open="(" separator="," close=")">
+        <foreach item="noticeId" collection="params.Ids" open="(" separator="," close=")">
             #{noticeId}
         </foreach>
         <!-- 数据范围过滤 -->
