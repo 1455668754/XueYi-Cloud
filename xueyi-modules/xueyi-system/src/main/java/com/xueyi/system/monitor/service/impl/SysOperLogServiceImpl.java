@@ -2,6 +2,7 @@ package com.xueyi.system.monitor.service.impl;
 
 import java.util.List;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,9 @@ import com.xueyi.system.monitor.service.ISysOperLogService;
  * @author xueyi
  */
 @Service
+@DS("#isolate")
 public class SysOperLogServiceImpl implements ISysOperLogService {
+
     @Autowired
     private SysOperLogMapper operLogMapper;
 

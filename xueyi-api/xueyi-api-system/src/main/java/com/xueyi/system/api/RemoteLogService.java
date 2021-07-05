@@ -28,6 +28,7 @@ public interface RemoteLogService {
     /**
      * 保存访问记录
      *
+     * @param sourceName     数据源名称
      * @param enterpriseId   企业Id
      * @param enterpriseName 企业名称
      * @param userId         用户Id
@@ -37,6 +38,6 @@ public interface RemoteLogService {
      * @return 结果
      */
     @PostMapping("/loginInfo")
-    R<Boolean> saveLoginInfo(@RequestParam("enterpriseId") Long enterpriseId, @RequestParam("enterpriseName") String enterpriseName, @RequestParam("userId") Long userId, @RequestParam("userName") String userName, @RequestParam("status") String status,
+    R<Boolean> saveLoginInfo(@RequestParam("sourceName") String sourceName, @RequestParam("enterpriseId") Long enterpriseId, @RequestParam("enterpriseName") String enterpriseName, @RequestParam("userId") Long userId, @RequestParam("userName") String userName, @RequestParam("status") String status,
                              @RequestParam("message") String message);
 }
