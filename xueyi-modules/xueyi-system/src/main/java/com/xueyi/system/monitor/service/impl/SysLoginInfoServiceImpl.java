@@ -3,7 +3,6 @@ package com.xueyi.system.monitor.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.system.monitor.domain.SysLoginInfo;
@@ -24,8 +23,9 @@ public class SysLoginInfoServiceImpl implements ISysLoginInfoService {
 
     /**
      * 新增系统登录日志
+     *
      * @param sourceName 数据源名称
-     * @param loginInfo 访问日志对象
+     * @param loginInfo  访问日志对象
      */
     @Override
     @DS("#sourceName")

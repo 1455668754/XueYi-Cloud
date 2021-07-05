@@ -62,12 +62,11 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * 通过租户Id&用户账号查询用户（登录校验）
      *
      * @param user 用户信息 | enterpriseId 租户Id | userName 用户账号
-     * @param sourceName   数据源名称
      * @return 用户对象信息
      */
     @Override
-    @DS("#sourceName")
-    public SysUser checkLoginByEnterpriseIdANDUserName(String sourceName, SysUser user) {
+    @DS("#user.sourceName")
+    public SysUser checkLoginByEnterpriseIdANDUserName(SysUser user) {
         return userMapper.checkLoginByEnterpriseIdANDUserName(user);
     }
 

@@ -3,7 +3,6 @@ package com.xueyi.system.monitor.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.monitor.domain.SysLoginInfo;
 
 /**

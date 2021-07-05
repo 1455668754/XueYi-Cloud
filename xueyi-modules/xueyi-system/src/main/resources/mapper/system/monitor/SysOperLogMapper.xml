@@ -28,9 +28,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         u.user_name as user_name, u.nick_name as user_nick
         from sys_oper_log ol
 		left join sys_user u on u.user_id = ol.user_id
-		left join sys_post p on p.post_id = u.post_id
-		left join sys_dept d on d.dept_id = u.dept_id
+# 		left join sys_post p on p.post_id = u.post_id
+# 		left join sys_dept d on d.dept_id = u.dept_id
     </sql>
+
+	<sql id="updateVo">
+		update sys_oper_log
+		set del_flag = 1
+	</sql>
 
 	<insert id="insertOperlog" parameterType="SysOperLog">
 		insert into sys_oper_log(title, business_type, method, request_method, operator_type, user_id, oper_url, oper_ip, oper_param, json_result, status, error_msg, tenant_id)
@@ -72,27 +77,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		order by ol.oper_id desc
 	</select>
 
-	<delete id="deleteOperLogByIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
- 		update sys_oper_log
- 		set del_flag = 1
- 		where oper_id in
- 		<foreach collection="search.operIds" item="operId" open="(" separator="," close=")">
- 			#{operId}
-        </foreach>
-		<!-- 数据范围过滤 -->
-		${params.updateScope}
- 	</delete>
-
- 	<select id="selectOperLogById" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysOperLogResult">
+ 	<select id="selectOperLogById" parameterType="SysOperLog" resultMap="SysOperLogResult">
 		<include refid="selectVo"/>
-		where oper_id = #{search.operId}
+		where oper_id = #{operId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
 
-	<update id="cleanOperLog" parameterType="com.xueyi.system.api.utilTool.SysSearch">
-		update sys_oper_log
-		set del_flag = 1
+	<delete id="deleteOperLogByIds" parameterType="SysOperLog">
+		<include refid="updateVo"/>
+		where oper_id in
+		<foreach collection="params.Ids" item="operId" open="(" separator="," close=")">
+			#{operId}
+		</foreach>
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<update id="cleanOperLog" parameterType="SysOperLog">
+		<include refid="updateVo"/>
 		where 1 = 1
 		<!-- 数据范围过滤 -->
 		${params.updateScope}

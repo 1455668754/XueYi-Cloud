@@ -36,6 +36,9 @@ public class BaseEntity implements Serializable
     /** 搜索值 */
     private String searchValue;
 
+    /** 数据源名称 */
+    private String sourceName;
+
     /** 显示顺序 */
     @Excel(name = "显示顺序", type = Excel.Type.IMPORT)
     private Integer sort;
@@ -118,6 +121,14 @@ public class BaseEntity implements Serializable
     public void setSearchValue(String searchValue)
     {
         this.searchValue = searchValue;
+    }
+
+    public String getSourceName() {
+        return sourceName;
+    }
+
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
     }
 
     public Integer getSort() {

@@ -27,20 +27,20 @@ public interface ISysOperLogService {
     public List<SysOperLog> selectOperLogList(SysOperLog operLog);
 
     /**
-     * 批量删除系统操作日志
-     *
-     * @param operIds 需要删除的操作日志ID
-     * @return 结果
-     */
-    public int deleteOperLogByIds(Long[] operIds);
-
-    /**
      * 查询操作日志详细
      *
-     * @param operId 操作ID
+     * @param operLog 操作日志对象 | operId 操作Id
      * @return 操作日志对象
      */
-    public SysOperLog selectOperLogById(Long operId);
+    public SysOperLog selectOperLogById(SysOperLog operLog);
+
+    /**
+     * 批量删除系统操作日志
+     *
+     * @param operLog 操作日志对象 | params.Ids 需要删除的登录日志Ids组
+     * @return 结果
+     */
+    public int deleteOperLogByIds(SysOperLog operLog);
 
     /**
      * 清空操作日志

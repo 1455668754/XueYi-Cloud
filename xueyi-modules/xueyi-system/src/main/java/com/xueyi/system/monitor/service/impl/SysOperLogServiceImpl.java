@@ -3,7 +3,6 @@ package com.xueyi.system.monitor.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.system.api.monitor.SysOperLog;
@@ -29,6 +28,7 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
      * @return 结果
      */
     @Override
+    @DS("#operLog.sourceName")
     public int insertOperlog(SysOperLog operLog) {
         return operLogMapper.insertOperlog(operLog);
     }
@@ -45,29 +45,25 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
     }
 
     /**
-     * 批量删除系统操作日志
-     *
-     * @param operIds 需要删除的操作日志Id
-     * @return 结果
-     */
-    @Override
-    public int deleteOperLogByIds(Long[] operIds) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("operIds", operIds);
-        return operLogMapper.deleteOperLogByIds(search);//@param search 万用组件 | operIds 需要删除的操作日志Ids(Long[])
-    }
-
-    /**
      * 查询操作日志详细
      *
-     * @param operId 操作Id
+     * @param operLog 操作日志对象 | operId 操作Id
      * @return 操作日志对象
      */
     @Override
-    public SysOperLog selectOperLogById(Long operId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("operId", operId);
-        return operLogMapper.selectOperLogById(search);//@param search 万用组件 | operId 操作Id
+    public SysOperLog selectOperLogById(SysOperLog operLog) {
+        return operLogMapper.selectOperLogById(operLog);
+    }
+
+    /**
+     * 批量删除系统操作日志
+     *
+     * @param operLog 操作日志对象 | params.Ids 需要删除的登录日志Ids组
+     * @return 结果
+     */
+    @Override
+    public int deleteOperLogByIds(SysOperLog operLog) {
+        return operLogMapper.deleteOperLogByIds(operLog);
     }
 
     /**
@@ -75,6 +71,6 @@ public class SysOperLogServiceImpl implements ISysOperLogService {
      */
     @Override
     public void cleanOperLog() {
-        operLogMapper.cleanOperLog(new SysSearch());//@param search 万用组件 | null
+        operLogMapper.cleanOperLog(new SysOperLog());
     }
 }

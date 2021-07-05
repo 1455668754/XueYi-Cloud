@@ -102,6 +102,7 @@ public class LogAspect
             operLog.setOperUrl(ServletUtils.getRequest().getRequestURI());
             LoginUser user = tokenService.getLoginUser();
             if(user != null){
+                operLog.setSourceName(user.getMainSource());
                 Long userId = user.getUserid();
                 Long enterpriseId = user.getEnterpriseId();
                 if (StringUtils.isNotNull(userId))
@@ -118,6 +119,7 @@ public class LogAspect
                     operLog.setEnterpriseId(0L);
                 }
             }else {
+                operLog.setSourceName("master");
                 operLog.setUserId(0L);
                 operLog.setEnterpriseId(0L);
             }

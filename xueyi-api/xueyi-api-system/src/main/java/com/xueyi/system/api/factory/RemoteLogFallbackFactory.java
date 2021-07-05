@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.RemoteLogService;
 import com.xueyi.system.api.monitor.SysOperLog;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 日志服务降级处理

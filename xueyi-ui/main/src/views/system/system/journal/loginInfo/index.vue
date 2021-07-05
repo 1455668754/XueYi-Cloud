@@ -247,7 +247,7 @@ export default {
     handleExport() {
       this.download('system/loginInfo/export', {
         ...this.queryParams
-      }, `登录日志${new Date().getTime()}.xlsx`)
+      }, `登录日志_${new Date().getTime()}.xlsx`)
     }
   }
 }

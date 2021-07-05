@@ -25,6 +25,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		left join sys_dept d on d.dept_id = u.dept_id
 	</sql>
 
+	<sql id="updateVo">
+		update sys_logininfor
+		set del_flag = 1
+	</sql>
+
 	<insert id="insertLoginInfo" parameterType="SysLoginInfo">
 		insert into sys_logininfor (enterprise_name, user_name, user_id, status, ipaddr, msg, tenant_id)
 		values (#{enterpriseName}, #{userName}, #{userId}, #{status}, #{ipaddr}, #{msg}, #{enterpriseId})
@@ -57,8 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<delete id="deleteLoginInfoByIds" parameterType="SysLoginInfo">
-		update sys_logininfor
-		set del_flag = 1
+		<include refid="updateVo"/>
  		where info_id in
  		<foreach collection="params.Ids" item="infoId" open="(" separator="," close=")">
  			#{infoId}
@@ -68,8 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	</delete>
 
     <update id="cleanLoginInfo" parameterType="SysLoginInfo">
-		update sys_logininfor
-		set del_flag = 1
+		<include refid="updateVo"/>
 		where 1 = 1
 		<!-- 数据范围过滤 -->
 		${params.updateScope}

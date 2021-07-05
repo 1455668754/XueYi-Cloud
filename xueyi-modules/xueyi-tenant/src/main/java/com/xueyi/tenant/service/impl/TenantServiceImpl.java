@@ -75,10 +75,10 @@ public class TenantServiceImpl implements ITenantService {
         TenantStrategy strategy = tenantStrategyMapper.selectTenantStrategyById(search);
         for (TenantSource source : strategy.getValues()) {
             if (source.getIsMain().equals("Y")) {
-                String sourceName = source.getSlave();
+                tenant.setSourceName(source.getSlave());
                 //新建租户时同步新建信息
                 //1.新建租户的部门|岗位|超管用户信息
-                tenantCreationService.organizeCreation(sourceName, tenant);
+                tenantCreationService.organizeCreation(tenant);
                 return tenantMapper.insertTenant(tenant);
             }
         }

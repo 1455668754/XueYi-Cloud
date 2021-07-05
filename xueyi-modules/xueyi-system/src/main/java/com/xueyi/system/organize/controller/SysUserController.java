@@ -86,9 +86,10 @@ public class SysUserController extends BaseController {
         }
         //开始进入对应的主数据库
         SysUser checkUser = new SysUser();
+        checkUser.setSourceName(master.getMaster());
         checkUser.setEnterpriseId(sysEnterprise.getEnterpriseId());
         checkUser.setUserName(userName);
-        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(master.getMaster(), checkUser);
+        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(checkUser);
         if (StringUtils.isNull(sysUser)) {
             return R.fail("账号或密码错误，请检查");
         }

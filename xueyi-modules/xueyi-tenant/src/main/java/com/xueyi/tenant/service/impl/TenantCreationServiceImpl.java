@@ -24,14 +24,13 @@ public class TenantCreationServiceImpl implements ITenantCreationService {
     /**
      * 租户新增-创建组织信息
      *
-     * @param sourceName 数据源名称
-     * @param tenant     租户信息
+     * @param tenant 租户信息
      * @return 结果
      */
     @Override
-    @DS("#sourceName")
+    @DS("#tenant.sourceName")
     @Transactional(propagation = Propagation.REQUIRES_NEW)      // 事务传播特性设置为 REQUIRES_NEW 开启新的事务
-    public int organizeCreation(String sourceName, Tenant tenant) {
+    public int organizeCreation(Tenant tenant) {
         int rows = 0;
         tenant.getParams().put("deptId", IdUtil.getSnowflake(0, 0).nextId());
         tenant.getParams().put("postId", IdUtil.getSnowflake(0, 0).nextId());
