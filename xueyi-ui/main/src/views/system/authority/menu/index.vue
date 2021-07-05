@@ -15,17 +15,18 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
+    {{menuList}}
     <el-table
       v-loading="loading"
       :data="menuList"
       row-key="id"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      indent="40"
+      :indent="40"
     >
       <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon"/>
+          <svg-icon :icon-class="scope.row.icon" v-if="scope.row.icon !== null"/>
         </template>
       </el-table-column>
       <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
@@ -44,12 +45,13 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     type="text"
-                     icon="el-icon-edit"
-                     @click="handleUpdate(scope.row)"
-                     v-hasPermi="['system:menu:edit']"
-                     v-if="scope.row.type === '1' && scope.row.isMain === '0'"
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['system:menu:edit']"
+            v-if="scope.row.type === '1' && scope.row.isMain === '0'"
           >修改
           </el-button>
           <el-button
