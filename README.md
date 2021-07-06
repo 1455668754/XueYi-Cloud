@@ -8,15 +8,7 @@
 * RBAC优化：角色-模块-菜单控制模式 | 优化角色控制逻辑
 * 分布式Id：通过雪花Id实现全局Id唯一
 
-基于本系统还有许多内容是希望加入进来的，但限于时间问题，后续慢慢更新进来，如遇bug，请提Issues。  
-  
-## 月度计划
-
-* 1.认证改造：redis改造oAuth 2.0
-* 2.`物理隔离实现(已完成)`
-* 3.demo部署
-* 4.基础操作视频讲解
-* 5.常规优化
+基于本系统还有许多内容是希望加入进来的，但限于时间问题，后续慢慢更新进来，如遇bug，请提Issues。
 
 走过路过，点个star :kissing_heart: 
 
@@ -106,3 +98,7 @@ com.xueyi
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png"/></td>
     </tr>
 </table>
+
+## 鸣谢
+
+[若依/RuoYi-Cloud](https://gitee.com/zhangmrit/ruoyi-cloud)
