@@ -2,7 +2,7 @@
 
 # 使用说明，用来提示输入参数
 usage() {
-	echo "Usage: sh 执行脚本.sh [port|base|modules|stop|rm]"
+	echo "Usage: sh 执行脚本.sh [port|base|modules|monitor|stop|rm]"
 	exit 1
 }
 
@@ -60,6 +60,9 @@ case "$1" in
 ;;
 "modules")
 	modules
+;;
+"monitor")
+	monitor
 ;;
 "stop")
 	stop
