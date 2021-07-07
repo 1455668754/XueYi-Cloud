@@ -98,7 +98,3 @@ com.xueyi
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png"/></td>
     </tr>
 </table>
-
-## 鸣谢
-
-[若依/RuoYi-Cloud](https://gitee.com/zhangmrit/ruoyi-cloud)
