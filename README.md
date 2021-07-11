@@ -19,10 +19,10 @@
 - xueYi / admin / admin123 
 
 
-- 超管账户（可增减租户）
+- 超管账户（可增减租户）`(自己部署后使用)`
 - administrator / admin / admin123
 
-演示地址：https://xueyitt.cn`(即将上线)`     
+演示地址：https://xueyitt.cn`(已上线，仅开放普通账户体验)`     
 文档地址：https://doc.xueyitt.cn
 
 ## 雪忆微服务交流群
