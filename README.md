@@ -19,20 +19,20 @@
 - xueYi / admin / admin123 
 
 
-- 超管账户（可增减租户）`(自己部署后使用)`
+- 超管账户（可增减租户）           
 - administrator / admin / admin123
 
-演示地址：https://xueyitt.cn`(已上线，仅开放普通账户体验)`     
-文档地址：https://doc.xueyitt.cn
+演示地址：https://xueyitt.cn         
+文档地址：https://doc.xueyitt.cn     
 
 ## 雪忆微服务交流群
 
 QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://jq.qq.com/?_wv=1027&k=zw11JJhj) 点击按钮入群。
 
-* 采用前后端分离的模式，微服务版本前端。
-* 后端采用Spring Boot、Spring Cloud & Alibaba。
-* 注册中心、配置中心选型Nacos，权限认证使用Redis。
-* 流量控制框架选型Sentinel，分布式事务选型Seata。
+* 采用前后端分离的模式，微服务版本前端。       
+* 后端采用Spring Boot、Spring Cloud & Alibaba。           
+* 注册中心、配置中心选型Nacos，权限认证使用Redis。         
+* 流量控制框架选型Sentinel，分布式事务选型Seata。            
 
 ## 系统模块
 
