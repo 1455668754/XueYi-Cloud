@@ -1,6 +1,6 @@
 <template>
   <div :class="{'show':show}" class="header-search">
-    <svg-icon class-name="search-icon" icon-class="xy_search" @click.stop="click" />
+    <svg-icon class-name="search-icon" icon-class="xy_search" @click.stop="click"/>
     <el-select
       ref="headerSearchSelect"
       v-model="search"
@@ -12,7 +12,8 @@
       class="header-search-select"
       @change="change"
     >
-      <el-option v-for="option in options" :key="option.item.path" :value="option.item" :label="option.item.title.join(' > ')" />
+      <el-option v-for="option in options" :key="option.item.path" :value="option.item"
+                 :label="option.item.title.join(' > ')"/>
     </el-select>
   </div>
 </template>
@@ -70,9 +71,11 @@ export default {
       this.show = false
     },
     change(val) {
-      if(this.ishttp(val.path)) {
+      const path = val.path
+      if (this.ishttp(val.path)) {
         // http(s):// 路径新窗口打开
-        window.open(val.path, "_blank");
+        const pindex = path.indexOf("http")
+        window.open(path.substr(pindex, path.length), "_blank")
       } else {
         this.$router.push(val.path)
       }
@@ -106,23 +109,21 @@ export default {
 
       for (const router of routes) {
         // skip hidden router
-        if (router.hidden) { continue }
-
+        if (router.hidden) {
+          continue
+        }
         const data = {
           path: !this.ishttp(router.path) ? path.resolve(basePath, router.path) : router.path,
           title: [...prefixTitle]
         }
-
         if (router.meta && router.meta.title) {
           data.title = [...data.title, router.meta.title]
-
           if (router.redirect !== 'noRedirect') {
             // only push the routes with title
             // special case: need to exclude parent router without redirect
             res.push(data)
           }
         }
-
         // recursive child routes
         if (router.children) {
           const tempRoutes = this.generateRoutes(router.children, data.path, data.title)
