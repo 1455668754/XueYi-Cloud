@@ -190,7 +190,7 @@ public class DataScopeAspect {
             }
 
             // 租户控制
-            if (StringUtils.isNotBlank(SedAlias) || StringUtils.isNotBlank(WedAlias) || StringUtils.isNotBlank(SWedAlias) || StringUtils.isNotBlank(SWLedAlias)) {
+            if (StringUtils.isNotBlank(SedAlias) || StringUtils.isNotBlank(WedAlias) || StringUtils.isNotBlank(SWedAlias) || StringUtils.isNotBlank(SLedAlias) || StringUtils.isNotBlank(SWLedAlias)) {
                 //控制数据权限 分离
                 if (StringUtils.isNotBlank(deptAlias)) {
                     sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", deptAlias, enterprise.getEnterpriseId(), deptAlias));
