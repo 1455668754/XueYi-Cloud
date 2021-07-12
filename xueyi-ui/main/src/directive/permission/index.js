@@ -1,7 +1,7 @@
 import hasRole from './hasRole'
 import hasPermi from './hasPermi'
 
-const install = function(Vue) {
+const install = function (Vue) {
   Vue.directive('hasRole', hasRole)
   Vue.directive('hasPermi', hasPermi)
 }
@@ -9,7 +9,7 @@ const install = function(Vue) {
 if (window.Vue) {
   window['hasRole'] = hasRole
   window['hasPermi'] = hasPermi
-  Vue.use(install); // eslint-disable-line
+  Vue.use(install) // eslint-disable-line
 }
 
 export default install

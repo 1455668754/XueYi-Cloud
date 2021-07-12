@@ -1,14 +1,14 @@
- /**
- * 角色权限处理
+/**
+ * v-hasRole 角色权限处理
  * Copyright (c) 2019 ruoyi
  */
- 
+
 import store from '@/store'
 
 export default {
   inserted(el, binding, vnode) {
-    const { value } = binding
-    const super_admin = "admin";
+    const {value} = binding
+    const super_admin = "admin"
     const roles = store.getters && store.getters.roles
 
     if (value && value instanceof Array && value.length > 0) {
