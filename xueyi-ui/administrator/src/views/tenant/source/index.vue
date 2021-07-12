@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
       <el-form-item label="数据源名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -127,8 +127,11 @@
         </template>
       </el-table-column>
       <el-table-column label="数据源名称" align="center" prop="name" class-name="allowDrag"/>
-      <el-table-column label="数据源驱动" align="center" prop="driverClassName" class-name="allowDrag"/>
-      <el-table-column label="数据源地址" align="center" prop="url" class-name="allowDrag"/>
+      <el-table-column label="数据源编码" align="center" prop="slave" class-name="allowDrag">
+        <template slot-scope="scope">
+          <el-tag type="info">{{ scope.row.slave }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
@@ -240,7 +243,7 @@
 </template>
 
 <script>
-import { listSource, getSource, delSource, addSource, updateSource, updateSourceSort } from '@/api/tenant/source'
+import {listSource, getSource, delSource, addSource, updateSource, updateSourceSort} from '@/api/tenant/source'
 import Sortable from 'sortablejs'
 
 export default {
@@ -292,16 +295,16 @@ export default {
       // 表单校验
       rules: {
         driverClassName: [
-          { required: true, message: '驱动不能为空', trigger: 'blur' }
+          {required: true, message: '驱动不能为空', trigger: 'blur'}
         ],
         url: [
-          { required: true, message: '地址不能为空', trigger: 'blur' }
+          {required: true, message: '地址不能为空', trigger: 'blur'}
         ],
         username: [
-          { required: true, message: '用户名不能为空', trigger: 'blur' }
+          {required: true, message: '用户名不能为空', trigger: 'blur'}
         ],
         password: [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
+          {required: true, message: '密码不能为空', trigger: 'blur'}
         ]
       }
     }
@@ -380,7 +383,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getSource({ sourceId: row.sourceId }).then(response => {
+      getSource({sourceId: row.sourceId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改数据源'
@@ -421,7 +424,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delSource(that.updateParamIds(sourceIds))
       }).then(() => {
         this.getList()

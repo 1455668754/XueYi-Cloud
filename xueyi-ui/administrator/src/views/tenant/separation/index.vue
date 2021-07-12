@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
       <el-form-item label="数据源名称" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -46,8 +46,11 @@
         </template>
       </el-table-column>
       <el-table-column label="数据源名称" align="center" prop="name"/>
-      <el-table-column label="数据源驱动" align="center" prop="driverClassName"/>
-      <el-table-column label="数据源地址" align="center" prop="url"/>
+      <el-table-column label="数据源编码" align="center" prop="slave">
+        <template slot-scope="scope">
+          <el-tag type="info">{{ scope.row.slave }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="读写类型" align="center" prop="type">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
@@ -133,7 +136,7 @@
 </template>
 
 <script>
-import { listSeparation, getSeparation, updateSeparation, readSeparation } from '@/api/tenant/separation'
+import {listSeparation, getSeparation, updateSeparation, readSeparation} from '@/api/tenant/separation'
 
 export default {
   name: 'Separation',
@@ -220,10 +223,10 @@ export default {
     /** 配置按钮操作 */
     handleUpdate(row) {
       this.reset()
-      readSeparation({ sourceId: row.sourceId, type: row.type }).then(response => {
+      readSeparation({sourceId: row.sourceId, type: row.type}).then(response => {
         this.containReadList = response.data
       })
-      getSeparation({ sourceId: row.sourceId }).then(response => {
+      getSeparation({sourceId: row.sourceId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改数据源'
