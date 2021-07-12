@@ -22,13 +22,13 @@
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       :indent="40"
     >
-      <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true"/>
       <el-table-column prop="icon" label="图标" align="center">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" v-if="scope.row.icon != undefined"/>
         </template>
       </el-table-column>
-      <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"></el-table-column>
+      <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"/>
       <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
       <el-table-column prop="status" label="状态" width="80">
         <template slot-scope="scope">
@@ -90,7 +90,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="24">
+          <el-col :span="14">
             <el-form-item label="菜单类型" prop="menuType">
               <el-radio-group v-model="form.menuType">
                 <el-radio label="M">目录</el-radio>
@@ -98,6 +98,18 @@
                 <el-radio label="F">按钮</el-radio>
               </el-radio-group>
             </el-form-item>
+          </el-col>
+          <el-col :span="10">
+          <el-form-item label="公共菜单" v-if="enterpriseName === 'administrator' && form.menuId == undefined">
+            <el-radio-group v-model="form.isCommon">
+              <el-radio
+                v-for="dict in choiceOptions"
+                :key="dict.dictValue"
+                :label="dict.dictValue"
+              >{{ dict.dictLabel }}
+              </el-radio>
+            </el-radio-group>
+          </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item v-if="form.menuType != 'F'" label="菜单图标">
@@ -202,12 +214,14 @@ import {treeSelect as systemMenuTreeSelect} from "@/api/system/system"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import IconSelect from "@/components/IconSelect"
+import store from "@/store"
 
 export default {
   name: "Menu",
   components: {Treeselect, IconSelect},
   data() {
     return {
+      enterpriseName: store.getters.enterpriseName,
       // 遮罩层
       loading: true,
       // 显示搜索条件
@@ -224,6 +238,8 @@ export default {
       visibleOptions: [],
       // 菜单状态数据字典
       statusOptions: [],
+      // 选择字典
+      choiceOptions: [],
       //本参数用于判断当前父级是模块Id还是菜单Id
       checkSystem: false,
       // 表单参数
@@ -246,6 +262,9 @@ export default {
     })
     this.getDicts("sys_normal_disable").then(response => {
       this.statusOptions = response.data
+    })
+    this.getDicts("sys_yes_no").then(response => {
+      this.choiceOptions = response.data
     })
   },
   methods: {
@@ -308,6 +327,7 @@ export default {
         icon: undefined,
         menuType: "M",
         sort: 0,
+        isCommon: "N",
         isFrame: "1",
         isCache: "0",
         visible: "0",

@@ -11,6 +11,7 @@
         <result property="type"             column="type"        />
         <result property="route"            column="route"       />
         <result property="isMain"           column="is_main"     />
+        <result property="isNew"            column="is_new"      />
         <result property="sort"       		column="sort"        />
         <result property="status"       	column="status"      />
         <result property="createBy"   		column="create_by"   />
@@ -23,12 +24,12 @@
     </resultMap>
 
     <sql id="selectVo">
-        select s.system_id, s.system_name, s.image_url, s.type, s.route, s.sort, s.status, s.create_by, s.create_time, s.update_by, s.update_time, s.remark
+        select s.system_id, s.system_name, s.image_url, s.type, s.is_new, s.route, s.sort, s.status, s.create_by, s.create_time, s.update_by, s.update_time, s.remark
         from xy_system s
     </sql>
 
     <sql id="RouteVo">
-        select distinct s.system_id, s.system_name, s.image_url, s.type, s.route, s.sort, s.status, s.remark
+        select distinct s.system_id, s.system_name, s.image_url, s.is_new, s.type, s.route, s.sort, s.status, s.remark
         from xy_system s
     </sql>
 
@@ -84,6 +85,7 @@
             <if test="systemName != null and systemName != ''">        system_name             ,</if>
             <if test="imageUrl != null and imageUrl != ''">            image_url               ,</if>
             <if test="type != null and type != ''">                    type                    ,</if>
+            <if test="isNew != null and isNew != ''">                  is_new                  ,</if>
             <if test="route != null and route != ''">                  route                   ,</if>
             <if test="sort != null">                                   sort                    ,</if>
             <if test="status != null and status != ''">                status                  ,</if>
@@ -96,6 +98,7 @@
             <if test="systemName != null and systemName != ''">        #{systemName}           ,</if>
             <if test="imageUrl != null and imageUrl != ''">            #{imageUrl}             ,</if>
             <if test="type != null and type != ''">                    #{type}                 ,</if>
+            <if test="isNew != null and isNew != ''">                  #{isNew}                ,</if>
             <if test="route != null and route != ''">                  #{route}                ,</if>
             <if test="sort != null">                                   #{sort}                 ,</if>
             <if test="status != null and status != ''">                #{status}               ,</if>
@@ -111,6 +114,7 @@
             <if test="systemName != null and systemName != ''">        system_name = #{systemName}    ,</if>
             <if test="imageUrl != null and imageUrl != ''">            image_url = #{imageUrl}        ,</if>
             <if test="type != null and type != ''">                    type = #{type}                 ,</if>
+            <if test="isNew != null and isNew != ''">                  is_new = #{isNew}              ,</if>
             <if test="route != null and route != ''">                  route = #{route}               ,</if>
             <if test="sort != null">                                   sort = #{sort}                 ,</if>
             <if test="status != null and status != ''">                status = #{status}             ,</if>

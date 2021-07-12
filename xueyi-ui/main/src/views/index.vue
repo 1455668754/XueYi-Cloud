@@ -51,8 +51,11 @@ export default {
       }
       //外部链接
       else if (item.type === '1') {
-        window.open(item.route, '_blank') // 在新窗口打开外链接
-        // window.location.href = item.route;  //在本页面打开外部链接
+        if (item.isNew === 'N'){
+          window.location.href = item.route;  //在本页面打开外部链接
+        }else {
+          window.open(item.route, '_blank') // 在新窗口打开外链接
+        }
       }
     }
   }

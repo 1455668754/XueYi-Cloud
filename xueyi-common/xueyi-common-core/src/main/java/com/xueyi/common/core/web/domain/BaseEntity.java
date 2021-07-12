@@ -36,6 +36,9 @@ public class BaseEntity implements Serializable
     /** 搜索值 */
     private String searchValue;
 
+    /** 公共控件 */
+    private String isCommon;
+
     /** 数据源名称 */
     private String sourceName;
 
@@ -121,6 +124,14 @@ public class BaseEntity implements Serializable
     public void setSearchValue(String searchValue)
     {
         this.searchValue = searchValue;
+    }
+
+    public String getIsCommon() {
+        return isCommon;
+    }
+
+    public void setIsCommon(String isCommon) {
+        this.isCommon = isCommon;
     }
 
     public String getSourceName() {

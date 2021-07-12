@@ -26,6 +26,9 @@ public class SysSystem extends BaseEntity
     @Excel(name = "跳转类型(0内部跳转 1外部跳转)")
     private String type;
 
+    /** 跳转新页(Y是 N否) */
+    private String isNew;
+
     /** 跳转路由 */
     @Excel(name = "跳转路由")
     private String route;
@@ -65,6 +68,14 @@ public class SysSystem extends BaseEntity
         return type;
     }
 
+    public String getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(String isNew) {
+        this.isNew = isNew;
+    }
+
     public void setRoute(String route)
     {
         this.route = route;
@@ -102,6 +113,7 @@ public class SysSystem extends BaseEntity
                 .append("type", getType())
                 .append("route", getRoute())
                 .append("isMain", getIsMain())
+                .append("isNew", getIsNew())
                 .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())

@@ -39,7 +39,7 @@ public interface SysSystemMapper {
      * @param sysSystem 子系统模块 | systemId 子系统模块Id
      * @return 子系统模块
      */
-    @DataScope(eAlias = "s")
+    @DataScope(edAlias = "s")
     public SysSystem selectSystemById(SysSystem sysSystem);
 
     /**

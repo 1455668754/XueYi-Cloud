@@ -314,7 +314,11 @@ public class DataScopeAspect {
         if (StringUtils.isNotBlank(sqlString.toString()) || StringUtils.isNotBlank(upSqlString.toString())) {
             if (StringUtils.isNotNull(params) && params instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) params;
-                baseEntity.setEnterpriseId(enterprise.getEnterpriseId());
+                if(StringUtils.isNotNull(baseEntity.getIsCommon()) && baseEntity.getIsCommon().equals("Y") && enterprise.getEnterpriseId() == -1){
+                    baseEntity.setEnterpriseId(0L);
+                }else {
+                    baseEntity.setEnterpriseId(enterprise.getEnterpriseId());
+                }
                 if (StringUtils.isNotBlank(sqlString.toString())) {
                     baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
                 }
@@ -329,7 +333,9 @@ public class DataScopeAspect {
                     baseEntity.setId(id);
                     baseEntity.setCreateBy(user.getUserId());
                     baseEntity.setUpdateBy(user.getUserId());
-                    baseEntity.getParams().put(UPDATE_SCOPE, " AND (" + upSqlString.substring(4) + ")");
+                    if (enterprise.getEnterpriseId() != -1) {
+                        baseEntity.getParams().put(UPDATE_SCOPE, " AND (" + upSqlString.substring(4) + ")");
+                    }
                 }
             }
         }

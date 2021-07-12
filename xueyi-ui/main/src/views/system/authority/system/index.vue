@@ -157,10 +157,36 @@
         <el-form-item label="系统简介" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" maxlength="14" show-word-limit/>
         </el-form-item>
-        <el-form-item label="跳转类型">
-          <el-radio-group v-model="form.type">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="跳转类型">
+              <el-radio-group v-model="form.type">
+                <el-radio
+                  v-for="dict in typeOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{ dict.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="跳转新页" v-if="form.type==='1'">
+              <el-radio-group v-model="form.isNew">
+                <el-radio
+                  v-for="dict in choiceOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{ dict.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="公共系统" v-if="enterpriseName === 'administrator' && form.systemId == undefined">
+          <el-radio-group v-model="form.isCommon">
             <el-radio
-              v-for="dict in typeOptions"
+              v-for="dict in choiceOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
             >{{ dict.dictLabel }}
@@ -204,12 +230,14 @@
 
 import {listSystem, getSystem, delSystem, addSystem, updateSystem, changeSystemStatus} from "@/api/system/system"
 import ImageBox from "@/components/XyComponents/ImageBox"
+import store from "@/store"
 
 export default {
   name: "System",
   components: {ImageBox},
   data() {
     return {
+      enterpriseName: store.getters.enterpriseName,
       dialogImageUrl: '',
       dialogVisible: false,
       // 遮罩层
@@ -249,6 +277,8 @@ export default {
       typeOptions: [],
       // 状态字典
       statusOptions: [],
+      // 选择字典
+      choiceOptions: [],
       // 表单参数
       form: {},
       // 弹出层标题
@@ -294,6 +324,9 @@ export default {
       this.getDicts("sys_show_hide").then(response => {
         this.statusOptions = response.data
       })
+      this.getDicts("sys_yes_no").then(response => {
+        this.choiceOptions = response.data
+      })
     },
     /** 字典内容转化 */
     typeFormat(row, column) {
@@ -310,6 +343,8 @@ export default {
         systemId: null,
         systemName: null,
         imageUrl: null,
+        isCommon: "N",
+        isNew: "Y",
         type: "0",
         route: null,
         sort: null,

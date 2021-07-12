@@ -136,6 +136,7 @@ create table xy_system (
   system_name		        varchar(50)	        not null	                            comment '系统名称',
   image_url                 varchar(5000)	    default null 	        	            comment '图片地址',
   type		                char(1)	            not null default '1'	                comment '跳转类型（0内部跳转 1外部跳转）',
+  is_new		            char(1)	            not null default 'Y'	                comment '新页面（Y是 N否）',
   route                     varchar(500)        not null	                            comment '跳转路由',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
@@ -422,7 +423,8 @@ values (1, '用户性别', 'sys_user_sex', 0, '用户性别列表'),
        (23, '邮费状态', 'sys_mall_postage_type', 0, '邮费状态列表'),
        (24, '读写类型', 'sys_tenant_read_type', 0, '读写类型列表'),
        (25, '数据源类型', 'sys_tenant_resource_type', 0, '数据源类型列表'),
-       (26, '配置类型', 'sys_tenant_configuration_type', 0, '配置类型列表');
+       (26, '配置类型', 'sys_tenant_configuration_type', 0, '配置类型列表'),
+       (27, '空间范围', 'sys_public_choice', 0, '空间范围列表');
 
 
 -- ----------------------------
@@ -523,7 +525,9 @@ values (1, 1, '男', '0', 'sys_user_sex', '', '', 'Y', 0, '性别男'),
        (71, 1, '从数据源', '0', 'sys_tenant_resource_type', '', '', 'N', 0, '从数据源'),
        (72, 2, '主数据源', '1', 'sys_tenant_resource_type', '', '', 'N', 0, '主数据源'),
        (73, 1, '自动配置', '0', 'sys_tenant_configuration_type', '', '', 'N', 0, '自动配置'),
-       (74, 2, '手动配置', '1', 'sys_tenant_configuration_type', '', '', 'N', 0, '手动配置');
+       (74, 2, '手动配置', '1', 'sys_tenant_configuration_type', '', '', 'N', 0, '手动配置'),
+       (75, 0, '私有', '0', 'sys_public_choice', '', '', 'N', 0, '私有'),
+       (76, 1, '公共', '1', 'sys_public_choice', '', '', 'N', 0, '公共');
 
 -- ----------------------------
 -- 10、参数配置表

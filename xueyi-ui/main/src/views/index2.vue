@@ -23,7 +23,6 @@
         </div>
       </el-col>
     </el-row>
-    <Material visible="true" v-model="list" max="5" clear="true"></Material>
   </div>
 </template>
 
@@ -33,7 +32,6 @@ import LineChart from './dashboard/LineChart'
 import RaddarChart from './dashboard/RaddarChart'
 import PieChart from './dashboard/PieChart'
 import BarChart from './dashboard/BarChart'
-import Material from "../components/XyComponents/Material/index";
 
 const lineChartData = {
   newVisitis: {
@@ -66,7 +64,6 @@ export default {
   },
   data() {
     return {
-      list:[ { "materialId": "1376349123774660608", "materialNick": "5efb19cb-cadc-4110-aba5-35158f547a2c.jpg", "materialUrl": "http://127.0.0.1:9300/statics/2021/03/29/5efb19cb-cadc-4110-aba5-35158f547a2c.jpg", "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/03/29/76b63f36-b232-4834-a269-d173d6eefad4.jpg" } ],
       lineChartData: lineChartData.newVisitis
     }
   },
