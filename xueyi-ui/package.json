@@ -9,7 +9,7 @@
   "scripts": {
     "install:administrator": "cd administrator && yarn",
     "install:main": "cd main && yarn",
-    "install-all": "npm-run-all install:*",
+    "install-all": "yarn install && npm-run-all install:*",
     "start:administrator": "cd administrator && yarn start",
     "start:main": "cd main && yarn start",
     "start-all": "npm-run-all --parallel start:*",
