@@ -60,6 +60,7 @@ com.xueyi
 │               └── notice                            // 公告模块
 │               └── organize                          // 组织模块
 │               └── role                              // 权限关系
+│               └── source                            // 源策略
 │       └── xueyi-gen                                 // 代码生成 [9400]
 │       └── xueyi-job                                 // 定时任务 [9500]
 │       └── xueyi-file                                // 文件服务 [9300]

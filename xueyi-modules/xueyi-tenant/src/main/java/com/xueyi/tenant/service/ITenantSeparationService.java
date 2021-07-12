@@ -1,6 +1,7 @@
 package com.xueyi.tenant.service;
 
 import java.util.List;
+
 import com.xueyi.tenant.api.source.TenantSource;
 
 /**
@@ -9,6 +10,7 @@ import com.xueyi.tenant.api.source.TenantSource;
  * @author xueyi
  */
 public interface ITenantSeparationService {
+
     /**
      * 查询数据源列表
      *

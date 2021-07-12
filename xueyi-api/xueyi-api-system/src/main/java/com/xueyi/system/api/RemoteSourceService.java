@@ -2,7 +2,7 @@ package com.xueyi.system.api;
 
 import com.xueyi.common.core.constant.ServiceNameConstants;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.tenant.api.source.Source;
+import com.xueyi.system.api.source.Source;
 import com.xueyi.system.api.factory.RemoteSourceFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author xueyi
  */
-@FeignClient(contextId = "remoteSourceService", value = ServiceNameConstants.TENANT_SERVICE, fallbackFactory = RemoteSourceFallbackFactory.class)
+@FeignClient(contextId = "remoteSourceService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSourceFallbackFactory.class)
 public interface RemoteSourceService {
     /**
      * 查询租户可加载数据源
@@ -23,6 +23,6 @@ public interface RemoteSourceService {
      * @param enterpriseId 企业Id
      * @return 结果
      */
-    @GetMapping(value = "/source/loadDataSources/{enterpriseId}")
+    @GetMapping(value = "/enterprise/loadDataSources/{enterpriseId}")
     public R<List<Source>> getLoadDataSources(@PathVariable("enterpriseId") Long enterpriseId);
 }

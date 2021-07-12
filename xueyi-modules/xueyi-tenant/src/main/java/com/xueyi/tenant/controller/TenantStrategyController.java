@@ -31,6 +31,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 @RestController
 @RequestMapping("/strategy")
 public class TenantStrategyController extends BaseController {
+
     @Autowired
     private ITenantStrategyService tenantStrategyService;
 

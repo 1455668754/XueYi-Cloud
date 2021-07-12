@@ -1,7 +1,9 @@
 package com.xueyi.system.organize.service;
 
 import com.xueyi.system.api.organize.SysEnterprise;
-import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.system.api.source.Source;
+
+import java.util.List;
 
 /**
  * 租户 业务层
@@ -9,6 +11,14 @@ import com.xueyi.system.api.utilTool.SysSearch;
  * @author xueyi
  */
 public interface ISysEnterpriseService {
+
+    /**
+     * 查询数据源列表
+     *
+     * @param source 数据源组
+     * @return 数据源组集合
+     */
+    public List<Source> selectLoadDataSources(Source source);
 
     /**
      * 通过企业账号查询租户信息

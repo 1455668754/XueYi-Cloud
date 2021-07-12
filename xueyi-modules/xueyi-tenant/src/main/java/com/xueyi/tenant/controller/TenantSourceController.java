@@ -1,21 +1,19 @@
 package com.xueyi.tenant.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
-import com.xueyi.common.core.domain.R;
-import com.xueyi.tenant.api.source.Source;
+
+import com.xueyi.common.core.utils.poi.ExcelUtil;
+import com.xueyi.tenant.api.source.TenantSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.tenant.api.source.TenantSource;
 import com.xueyi.tenant.service.ITenantSourceService;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.page.TableDataInfo;
 
 /**
@@ -26,19 +24,9 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 @RestController
 @RequestMapping("/source")
 public class TenantSourceController extends BaseController {
+
     @Autowired
     private ITenantSourceService tenantSourceService;
-
-    /**
-     * 获取当前用户信息
-     */
-    @GetMapping("/loadDataSources/{enterpriseId}")
-    public R<List<Source>> info(@PathVariable("enterpriseId") Long enterpriseId) {
-        Source source = new Source();
-        source.setEnterpriseId(enterpriseId);
-        List<Source> sources=tenantSourceService.selectLoadDataSources(source);
-        return R.ok(sources);
-    }
 
     /**
      * 查询数据源列表
@@ -99,7 +87,7 @@ public class TenantSourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
     public AjaxResult updateSort(@RequestBody TenantSource tenantSource) {
-        if (tenantSource.getDatabaseType()!= null && tenantSource.getDatabaseType().equals("1")) {
+        if (tenantSource.getDatabaseType() != null && tenantSource.getDatabaseType().equals("1")) {
             return AjaxResult.error("禁止操作主数据源");
         }
         return toAjax(tenantSourceService.updateTenantSourceSort(tenantSource));

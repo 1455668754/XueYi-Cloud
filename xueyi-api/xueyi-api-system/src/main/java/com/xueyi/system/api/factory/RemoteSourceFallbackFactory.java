@@ -2,7 +2,7 @@ package com.xueyi.system.api.factory;
 
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.RemoteSourceService;
-import com.xueyi.tenant.api.source.Source;
+import com.xueyi.system.api.source.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;

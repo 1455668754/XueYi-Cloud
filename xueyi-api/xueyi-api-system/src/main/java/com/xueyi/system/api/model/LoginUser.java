@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.api.organize.SysUser;
-import com.xueyi.tenant.api.source.Source;
+import com.xueyi.system.api.source.Source;
 
 /**
  * 用户信息

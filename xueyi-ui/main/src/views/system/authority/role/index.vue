@@ -201,7 +201,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示顺序" prop="sort">
-              <el-input-number v-model="form.sort" controls-position="right" :min="0" :max="127"/>
+              <el-input-number v-model="form.sort" controls-position="right" :min="0"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -524,9 +524,9 @@ export default {
         roleCode: undefined,
         roleName: undefined,
         roleKey: undefined,
-        dataScope: 0,
+        dataScope: '1',
         sort: 0,
-        status: 0,
+        status: '0',
         systemMenuIds: [],
         deptPostIds: [],
         menuCheckStrictly: true,

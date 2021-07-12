@@ -10,6 +10,7 @@ import com.xueyi.tenant.domain.TenantStrategy;
  * @author xueyi
  */
 public interface ITenantStrategyService {
+
     /**
      * 查询数据源策略列表
      *

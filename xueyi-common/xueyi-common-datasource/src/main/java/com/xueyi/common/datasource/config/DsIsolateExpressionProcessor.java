@@ -5,11 +5,8 @@ import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.model.LoginUser;
-import com.xueyi.tenant.api.source.Source;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * 获取并返回租户的数据源策略

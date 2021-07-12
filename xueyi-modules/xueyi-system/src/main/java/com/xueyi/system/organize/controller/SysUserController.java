@@ -11,10 +11,11 @@ import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.api.organize.SysPost;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.service.ISysLoginService;
+import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
 import com.xueyi.system.api.RemoteSourceService;
-import com.xueyi.tenant.api.source.Source;
+import com.xueyi.system.api.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,7 +63,7 @@ public class SysUserController extends BaseController {
     private TokenService tokenService;
 
     @Autowired
-    private RemoteSourceService remoteSourceService;
+    private ISysEnterpriseService enterpriseService;
 
     /**
      * 获取当前用户信息
@@ -76,7 +77,9 @@ public class SysUserController extends BaseController {
             return R.fail("账号或密码错误，请检查");
         }
         //查询租户所有的主从库信息
-        List<Source> source = remoteSourceService.getLoadDataSources(sysEnterprise.getEnterpriseId()).getData();
+        Source checkSource = new Source();
+        checkSource.setEnterpriseId(sysEnterprise.getEnterpriseId());
+        List<Source> source = enterpriseService.selectLoadDataSources(checkSource);
         Source master = null;
         for (Source s : source) {
             if (s.getIsMain().equals("Y")) {

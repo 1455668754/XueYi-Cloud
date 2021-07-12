@@ -2,7 +2,6 @@ package com.xueyi.tenant.service;
 
 import java.util.List;
 
-import com.xueyi.tenant.api.source.Source;
 import com.xueyi.tenant.api.source.TenantSource;
 
 /**
@@ -11,13 +10,6 @@ import com.xueyi.tenant.api.source.TenantSource;
  * @author xueyi
  */
 public interface ITenantSourceService {
-    /**
-     * 查询数据源列表
-     *
-     * @param source 数据源组
-     * @return 数据源组集合
-     */
-    public List<Source> selectLoadDataSources(Source source);
 
     /**
      * 查询数据源列表

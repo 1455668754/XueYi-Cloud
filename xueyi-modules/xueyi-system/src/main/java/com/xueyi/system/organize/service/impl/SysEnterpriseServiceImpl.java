@@ -4,9 +4,12 @@ import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.system.api.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
-import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.system.source.mapper.DataSourceMapper;
+import com.xueyi.system.api.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 租户信息 业务层处理
@@ -15,8 +18,22 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
+
     @Autowired
     private SysEnterpriseMapper enterpriseMapper;
+
+    @Autowired
+    private DataSourceMapper dataSourceMapper;
+
+    /**
+     * 查询数据源列表
+     *
+     * @param source 数据源组
+     * @return 数据源组集合
+     */
+    public List<Source> selectLoadDataSources(Source source){
+        return dataSourceMapper.selectLoadDataSources(source);
+    }
 
     /**
      * 通过企业账号查询租户信息

@@ -25,6 +25,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 @RestController
 @RequestMapping("/separation")
 public class TenantSeparationController extends BaseController {
+
     @Autowired
     private ITenantSeparationService tenantSeparationService;
 

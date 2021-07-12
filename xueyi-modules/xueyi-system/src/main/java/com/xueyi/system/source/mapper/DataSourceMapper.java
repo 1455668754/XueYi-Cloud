@@ -1,6 +1,6 @@
-package com.xueyi.tenant.mapper;
+package com.xueyi.system.source.mapper;
 
-import com.xueyi.tenant.api.source.Source;
+import com.xueyi.system.api.source.Source;
 
 import java.util.List;
 

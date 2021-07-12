@@ -1,6 +1,7 @@
 package com.xueyi.tenant.service;
 
 import java.util.List;
+
 import com.xueyi.tenant.domain.Tenant;
 
 /**
@@ -8,8 +9,8 @@ import com.xueyi.tenant.domain.Tenant;
  *
  * @author xueyi
  */
-public interface ITenantService
-{
+public interface ITenantService {
+
     /**
      * 查询租户信息列表
      *

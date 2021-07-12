@@ -6,9 +6,7 @@ import java.util.List;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
-import com.xueyi.tenant.api.source.Source;
 import com.xueyi.tenant.api.source.TenantSourceValue;
-import com.xueyi.tenant.mapper.DataSourceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.tenant.mapper.TenantSourceMapper;
@@ -27,19 +25,6 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
 
     @Autowired
     private TenantSourceMapper tenantSourceMapper;
-
-    @Autowired
-    private DataSourceMapper sourceMapper;
-
-    /**
-     * 查询数据源列表
-     *
-     * @param source 数据源组
-     * @return 数据源组集合
-     */
-    public List<Source> selectLoadDataSources(Source source){
-        return sourceMapper.selectLoadDataSources(source);
-    }
 
     /**
      * 查询数据源列表

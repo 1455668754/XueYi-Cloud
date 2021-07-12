@@ -16,6 +16,7 @@ import com.xueyi.system.api.RemoteFileService;
 import com.xueyi.system.api.material.SysFile;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.api.organize.SysEnterprise;
+import com.xueyi.system.api.source.Source;
 import com.xueyi.system.monitor.domain.SysUserOnline;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,17 @@ public class SysEnterpriseController extends BaseController {
     private RemoteFileService remoteFileService;
 
     /**
+     * 获取当前用户信息
+     */
+    @GetMapping("/loadDataSources/{enterpriseId}")
+    public R<List<Source>> info(@PathVariable("enterpriseId") Long enterpriseId) {
+        Source source = new Source();
+        source.setEnterpriseId(enterpriseId);
+        List<Source> sources = enterpriseService.selectLoadDataSources(source);
+        return R.ok(sources);
+    }
+
+    /**
      * 获取租户信息
      */
     @GetMapping("/profile")
@@ -63,23 +75,19 @@ public class SysEnterpriseController extends BaseController {
     @PreAuthorize(hasPermi = "system:enterpriseAdmin:edit")
     @Log(title = "企业Logo修改", businessType = BusinessType.UPDATE)
     @PostMapping("/changeLogo")
-    public AjaxResult avatar(@RequestParam("logo") MultipartFile file) throws IOException
-    {
-        if (!file.isEmpty())
-        {
+    public AjaxResult avatar(@RequestParam("logo") MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
             LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
             R<SysFile> fileResult = remoteFileService.upload(file);
-            if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData()))
-            {
+            if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
                 return AjaxResult.error("文件服务异常，请稍后再试");
             }
             String url = fileResult.getData().getUrl();
             SysEnterprise enterprise = new SysEnterprise();
             enterprise.setLogo(url);
-            if (enterpriseService.updateLogo(enterprise) > 0)
-            {
+            if (enterpriseService.updateLogo(enterprise) > 0) {
                 String oldLogoUrl = loginUser.getSysEnterprise().getLogo();
-                if(StringUtils.isNotEmpty(oldLogoUrl)){
+                if (StringUtils.isNotEmpty(oldLogoUrl)) {
                     remoteFileService.delete(oldLogoUrl);
                 }
                 AjaxResult ajax = AjaxResult.success();
