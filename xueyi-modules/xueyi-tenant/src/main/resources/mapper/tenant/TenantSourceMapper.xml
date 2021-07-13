@@ -39,21 +39,26 @@
         <result property="status"           column="sub_status"                             />
     </resultMap>
 
+    <sql id="listVo">
+        select e.source_id, e.name, e.database_type, e.slave, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
+        from xy_tenant_source e
+    </sql>
+
     <sql id="selectVo">
         select e.source_id, e.name, e.database_type, e.slave, e.driver_class_name, e.url, e.username, e.password, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
         from xy_tenant_source e
     </sql>
 
     <sql id="subVo">
-        select e.source_id, e.name, e.database_type, e.driver_class_name, e.slave, e.url, e.username, e.password, e.type, e.sort, e.status,
-               b.source_id as sub_source_id, b.name as sub_name, b.database_type as sub_database_type, b.slave as sub_slave, b.driver_class_name as sub_driver_class_name, b.url as sub_url, b.username as sub_username, b.password as sub_password, b.type as sub_type, b.sort as sub_sort, b.status as sub_status
+        select e.source_id, e.name, e.database_type, e.type, e.sort, e.status,
+               b.source_id as sub_source_id, b.name as sub_name, b.database_type as sub_database_type, b.slave as sub_slave, b.type as sub_type, b.sort as sub_sort, b.status as sub_status
         from xy_tenant_source e
                  left join xy_tenant_separation ts on ts.write_id = e.source_id
                  left join xy_tenant_source b on b.source_id = ts.read_id
     </sql>
 
     <select id="selectTenantSourceList" parameterType="TenantSource" resultMap="TenantSourceResult">
-        <include refid="selectVo"/>
+        <include refid="listVo"/>
         where e.del_flag = 0
         <if test="name != null  and name != ''"> and e.name like concat('%', #{name}, '%')</if>
         <if test="databaseType != null  and databaseType != ''"> and e.database_type = #{databaseType}</if>
@@ -80,7 +85,7 @@
     </select>
 
     <select id="selectContainReadList" parameterType="TenantSource" resultMap="TenantSourceResult">
-        <include refid="selectVo"/>
+        <include refid="listVo"/>
         left join xy_tenant_separation ts on ts.read_id = e.source_id
         where e.status = '0' and e.del_flag = 0 and ( ( e.type = '1' and ts.read_id is null ) or ( ts.write_id = #{sourceId} )
         <if test="sourceId != null"> or (e.type = '0' and e.source_id = #{sourceId} )</if> )
@@ -88,7 +93,7 @@
     </select>
 
     <select id="selectContainWriteList" parameterType="TenantSource" resultMap="TenantSourceResult">
-        <include refid="selectVo"/>
+        <include refid="listVo"/>
         where e.status = '0' and e.del_flag = 0 and ( e.type = '0' or e.type = '2' )
         order by e.sort
     </select>
