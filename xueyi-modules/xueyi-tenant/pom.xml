@@ -12,7 +12,7 @@
     <artifactId>xueyi-modules-tenant</artifactId>
 
     <description>
-        xueyi-modules-tenant系统模块
+        xueyi-modules-tenant租户模块
     </description>
 
     <dependencies>

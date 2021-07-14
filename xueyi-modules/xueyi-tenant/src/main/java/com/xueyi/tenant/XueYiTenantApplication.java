@@ -7,7 +7,7 @@ import com.xueyi.common.security.annotation.EnableRyFeignClients;
 import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
 
 /**
- * 系统模块
+ * 租户模块
  *
  * @author xueyi
  */
