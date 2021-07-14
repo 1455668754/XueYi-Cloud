@@ -32,9 +32,6 @@ public class PreAuthorizeAspect
     /** 所有权限标识 */
     private static final String ALL_PERMISSION = "*:*:*";
 
-    /** 管理员角色权限标识 */
-    private static final String SUPER_ADMIN = "admin";
-
     /** 数组为0时 */
     private static final Integer ARRAY_EMPTY = 0;
 
@@ -168,7 +165,7 @@ public class PreAuthorizeAspect
         }
         for (String roleKey : userInfo.getRoles())
         {
-            if (SUPER_ADMIN.equals(roleKey) || roleKey.equals(role))
+            if (roleKey.equals(role))
             {
                 return true;
             }
