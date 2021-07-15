@@ -3,7 +3,7 @@ package com.xueyi.tenant.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.tenant.api.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.TenantSource;
 
 /**
  * 数据源 数据层

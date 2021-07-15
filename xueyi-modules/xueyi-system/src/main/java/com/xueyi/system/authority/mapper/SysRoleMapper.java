@@ -3,8 +3,7 @@ package com.xueyi.system.authority.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.authority.SysRole;
-import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.system.api.domain.authority.SysRole;
 
 /**
  * 角色表 数据层

@@ -2,8 +2,8 @@ package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.authority.SysSystem;
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.authority.SysSystem;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.domain.SystemMenuVo;

@@ -2,7 +2,7 @@ package com.xueyi.system.api;
 
 import com.xueyi.common.core.constant.ServiceNameConstants;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.system.api.source.Source;
+import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.api.factory.RemoteSourceFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

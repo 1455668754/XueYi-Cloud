@@ -1,4 +1,4 @@
-package com.xueyi.system.api.material;
+package com.xueyi.system.api.domain.material;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.RemoteFileService;
-import com.xueyi.system.api.material.SysFile;
+import com.xueyi.system.api.domain.material.SysFile;
 
 /**
  * 文件服务降级处理

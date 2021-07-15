@@ -5,7 +5,7 @@ import java.util.List;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xueyi.system.api.monitor.SysOperLog;
+import com.xueyi.system.api.domain.monitor.SysOperLog;
 import com.xueyi.system.monitor.mapper.SysOperLogMapper;
 import com.xueyi.system.monitor.service.ISysOperLogService;
 

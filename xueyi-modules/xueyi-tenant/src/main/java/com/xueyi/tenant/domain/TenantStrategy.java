@@ -2,7 +2,7 @@ package com.xueyi.tenant.domain;
 
 import java.util.List;
 
-import com.xueyi.tenant.api.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.TenantSource;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xueyi.common.core.annotation.Excel;

@@ -5,7 +5,7 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.system.api.material.SysMaterialFolder;
+import com.xueyi.system.api.domain.material.SysMaterialFolder;
 import com.xueyi.system.material.service.ISysMaterialFolderService;
 import com.xueyi.system.material.service.ISysMaterialService;
 import org.springframework.beans.factory.annotation.Autowired;

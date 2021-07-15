@@ -1,4 +1,4 @@
-package com.xueyi.system.api.authority;
+package com.xueyi.system.api.domain.authority;
 
 import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.web.domain.BaseEntity;

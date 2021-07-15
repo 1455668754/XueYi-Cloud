@@ -1,7 +1,7 @@
 package com.xueyi.system.organize.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.organize.SysEnterprise;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
 
 /**
  * 租户表|租户信息表 数据层

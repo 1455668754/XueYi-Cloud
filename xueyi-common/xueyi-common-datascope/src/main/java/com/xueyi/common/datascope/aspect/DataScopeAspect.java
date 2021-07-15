@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
-import com.xueyi.system.api.organize.SysEnterprise;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,8 +18,8 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.domain.BaseEntity;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.authority.SysRole;
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.model.LoginUser;
 
 /**

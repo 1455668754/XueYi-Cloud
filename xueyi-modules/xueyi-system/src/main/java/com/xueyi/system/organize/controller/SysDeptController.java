@@ -20,7 +20,7 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.system.api.organize.SysDept;
+import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.organize.service.ISysDeptService;
 
 /**

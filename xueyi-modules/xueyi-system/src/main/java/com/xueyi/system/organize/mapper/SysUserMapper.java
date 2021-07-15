@@ -3,7 +3,7 @@ package com.xueyi.system.organize.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.organize.SysUser;
 
 /**
  * 用户表 数据层

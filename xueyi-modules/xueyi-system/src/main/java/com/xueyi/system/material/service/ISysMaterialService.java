@@ -1,6 +1,6 @@
 package com.xueyi.system.material.service;
 
-import com.xueyi.system.api.material.SysMaterial;
+import com.xueyi.system.api.domain.material.SysMaterial;
 
 import java.util.List;
 

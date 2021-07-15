@@ -13,11 +13,10 @@ import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.RemoteFileService;
-import com.xueyi.system.api.material.SysFile;
+import com.xueyi.system.api.domain.material.SysFile;
 import com.xueyi.system.api.model.LoginUser;
-import com.xueyi.system.api.organize.SysEnterprise;
-import com.xueyi.system.api.source.Source;
-import com.xueyi.system.monitor.domain.SysUserOnline;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
+import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 

@@ -2,7 +2,7 @@ package com.xueyi.system.organize.service;
 
 import java.util.List;
 
-import com.xueyi.system.api.organize.SysDept;
+import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.utils.vo.TreeSelect;
 
 /**

@@ -1,9 +1,9 @@
-package com.xueyi.system.api.organize;
+package com.xueyi.system.api.domain.organize;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import com.xueyi.common.core.annotation.Excels;
-import com.xueyi.system.api.authority.SysRole;
+import com.xueyi.system.api.domain.authority.SysRole;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xueyi.common.core.annotation.Excel;

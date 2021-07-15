@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import com.xueyi.common.core.constant.ServiceNameConstants;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.system.api.material.SysFile;
+import com.xueyi.system.api.domain.material.SysFile;
 import com.xueyi.system.api.factory.RemoteFileFallbackFactory;
 
 /**

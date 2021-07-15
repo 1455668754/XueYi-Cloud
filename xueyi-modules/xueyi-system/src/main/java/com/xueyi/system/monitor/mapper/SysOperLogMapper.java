@@ -2,9 +2,8 @@ package com.xueyi.system.monitor.mapper;
 
 import java.util.List;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.monitor.SysOperLog;
+import com.xueyi.system.api.domain.monitor.SysOperLog;
 
 /**
  * 操作日志 数据层

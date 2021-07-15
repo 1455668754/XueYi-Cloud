@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.xueyi.system.api.RemoteLogService;
-import com.xueyi.system.api.monitor.SysOperLog;
+import com.xueyi.system.api.domain.monitor.SysOperLog;
 
 /**
  * 异步调用日志服务

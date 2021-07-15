@@ -54,13 +54,19 @@
             <version>${minio.version}</version>
         </dependency>
         
-        <!-- RuoYi Api System -->
+        <!-- XueYi Api System -->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-api-system</artifactId>
         </dependency>
-        
-        <!-- RuoYi Common Swagger -->
+
+        <!-- XueYi Api Tenant -->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-api-system</artifactId>
+        </dependency>
+
+        <!-- XueYi Common Swagger -->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-swagger</artifactId>

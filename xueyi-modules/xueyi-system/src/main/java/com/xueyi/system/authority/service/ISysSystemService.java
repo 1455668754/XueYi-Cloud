@@ -1,7 +1,6 @@
 package com.xueyi.system.authority.service;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.system.api.authority.SysSystem;
+import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.role.domain.SysRoleSystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;

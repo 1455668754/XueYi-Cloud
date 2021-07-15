@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.organize.SysDept;
-import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.organize.domain.deptPostVo;
 

@@ -4,12 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.authority.SysRole;
-import com.xueyi.system.api.organize.SysEnterprise;
-import com.xueyi.system.api.organize.SysUser;
-import com.xueyi.system.organize.service.ISysEnterpriseService;
-import com.xueyi.system.organize.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.xueyi.common.core.constant.Constants;

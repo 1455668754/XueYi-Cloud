@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.authority.SysRole;
+import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.service.ISysRoleService;
 
 /**

@@ -239,6 +239,13 @@
                 <version>${xueyi.version}</version>
             </dependency>
 
+            <!-- 租管接口 -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-api-tenant</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
             <!--自引用插件-->
             <!-- 1.Thumbnailator 图片处理工具-->
             <dependency>

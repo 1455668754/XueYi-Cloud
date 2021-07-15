@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.RemoteLogService;
-import com.xueyi.system.api.monitor.SysOperLog;
+import com.xueyi.system.api.domain.monitor.SysOperLog;
 
 /**
  * 日志服务降级处理

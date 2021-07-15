@@ -3,7 +3,7 @@ package com.xueyi.system.organize.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.organize.SysDept;
+import com.xueyi.system.api.domain.organize.SysDept;
 
 /**
  * 部门管理 数据层

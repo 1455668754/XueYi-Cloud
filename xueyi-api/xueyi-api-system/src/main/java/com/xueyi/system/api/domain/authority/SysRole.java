@@ -1,4 +1,4 @@
-package com.xueyi.system.api.authority;
+package com.xueyi.system.api.domain.authority;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

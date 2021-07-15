@@ -7,7 +7,7 @@ import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.authority.SysSystem;
+import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.authority.service.ISysSystemService;
 import org.springframework.beans.factory.annotation.Autowired;

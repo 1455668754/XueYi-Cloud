@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.exception.CustomException;
-import com.xueyi.tenant.api.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.domain.TenantStrategy;
 import com.xueyi.tenant.mapper.TenantStrategyMapper;
 import com.xueyi.tenant.service.ITenantCreationService;

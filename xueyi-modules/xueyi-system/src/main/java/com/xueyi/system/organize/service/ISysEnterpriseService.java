@@ -1,7 +1,7 @@
 package com.xueyi.system.organize.service;
 
-import com.xueyi.system.api.organize.SysEnterprise;
-import com.xueyi.system.api.source.Source;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
+import com.xueyi.system.api.domain.source.Source;
 
 import java.util.List;
 

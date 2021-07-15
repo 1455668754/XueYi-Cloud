@@ -22,8 +22,8 @@ import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.RemoteFileService;
-import com.xueyi.system.api.material.SysFile;
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.material.SysFile;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.organize.service.ISysUserService;
 

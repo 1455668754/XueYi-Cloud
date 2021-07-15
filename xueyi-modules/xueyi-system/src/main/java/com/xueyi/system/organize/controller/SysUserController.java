@@ -6,16 +6,15 @@ import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.authority.SysRole;
-import com.xueyi.system.api.organize.SysEnterprise;
-import com.xueyi.system.api.organize.SysPost;
+import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
+import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
-import com.xueyi.system.api.RemoteSourceService;
-import com.xueyi.system.api.source.Source;
+import com.xueyi.system.api.domain.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +37,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.model.LoginUser;
 
 /**

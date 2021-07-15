@@ -1,4 +1,4 @@
-package com.xueyi.system.api.material;
+package com.xueyi.system.api.domain.material;
 
 import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.web.domain.BaseEntity;

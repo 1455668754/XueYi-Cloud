@@ -5,7 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.core.utils.poi.ExcelUtil;
-import com.xueyi.tenant.api.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.TenantSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.xueyi.common.log.annotation.Log;

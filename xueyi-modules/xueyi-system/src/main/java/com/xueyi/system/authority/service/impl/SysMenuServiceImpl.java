@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.role.domain.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;

@@ -1,16 +1,18 @@
-package com.xueyi.tenant.api.source;
+package com.xueyi.tenant.api.domain.source;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.web.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 数据源对象 xy_tenant_source
  *
  * @author xueyi
  */
-public class TenantSourceValue extends BaseEntity
+public class TenantSource extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -21,8 +23,8 @@ public class TenantSourceValue extends BaseEntity
     @Excel(name = "数据源名称")
     private String name;
 
-    /** 数据库(0从数据源 1主数据源) */
-    @Excel(name = "数据源类型", readConverterExp = "0=从数据源,1=主数据源")
+    /** 数据库(0普通数据源 1默认数据源) */
+    @Excel(name = "数据源类型", readConverterExp = "0=普通数据源,1=默认数据源")
     private String databaseType;
 
     /** 数据源编码 */
@@ -44,6 +46,10 @@ public class TenantSourceValue extends BaseEntity
     /** 密码 */
     private String password;
 
+    /** 主数据源（Y是 N否） */
+    @Excel(name = "主数据源", readConverterExp = "Y=是,N=否")
+    private String isMain;
+
     /** 读写类型(0读&写 1只读 2只写) */
     @Excel(name = "读写类型", readConverterExp = "0=读&写,1=只读,2=只写")
     private String type;
@@ -51,6 +57,9 @@ public class TenantSourceValue extends BaseEntity
     /** 状态（0正常 1停用） */
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
+
+    /** 读写分离 读 */
+    private List<TenantSourceValue> values;
 
     public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
@@ -124,12 +133,28 @@ public class TenantSourceValue extends BaseEntity
         return type;
     }
 
+    public String getIsMain() {
+        return isMain;
+    }
+
+    public void setIsMain(String isMain) {
+        this.isMain = isMain;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
 
     public String getStatus() {
         return status;
+    }
+
+    public List<TenantSourceValue> getValues() {
+        return values;
+    }
+
+    public void setValues(List<TenantSourceValue> values) {
+        this.values = values;
     }
 
     @Override
@@ -143,6 +168,8 @@ public class TenantSourceValue extends BaseEntity
                 .append("url", getUrl())
                 .append("username", getUsername())
                 .append("password", getPassword())
+                .append("values", getValues())
+                .append("isMain", getIsMain())
                 .append("type", getType())
                 .append("sort", getSort())
                 .append("status", getStatus())

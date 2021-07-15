@@ -1,6 +1,6 @@
 package com.xueyi.auth.service;
 
-import com.xueyi.system.api.organize.SysEnterprise;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.xueyi.common.core.constant.Constants;
@@ -12,7 +12,7 @@ import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.RemoteLogService;
 import com.xueyi.system.api.RemoteUserService;
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.model.LoginUser;
 
 /**

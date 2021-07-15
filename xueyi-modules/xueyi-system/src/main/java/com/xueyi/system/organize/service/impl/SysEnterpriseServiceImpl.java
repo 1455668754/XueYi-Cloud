@@ -1,11 +1,11 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.system.api.organize.SysEnterprise;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.source.mapper.DataSourceMapper;
-import com.xueyi.system.api.source.Source;
+import com.xueyi.system.api.domain.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

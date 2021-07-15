@@ -1,4 +1,4 @@
-package com.xueyi.system.api.source;
+package com.xueyi.system.api.domain.source;
 
 import com.xueyi.common.core.web.domain.BaseEntity;
 

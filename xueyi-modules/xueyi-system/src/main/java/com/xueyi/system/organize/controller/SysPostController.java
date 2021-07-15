@@ -5,7 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.organize.SysDept;
+import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.organize.service.ISysDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -24,7 +24,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.system.api.organize.SysPost;
+import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.organize.service.ISysPostService;
 
 /**

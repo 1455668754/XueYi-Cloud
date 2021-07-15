@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.xueyi.common.core.constant.ServiceNameConstants;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.system.api.monitor.SysOperLog;
+import com.xueyi.system.api.domain.monitor.SysOperLog;
 import com.xueyi.system.api.factory.RemoteLogFallbackFactory;
 
 /**

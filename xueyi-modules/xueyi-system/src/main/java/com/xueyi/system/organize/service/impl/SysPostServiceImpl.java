@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.system.api.organize.SysDept;
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.organize.SysDept;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.CustomException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.organize.SysPost;
+import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.organize.service.ISysPostService;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -3,7 +3,7 @@ package com.xueyi.tenant.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.tenant.api.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.mapper.TenantSourceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

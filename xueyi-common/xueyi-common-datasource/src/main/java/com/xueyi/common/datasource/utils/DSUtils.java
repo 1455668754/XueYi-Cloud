@@ -5,7 +5,7 @@ import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.bean.BeanUtils;
-import com.xueyi.tenant.api.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.TenantSource;
 import org.springframework.beans.BeansException;
 
 import javax.sql.DataSource;

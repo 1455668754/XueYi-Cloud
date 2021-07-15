@@ -16,13 +16,19 @@
 
     <dependencies>
     
-        <!-- RuoYi Api System -->
+        <!-- XueYi Api System -->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-api-system</artifactId>
         </dependency>
-        
-        <!-- RuoYi Common Redis-->
+
+        <!-- XueYi Api Tenant -->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-api-tenant</artifactId>
+        </dependency>
+
+        <!-- XueYi Common Redis-->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-redis</artifactId>

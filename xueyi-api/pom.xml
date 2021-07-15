@@ -10,6 +10,7 @@
 
     <modules>
         <module>xueyi-api-system</module>
+        <module>xueyi-api-tenant</module>
     </modules>
 
     <artifactId>xueyi-api</artifactId>

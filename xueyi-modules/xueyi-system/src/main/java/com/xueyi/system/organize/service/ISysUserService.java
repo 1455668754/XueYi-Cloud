@@ -2,7 +2,7 @@ package com.xueyi.system.organize.service;
 
 import java.util.List;
 
-import com.xueyi.system.api.organize.SysUser;
+import com.xueyi.system.api.domain.organize.SysUser;
 
 /**
  * 用户 业务层

@@ -1,7 +1,7 @@
 package com.xueyi.system.material.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.material.SysMaterial;
+import com.xueyi.system.api.domain.material.SysMaterial;
 import com.xueyi.system.api.utilTool.SysSearch;
 
 import java.util.List;

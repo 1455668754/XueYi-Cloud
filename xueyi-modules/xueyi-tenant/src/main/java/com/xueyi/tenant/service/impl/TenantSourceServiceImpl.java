@@ -6,11 +6,11 @@ import java.util.List;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
-import com.xueyi.tenant.api.source.TenantSourceValue;
+import com.xueyi.tenant.api.domain.source.TenantSourceValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.tenant.mapper.TenantSourceMapper;
-import com.xueyi.tenant.api.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.service.ITenantSourceService;
 import org.springframework.transaction.annotation.Transactional;
 

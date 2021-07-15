@@ -1,7 +1,7 @@
 package com.xueyi.system.authority.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.authority.SysSystem;
+import com.xueyi.system.api.domain.authority.SysSystem;
 
 import java.util.List;
 
