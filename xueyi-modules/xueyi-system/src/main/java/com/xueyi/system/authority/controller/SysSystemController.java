@@ -107,4 +107,3 @@ public class SysSystemController extends BaseController {
         return toAjax(systemService.deleteSystemByIds(sysSystem));
     }
 }
-

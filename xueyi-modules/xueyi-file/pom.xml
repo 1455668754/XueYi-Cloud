@@ -60,12 +60,6 @@
             <artifactId>xueyi-api-system</artifactId>
         </dependency>
 
-        <!-- XueYi Api Tenant -->
-        <dependency>
-            <groupId>com.xueyi</groupId>
-            <artifactId>xueyi-api-system</artifactId>
-        </dependency>
-
         <!-- XueYi Common Swagger -->
         <dependency>
             <groupId>com.xueyi</groupId>
