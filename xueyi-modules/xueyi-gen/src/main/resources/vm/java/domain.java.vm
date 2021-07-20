@@ -22,8 +22,8 @@ import com.xueyi.common.core.web.domain.TreeEntity;
 #elseif($table.tree)
 #set($Entity="TreeEntity")
 #end
-public class ${ClassName} extends ${Entity}
-{
+public class ${ClassName} extends ${Entity} {
+
     private static final long serialVersionUID = 1L;
 
 #foreach ($column in $columns)

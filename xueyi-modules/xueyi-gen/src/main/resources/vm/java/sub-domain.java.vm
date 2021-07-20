@@ -13,8 +13,7 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  * 
  * @author ${author}
  */
-public class ${subClassName} extends BaseEntity
-{
+public class ${subClassName} extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
 #foreach ($column in $subTable.columns)

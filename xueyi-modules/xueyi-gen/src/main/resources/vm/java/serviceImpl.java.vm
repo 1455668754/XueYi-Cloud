@@ -2,6 +2,7 @@ package ${packageName}.service.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import org.springframework.stereotype.Service;
 #if($table.sub)
 import java.util.ArrayList;
@@ -46,8 +47,9 @@ import ${packageName}.service.I${ClassName}Service;
  * @author ${author}
  */
 @Service
-public class ${ClassName}ServiceImpl implements I${ClassName}Service 
-{
+@DS("#isolate")
+public class ${ClassName}ServiceImpl implements I${ClassName}Service {
+
     @Autowired
     private ${ClassName}Mapper ${className}Mapper;
 

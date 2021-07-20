@@ -8,8 +8,8 @@ import ${packageName}.domain.${ClassName};
  * 
  * @author ${author}
  */
-public interface I${ClassName}Service 
-{
+public interface I${ClassName}Service {
+
     /**
      * 查询${functionName}列表
      *
