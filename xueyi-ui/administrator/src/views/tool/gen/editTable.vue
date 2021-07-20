@@ -127,8 +127,7 @@
 <script>
 import { getGenTable, updateGenTable } from "@/api/tool/gen";
 import { optionselect as getDictOptionselect } from "@/api/system/dict/type";
-import {treeSelect as systemMenuTreeSelect} from "@/api/system/system"
-import { listMenu as getMenuTreeselect } from "@/api/system/menu";
+import {treeSelect as systemMenuTreeSelect} from "@/api/common/temporary"
 import basicInfoForm from "./basicInfoForm";
 import genInfoForm from "./genInfoForm";
 import Sortable from 'sortablejs'
@@ -170,9 +169,9 @@ export default {
       getDictOptionselect().then(response => {
         this.dictOptions = response.data;
       });
-      /** 查询菜单下拉列表 */
-      getMenuTreeselect().then(response => {
-        this.menus = this.handleTree(response.data, "menuId");
+      /** 查询模块-菜单下拉列表 */
+      systemMenuTreeSelect({searchValue: '1'}).then(response => {
+        this.menus = response.data
       });
     }
   },
@@ -190,7 +189,8 @@ export default {
             treeCode: genTable.treeCode,
             treeName: genTable.treeName,
             treeParentCode: genTable.treeParentCode,
-            parentMenuId: genTable.parentMenuId
+            parentMenuId: genTable.parentMenuId,
+            parentSystemId: genTable.parentSystemId
           };
           updateGenTable(genTable).then(res => {
             this.msgSuccess(res.msg);

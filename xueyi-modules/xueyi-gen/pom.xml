@@ -78,6 +78,12 @@
             <artifactId>xueyi-common-swagger</artifactId>
         </dependency>
 
+        <!-- huTool 工具类库-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -2,8 +2,8 @@ package com.xueyi.common.core.constant;
 
 /**
  * 代码生成通用常量
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 public class GenConstants
 {
@@ -25,11 +25,14 @@ public class GenConstants
     /** 树名称字段 */
     public static final String TREE_NAME = "treeName";
 
-    /** 上级菜单ID字段 */
+    /** 上级菜单Id字段 */
     public static final String PARENT_MENU_ID = "parentMenuId";
 
     /** 上级菜单名称字段 */
     public static final String PARENT_MENU_NAME = "parentMenuName";
+
+    /** 归属模块Id字段 */
+    public static final String PARENT_SYSTEM_ID = "parentSystemId";
 
     /** 数据库字符串类型 */
     public static final String[] COLUMNTYPE_STR = { "char", "varchar", "nvarchar", "varchar2" };

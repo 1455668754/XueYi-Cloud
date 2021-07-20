@@ -31,6 +31,7 @@
   </el-form>
 </template>
 <script>
+
 export default {
   name: "BasicInfoForm",
   props: {

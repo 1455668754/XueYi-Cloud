@@ -10,8 +10,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
 
 /**
  * 业务表 gen_table
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 public class GenTable extends BaseEntity
 {
@@ -94,6 +94,9 @@ public class GenTable extends BaseEntity
 
     /** 上级菜单名称字段 */
     private String parentMenuName;
+
+    /** 归属模块ID字段 */
+    private String parentSystemId;
 
     public Long getTableId()
     {
@@ -327,6 +330,14 @@ public class GenTable extends BaseEntity
     public boolean isSub()
     {
         return isSub(this.tplCategory);
+    }
+
+    public String getParentSystemId() {
+        return parentSystemId;
+    }
+
+    public void setParentSystemId(String parentSystemId) {
+        this.parentSystemId = parentSystemId;
     }
 
     public static boolean isSub(String tplCategory)

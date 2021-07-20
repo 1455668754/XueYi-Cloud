@@ -73,6 +73,7 @@
             v-model="info.parentMenuId"
             :options="menus"
             :normalizer="normalizer"
+            @select="treeSelectSelect"
             :show-count="true"
             placeholder="请选择系统菜单"
           />
@@ -236,6 +237,8 @@ export default {
   },
   data() {
     return {
+      //本参数用于判断当前父级是模块Id还是菜单Id
+      checkSystem: false,
       subColumns: [],
       rules: {
         tplCategory: [
@@ -266,13 +269,18 @@ export default {
     /** 转换菜单数据结构 */
     normalizer(node) {
       if (node.children && !node.children.length) {
-        delete node.children;
+        delete node.children
       }
       return {
-        id: node.menuId,
-        label: node.menuName,
+        id: node.id,
+        label: node.type === '0' ? '模块 | ' + node.label : '菜单 | ' + node.label,
+        type: node.type,
+        systemId: node.systemId,
         children: node.children
-      };
+      }
+    },
+    treeSelectSelect(node, instanceId) {
+        this.info.parentSystemId = node.systemId
     },
     /** 选择子表名触发 */
     subSelectChange(value) {
