@@ -98,19 +98,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/dict',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'type/data/:dictId(\\d+)',
-        component: (resolve) => require(['@/views/system/system/dict/data'], resolve),
-        name: 'Data',
-        meta: { title: '字典数据', icon: '' }
-      }
-    ]
-  },
-  {
     path: '/job',
     component: Layout,
     hidden: true,
@@ -120,19 +107,6 @@ export const constantRoutes = [
         component: (resolve) => require(['@/views/system/monitor/job/log'], resolve),
         name: 'JobLog',
         meta: { title: '调度日志' }
-      }
-    ]
-  },
-  {
-    path: '/gen',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'edit/:tableId(\\d+)',
-        component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
-        name: 'GenEdit',
-        meta: { title: '修改生成配置' }
       }
     ]
   }
