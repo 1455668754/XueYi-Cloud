@@ -46,7 +46,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 		
-        <!-- RuoYi Common Security-->
+        <!-- XueYi Common Security-->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-security</artifactId>

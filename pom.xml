@@ -190,6 +190,13 @@
                 <version>${xueyi.version}</version>
             </dependency>
 
+            <!-- 消息队列 -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-common-message</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
             <!-- 接口模块 -->
             <dependency>
                 <groupId>com.xueyi</groupId>

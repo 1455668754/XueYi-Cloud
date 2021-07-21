@@ -64,7 +64,7 @@
             <artifactId>kaptcha</artifactId>
         </dependency>
 
-        <!-- RuoYi Common Redis-->
+        <!-- XueYi Common Redis-->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-redis</artifactId>

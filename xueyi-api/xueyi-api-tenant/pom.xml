@@ -17,7 +17,7 @@
 
     <dependencies>
 
-        <!-- RuoYi Common Core-->
+        <!-- XueYi Common Core-->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-core</artifactId>

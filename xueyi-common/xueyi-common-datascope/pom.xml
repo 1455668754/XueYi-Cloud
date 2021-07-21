@@ -17,7 +17,7 @@
 
     <dependencies>
 
-        <!-- RuoYi Common Security -->
+        <!-- XueYi Common Security -->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-security</artifactId>

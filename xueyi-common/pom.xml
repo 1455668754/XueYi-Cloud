@@ -12,6 +12,7 @@
         <module>xueyi-common-log</module>
         <module>xueyi-common-core</module>
         <module>xueyi-common-redis</module>
+        <module>xueyi-common-message</module>
         <module>xueyi-common-swagger</module>
         <module>xueyi-common-security</module>
         <module>xueyi-common-datascope</module>

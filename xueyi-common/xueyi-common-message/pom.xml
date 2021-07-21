@@ -8,20 +8,14 @@
         <version>2.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    
-    <artifactId>xueyi-common-log</artifactId>
-	
+
+    <artifactId>xueyi-common-message</artifactId>
+
     <description>
-        xueyi-common-log日志记录
+        xueyi-common-message消息队列
     </description>
 
     <dependencies>
-		
-        <!-- XueYi Common Security -->
-        <dependency>
-            <groupId>com.xueyi</groupId>
-            <artifactId>xueyi-common-security</artifactId>
-        </dependency>
-        
+
     </dependencies>
 </project>
