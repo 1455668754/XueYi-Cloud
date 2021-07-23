@@ -11,6 +11,8 @@
         <result property="slave"            column="slave"                                  />
         <result property="driverClassName"  column="driver_class_name"                      />
         <result property="url"              column="url"                                    />
+        <result property="urlPrepend"       column="url_prepend"                            />
+        <result property="urlAppend"        column="url_append"                             />
         <result property="username"         column="username"                               />
         <result property="password"         column="password"                               />
         <result property="type"             column="type"                                   />
@@ -45,7 +47,7 @@
     </sql>
 
     <sql id="selectVo">
-        select e.source_id, e.name, e.database_type, e.slave, e.driver_class_name, e.url, e.username, e.password, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
+        select e.source_id, e.name, e.database_type, e.slave, e.driver_class_name, e.url, e.url_prepend, e.url_append, e.username, e.password, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
         from xy_tenant_source e
     </sql>
 
@@ -111,6 +113,8 @@
             <if test="driverClassName != null and driverClassName != ''"> driver_class_name            ,</if>
             <if test="slave != null and slave != ''">                     slave                        ,</if>
             <if test="url != null and url != ''">                         url                          ,</if>
+            <if test="urlPrepend != null and urlPrepend != ''">           url_prepend                  ,</if>
+            <if test="urlAppend != null and urlAppend != ''">             url_append                   ,</if>
             <if test="username != null and username != ''">               username                     ,</if>
             <if test="password != null and password != ''">               password                     ,</if>
             <if test="type != null and type != ''">                       type                         ,</if>
@@ -124,6 +128,8 @@
             <if test="driverClassName != null and driverClassName != ''"> #{driverClassName}           ,</if>
             <if test="slave != null and slave != ''">                     #{slave}                     ,</if>
             <if test="url != null and url != ''">                         #{url}                       ,</if>
+            <if test="urlPrepend != null and urlPrepend != ''">           #{urlPrepend}                ,</if>
+            <if test="urlAppend != null and urlAppend != ''">             #{urlAppend}                 ,</if>
             <if test="username != null and username != ''">               #{username}                  ,</if>
             <if test="password != null and password != ''">               #{password}                  ,</if>
             <if test="type != null and type != ''">                       #{type}                      ,</if>
@@ -140,6 +146,8 @@
             <if test="driverClassName != null and driverClassName != ''">  driver_class_name = #{driverClassName}    ,</if>
             <if test="slave != null and slave != ''">                      slave = #{slave}                          ,</if>
             <if test="url != null and url != ''">                          url = #{url}                              ,</if>
+            <if test="urlPrepend != null and urlPrepend != ''">            url_prepend = #{urlPrepend}               ,</if>
+            <if test="urlAppend != null and urlAppend != ''">              url_append = #{urlAppend}                 ,</if>
             <if test="username != null and username != ''">                username = #{username}                    ,</if>
             <if test="password != null and password != ''">                password = #{password}                    ,</if>
             <if test="type != null and type != ''">                        type = #{type}                            ,</if>

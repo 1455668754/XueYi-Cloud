@@ -39,6 +39,14 @@ public class TenantSource extends BaseEntity
     @Excel(name = "地址")
     private String url;
 
+    /** 连接地址 */
+    @Excel(name = "连接地址")
+    private String urlPrepend;
+
+    /** 连接参数 */
+    @Excel(name = "连接参数")
+    private String urlAppend;
+
     /** 用户名 */
     @Excel(name = "用户名")
     private String username;
@@ -109,6 +117,22 @@ public class TenantSource extends BaseEntity
         return url;
     }
 
+    public String getUrlPrepend() {
+        return urlPrepend;
+    }
+
+    public void setUrlPrepend(String urlPrepend) {
+        this.urlPrepend = urlPrepend;
+    }
+
+    public String getUrlAppend() {
+        return urlAppend;
+    }
+
+    public void setUrlAppend(String urlAppend) {
+        this.urlAppend = urlAppend;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -166,6 +190,8 @@ public class TenantSource extends BaseEntity
                 .append("slave", getSlave())
                 .append("driverClassName", getDriverClassName())
                 .append("url", getUrl())
+                .append("urlPrepend", getUrlPrepend())
+                .append("urlAppend", getUrlAppend())
                 .append("username", getUsername())
                 .append("password", getPassword())
                 .append("values", getValues())

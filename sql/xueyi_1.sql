@@ -28,8 +28,7 @@ create table xy_tenant (
 -- ----------------------------
 insert into xy_tenant (is_change, strategy_id, tenant_id, tenant_name, tenant_system_name, tenant_nick, tenant_logo)
 values ('Y', 0, -1, 'administrator', '租户管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
-       ('N', 0, 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
-       ('N', 1, 2, 'xueYi2', '雪忆管理系统', 'xueYi2', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
+       ('N', 0, 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
 
 -- ----------------------------
 -- 2、数据源策略表|管理数据源策略信息
@@ -55,8 +54,7 @@ primary key (strategy_id)
 -- 初始化-数据源策略表数据
 -- ----------------------------
 insert into xy_tenant_strategy(strategy_id, name, tenant_amount, source_amount, is_change, sort)
-values (0, '默认策略', 2, 1, 1, 0),
-       (1, '策略一号', 1, 1, 0, 0);
+values (0, '默认策略', 2, 1, 1, 0);
 
 -- ----------------------------
 -- 3、数据源表|管理系统数据源信息 | 主库有且只能有一个，用途：主要用于存储公共数据，具体看后续文档或视频
@@ -69,6 +67,8 @@ create table xy_tenant_source (
   slave		                varchar(500)	    not null default ''	                    comment '数据源编码',
   driver_class_name		    varchar(500)	    not null default ''	                    comment '驱动',
   url	                    varchar(500)	    not null default ''	                    comment '地址',
+  url_prepend	            varchar(500)	    not null default ''	                    comment '连接地址',
+  url_append	            varchar(500)	    not null default ''	                    comment '连接参数',
   username	                varchar(500)	    not null default ''	                    comment '用户名',
   password	                varchar(500)	    not null default ''	                    comment '密码',
   type		                char(1)	            not null default '0'	                comment '读写类型（0读&写 1只读 2只写）',
@@ -85,9 +85,8 @@ primary key (source_id)
 -- ----------------------------
 -- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
 -- ----------------------------
-insert into xy_tenant_source(source_id, name, database_type, slave, driver_class_name, url, username, password, type)
-values (0, '默认数据源', '1', 'master', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0'),
-       (1, '数据源一号', '0', 'slave_1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
+insert into xy_tenant_source(source_id, name, database_type, slave, driver_class_name, url, url_prepend, url_append, username, password, type)
+values (0, '默认数据源', '1', 'master', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
 
 -- ----------------------------
 -- 4、主从库关联表  写1-n读
@@ -104,8 +103,7 @@ primary key (write_id, read_id)
 -- 初始化-主从库关联表数据
 -- ----------------------------
 insert into xy_tenant_separation(write_id, read_id)
-values (0, 0),
-       (1, 1);
+values (0, 0);
 
 -- ----------------------------
 -- 5、策略-数据源关联表  策略n-n写数据源 | 数据源仅为写|读写的类型
@@ -123,9 +121,7 @@ primary key (strategy_id, source_id)
 -- 初始化-策略-数据源关联表数据
 -- ----------------------------
 insert into xy_tenant_strategy_source(strategy_id, source_id, status)
-values (0, 0, 'N'),
-       (0, 1, 'Y'),
-       (1, 1, 'Y');
+values (0, 0, 'Y');
 
 -- ----------------------------
 -- 6、子模块表|管理子系统模块
