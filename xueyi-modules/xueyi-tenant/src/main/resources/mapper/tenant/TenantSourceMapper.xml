@@ -70,7 +70,6 @@
         order by e.sort
     </select>
 
-
     <select id="selectTenantSourceById" parameterType="TenantSource" resultMap="TenantSourceResult">
         <include refid="selectVo"/>
         where e.source_id = #{sourceId} and e.del_flag = 0

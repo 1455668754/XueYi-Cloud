@@ -101,13 +101,13 @@
           <el-table :data="form.values">
             <el-table-column label="读数据源" min-width="30%" align="center">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.sourceId" placeholder="请选择">
+                <el-select v-model="scope.row.sourceId" :disabled="scope.row.sourceId === form.sourceId" placeholder="请选择">
                   <el-option
                     v-for="item in containReadList"
                     :key="item.sourceId"
                     :label="item.name"
                     :value="item.sourceId"
-                  >
+                    :disabled="item.sourceId === form.sourceId">
                   </el-option>
                 </el-select>
               </template>
@@ -120,6 +120,7 @@
                   icon="el-icon-delete"
                   @click="valueDelete(scope.row)"
                   v-hasPermi="['tenant:separation:edit']"
+                  v-if="scope.row.type !== '0'"
                 >删除
                 </el-button>
               </template>
@@ -263,7 +264,7 @@ export default {
     valueCheck() {
       for (let i = 0; i < this.form.values.length; i++) {
         for (let j = 0; j < this.form.values.length; j++) {
-          if (this.form.values[i].sourceId === null || this.form.values[i].sourceId === '' || this.form.values[i].sourceId === this.form.sourceId) {
+          if (this.form.values[i].sourceId === null || this.form.values[i].sourceId === '') {
             this.form.values.splice(i--, 1)
           }
           if (i !== j && this.form.values[i].sourceId === this.form.values[j].sourceId) {

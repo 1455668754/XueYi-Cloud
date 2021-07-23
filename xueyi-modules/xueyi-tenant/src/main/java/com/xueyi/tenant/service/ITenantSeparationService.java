@@ -20,7 +20,7 @@ public interface ITenantSeparationService {
     public List<TenantSource> selectTenantSeparationList(TenantSource tenantSource);
 
     /**
-     * 查询 含读 数据源集合
+     * 查询 只读 数据源集合
      *
      * @param tenantSource 数据源
      * @return 数据源集合

@@ -41,7 +41,7 @@ public class TenantSeparationController extends BaseController {
     }
 
     /**
-     * 查询 含读 数据源集合
+     * 查询 只读 数据源集合
      */
     @GetMapping("/containRead")
     public AjaxResult containRead(TenantSource tenantSource) {
