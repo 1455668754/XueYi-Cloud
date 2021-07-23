@@ -171,6 +171,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tenant:source:remove']"
+            v-if="scope.row.databaseType !== '0'"
           >删除
           </el-button>
         </template>
@@ -246,7 +247,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" @click="submitForm" v-if="form.databaseType !== '1'">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
