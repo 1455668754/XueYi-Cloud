@@ -3,7 +3,9 @@ package com.xueyi.tenant.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.tenant.api.domain.source.TenantSourceValue;
@@ -13,6 +15,8 @@ import com.xueyi.tenant.mapper.TenantSourceMapper;
 import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.service.ITenantSourceService;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.sql.DataSource;
 
 /**
  * 数据源 业务层处理
@@ -25,6 +29,9 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
 
     @Autowired
     private TenantSourceMapper tenantSourceMapper;
+
+    @Autowired
+    private DataSource dataSource;
 
     /**
      * 查询数据源列表
@@ -68,10 +75,10 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
             tenantSource.setSourceId(tenantSource.getId());
             tenantSourceMapper.batchTenantSeparation(tenantSource);
         }
-        if(tenantSource.getType().equals("2")){
-            tenantSource.setSlave("slave"+tenantSource.getId().toString());
-        }else{
-            tenantSource.setSlave("master"+tenantSource.getId().toString());
+        if (tenantSource.getType().equals("2")) {
+            tenantSource.setSlave("slave" + tenantSource.getId().toString());
+        } else {
+            tenantSource.setSlave("master" + tenantSource.getId().toString());
         }
         // 将数据新增的的数据源添加到数据源库
         DSUtils.addDs(tenantSource);
@@ -82,17 +89,21 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      * 修改数据源
      *
      * @param tenantSource 数据源
+     * @param ds 数据源新增|更新|删除判断
      * @return 结果
      */
     @Override
-    public int updateTenantSource(TenantSource tenantSource) {
+    public int updateTenantSource(TenantSource tenantSource, int ds) {
         int res = tenantSourceMapper.updateTenantSource(tenantSource);
-        if (res > 0)
-        {
-            // 根据数据源编码从数据源库中删除数据源
-            DSUtils.delDs(tenantSource.getSlave());
-            // 再将数据源添加到数据源库中
-            DSUtils.addDs(tenantSource);
+        if (res > 0) {
+            if(ds == 1){
+                DSUtils.delDs(tenantSource.getSlave());
+                DSUtils.addDs(tenantSource);
+            }else if(ds == 2){
+                DSUtils.addDs(tenantSource);
+            }else if(ds == 3){
+                DSUtils.delDs(tenantSource.getSlave());
+            }
         }
         return res;
     }
@@ -117,8 +128,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
     @Override
     public int deleteTenantSourceById(TenantSource tenantSource) {
         int res = tenantSourceMapper.deleteTenantSourceById(tenantSource);
-        if (res > 0)
-        {
+        if (res > 0) {
             // 根据数据源编码从数据源库中删除数据源
             DSUtils.delDs(tenantSource.getSlave());
         }
@@ -145,7 +155,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      * @return 结果
      */
     @Override
-    public int checkStrategySourceBySourceId(TenantSource tenantSource){
+    public int checkStrategySourceBySourceId(TenantSource tenantSource) {
         return tenantSourceMapper.checkStrategySourceBySourceId(tenantSource);
     }
 
@@ -156,7 +166,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      * @return 结果
      */
     @Override
-    public int checkSeparationSourceByWriteId(TenantSource tenantSource){
+    public int checkSeparationSourceByWriteId(TenantSource tenantSource) {
         return tenantSourceMapper.checkSeparationSourceByWriteId(tenantSource);
     }
 
@@ -167,7 +177,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      * @return 结果
      */
     @Override
-    public int checkSeparationSourceByReadId(TenantSource tenantSource){
+    public int checkSeparationSourceByReadId(TenantSource tenantSource) {
         return tenantSourceMapper.checkSeparationSourceByReadId(tenantSource);
     }
 }

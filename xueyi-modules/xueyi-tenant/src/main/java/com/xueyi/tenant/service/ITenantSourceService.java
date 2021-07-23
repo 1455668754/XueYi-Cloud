@@ -39,9 +39,10 @@ public interface ITenantSourceService {
      * 修改数据源
      *
      * @param tenantSource 数据源
+     * @param ds 数据源新增|更新|删除判断
      * @return 结果
      */
-    public int updateTenantSource(TenantSource tenantSource);
+    public int updateTenantSource(TenantSource tenantSource, int ds);
 
     /**
      * 修改数据源排序
