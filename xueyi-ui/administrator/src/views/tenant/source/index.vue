@@ -191,6 +191,9 @@
         <el-form-item label="数据源名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入数据源名称"/>
         </el-form-item>
+        <el-form-item label="数据源编码" prop="slave" v-if="form.sourceId != undefined">
+          <el-input v-model="form.slave" disabled/>
+        </el-form-item>
         <el-form-item label="数据源类型">
           <el-radio-group v-model="form.databaseType" disabled>
             <el-radio
@@ -204,8 +207,16 @@
         <el-form-item label="数据源驱动" prop="driverClassName">
           <el-input v-model="form.driverClassName" placeholder="请输入数据源驱动"/>
         </el-form-item>
-        <el-form-item label="数据源地址" prop="url">
-          <el-input v-model="form.url" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" placeholder="请输入数据源地址"/>
+        <el-form-item label="连接地址" prop="urlPrepend" @input.native="databaseUrlChange">
+          <el-input v-model="form.urlPrepend" type="urlPrepend" :autosize="{ minRows: 3, maxRows: 6}"
+                    placeholder="请输入连接地址"/>
+        </el-form-item>
+        <el-form-item label="连接参数" prop="urlAppend" @input.native="databaseUrlChange">
+          <el-input v-model="form.urlAppend" type="textarea" :autosize="{ minRows: 3, maxRows: 6}"
+                    placeholder="请输入连接参数"/>
+        </el-form-item>
+        <el-form-item label="连接信息" prop="url">
+          <el-input v-model="form.url" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" disabled/>
         </el-form-item>
         <el-form-item label="数据源账号" prop="username">
           <el-input v-model="form.username" placeholder="请输入数据源账号"/>
@@ -297,7 +308,7 @@ export default {
         driverClassName: [
           {required: true, message: '驱动不能为空', trigger: 'blur'}
         ],
-        url: [
+        urlPrepend: [
           {required: true, message: '地址不能为空', trigger: 'blur'}
         ],
         username: [
@@ -349,6 +360,8 @@ export default {
         databaseType: '0',
         driverClassName: 'com.mysql.cj.jdbc.Driver',
         url: null,
+        urlPrepend: null,
+        urlAppend: '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8',
         username: null,
         password: null,
         type: '0',
@@ -388,6 +401,10 @@ export default {
         this.open = true
         this.title = '修改数据源'
       })
+    },
+    /** 修改数据源地址 */
+    databaseUrlChange() {
+      this.form.url = this.form.urlPrepend + this.form.urlAppend
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
