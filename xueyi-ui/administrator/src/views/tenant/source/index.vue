@@ -226,7 +226,7 @@
           <el-input v-model="form.password" :show-password="true" placeholder="请输入数据源密码"/>
         </el-form-item>
         <el-form-item label="读写类型">
-          <el-radio-group v-model="form.type" :disabled="form.sourceId !==null">
+          <el-radio-group v-model="form.type" :disabled="form.sourceId !==null" @change="TypeChange">
             <el-radio
               v-for="dict in typeOptions"
               :key="dict.dictValue"
@@ -236,7 +236,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态">
-          <el-radio-group v-model="form.status" :disabled="form.databaseType ==='1'">
+          <el-radio-group v-model="form.status" :disabled="form.databaseType === '1' || ( form.sourceId == undefined && form.type === '2' )">
             <el-radio
               v-for="dict in statusOptions"
               :key="dict.dictValue"
@@ -409,6 +409,12 @@ export default {
     /** 修改数据源地址 */
     databaseUrlChange() {
       this.form.url = this.form.urlPrepend + this.form.urlAppend
+    },
+    /** 修改数据源读写类型 | 仅新增 */
+    TypeChange() {
+      if(this.form.sourceId == undefined && this.form.type === '2'){
+        this.form.status = '1'
+      }
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
