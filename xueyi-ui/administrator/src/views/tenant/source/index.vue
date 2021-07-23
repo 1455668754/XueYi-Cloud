@@ -151,7 +151,7 @@
             v-model="scope.row.status"
             active-value="0"
             inactive-value="1"
-            @change="handleStatusChange(scope.row)"
+            @change="handleStatusChange($event,scope.row)"
           ></el-switch>
         </template>
       </el-table-column>
@@ -236,7 +236,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态">
-          <el-radio-group v-model="form.status" :disabled="form.databaseType === '1' || ( form.sourceId == undefined && form.type === '2' )">
+          <el-radio-group v-model="form.status"
+                          :disabled="form.databaseType === '1' || ( form.sourceId == undefined && form.type === '2' )">
             <el-radio
               v-for="dict in statusOptions"
               :key="dict.dictValue"
@@ -412,14 +413,15 @@ export default {
     },
     /** 修改数据源读写类型 | 仅新增 */
     TypeChange() {
-      if(this.form.sourceId == undefined && this.form.type === '2'){
+      if (this.form.sourceId == undefined && this.form.type === '2') {
         this.form.status = '1'
       }
     },
     /** 修改状态按钮操作 */
-    handleStatusChange(row) {
-      updateSource(row).then(response => {
+    handleStatusChange($event,row) {
+      updateSource({sourceId: row.sourceId,type: row.type, status: row.status}).then(response => {
         this.msgSuccess('修改成功')
+      }).catch(() => {
       })
     },
     /** 提交按钮 */

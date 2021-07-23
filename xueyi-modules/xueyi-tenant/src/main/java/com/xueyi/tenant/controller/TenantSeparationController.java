@@ -49,7 +49,7 @@ public class TenantSeparationController extends BaseController {
     }
 
     /**
-     * 查询 含读 数据源集合
+     * 查询 含写 数据源集合
      */
     @GetMapping("/containWrite")
     public AjaxResult containWrite(TenantSource tenantSource) {

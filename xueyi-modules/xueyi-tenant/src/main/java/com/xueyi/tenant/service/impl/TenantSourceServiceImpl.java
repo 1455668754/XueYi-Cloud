@@ -137,4 +137,37 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
         tenantSourceMapper.deleteTenantSeparationByValueId(tenantSource);
         return tenantSourceMapper.deleteTenantSourceByIds(tenantSource);
     }
+
+    /**
+     * 校验数据源是否已应用于策略
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
+    @Override
+    public int checkStrategySourceBySourceId(TenantSource tenantSource){
+        return tenantSourceMapper.checkStrategySourceBySourceId(tenantSource);
+    }
+
+    /**
+     * 校验写数据源是否已设置主从配置
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
+    @Override
+    public int checkSeparationSourceByWriteId(TenantSource tenantSource){
+        return tenantSourceMapper.checkSeparationSourceByWriteId(tenantSource);
+    }
+
+    /**
+     * 校验读数据源是否已应用于主从配置
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
+    @Override
+    public int checkSeparationSourceByReadId(TenantSource tenantSource){
+        return tenantSourceMapper.checkSeparationSourceByReadId(tenantSource);
+    }
 }

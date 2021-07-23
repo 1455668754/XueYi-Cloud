@@ -66,4 +66,28 @@ public interface ITenantSourceService {
      * @return 结果
      */
     public int deleteTenantSourceByIds(TenantSource tenantSource);
+
+    /**
+     * 校验数据源是否已应用于策略
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
+    public int checkStrategySourceBySourceId(TenantSource tenantSource);
+
+    /**
+     * 校验写数据源是否已设置主从配置
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
+    public int checkSeparationSourceByWriteId(TenantSource tenantSource);
+
+    /**
+     * 校验读数据源是否已应用于主从配置
+     *
+     * @param tenantSource 数据源
+     * @return 结果
+     */
+    public int checkSeparationSourceByReadId(TenantSource tenantSource);
 }

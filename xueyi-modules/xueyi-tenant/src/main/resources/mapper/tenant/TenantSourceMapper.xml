@@ -209,4 +209,19 @@
             ( #{sourceId}, #{item.sourceId} )
         </foreach>
     </insert>
+
+    <select id="checkStrategySourceBySourceId" parameterType="TenantSource" resultType="int">
+        select count(source_id) from xy_tenant_strategy_source e
+        where e.source_id = #{sourceId} and e.del_flag = 0
+    </select>
+
+    <select id="checkSeparationSourceByWriteId" parameterType="TenantSource" resultType="int">
+        select count(write_id) from xy_tenant_separation e
+        where e.write_id = #{sourceId} and e.del_flag = 0
+    </select>
+
+    <select id="checkSeparationSourceByReadId" parameterType="TenantSource" resultType="int">
+        select count(read_id) from xy_tenant_separation e
+        where e.read_id = #{sourceId} and e.del_flag = 0
+    </select>
 </mapper>
