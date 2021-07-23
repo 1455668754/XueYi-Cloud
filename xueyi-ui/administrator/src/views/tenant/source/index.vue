@@ -306,6 +306,9 @@ export default {
       form: {},
       // 表单校验
       rules: {
+        name: [
+          {required: true, message: '数据源名称不能为空', trigger: 'blur'}
+        ],
         driverClassName: [
           {required: true, message: '驱动不能为空', trigger: 'blur'}
         ],
