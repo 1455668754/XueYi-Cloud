@@ -52,7 +52,7 @@
     </sql>
 
     <sql id="subVo">
-        select e.source_id, e.name, e.database_type, e.type, e.sort, e.status,
+        select e.source_id, e.name, e.database_type, e.slave, e.type, e.sort, e.status,
                b.source_id as sub_source_id, b.name as sub_name, b.database_type as sub_database_type, b.slave as sub_slave, b.type as sub_type, b.sort as sub_sort, b.status as sub_status
         from xy_tenant_source e
                  left join xy_tenant_separation ts on ts.write_id = e.source_id

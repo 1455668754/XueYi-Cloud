@@ -171,7 +171,7 @@
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['tenant:source:remove']"
-            v-if="scope.row.databaseType !== '0'"
+            v-if="scope.row.databaseType !== '1'"
           >删除
           </el-button>
         </template>
@@ -193,7 +193,7 @@
           <el-input v-model="form.name" placeholder="请输入数据源名称"/>
         </el-form-item>
         <el-form-item label="数据源编码" prop="slave" v-if="form.sourceId != undefined">
-          <el-input v-model="form.slave" disabled/>
+          <el-input v-model="form.slave" readonly/>
         </el-form-item>
         <el-form-item label="数据源类型">
           <el-radio-group v-model="form.databaseType" disabled>
