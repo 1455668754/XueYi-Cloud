@@ -99,7 +99,17 @@
           <el-tag>{{ scope.row.sourceAmount }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" class-name="allowDrag"/>
+      <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            active-value="0"
+            inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+            :disabled="scope.row.isChange === '1'"
+          ></el-switch>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
         <template slot-scope="scope">
           <el-button
@@ -220,7 +230,8 @@ import {
   updateStrategySort
 } from '@/api/tenant/strategy'
 import Sortable from 'sortablejs'
-import { writeSeparation } from '@/api/tenant/separation'
+import {writeSeparation} from '@/api/tenant/separation'
+import {updateTenant} from "@/api/tenant/tenant"
 
 export default {
   name: 'Strategy',
@@ -266,7 +277,7 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: '策略名称不能为空', trigger: 'blur' }
+          {required: true, message: '策略名称不能为空', trigger: 'blur'}
         ]
       }
     }
@@ -347,7 +358,7 @@ export default {
     handleUpdate(row) {
       this.reset()
       this.getWriteSeparation()
-      getStrategy({ strategyId: row.strategyId }).then(response => {
+      getStrategy({strategyId: row.strategyId}).then(response => {
         this.form = response.data
         for (let i = 0; i < this.form.values.length; i++) {
           if (this.form.values[i].isMain === 'Y') {
@@ -356,6 +367,14 @@ export default {
         }
         this.open = true
         this.title = '修改数据源策略'
+      })
+    },
+    /** 修改状态按钮操作 */
+    handleStatusChange(row) {
+      updateTenant({strategyId: row.strategyId, status: row.status}).then(response => {
+        this.msgSuccess('修改成功')
+      }).catch(() => {
+        row.status = '0'?'1':'0'
       })
     },
     /** 提交按钮 */
@@ -396,7 +415,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(function() {
+      }).then(function () {
         return delStrategy(that.updateParamIds(strategyIds))
       }).then(() => {
         this.getList()
@@ -437,10 +456,10 @@ export default {
       this.form.values.push(newData)
     },
     valueChange(id) {
-      const writeData = this.containWriteList.filter(function(item) {
+      const writeData = this.containWriteList.filter(function (item) {
         return item.sourceId === id
       })
-      let data = this.form.values.filter(function(item) {
+      let data = this.form.values.filter(function (item) {
         return item.sourceId === id
       })
       data[0].status = writeData[0].status

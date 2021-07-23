@@ -151,7 +151,7 @@
             v-model="scope.row.status"
             active-value="0"
             inactive-value="1"
-            @change="handleStatusChange($event,scope.row)"
+            @change="handleStatusChange(scope.row)"
           ></el-switch>
         </template>
       </el-table-column>
@@ -418,10 +418,11 @@ export default {
       }
     },
     /** 修改状态按钮操作 */
-    handleStatusChange($event,row) {
+    handleStatusChange(row) {
       updateSource({sourceId: row.sourceId,type: row.type, status: row.status}).then(response => {
         this.msgSuccess('修改成功')
       }).catch(() => {
+        row.status = '0'?'1':'0'
       })
     },
     /** 提交按钮 */
