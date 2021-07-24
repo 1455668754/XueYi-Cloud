@@ -74,7 +74,6 @@ public class SysMenuServiceImpl implements ISysMenuService {
     public List<SysRoleSystemMenu> selectSystemMenuListByUserId(Long userId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("userId", userId);
-        List<SysRoleSystemMenu> s = roleSystemMenuMapper.selectSystemMenuListByUserId(search);//@param search 万用组件 | userId 用户Id
         return roleSystemMenuMapper.selectSystemMenuListByUserId(search);//@param search 万用组件 | userId 用户Id
     }
 
