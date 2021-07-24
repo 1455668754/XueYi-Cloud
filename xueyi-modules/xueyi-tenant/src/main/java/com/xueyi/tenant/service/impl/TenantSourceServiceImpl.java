@@ -89,28 +89,20 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      * 修改数据源
      *
      * @param tenantSource 数据源
-     * @param ds 数据源新增|更新|删除判断
+     * @param ds           数据源新增|更新|删除判断
      * @return 结果
      */
     @Override
     public int updateTenantSource(TenantSource tenantSource, int ds) {
         int res = tenantSourceMapper.updateTenantSource(tenantSource);
         if (res > 0) {
-            try{
-                System.out.println(ds);
-                DSUtils.getCurrentAllDataSources();
-                if(ds == 1){
-                    DSUtils.delDs(tenantSource.getSlave());
-                    DSUtils.addDs(tenantSource);
-                }else if(ds == 2){
-                    DSUtils.addDs(tenantSource);
-                }else if(ds == 3){
-                    DSUtils.delDs(tenantSource.getSlave());
-                }
-                System.out.println("-------------------------------");
-                DSUtils.getCurrentAllDataSources();
-            }catch (Exception ignored){
-                return res;
+            if (ds == 1) {
+                DSUtils.delDs(tenantSource.getSlave());
+                DSUtils.addDs(tenantSource);
+            } else if (ds == 2) {
+                DSUtils.addDs(tenantSource);
+            } else if (ds == 3) {
+                DSUtils.delDs(tenantSource.getSlave());
             }
         }
         return res;
@@ -134,10 +126,11 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      * @return 结果
      */
     @Override
+    @Transactional
     public int deleteTenantSourceById(TenantSource tenantSource) {
+        tenantSourceMapper.deleteTenantSeparationByValueId(tenantSource);
         int res = tenantSourceMapper.deleteTenantSourceById(tenantSource);
         if (res > 0) {
-            // 根据数据源编码从数据源库中删除数据源
             DSUtils.delDs(tenantSource.getSlave());
         }
         return res;
@@ -147,13 +140,20 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      * 批量删除数据源
      *
      * @param tenantSource 数据源
+     * @param DsIds        需停用的数据源
      * @return 结果
      */
     @Override
     @Transactional
-    public int deleteTenantSourceByIds(TenantSource tenantSource) {
+    public int deleteTenantSourceByIds(TenantSource tenantSource, List<TenantSource> DsIds) {
         tenantSourceMapper.deleteTenantSeparationByValueId(tenantSource);
-        return tenantSourceMapper.deleteTenantSourceByIds(tenantSource);
+        int res = tenantSourceMapper.deleteTenantSourceByIds(tenantSource);
+        if (res > 0 && DsIds.size() > 0) {
+            for (TenantSource Ds : DsIds) {
+                DSUtils.delDs(Ds.getSlave());
+            }
+        }
+        return res;
     }
 
     /**

@@ -16,6 +16,12 @@ public class TenantConstants {
     /** 停用状态 */
     public static final String DISABLE = "1";
 
+    /** 子数据源 */
+    public static final String SLAVE_SOURCE = "0";
+
+    /** 主数据源 */
+    public static final String MASTER_SOURCE = "1";
+
     /** 数据源读写类型 */
     public static final String SOURCE_READ_WRITE = "0";
 

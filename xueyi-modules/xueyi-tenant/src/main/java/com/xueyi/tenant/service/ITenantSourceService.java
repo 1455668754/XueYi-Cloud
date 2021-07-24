@@ -39,7 +39,7 @@ public interface ITenantSourceService {
      * 修改数据源
      *
      * @param tenantSource 数据源
-     * @param ds 数据源新增|更新|删除判断
+     * @param ds           数据源新增|更新|删除判断
      * @return 结果
      */
     public int updateTenantSource(TenantSource tenantSource, int ds);
@@ -64,9 +64,10 @@ public interface ITenantSourceService {
      * 批量删除数据源
      *
      * @param tenantSource 数据源
+     * @param DsIds        需停用的数据源
      * @return 结果
      */
-    public int deleteTenantSourceByIds(TenantSource tenantSource);
+    public int deleteTenantSourceByIds(TenantSource tenantSource, List<TenantSource> DsIds);
 
     /**
      * 校验数据源是否已应用于策略

@@ -1,5 +1,6 @@
 package com.xueyi.tenant.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
@@ -8,7 +9,6 @@ import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.tenant.api.domain.source.TenantSource;
-import com.xueyi.tenant.service.ITenantSeparationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.xueyi.common.log.annotation.Log;
@@ -30,9 +30,6 @@ public class TenantSourceController extends BaseController {
 
     @Autowired
     private ITenantSourceService tenantSourceService;
-
-    @Autowired
-    private ITenantSeparationService tenantSeparationService;
 
     /**
      * 查询数据源列表
@@ -99,7 +96,7 @@ public class TenantSourceController extends BaseController {
         } else {
             ds = 0;
         }
-        if(!key && ds != 0){
+        if (!key && ds != 0) {
             tenantSource.setSlave(oldSource.getSlave());
             tenantSource.setDriverClassName(oldSource.getDriverClassName());
             tenantSource.setUrl(oldSource.getUrl());
@@ -161,19 +158,41 @@ public class TenantSourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
     public AjaxResult updateSort(@RequestBody TenantSource tenantSource) {
-        if (tenantSource.getDatabaseType() != null && tenantSource.getDatabaseType().equals("1")) {
-            return AjaxResult.error("禁止操作主数据源");
-        }
         return toAjax(tenantSourceService.updateTenantSourceSort(tenantSource));
     }
 
     /**
-     * 删除数据源
+     * 删除数据源 | 葫芦娃救爷爷，一个个判断是否允许删除
      */
     @PreAuthorize(hasPermi = "tenant:source:remove")
     @Log(title = "数据源", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody TenantSource tenantSource) {
-        return toAjax(tenantSourceService.deleteTenantSourceByIds(tenantSource));
+        boolean key = false;
+        List<Long> Ids = (List<Long>) tenantSource.getParams().get("Ids");
+        List<TenantSource> DsIds = new ArrayList<>();
+        for (int i = Ids.size() - 1; i >= 0; i--) {
+            TenantSource check = new TenantSource();
+            String sourceId = String.valueOf(Ids.get(i));
+            check.setSourceId(Long.valueOf(sourceId));
+            TenantSource oldSource = tenantSourceService.selectTenantSourceById(check);
+            if (StringUtils.equals(TenantConstants.MASTER_SOURCE, oldSource.getDatabaseType()) || ((StringUtils.equals(TenantConstants.SOURCE_WRITE, oldSource.getType()) || StringUtils.equals(TenantConstants.SOURCE_READ_WRITE, oldSource.getType())) && tenantSourceService.checkStrategySourceBySourceId(check) > 0) || (StringUtils.equals(TenantConstants.SOURCE_READ, oldSource.getType()) && tenantSourceService.checkSeparationSourceByReadId(check) > 0)) {
+                Ids.remove(i);
+                key = true;
+            } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus())) {
+                TenantSource delDs = new TenantSource();
+                delDs.setSourceId(oldSource.getSourceId());
+                delDs.setSlave(oldSource.getSlave());
+                DsIds.add(delDs);
+            }
+        }
+        if (Ids.size() <= 0) {
+            return AjaxResult.error("删除失败，数据源已被应用于策略或主从！");
+        }
+        int res = tenantSourceService.deleteTenantSourceByIds(tenantSource, DsIds);
+        if(key){
+            return AjaxResult.error("已被应用于策略或主从的数据源未成功删除！");
+        }
+        return toAjax(res);
     }
 }
