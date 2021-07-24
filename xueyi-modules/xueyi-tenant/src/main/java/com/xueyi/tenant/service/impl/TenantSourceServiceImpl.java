@@ -96,13 +96,21 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
     public int updateTenantSource(TenantSource tenantSource, int ds) {
         int res = tenantSourceMapper.updateTenantSource(tenantSource);
         if (res > 0) {
-            if(ds == 1){
-                DSUtils.delDs(tenantSource.getSlave());
-                DSUtils.addDs(tenantSource);
-            }else if(ds == 2){
-                DSUtils.addDs(tenantSource);
-            }else if(ds == 3){
-                DSUtils.delDs(tenantSource.getSlave());
+            try{
+                System.out.println(ds);
+                DSUtils.getCurrentAllDataSources();
+                if(ds == 1){
+                    DSUtils.delDs(tenantSource.getSlave());
+                    DSUtils.addDs(tenantSource);
+                }else if(ds == 2){
+                    DSUtils.addDs(tenantSource);
+                }else if(ds == 3){
+                    DSUtils.delDs(tenantSource.getSlave());
+                }
+                System.out.println("-------------------------------");
+                DSUtils.getCurrentAllDataSources();
+            }catch (Exception ignored){
+                return res;
             }
         }
         return res;

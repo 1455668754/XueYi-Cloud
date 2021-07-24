@@ -85,23 +85,26 @@ public class TenantSourceController extends BaseController {
     public AjaxResult edit(@RequestBody TenantSource tenantSource) {
         boolean key;
         int ds;//0不变 1刷新 2启动 3删除
-        key = StringUtils.isNotNull(tenantSource.getName());
+        key = StringUtils.isNotNull(tenantSource.getName());//if 传入值无name则代表走的状态控制
         int update;
         TenantSource check = new TenantSource();
         check.setSourceId(tenantSource.getSourceId());
         TenantSource oldSource = tenantSourceService.selectTenantSourceById(check);
-        if (key) {
-            if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.DISABLE, tenantSource.getStatus())) {
-                ds = 3;
-            } else if (StringUtils.equals(TenantConstants.DISABLE, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus())) {
-                ds = 2;
-            } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus()) && !(StringUtils.equals(oldSource.getDriverClassName(), tenantSource.getDriverClassName()) && StringUtils.equals(oldSource.getUrl(), tenantSource.getUrl()) && StringUtils.equals(oldSource.getUsername(), tenantSource.getUsername()) && StringUtils.equals(oldSource.getPassword(), tenantSource.getPassword()))) {
-                ds = 1;
-            } else {
-                ds = 0;
-            }
+        if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.DISABLE, tenantSource.getStatus())) {
+            ds = 3;
+        } else if (StringUtils.equals(TenantConstants.DISABLE, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus())) {
+            ds = 2;
+        } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus()) && !(StringUtils.equals(oldSource.getDriverClassName(), tenantSource.getDriverClassName()) && StringUtils.equals(oldSource.getUrl(), tenantSource.getUrl()) && StringUtils.equals(oldSource.getUsername(), tenantSource.getUsername()) && StringUtils.equals(oldSource.getPassword(), tenantSource.getPassword()))) {
+            ds = 1;
         } else {
             ds = 0;
+        }
+        if(!key && ds != 0){
+            tenantSource.setSlave(oldSource.getSlave());
+            tenantSource.setDriverClassName(oldSource.getDriverClassName());
+            tenantSource.setUrl(oldSource.getUrl());
+            tenantSource.setUsername(oldSource.getUsername());
+            tenantSource.setPassword(oldSource.getPassword());
         }
         if (StringUtils.equals(TenantConstants.SOURCE_WRITE, tenantSource.getType()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus())) {
             if (!StringUtils.equals(oldSource.getStatus(), tenantSource.getStatus()) && tenantSourceService.checkSeparationSourceByWriteId(check) == 0) {
