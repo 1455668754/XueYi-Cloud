@@ -182,7 +182,7 @@
     />
     <!-- 添加或修改角色配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="角色编码" prop="roleCode">
@@ -195,7 +195,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="权限字符" prop="roleKey">
+            <el-form-item prop="roleKey">
+          <span slot="label">
+            <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasRole('admin')`)" placement="top">
+              <i class="el-icon-question"></i>
+            </el-tooltip>
+            权限字符
+          </span>
               <el-input v-model="form.roleKey" placeholder="请输入权限字符" :readonly="form.roleId !== undefined"/>
             </el-form-item>
           </el-col>
