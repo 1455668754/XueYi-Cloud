@@ -7,6 +7,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xueyi.common.core.annotation.Excel;
 #if($table.crud || $table.sub)
+#if($table.sub)
+import ${packageName}.domain.${subClassName};
+#end
 import com.xueyi.common.core.web.domain.BaseEntity;
 #elseif($table.tree)
 import com.xueyi.common.core.web.domain.TreeEntity;
@@ -14,7 +17,7 @@ import com.xueyi.common.core.web.domain.TreeEntity;
 
 /**
  * ${functionName}对象 ${tableName}
- * 
+ *
  * @author ${author}
  */
 #if($table.crud || $table.sub)
@@ -53,7 +56,7 @@ public class ${ClassName} extends ${Entity} {
 #end
 #if($table.sub)
     /** $table.subTable.functionName信息 */
-    private List<${subClassName}> ${subclassName}List;
+    private List<${subClassName}> subList;
 
 #end
 #foreach ($column in $columns)
@@ -76,14 +79,14 @@ public class ${ClassName} extends ${Entity} {
 #end
 #end
 #if($table.sub)
-    public List<${subClassName}> get${subClassName}List()
+    public List<${subClassName}> getSubList()
     {
-        return ${subclassName}List;
+        return subList;
     }
 
-    public void set${subClassName}List(List<${subClassName}> ${subclassName}List)
+    public void setSubList(List<${subClassName}> subList)
     {
-        this.${subclassName}List = ${subclassName}List;
+        this.subList = subList;
     }
 
 #end
@@ -111,7 +114,7 @@ public class ${ClassName} extends ${Entity} {
 #end
 #end
 #if($table.sub)
-            .append("${subclassName}List", get${subClassName}List())
+            .append("subList", getSubList())
 #end
             .toString();
     }

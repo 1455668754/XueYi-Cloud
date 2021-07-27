@@ -104,7 +104,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     {
 #if($table.sub)
         int rows = ${className}Mapper.insert${ClassName}(${className});
-        if (${className}.get${subClassName}List().size() > 0)
+        if (${className}.getSubList().size() > 0)
         {
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 #if(!$pkColumn.increment)
@@ -136,7 +136,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
 
     /**
      * 修改${functionName}
-     * 
+     *
      * @param ${className} ${functionName}
      * @return 结果
      */
@@ -148,7 +148,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     {
 #if($table.sub)
         ${className}Mapper.delete${subClassName}By${AttrName}(${className});
-        if (${className}.get${subClassName}List().size() > 0)
+        if (${className}.getSubList().size() > 0)
         {
             ${className}Mapper.batch${subClassName}(${className});
         }

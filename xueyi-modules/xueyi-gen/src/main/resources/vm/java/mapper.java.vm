@@ -74,8 +74,8 @@ public interface ${ClassName}Mapper {
     public List<${ClassName}> selectChildrenById(${ClassName} ${className});
 #end
 #end
-
 #end
+
     /**
      * 查询${functionName}
      * 访问控制 e 租户查询

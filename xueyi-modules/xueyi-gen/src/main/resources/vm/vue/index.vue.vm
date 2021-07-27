@@ -291,7 +291,7 @@
             <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete${subClassName}">删除</el-button>
           </el-col>
         </el-row>
-        <el-table :data="${subclassName}List" :row-class-name="row${subClassName}Index" @selection-change="handle${subClassName}SelectionChange" ref="${subclassName}">
+        <el-table :data="subList" :row-class-name="row${subClassName}Index" @selection-change="handle${subClassName}SelectionChange" ref="${subclassName}">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column label="序号" align="center" prop="index" width="50"/>
 #foreach($column in $subTable.columns)
@@ -363,7 +363,7 @@ export default {
 #end
 #if($table.sub)
       // ${subTable.functionName}表格数据
-      ${subclassName}List: [],
+      subList: [],
 #end
       // 弹出层标题
       title: "",
@@ -502,7 +502,7 @@ export default {
 #end
       };
 #if($table.sub)
-      this.${subclassName}List = [];
+      this.subList = [];
 #end
       this.resetForm("form");
     },
@@ -550,7 +550,7 @@ export default {
 #end
 #end
 #if($table.sub)
-        this.${subclassName}List = response.data.${subclassName}List;
+        this.subList = response.data.subList;
 #end
         this.open = true;
         this.title = "修改${functionName}";
@@ -566,7 +566,7 @@ export default {
 #end
 #end
 #if($table.sub)
-          this.form.${subclassName}List = this.${subclassName}List;
+          this.form.subList = this.subList;
 #end
           if (this.form.${pkColumn.javaField} != null) {
             update${BusinessName}(this.form).then(response => {
@@ -624,14 +624,14 @@ export default {
       obj.$column.javaField = "";
 #end
 #end
-      this.${subclassName}List.push(obj);
+      this.subList.push(obj);
     },
     /** ${subTable.functionName}删除按钮操作 */
     handleDelete${subClassName}() {
       if (this.checked${subClassName}.length == 0) {
         this.$alert("请先选择要删除的${subTable.functionName}数据", "提示", { confirmButtonText: "确定", });
       } else {
-        this.${subclassName}List.splice(this.checked${subClassName}[0].index - 1, 1);
+        this.subList.splice(this.checked${subClassName}[0].index - 1, 1);
       }
     },
     /** 单选框选中数据 */
