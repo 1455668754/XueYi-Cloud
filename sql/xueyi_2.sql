@@ -27,8 +27,7 @@ create table sys_dept (
 -- 初始化-部门表数据
 -- ----------------------------
 insert into sys_dept (dept_id, tenant_id, dept_code, parent_id, ancestors, dept_name)
-values (98, -1, '98', 0, '0', '雪忆科技'),
-       (99, 2, '100', 0, '0', '雪忆科技'),
+values (99, -1, '99', 0, '0', '雪忆科技'),
        (100, 1, '100', 0, '0', '雪忆科技'),
        (101, 1, '101', 100, '0,100', '深圳总公司'),
        (102, 1, '102',  100, '0,100', '长沙分公司'),
@@ -70,8 +69,7 @@ values (1, -1, 98, 'ceo', '超级管理员'),
        (2, 1, 100, 'ceo', '董事长'),
        (3, 1, 100, 'se', '项目经理'),
        (4, 1, 100, 'hr', '人力资源'),
-       (5, 2, 99, 'hr', '人力资源'),
-       (6, 1, 100, 'user', '普通员工');
+       (5, 1, 100, 'user', '普通员工');
 
 -- ----------------------------
 -- 3、用户信息表
@@ -111,8 +109,7 @@ create table sys_user (
 insert into sys_user (user_id, tenant_id, dept_id, post_id, user_code, user_name, nick_name,user_type, password, remark)
 values (-1, -1, 98, 1, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
        (2, 1, 100, 2, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员'),
-       (3, 1, 100, 2, '002', 'xy', 'xy', '01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '管理员'),
-       (4, 2, 99, 5, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员');
+       (3, 1, 100, 2, '002', 'xy', 'xy', '01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '管理员');
 
 -- ----------------------------
 -- 4、角色信息表
@@ -143,8 +140,7 @@ create table sys_role (
 -- ----------------------------
 insert into sys_role (role_id, tenant_id, role_code, role_name, role_key, menu_check_strictly, dept_check_strictly, create_by, remark)
 values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
-       (2, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色'),
-       (3, 2, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员');
+       (2, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色');
 
 -- ----------------------------
 -- 5、角色和系统-菜单关联表  角色N-N系统-菜单
