@@ -128,7 +128,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -418,7 +418,7 @@ export default {
     },
     /** 任务日志列表查询 */
     handleJobLog() {
-      this.$router.push("/job/log");
+      this.$router.push("/monitor/job-log/index");
     },
     /** 新增按钮操作 */
     handleAdd() {

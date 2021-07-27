@@ -70,41 +70,41 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/dict',
+    path: '/system/dict-data',
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'type/data/:dictId(\\d+)',
+        path: 'index/:dictId(\\d+)',
         component: (resolve) => require(['@/views/system/system/dict/data'], resolve),
         name: 'Data',
-        meta: { title: '字典数据', icon: '' }
+        meta: { title: '字典数据', activeMenu: '/system/dict'}
       }
     ]
   },
   {
-    path: '/job',
+    path: '/monitor/job-log',
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'log',
+        path: 'index',
         component: (resolve) => require(['@/views/system/monitor/job/log'], resolve),
         name: 'JobLog',
-        meta: { title: '调度日志' }
+        meta: { title: '调度日志', activeMenu: '/monitor/job'}
       }
     ]
   },
   {
-    path: '/gen',
+    path: '/tool/gen-edit',
     component: Layout,
     hidden: true,
     children: [
       {
-        path: 'edit/:tableId(\\d+)',
+        path: 'index/:tableId(\\d+)',
         component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
         name: 'GenEdit',
-        meta: { title: '修改生成配置' }
+        meta: { title: '修改生成配置', activeMenu: '/tool/gen'}
       }
     ]
   }
