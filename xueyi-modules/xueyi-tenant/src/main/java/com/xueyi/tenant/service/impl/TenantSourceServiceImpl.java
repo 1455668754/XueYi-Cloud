@@ -3,9 +3,7 @@ package com.xueyi.tenant.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.tenant.api.domain.source.TenantSourceValue;
@@ -15,8 +13,6 @@ import com.xueyi.tenant.mapper.TenantSourceMapper;
 import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.service.ITenantSourceService;
 import org.springframework.transaction.annotation.Transactional;
-
-import javax.sql.DataSource;
 
 /**
  * 数据源 业务层处理
@@ -29,9 +25,6 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
 
     @Autowired
     private TenantSourceMapper tenantSourceMapper;
-
-    @Autowired
-    private DataSource dataSource;
 
     /**
      * 查询数据源列表
