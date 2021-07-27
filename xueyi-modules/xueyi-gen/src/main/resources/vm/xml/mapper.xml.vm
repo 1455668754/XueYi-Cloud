@@ -34,11 +34,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #foreach ($column in $subTable.columns)
 #if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
 #if($column.javaField == 'createBy')
-        <result property="createBy"                 column="sub_create_by"      />
-        <result property="createName"   	        column="sub_create_name"    />
+        <result property="createBy"                 column="sub_create_by"          />
+        <result property="createName"   	        column="sub_create_name"        />
 #elseif($column.javaField == 'updateBy')
-        <result property="updateBy"   		        column="sub_update_by"      />
-        <result property="updateName"   	        column="sub_update_name"    />
+        <result property="updateBy"   		        column="sub_update_by"          />
+        <result property="updateName"   	        column="sub_update_name"        />
 #else
         <result property="${column.javaField}"#set($maxStep=23 - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end column="sub_${column.columnName}"#set($maxStep=17 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
 #end
@@ -63,9 +63,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 #else
     <sql id="selectVo">
+#if($table.crud)
         select#set($commaVo=0)#foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($commaVo == 1),#end#if($commaVo == 0)#set($commaVo=1)#end e.$column.columnName#end#end
 
         from ${tableName} e
+#elseif($table.sub)
+        select#set($temstep = 1)#foreach($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($temstep == 1)#set($temstep = 2)#else,#end e.$column.columnName#end#end,
+           #set($temstep = 1)#foreach($column in $subTable.columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($temstep == 1)#set($temstep = 2)#else,#end b.$column.columnName as sub_$column.columnName#end#end
+
+        from ${tableName} e
+        left join ${subTableName} b on b.${subTableFkName} = e.${pkColumn.columnName}
+#end
     </sql>
 #end
 
@@ -136,18 +144,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 
     <select id="select${ClassName}ById" parameterType="${ClassName}" resultMap="#if($table.sub)${ClassName}${subClassName}Result#else${ClassName}Result#end">
-#if($table.crud || $table.tree)
         <include refid="selectVo"/>
         where e.${pkColumn.columnName} = #{${pkColumn.javaField}}
-#elseif($table.sub)
-        select#foreach($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') e.$column.columnName#if($velocityCount != $columns.size()),#end#end#end
-
-           #foreach($column in $subTable.columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag') b.$column.columnName as sub_$column.columnName#if($velocityCount != $subTable.columns.size()),#end#end#end
-
-        from ${tableName} e
-        left join ${subTableName} b on b.${subTableFkName} = e.${pkColumn.columnName}
-        where e.${pkColumn.columnName} = #{${pkColumn.javaField}}
-#end
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>

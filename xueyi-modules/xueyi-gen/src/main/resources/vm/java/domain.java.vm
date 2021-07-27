@@ -75,7 +75,6 @@ public class ${ClassName} extends ${Entity} {
 #end
 #end
 #end
-
 #if($table.sub)
     public List<${subClassName}> get${subClassName}List()
     {

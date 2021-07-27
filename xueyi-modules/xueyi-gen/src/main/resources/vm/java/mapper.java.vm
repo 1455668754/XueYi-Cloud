@@ -3,9 +3,6 @@ package ${packageName}.mapper;
 import java.util.List;
 import com.xueyi.common.datascope.annotation.DataScope;
 import ${packageName}.domain.${ClassName};
-#if($table.sub)
-import ${packageName}.domain.${subClassName};
-#end
 #set($system=0)
 #set($site=0)
 #set($library=0)
@@ -48,6 +45,7 @@ public interface ${ClassName}Mapper {
      * @return ${functionName}集合
      */
     @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
+
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
 #if($table.tree)
 
