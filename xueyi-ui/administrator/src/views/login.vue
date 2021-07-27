@@ -23,7 +23,7 @@
           <svg-icon slot="prefix" icon-class="password" class="el-input__icon input-icon"/>
         </el-input>
       </el-form-item>
-      <el-form-item prop="code">
+      <el-form-item prop="code" v-if="captchaOnOff">
         <el-input
           v-model="loginForm.code"
           auto-complete="off"
@@ -89,6 +89,7 @@ export default {
         ],
         code: [{required: true, trigger: "change", message: "验证码不能为空"}]
       },
+      captchaOnOff: true,
       loading: false,
       redirect: undefined
     };
@@ -108,8 +109,11 @@ export default {
   methods: {
     getCode() {
       getCodeImg().then(res => {
-        this.codeUrl = "data:image/gif;base64," + res.img;
-        this.loginForm.uuid = res.uuid;
+        this.captchaOnOff = res.captchaOnOff === undefined ? true : res.captchaOnOff;
+        if (this.captchaOnOff) {
+          this.codeUrl = "data:image/gif;base64," + res.img;
+          this.loginForm.uuid = res.uuid;
+        }
       });
     },
     getCookie() {
@@ -144,7 +148,9 @@ export default {
             });
           }).catch(() => {
             this.loading = false;
-            this.getCode();
+            if (this.captchaOnOff) {
+              this.getCode();
+            }
           });
         }
       });
