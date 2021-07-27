@@ -37,7 +37,6 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
         return tenantSourceMapper.selectTenantSourceList(tenantSource);
     }
 
-
     /**
      * 查询数据源
      *
