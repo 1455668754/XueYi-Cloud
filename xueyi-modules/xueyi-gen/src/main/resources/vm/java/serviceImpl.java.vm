@@ -64,8 +64,8 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     {
         return ${className}Mapper.select${ClassName}List(${className});
     }
-
 #if($table.tree)
+
     /**
      * 查询${functionName}树选项列表
      *

@@ -48,10 +48,9 @@ public interface ${ClassName}Mapper {
      * @return ${functionName}集合
      */
     @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
-
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
-
 #if($table.tree)
+
     /**
      * 查询${functionName}树选项列表
      * 访问控制 e 租户查询

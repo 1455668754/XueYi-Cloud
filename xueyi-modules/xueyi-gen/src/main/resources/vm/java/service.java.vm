@@ -17,8 +17,8 @@ public interface I${ClassName}Service {
      * @return ${functionName}集合
      */
     public List<${ClassName}> select${ClassName}List(${ClassName} ${className});
-
 #if($table.tree)
+
     /**
      * 查询${functionName}树选项列表
      *
