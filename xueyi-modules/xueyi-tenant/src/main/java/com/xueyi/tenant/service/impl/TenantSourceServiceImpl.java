@@ -88,6 +88,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
     public int updateTenantSource(TenantSource tenantSource, int ds) {
         int res = tenantSourceMapper.updateTenantSource(tenantSource);
         if (res > 0) {
+            //ds 0不变 1刷新 2启动 3删除
             if (ds == 1) {
                 DSUtils.delDs(tenantSource.getSlave());
                 DSUtils.addDs(tenantSource);
