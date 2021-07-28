@@ -317,7 +317,7 @@ values
                                    (20013, 0, -1, 20010, '租户修改', '#', '', 'F', '0', 'tenant:tenant:edit',           '#', 3, 0, ''),
                                    (20014, 0, -1, 20010, '租户删除', '#', '', 'F', '0', 'tenant:tenant:remove',         '#', 4, 0, ''),
                      -- 二级菜单
-              (20050, 2, -1, 20000, '数据源策略', 'strategy',   'tenant/strategy/index',      'C', '0',  'tenant:strategy:list',      '#',   1, 0, '数据源策略菜单'),
+              (20050, 2, -1, 20000, '数据源策略', 'strategy',   'tenant/strategy/index',      'C', '0',  'tenant:strategy:list',      'xy_strategy',   1, 0, '数据源策略菜单'),
                                    -- 数据源策略按钮
                                    (20051, 2, -1, 20050, '数据源策略查询', '', '', 'F', '0', 'tenant:strategy:query',           '#', 1, 0, ''),
                                    (20052, 2, -1, 20050, '数据源策略新增', '', '', 'F', '0', 'tenant:strategy:add',             '#', 2, 0, ''),
@@ -325,7 +325,7 @@ values
                                    (20054, 2, -1, 20050, '数据源策略删除', '', '', 'F', '0', 'tenant:strategy:remove',          '#', 4, 0, ''),
                                    (20055, 2, -1, 20050, '数据源策略导出', '', '', 'F', '0', 'tenant:strategy:export',          '#', 5, 0, ''),
               -- 二级菜单
-              (20020, 2, -1, 20000, '数据源配置', 'source',   'tenant/source/index',      'C', '0',  'tenant:source:list',      '#',   1, 0, '数据源菜单'),
+              (20020, 2, -1, 20000, '数据源配置', 'source',   'tenant/source/index',      'C', '0',  'tenant:source:list',      'xy_source',   1, 0, '数据源菜单'),
                                    -- 数据源管理按钮
                                    (20021, 2, -1, 20020, '数据源配置查询', '', '', 'F', '0', 'tenant:source:query',           '#', 1, 0, ''),
                                    (20022, 2, -1, 20020, '数据源配置新增', '', '', 'F', '0', 'tenant:source:add',             '#', 2, 0, ''),
@@ -333,7 +333,7 @@ values
                                    (20024, 2, -1, 20020, '数据源配置删除', '', '', 'F', '0', 'tenant:source:remove',          '#', 4, 0, ''),
                                    (20025, 2, -1, 20020, '数据源配置导出', '', '', 'F', '0', 'tenant:source:export',          '#', 5, 0, ''),
               -- 二级菜单
-              (20030, 2, -1, 20000, '主从配置', 'separation',   'tenant/separation/index',      'C', '0',  'tenant:separation:list',      '#',   1, 0, '主从配置菜单'),
+              (20030, 2, -1, 20000, '主从配置', 'separation',   'tenant/separation/index',      'C', '0',  'tenant:separation:list',      'xy_master-slave',   1, 0, '主从配置菜单'),
                                    -- 读写分离按钮 SQL
                                    (20031, 2, -1, 20030, '主从配置查询', '', '', 'F', '0', 'tenant:separation:query',           '#', 1, 0, ''),
                                    (20032, 2, -1, 20030, '主从配置配置', '', '', 'F', '0', 'tenant:separation:edit',            '#', 2, 0, ''),
