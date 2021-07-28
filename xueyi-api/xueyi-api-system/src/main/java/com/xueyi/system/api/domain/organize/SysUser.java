@@ -74,10 +74,6 @@ public class SysUser extends BaseEntity
     @JsonIgnore
     private String password;
 
-    /** 盐加密 */
-    @JsonIgnore
-    private String salt;
-
     /** 帐号状态（0正常 1停用） */
     @Excel(name = "帐号状态", readConverterExp = "0=正常,1=停用")
     private String status;
@@ -248,14 +244,6 @@ public class SysUser extends BaseEntity
         this.status = status;
     }
 
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
     public String getLoginIp() {
         return loginIp;
     }
@@ -321,7 +309,6 @@ public class SysUser extends BaseEntity
                 .append("avatar", getAvatar())
                 .append("profile", getProfile())
                 .append("password", getPassword())
-                .append("salt", getSalt())
                 .append("loginIp", getLoginIp())
                 .append("loginDate", getLoginDate())
                 .append("sort", getSort())
