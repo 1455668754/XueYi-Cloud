@@ -36,7 +36,7 @@
         <fastjson.version>1.2.76</fastjson.version>
         <minio.version>8.2.1</minio.version>
 		<poi.version>4.1.2</poi.version>
-        <common-pool.version>2.6.2</common-pool.version>
+        <common-pool.version>2.10.0</common-pool.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <hutool-all.version>5.7.3</hutool-all.version>
         <thumbnailator.version>0.4.14</thumbnailator.version>
