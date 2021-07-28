@@ -66,7 +66,7 @@ public class TenantStrategyServiceImpl implements ITenantStrategyService {
     @DataScope(ueAlias = "empty")
     public int insertTenantStrategy(TenantStrategy tenantStrategy) {
         int rows = tenantStrategyMapper.insertTenantStrategy(tenantStrategy);
-        if (tenantStrategy.getValues().size() > 0) {
+        if (tenantStrategy.getValues() != null && tenantStrategy.getValues().size() > 0) {
             /**获取生成雪花Id，并赋值给主键，加入至子表对应外键中*/
             tenantStrategy.setStrategyId(tenantStrategy.getId());
             tenantStrategyMapper.batchTenantSource(tenantStrategy);
@@ -84,7 +84,7 @@ public class TenantStrategyServiceImpl implements ITenantStrategyService {
     @Transactional
     public int updateTenantStrategy(TenantStrategy tenantStrategy) {
         tenantStrategyMapper.deleteTenantSourceByStrategyId(tenantStrategy);
-        if (tenantStrategy.getValues().size() > 0) {
+        if (tenantStrategy.getValues() != null && tenantStrategy.getValues().size() > 0) {
             tenantStrategyMapper.batchTenantSource(tenantStrategy);
         }
         return tenantStrategyMapper.updateTenantStrategy(tenantStrategy);

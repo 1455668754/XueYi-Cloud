@@ -401,7 +401,7 @@ export default {
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
-      updateTenant({tenantId: row.tenantId, status: row.status}).then(response => {
+      updateTenant({tenantId: row.tenantId, isChange: row.isChange, status: row.status}).then(response => {
         this.msgSuccess('修改成功')
       }).catch(() => {
         row.status = '0'?'1':'0'

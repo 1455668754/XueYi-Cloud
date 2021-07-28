@@ -76,7 +76,7 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService {
     @Transactional
     public int updateTenantSeparation(TenantSource tenantSource) {
         int k=tenantSourceMapper.deleteTenantSeparationBySourceId(tenantSource);
-        if (tenantSource.getValues().size() > 0) {
+        if (tenantSource.getValues() != null && tenantSource.getValues().size() > 0) {
             tenantSourceMapper.batchTenantSeparation(tenantSource);
         }
         return k;
