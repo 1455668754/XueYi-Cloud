@@ -2,6 +2,7 @@ package com.xueyi.system.organize.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
@@ -260,6 +261,18 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysUser user) {
+        List<Long> Ids = (List<Long>) user.getParams().get("Ids");
+        for (int i = Ids.size() - 1; i >= 0; i--) {
+            if(Objects.equals(SecurityUtils.getUserId(), Long.valueOf(String.valueOf(Ids.get(i))))){
+                Ids.remove(i);
+                if(Ids.size()<=0){
+                    return AjaxResult.error("删除失败，不能删除自己！");
+                }else{
+                    userService.deleteUserByIds(user);
+                    return AjaxResult.error("删除成功但未删除自己信息！");
+                }
+            }
+        }
         return toAjax(userService.deleteUserByIds(user));
     }
 
