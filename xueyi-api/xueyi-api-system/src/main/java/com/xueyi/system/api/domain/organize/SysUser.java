@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.xueyi.system.api.domain.authority.SysRole;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -70,9 +71,11 @@ public class SysUser extends BaseEntity
     private String profile;
 
     /** 密码 */
+    @JsonIgnore
     private String password;
 
     /** 盐加密 */
+    @JsonIgnore
     private String salt;
 
     /** 帐号状态（0正常 1停用） */
