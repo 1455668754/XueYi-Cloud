@@ -14,6 +14,7 @@
         @contextmenu.prevent.native="openMenu(tag,$event)"
       >
         {{ tag.title }}
+        <svg-icon v-if="isActive(tag)" icon-class="xy_refresh" @click="refreshSelectedTag(tag)"></svg-icon>
         <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
