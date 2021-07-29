@@ -419,10 +419,10 @@ export default {
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
-      updateSource({sourceId: row.sourceId,type: row.type, status: row.status}).then(response => {
+      updateSource({sourceId: row.sourceId, type: row.type, status: row.status}).then(response => {
         this.msgSuccess('修改成功')
       }).catch(() => {
-        row.status = '0'?'1':'0'
+        row.status = '0' ? '1' : '0'
       })
     },
     /** 提交按钮 */
@@ -488,15 +488,17 @@ export default {
     }
   },
   mounted() {
-    const el = this.$refs.dataTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
-    Sortable.create(el, {
-      handle: '.allowDrag',
-      onEnd: evt => {
-        const targetRow = this.sourceList.splice(evt.oldIndex, 1)[0]
-        this.sourceList.splice(evt.newIndex, 0, targetRow)
-        this.sortVisible = true
-      }
-    })
+    if (!this.isMobile()) {
+      const el = this.$refs.dataTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
+      Sortable.create(el, {
+        handle: '.allowDrag',
+        onEnd: evt => {
+          const targetRow = this.sourceList.splice(evt.oldIndex, 1)[0]
+          this.sourceList.splice(evt.newIndex, 0, targetRow)
+          this.sortVisible = true
+        }
+      })
+    }
   }
 }
 </script>
