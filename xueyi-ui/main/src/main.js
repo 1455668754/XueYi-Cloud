@@ -21,7 +21,7 @@ import { getDicts } from "./api/common/common";
 import { getConfigKey } from "./api/common/common";
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "./utils/ruoyi";
 import { addSystem, updateParamIds } from "./utils/xueyi";  // 控制方法(必须)
-import { sortOrderListOnlyDynamic, sortOrderList, mergeTableRow } from "./utils/xueyi";  // 普通方法
+import { sortOrderListOnlyDynamic, sortOrderList, mergeTableRow, isMobile } from "./utils/xueyi";  // 普通方法
 import Pagination from "./components/Pagination";
 // 自定义表格工具组件
 import RightToolbar from "./components/RightToolbar"
@@ -53,7 +53,8 @@ Vue.prototype.updateParamIds = updateParamIds
 
 Vue.prototype.sortOrderList = sortOrderList
 Vue.prototype.sortOrderListOnlyDynamic = sortOrderListOnlyDynamic
-Vue.prototype.mergeTableRow = mergeTableRow // Table合并行通用（不相邻的数据相互不受影响且行不交叉合并）
+Vue.prototype.mergeTableRow = mergeTableRow
+Vue.prototype.isMobile = isMobile
 
 Vue.prototype.msgSuccess = function (msg) {
   this.$message({ showClose: true, message: msg, type: "success" });

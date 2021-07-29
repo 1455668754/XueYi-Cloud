@@ -1,144 +1,148 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="策略名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入策略名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+    <div class="wrapper-container">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+        <el-form-item label="策略名称" prop="name">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入策略名称"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+            <el-option
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['tenant:strategy:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['tenant:strategy:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['tenant:strategy:remove']"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['tenant:strategy:export']"
-        >导出
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-sort"
-          size="mini"
-          @click="handleSort"
-          v-show="sortVisible"
-          v-hasPermi="['tenant:strategy:edit']"
-        >保存排序
-        </el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
-    <el-table v-loading="loading" :data="strategyList" @selection-change="handleSelectionChange" ref="dataTable"
-              row-key="strategyId"
-    >
-      <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-      <el-table-column label="策略Id" align="center" prop="strategyId" class-name="allowDrag"/>
-      <el-table-column label="策略名称" align="center" prop="name" class-name="allowDrag"/>
-      <el-table-column label="数据源数量" align="center" prop="sourceAmount" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-tag>{{ scope.row.sourceAmount }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.status"
-            active-value="0"
-            inactive-value="1"
-            @change="handleStatusChange(scope.row)"
-            :disabled="scope.row.isChange === '1'"
-          ></el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
-        <template slot-scope="scope">
+    <div class="wrapper-container">
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
           <el-button
+            type="primary"
+            plain
+            icon="el-icon-plus"
             size="mini"
-            type="text"
+            @click="handleAdd"
+            v-hasPermi="['tenant:strategy:add']"
+          >新增
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="success"
+            plain
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            size="mini"
+            :disabled="single"
+            @click="handleUpdate"
             v-hasPermi="['tenant:strategy:edit']"
           >修改
           </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
-            size="mini"
-            type="text"
+            type="danger"
+            plain
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete"
             v-hasPermi="['tenant:strategy:remove']"
           >删除
           </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="warning"
+            plain
+            icon="el-icon-download"
+            size="mini"
+            @click="handleExport"
+            v-hasPermi="['tenant:strategy:export']"
+          >导出
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="warning"
+            plain
+            icon="el-icon-sort"
+            size="mini"
+            @click="handleSort"
+            v-show="sortVisible"
+            v-hasPermi="['tenant:strategy:edit']"
+          >保存排序
+          </el-button>
+        </el-col>
+        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      </el-row>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+      <el-table v-loading="loading" :data="strategyList" @selection-change="handleSelectionChange" ref="dataTable"
+                row-key="strategyId"
+      >
+        <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
+        <el-table-column label="策略Id" align="center" prop="strategyId" class-name="allowDrag"/>
+        <el-table-column label="策略名称" align="center" prop="name" class-name="allowDrag"/>
+        <el-table-column label="数据源数量" align="center" prop="sourceAmount" class-name="allowDrag">
+          <template slot-scope="scope">
+            <el-tag>{{ scope.row.sourceAmount }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.status"
+              active-value="0"
+              inactive-value="1"
+              @change="handleStatusChange(scope.row)"
+              :disabled="scope.row.isChange === '1'"
+            ></el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['tenant:strategy:edit']"
+            >修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['tenant:strategy:remove']"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+    </div>
 
     <!-- 添加或修改数据源策略对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>

@@ -1,90 +1,91 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
-      <el-form-item label="数据源名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入数据源名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="数据源类型" prop="databaseType">
-        <el-select v-model="queryParams.databaseType" placeholder="请选择数据源类型" clearable size="small">
-          <el-option
-            v-for="dict in databaseTypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+    <div class="wrapper-container">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+        <el-form-item label="数据源名称" prop="name">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入数据源名称"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="数据源编码" prop="slave">
-        <el-input
-          v-model="queryParams.slave"
-          placeholder="请输入数据源编码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+        </el-form-item>
+        <el-form-item label="数据源类型" prop="databaseType">
+          <el-select v-model="queryParams.databaseType" placeholder="请选择数据源类型" clearable size="small">
+            <el-option
+              v-for="dict in databaseTypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="数据源编码" prop="slave">
+          <el-input
+            v-model="queryParams.slave"
+            placeholder="请输入数据源编码"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
-    <el-row :gutter="10" class="mb8">
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+    <div class="wrapper-container">
 
-    <el-table v-loading="loading" :data="separationList">
-      <el-table-column label="编号" align="center" prop="sourceId">
-        <template slot-scope="scope">
-          <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + 1 + scope.$index }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="数据源名称" align="center" prop="name"/>
-      <el-table-column label="数据源编码" align="center" prop="slave">
-        <template slot-scope="scope">
-          <el-tag type="info">{{ scope.row.slave }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="读写类型" align="center" prop="type">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
-          <el-tag type="success" v-else-if="scope.row.type === '1'">只读</el-tag>
-          <el-tag type="warning" v-else-if="scope.row.type === '2'">只写</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="数据源类型" align="center" prop="databaseType">
-        <template slot-scope="scope">
-          <el-tag type="success" v-if="scope.row.databaseType === '0'">从数据源</el-tag>
-          <el-tag type="danger" v-else-if="scope.row.databaseType === '1'">主数据源</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['tenant:separation:edit']"
-          >配置
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+      <el-table v-loading="loading" :data="separationList">
+        <el-table-column label="编号" align="center" prop="sourceId">
+          <template slot-scope="scope">
+            <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + 1 + scope.$index }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="数据源名称" align="center" prop="name"/>
+        <el-table-column label="数据源编码" align="center" prop="slave">
+          <template slot-scope="scope">
+            <el-tag type="info">{{ scope.row.slave }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="读写类型" align="center" prop="type">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
+            <el-tag type="success" v-else-if="scope.row.type === '1'">只读</el-tag>
+            <el-tag type="warning" v-else-if="scope.row.type === '2'">只写</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="数据源类型" align="center" prop="databaseType">
+          <template slot-scope="scope">
+            <el-tag type="success" v-if="scope.row.databaseType === '0'">从数据源</el-tag>
+            <el-tag type="danger" v-else-if="scope.row.databaseType === '1'">主数据源</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['tenant:separation:edit']"
+            >配置
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+    </div>
 
     <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
@@ -101,7 +102,8 @@
           <el-table :data="form.values">
             <el-table-column label="读数据源" min-width="30%" align="center">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.sourceId" :disabled="scope.row.sourceId === form.sourceId" placeholder="请选择">
+                <el-select v-model="scope.row.sourceId" :disabled="scope.row.sourceId === form.sourceId"
+                           placeholder="请选择">
                   <el-option
                     v-for="item in containReadList"
                     :key="item.sourceId"

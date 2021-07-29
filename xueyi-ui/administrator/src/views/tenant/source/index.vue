@@ -1,190 +1,193 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
-      <el-form-item label="数据源名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入数据源名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="数据源类型" prop="databaseType">
-        <el-select v-model="queryParams.databaseType" placeholder="请选择数据源类型" clearable size="small">
-          <el-option
-            v-for="dict in databaseTypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+    <div class="wrapper-container">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+        <el-form-item label="数据源名称" prop="name">
+          <el-input
+            v-model="queryParams.name"
+            placeholder="请输入数据源名称"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="数据源编码" prop="slave">
-        <el-input
-          v-model="queryParams.slave"
-          placeholder="请输入数据源编码"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="读写类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择读写类型" clearable size="small">
-          <el-option
-            v-for="dict in typeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+        </el-form-item>
+        <el-form-item label="数据源类型" prop="databaseType">
+          <el-select v-model="queryParams.databaseType" placeholder="请选择数据源类型" clearable size="small">
+            <el-option
+              v-for="dict in databaseTypeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="数据源编码" prop="slave">
+          <el-input
+            v-model="queryParams.slave"
+            placeholder="请输入数据源编码"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['tenant:source:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['tenant:source:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['tenant:source:remove']"
-        >删除
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['tenant:source:export']"
-        >导出
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-sort"
-          size="mini"
-          @click="handleSort"
-          v-show="sortVisible"
-          v-hasPermi="['tenant:source:edit']"
-        >保存排序
-        </el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
-    <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange" ref="dataTable"
-              row-key="sourceId"
-    >
-      <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-      <el-table-column label="编号" align="center" prop="sourceId" class-name="allowDrag">
-        <template slot-scope="scope">
-          <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + 1 + scope.$index }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="数据源名称" align="center" prop="name" class-name="allowDrag"/>
-      <el-table-column label="数据源编码" align="center" prop="slave" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-tag type="info">{{ scope.row.slave }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
-          <el-tag type="success" v-else-if="scope.row.type === '1'">只读</el-tag>
-          <el-tag type="warning" v-else-if="scope.row.type === '2'">只写</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="数据源类型" align="center" prop="databaseType" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-tag type="success" v-if="scope.row.databaseType === '0'">从数据源</el-tag>
-          <el-tag type="danger" v-else-if="scope.row.databaseType === '1'">主数据源</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.status"
-            active-value="0"
-            inactive-value="1"
-            @change="handleStatusChange(scope.row)"
-          ></el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
-        <template slot-scope="scope">
+        </el-form-item>
+        <el-form-item label="读写类型" prop="type">
+          <el-select v-model="queryParams.type" placeholder="请选择读写类型" clearable size="small">
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+            <el-option
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="wrapper-container">
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
           <el-button
+            type="primary"
+            plain
+            icon="el-icon-plus"
             size="mini"
-            type="text"
+            @click="handleAdd"
+            v-hasPermi="['tenant:source:add']"
+          >新增
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="success"
+            plain
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            size="mini"
+            :disabled="single"
+            @click="handleUpdate"
             v-hasPermi="['tenant:source:edit']"
           >修改
           </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
-            size="mini"
-            type="text"
+            type="danger"
+            plain
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete"
             v-hasPermi="['tenant:source:remove']"
-            v-if="scope.row.databaseType !== '1'"
           >删除
           </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="warning"
+            plain
+            icon="el-icon-download"
+            size="mini"
+            @click="handleExport"
+            v-hasPermi="['tenant:source:export']"
+          >导出
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="warning"
+            plain
+            icon="el-icon-sort"
+            size="mini"
+            @click="handleSort"
+            v-show="sortVisible"
+            v-hasPermi="['tenant:source:edit']"
+          >保存排序
+          </el-button>
+        </el-col>
+        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      </el-row>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+      <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange" ref="dataTable"
+                row-key="sourceId"
+      >
+        <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
+        <el-table-column label="编号" align="center" prop="sourceId" class-name="allowDrag">
+          <template slot-scope="scope">
+            <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + 1 + scope.$index }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="数据源名称" align="center" prop="name" class-name="allowDrag"/>
+        <el-table-column label="数据源编码" align="center" prop="slave" class-name="allowDrag">
+          <template slot-scope="scope">
+            <el-tag type="info">{{ scope.row.slave }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
+            <el-tag type="success" v-else-if="scope.row.type === '1'">只读</el-tag>
+            <el-tag type="warning" v-else-if="scope.row.type === '2'">只写</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="数据源类型" align="center" prop="databaseType" class-name="allowDrag">
+          <template slot-scope="scope">
+            <el-tag type="success" v-if="scope.row.databaseType === '0'">从数据源</el-tag>
+            <el-tag type="danger" v-else-if="scope.row.databaseType === '1'">主数据源</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.status"
+              active-value="0"
+              inactive-value="1"
+              @change="handleStatusChange(scope.row)"
+            ></el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['tenant:source:edit']"
+            >修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['tenant:source:remove']"
+              v-if="scope.row.databaseType !== '1'"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+    </div>
 
     <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body>
