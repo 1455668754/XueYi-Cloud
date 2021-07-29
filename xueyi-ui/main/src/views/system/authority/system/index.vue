@@ -1,152 +1,155 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="系统名称" prop="systemName">
-        <el-input
-          v-model="queryParams.systemName"
-          placeholder="请输入系统名称"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="跳转类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择跳转类型" clearable size="small">
-          <el-option
-            v-for="dict in typeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+    <div class="wrapper-container" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+        <el-form-item label="系统名称" prop="systemName">
+          <el-input
+            v-model="queryParams.systemName"
+            placeholder="请输入系统名称"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="跳转路由" prop="route">
-        <el-input
-          v-model="queryParams.route"
-          placeholder="请输入跳转路由"
-          clearable
-          size="small"
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+        </el-form-item>
+        <el-form-item label="跳转类型" prop="type">
+          <el-select v-model="queryParams.type" placeholder="请选择跳转类型" clearable size="small">
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="跳转路由" prop="route">
+          <el-input
+            v-model="queryParams.route"
+            placeholder="请输入跳转路由"
+            clearable
+            size="small"
+            @keyup.enter.native="handleQuery"
           />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
+            <el-option
+              v-for="dict in statusOptions"
+              :key="dict.dictValue"
+              :label="dict.dictLabel"
+              :value="dict.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+          <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:system:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:system:edit']"
-        >修改
-        </el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:system:remove']"
-        >删除
-        </el-button>
-      </el-col>
-
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
-    </el-row>
-
-    <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="系统名称" align="center" prop="systemName" v-if="columns[0].visible"
-                       :show-overflow-tooltip="true"/>
-      <el-table-column label="系统图片" align="center" prop="imageUrl" v-if="columns[1].visible"
-                       :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-          <el-image
-            style="width: 80px; height: 80px"
-            :src="scope.row.imageUrl != null?JSON.parse(scope.row.imageUrl).materialUrl:null"
-            fit="contain"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="跳转类型" align="center" prop="type" v-if="columns[2].visible"
-                       :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.type==='0'?'success':'warning'">{{ typeFormat(scope.row) }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="路由|外链" align="center" prop="route" v-if="columns[3].visible"
-                       :show-overflow-tooltip="true"/>
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[4].visible"
-                       :show-overflow-tooltip="true">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.status"
-            active-value="0"
-            inactive-value="1"
-            @change="handleStatusChange(scope.row)"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="系统简介" align="center" prop="remark" v-if="columns[5].visible"
-                       :show-overflow-tooltip="true"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+    <div class="wrapper-container">
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
           <el-button
+            type="primary"
+            plain
+            icon="el-icon-plus"
             size="mini"
-            type="text"
+            @click="handleAdd"
+            v-hasPermi="['system:system:add']"
+          >新增
+          </el-button>
+        </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="success"
+            plain
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            size="mini"
+            :disabled="single"
+            @click="handleUpdate"
             v-hasPermi="['system:system:edit']"
           >修改
           </el-button>
+        </el-col>
+        <el-col :span="1.5">
           <el-button
-            size="mini"
-            type="text"
+            type="danger"
+            plain
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
+            size="mini"
+            :disabled="multiple"
+            @click="handleDelete"
             v-hasPermi="['system:system:remove']"
           >删除
           </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-col>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
+        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      </el-row>
+
+      <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" align="center"/>
+        <el-table-column label="系统名称" align="center" prop="systemName" v-if="columns[0].visible"
+                         :show-overflow-tooltip="true"/>
+        <el-table-column label="系统图片" align="center" prop="imageUrl" v-if="columns[1].visible"
+                         :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <el-image
+              style="width: 80px; height: 80px"
+              :src="scope.row.imageUrl != null?JSON.parse(scope.row.imageUrl).materialUrl:null"
+              fit="contain"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="跳转类型" align="center" prop="type" v-if="columns[2].visible"
+                         :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.type==='0'?'success':'warning'">{{ typeFormat(scope.row) }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="路由|外链" align="center" prop="route" v-if="columns[3].visible"
+                         :show-overflow-tooltip="true"/>
+        <el-table-column label="状态" align="center" prop="status" v-if="columns[4].visible"
+                         :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.status"
+              active-value="0"
+              inactive-value="1"
+              @change="handleStatusChange(scope.row)"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="系统简介" align="center" prop="remark" v-if="columns[5].visible"
+                         :show-overflow-tooltip="true"/>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['system:system:edit']"
+            >修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['system:system:remove']"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination
+        :total="total"
+        :page.sync="queryParams.pageNum"
+        :limit.sync="queryParams.pageSize"
+        @pagination="getList"
+      />
+    </div>
 
     <!-- 添加或修改子系统模块对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-click-modal="false">

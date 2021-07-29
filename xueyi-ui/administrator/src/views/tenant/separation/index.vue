@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <div class="wrapper-container">
-      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+    <div class="wrapper-container" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
         <el-form-item label="数据源名称" prop="name">
           <el-input
             v-model="queryParams.name"
@@ -38,7 +38,9 @@
     </div>
 
     <div class="wrapper-container">
-
+      <el-row :gutter="10" class="mb8">
+        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"/>
+      </el-row>
       <el-table v-loading="loading" :data="separationList">
         <el-table-column label="编号" align="center" prop="sourceId">
           <template slot-scope="scope">
@@ -79,7 +81,6 @@
       </el-table>
 
       <pagination
-        v-show="total>0"
         :total="total"
         :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"

@@ -3,150 +3,158 @@
     <el-row :gutter="20">
       <!--部门数据-->
       <el-col :span="4" :xs="24">
-        <div class="head-container">
-          <el-input
-            v-model="deptName"
-            placeholder="请输入部门名称"
-            clearable
-            size="small"
-            prefix-icon="el-icon-search"
-            style="margin-bottom: 20px"
-          />
-        </div>
-        <div class="head-container">
-          <el-tree
-            :data="deptOptions"
-            :props="defaultProps"
-            :expand-on-click-node="false"
-            :filter-node-method="filterNode"
-            ref="tree"
-            default-expand-all
-            @node-click="handleNodeClick"
-          />
+        <div class="wrapper-container wrapper-container-supplement">
+          <div class="head-container">
+            <el-input
+              v-model="deptName"
+              placeholder="请输入部门名称"
+              clearable
+              size="small"
+              prefix-icon="el-icon-search"
+              style="margin-bottom: 20px"
+            />
+          </div>
+          <div class="head-container">
+            <el-tree
+              :data="deptOptions"
+              :props="defaultProps"
+              :expand-on-click-node="false"
+              :filter-node-method="filterNode"
+              ref="tree"
+              default-expand-all
+              @node-click="handleNodeClick"
+            />
+          </div>
         </div>
       </el-col>
+
       <!--岗位数据-->
       <el-col :span="20" :xs="24">
-        <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
-          <el-form-item label="岗位编码" prop="postCode">
-            <el-input
-              v-model="queryParams.postCode"
-              placeholder="请输入岗位编码"
-              clearable
-              size="small"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="岗位名称" prop="postName">
-            <el-input
-              v-model="queryParams.postName"
-              placeholder="请输入岗位名称"
-              clearable
-              size="small"
-              @keyup.enter.native="handleQuery"
-            />
-          </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-select v-model="queryParams.status" placeholder="岗位状态" clearable size="small">
-              <el-option
-                v-for="dict in statusOptions"
-                :key="dict.dictValue"
-                :label="dict.dictLabel"
-                :value="dict.dictValue"
+        <div class="wrapper-container" v-show="showSearch">
+          <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
+            <el-form-item label="岗位编码" prop="postCode">
+              <el-input
+                v-model="queryParams.postCode"
+                placeholder="请输入岗位编码"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
               />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-          </el-form-item>
-        </el-form>
-        <el-row :gutter="10" class="mb8">
-          <el-col :span="1.5">
-            <el-button
-              type="primary"
-              plain
-              icon="el-icon-plus"
-              size="mini"
-              @click="handleAdd"
-              v-hasPermi="['system:post:add']"
-            >新增
-            </el-button>
-          </el-col>
-          <el-col :span="1.5">
-            <el-button
-              type="warning"
-              plain
-              icon="el-icon-download"
-              size="mini"
-              @click="handleExport"
-              v-hasPermi="['system:post:export']"
-            >导出
-            </el-button>
-          </el-col>
-          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
-        </el-row>
+            </el-form-item>
+            <el-form-item label="岗位名称" prop="postName">
+              <el-input
+                v-model="queryParams.postName"
+                placeholder="请输入岗位名称"
+                clearable
+                size="small"
+                @keyup.enter.native="handleQuery"
+              />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+              <el-select v-model="queryParams.status" placeholder="岗位状态" clearable size="small">
+                <el-option
+                  v-for="dict in statusOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="dict.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+              <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
 
-        <el-table v-loading="loading" :data="postList">
-          <el-table-column label="岗位编码" align="center" prop="postCode" key="postCode" v-if="columns[0].visible"/>
-          <el-table-column label="岗位名称" align="center" prop="postName" key="postName" v-if="columns[1].visible"
-                           :show-overflow-tooltip="true"/>
-          <el-table-column label="归属部门" align="center" prop="dept.deptName" key="dept.deptName"
-                           v-if="columns[2].visible" :show-overflow-tooltip="true"/>
-          <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" key="status"
-                           v-if="columns[3].visible" :show-overflow-tooltip="true">
-            <template slot-scope="scope">
-              <el-switch
-                v-model="scope.row.status"
-                active-value="0"
-                inactive-value="1"
-                @change="handleStatusChange(scope.row)"
-              ></el-switch>
-            </template>
-          </el-table-column>
-          <el-table-column label="创建时间" align="center" prop="createTime" width="180" key="createTime"
-                           v-if="columns[4].visible" :show-overflow-tooltip="true">
-            <template slot-scope="scope">
-              <span>{{ parseTime(scope.row.createTime) }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-            <template slot-scope="scope">
+        <div class="wrapper-container">
+          <el-row :gutter="10" class="mb8">
+            <el-col :span="1.5">
               <el-button
+                type="primary"
+                plain
+                icon="el-icon-plus"
                 size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleRoleUpdate(scope.row)"
-                v-hasPermi="['system:role:set']"
-              >岗位权限
+                @click="handleAdd"
+                v-hasPermi="['system:post:add']"
+              >新增
               </el-button>
+            </el-col>
+            <el-col :span="1.5">
               <el-button
+                type="warning"
+                plain
+                icon="el-icon-download"
                 size="mini"
-                type="text"
-                icon="el-icon-edit"
-                @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:post:edit']"
-              >修改
+                @click="handleExport"
+                v-hasPermi="['system:post:export']"
+              >导出
               </el-button>
-              <el-button
-                size="mini"
-                type="text"
-                icon="el-icon-delete"
-                @click="handleDelete(scope.row)"
-                v-hasPermi="['system:post:remove']"
-              >删除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+            </el-col>
+            <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+          </el-row>
 
-        <pagination
-          v-show="total>0"
-          :total="total"
-          :page.sync="queryParams.pageNum"
-          :limit.sync="queryParams.pageSize"
-          @pagination="getList"
-        />
+          <el-table v-loading="loading" :data="postList">
+            <el-table-column label="岗位编码" align="center" prop="postCode" key="postCode" v-if="columns[0].visible"/>
+            <el-table-column label="岗位名称" align="center" prop="postName" key="postName" v-if="columns[1].visible"
+                             :show-overflow-tooltip="true"/>
+            <el-table-column label="归属部门" align="center" prop="dept.deptName" key="dept.deptName"
+                             v-if="columns[2].visible" :show-overflow-tooltip="true"/>
+            <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" key="status"
+                             v-if="columns[3].visible" :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                <el-switch
+                  v-model="scope.row.status"
+                  active-value="0"
+                  inactive-value="1"
+                  @change="handleStatusChange(scope.row)"
+                ></el-switch>
+              </template>
+            </el-table-column>
+            <el-table-column label="创建时间" align="center" prop="createTime" width="180" key="createTime"
+                             v-if="columns[4].visible" :show-overflow-tooltip="true">
+              <template slot-scope="scope">
+                <span>{{ parseTime(scope.row.createTime) }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+              <template slot-scope="scope">
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-edit"
+                  @click="handleRoleUpdate(scope.row)"
+                  v-hasPermi="['system:role:set']"
+                >岗位权限
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-edit"
+                  @click="handleUpdate(scope.row)"
+                  v-hasPermi="['system:post:edit']"
+                >修改
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="text"
+                  icon="el-icon-delete"
+                  @click="handleDelete(scope.row)"
+                  v-hasPermi="['system:post:remove']"
+                >删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          <pagination
+            v-show="total>0"
+            :total="total"
+            :page.sync="queryParams.pageNum"
+            :limit.sync="queryParams.pageSize"
+            @pagination="getList"
+          />
+        </div>
       </el-col>
     </el-row>
 
@@ -409,7 +417,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getPost({postId:row.postId}).then(response => {
+      getPost({postId: row.postId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = "修改岗位"
@@ -497,3 +505,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.wrapper-container-supplement {
+  min-height: 330px;
+}
+</style>

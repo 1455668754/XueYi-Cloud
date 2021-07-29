@@ -1,78 +1,81 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:menu:add']"
-        >新增
-        </el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
-    <el-table
-      v-loading="loading"
-      :data="menuList"
-      row-key="id"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      :indent="40"
-    >
-      <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true"/>
-      <el-table-column prop="icon" label="图标" align="center">
-        <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon" v-if="scope.row.icon != undefined"/>
-        </template>
-      </el-table-column>
-      <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"/>
-      <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-      <el-table-column prop="status" label="状态" width="80">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.status"
-            active-value="0"
-            inactive-value="1"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            disabled>
-          </el-switch>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+    <div class="wrapper-container">
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="1.5">
           <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:menu:edit']"
-            v-if="scope.row.type === '1' && scope.row.isMain === '0'"
-          >修改
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
+            type="primary"
+            plain
             icon="el-icon-plus"
-            @click="handleAdd(scope.row)"
+            size="mini"
+            @click="handleAdd"
             v-hasPermi="['system:menu:add']"
           >新增
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:menu:remove']"
-            v-if="scope.row.type === '1' && scope.row.isMain === '0'"
-          >删除
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-col>
+        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      </el-row>
+
+      <el-table
+        v-loading="loading"
+        :data="menuList"
+        row-key="id"
+        :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+        :indent="40"
+      >
+        <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true"/>
+        <el-table-column prop="icon" label="图标" align="center">
+          <template slot-scope="scope">
+            <svg-icon :icon-class="scope.row.icon" v-if="scope.row.icon != undefined"/>
+          </template>
+        </el-table-column>
+        <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"/>
+        <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
+        <el-table-column prop="status" label="状态" width="80">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.status"
+              active-value="0"
+              inactive-value="1"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              disabled>
+            </el-switch>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-edit"
+              @click="handleUpdate(scope.row)"
+              v-hasPermi="['system:menu:edit']"
+              v-if="scope.row.type === '1' && scope.row.isMain === '0'"
+            >修改
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-plus"
+              @click="handleAdd(scope.row)"
+              v-hasPermi="['system:menu:add']"
+            >新增
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              v-hasPermi="['system:menu:remove']"
+              v-if="scope.row.type === '1' && scope.row.isMain === '0'"
+            >删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="table-container-supplement"/>
+    </div>
 
     <!-- 添加或修改菜单对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
@@ -100,16 +103,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="10">
-          <el-form-item label="公共菜单" v-if="enterpriseName === 'administrator' && form.menuId == undefined">
-            <el-radio-group v-model="form.isCommon">
-              <el-radio
-                v-for="dict in choiceOptions"
-                :key="dict.dictValue"
-                :label="dict.dictValue"
-              >{{ dict.dictLabel }}
-              </el-radio>
-            </el-radio-group>
-          </el-form-item>
+            <el-form-item label="公共菜单" v-if="enterpriseName === 'administrator' && form.menuId == undefined">
+              <el-radio-group v-model="form.isCommon">
+                <el-radio
+                  v-for="dict in choiceOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictValue"
+                >{{ dict.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item v-if="form.menuType != 'F'" label="菜单图标">
@@ -181,7 +184,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item v-if="form.menuType != 'M'">
-              <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100" />
+              <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100"/>
               <span slot="label">
                 <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasPermi('system:user:list')`)" placement="top">
                 <i class="el-icon-question"></i>

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <div class="wrapper-container">
-      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <div class="wrapper-container" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
         <el-form-item label="字典名称" prop="dictName">
           <el-input
             v-model="queryParams.dictName"
@@ -164,7 +164,6 @@
       </el-table>
 
       <pagination
-        v-show="total>0"
         :total="total"
         :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"

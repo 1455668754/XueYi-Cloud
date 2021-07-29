@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="68px">
+    <div class="wrapper-container" v-show="showSearch">
+    <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
 #foreach($column in $columns)
 #if($column.query)
 #set($dictType=$column.dictType)
@@ -18,8 +19,7 @@
           placeholder="请输入${comment}"
           clearable
           size="small"
-          @keyup.enter.native="handleQuery"
-        />
+          @keyup.enter.native="handleQuery"/>
       </el-form-item>
 #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
       <el-form-item label="${comment}" prop="${column.javaField}">
@@ -44,8 +44,7 @@
           v-model="queryParams.${column.javaField}"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="选择${comment}">
-        </el-date-picker>
+          placeholder="选择${comment}"/>
       </el-form-item>
 #elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
       <el-form-item label="${comment}">
@@ -57,8 +56,7 @@
           type="daterange"
           range-separator="-"
           start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
+          end-placeholder="结束日期"/>
       </el-form-item>
 #end
 #end
@@ -68,7 +66,9 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
+    </div>
 
+    <div class="wrapper-container">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -80,7 +80,7 @@
           v-hasPermi="['${moduleName}:${businessName}:add']"
         >新增</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"/>
     </el-row>
 
     <el-table
@@ -141,6 +141,8 @@
         </template>
       </el-table-column>
     </el-table>
+      <div class="table-container-supplement"/>
+    </div>
 
     <!-- 添加或修改${functionName}对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>

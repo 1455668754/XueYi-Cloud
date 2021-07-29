@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <div class="wrapper-container">
-      <el-form :model="queryParams" ref="queryForm" :inline="true" v-show="showSearch" label-width="100px">
+    <div class="wrapper-container" v-show="showSearch">
+      <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="100px">
         <el-form-item label="数据源名称" prop="name">
           <el-input
             v-model="queryParams.name"
@@ -116,7 +116,7 @@
           >保存排序
           </el-button>
         </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"/>
       </el-row>
 
       <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange" ref="dataTable"
@@ -181,7 +181,6 @@
       </el-table>
 
       <pagination
-        v-show="total>0"
         :total="total"
         :page.sync="queryParams.pageNum"
         :limit.sync="queryParams.pageSize"
