@@ -38,6 +38,7 @@
     "url": "https://gitee.com/xueyitiantang/xueyi-cloud.git"
   },
   "dependencies": {
+    "common": "file:../common",
     "qiankun": "^2.4.2",
     "@riophae/vue-treeselect": "0.4.0",
     "axios": "0.21.0",

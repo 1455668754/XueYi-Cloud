@@ -78,9 +78,9 @@
 </template>
 
 <script>
-import xy_notice from '@/assets/images/xy_notice.png'
-import xy_email from '@/assets/images/xy_email.png'
-import xy_message from '@/assets/images/xy_message.png'
+import xy_notice from 'common/src/assets/images/xy_notice.png'
+import xy_email from 'common/src/assets/images/xy_email.png'
+import xy_message from 'common/src/assets/images/xy_message.png'
 
 export default {
   name: "Notice",

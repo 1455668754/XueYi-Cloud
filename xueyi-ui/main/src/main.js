@@ -3,11 +3,12 @@ import Vue from 'vue'
 import Cookies from 'js-cookie'
 
 import Element from 'element-ui'
-import './assets/styles/element-variables.scss'
 
-import './assets/styles/index.scss' // global css
-import './assets/styles/ruoyi.scss' // ruoyi css
-import './assets/styles/xueyi.scss' //xueyi css element-UI重置
+import 'common/src/assets/styles/element-variables.scss'
+import 'common/src/assets/styles/index.scss' // global css
+import 'common/src/assets/styles/ruoyi.scss' // ruoyi css
+import 'common/src/assets/styles/xueyi.scss' //xueyi css element-UI重置
+
 import './utils/element' //js element-UI重置
 import App from './App'
 import store from './store'

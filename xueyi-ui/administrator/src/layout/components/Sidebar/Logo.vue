@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import variables from '@/assets/styles/variables.scss'
+import variables from 'common/src/assets/styles/variables.scss'
 import store from "@/store";
 
 export default {

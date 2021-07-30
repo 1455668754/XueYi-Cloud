@@ -7,7 +7,7 @@
         </div>
         <div class="setting-drawer-block-checbox">
           <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-dark')">
-            <img src="@/assets/images/dark.svg" alt="dark">
+            <img :src="modality.dark" alt="dark">
             <div v-if="sideTheme === 'theme-dark'" class="setting-drawer-block-checbox-selectIcon"
                  style="display: block;">
               <i aria-label="图标: check" class="anticon anticon-check">
@@ -20,7 +20,7 @@
             </div>
           </div>
           <div class="setting-drawer-block-checbox-item" @click="handleTheme('theme-light')">
-            <img src="@/assets/images/light.svg" alt="light">
+            <img :src="modality.light" alt="light">
             <div v-if="sideTheme === 'theme-light'" class="setting-drawer-block-checbox-selectIcon"
                  style="display: block;">
               <i aria-label="图标: check" class="anticon anticon-check">
@@ -79,11 +79,17 @@
 
 <script>
 import ThemePicker from '@/components/ThemePicker'
+import dark from  'common/src/assets/images/dark.svg'
+import light from  'common/src/assets/images/light.svg'
 
 export default {
   components: {ThemePicker},
   data() {
     return {
+      modality:{
+        dark: dark,
+        light: light
+      },
       theme: this.$store.state.settings.theme,
       sideTheme: this.$store.state.settings.sideTheme
     };

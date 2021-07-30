@@ -182,7 +182,7 @@ import {
   updateMaterial
 } from "@/api/common/material";
 import {getToken} from "@/utils/auth";
-import folderImg from '@/assets/images/xy-folder.png'
+import folderImg from 'common/src/assets/images/xy-folder.png'
 import 'element-ui/lib/theme-chalk/display.css';
 import draggable from 'vuedraggable';
 

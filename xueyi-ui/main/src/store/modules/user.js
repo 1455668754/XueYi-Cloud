@@ -71,7 +71,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
           const user = res.user
-          const avatar = user.avatar === "" ? require("@/assets/images/profile.jpg") : user.avatar;
+          const avatar = user.avatar === "" ? require("common/src/assets/images/profile.jpg") : user.avatar;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
@@ -87,7 +87,7 @@ const user = {
         getEnterpriseProfile().then(res => {
           const enterprise = res.data
           const systemName = enterprise.enterpriseSystemName === "" ? "雪忆管理系统" : enterprise.enterpriseSystemName;
-          const logo = enterprise.logo === "" ? require("@/assets/images/logo.jpg") : enterprise.logo;
+          const logo = enterprise.logo === "" ? require("common/src/assets/images/logo.jpg") : enterprise.logo;
           commit('SET_ENTERPRISENAME', enterprise.enterpriseName)
           commit('SET_ENTERPRISESYSTEMNAME', systemName)
           commit('SET_LOGO', logo)

@@ -1,0 +1,51 @@
+{
+  "name": "common",
+  "version": "2.0.1",
+  "description": "公共资源",
+  "author": "雪忆",
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
+    "serve": "vue-cli-service serve",
+    "build:prod": "vue-cli-service build",
+    "build:stage": "vue-cli-service build --mode staging",
+    "preview": "node build/index.js --preview",
+    "lint": "eslint --ext .js,.vue src"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "keywords": [
+    "vue",
+    "admin",
+    "dashboard",
+    "element-ui",
+    "boilerplate",
+    "admin-template",
+    "management-system"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/xueyitiantang/xueyi-cloud.git"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=8.9",
+    "npm": ">= 3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}

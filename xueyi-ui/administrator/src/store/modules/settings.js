@@ -1,4 +1,4 @@
-import variables from '@/assets/styles/element-variables.scss'
+import variables from 'common/src/assets/styles/element-variables.scss'
 import defaultSettings from '@/settings'
 
 const { sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, libraryId, siteId, systemId, homePageName, homePageIcon, baseSystemUrl, dynamicTitle } = defaultSettings

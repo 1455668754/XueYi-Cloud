@@ -2,10 +2,10 @@
   <div class="wscn-http404-container">
     <div class="wscn-http404">
       <div class="pic-404">
-        <img class="pic-404__parent" src="@/assets/404_images/404.png" alt="404">
-        <img class="pic-404__child left" src="@/assets/404_images/404_cloud.png" alt="404">
-        <img class="pic-404__child mid" src="@/assets/404_images/404_cloud.png" alt="404">
-        <img class="pic-404__child right" src="@/assets/404_images/404_cloud.png" alt="404">
+        <img class="pic-404__parent" :src="errImages.errImages1" alt="404">
+        <img class="pic-404__child left" :src="errImages.errImages2" alt="404">
+        <img class="pic-404__child mid" :src="errImages.errImages3" alt="404">
+        <img class="pic-404__child right" :src="errImages.errImages4" alt="404">
       </div>
       <div class="bullshit">
         <div class="bullshit__oops">
@@ -26,11 +26,26 @@
 </template>
 
 <script>
+import errImages1 from 'common/src/assets/404_images/404.png'
+import errImages2 from 'common/src/assets/404_images/404_cloud.png'
+import errImages3 from 'common/src/assets/404_images/404_cloud.png'
+import errImages4 from 'common/src/assets/404_images/404_cloud.png'
 
 export default {
   name: 'Page404',
+  data() {
+    return {
+      errImages: {
+        errImages1: errImages1,
+        errImages2: errImages2,
+        errImages3: errImages3,
+        errImages4: errImages4
+      }
+    }
+  },
   computed: {
     message() {
+
       return '找不到网页！'
     }
   }
