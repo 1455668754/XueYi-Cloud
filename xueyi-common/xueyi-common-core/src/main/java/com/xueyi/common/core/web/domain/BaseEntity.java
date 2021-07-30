@@ -39,6 +39,9 @@ public class BaseEntity implements Serializable
     /** 公共控件 */
     private String isCommon;
 
+    /** 更新类型（0 正常更新 1 状态更新） */
+    private String updateType;
+
     /** 数据源名称 */
     private String sourceName;
 
@@ -132,6 +135,14 @@ public class BaseEntity implements Serializable
 
     public void setIsCommon(String isCommon) {
         this.isCommon = isCommon;
+    }
+
+    public String getUpdateType() {
+        return updateType;
+    }
+
+    public void setUpdateType(String updateType) {
+        this.updateType = updateType;
     }
 
     public String getSourceName() {
