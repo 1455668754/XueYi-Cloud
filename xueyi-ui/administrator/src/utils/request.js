@@ -52,7 +52,7 @@ service.interceptors.response.use(res => {
         })
       }).catch(() => {
       })
-      return Promise.reject('error')
+      return Promise.reject()
     } else if (code === 500) {
       Message({
         message: msg,

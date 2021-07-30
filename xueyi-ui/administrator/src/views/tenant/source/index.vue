@@ -421,10 +421,10 @@ export default {
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
-      updateSource({sourceId: row.sourceId, type: row.type, status: row.status}).then(response => {
+      updateSource({sourceId: row.sourceId, type: row.type, status: row.status, updateType: '1'}).then(response => {
         this.msgSuccess('修改成功')
       }).catch(() => {
-        row.status = '0' ? '1' : '0'
+        row.status = row.status === '0' ? '1' : '0'
       })
     },
     /** 提交按钮 */

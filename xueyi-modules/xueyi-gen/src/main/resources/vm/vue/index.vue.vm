@@ -140,7 +140,18 @@
 #else
 #set($comment=$column.columnComment)
 #end
-#if($column.pk)
+#if($javaField == 'status')
+      <el-table-column label="${comment}" align="center" prop="${javaField}"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag"#end#end#end>
+        <template slot-scope="scope">
+          <el-switch
+              v-model="scope.row.${javaField}"
+              active-value="0"
+              inactive-value="1"
+              @change="handleStatusChange(scope.row)"
+          />
+        </template>
+      </el-table-column>
+#elseif($column.pk)
       <el-table-column label="${comment}" align="center" prop="${javaField}"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag"#end#end#end/>
 #elseif($column.list && $column.htmlType == "datetime")
       <el-table-column label="${comment}" align="center" prop="${javaField}" width="180"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag"#end#end#end>
@@ -556,6 +567,19 @@ export default {
         this.title = "修改${functionName}";
       });
     },
+#foreach ($column in $columns)
+#if($column.javaField == "status")
+    /** 修改状态按钮操作 */
+    handleStatusChange(row) {
+      update${BusinessName}({${pkColumn.javaField}: row.${pkColumn.javaField}, status: row.status, updateType: '1'}).then(response => {
+        this.msgSuccess(row.status === '0' ? '成功启用':'成功禁用')
+      }).catch(() => {
+        row.status === '0' ? row.status ='1' : row.status = '0'
+      })
+    },
+#break
+#end
+#end
     /** 提交按钮 */
     submitForm() {
       this.#[[$]]#refs["form"].validate(valid => {

@@ -30,6 +30,4 @@ public class TenantConstants {
 
     /** 数据源只写类型 */
     public static final String SOURCE_WRITE = "2";
-
-
 }

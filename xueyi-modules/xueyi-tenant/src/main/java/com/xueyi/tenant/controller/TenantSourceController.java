@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 
 import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.tenant.api.domain.source.TenantSource;
@@ -82,7 +83,7 @@ public class TenantSourceController extends BaseController {
     public AjaxResult edit(@RequestBody TenantSource tenantSource) {
         boolean key;
         int ds;//0不变 1刷新 2启动 3删除
-        key = StringUtils.isNotNull(tenantSource.getName());//if 传入值无name则代表走的状态控制
+        key = !StringUtils.equals(UserConstants.STATUS_UPDATE_OPERATION, tenantSource.getUpdateType());
         int update;
         TenantSource check = new TenantSource();
         check.setSourceId(tenantSource.getSourceId());
