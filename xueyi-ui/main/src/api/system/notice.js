@@ -12,7 +12,7 @@ export function listNotice(query) {
 // 查询公告详细
 export function getNotice(query) {
   return request({
-    url: '/system/notice',
+    url: '/system/notice/byId',
     method: 'get',
     params: query
   })
