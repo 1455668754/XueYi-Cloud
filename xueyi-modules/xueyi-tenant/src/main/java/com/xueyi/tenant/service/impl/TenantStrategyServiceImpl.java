@@ -3,6 +3,8 @@ package com.xueyi.tenant.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -83,9 +85,11 @@ public class TenantStrategyServiceImpl implements ITenantStrategyService {
     @Override
     @Transactional
     public int updateTenantStrategy(TenantStrategy tenantStrategy) {
-        tenantStrategyMapper.deleteTenantSourceByStrategyId(tenantStrategy);
-        if (tenantStrategy.getValues() != null && tenantStrategy.getValues().size() > 0) {
-            tenantStrategyMapper.batchTenantSource(tenantStrategy);
+        if (!StringUtils.equals(UserConstants.STATUS_UPDATE_OPERATION, tenantStrategy.getUpdateType())) {
+            tenantStrategyMapper.deleteTenantSourceByStrategyId(tenantStrategy);
+            if (tenantStrategy.getValues() != null && tenantStrategy.getValues().size() > 0) {
+                tenantStrategyMapper.batchTenantSource(tenantStrategy);
+            }
         }
         return tenantStrategyMapper.updateTenantStrategy(tenantStrategy);
     }
