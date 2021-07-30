@@ -54,6 +54,16 @@ public interface SysDeptRoleMapper {
     public int deleteDeptRoleByRoleId(SysSearch search);
 
     /**
+     * 批量删除部门和角色关联
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int deleteDeptRoleByRoleIds(SysSearch search);
+
+    /**
      * 删除部门和角色关联
      * 访问控制 empty 租户更新（无前缀）
      *

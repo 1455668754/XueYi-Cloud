@@ -45,6 +45,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</delete>
 
+	<delete id="deleteUserRoleByRoleIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+		delete from sys_user_role where role_id in
+		<foreach item="roleId" collection="search.roleIds" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
 	<delete id="deleteUserRoleByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch">
 		delete from sys_user_role
 		where user_id = #{search.userId}

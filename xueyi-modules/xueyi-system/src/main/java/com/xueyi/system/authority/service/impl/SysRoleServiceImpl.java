@@ -272,11 +272,11 @@ public class SysRoleServiceImpl implements ISysRoleService {
             // 2.批量删除角色和部门-岗位关联
             rs = rs + roleDeptPostMapper.deleteRoleDeptPostByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
             // 3.批量删除部门和角色关联
-            rs = rs + deptRoleMapper.deleteDeptRoleByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+            rs = rs + deptRoleMapper.deleteDeptRoleByRoleIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
             // 4.批量删除岗位和角色关联
-            rs = rs + postRoleMapper.deletePostRoleByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+            rs = rs + postRoleMapper.deletePostRoleByRoleIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
             // 5.批量删除用户和角色关联
-            rs = rs + userRoleMapper.deleteUserRoleByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+            rs = rs + userRoleMapper.deleteUserRoleByRoleIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
         }
         return rs;
     }

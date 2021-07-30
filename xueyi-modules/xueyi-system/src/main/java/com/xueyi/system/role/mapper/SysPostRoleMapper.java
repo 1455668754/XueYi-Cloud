@@ -54,6 +54,16 @@ public interface SysPostRoleMapper {
     public int deletePostRoleByRoleId(SysSearch search);
 
     /**
+     * 批量删除岗位和角色关联
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int deletePostRoleByRoleIds(SysSearch search);
+
+    /**
      * 删除岗位和角色关联
      * 访问控制 empty 租户更新（无前缀）
      *

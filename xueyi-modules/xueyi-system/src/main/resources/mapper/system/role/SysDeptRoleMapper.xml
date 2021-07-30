@@ -38,6 +38,15 @@
         ${params.updateScope}
     </delete>
 
+    <delete id="deleteDeptRoleByRoleIds" parameterType="com.xueyi.system.api.utilTool.SysSearch">
+        delete from sys_dept_role where role_id in
+        <foreach item="roleId" collection="search.roleIds" open="(" separator="," close=")">
+            #{roleId}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
     <delete id="deleteDeptRoleByDeptId" parameterType="com.xueyi.system.api.utilTool.SysSearch">
         delete from sys_dept_role
         where dept_id = #{search.deptId}
