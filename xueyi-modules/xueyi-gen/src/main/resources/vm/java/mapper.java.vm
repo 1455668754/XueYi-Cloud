@@ -72,7 +72,7 @@ public interface ${ClassName}Mapper {
      */
     @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
 
-    public List<${ClassName}> selectChildrenBy${pkColumn.javaField}(${ClassName} ${classNameNoPrefix});
+    public List<${ClassName}> selectChildrenBy${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
 #end
 #end
 #end
@@ -86,7 +86,7 @@ public interface ${ClassName}Mapper {
      */
     @DataScope(#if($method != '') ${method}eAlias = "e" )#else eAlias = "e" )#end
 
-    public ${ClassName} select${ClassNameNoPrefix}By${pkColumn.javaField}(${ClassName} ${classNameNoPrefix});
+    public ${ClassName} select${ClassNameNoPrefix}By${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
 
     /**
      * 新增${functionName}
@@ -160,7 +160,7 @@ public interface ${ClassName}Mapper {
      */
     @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
 
-    public int delete${ClassNameNoPrefix}By${pkColumn.javaField}(${ClassName} ${classNameNoPrefix});
+    public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
 #if(!$table.tree)
 
     /**
@@ -172,7 +172,7 @@ public interface ${ClassName}Mapper {
      */
     @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
 
-    public int delete${ClassNameNoPrefix}By${pkColumn.javaField}s(${ClassName} ${classNameNoPrefix});
+    public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}s(${ClassName} ${classNameNoPrefix});
 #end
 #if($table.tree)
 #foreach($column in $columns)
@@ -187,7 +187,7 @@ public interface ${ClassName}Mapper {
      */
     @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
 
-    public int deleteChildrenBy${pkColumn.javaField}(${ClassName} ${classNameNoPrefix});
+    public int deleteChildrenBy${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
 #end
 #end
 #elseif($table.sub)
