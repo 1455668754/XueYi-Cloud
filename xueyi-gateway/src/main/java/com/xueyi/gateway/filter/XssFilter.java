@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.http.MediaType;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.NettyDataBufferFactory;
@@ -40,6 +41,11 @@ public class XssFilter implements GlobalFilter, Ordered
         // GET DELETE 不过滤
         HttpMethod method = request.getMethod();
         if (method == null || method.matches("GET") || method.matches("DELETE"))
+        {
+            return chain.filter(exchange);
+        }
+        // 非json类型，不过滤
+        if (!isJsonRequest(exchange))
         {
             return chain.filter(exchange);
         }
@@ -91,6 +97,17 @@ public class XssFilter implements GlobalFilter, Ordered
 
         };
         return serverHttpRequestDecorator;
+    }
+
+    /**
+     * 是否是Json请求
+     *
+     * @param exchange  请求
+     */
+    public boolean isJsonRequest(ServerWebExchange exchange)
+    {
+        String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
+        return StringUtils.startsWithIgnoreCase(header, MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Override
