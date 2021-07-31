@@ -339,6 +339,7 @@ public class GenTableColumn extends BaseEntity
     public String readConverterExp()
     {
         String remarks = StringUtils.substringBetween(this.columnComment, "（", "）");
+        remarks = StringUtils.substringBetween(remarks, "(", ")");
         StringBuffer sb = new StringBuffer();
         if (StringUtils.isNotEmpty(remarks))
         {
