@@ -574,7 +574,7 @@ export default {
       update${BusinessName}({${pkColumn.javaField}: row.${pkColumn.javaField}, status: row.status, updateType: '1'}).then(response => {
         this.msgSuccess(row.status === '0' ? '成功启用':'成功禁用')
       }).catch(() => {
-        row.status === '0' ? row.status ='1' : row.status = '0'
+        row.status = row.status === '0' ? '1' : '0'
       })
     },
 #break
