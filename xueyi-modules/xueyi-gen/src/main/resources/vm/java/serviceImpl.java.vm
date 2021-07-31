@@ -50,50 +50,50 @@ import ${packageName}.service.I${ClassName}Service;
 public class ${ClassName}ServiceImpl implements I${ClassName}Service {
 
     @Autowired
-    private ${ClassName}Mapper ${className}Mapper;
+    private ${ClassName}Mapper ${classNameNoPrefix}Mapper;
 
     /**
      * 查询${functionName}列表
      *
-     * @param ${className} ${functionName}
+     * @param ${classNameNoPrefix} ${functionName}
      * @return ${functionName}
      */
     @Override
-    public List<${ClassName}> select${ClassName}List(${ClassName} ${className})
+    public List<${ClassName}> select${ClassNameNoPrefix}List(${ClassName} ${classNameNoPrefix})
     {
-        return ${className}Mapper.select${ClassName}List(${className});
+        return ${classNameNoPrefix}Mapper.select${ClassNameNoPrefix}List(${classNameNoPrefix});
     }
 #if($table.tree)
 
     /**
      * 查询${functionName}树选项列表
      *
-     * @param ${className} ${functionName}
+     * @param ${classNameNoPrefix} ${functionName}
      * @return ${functionName}
      */
     @Override
-    public List<${ClassName}> select${ClassName}Tree(${ClassName} ${className})
+    public List<${ClassName}> select${ClassNameNoPrefix}Tree(${ClassName} ${classNameNoPrefix})
     {
-        return ${className}Mapper.select${ClassName}Tree(${className});
+        return ${classNameNoPrefix}Mapper.select${ClassNameNoPrefix}Tree(${classNameNoPrefix});
     }
 #end
 
     /**
      * 查询${functionName}
-     * 
-     * @param ${className} ${functionName} | ${pkColumn.javaField} ${functionName}Id
+     *
+     * @param ${classNameNoPrefix} ${functionName} | ${pkColumn.javaField} ${functionName}Id
      * @return ${functionName}
      */
     @Override
-    public ${ClassName} select${ClassName}ById(${ClassName} ${className})
+    public ${ClassName} select${ClassNameNoPrefix}By${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix})
     {
-        return ${className}Mapper.select${ClassName}ById(${className});
+        return ${classNameNoPrefix}Mapper.select${ClassNameNoPrefix}By${pkColumn.capJavaField}(${classNameNoPrefix});
     }
 
     /**
      * 新增${functionName}
-     * 
-     * @param ${className} ${functionName}
+     *
+     * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
     @Override
@@ -102,88 +102,88 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
 
 #end
-    public int insert${ClassName}(${ClassName} ${className})
+    public int insert${ClassName}(${ClassName} ${classNameNoPrefix})
     {
 #if($table.sub)
-        int rows = ${className}Mapper.insert${ClassName}(${className});
-        if (${className}.getSubList() != null && ${className}.getSubList().size() > 0)
+        int rows = ${classNameNoPrefix}Mapper.insert${ClassNameNoPrefix}(${classNameNoPrefix});
+        if (${classNameNoPrefix}.getSubList() != null && ${classNameNoPrefix}.getSubList().size() > 0)
         {
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 #if(!$pkColumn.increment)
             /**获取生成雪花Id，并赋值给主键，加入至子表对应外键中*/
-            ${className}.set${AttrName}(${className}.getId());
+            ${classNameNoPrefix}.set${AttrName}(${classNameNoPrefix}.getId());
 #end
-            ${className}Mapper.batch${subClassName}(${className});
+            ${classNameNoPrefix}Mapper.batch${subClassNameNoPrefix}(${classNameNoPrefix});
         }
         return rows;
 #elseif($table.tree)
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
-        if(!${className}.getParentId().equals(0L)){
+        if(!${classNameNoPrefix}.getParentId().equals(0L)){
             ${ClassName} search = new ${ClassName}();
-            search.set${AttrName}(${className}.getParentId());
-            ${ClassName} newParent = ${className}Mapper.select${ClassName}ById(search);
-            ${className}.setAncestors(newParent.getAncestors()+","+newParent.get${AttrName}());
+            search.set${AttrName}(${classNameNoPrefix}.getParentId());
+            ${ClassName} newParent = ${classNameNoPrefix}Mapper.select${ClassNameNoPrefix}By${pkColumn.capJavaField}(search);
+            ${classNameNoPrefix}.setAncestors(newParent.getAncestors()+","+newParent.get${AttrName}());
         }else{
-            ${className}.setAncestors("0");
+            ${classNameNoPrefix}.setAncestors("0");
         }
-        return ${className}Mapper.insert${ClassName}(${className});
+        return ${classNameNoPrefix}Mapper.insert${ClassNameNoPrefix}(${classNameNoPrefix});
 #end
 #end
 #else
-        return ${className}Mapper.insert${ClassName}(${className});
+        return ${classNameNoPrefix}Mapper.insert${ClassNameNoPrefix}(${classNameNoPrefix});
 #end
     }
 
     /**
      * 修改${functionName}
      *
-     * @param ${className} ${functionName}
+     * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
     @Override
 #if($table.sub)
     @Transactional
 #end
-    public int update${ClassName}(${ClassName} ${className})
+    public int update${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix})
     {
 #if($table.sub)
-        if (!StringUtils.equals(UserConstants.STATUS_UPDATE_OPERATION, ${className}.getUpdateType())){
-            ${className}Mapper.delete${subClassName}By${AttrName}(${className});
-            if (${className}.getSubList() != null && ${className}.getSubList().size() > 0){
-                ${className}Mapper.batch${subClassName}(${className});
+        if (!StringUtils.equals(UserConstants.STATUS_UPDATE_OPERATION, ${classNameNoPrefix}.getUpdateType())){
+            ${classNameNoPrefix}Mapper.delete${subClassNameNoPrefix}By${AttrName}(${classNameNoPrefix});
+            if (${classNameNoPrefix}.getSubList() != null && ${classNameNoPrefix}.getSubList().size() > 0){
+                ${classNameNoPrefix}Mapper.batch${subClassNameNoPrefix}(${classNameNoPrefix});
             }
         }
 #elseif($table.tree)
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
         ${ClassName} search = new ${ClassName}();
-        search.set${AttrName}(${className}.get${AttrName}());
-        ${ClassName} old${ClassName} = ${className}Mapper.select${ClassName}ById(search);
-        if(!old${ClassName}.getParentId().equals(${className}.getParentId())){
+        search.set${AttrName}(${classNameNoPrefix}.get${AttrName}());
+        ${ClassName} old${ClassNameNoPrefix} = ${classNameNoPrefix}Mapper.select${ClassNameNoPrefix}By${pkColumn.capJavaField}(search);
+        if(!old${ClassNameNoPrefix}.getParentId().equals(${classNameNoPrefix}.getParentId())){
             String newAncestors, oldAncestors;
-            if(old${ClassName}.getParentId().equals(0L)){
+            if(old${ClassNameNoPrefix}.getParentId().equals(0L)){
                 oldAncestors = "0";
             }else{
-                search.set${AttrName}(old${ClassName}.getParentId());
-                ${ClassName} oldParent = ${className}Mapper.select${ClassName}ById(search);
+                search.set${AttrName}(old${ClassNameNoPrefix}.getParentId());
+                ${ClassName} oldParent = ${classNameNoPrefix}Mapper.select${ClassNameNoPrefix}By${pkColumn.capJavaField}(search);
                 oldAncestors = oldParent.getAncestors()+","+oldParent.get${AttrName}();
             }
-            if(${className}.getParentId().equals(0L)){
+            if(${classNameNoPrefix}.getParentId().equals(0L)){
                 newAncestors = "0";
             }else{
-                search.set${AttrName}(${className}.getParentId());
-                ${ClassName} newParent = ${className}Mapper.select${ClassName}ById(search);
+                search.set${AttrName}(${classNameNoPrefix}.getParentId());
+                ${ClassName} newParent = ${classNameNoPrefix}Mapper.select${ClassNameNoPrefix}By${pkColumn.capJavaField}(search);
                 newAncestors = newParent.getAncestors()+","+newParent.get${AttrName}();
             }
-            ${className}.setAncestors(newAncestors);
-            update${ClassName}Children(${className}.get${AttrName}(), newAncestors, oldAncestors);
+            ${classNameNoPrefix}.setAncestors(newAncestors);
+            update${ClassNameNoPrefix}Children(${classNameNoPrefix}.get${AttrName}(), newAncestors, oldAncestors);
         }
 #end
 #end
 #end
-        return ${className}Mapper.update${ClassName}(${className});
+        return ${classNameNoPrefix}Mapper.update${ClassNameNoPrefix}(${classNameNoPrefix});
     }
 
 #if($table.crud || $table.sub)
@@ -192,12 +192,12 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     /**
      * 修改${functionName}排序
      *
-     * @param ${className} ${functionName}
+     * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
     @Override
-    public int update${ClassName}Sort(${ClassName} ${className}){
-        return ${className}Mapper.update${ClassName}Sort(${className});
+    public int update${ClassNameNoPrefix}Sort(${ClassName} ${classNameNoPrefix}){
+        return ${classNameNoPrefix}Mapper.update${ClassNameNoPrefix}Sort(${classNameNoPrefix});
     }
 
 #end
@@ -206,44 +206,44 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     /**
      * 删除${functionName}信息
      *
-     * @param ${className} ${functionName} | ${pkColumn.javaField} ${functionName}Id
+     * @param ${classNameNoPrefix} ${functionName} | ${pkColumn.javaField} ${functionName}Id
      * @return 结果
      */
     @Override
 #if($table.sub)
     @Transactional
 #end
-    public int delete${ClassName}ById(${ClassName} ${className})
+    public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix})
     {
 #if($table.tree)
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
-        ${className}Mapper.deleteChildrenById(${className});
+        ${classNameNoPrefix}Mapper.deleteChildrenBy${pkColumn.capJavaField}(${classNameNoPrefix});
 #end
 #end
 #elseif($table.sub)
-        ${className}Mapper.delete${subClassName}By${AttrName}(${className});
+        ${classNameNoPrefix}Mapper.delete${subClassNameNoPrefix}By${AttrName}(${classNameNoPrefix});
 #end
-        return ${className}Mapper.delete${ClassName}ById(${className});
+        return ${classNameNoPrefix}Mapper.delete${ClassNameNoPrefix}By${pkColumn.capJavaField}(${classNameNoPrefix});
     }
 #if(!$table.tree)
 
     /**
      * 批量删除${functionName}
-     * 
-     * @param ${className} ${functionName} | params.Ids 需要删除的${functionName}Ids组
+     *
+     * @param ${classNameNoPrefix} ${functionName} | params.Ids 需要删除的${functionName}Ids组
      * @return 结果
      */
     @Override
 #if($table.sub)
     @Transactional
 #end
-    public int delete${ClassName}ByIds(${ClassName} ${className})
+    public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}s(${ClassName} ${classNameNoPrefix})
     {
 #if($table.sub)
-        ${className}Mapper.delete${subClassName}By${AttrName}s(${className});
+        ${classNameNoPrefix}Mapper.delete${subClassNameNoPrefix}By${AttrName}s(${classNameNoPrefix});
 #end
-        return ${className}Mapper.delete${ClassName}ByIds(${className});
+        return ${classNameNoPrefix}Mapper.delete${ClassNameNoPrefix}By${pkColumn.capJavaField}s(${classNameNoPrefix});
     }
 #end
 #if($table.tree)
@@ -256,17 +256,17 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     * @param newAncestors               新的父Id集合
     * @param oldAncestors               旧的父Id集合
     */
-    public void update${ClassName}Children(Long ${pkColumn.javaField}, String newAncestors, String oldAncestors) {
+    public void update${ClassNameNoPrefix}Children(Long ${pkColumn.javaField}, String newAncestors, String oldAncestors) {
         ${ClassName} searchChild = new ${ClassName}();
         searchChild.set${AttrName}(${pkColumn.javaField});
-        List<${ClassName}> children = ${className}Mapper.selectChildrenById(searchChild);
+        List<${ClassName}> children = ${classNameNoPrefix}Mapper.selectChildrenBy${pkColumn.capJavaField}(searchChild);
         if (children.size() > 0) {
             for (${ClassName} child : children) {
                 child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));
             }
             searchChild.set${AttrName}(null);
             searchChild.getParams().put("children", children);
-            ${className}Mapper.updateChildrenAncestors(searchChild);
+            ${classNameNoPrefix}Mapper.updateChildrenAncestors(searchChild);
         }
     }
 #end

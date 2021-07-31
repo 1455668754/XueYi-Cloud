@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${packageName}.mapper.${ClassName}Mapper">
     
-    <resultMap type="${ClassName}" id="${ClassName}Result">
+    <resultMap type="${ClassName}" id="${classNameNoPrefix}Result">
 #foreach ($column in $columns)
 #if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
 #if($column.javaField == ${pkColumn.javaField})
@@ -76,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 #end
 
-    <select id="select${ClassName}List" parameterType="${ClassName}" resultMap="${ClassName}Result">
+    <select id="select${ClassNameNoPrefix}List" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
 #if($table.tree)
         <include refid="treeVo"/>
 #else
@@ -121,7 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
 #if($table.tree)
-    <select id="select${ClassName}Tree" parameterType="${ClassName}" resultMap="${ClassName}Result">
+    <select id="select${ClassNameNoPrefix}Tree" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
         <include refid="selectVo"/>
         where 1 = 1
         #foreach($cu in $columns)#if($cu.columnName==${pkColumn.columnName})#set($javaField=$cu.javaField)#set($javaType=$cu.javaType)<if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end">and e.${pkColumn.columnName} != #{${pkColumn.javaField}}#foreach ($column in $columns)#if($column.columnName == 'ancestors') and NOT find_in_set( #{${pkColumn.javaField}} , e.ancestors )#elseif($column.columnName == 'status') and e.status = 0#end#end</if> #end#end
@@ -132,7 +132,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
-    <select id="selectChildrenById" parameterType="${ClassName}" resultMap="${ClassName}Result">
+    <select id="selectChildrenBy${pkColumn.javaField}" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
         <include refid="selectVo"/>
         where find_in_set( #{${pkColumn.javaField}} , e.ancestors )
         <!-- 数据范围过滤 -->
@@ -142,14 +142,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 #end
 
-    <select id="select${ClassName}ById" parameterType="${ClassName}" resultMap="#if($table.sub)${ClassName}${subClassName}Result#else${ClassName}Result#end">
+    <select id="select${ClassNameNoPrefix}By${pkColumn.javaField}" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
         <include refid="selectVo"/>
         where e.${pkColumn.columnName} = #{${pkColumn.javaField}}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
 
-    <insert id="insert${ClassName}" parameterType="${ClassName}"#if($pkColumn.increment) useGeneratedKeys="true" keyProperty="$pkColumn.javaField"#end>
+    <insert id="insert${ClassNameNoPrefix}" parameterType="${ClassName}"#if($pkColumn.increment) useGeneratedKeys="true" keyProperty="$pkColumn.javaField"#end>
         insert into ${tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
 #foreach($column in $columns)
@@ -181,7 +181,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="update${ClassName}" parameterType="${ClassName}">
+    <update id="update${ClassNameNoPrefix}" parameterType="${ClassName}">
         update ${tableName}
         <trim prefix="SET" suffixOverrides=",">
 #foreach($column in $columns)
@@ -199,7 +199,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #if($table.crud || $table.sub)
 #foreach ($co in $columns)
 #if($co.javaField == 'sort')
-    <update id="update${ClassName}Sort" parameterType="${ClassName}">
+    <update id="update${ClassNameNoPrefix}Sort" parameterType="${ClassName}">
         update ${tableName} set sort =
         <foreach collection="params.Ids" item="item" index="index" separator=" " open="case $pkColumn.columnName" close="end">
             when #{item.${pkColumn.javaField}} then #{item.sort}
@@ -236,7 +236,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 
 #end
-    <delete id="delete${ClassName}ById" parameterType="${ClassName}">
+    <delete id="delete${ClassNameNoPrefix}By${pkColumn.javaField}" parameterType="${ClassName}">
         update ${tableName}
         set del_flag = 1
         where ${pkColumn.columnName} = #{${pkColumn.javaField}}
@@ -245,7 +245,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 #if(!$table.tree)
 
-    <delete id="delete${ClassName}ByIds" parameterType="${ClassName}">
+    <delete id="delete${ClassNameNoPrefix}By${pkColumn.javaField}s" parameterType="${ClassName}">
         update ${tableName}
         set del_flag = 1
         where ${pkColumn.columnName} in
@@ -260,7 +260,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
 
-    <delete id="deleteChildrenById" parameterType="${ClassName}">
+    <delete id="deleteChildrenBy${pkColumn.javaField}" parameterType="${ClassName}">
         update ${tableName}
         set del_flag = 1
         where find_in_set( #{${pkColumn.javaField}} , ancestors )
@@ -272,7 +272,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #elseif($table.sub)
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 
-    <delete id="delete${subClassName}By${AttrName}s" parameterType="${ClassName}">
+    <delete id="delete${subClassNameNoPrefix}By${AttrName}s" parameterType="${ClassName}">
         delete from ${subTableName}
         where ${pkColumn.columnName} in
         <foreach item="${pkColumn.javaField}" collection="params.Ids" open="(" separator="," close=")">
@@ -282,14 +282,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ${params.updateScope}
     </delete>
 
-    <delete id="delete${subClassName}By${AttrName}" parameterType="${ClassName}">
+    <delete id="delete${subClassNameNoPrefix}By${AttrName}" parameterType="${ClassName}">
         delete from ${subTableName}
         where ${pkColumn.columnName} = #{${pkColumn.javaField}}
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>
 
-    <insert id="batch${subClassName}" parameterType="${ClassName}">
+    <insert id="batch${subClassNameNoPrefix}" parameterType="${ClassName}">
         insert into ${subTableName}(#set($commaBatchId=0)#foreach($column in $subTable.columns)#if($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')#else#if($commaBatchId == 1),#end#if($commaBatchId == 0)#set($commaBatchId = 1)#end $column.columnName#end#end) values
 		<foreach item="item" index="index" collection="subList" separator=",">
             (#set($commaBatch=0)#foreach($column in $subTable.columns)#if($column.columnName != 'create_time' && $column.columnName != 'update_time' && $column.columnName != 'update_by' && $column.columnName != 'del_flag')#if($column.columnName == 'tenant_id')#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{enterpriseId}#elseif($column.columnName == $pkColumn.columnName || $column.columnName == 'create_by' || $column.columnName == 'library_id' || $column.columnName == 'site_id' || $column.columnName == 'system_id')#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{$column.javaField}#else#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{item.$column.javaField}#end#end#end)

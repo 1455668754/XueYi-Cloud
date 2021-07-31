@@ -38,6 +38,12 @@ public class GenTable extends BaseEntity
     @NotBlank(message = "实体类名称不能为空")
     private String className;
 
+    /** 实体类名称前缀(首字母大写) */
+    private String prefix;
+
+    /** 前缀名称(首字母大写) */
+    private String getClassNameExcludePrefix;
+
     /** 使用的模板（crud单表操作 tree树表操作 sub主子表操作） */
     private String tplCategory;
 
@@ -156,6 +162,22 @@ public class GenTable extends BaseEntity
     public void setClassName(String className)
     {
         this.className = className;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    public String getGetClassNameExcludePrefix() {
+        return getClassNameExcludePrefix;
+    }
+
+    public void setGetClassNameExcludePrefix(String getClassNameExcludePrefix) {
+        this.getClassNameExcludePrefix = getClassNameExcludePrefix;
     }
 
     public String getTplCategory()

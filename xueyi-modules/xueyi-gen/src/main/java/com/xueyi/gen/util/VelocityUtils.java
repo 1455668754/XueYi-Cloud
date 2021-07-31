@@ -48,6 +48,8 @@ public class VelocityUtils {
         velocityContext.put("functionName", StringUtils.isNotEmpty(functionName) ? functionName : "【请填写功能名称】");
         velocityContext.put("ClassName", genTable.getClassName());
         velocityContext.put("className", StringUtils.uncapitalize(genTable.getClassName()));
+        velocityContext.put("ClassNameNoPrefix", genTable.getClassName().replaceFirst(genTable.getPrefix(),""));
+        velocityContext.put("classNameNoPrefix", StringUtils.uncapitalize(genTable.getClassName().replaceFirst(genTable.getPrefix(),"")));
         velocityContext.put("moduleName", genTable.getModuleName());
         velocityContext.put("BusinessName", StringUtils.capitalize(genTable.getBusinessName()));
         velocityContext.put("businessName", genTable.getBusinessName());
@@ -119,6 +121,8 @@ public class VelocityUtils {
         context.put("subTableFkclassName", StringUtils.uncapitalize(subTableFkClassName));
         context.put("subClassName", subClassName);
         context.put("subclassName", StringUtils.uncapitalize(subClassName));
+        context.put("subClassNameNoPrefix", subClassName.replaceFirst(genTable.getPrefix(),""));
+        context.put("subclassNameNoPrefix", StringUtils.uncapitalize(subClassName.replaceFirst(genTable.getPrefix(),"")));
         context.put("subImportList", getImportList(genTable.getSubTable()));
     }
 

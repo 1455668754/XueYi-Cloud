@@ -34,7 +34,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 public class ${ClassName}Controller extends BaseController {
 
     @Autowired
-    private I${ClassName}Service ${className}Service;
+    private I${ClassName}Service ${classNameNoPrefix}Service;
 
     /**
      * 查询${functionName}列表
@@ -42,16 +42,16 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize(hasPermi = "${permissionPrefix}:list")
     @GetMapping("/list")
 #if($table.crud || $table.sub)
-    public TableDataInfo list(${ClassName} ${className})
+    public TableDataInfo list(${ClassName} ${classNameNoPrefix})
     {
         startPage();
-        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        List<${ClassName}> list = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}List(${classNameNoPrefix});
         return getDataTable(list);
     }
 #elseif($table.tree)
-    public AjaxResult list(${ClassName} ${className})
+    public AjaxResult list(${ClassName} ${classNameNoPrefix})
     {
-        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        List<${ClassName}> list = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}List(${classNameNoPrefix});
         return AjaxResult.success(list);
     }
 #end
@@ -61,9 +61,9 @@ public class ${ClassName}Controller extends BaseController {
      * 查询${functionName}树选项列表
      */
     @GetMapping("/tree")
-    public AjaxResult tree(${ClassName} ${className})
+    public AjaxResult tree(${ClassName} ${classNameNoPrefix})
     {
-        List<${ClassName}> tree = ${className}Service.select${ClassName}Tree(${className});
+        List<${ClassName}> tree = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}Tree(${classNameNoPrefix});
         return AjaxResult.success(tree);
     }
 #end
@@ -74,9 +74,9 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize(hasPermi = "${permissionPrefix}:export")
     @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ${ClassName} ${className}) throws IOException
+    public void export(HttpServletResponse response, ${ClassName} ${classNameNoPrefix}) throws IOException
     {
-        List<${ClassName}> list = ${className}Service.select${ClassName}List(${className});
+        List<${ClassName}> list = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}List(${classNameNoPrefix});
         ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
         util.exportExcel(response, list, "${functionName}数据");
     }
@@ -86,9 +86,9 @@ public class ${ClassName}Controller extends BaseController {
      */
     @PreAuthorize(hasPermi = "${permissionPrefix}:query")
     @GetMapping(value = "/byId")
-    public AjaxResult getInfo(${ClassName} ${className})
+    public AjaxResult getInfo(${ClassName} ${classNameNoPrefix})
     {
-        return AjaxResult.success(${className}Service.select${ClassName}ById(${className}));
+        return AjaxResult.success(${classNameNoPrefix}Service.select${ClassNameNoPrefix}By${pkColumn.capJavaField}(${classNameNoPrefix}));
     }
 
     /**
@@ -97,9 +97,9 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize(hasPermi = "${permissionPrefix}:add")
     @Log(title = "${functionName}", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ${ClassName} ${className})
+    public AjaxResult add(@RequestBody ${ClassName} ${classNameNoPrefix})
     {
-        return toAjax(${className}Service.insert${ClassName}(${className}));
+        return toAjax(${classNameNoPrefix}Service.insert${ClassNameNoPrefix}(${classNameNoPrefix}));
     }
 
     /**
@@ -108,9 +108,9 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize(hasPermi = "${permissionPrefix}:edit")
     @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ${ClassName} ${className})
+    public AjaxResult edit(@RequestBody ${ClassName} ${classNameNoPrefix})
     {
-        return toAjax(${className}Service.update${ClassName}(${className}));
+        return toAjax(${classNameNoPrefix}Service.update${ClassNameNoPrefix}(${classNameNoPrefix}));
     }
 
 #if($table.crud || $table.sub)
@@ -122,9 +122,9 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize(hasPermi = "${permissionPrefix}:edit")
     @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
-    public AjaxResult updateSort(@RequestBody ${ClassName} ${className})
+    public AjaxResult updateSort(@RequestBody ${ClassName} ${classNameNoPrefix})
     {
-        return toAjax(${className}Service.update${ClassName}Sort(${className}));
+        return toAjax(${classNameNoPrefix}Service.update${ClassNameNoPrefix}Sort(${classNameNoPrefix}));
     }
 
 #end
@@ -136,8 +136,8 @@ public class ${ClassName}Controller extends BaseController {
     @PreAuthorize(hasPermi = "${permissionPrefix}:remove")
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
     @DeleteMapping
-    public AjaxResult remove(@RequestBody ${ClassName} ${className})
+    public AjaxResult remove(@RequestBody ${ClassName} ${classNameNoPrefix})
     {
-        return toAjax(${className}Service.delete${ClassName}ById#if(!$table.tree)s#end(${className}));
+        return toAjax(${classNameNoPrefix}Service.delete${ClassNameNoPrefix}By${pkColumn.capJavaField}#if(!$table.tree)s#end(${classNameNoPrefix}));
     }
 }
