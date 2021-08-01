@@ -16,10 +16,11 @@ import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.redis.service.RedisService;
-import com.xueyi.gateway.config.properties.IgnoreWhiteProperties;
 import com.xueyi.common.core.constant.HttpStatus;
 import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.common.core.constant.SecurityConstants;
+import com.xueyi.gateway.config.properties.IgnoreWhiteProperties;
 import reactor.core.publisher.Mono;
 
 /**
@@ -67,12 +68,12 @@ public class AuthFilter implements GlobalFilter, Ordered
             return unauthorizedResponse(exchange, "登录状态已过期");
         }
         JSONObject cacheObj = JSONObject.parseObject(userStr);
-        String userid = cacheObj.getString("userid");
-        String username = cacheObj.getString("username");
+        String userId = cacheObj.getString("userId");
+        String userName = cacheObj.getString("userName");
         String userType = cacheObj.getString("userType");
         String enterpriseId = cacheObj.getString("enterpriseId");
         String enterpriseName = cacheObj.getString("enterpriseName");
-        if (StringUtils.isEmpty(userid) || StringUtils.isEmpty(username))
+        if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(userName))
         {
             return unauthorizedResponse(exchange, "令牌验证失败");
         }
@@ -80,11 +81,13 @@ public class AuthFilter implements GlobalFilter, Ordered
         // 设置过期时间
         redisService.expire(getTokenKey(token), EXPIRE_TIME);
         // 设置用户信息到请求
-        addHeader(mutate, CacheConstants.DETAILS_USER_ID, userid);
-        addHeader(mutate, CacheConstants.DETAILS_USERNAME, username);
-        addHeader(mutate, CacheConstants.DETAILS_TYPE, userType);
-        addHeader(mutate, CacheConstants.DETAILS_ENTERPRISE_ID, enterpriseId);
-        addHeader(mutate, CacheConstants.DETAILS_ENTERPRISE_NAME, enterpriseName);
+        addHeader(mutate, SecurityConstants.DETAILS_USER_ID, userId);
+        addHeader(mutate, SecurityConstants.DETAILS_USERNAME, userName);
+        addHeader(mutate, SecurityConstants.DETAILS_TYPE, userType);
+        addHeader(mutate, SecurityConstants.DETAILS_ENTERPRISE_ID, enterpriseId);
+        addHeader(mutate, SecurityConstants.DETAILS_ENTERPRISE_NAME, enterpriseName);
+        // 内部请求来源参数清除
+        removeHeader(mutate, SecurityConstants.FROM_SOURCE);
         return chain.filter(exchange.mutate().request(mutate.build()).build());
     }
 
@@ -97,6 +100,11 @@ public class AuthFilter implements GlobalFilter, Ordered
         String valueStr = value.toString();
         String valueEncode = ServletUtils.urlEncode(valueStr);
         mutate.header(name, valueEncode);
+    }
+
+    private void removeHeader(ServerHttpRequest.Builder mutate, String name)
+    {
+        mutate.headers(httpHeaders -> httpHeaders.remove(name)).build();
     }
 
     private Mono<Void> unauthorizedResponse(ServerWebExchange exchange, String msg)
@@ -119,7 +127,7 @@ public class AuthFilter implements GlobalFilter, Ordered
      */
     private String getToken(ServerHttpRequest request)
     {
-        String token = request.getHeaders().getFirst(CacheConstants.TOKEN_AUTHENTICATION);
+        String token = request.getHeaders().getFirst(SecurityConstants.TOKEN_AUTHENTICATION);
         return SecurityUtils.replaceTokenPrefix(token);
     }
 

@@ -148,7 +148,7 @@ public class GenTableServiceImpl implements IGenTableService {
     @Override
     @Transactional
     public void importGenTable(List<GenTable> tableList) {
-        String operName = SecurityUtils.getUsername();
+        String operName = SecurityUtils.getUserName();
         try {
             for (GenTable table : tableList) {
                 String tableName = table.getTableName();

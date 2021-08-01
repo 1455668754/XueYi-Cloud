@@ -3,7 +3,7 @@ package com.xueyi.system.monitor.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.monitor.domain.SysLoginInfo;
+import com.xueyi.system.api.domain.monitor.SysLoginInfo;
 
 /**
  * 系统访问日志情况信息 数据层

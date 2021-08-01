@@ -1,6 +1,7 @@
 package com.xueyi.common.datasource.config;
 
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
+import com.xueyi.common.core.constant.TenantConstants;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,6 @@ public class DsMainExpressionProcessor extends DsProcessor {
 
     @Override
     public String doDetermineDatasource(MethodInvocation invocation, String key) {
-        return "master";
+        return TenantConstants.MAIN_SOURCE;
     }
 }

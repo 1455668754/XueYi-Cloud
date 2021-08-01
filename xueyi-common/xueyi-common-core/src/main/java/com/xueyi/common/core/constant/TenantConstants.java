@@ -7,6 +7,15 @@ package com.xueyi.common.core.constant;
  */
 public class TenantConstants {
 
+    /** 注册租户默认策略Id */
+    public static final Long REGISTER_TENANT_STRATEGY_ID = 1L;
+
+    /** 注册租户默认策略数据源 */
+    public static final String TENANT_STRATEGY_SOURCE = "slave";
+
+    /** 默认主数据源 */
+    public static final String MAIN_SOURCE = "master";
+
     /** 正常状态 */
     public static final String NORMAL = "0";
 

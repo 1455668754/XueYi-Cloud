@@ -38,6 +38,11 @@
         left join xy_tenant_strategy b on b.strategy_id = e.strategy_id
     </sql>
 
+    <sql id="checkVo">
+        select e.tenant_id, e.strategy_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark
+        from xy_tenant e
+    </sql>
+
     <select id="selectTenantList" parameterType="Tenant" resultMap="TenantResult">
         <include refid="selectVo"/>
         where e.del_flag = 0 and ( b.strategy_id is null or ( b.strategy_id is not null and b.del_flag = 0 ) )
@@ -126,4 +131,10 @@
             #{tenantId}
         </foreach>
     </delete>
+
+    <select id="checkTenantNameUnique" parameterType="Tenant" resultMap="TenantResult">
+        <include refid="checkVo"/>
+        where e.tenant_name = #{tenantName}
+        and e.del_flag = 0
+    </select>
 </mapper>

@@ -27,8 +27,8 @@ create table xy_tenant (
 -- 初始化-租户信息表数据
 -- ----------------------------
 insert into xy_tenant (is_change, strategy_id, tenant_id, tenant_name, tenant_system_name, tenant_nick, tenant_logo)
-values ('Y', 0, -1, 'administrator', '租户管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
-       ('N', 0, 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
+values ('Y', 1, -1, 'administrator', '租户管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
+       ('N', 1, 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
 
 -- ----------------------------
 -- 2、数据源策略表|管理数据源策略信息
@@ -54,8 +54,8 @@ primary key (strategy_id)
 -- 初始化-数据源策略表数据
 -- ----------------------------
 insert into xy_tenant_strategy(strategy_id, name, tenant_amount, source_amount, is_change, sort)
-values (0, '默认策略', 2, 1, 1, 0),
-       (1, '子策略一', 0, 1, 0, 1);
+values (0, '默认初始策略', 0, 1, 1, 0),
+       (1, '默认注册策略', 2, 1, 1, 1);
 
 -- ----------------------------
 -- 3、数据源表|管理系统数据源信息 | 主库有且只能有一个，用途：主要用于存储公共数据，具体看后续文档或视频
@@ -88,7 +88,7 @@ primary key (source_id)
 -- ----------------------------
 insert into xy_tenant_source(source_id, name, database_type, slave, driver_class_name, url, url_prepend, url_append, username, password, type)
 values (0, '默认数据源', '1', 'master', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0'),
-       (1, '子数据源一', '0', 'slave1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
+       (1, '注册数据源', '1', 'slave1', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
 
 -- ----------------------------
 -- 4、主从库关联表  写1-n读
@@ -509,7 +509,8 @@ create table sys_config (
 insert into sys_config (config_id, config_name, config_key, config_value, config_type, remark, tenant_id)
 values (1, '主框架页-默认皮肤样式名称', 'sys.index.skinName',     'skin-blue',     'Y', '蓝色 skin-blue、绿色 skin-green、紫色 skin-purple、红色 skin-red、黄色 skin-yellow', 0),
        (2, '用户管理-账号初始密码',     'sys.user.initPassword',  '123456',        'Y', '初始化密码 123456', 0),
-       (3, '主框架页-侧边栏主题',       'sys.index.sideTheme',    'theme-dark',    'Y', '深色主题theme-dark，浅色主题theme-light', 0);
+       (3, '主框架页-侧边栏主题',       'sys.index.sideTheme',    'theme-dark',    'Y', '深色主题theme-dark，浅色主题theme-light', 0),
+       (3, '账号自助-是否开启租户注册功能',       'sys.account.registerTenant',    'false',    'Y', '是否开启注册租户功能（true开启，false关闭）', -1);
 
 -- ----------------------------
 -- 11、定时任务调度表

@@ -103,7 +103,7 @@ public class SysMenuController extends BaseController {
     @GetMapping("getRouters")
     public AjaxResult getRouters(SysMenu menu) {
         LoginUser loginUser = tokenService.getLoginUser();
-        List<SysMenu> menus = menuService.selectMenuTreeByUserId(loginUser.getUserid(), menu.getSystemId(), loginUser.getUserType());
+        List<SysMenu> menus = menuService.selectMenuTreeByUserId(loginUser.getUserId(), menu.getSystemId(), loginUser.getUserType());
         return AjaxResult.success(menuService.buildMenus(menus));
     }
 }

@@ -36,6 +36,14 @@ public interface ITenantService {
     public int insertTenant(Tenant tenant);
 
     /**
+     * 注册租户信息
+     *
+     * @param tenant 租户信息
+     * @return 结果
+     */
+    public Boolean registerTenant(Tenant tenant);
+
+    /**
      * 修改租户信息
      *
      * @param tenant 租户信息
@@ -66,4 +74,12 @@ public interface ITenantService {
      * @return 结果
      */
     public int deleteTenantByIds(Tenant tenant);
+
+    /**
+     * 校验租户账号是否唯一
+     *
+     * @param tenant 租户信息 | tenantName 租户Id
+     * @return 结果
+     */
+    public String checkTenantNameUnique(Tenant tenant);
 }

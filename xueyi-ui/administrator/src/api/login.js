@@ -1,11 +1,11 @@
 import request from '@/utils/request'
 
 // 登录方法
-export function login(enterpriseName, username, password, code, uuid) {
+export function login(enterpriseName, userName, password, code, uuid) {
   return request({
     url: '/auth/login',
     method: 'post',
-    data: { enterpriseName, username, password, code, uuid }
+    data: { enterpriseName, userName, password, code, uuid }
   })
 }
 

@@ -17,6 +17,7 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.system.api.domain.monitor.SysOperLog;
 import com.xueyi.system.monitor.service.ISysOperLogService;
@@ -64,6 +65,7 @@ public class SysOperlogController extends BaseController {
         return AjaxResult.success();
     }
 
+    @InnerAuth
     @PostMapping
     public AjaxResult add(@RequestBody SysOperLog operLog) {
         return toAjax(operLogService.insertOperlog(operLog));

@@ -48,12 +48,12 @@ const user = {
     // 登录
     Login({ commit }, userInfo) {
       const enterpriseName = userInfo.enterpriseName.trim()
-      const username = userInfo.username.trim()
+      const userName = userInfo.userName.trim()
       const password = userInfo.password
       const code = userInfo.code
       const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
-        login(enterpriseName, username, password, code, uuid).then(res => {
+        login(enterpriseName, userName, password, code, uuid).then(res => {
           let data = res.data
           setToken(data.access_token)
           commit('SET_TOKEN', data.access_token)

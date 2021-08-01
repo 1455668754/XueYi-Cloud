@@ -13,7 +13,7 @@
         <result property="url"              column="url"                                    />
         <result property="urlPrepend"       column="url_prepend"                            />
         <result property="urlAppend"        column="url_append"                             />
-        <result property="username"         column="username"                               />
+        <result property="userName"         column="username"                               />
         <result property="password"         column="password"                               />
         <result property="type"             column="type"                                   />
         <result property="sort"             column="sort"                                   />
@@ -34,7 +34,7 @@
         <result property="slave"            column="sub_slave"                              />
         <result property="driverClassName"  column="sub_driver_class_name"                  />
         <result property="url"              column="sub_url"                                />
-        <result property="username"         column="sub_username"                           />
+        <result property="userName"         column="sub_username"                           />
         <result property="password"         column="sub_password"                           />
         <result property="type"             column="sub_type"                               />
         <result property="sort"             column="sub_sort"                               />
@@ -114,7 +114,7 @@
             <if test="url != null and url != ''">                         url                          ,</if>
             <if test="urlPrepend != null and urlPrepend != ''">           url_prepend                  ,</if>
             <if test="urlAppend != null and urlAppend != ''">             url_append                   ,</if>
-            <if test="username != null and username != ''">               username                     ,</if>
+            <if test="userName != null and userName != ''">               username                     ,</if>
             <if test="password != null and password != ''">               password                     ,</if>
             <if test="type != null and type != ''">                       type                         ,</if>
             <if test="sort != null and sort != ''">                       sort                         ,</if>
@@ -129,7 +129,7 @@
             <if test="url != null and url != ''">                         #{url}                       ,</if>
             <if test="urlPrepend != null and urlPrepend != ''">           #{urlPrepend}                ,</if>
             <if test="urlAppend != null and urlAppend != ''">             #{urlAppend}                 ,</if>
-            <if test="username != null and username != ''">               #{username}                  ,</if>
+            <if test="userName != null and userName != ''">               #{userName}                  ,</if>
             <if test="password != null and password != ''">               #{password}                  ,</if>
             <if test="type != null and type != ''">                       #{type}                      ,</if>
             <if test="sort != null and sort != ''">                       #{sort}                      ,</if>
@@ -147,7 +147,7 @@
             <if test="url != null and url != ''">                          url = #{url}                              ,</if>
             <if test="urlPrepend != null and urlPrepend != ''">            url_prepend = #{urlPrepend}               ,</if>
             <if test="urlAppend != null and urlAppend != ''">              url_append = #{urlAppend}                 ,</if>
-            <if test="username != null and username != ''">                username = #{username}                    ,</if>
+            <if test="userName != null and userName != ''">                username = #{userName}                    ,</if>
             <if test="password != null and password != ''">                password = #{password}                    ,</if>
             <if test="type != null and type != ''">                        type = #{type}                            ,</if>
             <if test="sort != null and sort != ''">                        sort = #{sort}                            ,</if>

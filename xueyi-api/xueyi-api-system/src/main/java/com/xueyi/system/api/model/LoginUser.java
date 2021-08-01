@@ -19,17 +19,17 @@ public class LoginUser implements Serializable
     /** 用户唯一标识 */
     private String token;
 
-    /** 企业账号id */
+    /** 企业账号Id */
     private Long enterpriseId;
 
     /** 企业账号 */
     private String enterpriseName;
 
-    /** 用户名id */
-    private Long userid;
+    /** 用户名Id */
+    private Long userId;
 
     /** 用户名 */
-    private String username;
+    private String userName;
 
     /** 用户标识 */
     private String userType;
@@ -85,20 +85,20 @@ public class LoginUser implements Serializable
         this.enterpriseName = enterpriseName;
     }
 
-    public Long getUserid() {
-        return userid;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUserid(Long userid) {
-        this.userid = userid;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getUserType() {

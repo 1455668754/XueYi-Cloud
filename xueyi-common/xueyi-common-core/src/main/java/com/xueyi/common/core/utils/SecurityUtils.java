@@ -3,7 +3,7 @@ package com.xueyi.common.core.utils;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import com.xueyi.common.core.constant.CacheConstants;
+import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.text.Convert;
 
 /**
@@ -19,7 +19,7 @@ public class SecurityUtils
      */
     public static Long getEnterpriseId()
     {
-        return Convert.toLong(ServletUtils.getRequest().getHeader(CacheConstants.DETAILS_ENTERPRISE_ID));
+        return Convert.toLong(ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_ENTERPRISE_ID));
     }
 
     /**
@@ -27,7 +27,7 @@ public class SecurityUtils
      */
     public static String getEnterpriseName()
     {
-        return ServletUtils.getRequest().getHeader(CacheConstants.DETAILS_ENTERPRISE_NAME);
+        return ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_ENTERPRISE_NAME);
     }
 
     /**
@@ -35,16 +35,16 @@ public class SecurityUtils
      */
     public static Long getUserId()
     {
-        return Convert.toLong(ServletUtils.getRequest().getHeader(CacheConstants.DETAILS_USER_ID));
+        return Convert.toLong(ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USER_ID));
     }
 
     /**
      * 获取用户
      */
-    public static String getUsername()
+    public static String getUserName()
     {
-        String username = ServletUtils.getRequest().getHeader(CacheConstants.DETAILS_USERNAME);
-        return ServletUtils.urlDecode(username);
+        String userName = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USERNAME);
+        return ServletUtils.urlDecode(userName);
     }
 
     /**
@@ -52,7 +52,7 @@ public class SecurityUtils
      */
     public static String getUserType()
     {
-        String userType = ServletUtils.getRequest().getHeader(CacheConstants.DETAILS_TYPE);
+        String userType = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_TYPE);
         return ServletUtils.urlDecode(userType);
     }
 
@@ -69,7 +69,7 @@ public class SecurityUtils
      */
     public static String getToken(HttpServletRequest request)
     {
-        String token = request.getHeader(CacheConstants.TOKEN_AUTHENTICATION);
+        String token = request.getHeader(SecurityConstants.TOKEN_AUTHENTICATION);
         return replaceTokenPrefix(token);
     }
 
@@ -78,9 +78,9 @@ public class SecurityUtils
      */
     public static String replaceTokenPrefix(String token)
     {
-        if (StringUtils.isNotEmpty(token) && token.startsWith(CacheConstants.TOKEN_PREFIX))
+        if (StringUtils.isNotEmpty(token) && token.startsWith(SecurityConstants.TOKEN_PREFIX))
         {
-            token = token.replace(CacheConstants.TOKEN_PREFIX, "");
+            token = token.replace(SecurityConstants.TOKEN_PREFIX, "");
         }
         return token;
     }

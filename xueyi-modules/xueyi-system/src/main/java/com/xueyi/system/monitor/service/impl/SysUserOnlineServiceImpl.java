@@ -41,7 +41,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
     @Override
     public SysUserOnline selectOnlineByUserName(String userName, LoginUser user)
     {
-        if (StringUtils.equals(userName, user.getUsername()))
+        if (StringUtils.equals(userName, user.getUserName()))
         {
             return loginUserToUserOnline(user);
         }
@@ -59,7 +59,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
     @Override
     public SysUserOnline selectOnlineByInfo(String ipaddr, String userName, LoginUser user)
     {
-        if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUsername()))
+        if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUserName()))
         {
             return loginUserToUserOnline(user);
         }
@@ -81,7 +81,7 @@ public class SysUserOnlineServiceImpl implements ISysUserOnlineService
         }
         SysUserOnline sysUserOnline = new SysUserOnline();
         sysUserOnline.setTokenId(user.getToken());
-        sysUserOnline.setUserName(user.getUsername());
+        sysUserOnline.setUserName(user.getUserName());
         sysUserOnline.setUserNick(user.getSysUser().getNickName());
         sysUserOnline.setIpaddr(user.getIpaddr());
         sysUserOnline.setLoginTime(user.getLoginTime());

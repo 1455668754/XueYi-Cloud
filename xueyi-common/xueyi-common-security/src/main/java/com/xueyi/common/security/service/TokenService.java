@@ -43,8 +43,8 @@ public class TokenService
         loginUser.setToken(token);
         loginUser.setEnterpriseId(loginUser.getSysEnterprise().getEnterpriseId());
         loginUser.setEnterpriseName(loginUser.getSysEnterprise().getEnterpriseName());
-        loginUser.setUserid(loginUser.getSysUser().getUserId());
-        loginUser.setUsername(loginUser.getSysUser().getUserName());
+        loginUser.setUserId(loginUser.getSysUser().getUserId());
+        loginUser.setUserName(loginUser.getSysUser().getUserName());
         loginUser.setUserType(loginUser.getSysUser().getUserType());
         loginUser.setIpaddr(IpUtils.getIpAddr(ServletUtils.getRequest()));
         refreshToken(loginUser);

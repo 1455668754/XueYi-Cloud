@@ -3,12 +3,21 @@ package com.xueyi.tenant.controller;
 import java.util.List;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+
+import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.domain.R;
+import com.xueyi.common.security.annotation.InnerAuth;
+import com.xueyi.system.api.RemoteConfigService;
+import com.xueyi.system.api.domain.organize.SysDept;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
+import com.xueyi.system.api.domain.organize.SysUser;
+import com.xueyi.tenant.api.model.TenantRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +42,9 @@ public class TenantController extends BaseController
 {
     @Autowired
     private ITenantService tenantService;
+
+    @Autowired
+    private RemoteConfigService remoteConfigService;
 
     /**
      * 查询租户信息列表
@@ -78,6 +90,49 @@ public class TenantController extends BaseController
     public AjaxResult add(@RequestBody Tenant tenant)
     {
         return toAjax(tenantService.insertTenant(tenant));
+    }
+
+    /**
+     * 注册用户信息
+     */
+    @InnerAuth
+    @PostMapping("/register")
+    public R<Boolean> register(@RequestBody TenantRegister register)
+    {
+        String key = remoteConfigService.getKey("sys.account.registerTenant").getData();
+        if (!("true".equals(key)))
+        {
+            return R.fail("当前系统没有开启注册功能！");
+        }
+        Tenant tenant = new Tenant();
+        tenant.setTenantName(register.getEnterpriseName());
+        if (UserConstants.NOT_UNIQUE.equals(tenantService.checkTenantNameUnique(tenant)))
+        {
+            return R.fail("注册租户'" + register.getEnterpriseSystemName() + "'失败，注册账号已存在");
+        }
+        //租户信息
+        tenant.setStrategyId(TenantConstants.REGISTER_TENANT_STRATEGY_ID);
+        tenant.setTenantName(register.getEnterpriseName());
+        tenant.setTenantSystemName(register.getEnterpriseSystemName());
+        tenant.setTenantNick(register.getEnterpriseNick());
+        tenant.setTenantLogo(register.getLogo());
+
+        //部门信息
+        SysDept dept = new SysDept();
+        dept.setDeptName(register.getNickName());
+        tenant.getParams().put("dept",dept);
+        //个人信息
+        SysUser user = new SysUser();
+        user.setUserName(register.getUserName());
+        user.setNickName(register.getNickName());
+        user.setEmail(register.getEmail());
+        user.setPhone(register.getPhone());
+        user.setSex(register.getSex());
+        user.setAvatar(register.getAvatar());
+        user.setProfile(register.getProfile());
+        user.setPassword(register.getPassword());
+        tenant.getParams().put("user",user);
+        return R.ok(tenantService.registerTenant(tenant));
     }
 
     /**

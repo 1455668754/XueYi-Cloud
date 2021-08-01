@@ -39,7 +39,7 @@ public class TenantSourceValue extends BaseEntity
 
     /** 用户名 */
     @Excel(name = "用户名")
-    private String username;
+    private String userName;
 
     /** 密码 */
     private String password;
@@ -100,12 +100,12 @@ public class TenantSourceValue extends BaseEntity
         return url;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
     public void setPassword(String password) {
@@ -141,7 +141,7 @@ public class TenantSourceValue extends BaseEntity
                 .append("slave", getSlave())
                 .append("driverClassName", getDriverClassName())
                 .append("url", getUrl())
-                .append("username", getUsername())
+                .append("userName", getUserName())
                 .append("password", getPassword())
                 .append("type", getType())
                 .append("sort", getSort())

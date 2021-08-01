@@ -3,6 +3,8 @@ package com.xueyi.system.dict.controller;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.xueyi.common.core.domain.R;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +37,15 @@ public class SysConfigController extends BaseController
 {
     @Autowired
     private ISysConfigService configService;
+
+    /**
+     * 根据参数键名查询参数值
+     */
+    @GetMapping(value = "/innerConfigKey/{configKey}")
+    public R<String> getKey(@PathVariable String configKey)
+    {
+        return R.ok(configService.selectConfigByKey(configKey));
+    }
 
     /**
      * 获取参数配置列表

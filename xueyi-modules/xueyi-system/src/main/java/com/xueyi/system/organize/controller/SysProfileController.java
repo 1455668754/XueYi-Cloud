@@ -91,7 +91,7 @@ public class SysProfileController extends BaseController {
     public AjaxResult updatePwd(String oldPassword, String newPassword) {
         Long userId = SecurityUtils.getUserId();
         SysUser checkUser = new SysUser();
-        checkUser.setUserName(SecurityUtils.getUsername());
+        checkUser.setUserName(SecurityUtils.getUserName());
         SysUser user = userService.selectUserByUserName(checkUser);
         String password = user.getPassword();
         if (!SecurityUtils.matchesPassword(oldPassword, password)) {
@@ -127,7 +127,7 @@ public class SysProfileController extends BaseController {
             }
             String url = fileResult.getData().getUrl();
             SysUser user = new SysUser();
-            user.setUserId(loginUser.getUserid());
+            user.setUserId(loginUser.getUserId());
             user.setAvatar(url);
             if (userService.updateUserAvatar(user)) {
                 String oldAvatarUrl = loginUser.getSysUser().getAvatar();

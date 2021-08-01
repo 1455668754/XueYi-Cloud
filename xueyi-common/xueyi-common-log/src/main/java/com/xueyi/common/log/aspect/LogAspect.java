@@ -102,7 +102,7 @@ public class LogAspect
             LoginUser user = tokenService.getLoginUser();
             if(user != null){
                 operLog.setSourceName(user.getMainSource());
-                Long userId = user.getUserid();
+                Long userId = user.getUserId();
                 Long enterpriseId = user.getEnterpriseId();
                 if (StringUtils.isNotNull(userId))
                 {

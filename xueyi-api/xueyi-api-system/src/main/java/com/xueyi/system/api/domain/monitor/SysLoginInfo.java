@@ -1,4 +1,4 @@
-package com.xueyi.system.monitor.domain;
+package com.xueyi.system.api.domain.monitor;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;

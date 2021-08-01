@@ -52,7 +52,7 @@ public class SysUserOnlineController extends BaseController {
             LoginUser user = redisService.getCacheObject(key);
             if (mine.getEnterpriseId().equals(user.getEnterpriseId())) {
                 if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName)) {
-                    if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUsername())) {
+                    if (StringUtils.equals(ipaddr, user.getIpaddr()) && StringUtils.equals(userName, user.getUserName())) {
                         userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
                     }
                 } else if (StringUtils.isNotEmpty(ipaddr)) {
@@ -60,7 +60,7 @@ public class SysUserOnlineController extends BaseController {
                         userOnlineList.add(userOnlineService.selectOnlineByIpaddr(ipaddr, user));
                     }
                 } else if (StringUtils.isNotEmpty(userName)) {
-                    if (StringUtils.equals(userName, user.getUsername())) {
+                    if (StringUtils.equals(userName, user.getUserName())) {
                         userOnlineList.add(userOnlineService.selectOnlineByUserName(userName, user));
                     }
                 } else {

@@ -32,6 +32,7 @@ import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
+import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
@@ -68,6 +69,7 @@ public class SysUserController extends BaseController {
     /**
      * 获取当前用户信息
      */
+    @InnerAuth
     @GetMapping("/info/{enterpriseName}/{userName}")
     public R<LoginUser> info(@PathVariable("enterpriseName") String enterpriseName, @PathVariable("userName") String userName) {
         SysEnterprise checkEnterprise = new SysEnterprise();
@@ -297,7 +299,7 @@ public class SysUserController extends BaseController {
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
-        String operName = SecurityUtils.getUsername();
+        String operName = SecurityUtils.getUserName();
         String message = userService.importUser(userList, updateSupport, operName);
         return AjaxResult.success(message);
     }

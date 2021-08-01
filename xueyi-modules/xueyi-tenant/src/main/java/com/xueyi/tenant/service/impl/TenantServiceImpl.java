@@ -3,7 +3,10 @@ package com.xueyi.tenant.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.CustomException;
+import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.domain.TenantStrategy;
 import com.xueyi.tenant.mapper.TenantStrategyMapper;
@@ -30,10 +33,14 @@ public class TenantServiceImpl implements ITenantService {
     private TenantMapper tenantMapper;
 
     @Autowired
+    private ITenantService tenantService;
+
+    @Autowired
     private TenantStrategyMapper tenantStrategyMapper;
 
     @Autowired
     private ITenantCreationService tenantCreationService;
+
 
     /**
      * 查询租户信息列表
@@ -90,6 +97,17 @@ public class TenantServiceImpl implements ITenantService {
     }
 
     /**
+     * 注册租户信息
+     *
+     * @param tenant 租户信息
+     * @return 结果
+     */
+    public Boolean registerTenant(Tenant tenant){
+        int row = tenantService.insertTenant(tenant);
+        return row > 0;
+    }
+
+    /**
      * 修改租户信息
      *
      * @param tenant 租户信息
@@ -131,5 +149,19 @@ public class TenantServiceImpl implements ITenantService {
     @Override
     public int deleteTenantByIds(Tenant tenant) {
         return tenantMapper.deleteTenantByIds(tenant);
+    }
+
+    /**
+     * 校验租户账号是否唯一
+     *
+     * @param tenant 租户信息 | tenantName 租户Id
+     * @return 结果
+     */
+    public String checkTenantNameUnique(Tenant tenant){
+        Tenant info = tenantMapper.checkTenantNameUnique(tenant);
+        if (StringUtils.isNotNull(info)) {
+            return UserConstants.NOT_UNIQUE;
+        }
+        return UserConstants.UNIQUE;
     }
 }

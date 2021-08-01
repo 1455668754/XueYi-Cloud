@@ -2,7 +2,7 @@ package com.xueyi.system.monitor.service;
 
 import java.util.List;
 
-import com.xueyi.system.monitor.domain.SysLoginInfo;
+import com.xueyi.system.api.domain.monitor.SysLoginInfo;
 
 /**
  * 系统访问日志情况信息 服务层

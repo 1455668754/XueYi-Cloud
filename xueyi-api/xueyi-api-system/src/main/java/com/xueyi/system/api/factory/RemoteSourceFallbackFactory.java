@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * 租户数据源加载服务降级处理
+ * 数据源策略加载服务降级处理
  *
  * @author xueyi
  */
@@ -21,11 +21,11 @@ public class RemoteSourceFallbackFactory implements FallbackFactory<RemoteSource
 
     @Override
     public RemoteSourceService create(Throwable throwable) {
-        log.error("租户数据源加载服务调用失败:{}", throwable.getMessage());
+        log.error("数据源策略加载服务调用失败:{}", throwable.getMessage());
         return new RemoteSourceService() {
             @Override
             public R<List<Source>> getLoadDataSources(Long enterpriseId) {
-                return R.fail("获取租户数据源失败:" + throwable.getMessage());
+                return R.fail("获取数据源策略失败:" + throwable.getMessage());
             }
         };
     }

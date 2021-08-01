@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.RemoteLogService;
+import com.xueyi.system.api.domain.monitor.SysLoginInfo;
 import com.xueyi.system.api.domain.monitor.SysOperLog;
 
 /**
@@ -22,12 +23,12 @@ public class RemoteLogFallbackFactory implements FallbackFactory<RemoteLogServic
         log.error("日志服务调用失败:{}", throwable.getMessage());
         return new RemoteLogService() {
             @Override
-            public R<Boolean> saveLog(SysOperLog sysOperLog) {
+            public R<Boolean> saveLog(SysOperLog sysOperLog, String source) {
                 return null;
             }
 
             @Override
-            public R<Boolean> saveLoginInfo(String sourceName, Long enterpriseId, String enterpriseName, Long userId, String userName, String status, String message) {
+            public R<Boolean> saveLoginInfo(SysLoginInfo loginInfo, String source) {
                 return null;
             }
         };
