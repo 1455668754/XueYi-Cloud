@@ -102,7 +102,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     @DataScope(#if($method != '') ${method}ueAlias = "empty" )#else ueAlias = "empty" )#end
 
 #end
-    public int insert${ClassName}(${ClassName} ${classNameNoPrefix})
+    public int insert${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix})
     {
 #if($table.sub)
         int rows = ${classNameNoPrefix}Mapper.insert${ClassNameNoPrefix}(${classNameNoPrefix});
