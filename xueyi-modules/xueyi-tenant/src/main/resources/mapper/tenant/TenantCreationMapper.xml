@@ -10,17 +10,74 @@
     </resultMap>
 
     <insert id="createDeptByTenantId" parameterType="Tenant">
-        insert into sys_dept (dept_id, tenant_id, parent_id, ancestors, dept_name)
-            value (#{params.deptId}, #{tenantId}, 0, '0', '主部门')
+        insert into sys_dept
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="params.dept.deptId != null">                                           dept_id                                      ,</if>
+            <if test="params.dept.deptName == null">                                         dept_name                                    ,</if>
+            <if test="params.dept.deptName != null and params.dept.deptName != ''">          dept_name                                    ,</if>
+            <if test="tenantId != null">                                                     tenant_id                                    ,</if>
+                                                                                             parent_id                                    ,
+                                                                                             ancestors
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="params.dept.deptId != null">                                           #{params.dept.deptId}                        ,</if>
+            <if test="params.dept.deptName == null">                                         '主部门'                                      ,</if>
+            <if test="params.dept.deptName != null and params.dept.deptName != ''">          #{params.dept.deptName}                      ,</if>
+            <if test="tenantId != null">                                                     #{tenantId}                                  ,</if>
+                                                                                             0                                            ,
+                                                                                             '0'
+        </trim>
     </insert>
 
     <insert id="createPostByTenantId" parameterType="Tenant">
-        insert into sys_post (post_id, tenant_id, dept_id, post_name)
-            value (#{params.postId}, #{tenantId}, #{params.deptId}, '主岗位')
+        insert into sys_post
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="params.post.postId != null">                                           post_id                                      ,</if>
+            <if test="params.post.deptId != null">                                           dept_id                                      ,</if>
+            <if test="params.post.postName == null">                                         post_name                                    ,</if>
+            <if test="params.post.postName != null and params.post.postName != ''">          post_name                                    ,</if>
+            <if test="tenantId != null">                                                     tenant_id                                    ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="params.post.postId != null">                                           #{params.post.postId}                        ,</if>
+            <if test="params.post.deptId != null">                                           #{params.post.deptId}                        ,</if>
+            <if test="params.post.postName == null">                                         '主岗位'                                      ,</if>
+            <if test="params.post.postName != null and params.post.postName != ''">          #{params.post.postName}                      ,</if>
+            <if test="tenantId != null">                                                     #{tenantId}                                  ,</if>
+        </trim>
     </insert>
 
     <insert id="createUserByTenantId" parameterType="Tenant">
-        insert into sys_user (user_id, tenant_id, dept_id, post_id, user_name, nick_name, user_type, password)
-            value (#{params.userId}, #{tenantId}, #{params.deptId}, #{params.postId}, 'admin', '超级管理员', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2')
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="params.user.userId != null">                                           user_id                                      ,</if>
+            <if test="params.user.deptId != null">                                           dept_id                                      ,</if>
+            <if test="params.user.postId != null">                                           post_id                                      ,</if>
+            <if test="params.user.userName == null">                                         user_name                                    ,</if>
+            <if test="params.user.userName != null and params.user.userName != ''">          user_name                                    ,</if>
+            <if test="params.user.nickName == null">                                         nick_name                                    ,</if>
+            <if test="params.user.nickName != null and params.user.nickName != ''">          nick_name                                    ,</if>
+            <if test="params.user.password == null">                                         password                                     ,</if>
+            <if test="params.user.password != null and params.user.password != ''">          password                                     ,</if>
+            <if test="params.user.email != null and params.user.email != ''">                email                                        ,</if>
+            <if test="params.user.phone != null and params.user.phone != ''">                phone                                        ,</if>
+            <if test="tenantId != null">                                                     tenant_id                                    ,</if>
+                                                                                             user_type
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="params.user.userId != null">                                           #{params.user.userId}                        ,</if>
+            <if test="params.user.deptId != null">                                           #{params.user.deptId}                        ,</if>
+            <if test="params.user.postId != null">                                           #{params.user.postId}                        ,</if>
+            <if test="params.user.userName == null">                                         user_name                                    ,</if>
+            <if test="params.user.userName != null and params.user.userName != ''">          #{params.user.userName}                      ,</if>
+            <if test="params.user.nickName == null">                                         '超级管理员'                                   ,</if>
+            <if test="params.user.nickName != null and params.user.nickName != ''">          #{params.user.nickName}                      ,</if>
+            <if test="params.user.password == null">                                         '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2'  ,</if>
+            <if test="params.user.password != null and params.user.password != ''">          #{params.user.password}                      ,</if>
+            <if test="params.user.email != null and params.user.email != ''">                #{params.user.email}                         ,</if>
+            <if test="params.user.phone != null and params.user.phone != ''">                #{params.user.phone}                         ,</if>
+            <if test="tenantId != null">                                                     #{tenantId}                                  ,</if>
+                                                                                             '00'
+        </trim>
     </insert>
 </mapper>

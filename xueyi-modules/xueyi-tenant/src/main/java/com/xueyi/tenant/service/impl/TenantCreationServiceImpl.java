@@ -51,18 +51,24 @@ public class TenantCreationServiceImpl implements ITenantCreationService {
         }
         if(tenant.getParams().containsKey("post")){
             SysPost post = (SysPost) tenant.getParams().get("post");
-            post.setDeptId(postId);
+            post.setDeptId(deptId);
+            post.setPostId(postId);
         }else{
             SysPost post = new SysPost();
-            post.setDeptId(postId);
+            post.setDeptId(deptId);
+            post.setPostId(postId);
             tenant.getParams().put("post",post);
         }
         if(tenant.getParams().containsKey("user")){
             SysUser user = (SysUser) tenant.getParams().get("user");
-            user.setDeptId(userId);
+            user.setDeptId(deptId);
+            user.setPostId(postId);
+            user.setUserId(userId);
         }else{
             SysUser user = new SysUser();
-            user.setDeptId(userId);
+            user.setDeptId(deptId);
+            user.setPostId(postId);
+            user.setUserId(userId);
             tenant.getParams().put("user",user);
         }
         rows = rows + tenantCreationMapper.createDeptByTenantId(tenant);
