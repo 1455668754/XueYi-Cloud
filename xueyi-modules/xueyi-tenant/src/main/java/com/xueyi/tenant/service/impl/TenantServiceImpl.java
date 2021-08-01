@@ -41,7 +41,6 @@ public class TenantServiceImpl implements ITenantService {
     @Autowired
     private ITenantCreationService tenantCreationService;
 
-
     /**
      * 查询租户信息列表
      *
