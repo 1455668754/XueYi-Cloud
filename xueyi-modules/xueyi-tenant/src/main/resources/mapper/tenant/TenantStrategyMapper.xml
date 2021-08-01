@@ -29,7 +29,7 @@
         <result property="slave"                column="sub_slave"              />
         <result property="driverClassName"      column="sub_driver_class_name"  />
         <result property="url"                  column="sub_url"                />
-        <result property="userName"             column="sub_username"           />
+        <result property="username"             column="sub_username"           />
         <result property="password"             column="sub_password"           />
         <result property="type"                 column="sub_type"               />
         <result property="sort"                 column="sub_sort"               />

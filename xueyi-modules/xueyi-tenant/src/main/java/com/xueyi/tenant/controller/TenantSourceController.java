@@ -92,7 +92,7 @@ public class TenantSourceController extends BaseController {
             ds = 3;
         } else if (StringUtils.equals(TenantConstants.DISABLE, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus())) {
             ds = 2;
-        } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus()) && !(StringUtils.equals(oldSource.getDriverClassName(), tenantSource.getDriverClassName()) && StringUtils.equals(oldSource.getUrl(), tenantSource.getUrl()) && StringUtils.equals(oldSource.getUserName(), tenantSource.getUserName()) && StringUtils.equals(oldSource.getPassword(), tenantSource.getPassword()))) {
+        } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus()) && !(StringUtils.equals(oldSource.getDriverClassName(), tenantSource.getDriverClassName()) && StringUtils.equals(oldSource.getUrl(), tenantSource.getUrl()) && StringUtils.equals(oldSource.getUsername(), tenantSource.getUsername()) && StringUtils.equals(oldSource.getPassword(), tenantSource.getPassword()))) {
             ds = 1;
         } else {
             ds = 0;
@@ -101,7 +101,7 @@ public class TenantSourceController extends BaseController {
             tenantSource.setSlave(oldSource.getSlave());
             tenantSource.setDriverClassName(oldSource.getDriverClassName());
             tenantSource.setUrl(oldSource.getUrl());
-            tenantSource.setUserName(oldSource.getUserName());
+            tenantSource.setUsername(oldSource.getUsername());
             tenantSource.setPassword(oldSource.getPassword());
         }
         if (StringUtils.equals(TenantConstants.SOURCE_WRITE, tenantSource.getType()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus())) {

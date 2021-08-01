@@ -49,7 +49,7 @@ public class TenantSource extends BaseEntity
 
     /** 用户名 */
     @Excel(name = "用户名")
-    private String userName;
+    private String username;
 
     /** 密码 */
     private String password;
@@ -133,12 +133,12 @@ public class TenantSource extends BaseEntity
         this.urlAppend = urlAppend;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public void setPassword(String password) {
@@ -192,7 +192,7 @@ public class TenantSource extends BaseEntity
                 .append("url", getUrl())
                 .append("urlPrepend", getUrlPrepend())
                 .append("urlAppend", getUrlAppend())
-                .append("userName", getUserName())
+                .append("username", getUsername())
                 .append("password", getPassword())
                 .append("values", getValues())
                 .append("isMain", getIsMain())

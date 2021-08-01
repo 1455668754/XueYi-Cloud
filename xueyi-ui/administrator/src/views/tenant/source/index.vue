@@ -221,8 +221,8 @@
         <el-form-item label="连接信息" prop="url">
           <el-input v-model="form.url" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" disabled/>
         </el-form-item>
-        <el-form-item label="数据源账号" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入数据源账号"/>
+        <el-form-item label="数据源账号" prop="username">
+          <el-input v-model="form.username" placeholder="请输入数据源账号"/>
         </el-form-item>
         <el-form-item label="数据源密码" prop="password">
           <el-input v-model="form.password" :show-password="true" placeholder="请输入数据源密码"/>
@@ -318,7 +318,7 @@ export default {
         urlPrepend: [
           {required: true, message: '地址不能为空', trigger: 'blur'}
         ],
-        userName: [
+        username: [
           {required: true, message: '用户名不能为空', trigger: 'blur'}
         ],
         password: [
@@ -369,7 +369,7 @@ export default {
         url: null,
         urlPrepend: null,
         urlAppend: '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8',
-        userName: null,
+        username: null,
         password: null,
         type: '0',
         sort: 0,
