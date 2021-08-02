@@ -8,18 +8,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #foreach ($column in $columns)
 #if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
 #if($column.javaField == ${pkColumn.javaField})
-        <id     property="${pkColumn.javaField}"#set($maxStep=23 - ${pkColumn.javaField.length()})#foreach($step in[0..$maxStep]) #end column="${pkColumn.columnName}"#set($maxStep=13 - ${pkColumn.columnName.length()})#foreach($step in[0..$maxStep]) #end />
+        <id     property="${pkColumn.javaField}"#set($maxStep=23 - ${pkColumn.javaField.length()})#foreach($step in[0..$maxStep]) #end column="${pkColumn.columnName}"#set($maxStep=23 - ${pkColumn.columnName.length()})#foreach($step in[0..$maxStep]) #end />
 #elseif($column.javaField == 'createBy')
-        <result property="createBy"                 column="create_by"      />
-        <result property="createName"               column="create_name"    />
+        <result property="createBy"                 column="create_by"                />
+        <result property="createName"               column="create_name"              />
 #elseif($column.javaField == 'updateBy')
-        <result property="updateBy"                 column="update_by"      />
-        <result property="updateName"               column="update_name"    />
+        <result property="updateBy"                 column="update_by"                />
+        <result property="updateName"               column="update_name"              />
 #elseif($table.sub && $column.javaField == 'parentId')
-        <result property="parentId"                 column="parent_id"      />
-        <result property="parentName"               column="parent_name"    />
+        <result property="parentId"                 column="parent_id"                />
+        <result property="parentName"               column="parent_name"              />
 #else
-        <result property="${column.javaField}"#set($maxStep=23 - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end column="${column.columnName}"#set($maxStep=13 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
+        <result property="${column.javaField}"#set($maxStep=23 - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end column="${column.columnName}"#set($maxStep=23 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
 #end
 #end
 #end
@@ -33,13 +33,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #foreach ($column in $subTable.columns)
 #if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
 #if($column.javaField == 'createBy')
-        <result property="createBy"                 column="sub_create_by"          />
-        <result property="createName"   	        column="sub_create_name"        />
+        <result property="createBy"                 column="sub_create_by"                    />
+        <result property="createName"   	        column="sub_create_name"                  />
 #elseif($column.javaField == 'updateBy')
-        <result property="updateBy"   		        column="sub_update_by"          />
-        <result property="updateName"   	        column="sub_update_name"        />
+        <result property="updateBy"   		        column="sub_update_by"                    />
+        <result property="updateName"   	        column="sub_update_name"                  />
 #else
-        <result property="${column.javaField}"#set($maxStep=23 - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end column="sub_${column.columnName}"#set($maxStep=17 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
+        <result property="${column.javaField}"#set($maxStep=23 - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end column="sub_${column.columnName}"#set($maxStep=27 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
 #end
 #end
 #end
@@ -132,7 +132,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
-    <select id="selectChildrenBy${pkColumn.javaField}" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
+    <select id="selectChildrenBy${pkColumn.capJavaField}" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
         <include refid="selectVo"/>
         where find_in_set( #{${pkColumn.javaField}} , e.ancestors )
         <!-- 数据范围过滤 -->
@@ -142,7 +142,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 #end
 
-    <select id="select${ClassNameNoPrefix}By${pkColumn.javaField}" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
+    <select id="select${ClassNameNoPrefix}By${pkColumn.capJavaField}" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
         <include refid="selectVo"/>
         where e.${pkColumn.columnName} = #{${pkColumn.javaField}}
         <!-- 数据范围过滤 -->
@@ -236,7 +236,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 
 #end
-    <delete id="delete${ClassNameNoPrefix}By${pkColumn.javaField}" parameterType="${ClassName}">
+    <delete id="delete${ClassNameNoPrefix}By${pkColumn.capJavaField}" parameterType="${ClassName}">
         update ${tableName}
         set del_flag = 1
         where ${pkColumn.columnName} = #{${pkColumn.javaField}}
@@ -245,7 +245,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 #if(!$table.tree)
 
-    <delete id="delete${ClassNameNoPrefix}By${pkColumn.javaField}s" parameterType="${ClassName}">
+    <delete id="delete${ClassNameNoPrefix}By${pkColumn.capJavaField}s" parameterType="${ClassName}">
         update ${tableName}
         set del_flag = 1
         where ${pkColumn.columnName} in
@@ -260,7 +260,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
 
-    <delete id="deleteChildrenBy${pkColumn.javaField}" parameterType="${ClassName}">
+    <delete id="deleteChildrenBy${pkColumn.capJavaField}" parameterType="${ClassName}">
         update ${tableName}
         set del_flag = 1
         where find_in_set( #{${pkColumn.javaField}} , ancestors )

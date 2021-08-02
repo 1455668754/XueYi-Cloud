@@ -38,6 +38,9 @@
         </div>
       </el-form-item>
       <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <div style="float: right;" v-if="register">
+        <router-link class="link-type" :to="'/register'">立即注册</router-link>
+      </div>
       <el-form-item style="width:100%;">
         <el-button
           :loading="loading"
@@ -79,18 +82,21 @@ export default {
       },
       loginRules: {
         enterpriseName: [
-          {required: true, trigger: "blur", message: "企业账号不能为空"}
+          {required: true, trigger: "blur", message: "请输入您的企业账号"}
         ],
         userName: [
-          {required: true, trigger: "blur", message: "员工账号不能为空"}
+          {required: true, trigger: "blur", message: "请输入您的员工账号"}
         ],
         password: [
-          {required: true, trigger: "blur", message: "密码不能为空"}
+          {required: true, trigger: "blur", message: "请输入您的密码"}
         ],
-        code: [{required: true, trigger: "change", message: "验证码不能为空"}]
+        code: [{required: true, trigger: "change", message: "请输入验证码"}]
       },
-      captchaOnOff: true,
       loading: false,
+      // 验证码开关
+      captchaOnOff: true,
+      // 注册开关
+      register: false,
       redirect: undefined
     };
   },

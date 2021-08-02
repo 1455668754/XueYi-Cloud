@@ -367,7 +367,7 @@ export default {
         databaseType: '0',
         driverClassName: 'com.mysql.cj.jdbc.Driver',
         url: null,
-        urlPrepend: null,
+        urlPrepend: 'jdbc:mysql://localhost:3306/',
         urlAppend: '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8',
         username: null,
         password: null,
