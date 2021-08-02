@@ -175,6 +175,8 @@
       </el-table-column>
 #elseif($column.list && "" != $javaField)
       <el-table-column label="${comment}" align="center" key="${javaField}" prop="${javaField}"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') class-name="allowDrag" v-if="columns[${stepNum}].visible"#end#end#end/>
+#else
+#set($stepNum = $stepNum - 1)
 #end
 #set($stepNum = $stepNum + 1)
 #end
@@ -426,7 +428,7 @@ export default {
 #foreach ($column in $columns)
 #if($column.javaField == $pkColumn.javaField)
         {key: 0, label: `序号`, visible: true},
-#else
+#elseif(($column.javaField == 'status' && $column.dictType == 'sys_normal_disable') || $column.pk || ($column.list && $column.htmlType == "datetime") || ($column.list && "" != $column.dictType) || ($column.list && "" != $column.javaField))
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)
 #set($comment=$column.columnComment.substring(0, $parentheseIndex))
@@ -435,9 +437,12 @@ export default {
 #end
         {key: ${stepNum}, label: `${comment}`, visible: true}#if($stepNum != $columns.size() - 1),
 #end
+#else
+#set($stepNum = $stepNum - 1)
 #end
 #set($stepNum = $stepNum + 1)
 #end
+
       ],
       // 表单参数
       form: {},
@@ -670,7 +675,7 @@ export default {
     },
     /** ${subTable.functionName}删除按钮操作 */
     handleDelete${subClassNameNoPrefix}() {
-      if (this.checked${subClassNameNoPrefix}.length == 0) {
+      if (this.checked${subClassNameNoPrefix}.length === 0) {
         this.$alert("请先选择要删除的${subTable.functionName}数据", "提示", { confirmButtonText: "确定", });
       } else {
         this.subList.splice(this.checked${subClassNameNoPrefix}[0].index - 1, 1);
