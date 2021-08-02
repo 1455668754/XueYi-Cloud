@@ -7,7 +7,7 @@ import defaultSettings from '@/settings'
 
 // 添加系统参数 | 系统Id systemId
 export function addSystem(data) {
-  const { systemId } = defaultSettings
+  const {systemId} = defaultSettings
   const state = {
     systemId: systemId
   }
@@ -23,7 +23,7 @@ export function addSystem(data) {
 
 // 添加系统参数 | 站点Id siteId
 export function addSite(data) {
-  const { siteId } = defaultSettings
+  const {siteId} = defaultSettings
   const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
   const state = {
     siteId: siteSetting.siteId === undefined ? siteId : siteSetting.siteId
@@ -40,7 +40,7 @@ export function addSite(data) {
 
 // 添加系统参数 | 库Id libraryId
 export function addLibrary(data) {
-  const { libraryId } = defaultSettings
+  const {libraryId} = defaultSettings
   const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
   const state = {
     libraryId: librarySetting.libraryId === undefined ? libraryId : librarySetting.libraryId
@@ -57,7 +57,7 @@ export function addLibrary(data) {
 
 // 添加系统参数 | 系统Id systemId | 站点Id siteId
 export function addSystemAndSite(data) {
-  const { systemId, siteId } = defaultSettings
+  const {systemId, siteId} = defaultSettings
   const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
   const state = {
     siteId: siteSetting.siteId === undefined ? siteId : siteSetting.siteId,
@@ -76,7 +76,7 @@ export function addSystemAndSite(data) {
 
 // 添加系统参数 | 系统Id systemId | 库Id libraryId
 export function addSystemAndLibrary(data) {
-  const { systemId, libraryId } = defaultSettings
+  const {systemId, libraryId} = defaultSettings
   const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
   const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
   const state = {
@@ -96,7 +96,7 @@ export function addSystemAndLibrary(data) {
 
 // 添加系统参数 | 站点Id siteId | 库Id libraryId
 export function addSiteAndLibrary(data) {
-  const { siteId, libraryId } = defaultSettings
+  const {siteId, libraryId} = defaultSettings
   const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
   const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
   const state = {
@@ -116,7 +116,7 @@ export function addSiteAndLibrary(data) {
 
 // 添加系统参数 | 系统Id systemId | 站点Id siteId | 库Id libraryId
 export function addSystemAndSiteAndLibrary(data) {
-  const { systemId, siteId, libraryId } = defaultSettings
+  const {systemId, siteId, libraryId} = defaultSettings
   const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
   const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
   const state = {
@@ -160,29 +160,146 @@ export function updateParamIds(Ids, params, propName) {
   return search
 }
 
-// 数组对象排序 | 需有sort参数 | 返回新排序数组 | 仅排序变化数据
-export function sortOrderListOnlyDynamic(newList, oldList, idName) {
+// 数组对象排序 | params(需排序数组, 原始数组, 唯一参数别名（default 'id'）, 排序参数别名（default 'sort'）, 起始值（default 0）, 排序方法（asc递增 || desc递减）) | return 仅排序变化数据数组
+export function sortOrderListOnlyDynamic(newList, oldList, idName, sortName, startNumber, sortOrder) {
   let returnList = []
-  let id = idName != null ? idName : 'id'
   let listNew = JSON.parse(JSON.stringify(newList))
-  for (let i = 0; i < listNew.length; i++) {
-    listNew[i].sort = i
-    for (let j = 0; j < newList.length; j++) {
-      if (listNew[i][id] === newList[j][id] && listNew[i].sort !== newList[j].sort) {
-        returnList.push(listNew[i])
+  let id = idName != null ? idName : 'id'
+  let sort = sortName != null ? sortName : 'sort'
+  let num = startNumber != null ? startNumber : 0
+  let order = sortOrder != null && sortOrder === 'desc' || sortOrder === 'DESC' ? 'desc' : 'asc'
+  if (order === 'desc') {
+    for (let i = 0; i < listNew.length; i++) {
+      listNew[i][sort] = num - i
+      for (let j = 0; j < newList.length; j++) {
+        if (listNew[i][id] === newList[j][id] && listNew[i][sort] !== newList[j][sort]) {
+          returnList.push(listNew[i])
+        }
+      }
+    }
+  } else {
+    for (let i = 0; i < listNew.length; i++) {
+      listNew[i][sort] = num + i
+      for (let j = 0; j < newList.length; j++) {
+        if (listNew[i][id] === newList[j][id] && listNew[i][sort] !== newList[j][sort]) {
+          returnList.push(listNew[i])
+        }
       }
     }
   }
   return returnList
 }
 
-// 数组对象排序 | 需有sort参数 | 返回新排序数组 全部数据
-export function sortOrderList(newList) {
-  let listNew = JSON.parse(JSON.stringify(newList))
-  for (let i = 0; i < listNew.length; i++) {
-    listNew[i].sort = i
+// 数组对象排序 | params(需排序数组, 排序参数别名（default 'sort'）, 起始值（default 0）, 排序方法（asc递增 || desc递减）) | return 新排序数组 全部数据
+export function sortOrderList(newList, sortName, startNumber, sortOrder) {
+  let listNew = newList
+  let sort = sortName != null ? sortName : 'sort'
+  let num = startNumber != null ? startNumber : 0
+  let order = sortOrder != null && sortOrder === 'desc' || sortOrder === 'DESC' ? 'desc' : 'asc'
+  if (order === 'desc') {
+    for (let i = 0; i < listNew.length; i++) {
+      listNew[i][sort] = num - i
+    }
+  } else {
+    for (let i = 0; i < listNew.length; i++) {
+      listNew[i][sort] = num + i
+    }
   }
-  return listNew
+}
+
+// 数组对象去空 | params(需去空数组, 操作类型（0删除 || 1改变对象操作变量（非空=false,空=true） | default 0） 操作变量（default 'params.visible' 仅操作类型为1时生效）, 检验去空值) | return 去空数组 全部数据
+export function excludeEmptyList(newList, actionType, actionValue, ...excludeNames) {
+  let change = false
+  let listNew = newList
+  let value = actionValue != null ? actionValue : 'visible'
+  if (actionType === 1) {
+    for (const excludeName of excludeNames) {
+      let i = listNew.length
+      while (i--) {
+        if (value === 'visible') {
+          if (!listNew[i].hasOwnProperty('params')) {
+            listNew[i]["params"] = {}
+          }
+          if (change === true) {
+            listNew[i]['params']['visible'] = listNew[i][excludeName] == null || listNew[i][excludeName].replace(/[ ]/g, "").length === 0
+          } else {
+            change = listNew[i]['params']['visible'] = listNew[i][excludeName] == null || listNew[i][excludeName].replace(/[ ]/g, "").length === 0
+          }
+        } else {
+          if (change === true) {
+            listNew[i][value] = listNew[i][excludeName] == null || listNew[i][excludeName].replace(/[ ]/g, "").length === 0
+          } else {
+            change = listNew[i][value] = listNew[i][excludeName] == null || listNew[i][excludeName].replace(/[ ]/g, "").length === 0
+          }
+        }
+      }
+    }
+  } else {
+    for (const excludeName of excludeNames) {
+      let i = listNew.length
+      while (i--) {
+        if (listNew[i][excludeName] == null || listNew[i][excludeName].replace(/[ ]/g, "").length === 0) {
+          listNew.splice(i, 1)
+          change = true
+        }
+      }
+    }
+  }
+  return change
+}
+
+// 数组对象去重 | params(需去重数组, 操作类型（0删除 || 1改变对象操作变量（非重=false,重=true） | default 0） 操作变量（default 'params.visible' 仅操作类型为1时生效）, 检验去重值) | return 去重数组 全部数据
+export function excludeRepeatList(newList, actionType, actionValue, ...excludeNames) {
+  let change = false
+  let listNew = newList
+  let value = actionValue != null ? actionValue : 'visible'
+  if (actionType === 1) {
+    for (let k = 0; k < listNew.length; k++) {
+      if (value === 'visible') {
+        if (!listNew[k].hasOwnProperty('params')) {
+          listNew[k]["params"] = {}
+        }
+        listNew[k]['params']['visible'] = false
+      } else {
+        listNew[k][value] = false
+      }
+    }
+    for (const excludeName of excludeNames) {
+      let i = listNew.length
+      while (i--) {
+        let j = listNew.length
+        while (j--) {
+          if (value === 'visible') {
+            if (change === true) {
+              listNew[i]['params']['visible'] = listNew[i][excludeName] === listNew[j][excludeName] && i !== j
+            } else {
+              change = listNew[i]['params']['visible'] = listNew[i][excludeName] === listNew[j][excludeName] && i !== j
+            }
+          } else {
+            if (change === true) {
+              listNew[i][value] = listNew[i][excludeName] === listNew[j][excludeName] && i !== j
+            } else {
+              change = listNew[i][value] = listNew[i][excludeName] === listNew[j][excludeName] && i !== j
+            }
+          }
+        }
+      }
+    }
+  } else {
+    for (const excludeName of excludeNames) {
+      let i = listNew.length
+      while (i--) {
+        let j = listNew.length
+        while (j--) {
+          if (listNew[i][excludeName] === listNew[j][excludeName] && i !== j) {
+            listNew.splice(j, 1)
+            change = true
+          }
+        }
+      }
+    }
+  }
+  return change
 }
 
 // Table合并行通用（不相邻的数据相互不受影响且行不交叉合并）
@@ -234,5 +351,5 @@ export function mergeTableRow(config) {
 
 // 检验是否为移动端设备
 export function isMobile() {
-  return navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
+  return navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)
 }
