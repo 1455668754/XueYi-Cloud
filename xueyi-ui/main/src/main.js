@@ -108,16 +108,3 @@ new Vue({
   store,
   render: h => h(App)
 })
-
-// 注册微应用
-registerMicroApps([
-  {
-    name: 'administrator',
-    entry: '//localhost:81',
-    container: '#container',
-    activeRule: '/administrator',
-  }
-]);
-
-// 启动 乾坤
-start();

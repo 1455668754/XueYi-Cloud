@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import defaultSettings from '@/settings'
-import '../public-path';//微应用js
 
 //系统编号
 const { homePageName, homePageIcon } = defaultSettings
@@ -111,7 +110,7 @@ export const constantRoutes = [
 ]
 
 export default new Router({
-  base: window.__POWERED_BY_QIANKUN__ ? '/administrator/' : '/',
+  // base: "/administrator",
   mode: 'history', // 去掉url中的#
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes

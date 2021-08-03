@@ -92,6 +92,7 @@ export default {
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
           location.href = '/index';
+          // location.href = this.$router.options.base + '/index';
         })
       }).catch(() => {});
     },
