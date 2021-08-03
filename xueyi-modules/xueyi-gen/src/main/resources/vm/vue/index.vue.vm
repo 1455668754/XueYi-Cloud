@@ -99,6 +99,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
+          :loading="submitLoading"
           v-hasPermi="['${moduleName}:${businessName}:remove']"
         >删除</el-button>
       </el-col>
@@ -121,13 +122,14 @@
           size="mini"
           @click="handleSort"
           v-show="sortVisible"
+          :loading="submitLoading"
           v-hasPermi="['${moduleName}:${businessName}:edit']"
         >保存排序</el-button>
       </el-col>
 #end
 #end
 #end
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') @controlSortable="handleSortable"#end#end#end @queryTable="getList" :columns="columns"/>
     </el-row>
 
     <el-table v-loading="loading" :data="${businessName}List" @selection-change="handleSelectionChange"#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort') ref="dataTable" row-key="${pkColumn.javaField}"#end#end#end>
@@ -341,7 +343,7 @@
 #end
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -358,6 +360,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 选中数组
       ids: [],
 #foreach ($column in $columns)
@@ -384,6 +388,8 @@ export default {
       old${BusinessName}List: [],
       // 排序保存按钮显示
       sortVisible: false,
+      // 排序参数
+      sortable:null,
 #end
 #end
 #end
@@ -605,6 +611,7 @@ export default {
 #end
     /** 提交按钮 */
     submitForm() {
+      this.submitLoading = true;
       this.#[[$]]#refs["form"].validate(valid => {
         if (valid) {
 #foreach ($column in $columns)
@@ -630,9 +637,11 @@ export default {
           }
         }
       });
+      this.submitLoading = false;
     },
     /** 删除按钮操作 */
     handleDelete(row) {
+      this.submitLoading = true;
       const ${pkColumn.javaField}s = row.${pkColumn.javaField} || this.ids;
 #set($nameVo=0)
 #foreach ($column in $columns)
@@ -656,6 +665,7 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         }).catch(() => {});
+      this.submitLoading = false;
     },
 #if($table.sub)
 	/** ${subTable.functionName}序号 */
@@ -699,6 +709,7 @@ export default {
     }#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort'),
     /** 保存排序按钮操作 */
     handleSort(){
+      this.submitLoading = true;
       this.$confirm('是否确认保存新排序?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -713,23 +724,30 @@ export default {
         this.sortVisible = false;
         this.msgSuccess("保存成功");
       }).catch(() => {});
+      this.submitLoading = false;
+    },
+    /** 排序开关 */
+    handleSortable(sortable) {
+      if (!this.isMobile()) {
+        this.sortable != null && this.sortable.destroy()
+        const el = this.$refs.dataTable.$el.querySelectorAll(".el-table__body-wrapper > table > tbody")[0]
+        this.sortable = Sortable.create(el, {
+          disabled: sortable,
+          handle: ".allowDrag",
+          onEnd: evt => {
+            const targetRow = this.${businessName}List.splice(evt.oldIndex, 1)[0];
+            this.${businessName}List.splice(evt.newIndex, 0, targetRow);
+            this.sortVisible = true
+          }
+        })
+      }
     }
 #end
 #end
 #end
   }#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort'),
   mounted() {
-    if (!this.isMobile()) {
-      const el = this.$refs.dataTable.$el.querySelectorAll(".el-table__body-wrapper > table > tbody")[0];
-      Sortable.create(el, {
-        handle: ".allowDrag",
-        onEnd: evt => {
-          const targetRow = this.${businessName}List.splice(evt.oldIndex, 1)[0];
-          this.${businessName}List.splice(evt.newIndex, 0, targetRow);
-          this.sortVisible = true;
-        }
-      });
-    }
+    this.handleSortable(false);
   }
 #end
 #end

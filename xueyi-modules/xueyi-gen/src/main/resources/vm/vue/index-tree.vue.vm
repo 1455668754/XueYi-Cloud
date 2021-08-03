@@ -253,7 +253,7 @@
 #end
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -274,6 +274,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 显示搜索条件
       showSearch: true,
       // ${functionName}表格数据
@@ -471,6 +473,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      this.submitLoading = true;
       this.#[[$]]#refs["form"].validate(valid => {
         if (valid) {
 #foreach ($column in $columns)
@@ -493,6 +496,7 @@ export default {
           }
         }
       });
+      this.submitLoading = false;
     },
     /** 删除按钮操作 */
     handleDelete(row) {
