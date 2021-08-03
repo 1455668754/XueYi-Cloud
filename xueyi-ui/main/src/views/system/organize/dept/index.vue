@@ -176,7 +176,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -217,7 +217,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitRoleForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitRoleForm">确 定</el-button>
         <el-button @click="roleCancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -246,6 +246,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 显示搜索条件
       showSearch: true,
       // 表格树数据
@@ -424,6 +426,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+      this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.deptId !== undefined) {
@@ -441,9 +444,11 @@ export default {
           }
         }
       })
+      this.submitLoading = false
     },
     /** 部门权限提交按钮 */
     submitRoleForm: function () {
+      this.submitLoading = true
       if (this.form.deptId !== undefined) {
         changeDeptRole(this.form).then(response => {
           this.msgSuccess("部门权限修改成功")
@@ -451,6 +456,7 @@ export default {
           this.getList()
         })
       }
+      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {

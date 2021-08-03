@@ -84,6 +84,7 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
+            :loading="submitLoading"
             v-hasPermi="['system:config:remove']"
           >删除
           </el-button>
@@ -187,7 +188,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -203,6 +204,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -320,6 +323,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+      this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.configId != undefined) {
@@ -337,9 +341,11 @@ export default {
           }
         }
       })
+      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {
+      this.submitLoading = true
       const configIds = row.configId || this.ids
       this.$confirm('是否确认删除参数编号为"' + configIds + '"的数据项?', "警告", {
         confirmButtonText: "确定",
@@ -352,6 +358,7 @@ export default {
         this.msgSuccess("删除成功")
       }).catch(() => {
       })
+      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {

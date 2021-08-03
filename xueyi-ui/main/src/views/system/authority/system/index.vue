@@ -80,6 +80,7 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
+            :loading="submitLoading"
             v-hasPermi="['system:system:remove']"
           >删除
           </el-button>
@@ -223,7 +224,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -245,6 +246,8 @@ export default {
       dialogVisible: false,
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 选中数组
       ids: [],
       idNames: [],
@@ -390,6 +393,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.systemId != null) {
@@ -407,6 +411,7 @@ export default {
           }
         }
       })
+      this.submitLoading = false
     },
     // 模块状态修改
     handleStatusChange(row) {
@@ -426,6 +431,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
+      this.submitLoading = true
       const systemIds = row.systemId || this.ids
       const name = row.name || this.idNames
       let $this = this
@@ -440,6 +446,7 @@ export default {
         this.msgSuccess("删除成功")
       }).catch((err) => {
       })
+      this.submitLoading = false
     }
   }
 }

@@ -73,6 +73,7 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
+            :loading="submitLoading"
             v-hasPermi="['monitor:job:remove']"
           >删除
           </el-button>
@@ -84,6 +85,7 @@
             icon="el-icon-delete"
             size="mini"
             @click="handleClean"
+            :loading="submitLoading"
             v-hasPermi="['monitor:job:remove']"
           >清空
           </el-button>
@@ -194,6 +196,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 选中数组
       ids: [],
       // 非多个禁用
@@ -289,6 +293,7 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
+      this.submitLoading = true
       const jobLogIds = this.ids
       this.$confirm('是否确认删除调度日志编号为"' + jobLogIds + '"的数据项?', "警告", {
         confirmButtonText: "确定",
@@ -301,9 +306,11 @@ export default {
         this.msgSuccess("删除成功")
       }).catch(() => {
       })
+      this.submitLoading = false
     },
     /** 清空按钮操作 */
     handleClean() {
+      this.submitLoading = true
       this.$confirm("是否确认清空所有调度日志数据项?", "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -315,6 +322,7 @@ export default {
         this.msgSuccess("清空成功")
       }).catch(() => {
       })
+      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {

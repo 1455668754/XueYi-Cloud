@@ -132,7 +132,7 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -149,6 +149,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -238,6 +240,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      this.submitLoading = true
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.sourceId != null) {
@@ -251,6 +254,7 @@ export default {
           }
         }
       })
+      this.submitLoading = false
     },
     valueAdd() {
       const newData = {

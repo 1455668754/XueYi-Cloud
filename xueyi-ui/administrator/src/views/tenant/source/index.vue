@@ -89,6 +89,7 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
+            :loading="submitLoading"
             v-hasPermi="['tenant:source:remove']"
           >删除
           </el-button>
@@ -112,6 +113,7 @@
             size="mini"
             @click="handleSort"
             v-show="sortVisible"
+            :loading="submitLoading"
             v-hasPermi="['tenant:source:edit']"
           >保存排序
           </el-button>
@@ -250,7 +252,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm" v-if="form.databaseType !== '1'">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm" v-if="form.databaseType !== '1'">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -268,6 +270,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 选中数组
       ids: [],
       idNames: [],
@@ -429,6 +433,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      this.submitLoading = true
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.sourceId != null) {
@@ -446,9 +451,11 @@ export default {
           }
         }
       })
+      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {
+      this.submitLoading = true
       const sourceIds = row.sourceId || this.ids
       const names = row.name || this.idNames
       let that = this
@@ -463,6 +470,7 @@ export default {
         this.msgSuccess('删除成功')
       }).catch(() => {
       })
+      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -472,6 +480,7 @@ export default {
     },
     /** 保存排序按钮操作 */
     handleSort() {
+      this.submitLoading = true
       this.$confirm('是否确认保存新排序?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -485,8 +494,8 @@ export default {
         this.getList()
         this.sortVisible = false
         this.msgSuccess('保存成功')
-      }).catch(() => {
-      })
+      }).catch(() => {})
+      this.submitLoading = false
     }
   },
   mounted() {

@@ -246,7 +246,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -269,6 +269,8 @@ export default {
       enterpriseName: store.getters.enterpriseName,
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 显示搜索条件
       showSearch: true,
       // 菜单表格树数据
@@ -408,6 +410,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+      this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.checkSystem) {
@@ -429,6 +432,7 @@ export default {
           }
         }
       })
+      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {

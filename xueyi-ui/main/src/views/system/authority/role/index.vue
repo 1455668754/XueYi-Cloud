@@ -100,6 +100,7 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
+            :loading="submitLoading"
             v-hasPermi="['system:role:remove']"
           >删除
           </el-button>
@@ -234,7 +235,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -274,7 +275,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitMenuScope">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitMenuScope">确 定</el-button>
         <el-button @click="cancelMenuScope">取 消</el-button>
       </div>
     </el-dialog>
@@ -315,7 +316,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitDataScope">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitDataScope">确 定</el-button>
         <el-button @click="cancelDataScope">取 消</el-button>
       </div>
     </el-dialog>
@@ -344,6 +345,8 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 选中数组
       ids: [],
       idNames: [],
@@ -638,6 +641,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm: function () {
+      this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.roleId !== undefined) {
@@ -655,9 +659,11 @@ export default {
           }
         }
       })
+      this.submitLoading = false
     },
     /** 提交按钮（菜单权限） */
     submitMenuScope: function () {
+      this.submitLoading = true
       if (this.form.roleId !== undefined) {
         this.form.systemMenuIds = this.getSystemMenuAllCheckedKeys()
         menuScope(this.form).then(response => {
@@ -666,9 +672,11 @@ export default {
           this.getList()
         })
       }
+      this.submitLoading = false
     },
     /** 提交按钮（数据权限） */
     submitDataScope: function () {
+      this.submitLoading = true
       if (this.form.roleId !== undefined) {
         this.form.deptPostIds = this.getDeptPostAllCheckedKeys()
         dataScope(this.form).then(response => {
@@ -677,9 +685,11 @@ export default {
           this.getList()
         })
       }
+      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {
+      this.submitLoading = true
       const roleIds = row.roleId || this.ids
       const name = row.name || this.idNames
       let $this = this
@@ -694,6 +704,7 @@ export default {
         this.msgSuccess("删除成功")
       }).catch((err) => {
       })
+      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {
