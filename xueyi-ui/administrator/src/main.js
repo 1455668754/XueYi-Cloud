@@ -20,12 +20,14 @@ import { download } from './utils/request'
 
 import './assets/icons' // icon
 import './permission' // permission control
-import { getDicts } from "./api/common/common";
-import { getConfigKey } from "./api/common/common";
-import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "./utils/ruoyi";
-import { addSystem, updateParamIds } from "./utils/xueyi";  // 控制方法(必须)
-import { sortOrderListOnlyDynamic, sortOrderList, excludeEmptyList, excludeRepeatList, mergeTableRow, isMobile } from "./utils/xueyi";  // 普通方法
-import Pagination from "./components/Pagination";
+import { getDicts } from "./api/common/common"
+import { getConfigKey } from "./api/common/common"
+import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "./utils/ruoyi"
+import { addSystem, updateParamIds } from "./utils/xueyi"  // 控制方法(必须)
+import { sortOrderListOnlyDynamic, sortOrderList, excludeEmptyList, excludeRepeatList, mergeTableRow, isMobile } from "./utils/xueyi"  // 普通方法
+import Pagination from "./components/Pagination"
+// 图片管理组件
+import ImageBox from "./components/XyComponents/ImageBox"
 // 自定义表格工具组件
 import RightToolbar from "./components/RightToolbar"
 // 富文本组件
@@ -61,22 +63,23 @@ Vue.prototype.mergeTableRow = mergeTableRow
 Vue.prototype.isMobile = isMobile
 
 Vue.prototype.msgSuccess = function (msg) {
-  this.$message({ showClose: true, message: msg, type: "success" });
+  this.$message({showClose: true, message: msg, type: "success"})
 }
 
 Vue.prototype.msgError = function (msg) {
-  this.$message({ showClose: true, message: msg, type: "error" });
+  this.$message({showClose: true, message: msg, type: "error"})
 }
 
 Vue.prototype.msgWarning = function (msg) {
-  this.$message({ showClose: true, message: msg, type: "warning" });
+  this.$message({showClose: true, message: msg, type: "warning"})
 }
 
 Vue.prototype.msgInfo = function (msg) {
-  this.$message.info(msg);
+  this.$message.info(msg)
 }
 
 // 全局组件挂载
+Vue.component('ImageBox', ImageBox)
 Vue.component('DictTag', DictTag)
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
