@@ -9,7 +9,7 @@
         <el-button size="mini" circle icon="el-icon-refresh" @click="refresh()"/>
       </el-tooltip>
       <el-tooltip class="item" effect="dark" :content="sortable ? '禁用排序' : '启用排序'" placement="top" v-if="sortVisible">
-        <el-button size="mini" circle icon="el-icon-refresh" @click="toggleSortable()"/>
+        <el-button size="mini" circle icon="el-icon-sort" @click="toggleSortable()"/>
       </el-tooltip>
       <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="columns">
         <el-button size="mini" circle icon="el-icon-menu" @click="showColumn()"/>
