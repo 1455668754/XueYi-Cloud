@@ -90,7 +90,7 @@
           >保存排序
           </el-button>
         </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        <right-toolbar :showSearch.sync="showSearch" @controlSortable="handleSortable" @queryTable="getList"/>
       </el-row>
 
       <el-table v-loading="loading" :data="strategyList" @selection-change="handleSelectionChange" ref="dataTable"
@@ -264,6 +264,8 @@ export default {
       oldStrategyList: [],
       // 排序保存按钮显示
       sortVisible: false,
+      // 排序参数
+      sortable:null,
       // 具备写 数据源集合
       containWriteList: [],
       // 弹出层标题
@@ -527,20 +529,26 @@ export default {
       }
       this.form.amount = this.form.values.length
       return true
+    },
+    /** 排序开关 */
+    handleSortable(sortable) {
+      if (!this.isMobile()) {
+        this.sortable != null && this.sortable.destroy()
+        const el = this.$refs.dataTable.$el.querySelectorAll(".el-table__body-wrapper > table > tbody")[0]
+        this.sortable = Sortable.create(el, {
+          disabled: sortable,
+          handle: ".allowDrag",
+          onEnd: evt => {
+            const targetRow = this.strategyList.splice(evt.oldIndex, 1)[0]
+            this.strategyList.splice(evt.newIndex, 0, targetRow)
+            this.sortVisible = true
+          }
+        })
+      }
     }
   },
   mounted() {
-    if (!this.isMobile()) {
-      const el = this.$refs.dataTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
-      Sortable.create(el, {
-        handle: '.allowDrag',
-        onEnd: evt => {
-          const targetRow = this.strategyList.splice(evt.oldIndex, 1)[0]
-          this.strategyList.splice(evt.newIndex, 0, targetRow)
-          this.sortVisible = true
-        }
-      })
-    }
+    this.handleSortable(false)
   }
 }
 </script>

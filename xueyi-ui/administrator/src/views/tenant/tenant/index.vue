@@ -118,7 +118,7 @@
           >保存排序
           </el-button>
         </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        <right-toolbar :showSearch.sync="showSearch" @controlSortable="handleSortable" @queryTable="getList"></right-toolbar>
       </el-row>
 
       <el-table v-loading="loading" :data="tenantList" @selection-change="handleSelectionChange" ref="dataTable"
@@ -292,6 +292,8 @@ export default {
       statusOptions: [],
       // 排序保存按钮显示
       sortVisible: false,
+      // 排序参数
+      sortable:null,
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -486,20 +488,26 @@ export default {
         this.msgSuccess('保存成功')
       }).catch(() => {})
       this.submitLoading = false
+    },
+    /** 排序开关 */
+    handleSortable(sortable) {
+      if (!this.isMobile()) {
+        this.sortable != null && this.sortable.destroy()
+        const el = this.$refs.dataTable.$el.querySelectorAll(".el-table__body-wrapper > table > tbody")[0]
+        this.sortable = Sortable.create(el, {
+          disabled: sortable,
+          handle: ".allowDrag",
+          onEnd: evt => {
+            const targetRow = this.tenantList.splice(evt.oldIndex, 1)[0]
+            this.tenantList.splice(evt.newIndex, 0, targetRow)
+            this.sortVisible = true
+          }
+        })
+      }
     }
   },
   mounted() {
-    if (!this.isMobile()) {
-      const el = this.$refs.dataTable.$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
-      Sortable.create(el, {
-        handle: '.allowDrag',
-        onEnd: evt => {
-          const targetRow = this.tenantList.splice(evt.oldIndex, 1)[0]
-          this.tenantList.splice(evt.newIndex, 0, targetRow)
-          this.sortVisible = true
-        }
-      })
-    }
+    this.handleSortable(false)
   }
 }
 </script>
