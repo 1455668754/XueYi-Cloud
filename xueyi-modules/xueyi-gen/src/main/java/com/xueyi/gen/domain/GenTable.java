@@ -396,16 +396,16 @@ public class GenTable extends BaseEntity
         return StringUtils.equalsAnyIgnoreCase(javaField, GenConstants.BASE_ENTITY);
     }
 
+    // isExcisionAOP()中的名单用于生成租户等各层级控制注解
     public Map<String, String> getExcisionAOP() {
-        return isExcisionAOP();
-    }
-
-    // isExcisionAOP()中的名单用于生成租户级控制注解
-    public Map<String, String> isExcisionAOP() {
         return new HashMap<String, String>(){{
             put("systemId","SY");
             put("siteId","SI");
             put("libraryId","LI");
         }};
+    }
+
+    public void setExcisionAOP(Map<String, String> excisionAOP) {
+        this.excisionAOP = excisionAOP;
     }
 }

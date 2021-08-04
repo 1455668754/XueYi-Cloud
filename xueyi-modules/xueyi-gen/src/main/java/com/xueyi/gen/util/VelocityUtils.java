@@ -61,6 +61,7 @@ public class VelocityUtils {
         velocityContext.put("importList", getImportList(genTable));
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
         velocityContext.put("columns", genTable.getColumns());
+        velocityContext.put("excisionAOP", genTable.getExcisionAOP());
         velocityContext.put("table", genTable);
         setMenuVelocityContext(velocityContext, genTable);
         if (GenConstants.TPL_TREE.equals(tplCategory)) {
