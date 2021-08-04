@@ -1,6 +1,6 @@
 package com.xueyi.gen.domain;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,9 +103,6 @@ public class GenTable extends BaseEntity
 
     /** 归属模块ID字段 */
     private String parentSystemId;
-
-    /** 表列信息 */
-    private Map<String,String> excisionAOP;
 
     public Long getTableId()
     {
@@ -397,7 +394,7 @@ public class GenTable extends BaseEntity
     }
 
     // isExcisionAOP()中的名单用于生成租户等各层级控制注解
-    public Map<String, String> getExcisionAOP() {
+    public static Map<String, String> getExcisionAOP() {
         return new HashMap<String, String>(){{
             put("systemId","SY");
             put("siteId","SI");
@@ -405,7 +402,18 @@ public class GenTable extends BaseEntity
         }};
     }
 
-    public void setExcisionAOP(Map<String, String> excisionAOP) {
-        this.excisionAOP = excisionAOP;
+    // getExcisionEntity()中的名单不会在domain中声明基类有的方法
+    public static List<String> getExcisionEntity() {
+        return Arrays.asList("tenantId", "systemId", "siteId", "libraryId", "sort", "createBy", "createName", "createTime", "updateBy", "updateName", "updateTime", "remark", "delFlag");
+    }
+
+    // getExcisionTreeEntity()中的名单在树表结构中额外需要排除的参数
+    public static List<String> getExcisionTreeEntity() {
+        return Arrays.asList("parentId", "parentName", "ancestors");
+    }
+
+    // getConcealExcisionEntity()中的名单不会声明但依旧会应用至toString
+    public static List<String> getConcealExcisionEntity() {
+        return Arrays.asList("sort", "createBy", "createName", "createTime", "updateBy", "updateName", "updateTime", "remark");
     }
 }
