@@ -1,138 +1,28 @@
-import defaultSettings from '@/settings'
+import defaultSettings from "@/settings"
 
 /**
  * 通用js方法封装处理
  * Copyright (c) 2021 xueyi
  */
-
-// 添加系统参数 | 系统Id systemId
-export function addSystem(data) {
-  const {systemId} = defaultSettings
-  const state = {
-    systemId: systemId
+// 添加参数 data 原始数据 | params 要获取的参数名
+export function acquisition(data, ...params){
+  let search = data != null ? data : {}
+  for (const paramsName of params) {
+    if(paramsName === 'systemId'){
+      const { systemId } = defaultSettings
+      search['systemId'] = systemId
+    }
+    if(paramsName === 'siteId'){
+      const { siteId } = defaultSettings
+      const siteSetting = sessionStorage.getItem('site-setting') !== null ? JSON.parse(sessionStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
+      search['siteId'] = siteSetting.siteId === undefined ? siteId : siteSetting.siteId
+    }
+    if(paramsName === 'libraryId'){
+      const { libraryId } = defaultSettings
+      const librarySetting = sessionStorage.getItem('library-setting') !== null ? JSON.parse(sessionStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
+      search['libraryId'] = librarySetting.libraryId === undefined ? libraryId : librarySetting.libraryId
+    }
   }
-  let search
-  if (data != null) {
-    search = data
-  } else {
-    search = {}
-  }
-  search["systemId"] = state.systemId
-  return search
-}
-
-// 添加系统参数 | 站点Id siteId
-export function addSite(data) {
-  const {siteId} = defaultSettings
-  const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
-  const state = {
-    siteId: siteSetting.siteId === undefined ? siteId : siteSetting.siteId
-  }
-  let search
-  if (data != null) {
-    search = data
-  } else {
-    search = {}
-  }
-  search["siteId"] = state.siteId
-  return search
-}
-
-// 添加系统参数 | 库Id libraryId
-export function addLibrary(data) {
-  const {libraryId} = defaultSettings
-  const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
-  const state = {
-    libraryId: librarySetting.libraryId === undefined ? libraryId : librarySetting.libraryId
-  }
-  let search
-  if (data != null) {
-    search = data
-  } else {
-    search = {}
-  }
-  search["libraryId"] = state.libraryId
-  return search
-}
-
-// 添加系统参数 | 系统Id systemId | 站点Id siteId
-export function addSystemAndSite(data) {
-  const {systemId, siteId} = defaultSettings
-  const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
-  const state = {
-    siteId: siteSetting.siteId === undefined ? siteId : siteSetting.siteId,
-    systemId: systemId
-  }
-  let search
-  if (data != null) {
-    search = data
-  } else {
-    search = {}
-  }
-  search["siteId"] = state.siteId
-  search["systemId"] = state.systemId
-  return search
-}
-
-// 添加系统参数 | 系统Id systemId | 库Id libraryId
-export function addSystemAndLibrary(data) {
-  const {systemId, libraryId} = defaultSettings
-  const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
-  const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
-  const state = {
-    systemId: systemId,
-    libraryId: librarySetting.libraryId === undefined ? libraryId : librarySetting.libraryId
-  }
-  let search
-  if (data != null) {
-    search = data
-  } else {
-    search = {}
-  }
-  search["systemId"] = state.systemId
-  search["libraryId"] = state.libraryId
-  return search
-}
-
-// 添加系统参数 | 站点Id siteId | 库Id libraryId
-export function addSiteAndLibrary(data) {
-  const {siteId, libraryId} = defaultSettings
-  const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
-  const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
-  const state = {
-    siteId: siteSetting.siteId === undefined ? siteId : siteSetting.siteId,
-    libraryId: librarySetting.libraryId === undefined ? libraryId : librarySetting.libraryId
-  }
-  let search
-  if (data != null) {
-    search = data
-  } else {
-    search = {}
-  }
-  search["siteId"] = state.siteId
-  search["libraryId"] = state.libraryId
-  return search
-}
-
-// 添加系统参数 | 系统Id systemId | 站点Id siteId | 库Id libraryId
-export function addSystemAndSiteAndLibrary(data) {
-  const {systemId, siteId, libraryId} = defaultSettings
-  const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
-  const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
-  const state = {
-    siteId: siteSetting.siteId === undefined ? siteId : siteSetting.siteId,
-    libraryId: librarySetting.libraryId === undefined ? libraryId : librarySetting.libraryId,
-    systemId: systemId
-  }
-  let search
-  if (data != null) {
-    search = data
-  } else {
-    search = {}
-  }
-  search["systemId"] = state.systemId
-  search["siteId"] = state.siteId
-  search["libraryId"] = state.libraryId
   return search
 }
 

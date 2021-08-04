@@ -3,9 +3,7 @@ package com.xueyi.system.authority.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.domain.SysMenu;
-import com.xueyi.system.role.domain.SysRoleSystemMenu;
 
 /**
  * 菜单表 数据层
@@ -13,6 +11,7 @@ import com.xueyi.system.role.domain.SysRoleSystemMenu;
  * @author xueyi
  */
 public interface SysMenuMapper {
+
     /**
      * 根据用户Id查询权限（登录校验）
      * 登陆前验证，无需切片控制(service/impl层在com.xueyi.authority.service)
@@ -48,7 +47,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息 | systemId 系统Id
      * @return 菜单列表
      */
-    @DataScope(SedAlias = "m")
+    @DataScope(edAlias = "m", SYAlias = "m")
     public List<SysMenu> selectMenuTreeAll(SysMenu menu);
 
     /**
@@ -58,7 +57,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息 | params.roleSystemPerms 菜单Id组（List<SysRoleSystemMenu>） | systemId 系统Id
      * @return 菜单列表
      */
-    @DataScope(SedAlias = "m")
+    @DataScope(edAlias = "m", SYAlias = "m")
     public List<SysMenu> selectMenuTreeByUserId(SysMenu menu);
 
     /**

@@ -21,7 +21,7 @@ import './permission' // permission control
 import { getDicts } from "./api/common/common"
 import { getConfigKey } from "./api/common/common"
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "./utils/ruoyi"
-import { addSystem, updateParamIds } from "./utils/xueyi"  // 控制方法(必须)
+import { acquisition, updateParamIds } from "./utils/xueyi"  // 控制方法(必须)
 import { sortOrderListOnlyDynamic, sortOrderList, excludeEmptyList, excludeRepeatList, mergeTableRow, isMobile } from "./utils/xueyi"  // 普通方法
 import Pagination from "./components/Pagination"
 // 图片管理组件
@@ -50,7 +50,7 @@ Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 
-Vue.prototype.addSystem = addSystem
+Vue.prototype.acquisition = acquisition
 Vue.prototype.updateParamIds = updateParamIds
 
 Vue.prototype.sortOrderList = sortOrderList
