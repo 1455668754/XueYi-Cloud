@@ -410,7 +410,7 @@ public class GenTable extends BaseEntity {
 
     // domain生成排除baseEntity中已有属性
     public static List<String> getExcisionEntity() {
-        return Arrays.asList("tenantId", "systemId", "siteId", "libraryId", "sort", "createBy", "createName", "createTime", "updateBy", "updateName", "updateTime", "remark", "delFlag");
+        return Arrays.asList("sort", "createBy", "createName", "createTime", "updateBy", "updateName", "updateTime", "remark", "tenantId", "systemId", "siteId", "libraryId", "delFlag");
     }
 
     // domain生成排除treeEntity中已有属性
@@ -430,17 +430,17 @@ public class GenTable extends BaseEntity {
 
     // 前端&&XML生成时子表屏蔽字段
     public static List<String> getXMLExcisionSubEntity() {
-        return Arrays.asList("tenantId", "systemId", "siteId", "libraryId", "createBy", "createTime", "updateBy", "updateTime", "delFlag");
+        return Arrays.asList("createBy", "createTime", "updateBy", "updateTime", "tenantId", "systemId", "siteId", "libraryId", "delFlag");
     }
 
     // 前端&&XML生成时 insert batch 屏蔽字段 | batch 主子表中子表新增
     public static List<String> getXMLConcealInsertEntity() {
-        return Arrays.asList("createTime", "updateTime", "updateBy", "delFlag");
+        return Arrays.asList("createTime", "updateBy", "updateTime", "delFlag");
     }
 
     // 前端&&XML生成时 update 屏蔽字段
     public static List<String> getXMLConcealUpdateEntity() {
-        return Arrays.asList("createTime", "createBy", "updateTime", "updateBy", "tenantId", "systemId", "siteId", "libraryId", "delFlag");
+        return Arrays.asList("createBy", "createTime", "updateBy", "updateTime", "tenantId", "systemId", "siteId", "libraryId", "delFlag");
     }
 
     // 前端&&XML生成时 batch 主表字段 | 仅主子表生效 赋值取主表字段

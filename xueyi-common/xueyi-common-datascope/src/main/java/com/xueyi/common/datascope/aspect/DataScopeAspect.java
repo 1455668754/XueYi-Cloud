@@ -95,25 +95,6 @@ public class DataScopeAspect {
      * @param user                用户
      * @param controllerDataScope 切片数据
      */
-//     * @param eAlias     租户的别名 | 控制 enterpriseId
-//     * @param edAlias    租户的别名 | 控制 enterpriseId （包含 enterpriseId = 0 的数据）
-//     * @param ueAlias    租户更新控制的别名 | 控制 enterpriseId (empty 无前缀更新 | other 有前缀更新)
-//
-//     * @param SYAlias     租户的别名 | 控制 systemId
-//     * @param SYdAlias    租户的别名 | 控制 systemId （包含 systemId = 0 的数据）
-//     * @param uSYAlias    租户更新控制的别名 | 控制 systemId (empty 无前缀更新 | other 有前缀更新)
-//
-//     * @param SIAlias     租户的别名 | 控制 siteId
-//     * @param SIdAlias    租户的别名 | 控制 siteId （包含 siteId = 0 的数据）
-//     * @param uSIAlias    租户更新控制的别名 | 控制 siteId (empty 无前缀更新 | other 有前缀更新)
-//
-//     * @param LIAlias     租户的别名 | 控制 LibraryId
-//     * @param LIdAlias    租户的别名 | 控制 LibraryId （包含 LibraryId = 0 的数据）
-//     * @param uLIAlias    租户更新控制的别名 | 控制 LibraryId (empty 无前缀更新 | other 有前缀更新)
-//
-//     * @param deptAlias  部门别名
-//     * @param postAlias  岗位别名
-//     * @param userAlias  用户别名
     public static void dataScopeFilter(JoinPoint joinPoint, SysEnterprise enterprise, SysUser user, DataScope controllerDataScope) {
 
         String deptAlias = controllerDataScope.deptAlias();
