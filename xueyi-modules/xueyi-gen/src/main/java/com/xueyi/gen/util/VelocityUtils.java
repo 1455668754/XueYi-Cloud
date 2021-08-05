@@ -61,10 +61,16 @@ public class VelocityUtils {
         velocityContext.put("importList", getImportList(genTable));
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
         velocityContext.put("columns", genTable.getColumns());
+        velocityContext.put("replaceParams", GenTable.getReplaceParams());
         velocityContext.put("excisionAOP", GenTable.getExcisionAOP());
         velocityContext.put("excisionEntity", GenTable.getExcisionEntity());
         velocityContext.put("excisionTreeEntity", GenTable.getExcisionTreeEntity());
         velocityContext.put("concealExcisionEntity", GenTable.getConcealExcisionEntity());
+        velocityContext.put("XMLExcisionEntity", GenTable.getXMLExcisionEntity());
+        velocityContext.put("XMLExcisionSubEntity", GenTable.getXMLExcisionSubEntity());
+        velocityContext.put("XMLConcealInsertEntity", GenTable.getXMLConcealInsertEntity());
+        velocityContext.put("XMLConcealUpdateEntity", GenTable.getXMLConcealUpdateEntity());
+        velocityContext.put("XMLConcealBatchEntity", GenTable.getXMLConcealBatchEntity());
         velocityContext.put("table", genTable);
         setMenuVelocityContext(velocityContext, genTable);
         if (GenConstants.TPL_TREE.equals(tplCategory)) {

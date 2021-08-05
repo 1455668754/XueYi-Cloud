@@ -12,7 +12,7 @@ import com.xueyi.gen.domain.GenTableColumn;
 /**
  * 代码生成器 工具类
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class GenUtils {
     /**

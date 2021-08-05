@@ -16,8 +16,7 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class GenTable extends BaseEntity
-{
+public class GenTable extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 编号 */
@@ -393,6 +392,13 @@ public class GenTable extends BaseEntity
         return StringUtils.equalsAnyIgnoreCase(javaField, GenConstants.BASE_ENTITY);
     }
 
+    // 代码生成时自动进行替换的字段
+    public static Map<String, String> getReplaceParams() {
+        return new HashMap<String, String>(){{
+            put("tenantId","enterpriseId");
+        }};
+    }
+
     // isExcisionAOP()中的名单用于生成租户等各层级控制注解
     public static Map<String, String> getExcisionAOP() {
         return new HashMap<String, String>(){{
@@ -402,18 +408,43 @@ public class GenTable extends BaseEntity
         }};
     }
 
-    // getExcisionEntity()中的名单不会在domain中声明基类有的方法
+    // domain生成排除baseEntity中已有属性
     public static List<String> getExcisionEntity() {
         return Arrays.asList("tenantId", "systemId", "siteId", "libraryId", "sort", "createBy", "createName", "createTime", "updateBy", "updateName", "updateTime", "remark", "delFlag");
     }
 
-    // getExcisionTreeEntity()中的名单在树表结构中额外需要排除的参数
+    // domain生成排除treeEntity中已有属性
     public static List<String> getExcisionTreeEntity() {
         return Arrays.asList("parentId", "parentName", "ancestors");
     }
 
-    // getConcealExcisionEntity()中的名单不会声明但依旧会应用至toString
+    // domain生成时将baseEntity | treeEntity指定值输出至toString
     public static List<String> getConcealExcisionEntity() {
-        return Arrays.asList("sort", "createBy", "createName", "createTime", "updateBy", "updateName", "updateTime", "remark");
+        return Arrays.asList("parentId", "parentName", "ancestors", "sort", "createBy", "createName", "createTime", "updateBy", "updateName", "updateTime", "remark");
+    }
+
+    // 前端&&XML生成时主表屏蔽字段
+    public static List<String> getXMLExcisionEntity() {
+        return Arrays.asList("tenantId", "systemId", "siteId", "libraryId", "delFlag");
+    }
+
+    // 前端&&XML生成时子表屏蔽字段
+    public static List<String> getXMLExcisionSubEntity() {
+        return Arrays.asList("tenantId", "systemId", "siteId", "libraryId", "createBy", "createTime", "updateBy", "updateTime", "delFlag");
+    }
+
+    // 前端&&XML生成时 insert batch 屏蔽字段 | batch 主子表中子表新增
+    public static List<String> getXMLConcealInsertEntity() {
+        return Arrays.asList("createTime", "updateTime", "updateBy", "delFlag");
+    }
+
+    // 前端&&XML生成时 update 屏蔽字段
+    public static List<String> getXMLConcealUpdateEntity() {
+        return Arrays.asList("createTime", "createBy", "updateTime", "updateBy", "tenantId", "systemId", "siteId", "libraryId", "delFlag");
+    }
+
+    // 前端&&XML生成时 batch 主表字段 | 仅主子表生效 赋值取主表字段
+    public static List<String> getXMLConcealBatchEntity() {
+        return Arrays.asList("createBy", "tenantId", "systemId", "siteId", "libraryId");
     }
 }

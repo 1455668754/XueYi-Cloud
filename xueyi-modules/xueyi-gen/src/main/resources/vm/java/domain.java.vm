@@ -45,6 +45,13 @@ public class ${ClassName} extends ${Entity} {
 #end
 #end
 #end
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
+#end
+#end
 #if($conceal)
 #if(!$table.isSuperColumn($column.javaField))
     /** $column.columnComment */
@@ -64,7 +71,7 @@ public class ${ClassName} extends ${Entity} {
     @Excel(name = "${comment}")
 #end
 #end
-    private $column.javaType $column.javaField;
+    private $column.javaType $AttrName;
 
 #end
 #end
@@ -90,18 +97,25 @@ public class ${ClassName} extends ${Entity} {
 #end
 #end
 #end
-#if($conceal)
-#if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
-#set($AttrName=$column.javaField)
-#else
-#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
 #end
-    public void set${AttrName}($column.javaType $column.javaField) {
-        this.$column.javaField = $column.javaField;
+#end
+#if($conceal)
+#if($AttrName.length() > 2 && $AttrName.substring(1,2).matches("[A-Z]"))
+#set($field=$AttrName)
+#else
+#set($field=$AttrName.substring(0,1).toUpperCase() + ${AttrName.substring(1)})
+#end
+    public void set${field}($column.javaType $AttrName) {
+        this.$AttrName = $AttrName;
     }
 
-    public $column.javaType get${AttrName}() {
-        return $column.javaField;
+    public $column.javaType get${field}() {
+        return $AttrName;
     }
 
 #end
@@ -143,23 +157,30 @@ public class ${ClassName} extends ${Entity} {
 #break
 #end
 #end
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
+#end
+#end
 #if($conceal)
-#if($column.javaField == 'createBy')
+#if($AttrName == 'createBy')
             .append("createBy", getCreateBy())
             .append("createName", getCreateName())
-#elseif($column.javaField == 'updateBy')
+#elseif($AttrName == 'updateBy')
             .append("updateBy", getUpdateBy())
             .append("updateName", getUpdateName())
-#elseif($column.javaField == 'parentId' && $table.tree)
+#elseif($AttrName == 'parentId' && $table.tree)
             .append("parentId", getParentId())
             .append("parentName", getParentName())
 #else
-#if($column.javaField.length() > 2 && $column.javaField.substring(1,2).matches("[A-Z]"))
-#set($AttrName=$column.javaField)
+#if($AttrName.length() > 2 && $AttrName.substring(1,2).matches("[A-Z]"))
+#set($field=$AttrName)
 #else
-#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#set($field=$AttrName.substring(0,1).toUpperCase() + ${AttrName.substring(1)})
 #end
-            .append("${column.javaField}", get${AttrName}())
+            .append("${AttrName}", get${field}())
 #end
 #end
 #end

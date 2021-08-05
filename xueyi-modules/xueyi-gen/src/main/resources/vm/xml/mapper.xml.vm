@@ -6,20 +6,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="${ClassName}" id="${classNameNoPrefix}Result">
 #foreach ($column in $columns)
-#if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
+#set($conceal = true)
+#foreach($item in $XMLExcisionEntity)
+#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)
+#set($conceal = false)
+#break
+#end
+#end
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
+#end
+#end
+#if($conceal)
 #if($column.javaField == ${pkColumn.javaField})
-        <id     property="${pkColumn.javaField}"#set($maxStep=23 - ${pkColumn.javaField.length()})#foreach($step in[0..$maxStep]) #end column="${pkColumn.columnName}"#set($maxStep=23 - ${pkColumn.columnName.length()})#foreach($step in[0..$maxStep]) #end />
+        <id     property="${AttrName}"#set($maxStep=23 - ${AttrName.length()})#foreach($step in[0..$maxStep]) #end column="${pkColumn.columnName}"#set($maxStep=23 - ${pkColumn.columnName.length()})#foreach($step in[0..$maxStep]) #end />
 #elseif($column.javaField == 'createBy')
         <result property="createBy"                 column="create_by"                />
         <result property="createName"               column="create_name"              />
 #elseif($column.javaField == 'updateBy')
         <result property="updateBy"                 column="update_by"                />
         <result property="updateName"               column="update_name"              />
-#elseif($table.sub && $column.javaField == 'parentId')
+#elseif($table.tree && $column.javaField == 'parentId')
         <result property="parentId"                 column="parent_id"                />
         <result property="parentName"               column="parent_name"              />
 #else
-        <result property="${column.javaField}"#set($maxStep=23 - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end column="${column.columnName}"#set($maxStep=23 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
+        <result property="${AttrName}"#set($maxStep=23 - ${AttrName.length()})#foreach($step in[0..$maxStep]) #end column="${column.columnName}"#set($maxStep=23 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
 #end
 #end
 #end
@@ -31,7 +45,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <resultMap type="${subClassName}" id="subResult">
 #foreach ($column in $subTable.columns)
-#if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
+#set($conceal = true)
+#foreach($item in $XMLExcisionSubEntity)
+#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)
+#set($conceal = false)
+#break
+#end
+#end
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
+#end
+#end
+#if($conceal)
 #if($column.javaField == 'createBy')
         <result property="createBy"                 column="sub_create_by"                    />
         <result property="createName"   	        column="sub_create_name"                  />
@@ -39,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"   		        column="sub_update_by"                    />
         <result property="updateName"   	        column="sub_update_name"                  />
 #else
-        <result property="${column.javaField}"#set($maxStep=23 - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end column="sub_${column.columnName}"#set($maxStep=27 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
+        <result property="${AttrName}"#set($maxStep=23 - ${AttrName.length()})#foreach($step in[0..$maxStep]) #end column="sub_${column.columnName}"#set($maxStep=27 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end />
 #end
 #end
 #end
@@ -47,31 +75,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 
 #if($table.tree)
+#set($commaStep = 0)
     <sql id="selectVo">
-        select#set($commaVo=0)#foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($commaVo == 1),#end#if($commaVo == 0)#set($commaVo=1)#end e.$column.columnName#end#end
+        select #foreach($column in $columns)#set($conceal = true)#foreach($item in $XMLExcisionEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#if($conceal)#if($commaStep == 0)e.$column.columnName#set($commaStep = 1)#else, e.$column.columnName#end#end#end
 
         from ${tableName} e
     </sql>
 
+#set($treeStep=0)
     <sql id="treeVo">
-        select#set($commaVo=0)#foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($commaVo == 1),#end#if($commaVo == 0)#set($commaVo=1)#end e.$column.columnName#end#end
-        #set($treeVo=0)#foreach ($column in $columns)#if($column.columnName == 'parent_id' || $column.columnName == 'name')#set($treeVo=$treeVo+1)#if($treeVo==2), pe.name as parent_name#end#end#end
+        select#foreach($column in $columns)#set($conceal = true)#foreach($item in $XMLExcisionEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#if($conceal)#if($column.columnName == 'parent_id' || $column.columnName == 'name')#set($treeStep = $treeStep + 1)#end e.$column.columnName,#end#end#if($treeStep == 2) pe.name as parent_name#end
 
         from ${tableName} e
         left join ${tableName} pe on pe.$pkColumn.columnName = e.$pkColumn.columnName
     </sql>
 #else
     <sql id="selectVo">
+#set($commaStep = 0)
 #if($table.crud)
-        select#set($commaVo=0)#foreach ($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($commaVo == 1),#end#if($commaVo == 0)#set($commaVo=1)#end e.$column.columnName#end#end
+        select #foreach($column in $columns)#set($conceal = true)#foreach($item in $XMLExcisionEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#if($conceal)#if($commaStep == 0)e.$column.columnName#set($commaStep = 1)#else, e.$column.columnName#end#end#end
 
         from ${tableName} e
 #elseif($table.sub)
-        select#set($temstep = 1)#foreach($column in $columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($temstep == 1)#set($temstep = 2)#else,#end e.$column.columnName#end#end,
-           #set($temstep = 1)#foreach($column in $subTable.columns)#if($column.columnName != 'tenant_id' && $column.columnName != 'system_id' && $column.columnName != 'site_id' && $column.columnName != 'library_id' && $column.columnName != 'del_flag')#if($temstep == 1)#set($temstep = 2)#else,#end b.$column.columnName as sub_$column.columnName#end#end
+        select#foreach($column in $columns)#set($conceal = true)#foreach($item in $XMLExcisionEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#if($conceal) e.$column.columnName,#end#end
+
+               #foreach($column in $subTable.columns)#set($conceal = true)#foreach($item in $XMLExcisionSubEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#if($conceal)#if($commaStep == 0)s.$column.columnName as sub_$column.columnName#set($commaStep = 1)#else, s.$column.columnName as sub_$column.columnName#end#end#end
 
         from ${tableName} e
-        left join ${subTableName} b on b.${subTableFkName} = e.${pkColumn.columnName}
+        left join ${subTableName} s on s.${subTableFkName} = e.${pkColumn.columnName}
 #end
     </sql>
 #end
@@ -84,12 +115,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
         where 1 = 1
 #foreach($column in $columns)
-#if($column.javaField != 'tenantId' && $column.javaField != 'systemId' && $column.javaField != 'siteId' && $column.javaField != 'libraryId' && $column.javaField != 'delFlag' )
+#set($conceal = true)
+#foreach($item in $XMLExcisionEntity)
+#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)
+#set($conceal = false)
+#break
+#end
+#end
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
+#end
+#end
+#if($conceal)
 #set($queryType=$column.queryType)
-#set($javaField=$column.javaField)
+#set($javaField=$AttrName)
 #set($javaType=$column.javaType)
 #set($columnName=$column.columnName)
-#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#set($AttrName=$AttrName.substring(0,1).toUpperCase() + ${AttrName.substring(1)})
 #if($column.query)
 #if($column.queryType == "EQ")
         <if test="$javaField != null #if($javaType == 'String' ) and $javaField.trim() != ''#end">#if($column.javaType == 'String')#set($maxStep=25 + 11 - ${javaField.length()} * 2)#else#set($maxStep=25 + 22 - ${javaField.length()})#end#foreach($step in[0..$maxStep]) #end and e.$columnName = #{$javaField} #set($maxStep=40 - ${columnName.length()} - ${javaField.length()})#foreach($step in[0..$maxStep]) #end </if>
@@ -153,29 +198,51 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ${tableName}
         <trim prefix="(" suffix=")" suffixOverrides=",">
 #foreach($column in $columns)
-#if($column.columnName == $pkColumn.columnName)
-#if(!$pkColumn.increment)
-            <if test="Id != null">                                                         $column.columnName #set($maxStep=21 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
+#set($conceal = true)
+#foreach($item in $XMLConcealInsertEntity)
+#if($column.javaField == $item)
+#set($conceal = false)
+#break
 #end
-#elseif($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')
-#elseif($column.columnName == 'tenant_id')
-            <if test="enterpriseId != null">                                               tenant_id              ,</if>
+#end
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
+#end
+#end
+#if($conceal)
+#if(!$pkColumn.increment && $column.columnName == $pkColumn.columnName)
+            <if test="Id != null">                                                         $column.columnName #set($maxStep=21 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
 #elseif($column.columnName != $pkColumn.columnName)
-            <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">#if($column.javaType == 'String' && $column.required)#set($maxStep=35 + 11 - ${column.javaField.length()} * 2)#else#set($maxStep=35 + 22 - ${column.javaField.length()})#end#foreach($step in[0..$maxStep]) #end $column.columnName #set($maxStep=21 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
+            <if test="$AttrName != null#if($column.javaType == 'String' && $column.required) and $AttrName != ''#end">#if($column.javaType == 'String' && $column.required)#set($maxStep=35 + 11 - ${AttrName.length()} * 2)#else#set($maxStep=35 + 22 - ${AttrName.length()})#end#foreach($step in[0..$maxStep]) #end $column.columnName #set($maxStep=21 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
+#end
 #end
 #end
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 #foreach($column in $columns)
-#if($column.columnName == $pkColumn.columnName)
-#if(!$pkColumn.increment)
-            <if test="Id != null">                                                         #{Id}                  ,</if>
+#set($conceal = true)
+#foreach($item in $XMLConcealInsertEntity)
+#if($column.javaField == $item)
+#set($conceal = false)
+#break
 #end
-#elseif($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')
-#elseif($column.columnName == 'tenant_id')
-            <if test="enterpriseId != null">                                               #{enterpriseId}        ,</if>
+#end
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
+#end
+#end
+#if($conceal)
+#if(!$pkColumn.increment && $column.columnName == $pkColumn.columnName)
+            <if test="Id != null">                                                         #{Id}                  ,</if>
 #elseif($column.columnName != $pkColumn.columnName)
-            <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">#if($column.javaType == 'String' && $column.required)#set($maxStep=35 + 11 - ${column.javaField.length()} * 2)#else#set($maxStep=35 + 22 - ${column.javaField.length()})#end#foreach($step in[0..$maxStep]) #end #{$column.javaField} #set($maxStep=18 - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end ,</if>
+            <if test="$AttrName != null#if($column.javaType == 'String' && $column.required) and $AttrName != ''#end">#if($column.javaType == 'String' && $column.required)#set($maxStep=35 + 11 - ${AttrName.length()} * 2)#else#set($maxStep=35 + 22 - ${AttrName.length()})#end#foreach($step in[0..$maxStep]) #end #{$AttrName} #set($maxStep=18 - ${AttrName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
+#end
 #end
 #end
          </trim>
@@ -185,9 +252,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update ${tableName}
         <trim prefix="SET" suffixOverrides=",">
 #foreach($column in $columns)
-#if($column.columnName == 'create_by' || $column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'del_flag' || $column.columnName == 'library_id' || $column.columnName == 'site_id' || $column.columnName == 'system_id' || $column.columnName == 'tenant_id')
-#elseif($column.columnName != $pkColumn.columnName)
-            <if test="$column.javaField != null#if($column.javaType == 'String' && $column.required) and $column.javaField != ''#end">#if($column.javaType == 'String' && $column.required)#set($maxStep=35 + 11 - ${column.javaField.length()} * 2)#else#set($maxStep=35 + 22 - ${column.javaField.length()})#end#foreach($step in[0..$maxStep]) #end $column.columnName = #{$column.javaField} #set($maxStep=29 - ${column.columnName.length()} - ${column.javaField.length()})#foreach($step in[0..$maxStep]) #end ,</if>
+#set($conceal = true)
+#foreach($item in $XMLConcealUpdateEntity)
+#if($column.javaField == $item)
+#set($conceal = false)
+#break
+#end
+#end
+#set($AttrName = $column.javaField)
+#foreach($item in $replaceParams.entrySet())
+#if($column.javaField == $item.key)
+#set($AttrName = $item.value)
+#break
+#end
+#end
+#if($conceal)
+#if($column.columnName != $pkColumn.columnName)
+            <if test="$AttrName != null#if($column.javaType == 'String' && $column.required) and $AttrName != ''#end">#if($column.javaType == 'String' && $column.required)#set($maxStep=35 + 11 - ${AttrName.length()} * 2)#else#set($maxStep=35 + 22 - ${AttrName.length()})#end#foreach($step in[0..$maxStep]) #end $column.columnName = #{$AttrName} #set($maxStep=29 - ${column.columnName.length()} - ${AttrName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
+#end
 #end
 #end
         </trim>
@@ -290,9 +372,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <insert id="batch${subClassNameNoPrefix}" parameterType="${ClassName}">
-        insert into ${subTableName}(#set($commaBatchId=0)#foreach($column in $subTable.columns)#if($column.columnName == 'create_time' || $column.columnName == 'update_time' || $column.columnName == 'update_by' || $column.columnName == 'del_flag')#else#if($commaBatchId == 1),#end#if($commaBatchId == 0)#set($commaBatchId = 1)#end $column.columnName#end#end) values
+        insert into ${subTableName}( #set($commaStep = 0)#foreach($column in $subTable.columns)#set($conceal = true)#foreach($item in $XMLConcealInsertEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#if($conceal)#if($commaStep == 0)$column.columnName#set($commaStep = 1)#else, $column.columnName#end#end#end ) values
 		<foreach item="item" index="index" collection="subList" separator=",">
-            (#set($commaBatch=0)#foreach($column in $subTable.columns)#if($column.columnName != 'create_time' && $column.columnName != 'update_time' && $column.columnName != 'update_by' && $column.columnName != 'del_flag')#if($column.columnName == 'tenant_id')#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{enterpriseId}#elseif($column.columnName == $pkColumn.columnName || $column.columnName == 'create_by' || $column.columnName == 'library_id' || $column.columnName == 'site_id' || $column.columnName == 'system_id')#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{$column.javaField}#else#if($commaBatch == 1),#end#if($commaBatch == 0)#set($commaBatch = 1)#end #{item.$column.javaField}#end#end#end)
+            ( #set($commaStep = 0)#foreach($column in $subTable.columns)#set($AttrName = $column.javaField)#set($commaBatch = 0)#set($conceal = true)#foreach($item in $XMLConcealInsertEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#foreach($item in $XMLConcealBatchEntity)#if($column.javaField == $pkColumn.javaField || $column.javaField == $item)#set($commaBatch = 1)#break#end#end#foreach($item in $replaceParams.entrySet())#if($column.javaField == $item.key)#set($AttrName = $item.value)#break#end#end#if($conceal)#if($commaStep == 0)#if($commaBatch == 0)#{item.$AttrName}#else#{$AttrName}#end#set($commaStep = 1)#else#if($commaBatch == 0), #{item.$AttrName}#else, #{$AttrName}#end#end#end#end )
         </foreach>
     </insert>
 #end
