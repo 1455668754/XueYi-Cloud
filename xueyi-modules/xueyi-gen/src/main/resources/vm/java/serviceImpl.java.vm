@@ -24,7 +24,7 @@ import ${packageName}.service.I${ClassName}Service;
 
 /**
  * ${functionName} 业务层处理
- * 
+ *
  * @author ${author}
  */
 @Service
@@ -81,7 +81,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     @Override
 #if($table.sub)
     @Transactional
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
 #end
     public int insert${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix})
     {

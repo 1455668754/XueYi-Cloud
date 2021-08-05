@@ -78,7 +78,7 @@ public interface ${ClassName}Mapper {
      */
 #if($table.sub)
 #else
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
 #end
     public int insert${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix});
 
@@ -89,7 +89,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int update${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix});
 #if($table.tree)
 #foreach($column in $columns)
@@ -102,7 +102,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName} | List<${ClassName}> children
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int updateChildrenAncestors(${ClassName} ${classNameNoPrefix});
 #end
 #end
@@ -118,7 +118,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int update${ClassNameNoPrefix}Sort(${ClassName} ${classNameNoPrefix});
 
 #end
@@ -131,7 +131,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName} | ${pkColumn.javaField} ${functionName}Id
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
 #if(!$table.tree)
 
@@ -142,7 +142,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName} | params.Ids 需要删除的${functionName}Ids组
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}s(${ClassName} ${classNameNoPrefix});
 #end
 #if($table.tree)
@@ -156,7 +156,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int deleteChildrenBy${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
 #end
 #end
@@ -170,7 +170,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int batch${subClassNameNoPrefix}(${ClassName} ${classNameNoPrefix});
 
     /**
@@ -180,7 +180,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int delete${subClassNameNoPrefix}By${AttrName}(${ClassName} ${classNameNoPrefix});
 
     /**
@@ -190,7 +190,7 @@ public interface ${ClassName}Mapper {
      * @param ${classNameNoPrefix} ${functionName}
      * @return 结果
      */
-    @DataScope( eAlias = "empty"#foreach($item in $AOP), ${item}Alias = "empty"#end )
+    @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int delete${subClassNameNoPrefix}By${AttrName}s(${ClassName} ${classNameNoPrefix});
 #end
 }
