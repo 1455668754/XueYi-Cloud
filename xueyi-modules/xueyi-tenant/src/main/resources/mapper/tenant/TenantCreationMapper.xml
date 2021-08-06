@@ -15,7 +15,7 @@
             <if test="params.dept.deptId != null">                                           dept_id                                      ,</if>
             <if test="params.dept.deptName == null">                                         dept_name                                    ,</if>
             <if test="params.dept.deptName != null and params.dept.deptName != ''">          dept_name                                    ,</if>
-            <if test="tenantId != null">                                                     tenant_id                                    ,</if>
+                                                                                             tenant_id                                    ,
                                                                                              parent_id                                    ,
                                                                                              ancestors
         </trim>
@@ -23,7 +23,7 @@
             <if test="params.dept.deptId != null">                                           #{params.dept.deptId}                        ,</if>
             <if test="params.dept.deptName == null">                                         '主部门'                                      ,</if>
             <if test="params.dept.deptName != null and params.dept.deptName != ''">          #{params.dept.deptName}                      ,</if>
-            <if test="tenantId != null">                                                     #{tenantId}                                  ,</if>
+                                                                                             #{tenantId}                                  ,
                                                                                              0                                            ,
                                                                                              '0'
         </trim>
@@ -36,14 +36,14 @@
             <if test="params.post.deptId != null">                                           dept_id                                      ,</if>
             <if test="params.post.postName == null">                                         post_name                                    ,</if>
             <if test="params.post.postName != null and params.post.postName != ''">          post_name                                    ,</if>
-            <if test="tenantId != null">                                                     tenant_id                                    ,</if>
+                                                                                             tenant_id                                    ,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="params.post.postId != null">                                           #{params.post.postId}                        ,</if>
             <if test="params.post.deptId != null">                                           #{params.post.deptId}                        ,</if>
             <if test="params.post.postName == null">                                         '主岗位'                                      ,</if>
             <if test="params.post.postName != null and params.post.postName != ''">          #{params.post.postName}                      ,</if>
-            <if test="tenantId != null">                                                     #{tenantId}                                  ,</if>
+                                                                                             #{tenantId}                                  ,
         </trim>
     </insert>
 
@@ -61,14 +61,14 @@
             <if test="params.user.password != null and params.user.password != ''">          password                                     ,</if>
             <if test="params.user.email != null and params.user.email != ''">                email                                        ,</if>
             <if test="params.user.phone != null and params.user.phone != ''">                phone                                        ,</if>
-            <if test="tenantId != null">                                                     tenant_id                                    ,</if>
+                                                                                             tenant_id                                    ,
                                                                                              user_type
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="params.user.userId != null">                                           #{params.user.userId}                        ,</if>
             <if test="params.user.deptId != null">                                           #{params.user.deptId}                        ,</if>
             <if test="params.user.postId != null">                                           #{params.user.postId}                        ,</if>
-            <if test="params.user.userName == null">                                         user_name                                    ,</if>
+            <if test="params.user.userName == null">                                         'admin'                                      ,</if>
             <if test="params.user.userName != null and params.user.userName != ''">          #{params.user.userName}                      ,</if>
             <if test="params.user.nickName == null">                                         '超级管理员'                                   ,</if>
             <if test="params.user.nickName != null and params.user.nickName != ''">          #{params.user.nickName}                      ,</if>
@@ -76,7 +76,7 @@
             <if test="params.user.password != null and params.user.password != ''">          #{params.user.password}                      ,</if>
             <if test="params.user.email != null and params.user.email != ''">                #{params.user.email}                         ,</if>
             <if test="params.user.phone != null and params.user.phone != ''">                #{params.user.phone}                         ,</if>
-            <if test="tenantId != null">                                                     #{tenantId}                                  ,</if>
+                                                                                             #{tenantId}                                  ,
                                                                                              '00'
         </trim>
     </insert>

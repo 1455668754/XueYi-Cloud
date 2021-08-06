@@ -68,7 +68,7 @@ public interface ${ClassName}Mapper {
     /**
      * 新增${functionName}
 #if($table.sub)
-    * 访问控制 empty 租户更新（无前缀）()控制方法在impl层 | ${ClassName}ServiceImpl)
+    * 访问控制 empty 租户更新（无前缀）()控制方法在impl层 | ${ClassName}ServiceImpl
 #else
     * 访问控制 empty 租户更新（无前缀）
 #end
