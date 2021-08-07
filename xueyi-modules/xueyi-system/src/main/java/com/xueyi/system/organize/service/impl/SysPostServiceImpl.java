@@ -3,6 +3,7 @@ package com.xueyi.system.organize.service.impl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -113,6 +114,15 @@ public class SysPostServiceImpl implements ISysPostService {
                 } catch (Exception ignored) {
                 }
                 updatePostStatus(post);//修改保存岗位状态
+            }
+            SysPost check = new SysPost();
+            check.setPostId(post.getPostId());
+            SysPost oldPost = postMapper.selectPostById(check);
+            if(StringUtils.isNotNull(info) && !Objects.equals(oldPost.getDeptId(), post.getDeptId())){
+                SysUser user = new SysUser();
+                user.setPostId(post.getPostId());
+                user.setDeptId(post.getDeptId());
+                userMapper.updateUserDeptByPostId(user);
             }
         }
         // 执行岗位状态变更

@@ -261,6 +261,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</update>
 
+	<update id="updateUserDeptByPostId" parameterType="SysUser">
+		update sys_user
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="deptId != null and deptId != ''">	                      dept_id = #{deptId}	     	 ,</if>
+			<if test="updateBy != null">		                              update_by = #{updateBy}		 ,</if>
+		</trim>
+		where post_id = #{postId} and dept_id != #{deptId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</update>
+
 	<update id="updateUserAvatar" parameterType="SysUser">
 		update sys_user
 		set avatar = #{avatar}

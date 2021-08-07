@@ -108,6 +108,15 @@ public interface SysUserMapper {
     public int updateUserStatusByDeptId(SysUser user);
 
     /**
+     * 根据岗位Id修改用户部门信息
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param user 用户信息 | postId 岗位Id | deptId 部门Id
+     */
+    @DataScope(ueAlias = "empty")
+    public int updateUserDeptByPostId(SysUser user);
+
+    /**
      * 修改用户头像
      * 访问控制 empty 租户更新（无前缀）
      *
