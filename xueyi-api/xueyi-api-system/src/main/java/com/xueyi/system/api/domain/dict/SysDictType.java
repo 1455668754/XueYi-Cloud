@@ -1,4 +1,4 @@
-package com.xueyi.system.dict.domain;
+package com.xueyi.system.api.domain.dict;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

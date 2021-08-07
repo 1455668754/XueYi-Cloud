@@ -1,4 +1,4 @@
-package com.xueyi.system.utils;
+package com.xueyi.common.security.utils;
 
 import java.util.Collection;
 import java.util.List;
@@ -6,7 +6,7 @@ import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
-import com.xueyi.system.dict.domain.SysDictData;
+import com.xueyi.system.api.domain.dict.SysDictData;
 
 /**
  * 字典工具类

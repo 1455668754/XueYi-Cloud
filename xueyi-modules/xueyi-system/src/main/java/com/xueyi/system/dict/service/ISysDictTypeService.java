@@ -1,8 +1,8 @@
 package com.xueyi.system.dict.service;
 
 import java.util.List;
-import com.xueyi.system.dict.domain.SysDictData;
-import com.xueyi.system.dict.domain.SysDictType;
+import com.xueyi.system.api.domain.dict.SysDictData;
+import com.xueyi.system.api.domain.dict.SysDictType;
 
 /**
  * 字典 业务层

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.xueyi.system.dict.domain.SysDictType;
+import com.xueyi.system.api.domain.dict.SysDictType;
 
 /**
  * 字典表 数据层

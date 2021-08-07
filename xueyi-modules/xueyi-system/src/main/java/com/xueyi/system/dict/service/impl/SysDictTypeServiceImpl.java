@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.CustomException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.dict.domain.SysDictData;
-import com.xueyi.system.dict.domain.SysDictType;
+import com.xueyi.system.api.domain.dict.SysDictData;
+import com.xueyi.system.api.domain.dict.SysDictType;
 import com.xueyi.system.dict.mapper.SysDictDataMapper;
 import com.xueyi.system.dict.mapper.SysDictTypeMapper;
 import com.xueyi.system.dict.service.ISysDictTypeService;
-import com.xueyi.system.utils.DictUtils;
+import com.xueyi.common.security.utils.DictUtils;
 
 /**
  * 字典 业务层处理

@@ -3,10 +3,10 @@ package com.xueyi.system.dict.service.impl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xueyi.system.dict.domain.SysDictData;
+import com.xueyi.system.api.domain.dict.SysDictData;
 import com.xueyi.system.dict.mapper.SysDictDataMapper;
 import com.xueyi.system.dict.service.ISysDictDataService;
-import com.xueyi.system.utils.DictUtils;
+import com.xueyi.common.security.utils.DictUtils;
 
 /**
  * 字典 业务层处理
