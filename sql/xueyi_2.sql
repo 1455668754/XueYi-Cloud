@@ -27,7 +27,7 @@ create table sys_dept (
 -- 初始化-部门表数据
 -- ----------------------------
 insert into sys_dept (dept_id, tenant_id, dept_code, parent_id, ancestors, dept_name)
-values (1, -1, '1', 0, '0', '雪忆科技'),
+values (-1, -1, '1', 0, '0', '雪忆科技'),
        (100, 1, '100', 0, '0', '雪忆科技'),
        (101, 1, '101', 100, '0,100', '深圳总公司'),
        (102, 1, '102',  100, '0,100', '长沙分公司'),
@@ -65,7 +65,7 @@ create table sys_post
 -- 初始化-岗位信息表数据
 -- ----------------------------
 insert into sys_post (post_id, tenant_id, dept_id, post_code, post_name)
-values (1, -1, 1, 'ceo', '超级管理员'),
+values (1, -1, -1, 'ceo', '超级管理员'),
        (2, 1, 100, 'ceo', '董事长'),
        (3, 1, 100, 'se', '项目经理'),
        (4, 1, 100, 'hr', '人力资源'),
@@ -107,7 +107,7 @@ create table sys_user (
 -- 初始化-用户信息表数据
 -- ----------------------------
 insert into sys_user (user_id, tenant_id, dept_id, post_id, user_code, user_name, nick_name,user_type, password, remark)
-values (-1, -1, 1, 1, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
+values (-1, -1, -1, -1, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
        (2, 1, 100, 2, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员'),
        (3, 1, 100, 2, '002', 'xy', 'xy', '01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '管理员');
 
@@ -140,9 +140,15 @@ create table sys_role (
 -- ----------------------------
 -- 初始化-角色信息表数据
 -- ----------------------------
+insert into sys_role (role_id, role_name, type, tenant_id)
+values (-1, '超管衍生-1', '1', -1),
+       (-2, '租户衍生-1', '2', -1),
+       (-3, '超管衍生1', '1', 1),
+       (-4, '租户衍生1', '2', 1);
+
 insert into sys_role (role_id, tenant_id, role_code, role_name, role_key, menu_check_strictly, dept_check_strictly, create_by, remark)
-values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
-       (2, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色');
+values (2, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
+       (3, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色');
 
 -- ----------------------------
 -- 5、角色和系统-菜单关联表  角色N-N系统-菜单
@@ -160,7 +166,7 @@ create table sys_role_system_menu (
 -- ----------------------------
 -- 初始化-角色和系统-菜单关联表数据
 -- ----------------------------
-insert into sys_role_system_menu value (1, 12005 , 0, 0, 1);
+insert into sys_role_system_menu value (2, 12005 , 0, 0, 1);
 
 -- ----------------------------
 -- 6、角色和部门-岗位关联表  角色N-N部门-岗位
@@ -178,7 +184,7 @@ create table sys_role_dept_post (
 -- ----------------------------
 -- 初始化-角色和部门-岗位关联表数据
 -- ----------------------------
-insert into sys_role_dept_post value (1, 107, 0, 0, 1);
+insert into sys_role_dept_post value (2, 107, 0, 0, 1);
 
 -- ----------------------------
 -- 7、组织和角色关联表  组织N-N角色
@@ -200,6 +206,15 @@ create table sys_organize_role (
   primary key(id)
   ,unique (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_tenant_id, derive_administrator_id, role_id)
 ) engine=innodb auto_increment=1 comment = '组织和角色关联表';
+
+-- ----------------------------
+-- 初始化-角色和部门-岗位关联表数据
+-- ----------------------------
+insert into sys_organize_role ( derive_tenant_id, derive_administrator_id, role_id, tenant_id )
+values (null, -1, -1, -1),
+       (-1, null, -2, -1),
+       (null, 1, -3, 1),
+       (1, null, -4, 1);
 
 -- ----------------------------
 -- 8、素材信息表|管理素材信息

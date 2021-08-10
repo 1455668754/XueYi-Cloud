@@ -64,7 +64,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public List<SysDept> selectDeptList(SysDept dept) {
-        return deptMapper.selectDeptList(dept);//@param dept 部门信息
+        return deptMapper.selectDeptList(dept);
     }
 
     /**
@@ -136,11 +136,11 @@ public class SysDeptServiceImpl implements ISysDeptService {
                     throw new CustomException(String.format("%1$s上级部门已停用,无法启用该部门", dept.getDeptName()));
                 } catch (Exception ignored) {
                 }
-                updateDeptStatus(dept);//修改保存部门状态
+                updateDeptStatus(dept);
             }
         }
         // 执行部门状态变更
-        return deptMapper.updateDept(dept);//@param dept 部门信息
+        return deptMapper.updateDept(dept);
     }
 
     /**

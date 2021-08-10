@@ -26,9 +26,9 @@ create table xy_tenant (
 -- ----------------------------
 -- 初始化-租户信息表数据
 -- ----------------------------
-insert into xy_tenant (is_change, strategy_id, tenant_id, tenant_name, tenant_system_name, tenant_nick, tenant_logo)
-values ('Y', 1, -1, 'administrator', '租户管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
-       ('N', 1, 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
+insert into xy_tenant (tenant_id, is_change, strategy_id,  tenant_name, tenant_system_name, tenant_nick, tenant_logo)
+values (-1, 'Y', 1, 'administrator', '租户管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
+       ( 1, 'N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
 
 -- ----------------------------
 -- 2、数据源策略表|管理数据源策略信息

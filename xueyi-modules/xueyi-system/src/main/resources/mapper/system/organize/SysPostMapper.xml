@@ -45,14 +45,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="status"       column="role_status"    />
 	</resultMap>
 
+	<sql id="listVo">
+		select p.post_id, p.dept_id, p.post_code, p.post_name, p.sort, p.status, p.create_by, p.create_time, p.update_by, p.update_time, p.remark,
+			   d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email, d.status as dept_status
+		from sys_post p
+				 left join sys_dept d on p.dept_id = d.dept_id
+	</sql>
+
 	<sql id="selectVo">
 		select p.post_id, p.dept_id, p.post_code, p.post_name, p.sort, p.status, p.create_by, p.create_time, p.update_by, p.update_time, p.remark,
 			   d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email, d.status as dept_status,
 			   r.role_id, r.role_code, r.role_name, r.role_key, r.sort, r.data_scope, r.status as role_status
 		from sys_post p
 				 left join sys_dept d on p.dept_id = d.dept_id
-				 left join sys_post_role pr on pr.post_id = p.post_id
-				 left join sys_role r on r.role_id = pr.role_id
+				 left join sys_organize_role sor on sor.post_id = p.post_id
+				 left join sys_role r on r.role_id = sor.role_id
 	</sql>
 
 	<sql id="checkVo">
@@ -73,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</sql>
 
 	<select id="selectPostList" parameterType="SysPost" resultMap="SysPostResult">
-		<include refid="selectVo"/>
+		<include refid="listVo"/>
 		where 1 = 1
 		<if test="deptId != null and deptId != 0">
 			AND p.dept_id like concat('%', #{deptId}, '%')

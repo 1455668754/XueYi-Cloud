@@ -36,12 +36,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="status"       column="role_status"    />
 	</resultMap>
 
+	<sql id="listVo">
+		select d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email, d.sort, d.status, d.create_by, d.create_time, d.update_by, d.update_time, d.remark
+		from sys_dept d
+	</sql>
+
 	<sql id="selectVo">
 		select d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email, d.sort, d.status, d.create_by, d.create_time, d.update_by, d.update_time, d.remark,
 			   r.role_id, r.role_code, r.role_name, r.role_key, r.sort, r.data_scope, r.status as role_status
 		from sys_dept d
-				 left join sys_dept_role dr on dr.dept_id = d.dept_id
-				 left join sys_role r on r.role_id = dr.role_id
+				 left join sys_organize_role sor on sor.dept_id = d.dept_id
+				 left join sys_role r on r.role_id = sor.role_id
 	</sql>
 
 	<sql id="checkVo">
@@ -55,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</sql>
 
 	<select id="selectDeptList" parameterType="SysDept" resultMap="SysDeptResult">
-		<include refid="selectVo"/>
+		<include refid="listVo"/>
 		where 1 = 1
 		<if test="parentId != null and parentId != 0">
 			AND d.parent_id = #{parentId}
@@ -85,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="selectChildrenDeptById" parameterType="SysDept" resultMap="SysDeptResult">
-		<include refid="selectVo"/>
+		<include refid="listVo"/>
 		where find_in_set(#{deptId}, d.ancestors)
 		<!-- 数据范围过滤 -->
 		${params.dataScope}

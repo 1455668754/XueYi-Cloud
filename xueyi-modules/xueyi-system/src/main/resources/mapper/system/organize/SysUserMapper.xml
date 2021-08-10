@@ -73,10 +73,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from sys_user u
 				 left join sys_dept d on u.dept_id = d.dept_id
 				 left join sys_post p on u.post_id = p.post_id
-				 left join sys_dept_role dr on dr.dept_id = d.dept_id
-				 left join sys_post_role pr on pr.post_id = p.post_id
-				 left join sys_user_role ur on ur.user_id = u.user_id
-				 left join sys_role r on r.role_id = dr.role_id or r.role_id = pr.role_id or r.role_id = ur.role_id
+				 left join sys_organize_role sor on sor.dept_id = d.dept_id or sor.post_id = p.post_id or sor.user_id = u.user_id
+				 left join sys_role r on r.role_id = sor.role_id
+	</sql>
+
+	<sql id="listVo">
+		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.profile, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
+			   d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email,d.status as dept_status,
+			   p.post_id, p.dept_id, p.post_code, p.post_name,p.status as post_status
+		from sys_user u
+				 left join sys_dept d on u.dept_id = d.dept_id
+				 left join sys_post p on u.post_id = p.post_id
 	</sql>
 
 	<sql id="selectVo">
@@ -87,8 +94,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from sys_user u
 				 left join sys_dept d on u.dept_id = d.dept_id
 				 left join sys_post p on u.post_id = p.post_id
-				 left join sys_user_role ur on u.user_id = ur.user_id
-				 left join sys_role r on r.role_id = ur.role_id
+				 left join sys_organize_role sor on sor.user_id = u.user_id
+				 left join sys_role r on r.role_id = sor.role_id
 	</sql>
 
 	<sql id="checkVo">
@@ -112,7 +119,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		<include refid="selectVo"/>
+		<include refid="listVo"/>
 		where 1 = 1
 		<if test="postId != null and postId != 0">
 			AND u.post_id = #{postId}

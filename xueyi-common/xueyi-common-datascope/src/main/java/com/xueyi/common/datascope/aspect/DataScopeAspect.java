@@ -93,7 +93,6 @@ public class DataScopeAspect {
         }
         // 获取当前的用户
         LoginUser loginUser = tokenService.getLoginUser();
-
         if (StringUtils.isNotNull(loginUser)) {
             SysUser currentUser = loginUser.getSysUser();
             SysEnterprise currentEnterprise = loginUser.getSysEnterprise();

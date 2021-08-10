@@ -28,16 +28,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<sql id="permVo">
 		select distinct r.role_id, r.role_code, r.role_name, r.role_key, r.data_scope, r.status
 		from sys_role r
-				 left join sys_dept_role dr on dr.role_id = r.role_id
-				 left join sys_post_role pr on pr.role_id = r.role_id
-				 left join sys_user_role ur on ur.role_id = r.role_id
+				 left join sys_organize_role sor on sor.role_id = r.role_id
 	</sql>
 
 	<sql id="selectVo">
 		select distinct r.role_id, r.role_code, r.role_name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.sort, r.status, r.create_by, r.create_time, r.update_by, r.update_time, r.remark
 		from sys_role r
-				 left join sys_user_role ur on ur.role_id = r.role_id
-				 left join sys_user u on u.user_id = ur.user_id
+				 left join sys_organize_role sor on sor.role_id = r.role_id
+				 left join sys_user u on u.user_id = sor.user_id
 				 left join sys_dept d on u.dept_id = d.dept_id
 				 left join sys_post p on u.post_id = p.post_id
 	</sql>
@@ -55,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!--未登录用户的登录校验方法，不允许加访问控制-->
 	<select id="checkLoginRolePermission" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="permVo"/>
-		WHERE dr.dept_id = #{params.deptId} or pr.post_id = #{params.postId} or ur.user_id = #{params.userId} and r.del_flag = 0 and r.tenant_id = #{enterpriseId}
+		WHERE sor.dept_id = #{params.deptId} or sor.post_id = #{params.postId} or sor.user_id = #{params.userId} and r.del_flag = 0 and r.tenant_id = #{enterpriseId}
 	</select>
 
 	<select id="selectRoleAll" parameterType="SysRole" resultMap="SysRoleResult">
