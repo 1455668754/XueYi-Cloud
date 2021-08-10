@@ -54,8 +54,7 @@ primary key (strategy_id)
 -- 初始化-数据源策略表数据
 -- ----------------------------
 insert into xy_tenant_strategy(strategy_id, name, tenant_amount, source_amount, is_change, sort)
-values (0, '默认初始策略', 0, 1, 1, 0),
-       (1, '默认注册策略', 2, 1, 1, 1);
+values (1, '默认注册策略', 2, 1, 1, 1);
 
 -- ----------------------------
 -- 3、数据源表|管理系统数据源信息 | 主库有且只能有一个，用途：主要用于存储公共数据，具体看后续文档或视频
@@ -105,8 +104,7 @@ primary key (read_id)
 -- 初始化-主从库关联表数据
 -- ----------------------------
 insert into xy_tenant_separation(write_id, read_id)
-values (0, 0),
-       (1, 1);
+values (1, 1);
 
 -- ----------------------------
 -- 5、策略-数据源关联表  策略n-n写数据源 | 数据源仅为写|读写的类型
@@ -124,8 +122,7 @@ primary key (strategy_id, source_id)
 -- 初始化-策略-数据源关联表数据
 -- ----------------------------
 insert into xy_tenant_strategy_source(strategy_id, source_id, status)
-values (0, 0, 'Y'),
-       (1, 1, 'Y');
+values (1, 1, 'Y');
 
 -- ----------------------------
 -- 6、子模块表|管理子系统模块

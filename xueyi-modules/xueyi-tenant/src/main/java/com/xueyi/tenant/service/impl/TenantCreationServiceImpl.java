@@ -3,7 +3,6 @@ package com.xueyi.tenant.service.impl;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.RoleConstants;
-import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.api.domain.organize.SysPost;
@@ -15,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
 
 /**
  * 数据源 业务层处理
@@ -37,37 +34,37 @@ public class TenantCreationServiceImpl implements ITenantCreationService {
      */
     @Override
     @DS("#tenant.sourceName")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)      // 事务传播特性设置为 REQUIRES_NEW 开启新的事务
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public int organizeCreation(Tenant tenant) {
-        int rows = 0;
+        int d, p, u;
         Long deptId = IdUtil.getSnowflake(0, 0).nextId();
         Long postId = IdUtil.getSnowflake(0, 0).nextId();
         Long userId = IdUtil.getSnowflake(0, 0).nextId();
         // 1.建立新租户初始部门信息
         SysDept dept = tenant.getParams().containsKey("dept") ? (SysDept) tenant.getParams().get("dept") : new SysDept();
         dept.setDeptId(deptId);
-        if(!tenant.getParams().containsKey("dept")){
-            tenant.getParams().put("dept",dept);
+        if (!tenant.getParams().containsKey("dept")) {
+            tenant.getParams().put("dept", dept);
         }
         // 2.建立新租户初始岗位信息
         SysPost post = tenant.getParams().containsKey("post") ? (SysPost) tenant.getParams().get("post") : new SysPost();
         post.setDeptId(deptId);
         post.setPostId(postId);
-        if(!tenant.getParams().containsKey("post")){
-            tenant.getParams().put("post",post);
+        if (!tenant.getParams().containsKey("post")) {
+            tenant.getParams().put("post", post);
         }
         // 3.建立新租户初始用户信息
         SysUser user = tenant.getParams().containsKey("user") ? (SysUser) tenant.getParams().get("user") : new SysUser();
         user.setDeptId(deptId);
         user.setPostId(postId);
         user.setUserId(userId);
-        if(!tenant.getParams().containsKey("user")){
-            tenant.getParams().put("user",user);
+        if (!tenant.getParams().containsKey("user")) {
+            tenant.getParams().put("user", user);
         }
-        rows = rows + tenantCreationMapper.createDeptByTenantId(tenant);
-        rows = rows + tenantCreationMapper.createPostByTenantId(tenant);
-        rows = rows + tenantCreationMapper.createUserByTenantId(tenant);
-        return rows;
+        d = tenantCreationMapper.createDeptByTenantId(tenant);
+        p = tenantCreationMapper.createPostByTenantId(tenant);
+        u = tenantCreationMapper.createUserByTenantId(tenant);
+        return d + p + u;
     }
 
     /**
@@ -78,27 +75,27 @@ public class TenantCreationServiceImpl implements ITenantCreationService {
      */
     @Override
     @DS("#tenant.sourceName")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)      // 事务传播特性设置为 REQUIRES_NEW 开启新的事务
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public int deriveRoleCreation(Tenant tenant) {
-        int rows = 0;
+        int r, or;
         Long deriveAdministratorId = IdUtil.getSnowflake(0, 0).nextId();
         Long deriveTenantId = IdUtil.getSnowflake(0, 0).nextId();
         // 1.建立新租户初始租管衍生角色信息
         SysRole deriveAdministrator = tenant.getParams().containsKey("role") ? (SysRole) tenant.getParams().get("role") : new SysRole();
         deriveAdministrator.setRoleId(deriveAdministratorId);
         deriveAdministrator.setType(RoleConstants.ADMINISTRATOR_DERIVE_TYPE);
-        deriveAdministrator.setRoleName("超管衍生"+deriveAdministratorId);
-        if(!tenant.getParams().containsKey("role")){
-            tenant.getParams().put("role",deriveAdministrator);
+        deriveAdministrator.setRoleName("超管衍生" + deriveAdministratorId);
+        if (!tenant.getParams().containsKey("role")) {
+            tenant.getParams().put("role", deriveAdministrator);
         }
         // 2.建立新租户初始租户衍生角色信息
         SysRole deriveTenant = new SysRole();
         deriveTenant.setRoleId(deriveTenantId);
         deriveTenant.setType(RoleConstants.ENTERPRISE_DERIVE_TYPE);
-        deriveTenant.setRoleName("租户衍生"+deriveTenantId);
-        tenant.getParams().put("deriveRole",deriveTenant);
-        rows = rows + tenantCreationMapper.createRoleByTenantId(tenant);
-        rows = rows + tenantCreationMapper.createOrganizeRoleByTenantId(tenant);
-        return rows;
+        deriveTenant.setRoleName("租户衍生" + deriveTenantId);
+        tenant.getParams().put("deriveRole", deriveTenant);
+        r = tenantCreationMapper.createRoleByTenantId(tenant);
+        or = tenantCreationMapper.createOrganizeRoleByTenantId(tenant);
+        return r + or;
     }
 }

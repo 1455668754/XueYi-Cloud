@@ -70,7 +70,7 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     @Transactional
-    @GlobalTransactional        // 第一个开启事务的需要添加seata全局事务注解
+    @GlobalTransactional
     @DataScope(ueAlias = "empty")
     public int insertTenant(Tenant tenant) {
         /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */

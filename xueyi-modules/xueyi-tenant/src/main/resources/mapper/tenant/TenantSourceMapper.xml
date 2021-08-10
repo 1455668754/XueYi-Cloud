@@ -95,7 +95,7 @@
 
     <select id="selectContainWriteList" parameterType="TenantSource" resultMap="TenantSourceResult">
         <include refid="listVo"/>
-        where e.status = '0' and e.del_flag = 0 and ( e.type = '0' or e.type = '2' )
+        where e.status = '0' and e.del_flag = 0 and ( e.type = '0' or e.type = '2' ) and e.slave != 'master'
         order by e.sort
     </select>
 

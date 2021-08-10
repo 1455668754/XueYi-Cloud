@@ -174,6 +174,7 @@ create table sys_role_dept_post (
   tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(role_id, dept_post_id)
 ) engine=innodb comment = '角色和部门-岗位关联表';
+
 -- ----------------------------
 -- 初始化-角色和部门-岗位关联表数据
 -- ----------------------------
