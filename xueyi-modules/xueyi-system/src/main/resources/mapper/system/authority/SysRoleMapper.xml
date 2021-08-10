@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectRoleAll" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="selectAllVo"/>
-		WHERE r.status = '0'
+		WHERE r.status = '0' and r.type = '0'
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>

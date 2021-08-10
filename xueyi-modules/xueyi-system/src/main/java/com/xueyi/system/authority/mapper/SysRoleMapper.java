@@ -22,7 +22,7 @@ public interface SysRoleMapper {
     public List<SysRole> checkLoginRolePermission(SysRole role);
 
     /**
-     * 查询所有角色
+     * 查询所有角色 | exclude 衍生角色
      * 访问控制 r 租户查询
      *
      * @param role 角色信息 | null
