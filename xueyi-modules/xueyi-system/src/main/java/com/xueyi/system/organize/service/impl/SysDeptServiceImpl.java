@@ -12,11 +12,14 @@ import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
+import com.xueyi.system.authority.service.ISysRoleService;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.organize.service.ISysDeptService;
+import com.xueyi.system.role.domain.SysOrganizeRole;
 import com.xueyi.system.role.mapper.SysDeptRoleMapper;
+import com.xueyi.system.role.mapper.SysOrganizeRoleMapper;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,13 +40,19 @@ import java.util.stream.Collectors;
 public class SysDeptServiceImpl implements ISysDeptService {
 
     @Autowired
+    private ISysRoleService roleService;
+
+    @Autowired
+    private SysRoleMapper roleMapper;
+
+    @Autowired
+    private SysOrganizeRoleMapper organizeRoleMapper;
+
+    @Autowired
     private SysDeptMapper deptMapper;
 
     @Autowired
     private SysDeptRoleMapper deptRoleMapper;
-
-    @Autowired
-    private SysRoleMapper roleMapper;
 
     @Autowired
     private SysPostMapper postMapper;
@@ -96,7 +105,8 @@ public class SysDeptServiceImpl implements ISysDeptService {
             SysRole role = new SysRole();
             role.setType(RoleConstants.DEPT_DERIVE_TYPE);
             role.setDeriveId(dept.getId());
-            roleMapper.insertRole(role);
+            role.setRoleName("衍生"+dept.getId());
+            roleService.insertRole(role);
         }
         return row;
     }
@@ -140,7 +150,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 修改保存部门-角色信息
      *
-     * @param dept 部门信息 | deptId  部门Id | roleIds 角色组Ids
+     * @param dept 部门信息 | deptId 部门Id | roleIds 角色组Ids
      * @return 结果
      */
     @Override
@@ -218,14 +228,16 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     @Transactional
     public int deleteDeptById(SysDept dept) {
-        int rows;
-        SysSearch search = new SysSearch();
-        search.getSearch().put("deptId", dept.getDeptId());
-        rows = deptMapper.deleteDeptById(dept);
-        if (rows > 0) {
-            rows = rows + deptRoleMapper.deleteDeptRoleByDeptId(search);//@param search 万用组件 | deptId 部门Id
-        }
-        return rows;
+        // 1.删除衍生role信息
+        SysRole role = new SysRole();
+        role.setType(RoleConstants.DEPT_DERIVE_TYPE);
+        role.setDeriveId(dept.getDeptId());
+        roleMapper.deleteRoleByTypeAndDeriveId(role);
+        // 2.删除部门-角色关联信息
+        SysOrganizeRole organizeRole = new SysOrganizeRole();
+        organizeRole.setDeptId(dept.getDeptId());
+        organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
+        return deptMapper.deleteDeptById(dept);
     }
 
     /**
@@ -271,7 +283,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 校验部门编码是否唯一
      *
-     * @param dept 部门信息 | deptId   部门Id | deptCode 部门编码
+     * @param dept 部门信息 | deptId 部门Id | deptCode 部门编码
      * @return 结果
      */
     @Override
@@ -289,7 +301,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 校验部门名称是否唯一
      *
-     * @param dept 部门信息 | deptId   部门Id | parentId 父级Id | deptName 部门名称
+     * @param dept 部门信息 | deptId 部门Id | parentId 父级Id | deptName 部门名称
      * @return 结果
      */
     @Override
@@ -307,7 +319,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     /**
      * 校验是否为父级的子级
      *
-     * @param dept 部门信息 | deptId   子级Id | parentId 父级Id
+     * @param dept 部门信息 | deptId 子级Id | parentId 父级Id
      * @return 结果
      */
     public String checkIsChild(SysDept dept) {

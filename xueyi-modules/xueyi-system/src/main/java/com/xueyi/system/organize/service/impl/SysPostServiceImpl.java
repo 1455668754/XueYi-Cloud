@@ -13,10 +13,13 @@ import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
+import com.xueyi.system.authority.service.ISysRoleService;
 import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
+import com.xueyi.system.role.domain.SysOrganizeRole;
+import com.xueyi.system.role.mapper.SysOrganizeRoleMapper;
 import com.xueyi.system.role.mapper.SysPostRoleMapper;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.utils.vo.TreeSelect;
@@ -40,6 +43,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class SysPostServiceImpl implements ISysPostService {
 
     @Autowired
+    private ISysRoleService roleService;
+
+    @Autowired
+    private SysRoleMapper roleMapper;
+
+    @Autowired
+    private SysOrganizeRoleMapper organizeRoleMapper;
+
+    @Autowired
     private SysDeptMapper deptMapper;
 
     @Autowired
@@ -50,9 +62,6 @@ public class SysPostServiceImpl implements ISysPostService {
 
     @Autowired
     private SysPostRoleMapper postRoleMapper;
-
-    @Autowired
-    private SysRoleMapper roleMapper;
 
     /**
      * 查询岗位信息集合
@@ -104,7 +113,8 @@ public class SysPostServiceImpl implements ISysPostService {
             SysRole role = new SysRole();
             role.setType(RoleConstants.POST_DERIVE_TYPE);
             role.setDeriveId(post.getId());
-            roleMapper.insertRole(role);
+            role.setRoleName("衍生"+post.getId());
+            roleService.insertRole(role);
         }
         return row;
     }
@@ -199,14 +209,16 @@ public class SysPostServiceImpl implements ISysPostService {
     @Override
     @Transactional
     public int deletePostById(SysPost post) {
-        int rows;
-        SysSearch search = new SysSearch();
-        search.getSearch().put("postId", post.getPostId());
-        rows = postMapper.deletePostById(post);
-        if (rows > 0) {
-            rows = rows + postRoleMapper.deletePostRoleByPostId(search);//@param search 查询组件 | postId 岗位Id
-        }
-        return rows;
+        // 1.删除衍生role信息
+        SysRole role = new SysRole();
+        role.setType(RoleConstants.POST_DERIVE_TYPE);
+        role.setDeriveId(post.getPostId());
+        roleMapper.deleteRoleByTypeAndDeriveId(role);
+        // 2.删除岗位-角色关联信息
+        SysOrganizeRole organizeRole = new SysOrganizeRole();
+        organizeRole.setPostId(post.getPostId());
+        organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
+        return postMapper.deletePostById(post);
     }
 
     /**
@@ -216,15 +228,19 @@ public class SysPostServiceImpl implements ISysPostService {
      * @return 结果
      */
     @Override
+    @Transactional
     public int deletePostByIds(SysPost post) {
-        int rows;
-        SysSearch search = new SysSearch();
-        search.getSearch().put("postIds", post.getParams().get("Ids"));
-        rows = postMapper.deletePostByIds(post);
-        if (rows > 0) {
-            rows = rows + postRoleMapper.deletePostRoleByIds(search);//@param search 查询组件 | postIds 需要删除的岗位Ids(Long[])
-        }
-        return rows;
+        // 1.批量删除衍生role信息
+        SysRole role = new SysRole();
+        role.setType(RoleConstants.POST_DERIVE_TYPE);
+        role.getParams().put("Ids",post.getParams().get("Ids"));
+        roleMapper.deleteRoleByTypeAndDeriveIds(role);
+        // 2.批量删除岗位-角色关联信息
+        SysOrganizeRole organizeRole = new SysOrganizeRole();
+        organizeRole.setPostId(RoleConstants.DELETE_PARAM);
+        organizeRole.getParams().put("Ids",post.getParams().get("Ids"));
+        organizeRoleMapper.deleteOrganizeRoleByOrganizeIds(organizeRole);
+        return postMapper.deletePostByIds(post);
     }
 
     /**

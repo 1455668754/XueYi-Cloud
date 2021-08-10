@@ -3,9 +3,11 @@ package com.xueyi.system.authority.service.impl;
 import java.util.*;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.RoleConstants;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
+import com.xueyi.system.role.domain.SysOrganizeRole;
 import com.xueyi.system.role.domain.SysRoleDeptPost;
 import com.xueyi.system.role.domain.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.*;
@@ -38,6 +40,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
 
     @Autowired
     private SysRoleDeptPostMapper roleDeptPostMapper;
+
+    @Autowired
+    private SysOrganizeRoleMapper organizeRoleMapper;
 
     @Autowired
     private SysDeptRoleMapper deptRoleMapper;
@@ -149,8 +154,24 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
+    @Transactional
+    @DataScope(ueAlias = "empty")
     public int insertRole(SysRole role) {
-        return roleMapper.insertRole(role);//@param role 角色信息
+        if(!StringUtils.equals(role.getType(), RoleConstants.ROUTINE_DERIVE_TYPE)){
+            SysOrganizeRole organizeRole = new SysOrganizeRole();
+            organizeRole.setRoleId(role.getId());
+            if(StringUtils.equals(role.getType(), RoleConstants.DEPT_DERIVE_TYPE)){
+                organizeRole.setDeriveDeptId(role.getDeriveId());
+            }else if(StringUtils.equals(role.getType(), RoleConstants.POST_DERIVE_TYPE)){
+                organizeRole.setDerivePostId(role.getDeriveId());
+            }else if(StringUtils.equals(role.getType(), RoleConstants.USER_DERIVE_TYPE)){
+                organizeRole.setDeriveUserId(role.getDeriveId());
+            }else if(StringUtils.equals(role.getType(), RoleConstants.ENTERPRISE_DERIVE_TYPE)){
+                organizeRole.setDeriveEnterpriseId(role.getDeriveId());
+            }
+            organizeRoleMapper.insertOrganizeRole(organizeRole);
+        }
+        return roleMapper.insertRole(role);
     }
 
     /**
@@ -236,20 +257,13 @@ public class SysRoleServiceImpl implements ISysRoleService {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", role.getRoleId());
         // 1.通过角色Id删除角色
-        r = roleMapper.deleteRoleById(role);
-        if (r > 0) {
             // 1.删除角色和系统-菜单关联
-            r = r + roleSystemMenuMapper.deleteRoleSystemMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
+            roleSystemMenuMapper.deleteRoleSystemMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
             // 2.删除角色和部门-岗位关联
-            r = r + roleDeptPostMapper.deleteRoleDeptPostByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 3.删除部门和角色关联
-            r = r + deptRoleMapper.deleteDeptRoleByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 4.删除岗位和角色关联
-            r = r + postRoleMapper.deletePostRoleByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 5.删除用户和角色关联
-            r = r + userRoleMapper.deleteUserRoleByRoleId(search);//@param search 查询组件 | roleId 角色Id
-        }
-        return r;
+            roleDeptPostMapper.deleteRoleDeptPostByRoleId(search);//@param search 查询组件 | roleId 角色Id
+        // 3.删除组织和角色关联
+        organizeRoleMapper.deleteOrganizeRoleByRoleId(role);//role 角色信息 | roleId 角色Id
+        return roleMapper.deleteRoleById(role);
     }
 
     /**
@@ -265,20 +279,14 @@ public class SysRoleServiceImpl implements ISysRoleService {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleIds", role.getParams().get("Ids"));
         // 1.批量删除角色信息
-        rs = roleMapper.deleteRoleByIds(role);
-        if (rs > 0) {
             // 1.批量删除角色和系统-菜单关联
-            rs = rs + roleSystemMenuMapper.deleteRoleSystemMenuByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+            roleSystemMenuMapper.deleteRoleSystemMenuByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
             // 2.批量删除角色和部门-岗位关联
-            rs = rs + roleDeptPostMapper.deleteRoleDeptPostByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 3.批量删除部门和角色关联
-            rs = rs + deptRoleMapper.deleteDeptRoleByRoleIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 4.批量删除岗位和角色关联
-            rs = rs + postRoleMapper.deletePostRoleByRoleIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 5.批量删除用户和角色关联
-            rs = rs + userRoleMapper.deleteUserRoleByRoleIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-        }
-        return rs;
+            roleDeptPostMapper.deleteRoleDeptPostByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+        // 3.批量删除组织和角色关联
+        System.out.println(1);
+        organizeRoleMapper.deleteOrganizeRoleByRoleIds(role);//role 角色信息 | params.Ids 需要删除的角色Ids组
+        return roleMapper.deleteRoleByIds(role);
     }
 
     /**

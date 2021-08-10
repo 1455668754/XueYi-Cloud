@@ -28,8 +28,8 @@ public interface ${ClassName}Mapper {
      */
     @DataScope( eAlias = "e"#foreach($item in $AOP), ${item}Alias = "e"#end )
     public List<${ClassName}> select${ClassNameNoPrefix}List(${ClassName} ${classNameNoPrefix});
-#if($table.tree)
 
+#if($table.tree)
     /**
      * 查询${functionName}树选项列表
      * 访问控制 e 租户查询
@@ -39,9 +39,9 @@ public interface ${ClassName}Mapper {
      */
     @DataScope( eAlias = "e"#foreach($item in $AOP), ${item}Alias = "e"#end )
     public List<${ClassName}> select${ClassNameNoPrefix}Tree(${ClassName} ${classNameNoPrefix});
+
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
-
     /**
      * 根据Id查询${functionName}子集
      * 访问控制 e 租户查询
@@ -51,10 +51,10 @@ public interface ${ClassName}Mapper {
      */
     @DataScope( eAlias = "e"#foreach($item in $AOP), ${item}Alias = "e"#end )
     public List<${ClassName}> selectChildrenBy${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
-#end
-#end
-#end
 
+#end
+#end
+#end
     /**
      * 查询${functionName}
      * 访问控制 e 租户查询
@@ -91,10 +91,10 @@ public interface ${ClassName}Mapper {
      */
     @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int update${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix});
+
 #if($table.tree)
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
-
     /**
      * 修改${functionName}子集祖籍信息
      * 访问控制 empty 租户更新（无前缀）
@@ -104,13 +104,13 @@ public interface ${ClassName}Mapper {
      */
     @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int updateChildrenAncestors(${ClassName} ${classNameNoPrefix});
+
 #end
 #end
 #end
 #if($table.crud || $table.sub)
 #foreach ($column in $columns)
 #if($column.javaField == 'sort')
-
     /**
      * 修改${functionName}排序
      * 访问控制 empty 租户更新（无前缀）
@@ -133,8 +133,8 @@ public interface ${ClassName}Mapper {
      */
     @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
-#if(!$table.tree)
 
+#if(!$table.tree)
     /**
      * 批量删除${functionName}
      * 访问控制 empty 租户更新（无前缀）
@@ -144,11 +144,11 @@ public interface ${ClassName}Mapper {
      */
     @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}s(${ClassName} ${classNameNoPrefix});
+
 #end
 #if($table.tree)
 #foreach($column in $columns)
 #if($column.javaField == 'ancestors')
-
     /**
      * 根据Id删除${functionName}子集
      * 访问控制 empty 租户更新（无前缀）
@@ -158,11 +158,11 @@ public interface ${ClassName}Mapper {
      */
     @DataScope( ueAlias = "empty"#foreach($item in $AOP), u${item}Alias = "empty"#end )
     public int deleteChildrenBy${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
+
 #end
 #end
 #elseif($table.sub)
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
-
     /**
      * 批量新增${subTable.functionName}
      * 访问控制 empty 租户更新（无前缀）

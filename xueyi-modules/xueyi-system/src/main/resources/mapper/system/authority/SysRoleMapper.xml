@@ -198,6 +198,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</delete>
 
+	<delete id="deleteRoleByTypeAndDeriveId" parameterType="SysRole">
+		update sys_role
+		set del_flag = 1
+		where type = #{type} and derive_id = #{deriveId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<delete id="deleteRoleByTypeAndDeriveIds" parameterType="SysRole">
+		update sys_role
+		set del_flag = 1
+		where type = #{type} and derive_id in
+		<foreach item="deriveId" collection="params.Ids" open="(" separator="," close=")">
+			#{deriveId}
+		</foreach>
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
 	<select id="checkRoleCodeUnique" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="checkVo"/>
 		where r.role_key=#{roleCode}

@@ -68,7 +68,6 @@ public interface SysRoleMapper {
      * @param role 角色信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int insertRole(SysRole role);
 
     /**
@@ -118,6 +117,26 @@ public interface SysRoleMapper {
      */
     @DataScope(ueAlias = "empty")
     public int deleteRoleByIds(SysRole role);
+
+    /**
+     * 依据角色类型 && 衍生Id 删除角色信息
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param role 角色信息 | type 角色类型 | deriveId 衍生Id
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int deleteRoleByTypeAndDeriveId(SysRole role);
+
+    /**
+     * 依据角色类型 && 衍生Ids 批量删除角色信息
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param role 角色信息 | type 角色类型 | params.Ids 需要删除的衍生Ids组
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int deleteRoleByTypeAndDeriveIds(SysRole role);
 
     /**
      * 校验角色编码是否唯一

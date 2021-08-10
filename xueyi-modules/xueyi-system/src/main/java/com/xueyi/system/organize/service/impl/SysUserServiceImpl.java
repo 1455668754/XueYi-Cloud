@@ -5,6 +5,10 @@ import java.util.List;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.RoleConstants;
 import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.system.authority.mapper.SysRoleMapper;
+import com.xueyi.system.authority.service.ISysRoleService;
+import com.xueyi.system.role.domain.SysOrganizeRole;
+import com.xueyi.system.role.mapper.SysOrganizeRoleMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +23,6 @@ import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.organize.mapper.SysPostMapper;
-import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.role.mapper.SysUserRoleMapper;
 import com.xueyi.system.dict.service.ISysConfigService;
@@ -33,13 +36,20 @@ import com.xueyi.system.organize.service.ISysUserService;
 @Service
 @DS("#isolate")
 public class SysUserServiceImpl implements ISysUserService {
+
     private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
     @Autowired
-    private SysUserMapper userMapper;
+    private ISysRoleService roleService;
 
     @Autowired
     private SysRoleMapper roleMapper;
+
+    @Autowired
+    private SysOrganizeRoleMapper organizeRoleMapper;
+
+    @Autowired
+    private SysUserMapper userMapper;
 
     @Autowired
     private SysPostMapper postMapper;
@@ -141,8 +151,9 @@ public class SysUserServiceImpl implements ISysUserService {
         if(row>0){
             SysRole role = new SysRole();
             role.setType(RoleConstants.USER_DERIVE_TYPE);
-            role.setDeriveId(post.getId());
-            roleMapper.insertRole(role);
+            role.setDeriveId(user.getId());
+            role.setRoleName("衍生"+user.getId());
+            roleService.insertRole(role);
         }
         return row;
     }
@@ -246,14 +257,16 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional
     public int deleteUserById(SysUser user) {
-        int rows;
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userId", user.getUserId());
-        rows = userMapper.deleteUserById(user);
-        if (rows > 0) {
-            rows = rows + userRoleMapper.deleteUserRoleByUserId(search);//@param search 查询组件 | userId 用户Id
-        }
-        return rows;
+        // 1.删除衍生role信息
+        SysRole role = new SysRole();
+        role.setType(RoleConstants.USER_DERIVE_TYPE);
+        role.setDeriveId(user.getUserId());
+        roleMapper.deleteRoleByTypeAndDeriveId(role);
+        // 2.删除用户-角色关联信息
+        SysOrganizeRole organizeRole = new SysOrganizeRole();
+        organizeRole.setUserId(user.getUserId());
+        organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
+        return userMapper.deleteUserById(user);
     }
 
     /**
@@ -265,14 +278,17 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     @Transactional
     public int deleteUserByIds(SysUser user) {
-        int rows;
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userIds", user.getParams().get("Ids"));
-        rows = userMapper.deleteUserByIds(user);
-        if (rows > 0) {
-            rows = rows + userRoleMapper.deleteUserRoleByIds(search);//@param search 查询组件 | userIds 需要删除的用户Ids(Long[])
-        }
-        return rows;
+        // 1.批量删除衍生role信息
+        SysRole role = new SysRole();
+        role.setType(RoleConstants.USER_DERIVE_TYPE);
+        role.getParams().put("Ids",user.getParams().get("Ids"));
+        roleMapper.deleteRoleByTypeAndDeriveIds(role);
+        // 2.批量删除用户-角色关联信息
+        SysOrganizeRole organizeRole = new SysOrganizeRole();
+        organizeRole.setUserId(RoleConstants.DELETE_PARAM);
+        organizeRole.getParams().put("Ids",user.getParams().get("Ids"));
+        organizeRoleMapper.deleteOrganizeRoleByOrganizeIds(organizeRole);
+        return userMapper.deleteUserByIds(user);
     }
 
     /**
