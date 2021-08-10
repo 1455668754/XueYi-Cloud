@@ -32,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				 left join sys_post_role pr on pr.role_id = r.role_id
 				 left join sys_user_role ur on ur.role_id = r.role_id
 	</sql>
+
 	<sql id="selectVo">
 		select distinct r.role_id, r.role_code, r.role_name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.sort, r.status, r.create_by, r.create_time, r.update_by, r.update_time, r.remark
 		from sys_role r
@@ -73,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="selectRoleList" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="selectVo"/>
-		where 1 = 1
+		where r.type = '0'
 		<if test="roleCode != null and roleCode != ''">
 			AND r.role_code like concat('%', #{roleCode}, '%')
 		</if>
