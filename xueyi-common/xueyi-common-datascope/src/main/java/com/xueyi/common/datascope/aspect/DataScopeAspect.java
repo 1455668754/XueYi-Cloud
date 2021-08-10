@@ -31,28 +31,44 @@ import com.xueyi.system.api.model.LoginUser;
 @Component
 public class DataScopeAspect {
 
-    /** 全部数据权限 */
+    /**
+     * 全部数据权限
+     */
     public static final String DATA_SCOPE_ALL = "1";
 
-    /** 自定义数据权限 */
+    /**
+     * 自定义数据权限
+     */
     public static final String DATA_SCOPE_CUSTOM = "2";
 
-    /** 本部门数据权限 */
+    /**
+     * 本部门数据权限
+     */
     public static final String DATA_SCOPE_DEPT = "3";
 
-    /** 本部门及以下数据权限 */
+    /**
+     * 本部门及以下数据权限
+     */
     public static final String DATA_SCOPE_DEPT_AND_CHILD = "4";
 
-    /** 本岗位数据权限 */
+    /**
+     * 本岗位数据权限
+     */
     public static final String DATA_SCOPE_POST = "5";
 
-    /** 仅本人数据权限 */
+    /**
+     * 仅本人数据权限
+     */
     public static final String DATA_SCOPE_SELF = "6";
 
-    /** 数据权限过滤关键字 */
+    /**
+     * 数据权限过滤关键字
+     */
     public static final String DATA_SCOPE = "dataScope";
 
-    /** 数据权限过滤关键字|更新 */
+    /**
+     * 数据权限过滤关键字|更新
+     */
     public static final String UPDATE_SCOPE = "updateScope";
 
     @Autowired
@@ -135,73 +151,74 @@ public class DataScopeAspect {
         StringBuilder upSqlString = new StringBuilder();
 
         // 如果是超级管理员，则不过滤数据
-        if (!user.isAdmin()) {
-            for (SysRole role : user.getRoles()) {
-                String dataScope = role.getDataScope();
-                // 1.全部数据权限
-                if (DATA_SCOPE_ALL.equals(dataScope)) {
-                    sqlString = new StringBuilder();
-                    break;
-                }
-                // 2.自定数据权限
-                else if (DATA_SCOPE_CUSTOM.equals(dataScope) && (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias))) {
-                    if (StringUtils.isNotBlank(deptAlias) && StringUtils.isNotBlank(postAlias)) {
-                        sqlString.append(StringUtils.format(
-                                " OR ( {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ) ", deptAlias,
-                                role.getRoleId(), postAlias, role.getRoleId()));
-                    } else if (StringUtils.isNotBlank(deptAlias)) {
-                        sqlString.append(StringUtils.format(
-                                " OR {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ", deptAlias,
-                                role.getRoleId(), postAlias, role.getRoleId()));
-                    } else if (StringUtils.isNotBlank(postAlias)) {
-                        sqlString.append(StringUtils.format(
-                                " OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ", deptAlias,
-                                role.getRoleId(), postAlias, role.getRoleId()));
+        if (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias) || StringUtils.isNotBlank(userAlias)) {
+            if (!user.isAdmin()) {
+                for (SysRole role : user.getRoles()) {
+                    String dataScope = role.getDataScope();
+                    // 1.全部数据权限
+                    if (DATA_SCOPE_ALL.equals(dataScope)) {
+                        sqlString = new StringBuilder();
+                        break;
                     }
+                    // 2.自定数据权限
+                    else if (DATA_SCOPE_CUSTOM.equals(dataScope) && (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias))) {
+                        if (StringUtils.isNotBlank(deptAlias) && StringUtils.isNotBlank(postAlias)) {
+                            sqlString.append(StringUtils.format(
+                                    " OR ( {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ) ", deptAlias,
+                                    role.getRoleId(), postAlias, role.getRoleId()));
+                        } else if (StringUtils.isNotBlank(deptAlias)) {
+                            sqlString.append(StringUtils.format(
+                                    " OR {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ", deptAlias,
+                                    role.getRoleId(), postAlias, role.getRoleId()));
+                        } else if (StringUtils.isNotBlank(postAlias)) {
+                            sqlString.append(StringUtils.format(
+                                    " OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ", deptAlias,
+                                    role.getRoleId(), postAlias, role.getRoleId()));
+                        }
+                    }
+                    // 3.本部门数据权限
+                    else if (DATA_SCOPE_DEPT.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                        sqlString.append(StringUtils.format(" OR {}.dept_id = {} ", deptAlias, user.getDeptId()));
+                    }
+                    // 4.本部门及以下数据权限
+                    else if (DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                        sqlString.append(StringUtils.format(
+                                " OR {}.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = {} or find_in_set( {} , ancestors ) ) ",
+                                deptAlias, user.getDeptId(), user.getDeptId()));
+                    }
+                    // 5.本岗位数据权限
+                    else if (DATA_SCOPE_POST.equals(dataScope) && StringUtils.isNotBlank(postAlias)) {
+                        sqlString.append(StringUtils.format(" OR {}.post_id = {} ", postAlias, user.getPostId()));
+                    }
+                    // 6.仅本人数据权限
+                    else if (DATA_SCOPE_SELF.equals(dataScope)) {
+                        if (StringUtils.isNotBlank(userAlias)) {
+                            sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
+                        }
+                    }
+                }
 
-                }
-                // 3.本部门数据权限
-                else if (DATA_SCOPE_DEPT.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
-                    sqlString.append(StringUtils.format(" OR {}.dept_id = {} ", deptAlias, user.getDeptId()));
-                }
-                // 4.本部门及以下数据权限
-                else if (DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
-                    sqlString.append(StringUtils.format(
-                            " OR {}.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = {} or find_in_set( {} , ancestors ) ) ",
-                            deptAlias, user.getDeptId(), user.getDeptId()));
-                }
-                // 5.本岗位数据权限
-                else if (DATA_SCOPE_POST.equals(dataScope) && StringUtils.isNotBlank(postAlias)) {
-                    sqlString.append(StringUtils.format(" OR {}.post_id = {} ", postAlias, user.getPostId()));
-                }
-                // 6.仅本人数据权限
-                else if (DATA_SCOPE_SELF.equals(dataScope)) {
+                // 权限表的租户控制
+                if (StringUtils.isNotBlank(eAlias)) {
+                    if (StringUtils.isNotBlank(deptAlias)) {
+                        sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", deptAlias, enterprise.getEnterpriseId()));
+                    }
+                    if (StringUtils.isNotBlank(postAlias)) {
+                        sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", postAlias, enterprise.getEnterpriseId()));
+                    }
                     if (StringUtils.isNotBlank(userAlias)) {
-                        sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
+                        sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", userAlias, enterprise.getEnterpriseId()));
                     }
-                }
-            }
-
-            // 权限表的租户控制
-            if (StringUtils.isNotBlank(eAlias)) {
-                if (StringUtils.isNotBlank(deptAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", deptAlias, enterprise.getEnterpriseId()));
-                }
-                if (StringUtils.isNotBlank(postAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", postAlias, enterprise.getEnterpriseId()));
-                }
-                if (StringUtils.isNotBlank(userAlias)) {
-                    sqlString.append(StringUtils.format(" AND {}.tenant_id = {} ", userAlias, enterprise.getEnterpriseId()));
-                }
-            } else {
-                if (StringUtils.isNotBlank(deptAlias)) {
-                    sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", deptAlias, enterprise.getEnterpriseId(), deptAlias));
-                }
-                if (StringUtils.isNotBlank(postAlias)) {
-                    sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", postAlias, enterprise.getEnterpriseId(), postAlias));
-                }
-                if (StringUtils.isNotBlank(userAlias)) {
-                    sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", userAlias, enterprise.getEnterpriseId(), userAlias));
+                } else {
+                    if (StringUtils.isNotBlank(deptAlias)) {
+                        sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", deptAlias, enterprise.getEnterpriseId(), deptAlias));
+                    }
+                    if (StringUtils.isNotBlank(postAlias)) {
+                        sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", postAlias, enterprise.getEnterpriseId(), postAlias));
+                    }
+                    if (StringUtils.isNotBlank(userAlias)) {
+                        sqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) ", userAlias, enterprise.getEnterpriseId(), userAlias));
+                    }
                 }
             }
         }
