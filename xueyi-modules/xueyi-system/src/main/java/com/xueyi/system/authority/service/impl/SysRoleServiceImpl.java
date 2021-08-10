@@ -29,6 +29,7 @@ import com.xueyi.system.authority.service.ISysRoleService;
 @Service
 @DS("#isolate")
 public class SysRoleServiceImpl implements ISysRoleService {
+
     @Autowired
     private SysRoleMapper roleMapper;
 
@@ -209,7 +210,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     @Transactional
     public int authDataScope(SysRole role) {
-
         int r;
         // 1.更新角色数据权限范围
         r = roleMapper.updateRoleDataScope(role);
@@ -224,7 +224,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
         }
         return (r);
     }
-
 
     /**
      * 通过角色Id删除角色
