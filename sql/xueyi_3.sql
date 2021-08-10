@@ -22,7 +22,7 @@ create table sys_dept (
   tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
   primary key (dept_id)
 ) engine=innodb comment = '部门表';
-       
+
 -- ----------------------------
 -- 2、岗位信息表
 -- ----------------------------
@@ -89,6 +89,8 @@ create table sys_role (
   data_scope                char(1)             default '1'                             comment '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限 5：本岗位数据权限  6：仅本人数据权限）',
   menu_check_strictly       tinyint             default 1                               comment '菜单树选择项是否关联显示',
   dept_check_strictly       tinyint             default 1                               comment '部门树选择项是否关联显示',
+  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1超管衍生 2租户衍生 3部门衍生 4岗位衍生 5用户衍生）',
+  derive_id		            bigint	            default null	                        comment '衍生Id',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
@@ -108,6 +110,7 @@ drop table if exists sys_role_system_menu;
 create table sys_role_system_menu (
   role_id                   bigint              not null                                comment '角色Id',
   system_menu_id            bigint              not null                                comment '系统-菜单Id',
+  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1衍生 2租户）',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
   tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(role_id, system_menu_id)
@@ -120,49 +123,35 @@ drop table if exists sys_role_dept_post;
 create table sys_role_dept_post (
   role_id                   bigint              not null                                comment '角色Id',
   dept_post_id              bigint              not null                                comment '部门-岗位Id',
+  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1衍生）',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
   tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(role_id, dept_post_id)
 ) engine=innodb comment = '角色和部门-岗位关联表';
 
 -- ----------------------------
--- 7、部门和角色关联表  部门N-N角色
+-- 7、组织和角色关联表  组织N-N角色
 -- ----------------------------
-drop table if exists sys_dept_role;
-create table sys_dept_role (
-  dept_id                   bigint              not null                                comment '部门id',
+drop table if exists sys_organize_role;
+create table sys_organize_role (
+  id		                bigint	            not null auto_increment                 comment 'id',
+  dept_id                   bigint              default null                            comment '部门id',
+  post_id                   bigint              default null                            comment '岗位id',
+  user_id                   bigint              default null                            comment '用户id',
+  derive_dept_id            bigint              default null                            comment '部门衍生id',
+  derive_post_id            bigint              default null                            comment '岗位衍生id',
+  derive_user_id            bigint              default null                            comment '用户衍生id',
+  derive_tenant_id          bigint              default null                            comment '租户衍生id',
+  derive_administrator_id   bigint              default null                            comment '超管衍生id',
   role_id                   bigint              not null                                comment '角色Id',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
   tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
-  primary key(dept_id, role_id)
-) engine=innodb comment = '部门和角色关联表';
+  primary key(id)
+  ,unique (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_tenant_id, derive_administrator_id, role_id)
+) engine=innodb auto_increment=1 comment = '组织和角色关联表';
 
 -- ----------------------------
--- 8、岗位和角色关联表  岗位N-N角色
--- ----------------------------
-drop table if exists sys_post_role;
-create table sys_post_role (
-  post_id                   bigint              not null                                comment '岗位Id',
-  role_id                   bigint              not null                                comment '角色Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
-  primary key(post_id, role_id)
-) engine=innodb comment = '岗位和角色关联表';
-
--- ----------------------------
--- 9、用户和角色关联表  用户N-N角色
--- ----------------------------
-drop table if exists sys_user_role;
-create table sys_user_role (
-  user_id                   bigint              not null                                comment '用户Id',
-  role_id                   bigint              not null                                comment '角色Id',
-  del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
-  primary key(user_id, role_id)
-) engine=innodb comment = '用户和角色关联表';
-
--- ----------------------------
--- 10、素材信息表|管理素材信息
+-- 8、素材信息表|管理素材信息
 -- ----------------------------
 drop table if exists xy_material;
 create table xy_material (
@@ -187,7 +176,7 @@ create table xy_material (
 ) engine=innodb comment = '素材信息表';
 
 -- ----------------------------
--- 11、素材分类表|管理素材信息分类
+-- 9、素材分类表|管理素材信息分类
 -- ----------------------------
 drop table if exists xy_material_folder;
 create table xy_material_folder (
@@ -208,7 +197,7 @@ create table xy_material_folder (
 ) engine=innodb comment = '素材分类表';
 
 -- ----------------------------
--- 12、操作日志记录
+-- 10、操作日志记录
 -- ----------------------------
 drop table if exists sys_oper_log;
 create table sys_oper_log (
@@ -234,7 +223,7 @@ create table sys_oper_log (
 ) engine=innodb auto_increment=100 comment = '操作日志记录';
 
 -- ----------------------------
--- 13、系统访问记录
+-- 11、系统访问记录
 -- ----------------------------
 drop table if exists sys_logininfor;
 create table sys_logininfor (
@@ -253,7 +242,7 @@ create table sys_logininfor (
 ) engine=innodb auto_increment=100 comment = '系统访问记录';
 
 -- ----------------------------
--- 14、通知公告表
+-- 12、通知公告表
 -- ----------------------------
 drop table if exists sys_notice;
 create table sys_notice (
