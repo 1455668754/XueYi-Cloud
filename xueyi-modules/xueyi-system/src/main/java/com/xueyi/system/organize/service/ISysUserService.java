@@ -70,11 +70,10 @@ public interface ISysUserService {
     /**
      * 修改保存用户-角色信息
      *
-     * @param userId  用户Id
-     * @param roleIds 角色组Ids
+     * @param user 用户信息 | userId  用户Id | roleIds 角色组Ids
      * @return 结果
      */
-    public int updateUserRole(Long userId, Long[] roleIds);
+    public int updateUserRole(SysUser user);
 
     /**
      * 修改用户状态

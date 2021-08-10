@@ -24,7 +24,6 @@ import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
-import com.xueyi.system.role.mapper.SysUserRoleMapper;
 import com.xueyi.system.dict.service.ISysConfigService;
 import com.xueyi.system.organize.service.ISysUserService;
 
@@ -53,9 +52,6 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Autowired
     private SysPostMapper postMapper;
-
-    @Autowired
-    private SysUserRoleMapper userRoleMapper;
 
     @Autowired
     private ISysConfigService configService;
@@ -184,24 +180,22 @@ public class SysUserServiceImpl implements ISysUserService {
     /**
      * 修改保存用户-角色信息
      *
-     * @param userId  用户Id
-     * @param roleIds 角色组Ids
+     * @param user 用户信息 | userId  用户Id | roleIds 角色组Ids
      * @return 结果
      */
     @Override
     @Transactional
-    public int updateUserRole(Long userId, Long[] roleIds) {
-        // 执行用户-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
-        SysSearch search = new SysSearch();
-        // 删除原有的userRole信息
-        search.getSearch().put("userId", userId);
-        int rows = userRoleMapper.deleteUserRoleByUserId(search);//@param search 查询组件 | userId 用户Id
-        if (roleIds.length > 0) {
-            // 改变为最新的userRole信息
-            search.getSearch().put("roleIds", roleIds);
-            rows = rows + userRoleMapper.batchUserRole(search);//@param search 万用组件 | userId 用户Id | roleIds 角色Ids
+    public int updateUserRole(SysUser user) {
+        // 1.删除原有用户-角色关联
+        SysOrganizeRole organizeRole = new SysOrganizeRole();
+        organizeRole.setUserId(user.getUserId());
+        organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
+        // 2.是否需要执行新增
+        if(user.getRoleIds().length > 0){
+            organizeRole.getParams().put("roleIds",user.getRoleIds());
+            organizeRoleMapper.batchOrganizeRole(organizeRole);
         }
-        return rows;
+        return 1;
     }
 
     /**
@@ -265,6 +259,7 @@ public class SysUserServiceImpl implements ISysUserService {
         // 2.删除用户-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setUserId(user.getUserId());
+        organizeRole.setDeriveUserId(user.getUserId());
         organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
         return userMapper.deleteUserById(user);
     }
@@ -286,6 +281,7 @@ public class SysUserServiceImpl implements ISysUserService {
         // 2.批量删除用户-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setUserId(RoleConstants.DELETE_PARAM);
+        organizeRole.setDeriveUserId(RoleConstants.DELETE_PARAM);
         organizeRole.getParams().put("Ids",user.getParams().get("Ids"));
         organizeRoleMapper.deleteOrganizeRoleByOrganizeIds(organizeRole);
         return userMapper.deleteUserByIds(user);

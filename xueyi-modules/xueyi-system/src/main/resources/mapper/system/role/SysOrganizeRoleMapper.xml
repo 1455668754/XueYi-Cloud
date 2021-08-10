@@ -21,6 +21,11 @@
         from sys_organize_role e
     </sql>
 
+    <sql id="countVo">
+        select count(1)
+        from sys_organize_role e
+    </sql>
+
     <select id="selectOrganizeRoleList" parameterType="SysOrganizeRole" resultMap="organizeRoleResult">
         <include refid="selectVo"/>
         where 1 = 1
@@ -39,7 +44,7 @@
     <insert id="insertOrganizeRole" parameterType="SysOrganizeRole">
         insert into sys_organize_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                                         dept_id                        ,</if>
+            <if test="deptId != null">                                                     dept_id                        ,</if>
             <if test="postId != null">                                                     post_id                        ,</if>
             <if test="userId != null">                                                     user_id                        ,</if>
             <if test="deriveDeptId != null">                                               derive_dept_id                 ,</if>
@@ -50,7 +55,7 @@
             <if test="enterpriseId != null">                                               tenant_id                      ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                                         #{Id}                          ,</if>
+            <if test="deptId != null">                                                     #{deptId}                      ,</if>
             <if test="postId != null">                                                     #{postId}                      ,</if>
             <if test="userId != null">                                                     #{userId}                      ,</if>
             <if test="deriveDeptId != null">                                               #{deriveDeptId}                ,</if>
@@ -60,6 +65,50 @@
             <if test="roleId != null">                                                     #{roleId}                      ,</if>
             <if test="enterpriseId != null">                                               #{enterpriseId}                ,</if>
         </trim>
+    </insert>
+
+    <insert id="batchOrganizeRole" parameterType="SysOrganizeRole">
+        insert into sys_organize_role (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_tenant_id, role_id, tenant_id) values
+        <choose>
+            <when test="params.roleIds != null">
+                <foreach item="roleId" collection="params.roleIds" separator=",">
+                    (#{deptId}, #{postId}, #{userId}, #{deriveDeptId}, #{derivePostId}, #{deriveUserId}, #{deriveEnterpriseId}, #{roleId}, #{enterpriseId})
+                </foreach>
+            </when>
+            <when test="params.deptIds != null">
+                <foreach item="deptId" collection="params.deptIds" separator=",">
+                    (#{deptId}, #{postId}, #{userId}, #{deriveDeptId}, #{derivePostId}, #{deriveUserId}, #{deriveEnterpriseId}, #{roleId}, #{enterpriseId})
+                </foreach>
+            </when>
+            <when test="params.postIds != null">
+                <foreach item="postId" collection="params.postIds" separator=",">
+                    (#{deptId}, #{postId}, #{userId}, #{deriveDeptId}, #{derivePostId}, #{deriveUserId}, #{deriveEnterpriseId}, #{roleId}, #{enterpriseId})
+                </foreach>
+            </when>
+            <when test="params.userIds != null">
+                <foreach item="userId" collection="params.userIds" separator=",">
+                    (#{deptId}, #{postId}, #{userId}, #{deriveDeptId}, #{derivePostId}, #{deriveUserId}, #{deriveEnterpriseId}, #{roleId}, #{enterpriseId})
+                </foreach>
+            </when>
+            <when test="params.deriveDeptIds != null">
+                <foreach item="deriveDeptId" collection="params.deriveDeptIds" separator=",">
+                    (#{deptId}, #{postId}, #{userId}, #{deriveDeptId}, #{derivePostId}, #{deriveUserId}, #{deriveEnterpriseId}, #{roleId}, #{enterpriseId})
+                </foreach>
+            </when>
+            <when test="params.derivePostIds != null">
+                <foreach item="derivePostId" collection="params.derivePostIds" separator=",">
+                    (#{deptId}, #{postId}, #{userId}, #{deriveDeptId}, #{derivePostId}, #{deriveUserId}, #{deriveEnterpriseId}, #{roleId}, #{enterpriseId})
+                </foreach>
+            </when>
+            <when test="params.deriveUserIds != null">
+                <foreach item="deriveUserId" collection="params.deriveUserIds" separator=",">
+                    (#{deptId}, #{postId}, #{userId}, #{deriveDeptId}, #{derivePostId}, #{deriveUserId}, #{deriveEnterpriseId}, #{roleId}, #{enterpriseId})
+                </foreach>
+            </when>
+            <otherwise>
+                (#{deptId}, #{postId}, #{userId}, #{deriveDeptId}, #{derivePostId}, #{deriveUserId}, #{deriveEnterpriseId}, #{roleId}, #{enterpriseId})
+            </otherwise>
+        </choose>
     </insert>
 
     <delete id="deleteOrganizeRoleByRoleId" parameterType="SysRole">
@@ -82,9 +131,12 @@
     <delete id="deleteOrganizeRoleByOrganizeId" parameterType="SysOrganizeRole">
         delete from sys_organize_role
         where 1 = 0
-        <if test="deptId != null"> or dept_id = #{deptId} or derive_dept_id = #{deptId} </if>
-        <if test="postId != null"> or post_id = #{postId} or derive_post_id = #{postId} </if>
-        <if test="userId != null"> or user_id = #{userId} or derive_user_id = #{userId} </if>
+        <if test="deptId != null">             or dept_id = #{deptId} </if>
+        <if test="deriveDeptId != null">       or derive_dept_id = #{deptId} </if>
+        <if test="postId != null">             or post_id = #{postId} </if>
+        <if test="derivePostId != null">       or derive_post_id = #{postId} </if>
+        <if test="userId != null">             or user_id = #{userId} </if>
+        <if test="deriveUserId != null">       or derive_user_id = #{userId} </if>
         <if test="deriveEnterpriseId != null"> or derive_tenant_id = #{deriveEnterpriseId} </if>
         and derive_administrator_id is null
         <!-- 数据范围过滤 -->
@@ -94,12 +146,22 @@
     <delete id="deleteOrganizeRoleByOrganizeIds" parameterType="SysOrganizeRole">
         delete from sys_organize_role
         where 1 = 0
-        <if test="deptId != null"> or dept_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> or derive_dept_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
-        <if test="postId != null"> or post_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> or derive_post_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
-        <if test="userId != null"> or user_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> or derive_user_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
-        <if test="deriveEnterpriseId != null"> or derive_tenant_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
+        <if test="deptId != null">              or dept_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
+        <if test="deriveDeptId != null">        or derive_dept_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
+        <if test="postId != null">              or post_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
+        <if test="derivePostId != null">        or derive_post_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
+        <if test="userId != null">              or user_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
+        <if test="deriveUserId != null">        or derive_user_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
+        <if test="deriveEnterpriseId != null">  or derive_tenant_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
         and derive_administrator_id is null
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>
+
+    <select id="countOrganizeRoleByRoleId" parameterType="SysRole" resultType="java.lang.Integer">
+        <include refid="countVo"/>
+        where e.role_id = #{roleId}
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
 </mapper>

@@ -45,15 +45,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
     private SysOrganizeRoleMapper organizeRoleMapper;
 
     @Autowired
-    private SysDeptRoleMapper deptRoleMapper;
-
-    @Autowired
-    private SysPostRoleMapper postRoleMapper;
-
-    @Autowired
-    private SysUserRoleMapper userRoleMapper;
-
-    @Autowired
     private ISysRoleService roleService;
 
     /**
@@ -135,16 +126,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public int useCountByRoleId(SysRole role) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", role.getRoleId());
-        int cr;
-        // 1.通过角色Id查询部门-角色使用数量
-        cr = deptRoleMapper.countDeptRoleByRoleId(search);//@param search 万用组件 | roleId 角色Id
-        // 1.通过角色Id查询岗位-角色使用数量
-        cr = cr + postRoleMapper.countPostRoleByRoleId(search);//@param search 万用组件 | roleId 角色Id
-        // 1.通过角色Id查询用户-角色使用数量
-        cr = cr + userRoleMapper.countUserRoleByRoleId(search);//@param search 万用组件 | roleId 角色Id
-        return cr;
+        return organizeRoleMapper.countOrganizeRoleByRoleId(role);
     }
 
     /**
@@ -182,7 +164,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public int updateRole(SysRole role) {
-        return roleMapper.updateRole(role);//@param role 角色信息
+        return roleMapper.updateRole(role);
     }
 
     /**

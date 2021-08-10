@@ -21,7 +21,6 @@ import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.role.domain.SysOrganizeRole;
 import com.xueyi.system.role.mapper.SysOrganizeRoleMapper;
 import com.xueyi.system.role.mapper.SysPostRoleMapper;
-import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.apache.commons.collections4.list.TreeList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,9 +58,6 @@ public class SysPostServiceImpl implements ISysPostService {
 
     @Autowired
     private SysUserMapper userMapper;
-
-    @Autowired
-    private SysPostRoleMapper postRoleMapper;
 
     /**
      * 查询岗位信息集合
@@ -156,7 +152,7 @@ public class SysPostServiceImpl implements ISysPostService {
     }
 
     /**
-     * 修改保存部门-角色信息
+     * 修改保存岗位-角色信息
      *
      * @param post 岗位信息 | postId  岗位Id | roleIds 角色组Ids
      * @return 结果
@@ -164,17 +160,16 @@ public class SysPostServiceImpl implements ISysPostService {
     @Override
     @Transactional
     public int updatePostRole(SysPost post) {
-        // 执行部门-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
-        SysSearch search = new SysSearch();
-        // 删除原有的postRole信息
-        search.getSearch().put("postId", post.getPostId());
-        int rows = postRoleMapper.deletePostRoleByPostId(search);//@param search 查询组件 | postId 岗位Id
-        if (post.getRoleIds().length > 0) {
-            // 改变为最新的postRole信息
-            search.getSearch().put("roleIds", post.getRoleIds());
-            rows = rows + postRoleMapper.batchPostRole(search);//@param search 万用组件 | postId 岗位Id | roleIds 角色Ids
+        // 1.删除原有岗位-角色关联
+        SysOrganizeRole organizeRole = new SysOrganizeRole();
+        organizeRole.setPostId(post.getPostId());
+        organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
+        // 2.是否需要执行新增
+        if(post.getRoleIds().length > 0){
+            organizeRole.getParams().put("roleIds",post.getRoleIds());
+            organizeRoleMapper.batchOrganizeRole(organizeRole);
         }
-        return rows;
+        return 1;
     }
 
     /**
@@ -217,6 +212,7 @@ public class SysPostServiceImpl implements ISysPostService {
         // 2.删除岗位-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setPostId(post.getPostId());
+        organizeRole.setDerivePostId(post.getPostId());
         organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
         return postMapper.deletePostById(post);
     }
@@ -238,6 +234,7 @@ public class SysPostServiceImpl implements ISysPostService {
         // 2.批量删除岗位-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setPostId(RoleConstants.DELETE_PARAM);
+        organizeRole.setDerivePostId(RoleConstants.DELETE_PARAM);
         organizeRole.getParams().put("Ids",post.getParams().get("Ids"));
         organizeRoleMapper.deleteOrganizeRoleByOrganizeIds(organizeRole);
         return postMapper.deletePostByIds(post);

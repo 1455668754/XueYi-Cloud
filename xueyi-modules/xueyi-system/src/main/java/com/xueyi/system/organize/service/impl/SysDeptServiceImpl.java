@@ -18,7 +18,6 @@ import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.organize.service.ISysDeptService;
 import com.xueyi.system.role.domain.SysOrganizeRole;
-import com.xueyi.system.role.mapper.SysDeptRoleMapper;
 import com.xueyi.system.role.mapper.SysOrganizeRoleMapper;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +49,6 @@ public class SysDeptServiceImpl implements ISysDeptService {
 
     @Autowired
     private SysDeptMapper deptMapper;
-
-    @Autowired
-    private SysDeptRoleMapper deptRoleMapper;
 
     @Autowired
     private SysPostMapper postMapper;
@@ -156,17 +152,16 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     @Transactional
     public int updateDeptRole(SysDept dept) {
-        // 执行部门-角色变更 处理逻辑依次为：1.执行删除 → 2.是否需要执行新增
-        SysSearch search = new SysSearch();
-        // 删除原有的deptRole信息
-        search.getSearch().put("deptId", dept.getDeptId());
-        int rows = deptRoleMapper.deleteDeptRoleByDeptId(search);//@param search 万用组件 | deptId 部门Id
-        if (dept.getRoleIds().length > 0) {
-            // 改变为最新的deptRole信息
-            search.getSearch().put("roleIds", dept.getRoleIds());
-            rows = rows + deptRoleMapper.batchDeptRole(search);//@param search 万用组件 | deptId 部门Id | roleIds 角色Ids(Long[])
+        // 1.删除原有部门-角色关联
+        SysOrganizeRole organizeRole = new SysOrganizeRole();
+        organizeRole.setDeptId(dept.getDeptId());
+        organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
+        // 2.是否需要执行新增
+        if(dept.getRoleIds().length > 0){
+            organizeRole.getParams().put("roleIds",dept.getRoleIds());
+            organizeRoleMapper.batchOrganizeRole(organizeRole);
         }
-        return rows;
+        return 1;
     }
 
     /**
@@ -236,6 +231,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
         // 2.删除部门-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setDeptId(dept.getDeptId());
+        organizeRole.setDeriveDeptId(dept.getDeptId());
         organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
         return deptMapper.deleteDeptById(dept);
     }

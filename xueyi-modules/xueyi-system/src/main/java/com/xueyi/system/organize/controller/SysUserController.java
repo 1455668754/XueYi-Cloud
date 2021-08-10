@@ -224,7 +224,7 @@ public class SysUserController extends BaseController {
     @PutMapping("/changeUserRole")
     public AjaxResult editUserRole(@Validated @RequestBody SysUser user) {
         userService.checkUserAllowed(user);
-        return toAjax(userService.updateUserRole(user.getUserId(), user.getRoleIds()));
+        return toAjax(userService.updateUserRole(user));
     }
 
     /**

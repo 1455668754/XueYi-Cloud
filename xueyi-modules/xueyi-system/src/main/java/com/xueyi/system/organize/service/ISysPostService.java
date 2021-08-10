@@ -45,7 +45,7 @@ public interface ISysPostService {
     public int updatePost(SysPost post);
 
     /**
-     * 修改保存部门-角色信息
+     * 修改保存岗位-角色信息
      *
      * @param post 岗位信息 | postId  岗位Id | roleIds 角色组Ids
      * @return 结果
