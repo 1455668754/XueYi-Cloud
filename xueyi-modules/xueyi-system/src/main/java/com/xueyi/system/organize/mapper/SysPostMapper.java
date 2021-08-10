@@ -38,7 +38,6 @@ public interface SysPostMapper {
      * @param post 岗位信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int insertPost(SysPost post);
 
     /**

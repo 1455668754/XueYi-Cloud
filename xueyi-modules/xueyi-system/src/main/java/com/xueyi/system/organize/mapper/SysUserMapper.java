@@ -67,7 +67,6 @@ public interface SysUserMapper {
      * @param user 用户信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int insertUser(SysUser user);
 
     /**

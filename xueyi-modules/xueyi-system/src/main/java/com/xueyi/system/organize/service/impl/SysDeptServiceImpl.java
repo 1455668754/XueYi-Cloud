@@ -1,13 +1,17 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.RoleConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.CustomException;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
@@ -37,6 +41,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
 
     @Autowired
     private SysDeptRoleMapper deptRoleMapper;
+
+    @Autowired
+    private SysRoleMapper roleMapper;
 
     @Autowired
     private SysPostMapper postMapper;
@@ -73,6 +80,8 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * @return 结果
      */
     @Override
+    @Transactional
+    @DataScope(ueAlias = "empty")
     public int insertDept(SysDept dept) {
         // 查询父节点是否正常状态,不正常则不允许新增子节点
         SysDept parentDept = new SysDept();
@@ -82,7 +91,14 @@ public class SysDeptServiceImpl implements ISysDeptService {
             throw new CustomException("部门停用，不允许新增");
         }
         dept.setAncestors(info.getAncestors() + "," + dept.getParentId());
-        return deptMapper.insertDept(dept);//@param dept 部门信息
+        int row = deptMapper.insertDept(dept);
+        if(row>0){
+            SysRole role = new SysRole();
+            role.setType(RoleConstants.DEPT_DERIVE_TYPE);
+            role.setDeriveId(dept.getId());
+            roleMapper.insertRole(role);
+        }
+        return row;
     }
 
     /**
@@ -167,7 +183,6 @@ public class SysDeptServiceImpl implements ISysDeptService {
             rows = rows + postMapper.updatePostStatusByDeptId(post);
             rows = rows + userMapper.updateUserStatusByDeptId(user);
         }
-
         return rows;
     }
 

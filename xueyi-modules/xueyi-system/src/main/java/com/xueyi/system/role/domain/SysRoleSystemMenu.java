@@ -18,6 +18,9 @@ public class SysRoleSystemMenu extends BaseEntity {
     /** 系统Id */
     private Long systemMenuId;
 
+    /** 角色类型（0常规 1衍生 2租户） */
+    private String type;
+
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
@@ -34,11 +37,20 @@ public class SysRoleSystemMenu extends BaseEntity {
         this.systemMenuId = systemMenuId;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("roleId", getRoleId())
                 .append("systemMenuId", getSystemMenuId())
+                .append("type", getType())
                 .toString();
     }
 }

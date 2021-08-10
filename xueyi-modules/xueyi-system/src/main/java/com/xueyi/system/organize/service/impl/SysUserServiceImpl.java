@@ -3,6 +3,7 @@ package com.xueyi.system.organize.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.RoleConstants;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,6 +122,8 @@ public class SysUserServiceImpl implements ISysUserService {
      * @return 结果
      */
     @Override
+    @Transactional
+    @DataScope(ueAlias = "empty")
     public int insertUser(SysUser user) {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
         SysPost post = new SysPost();
@@ -134,7 +137,14 @@ public class SysUserServiceImpl implements ISysUserService {
             } catch (Exception ignored) {
             }
         }
-        return userMapper.insertUser(user);//@param user 用户信息
+        int row = userMapper.insertUser(user);
+        if(row>0){
+            SysRole role = new SysRole();
+            role.setType(RoleConstants.USER_DERIVE_TYPE);
+            role.setDeriveId(post.getId());
+            roleMapper.insertRole(role);
+        }
+        return row;
     }
 
     /**

@@ -48,7 +48,6 @@ public interface SysDeptMapper {
      * @param dept 部门信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int insertDept(SysDept dept);
 
     /**

@@ -12,6 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="dataScope"          	column="data_scope"            />
 		<result property="menuCheckStrictly"  	column="menu_check_strictly"   />
 		<result property="deptCheckStrictly"  	column="dept_check_strictly"   />
+		<result property="type"   				column="type"   	 		   />
 		<result property="sort"   				column="sort"   	 		   />
 		<result property="status"     			column="status"      		   />
 		<result property="createBy"   		    column="create_by"             />
@@ -112,6 +113,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="dataScope != null and dataScope != ''">			data_scope				        ,</if>
 			<if test="menuCheckStrictly != null">						menu_check_strictly		        ,</if>
 			<if test="deptCheckStrictly != null">						dept_check_strictly		        ,</if>
+			<if test="type != null and type != ''">						type					        ,</if>
 			<if test="sort != null">									sort					        ,</if>
 			<if test="status != null and status != ''">					status					        ,</if>
 			<if test="createBy != null">								create_by				        ,</if>
@@ -126,6 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="dataScope != null and dataScope != ''">			#{dataScope}			        ,</if>
 			<if test="menuCheckStrictly != null">						#{menuCheckStrictly}	        ,</if>
 			<if test="deptCheckStrictly != null">						#{deptCheckStrictly}	        ,</if>
+			<if test="type != null and type != ''">						#{type}					        ,</if>
 			<if test="sort != null">									#{sort}					        ,</if>
 			<if test="status != null and status != ''">					#{status}				        ,</if>
 			<if test="createBy != null">								#{createBy}				        ,</if>

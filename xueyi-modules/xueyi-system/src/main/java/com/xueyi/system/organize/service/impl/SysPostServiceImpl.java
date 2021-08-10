@@ -7,8 +7,12 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.RoleConstants;
+import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.api.domain.organize.SysUser;
+import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
@@ -47,6 +51,9 @@ public class SysPostServiceImpl implements ISysPostService {
     @Autowired
     private SysPostRoleMapper postRoleMapper;
 
+    @Autowired
+    private SysRoleMapper roleMapper;
+
     /**
      * 查询岗位信息集合
      *
@@ -76,6 +83,8 @@ public class SysPostServiceImpl implements ISysPostService {
      * @return 结果
      */
     @Override
+    @Transactional
+    @DataScope(ueAlias = "empty")
     public int insertPost(SysPost post) {
         // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
         if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
@@ -90,7 +99,14 @@ public class SysPostServiceImpl implements ISysPostService {
                 }
             }
         }
-        return postMapper.insertPost(post);
+        int row = postMapper.insertPost(post);
+        if(row>0){
+            SysRole role = new SysRole();
+            role.setType(RoleConstants.POST_DERIVE_TYPE);
+            role.setDeriveId(post.getId());
+            roleMapper.insertRole(role);
+        }
+        return row;
     }
 
     /**

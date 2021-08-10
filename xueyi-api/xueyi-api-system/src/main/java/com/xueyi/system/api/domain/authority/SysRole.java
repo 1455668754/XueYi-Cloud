@@ -42,7 +42,15 @@ public class SysRole extends BaseEntity
     private boolean menuCheckStrictly;
 
     /** 部门树选择项是否关联显示（0：父子不互相关联显示 1：父子互相关联显示 ） */
+
     private boolean deptCheckStrictly;
+
+    /** 角色类型（0常规 1租户衍生 2部门衍生 3岗位衍生 4用户衍生） */
+    @Excel(name = "角色类型", readConverterExp = "0=常规,1=租户衍生,2=部门衍生,3=岗位衍生,4=用户衍生")
+    private String type;
+
+    /** 衍生Id */
+    private Long deriveId;
 
     /** 角色状态（0正常 1停用） */
     @Excel(name = "角色状态", readConverterExp = "0=正常,1=停用")
@@ -89,6 +97,22 @@ public class SysRole extends BaseEntity
 
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public Long getDeriveId() {
+        return deriveId;
+    }
+
+    public void setDeriveId(Long deriveId) {
+        this.deriveId = deriveId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getStatus() {
@@ -165,6 +189,7 @@ public class SysRole extends BaseEntity
                 .append("roleKey", getRoleKey())
                 .append("menuCheckStrictly", isMenuCheckStrictly())
                 .append("deptCheckStrictly", isDeptCheckStrictly())
+                .append("type", getType())
                 .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())
