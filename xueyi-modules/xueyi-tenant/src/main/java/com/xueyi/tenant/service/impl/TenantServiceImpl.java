@@ -6,7 +6,6 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.CustomException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.domain.TenantStrategy;
 import com.xueyi.tenant.mapper.TenantStrategyMapper;
@@ -85,6 +84,8 @@ public class TenantServiceImpl implements ITenantService {
                 //新建租户时同步新建信息
                 //1.新建租户的部门|岗位|超管用户信息
                 tenantCreationService.organizeCreation(tenant);
+                //1.新建租户的衍生角色&&模块|菜单屏蔽信息
+                tenantCreationService.deriveRoleCreation(tenant);
                 return tenantMapper.insertTenant(tenant);
             }
         }

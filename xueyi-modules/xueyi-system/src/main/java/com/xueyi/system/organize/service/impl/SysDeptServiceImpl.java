@@ -101,7 +101,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
             SysRole role = new SysRole();
             role.setType(RoleConstants.DEPT_DERIVE_TYPE);
             role.setDeriveId(dept.getId());
-            role.setRoleName("衍生"+dept.getId());
+            role.setRoleName("部门衍生"+dept.getId());
             roleService.insertRole(role);
         }
         return row;

@@ -37,4 +37,22 @@ public interface TenantCreationMapper {
      * @return 结果
      */
     public int createUserByTenantId(Tenant tenant);
+
+    /**
+     * 创建新租户衍生角色
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param tenant 租户管理
+     * @return 结果
+     */
+    public int createRoleByTenantId(Tenant tenant);
+
+    /**
+     * 创建新租户组织-衍生角色关联
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param tenant 租户管理
+     * @return 结果
+     */
+    public int createOrganizeRoleByTenantId(Tenant tenant);
 }

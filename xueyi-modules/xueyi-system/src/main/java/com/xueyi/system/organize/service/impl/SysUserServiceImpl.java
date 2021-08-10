@@ -148,7 +148,7 @@ public class SysUserServiceImpl implements ISysUserService {
             SysRole role = new SysRole();
             role.setType(RoleConstants.USER_DERIVE_TYPE);
             role.setDeriveId(user.getId());
-            role.setRoleName("衍生"+user.getId());
+            role.setRoleName("用户衍生"+user.getId());
             roleService.insertRole(role);
         }
         return row;

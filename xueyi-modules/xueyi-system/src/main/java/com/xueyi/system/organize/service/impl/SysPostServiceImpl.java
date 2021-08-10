@@ -20,7 +20,6 @@ import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.role.domain.SysOrganizeRole;
 import com.xueyi.system.role.mapper.SysOrganizeRoleMapper;
-import com.xueyi.system.role.mapper.SysPostRoleMapper;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.apache.commons.collections4.list.TreeList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +108,7 @@ public class SysPostServiceImpl implements ISysPostService {
             SysRole role = new SysRole();
             role.setType(RoleConstants.POST_DERIVE_TYPE);
             role.setDeriveId(post.getId());
-            role.setRoleName("衍生"+post.getId());
+            role.setRoleName("岗位衍生"+post.getId());
             roleService.insertRole(role);
         }
         return row;
