@@ -13,14 +13,14 @@ import java.util.List;
 public interface SysSystemMapper {
 
     /**
-     * 查询子系统模块列表|超管
+     * 当前用户首页可展示的模块列表 | 管理员
      * 访问控制 s 租户查询
      *
      * @param sysSystem 子系统模块 | null
      * @return 子系统模块集合
      */
     @DataScope(edAlias = "s")
-    public List<SysSystem> selectSystemViewAdminList(SysSystem sysSystem);
+    public List<SysSystem> AdminHomePageView(SysSystem sysSystem);
 
     /**
      * 查询子系统模块列表

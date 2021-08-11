@@ -33,7 +33,7 @@
         from xy_system s
     </sql>
 
-    <select id="selectSystemViewAdminList" parameterType="SysSystem" resultMap="SysSystemResult">
+    <select id="AdminHomePageView" parameterType="SysSystem" resultMap="SysSystemResult">
         <include refid="RouteVo"/>
         where s.status = '0'
         <!-- 数据范围过滤 -->

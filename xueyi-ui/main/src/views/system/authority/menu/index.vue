@@ -255,7 +255,7 @@
 
 <script>
 import {getMenu, delMenu, addMenu, updateMenu} from "@/api/system/menu"
-import {treeSelect as systemMenuTreeSelect} from "@/api/system/system"
+import {treeSelectPermitPersonal as systemMenuTreeSelect} from "@/api/system/system"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import IconSelect from "@/components/IconSelect"
@@ -322,7 +322,7 @@ export default {
     /** 查询菜单列表 */
     getList() {
       this.loading = true
-      systemMenuTreeSelect({searchValue: '1'}).then(response => {
+      systemMenuTreeSelect().then(response => {
         this.menuList = response.data
         this.loading = false
       })
@@ -355,7 +355,7 @@ export default {
       if (row != null && row.type === '1' && row.id) {
         id = row.id
       }
-      systemMenuTreeSelect({Id: id, searchValue: '1'}).then(response => {
+      systemMenuTreeSelect({Id: id}).then(response => {
         this.menuOptions = response.data
       })
     },

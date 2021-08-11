@@ -1,10 +1,12 @@
 package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.MenuConstants;
+import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
@@ -12,13 +14,14 @@ import com.xueyi.system.authority.mapper.SysSystemMapper;
 import com.xueyi.system.authority.service.ISysSystemService;
 import com.xueyi.system.role.domain.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
+import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import com.xueyi.system.utils.vo.TreeSelect;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -37,40 +40,41 @@ public class SysSystemServiceImpl implements ISysSystemService {
     private SysSystemMapper systemMapper;
 
     @Autowired
+    private ISysRoleSystemMenuService roleSystemMenuService;
+
+    @Autowired
     private SysRoleSystemMenuMapper roleSystemMenuMapper;
 
     @Autowired
     private ISysSystemService systemService;
 
     /**
-     * 查询首页可展示子系统模块列表
+     * 当前用户首页可展示的模块列表
      *
-     * @param userId   当前用户Id
-     * @param userType 用户标识
      * @return 子系统模块集合
      */
     @Override
-    public List<SysSystem> selectSystemViewList(Long userId, String userType) {
-        if (SysUser.isAdmin(userType)) {
-            return systemMapper.selectSystemViewAdminList(new SysSystem());
+    public List<SysSystem> homePageView() {
+        if (SysUser.isAdmin(SecurityUtils.getUserType())) {
+            return systemMapper.AdminHomePageView(new SysSystem());
         }
         SysSystem sysSystem = new SysSystem();
-        sysSystem.getParams().put("roleSystemPerms", systemService.selectSystemMenuListByUserId(userId));
+        SysMenu menu = new SysMenu();
+        menu.getParams().put("userId", SecurityUtils.getUserId());
+        sysSystem.getParams().put("roleSystemPerms", systemService.userHomePageView(menu));
         return systemMapper.selectSystemViewList(sysSystem);
     }
 
     /**
-     * 根据用户Id查询模块&&菜单
+     * 根据用户Id查询模块&&菜单 | 非管理员
      *
-     * @param userId 用户Id
      * @return 模块&&菜单列表
      */
     @Override
     @DS("#isolate")
-    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(Long userId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        return roleSystemMenuMapper.selectSystemMenuListByUserId(search);//@param search 万用组件 | userId 用户Id
+    @DataScope(eAlias = "rsm")
+    public List<SysRoleSystemMenu> userHomePageView(SysMenu menu) {
+        return roleSystemMenuMapper.selectSystemMenuListByUserId(menu);
     }
 
     /**
@@ -139,34 +143,57 @@ public class SysSystemServiceImpl implements ISysSystemService {
     }
 
     /**
-     * 加载对应角色系统-菜单列表树 | searchValue === 0 仅查询所有正常模块&&菜单 | searchValue === 1 查询所有模块&&菜单 | Id exclude的菜单Id
+     * 加载角色系统-菜单列表树
+     *
+     * @param sysSystem 子系统模块 | Id exclude的模块&菜单Id | status 模块&菜单状态 | searchValue 查询类型
+     *                  searchValue = PERMIT_ALL                        获取所有权限内模块&菜单 | 无衍生角色
+     *                  searchValue = PERMIT_ADMINISTRATOR              仅获取超管权限内模块&菜单 | 衍生角色仅获取超管衍生
+     *                  searchValue = PERMIT_ENTERPRISE                 仅获取租户权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
+     *                  searchValue = PERMIT_PERSONAL_SCREEN_DERIVE     仅获取个人权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
+     *                  searchValue = PERMIT_PERSONAL                   仅获取个人权限内模块&菜单 | 衍生角色获取自身组织衍生&超管衍生&租户衍生
      */
     @Override
+    @Transactional
+    @GlobalTransactional
     public List<TreeSelect> buildSystemMenuTreeSelect(SysSystem sysSystem) {
+        List<SysRoleSystemMenu> list = null;
         SysSystem checkSystem = new SysSystem();
         SysMenu checkMenu = new SysMenu();
-        if (sysSystem.getSearchValue().equals("0")) {
-            checkSystem.setStatus("0");
-            checkMenu.setStatus("0");
-        } else if (sysSystem.getSearchValue().equals("1") && sysSystem.getId() != null && sysSystem.getId() != 0L) {
-            checkMenu.setMenuId(sysSystem.getId());
+        if (StringUtils.isNotEmpty(sysSystem.getSearchValue()) && !StringUtils.equals(sysSystem.getSearchValue(), MenuConstants.PERMIT_ALL)) {
+            if (SysUser.isAdmin(SecurityUtils.getUserType()) || StringUtils.equals(sysSystem.getSearchValue(), MenuConstants.PERMIT_ADMINISTRATOR)) {
+                list = roleSystemMenuService.selectPermitAdministrator(new SysRoleSystemMenu());
+            } else if (StringUtils.equals(sysSystem.getSearchValue(), MenuConstants.PERMIT_ENTERPRISE)) {
+                list = roleSystemMenuService.selectPermitEnterprise(new SysRoleSystemMenu());
+            } else if (StringUtils.equals(sysSystem.getSearchValue(), MenuConstants.PERMIT_PERSONAL_SCREEN_DERIVE)) {
+                SysRoleSystemMenu systemMenu = new SysRoleSystemMenu();
+                systemMenu.getParams().put("userId", SecurityUtils.getUserId());
+                list = roleSystemMenuService.selectPermitPersonalScreenDerive(systemMenu);
+            } else if (StringUtils.equals(sysSystem.getSearchValue(), MenuConstants.PERMIT_PERSONAL)) {
+                SysRoleSystemMenu systemMenu = new SysRoleSystemMenu();
+                systemMenu.getParams().put("userId", SecurityUtils.getUserId());
+                list = roleSystemMenuService.selectPermitPersonal(systemMenu);
+            }
+            if (StringUtils.equals(sysSystem.getSearchValue(), MenuConstants.PERMIT_PERSONAL_SCREEN_DERIVE)) {
+                checkSystem.getParams().put("onlyList", list);
+                checkMenu.getParams().put("onlyList", list);
+            } else {
+                checkSystem.getParams().put("excludeList", list);
+                checkMenu.getParams().put("excludeList", list);
+            }
         }
+        checkSystem.setStatus(sysSystem.getStatus());
+        checkMenu.setStatus(sysSystem.getStatus());
+        checkMenu.setMenuId(sysSystem.getId());
         //查询系统信息列表
         List<SysSystem> systemList = systemMapper.selectSystemList(checkSystem);
         //查询菜单信息列表
-        List<SysMenu> menuList = menuMapper.selectMenuListAll(checkMenu);
-        //将菜单列表中的顶级菜单的父级变更为对应系统ID，为下一步的系统-菜单列表组件提供有效参数
-        for (SysMenu sysMenu : menuList) {
-            if (sysMenu.getParentId().equals(0L)) {
-                sysMenu.setParentId(sysMenu.getSystemId());
-            }
-        }
+        List<SysMenu> menuList = menuMapper.buildSystemMenuTreeSelect(checkMenu);
         List<SystemMenuVo> systemMenuList = new ArrayList<>();
         SystemMenuVo systemMenuVo;
         //创建初始系统信息并添加进list中
         systemMenuVo = new SystemMenuVo();
         systemMenuVo.setUid(0L);
-        systemMenuVo.setFUid(-1L);
+        systemMenuVo.setFUid(MenuConstants.TOP_NODE);
         systemMenuVo.setName("默认系统");
         systemMenuVo.setStatus("0");
         systemMenuVo.setType("0");
@@ -177,7 +204,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
         for (SysSystem system : systemList) {
             systemMenuVo = new SystemMenuVo();
             systemMenuVo.setUid(system.getSystemId());
-            systemMenuVo.setFUid(-1L);
+            systemMenuVo.setFUid(MenuConstants.TOP_NODE);
             systemMenuVo.setName(system.getSystemName());
             systemMenuVo.setStatus(system.getStatus());
             systemMenuVo.setType("0");
@@ -201,7 +228,18 @@ public class SysSystemServiceImpl implements ISysSystemService {
             systemMenuList.add(systemMenuVo);
         }
         List<SystemMenuVo> trees = buildSystemMenuTree(systemMenuList);
+        //干掉父级不是顶级节点的
+        deleteNoTopNode(trees);
         return trees.stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    /**
+     * 删除顶级节点非 TOP_NODE 的值
+     *
+     * @param systemMenuList 系统-菜单组装列表
+     */
+    public void deleteNoTopNode(List<SystemMenuVo> systemMenuList) {
+        systemMenuList.removeIf(systemMenuVo -> !Objects.equals(systemMenuVo.getFUid(), MenuConstants.TOP_NODE));
     }
 
     /**

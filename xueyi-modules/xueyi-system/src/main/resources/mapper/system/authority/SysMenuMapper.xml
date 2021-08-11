@@ -110,13 +110,27 @@
 		order by m.parent_id, m.sort
 	</select>
 
-	<select id="selectMenuListAll" parameterType="SysMenu" resultMap="SysMenuResult">
-		select m.menu_id, m.system_id, m.menu_name, m.parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, if(m.tenant_id = 0 and ( -1 != #{enterpriseId} or 0 != #{enterpriseId} ),'1','0') as is_main,
+	<select id="buildSystemMenuTreeSelect" parameterType="SysMenu" resultMap="SysMenuResult">
+		select m.menu_id, m.system_id, m.menu_name, if(m.parent_id = 0, m.system_id, m.parent_id) as parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, if(m.tenant_id = 0 and ( -1 != #{enterpriseId} or 0 != #{enterpriseId} ),'1','0') as is_main,
 		ifnull(perms, '') as perms, m.icon, m.create_time
 		from sys_menu m
 		where 1 = 1
-		<if test="menuId != null">	AND m.menu_id != #{menuId}	</if>
-		<if test="status != null and status != ''">	AND m.status = #{status}	</if>
+		<if test="menuId != null">and m.menu_id != #{menuId}</if>
+		<if test="status != null and status != ''">and m.status = #{status}</if>
+		<choose>
+			<when test="params.onlyList != null and params.onlyList.size() > 0">
+				and m.menu_id in
+				<foreach collection="params.onlyList" index="index" item="item" open="(" separator="," close=")">
+					#{item.systemMenuId}
+				</foreach>
+			</when>
+			<when test="params.excludeList != null and params.excludeList.size() > 0">
+				and m.menu_id not in
+				<foreach collection="params.excludeList" index="index" item="item" open="(" separator="," close=")">
+					#{item.systemMenuId}
+				</foreach>
+			</when>
+		</choose>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		order by m.parent_id, m.sort

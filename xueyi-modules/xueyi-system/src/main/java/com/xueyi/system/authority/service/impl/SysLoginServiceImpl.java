@@ -125,11 +125,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
         if (SysUser.isAdmin(userType)) {
             perms.add("*:*:*");
         } else {
-            SysSearch search = new SysSearch();
-            search.setEnterpriseId(menu.getEnterpriseId());
-            search.getSearch().put("userId", menu.getParams().get("userId"));
-            List<SysRoleSystemMenu> roleSystemPerms = roleSystemMenuMapper.selectSystemMenuPermsList(search);
-            menu.getParams().put("roleSystemPerms", roleSystemPerms);
+            menu.getParams().put("roleSystemPerms", roleSystemMenuMapper.selectSystemMenuListByUserId(menu));
             perms.addAll(loginService.checkLoginMenuPerms(menu));
         }
         return perms;

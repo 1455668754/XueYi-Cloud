@@ -30,15 +30,16 @@ public interface SysMenuMapper {
      */
     @DataScope(edAlias = "m")
     public List<SysMenu> selectSystemMenuListOnlyChild(SysMenu menu);
+
     /**
-     * 查询系统全部菜单列表
+     * 查询系统全部菜单列表 | exclude 超管和租户衍生控制
      * 访问控制 m 租户查询
      *
-     * @param menu 菜单信息 | status 菜单状态
+     * @param menu 菜单信息 | status 菜单状态 |
      * @return 菜单列表
      */
     @DataScope(edAlias = "m")
-    public List<SysMenu> selectMenuListAll(SysMenu menu);
+    public List<SysMenu> buildSystemMenuTreeSelect(SysMenu menu);
 
     /**
      * 根据用户Id查询菜单
@@ -54,7 +55,7 @@ public interface SysMenuMapper {
      * 根据用户Id查询菜单
      * 访问控制 m 租户查询
      *
-     * @param menu 菜单信息 | params.roleSystemPerms 菜单Id组（List<SysRoleSystemMenu>） | systemId 系统Id
+     * @param menu 菜单信息 | params.roleSystemPerms 菜单Ids组（List<SysRoleSystemMenu>） | systemId 系统Id
      * @return 菜单列表
      */
     @DataScope(edAlias = "m", SYAlias = "m")

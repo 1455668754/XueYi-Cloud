@@ -9,18 +9,76 @@
         <result property="systemMenuId"     column="system_menu_id"     />
     </resultMap>
 
-    <sql id="permsPositiveVo">
-        select distinct rsm.system_menu_id
-        from sys_role_system_menu rsm
-                 left join sys_organize_role sor on sor.role_id = rsm.role_id
-                 left join sys_user u on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
+    <sql id="permsVo">
+        select distinct system_menu_id
+        from (
+                 select distinct rsm.system_menu_id
+                 from sys_role_system_menu rsm
+                          left join sys_role r on r.role_id = rsm.role_id
+                          left join sys_organize_role sor on sor.role_id = rsm.role_id
+                          left join sys_user u on u.dept_id = sor.derive_dept_id or u.post_id = sor.derive_post_id or
+                                                  u.user_id = sor.derive_user_id or sor.derive_tenant_id is not null or
+                                                  sor.derive_administrator_id is not null
+                 where r.status = '0' and u.user_id = #{params.userId} and rsm.tenant_id = #{enterpriseId}
+                   and (derive_tenant_id = #{enterpriseId} or derive_administrator_id = #{enterpriseId})
+                 union all
+                 select rsm.system_menu_id
+                 from sys_role_system_menu rsm
+                          left join sys_role r on r.role_id = rsm.role_id
+                          left join sys_organize_role sor on sor.role_id = rsm.role_id
+                          left join sys_user u
+                                    on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
+                 where r.status = '0' and u.user_id = #{params.userId} and rsm.tenant_id = #{enterpriseId}
+             ) as sm
+        where system_menu_id in (
+            select rsm.system_menu_id
+            from sys_role_system_menu rsm
+                     left join sys_role r on r.role_id = rsm.role_id
+                     left join sys_organize_role sor on sor.role_id = rsm.role_id
+                     left join sys_user u
+                               on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
+            where r.status = '0' and u.user_id = #{params.userId} and rsm.tenant_id = #{enterpriseId}
+        )
+        group by system_menu_id
+        having count(system_menu_id) = 1;
     </sql>
 
-    <sql id="permsNegativeVo">
+    <sql id="permitVo">
         select distinct rsm.system_menu_id
         from sys_role_system_menu rsm
-                 left join sys_organize_role sor on sor.role_id = rsm.role_id
-                 left join sys_user u on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
+        left join sys_organize_role sor on sor.role_id = rsm.role_id
+    </sql>
+
+    <sql id="permitPersonalScreenDeriveVo">
+        select distinct system_menu_id
+        from (
+                 select distinct rsm.system_menu_id
+                 from sys_role_system_menu rsm
+                          left join sys_role r on r.role_id = rsm.role_id
+                          left join sys_organize_role sor on sor.role_id = rsm.role_id
+                          left join sys_user u on sor.derive_tenant_id is not null or sor.derive_administrator_id is not null
+                 where r.status = '0' and u.user_id = #{params.userId} and rsm.tenant_id = #{enterpriseId}
+                   and (derive_tenant_id = #{enterpriseId} or derive_administrator_id = #{enterpriseId})
+                 union all
+                 select rsm.system_menu_id
+                 from sys_role_system_menu rsm
+                          left join sys_role r on r.role_id = rsm.role_id
+                          left join sys_organize_role sor on sor.role_id = rsm.role_id
+                          left join sys_user u
+                                    on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
+                 where r.status = '0' and u.user_id = #{params.userId} and rsm.tenant_id = #{enterpriseId}
+             ) as sm
+        where system_menu_id in (
+            select rsm.system_menu_id
+            from sys_role_system_menu rsm
+                     left join sys_role r on r.role_id = rsm.role_id
+                     left join sys_organize_role sor on sor.role_id = rsm.role_id
+                     left join sys_user u
+                               on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
+            where r.status = '0' and u.user_id = #{params.userId} and rsm.tenant_id = #{enterpriseId}
+        )
+        group by system_menu_id
+        having count(system_menu_id) = 1;
     </sql>
 
     <sql id="selectVo">
@@ -33,79 +91,30 @@
         from sys_role_system_menu rsm
     </sql>
 
-    <select id="selectSystemMenuPermsList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">
-        select distinct system_menu_id
-        from (
-                 select distinct rsm.system_menu_id
-                 from sys_role_system_menu rsm
-                          left join sys_organize_role sor on sor.role_id = rsm.role_id
-                          left join sys_user u on u.dept_id = sor.derive_dept_id or u.post_id = sor.derive_post_id or
-                                                  u.user_id = sor.derive_user_id or sor.derive_tenant_id is not null or
-                                                  sor.derive_administrator_id is not null
-                 where u.user_id = #{search.userId}
-                   and (derive_tenant_id = #{enterpriseId} or derive_administrator_id = #{enterpriseId})
-                 union all
-                 select rsm.system_menu_id
-                 from sys_role_system_menu rsm
-                          left join sys_organize_role sor on sor.role_id = rsm.role_id
-                          left join sys_user u
-                                    on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
-                 where u.user_id = #{search.userId}
-             ) as sm
-        where system_menu_id in (
-            select rsm.system_menu_id
-            from sys_role_system_menu rsm
-                     left join sys_organize_role sor on sor.role_id = rsm.role_id
-                     left join sys_user u
-                               on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
-            where u.user_id = #{search.userId}
-        )
-        group by system_menu_id
-        having count(system_menu_id) = 1;
+    <select id="selectSystemMenuListByUserId" parameterType="SysMenu" resultMap="SysRoleSystemMenuResult">
+        <include refid="permsVo"/>
     </select>
 
-    <select id="selectSystemMenuListByUserId" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">
-        select distinct system_menu_id
-        from (
-                 select distinct rsm.system_menu_id
-                 from sys_role_system_menu rsm
-                          left join sys_organize_role sor on sor.role_id = rsm.role_id
-                          left join sys_user u on u.dept_id = sor.derive_dept_id or u.post_id = sor.derive_post_id or
-                                                  u.user_id = sor.derive_user_id or sor.derive_tenant_id is not null or
-                                                  sor.derive_administrator_id is not null
-                 where u.user_id = #{search.userId}
-                   and (derive_tenant_id = #{enterpriseId} or derive_administrator_id = #{enterpriseId})
-                 union all
-                 select rsm.system_menu_id
-                 from sys_role_system_menu rsm
-                          left join sys_organize_role sor on sor.role_id = rsm.role_id
-                          left join sys_user u
-                                    on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
-                 where u.user_id = #{search.userId}
-             ) as sm
-        where system_menu_id in (
-            select rsm.system_menu_id
-            from sys_role_system_menu rsm
-                     left join sys_organize_role sor on sor.role_id = rsm.role_id
-                     left join sys_user u
-                               on u.dept_id = sor.dept_id or u.post_id = sor.post_id or u.user_id = sor.user_id
-            where u.user_id = #{search.userId}
-        )
-        group by system_menu_id
-        having count(system_menu_id) = 1;
-    </select>
-
-    <select id="selectSystemMenuList" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">
-        <include refid="selectVo"/>
-        where 1 = 1
-        <if test="search.roleId != null">
-            AND rsm.role_id = #{search.roleId}
-        </if>
-        <if test="search.systemMenuId != null">
-            AND rsm.system_menu_id = #{search.systemMenuId}
-        </if>
+    <select id="selectPermitAdministrator" parameterType="SysRoleSystemMenu" resultMap="SysRoleSystemMenuResult">
+        <include refid="permitVo"/>
+        where sor.derive_administrator_id = #{enterpriseId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+    </select>
+
+    <select id="selectPermitEnterprise" parameterType="SysRoleSystemMenu" resultMap="SysRoleSystemMenuResult">
+        <include refid="permitVo"/>
+        where ( sor.derive_tenant_id = #{enterpriseId} or sor.derive_administrator_id = #{enterpriseId} )
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <select id="selectPermitPersonalScreenDerive" parameterType="SysRoleSystemMenu" resultMap="SysRoleSystemMenuResult">
+        <include refid="permitPersonalScreenDeriveVo"/>
+    </select>
+
+    <select id="selectPermitPersonal" parameterType="SysRoleSystemMenu" resultMap="SysRoleSystemMenuResult">
+        <include refid="permsVo"/>
     </select>
 
     <select id="selectMenuScopeByIdExclude" parameterType="com.xueyi.system.api.utilTool.SysSearch" resultMap="SysRoleSystemMenuResult">

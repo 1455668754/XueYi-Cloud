@@ -337,7 +337,7 @@ import {
   getMenuScope, getDataScope
 } from "@/api/system/role"
 import {treeSelect as roleDeptTreeSelect} from "@/api/system/post"
-import {treeSelect as roleSystemMenuTreeSelect} from "@/api/system/system"
+import {treeSelectPermitEnterprise as roleSystemMenuTreeSelect} from "@/api/system/system"
 
 export default {
   name: "Role",
@@ -457,7 +457,7 @@ export default {
     },
     /** 查询系统-菜单树结构 */
     getSystemMenuTreeSelect() {
-      roleSystemMenuTreeSelect({searchValue: '0'}).then(response => {
+      roleSystemMenuTreeSelect({ status: '0' }).then(response => {
         this.systemMenuOptions = response.data
       })
     },

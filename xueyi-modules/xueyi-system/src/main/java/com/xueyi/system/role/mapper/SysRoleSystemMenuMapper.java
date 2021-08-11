@@ -2,6 +2,8 @@ package com.xueyi.system.role.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.role.domain.SysOrganizeRole;
 import com.xueyi.system.role.domain.SysRoleSystemMenu;
 
 import java.util.List;
@@ -12,34 +14,55 @@ import java.util.List;
  * @author xueyi
  */
 public interface SysRoleSystemMenuMapper {
-    /**
-     * 获取菜单数据权限（登录校验）
-     * 访问控制 rsm 租户查询
-     *
-     * @param search 万用组件 | userId 用户Id | enterpriseId 租户Id
-     * @return 结果
-     */
-    public List<SysRoleSystemMenu> selectSystemMenuPermsList(SysSearch search);
 
     /**
-     * 根据用户Id查询模块|菜单（构建前端路由 | 前端产品中心）
+     * 查询当前用户Id拥有权限的模块&菜单即可（构建前端路由 | 前端产品中心）
      * 访问控制 rsm 租户查询
      *
-     * @param search 万用组件 | userId 用户Id | systemId 系统Id
+     * @param menu 菜单信息 | systemId 系统Id | params.userId 用户Id | enterpriseId 租户Id
+     * @return 结果
+     */
+    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(SysMenu menu);
+
+    /**
+     * 仅获取超管衍生权限内模块&菜单
+     * 访问控制 rsm 租户查询
+     *
+     * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id
      * @return 结果
      */
     @DataScope(eAlias = "rsm")
-    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(SysSearch search);
+    public List<SysRoleSystemMenu> selectPermitAdministrator(SysRoleSystemMenu systemMenu);
 
     /**
-     * 查询系统-菜单集合
+     * 仅获取租户衍生权限内模块&菜单
      * 访问控制 rsm 租户查询
      *
-     * @param search 万用组件 | roleId 角色Id | systemMenuId 系统-菜单Id
+     * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id
      * @return 结果
      */
     @DataScope(eAlias = "rsm")
-    public List<SysRoleSystemMenu> selectSystemMenuList(SysSearch search);
+    public List<SysRoleSystemMenu> selectPermitEnterprise(SysRoleSystemMenu systemMenu);
+
+    /**
+     * 仅获取个人权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
+     * 访问控制 rsm 租户查询
+     *
+     * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id | params.userId 用户Id
+     * @return 结果
+     */
+    @DataScope(eAlias = "rsm")
+    public List<SysRoleSystemMenu> selectPermitPersonalScreenDerive(SysRoleSystemMenu systemMenu);
+
+    /**
+     * 仅获取个人衍生权限内模块&菜单
+     * 访问控制 rsm 租户查询
+     *
+     * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id | params.userId 用户Id
+     * @return 结果
+     */
+    @DataScope(eAlias = "rsm")
+    public List<SysRoleSystemMenu> selectPermitPersonal(SysRoleSystemMenu systemMenu);
 
     /**
      * 查询系统-菜单集合 | 仅获取没有子集的菜单或者系统信息

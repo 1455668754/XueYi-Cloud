@@ -32,6 +32,7 @@ import com.xueyi.system.authority.service.ISysRoleService;
 @RestController
 @RequestMapping("/role")
 public class SysRoleController extends BaseController {
+
     @Autowired
     private ISysRoleService roleService;
 
@@ -146,7 +147,6 @@ public class SysRoleController extends BaseController {
     public AjaxResult remove(@RequestBody SysRole role) {
         return toAjax(roleService.deleteRoleByIds(role));
     }
-
 
     /**
      * 导出角色列表

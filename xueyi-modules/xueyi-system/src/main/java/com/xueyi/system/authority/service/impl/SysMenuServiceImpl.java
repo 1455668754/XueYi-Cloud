@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.role.domain.SysRoleSystemMenu;
@@ -41,40 +43,36 @@ public class SysMenuServiceImpl implements ISysMenuService {
     private ISysMenuService menuService;
 
     /**
-     * 根据用户Id查询菜单
+     * 根据当前用户Id查询菜单 | 菜单路由
      *
-     * @param userId   用户Id
-     * @param systemId 系统Id
-     * @param userType 用户标识
+     * @param menu 菜单信息 | systemId 系统Id
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> selectMenuTreeByUserId(Long userId, Long systemId, String userType) {
+    public List<SysMenu> selectMenuTreeByUserId(SysMenu menu) {
         List<SysMenu> menus;
-        SysMenu menu = new SysMenu();
         // 管理员显示所有菜单信息
-        menu.setSystemId(systemId);
-        if (SysUser.isAdmin(userType)) {
+        if (SysUser.isAdmin(SecurityUtils.getUserType())) {
             menus = menuMapper.selectMenuTreeAll(menu);
         } else {
-            menu.getParams().put("roleSystemPerms", menuService.selectSystemMenuListByUserId(userId));
+            menu.getParams().put("userId", SecurityUtils.getUserId());
+            menu.getParams().put("roleSystemPerms", menuService.selectSystemMenuListByUserId(menu));
             menus = menuMapper.selectMenuTreeByUserId(menu);
         }
         return getChildPerms(menus, 0L);
     }
 
     /**
-     * 根据用户Id查询模块&&菜单
+     * 根据当前用户Id查询模块&&菜单
      *
-     * @param userId 用户Id
+     * @param menu 菜单信息 | systemId 系统Id | params.userId 用户Id
      * @return 模块&&菜单列表
      */
     @Override
     @DS("#isolate")
-    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(Long userId) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("userId", userId);
-        return roleSystemMenuMapper.selectSystemMenuListByUserId(search);//@param search 万用组件 | userId 用户Id
+    @DataScope(eAlias = "rsm")
+    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(SysMenu menu) {
+        return roleSystemMenuMapper.selectSystemMenuListByUserId(menu);
     }
 
     /**
@@ -289,8 +287,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @param menu 菜单信息
      * @return 结果
      */
-    public boolean isInnerLink(SysMenu menu)
-    {
+    public boolean isInnerLink(SysMenu menu) {
         return menu.getIsFrame().equals(UserConstants.NO_FRAME) && StringUtils.ishttp(menu.getPath());
     }
 
