@@ -132,6 +132,8 @@ create table xy_system (
   system_id		            bigint	            not null                                comment '系统Id',
   system_name		        varchar(50)	        not null	                            comment '系统名称',
   image_url                 varchar(5000)	    default null 	        	            comment '图片地址',
+  is_main                   char(1)             not null default 'N'	                comment '主系统（Y是 N否）',
+  is_default                char(1)             not null default 'N'	                comment '默认系统（Y是 N否）',
   type		                char(1)	            not null default '1'	                comment '跳转类型（0内部跳转 1外部跳转）',
   is_new		            char(1)	            not null default 'Y'	                comment '新页面（Y是 N否）',
   route                     varchar(500)        not null	                            comment '跳转路由',
@@ -150,9 +152,12 @@ create table xy_system (
 # ----------------------------
 # 初始化-租户信息表数据
 # ----------------------------
+insert into xy_system (system_id, system_name, is_main, is_default, route, remark, tenant_id)
+values (0, '默认系统' ,    'Y', 'Y', '', '默认系统', 0),
+       (2, '租户管理系统' , 'Y', 'N', 'http://localhost:81' , '雪忆租户管理系统', -1);
+
 insert into xy_system (system_id, system_name, image_url, route, remark, tenant_id)
-values (2, '租户管理系统' , '{"materialId":"1401773330431913984","materialNick":"15d67d32-ca7e-4f41-a33c-1aa6d669109f.jpg","materialUrl":"http://127.0.0.1:9300/statics/2021/06/07/15d67d32-ca7e-4f41-a33c-1aa6d669109f.jpg","materialOriginalUrl":"http://127.0.0.1:9300/statics/2021/06/07/1d72dee2-48d8-446c-a264-61a4f3a121d8.jpg","hiddenVisible":false}' , 'http://localhost:81' , '雪忆租户管理系统', -1),
-       (1 , '商城' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , 'http://localhost:82' , '轻松打造在线商城', 0),
+values (1 , '商城' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , 'http://localhost:82' , '轻松打造在线商城', 0),
        (3 , '系统3' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
        (4 , '系统4' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
        (5 , '系统5' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),

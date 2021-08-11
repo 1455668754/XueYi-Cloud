@@ -184,51 +184,40 @@ public class SysSystemServiceImpl implements ISysSystemService {
         checkSystem.setStatus(sysSystem.getStatus());
         checkMenu.setStatus(sysSystem.getStatus());
         checkMenu.setMenuId(sysSystem.getId());
-        //查询系统信息列表
-        List<SysSystem> systemList = systemMapper.selectSystemList(checkSystem);
-        //查询菜单信息列表
+        // 查询系统信息列表
+        List<SysSystem> systemList = systemMapper.buildSystemMenuTreeSelect(checkSystem);
+        // 查询菜单信息列表
         List<SysMenu> menuList = menuMapper.buildSystemMenuTreeSelect(checkMenu);
         List<SystemMenuVo> systemMenuList = new ArrayList<>();
-        SystemMenuVo systemMenuVo;
-        //创建初始系统信息并添加进list中
-        systemMenuVo = new SystemMenuVo();
-        systemMenuVo.setUid(0L);
-        systemMenuVo.setFUid(MenuConstants.TOP_NODE);
-        systemMenuVo.setName("默认系统");
-        systemMenuVo.setStatus("0");
-        systemMenuVo.setType("0");
-        systemMenuVo.setSystemId(0L);
-        systemMenuVo.setIsMain("1");
-        systemMenuList.add(systemMenuVo);
-        //遍历系统列表并添加进系统-菜单树中
+        // 遍历系统列表并添加进系统-菜单树中
         for (SysSystem system : systemList) {
-            systemMenuVo = new SystemMenuVo();
-            systemMenuVo.setUid(system.getSystemId());
-            systemMenuVo.setFUid(MenuConstants.TOP_NODE);
-            systemMenuVo.setName(system.getSystemName());
-            systemMenuVo.setStatus(system.getStatus());
-            systemMenuVo.setType("0");
-            systemMenuVo.setSystemId(system.getSystemId());
-            systemMenuVo.setIsMain("1");
-            systemMenuList.add(systemMenuVo);
+            SystemMenuVo systemVo = new SystemMenuVo();
+            systemVo.setUid(system.getSystemId());
+            systemVo.setFUid(MenuConstants.TOP_NODE);
+            systemVo.setName(system.getSystemName());
+            systemVo.setStatus(system.getStatus());
+            systemVo.setType("0");
+            systemVo.setSystemId(system.getSystemId());
+            systemVo.setIsMain(system.getIsMain());
+            systemMenuList.add(systemVo);
         }
-        //遍历菜单列表并添加进系统-菜单组装列表中
+        // 遍历菜单列表并添加进系统-菜单组装列表中
         for (SysMenu menu : menuList) {
-            systemMenuVo = new SystemMenuVo();
-            systemMenuVo.setUid(menu.getMenuId());
-            systemMenuVo.setFUid(menu.getParentId());
-            systemMenuVo.setName(menu.getMenuName());
-            systemMenuVo.setStatus(menu.getStatus());
-            systemMenuVo.setPerms(menu.getPerms());
-            systemMenuVo.setIcon(menu.getIcon());
-            systemMenuVo.setComponent(menu.getComponent());
-            systemMenuVo.setSystemId(menu.getSystemId());
-            systemMenuVo.setIsMain(menu.getIsMain());
-            systemMenuVo.setType("1");
-            systemMenuList.add(systemMenuVo);
+            SystemMenuVo menuVo = new SystemMenuVo();
+            menuVo.setUid(menu.getMenuId());
+            menuVo.setFUid(menu.getParentId());
+            menuVo.setName(menu.getMenuName());
+            menuVo.setStatus(menu.getStatus());
+            menuVo.setPerms(menu.getPerms());
+            menuVo.setIcon(menu.getIcon());
+            menuVo.setComponent(menu.getComponent());
+            menuVo.setSystemId(menu.getSystemId());
+            menuVo.setIsMain(menu.getIsMain());
+            menuVo.setType("1");
+            systemMenuList.add(menuVo);
         }
         List<SystemMenuVo> trees = buildSystemMenuTree(systemMenuList);
-        //干掉父级不是顶级节点的
+        // 干掉父级不是顶级节点的
         deleteNoTopNode(trees);
         return trees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
