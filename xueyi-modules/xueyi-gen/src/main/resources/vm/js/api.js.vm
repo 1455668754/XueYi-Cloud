@@ -48,7 +48,7 @@ export function add${BusinessName}(data) {
   return request({
     url: '/${moduleName}/${businessName}',
     method: 'post',
-    data:#if($AOP.size() > 0) acquisition(query#foreach($item in $AOP), ${item})#end#else query#end
+    data:#if($AOP.size() > 0) acquisition(data#foreach($item in $AOP), ${item})#end#else data#end
 
   })
 }
@@ -58,7 +58,7 @@ export function update${BusinessName}(data) {
   return request({
     url: '/${moduleName}/${businessName}',
     method: 'put',
-    data:#if($AOP.size() > 0) acquisition(query#foreach($item in $AOP), ${item})#end#else query#end
+    data:#if($AOP.size() > 0) acquisition(data#foreach($item in $AOP), ${item})#end#else data#end
 
   })
 }
@@ -69,7 +69,7 @@ export function update${BusinessName}Sort(data) {
   return request({
     url: '/${moduleName}/${businessName}/sort',
     method: 'put',
-  data:#if($AOP.size() > 0) acquisition(query#foreach($item in $AOP), ${item})#end#else query#end
+  data:#if($AOP.size() > 0) acquisition(data#foreach($item in $AOP), ${item})#end#else data#end
 
   })
 }
@@ -80,7 +80,7 @@ export function del${BusinessName}(data) {
   return request({
     url: '/${moduleName}/${businessName}',
     method: 'delete',
-    data:#if($AOP.size() > 0) acquisition(query#foreach($item in $AOP), ${item})#end#else query#end
+    data:#if($AOP.size() > 0) acquisition(data#foreach($item in $AOP), ${item})#end#else data#end
 
   })
 }
