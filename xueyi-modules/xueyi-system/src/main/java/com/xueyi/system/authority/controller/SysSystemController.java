@@ -7,9 +7,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.authority.SysSystem;
-import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.authority.service.ISysSystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/system")
 public class SysSystemController extends BaseController {
+
     @Autowired
     private ISysSystemService systemService;
 
@@ -41,9 +40,9 @@ public class SysSystemController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:system:list")
     @GetMapping("/list")
-    public TableDataInfo list(SysSystem sysSystem) {
+    public TableDataInfo list(SysSystem system) {
         startPage();
-        List<SysSystem> list = systemService.selectSystemList(sysSystem);
+        List<SysSystem> list = systemService.selectSystemList(system);
         return getDataTable(list);
     }
 
@@ -51,45 +50,54 @@ public class SysSystemController extends BaseController {
      * 加载对应模块&菜单列表树 | searchValue === PERMIT_ALL 获取所有权限内模块&菜单 | 无衍生角色
      */
     @GetMapping(value = "/systemMenuTreePermitAll")
-    public AjaxResult getListPermitAll(SysSystem sysSystem) {
-        sysSystem.setSearchValue(MenuConstants.PERMIT_ALL);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(sysSystem));
+    public AjaxResult getListPermitAll(SysSystem system) {
+        system.setSearchValue(MenuConstants.PERMIT_ALL);
+        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
+    }
+
+    /**
+     * 加载对应模块&菜单列表树 - 仅公共数据 - 租管使用 | searchValue === PERMIT_ALL_ONLY_PUBLIC 获取所有权限内模块&菜单 | 无衍生角色 | 仅公共数据
+     */
+    @GetMapping(value = "/systemMenuTreePermitAllOnlyPublic")
+    public AjaxResult getListPermitAllOnlyPublic(SysSystem system) {
+        system.setSearchValue(MenuConstants.PERMIT_ALL_ONLY_PUBLIC);
+        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
     }
 
     /**
      * 加载对应模块&菜单列表树 | searchValue === PERMIT_ADMINISTRATOR 仅获取超管权限内模块&菜单 | 衍生角色仅获取超管衍生
      */
     @GetMapping(value = "/systemMenuTreePermitAdministrator")
-    public AjaxResult getListPermitAdministrator(SysSystem sysSystem) {
-        sysSystem.setSearchValue(MenuConstants.PERMIT_ADMINISTRATOR);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(sysSystem));
+    public AjaxResult getListPermitAdministrator(SysSystem system) {
+        system.setSearchValue(MenuConstants.PERMIT_ADMINISTRATOR);
+        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
     }
 
     /**
      * 加载对应模块&菜单列表树 | searchValue === PERMIT_ENTERPRISE 仅获取租户权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
      */
     @GetMapping(value = "/systemMenuTreePermitEnterprise")
-    public AjaxResult getListPermitEnterprise(SysSystem sysSystem) {
-        sysSystem.setSearchValue(MenuConstants.PERMIT_ENTERPRISE);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(sysSystem));
+    public AjaxResult getListPermitEnterprise(SysSystem system) {
+        system.setSearchValue(MenuConstants.PERMIT_ENTERPRISE);
+        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
     }
 
     /**
      * 加载对应模块&菜单列表树 | searchValue === PERMIT_PERSONAL_SCREEN_DERIVE 仅获取个人权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
      */
     @GetMapping(value = "/systemMenuTreePermitPersonalScreenDerice")
-    public AjaxResult getListPermitPersonalScreenDerice(SysSystem sysSystem) {
-        sysSystem.setSearchValue(MenuConstants.PERMIT_PERSONAL_SCREEN_DERIVE);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(sysSystem));
+    public AjaxResult getListPermitPersonalScreenDerice(SysSystem system) {
+        system.setSearchValue(MenuConstants.PERMIT_PERSONAL_SCREEN_DERIVE);
+        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
     }
     
     /**
      * 加载对应角色模块&菜单列表树 | searchValue === PERMIT_PERSONAL 仅获取个人权限内模块&菜单 | 衍生角色获取自身组织衍生&超管衍生&租户衍生
      */
     @GetMapping(value = "/systemMenuTreePermitPersonal")
-    public AjaxResult getListPermitPersonal(SysSystem sysSystem) {
-        sysSystem.setSearchValue(MenuConstants.PERMIT_PERSONAL);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(sysSystem));
+    public AjaxResult getListPermitPersonal(SysSystem system) {
+        system.setSearchValue(MenuConstants.PERMIT_PERSONAL);
+        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
     }
 
     /**
@@ -97,8 +105,8 @@ public class SysSystemController extends BaseController {
      */
     @PreAuthorize(hasPermi = "system:system:query")
     @GetMapping(value = "/byId")
-    public AjaxResult getInfo(SysSystem sysSystem) {
-        return AjaxResult.success(systemService.selectSystemById(sysSystem));
+    public AjaxResult getInfo(SysSystem system) {
+        return AjaxResult.success(systemService.selectSystemById(system));
     }
 
     /**
@@ -107,8 +115,8 @@ public class SysSystemController extends BaseController {
     @PreAuthorize(hasPermi = "system:system:add")
     @Log(title = "模块管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysSystem sysSystem) {
-        return toAjax(systemService.insertSystem(sysSystem));
+    public AjaxResult add(@RequestBody SysSystem system) {
+        return toAjax(systemService.insertSystem(system));
     }
 
     /**
@@ -117,8 +125,8 @@ public class SysSystemController extends BaseController {
     @PreAuthorize(hasPermi = "system:system:edit")
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysSystem sysSystem) {
-        return toAjax(systemService.updateSystem(sysSystem));
+    public AjaxResult edit(@RequestBody SysSystem system) {
+        return toAjax(systemService.updateSystem(system));
     }
 
     /**
@@ -127,8 +135,8 @@ public class SysSystemController extends BaseController {
     @PreAuthorize(hasPermi = "system:system:edit")
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
-    public AjaxResult changeStatus(@RequestBody SysSystem sysSystem) {
-        return toAjax(systemService.updateSystemStatus(sysSystem));
+    public AjaxResult changeStatus(@RequestBody SysSystem system) {
+        return toAjax(systemService.updateSystemStatus(system));
     }
 
     /**
@@ -137,7 +145,7 @@ public class SysSystemController extends BaseController {
     @PreAuthorize(hasPermi = "system:system:remove")
     @Log(title = "模块管理", businessType = BusinessType.DELETE)
     @DeleteMapping
-    public AjaxResult remove(@RequestBody SysSystem sysSystem) {
-        return toAjax(systemService.deleteSystemByIds(sysSystem));
+    public AjaxResult remove(@RequestBody SysSystem system) {
+        return toAjax(systemService.deleteSystemByIds(system));
     }
 }

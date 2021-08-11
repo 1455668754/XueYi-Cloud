@@ -94,6 +94,16 @@
         order by s.sort
     </select>
 
+    <select id="buildSystemMenuTreeSelectOnlyPublic" parameterType="SysSystem" resultMap="SysSystemResult">
+        <include refid="selectVo"/>
+        where s.tenant_id = 0
+        <if test="systemId != null">and s.system_id != #{systemId}</if>
+        <if test="status != null and status != ''">and s.status = #{status}</if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by s.sort
+    </select>
+
     <select id="selectSystemById" parameterType="SysSystem" resultMap="SysSystemResult">
         <include refid="selectVo"/>
         where s.system_id = #{systemId}

@@ -164,6 +164,18 @@
 		order by m.parent_id, m.sort
 	</select>
 
+	<select id="buildSystemMenuTreeSelectOnlyPublic" parameterType="SysMenu" resultMap="SysMenuResult">
+		select m.menu_id, m.system_id, m.menu_name, if(m.parent_id = 0, m.system_id, m.parent_id) as parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, if(m.tenant_id = 0 and ( -1 != #{enterpriseId} or 0 != #{enterpriseId} ),'1','0') as is_main,
+		ifnull(perms, '') as perms, m.icon, m.create_time
+		from sys_menu m
+		where m.tenant_id = 0
+		<if test="menuId != null">and m.menu_id != #{menuId}</if>
+		<if test="status != null and status != ''">and m.status = #{status}</if>
+		<!-- 数据范围过滤 -->
+		${params.dataScope}
+		order by m.parent_id, m.sort
+	</select>
+
 	<select id="selectMenuById" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectVo"/>
 		where m.menu_id = #{menuId}

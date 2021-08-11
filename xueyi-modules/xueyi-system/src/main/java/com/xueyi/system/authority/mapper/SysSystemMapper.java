@@ -61,7 +61,17 @@ public interface SysSystemMapper {
      */
     @DataScope(edAlias = "s")
     public List<SysSystem> buildSystemMenuTreeSelect(SysSystem system);
-    
+
+    /**
+     * 查询系统全部模块列表 | 遵循模块查询控制 | 仅公共数据
+     * 访问控制 m 租户查询
+     *
+     * @param system 模块模块 | status 菜单状态 | menu_id 排除的菜单Id | params.onlyList in list | params.excludeList not in list
+     * @return 模块列表
+     */
+    @DataScope(edAlias = "s")
+    public List<SysSystem> buildSystemMenuTreeSelectOnlyPublic(SysSystem system);
+
     /**
      * 新增子系统模块
      * 访问控制 empty 租户更新（无前缀）

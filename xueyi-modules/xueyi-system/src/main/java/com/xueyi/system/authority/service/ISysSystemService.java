@@ -33,58 +33,63 @@ public interface ISysSystemService {
     /**
      * 查询子系统模块
      *
-     * @param sysSystem 子系统模块 | systemId 子系统模块Id
+     * @param system 子系统模块 | systemId 子系统模块Id
      * @return 子系统模块
      */
-    public SysSystem selectSystemById(SysSystem sysSystem);
+    public SysSystem selectSystemById(SysSystem system);
 
     /**
      * 查询子系统模块列表
      *
-     * @param sysSystem 子系统模块
+     * @param system 子系统模块
      * @return 子系统模块集合
      */
-    public List<SysSystem> selectSystemList(SysSystem sysSystem);
+    public List<SysSystem> selectSystemList(SysSystem system);
 
     /**
      * 新增子系统模块
      *
-     * @param sysSystem 子系统模块
+     * @param system 子系统模块
      * @return 结果
      */
-    public int insertSystem(SysSystem sysSystem);
+    public int insertSystem(SysSystem system);
 
     /**
      * 修改子系统模块
      *
-     * @param sysSystem 子系统模块
+     * @param system 子系统模块
      * @return 结果
      */
-    public int updateSystem(SysSystem sysSystem);
+    public int updateSystem(SysSystem system);
 
     /**
      * 修改子系统模块状态
      *
-     * @param sysSystem 子系统模块
+     * @param system 子系统模块
      * @return 结果
      */
-    public int updateSystemStatus(SysSystem sysSystem);
+    public int updateSystemStatus(SysSystem system);
 
     /**
      * 批量删除子系统模块
      *
-     * @param sysSystem 子系统模块 | params.Ids 需要删除的子系统模块Ids组
+     * @param system 子系统模块 | params.Ids 需要删除的子系统模块Ids组
      * @return 结果
      */
-    public int deleteSystemByIds(SysSystem sysSystem);
+    public int deleteSystemByIds(SysSystem system);
 
     /**
      * 加载角色系统-菜单列表树
      *
-     * @param sysSystem 子系统模块 | Id exclude的模块&菜单Id | status 模块&菜单状态 | searchValue 查询类型
-     *                  searchValue = PERMIT_ALL 查询所有权限内模块&菜单 : PERMIT_ADMINISTRATOR 仅查询超管权限内模块&菜单 : PERMIT_ENTERPRISE 仅查询租户权限内模块&菜单 : PERMIT_PERSONAL 仅查询个人权限内模块&菜单
+     * @param system 子系统模块 | Id exclude的模块&菜单Id | status 模块&菜单状态 | searchValue 查询类型
+     *               searchValue = PERMIT_ALL                        获取所有权限内模块&菜单 | 无衍生角色
+     *               searchValue = PERMIT_ALL_ONLY_PUBLIC            获取所有权限内模块&菜单 | 无衍生角色 | 仅公共数据
+     *               searchValue = PERMIT_ADMINISTRATOR              仅获取超管权限内模块&菜单 | 衍生角色仅获取超管衍生
+     *               searchValue = PERMIT_ENTERPRISE                 仅获取租户权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
+     *               searchValue = PERMIT_PERSONAL_SCREEN_DERIVE     仅获取个人权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
+     *               searchValue = PERMIT_PERSONAL                   仅获取个人权限内模块&菜单 | 衍生角色获取自身组织衍生&超管衍生&租户衍生
      */
-    public List<TreeSelect> buildSystemMenuTreeSelect(SysSystem sysSystem);
+    public List<TreeSelect> buildSystemMenuTreeSelect(SysSystem system);
 
     /**
      * 构建前端所需要树结构

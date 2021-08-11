@@ -5,8 +5,11 @@ public class MenuConstants {
     /** 控制参数 - 获取所有权限内模块&菜单 | 无衍生角色 */
     public static final String PERMIT_ALL = "0";
 
+    /** 控制参数 - 获取所有权限内模块&菜单 | 无衍生角色 | 仅公共数据 */
+    public static final String PERMIT_ALL_ONLY_PUBLIC = "1";
+
     /** 控制参数 - 仅获取超管权限内模块&菜单 | 衍生角色仅获取超管衍生 */
-    public static final String PERMIT_ADMINISTRATOR = "1";
+    public static final String PERMIT_ADMINISTRATOR = "2";
 
     /** 控制参数 - 仅获取租户权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生 */
     public static final String PERMIT_ENTERPRISE = "3";

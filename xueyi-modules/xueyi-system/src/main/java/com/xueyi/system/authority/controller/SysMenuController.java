@@ -2,8 +2,6 @@ package com.xueyi.system.authority.controller;
 
 import java.util.List;
 
-import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.model.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,9 +32,6 @@ public class SysMenuController extends BaseController {
 
     @Autowired
     private ISysMenuService menuService;
-
-    @Autowired
-    private TokenService tokenService;
 
     /**
      * 根据菜单Id获取详细信息
