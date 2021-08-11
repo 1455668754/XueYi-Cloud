@@ -140,16 +140,16 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Transactional
     @DataScope(ueAlias = "empty")
     public int insertRole(SysRole role) {
-        if(!StringUtils.equals(role.getType(), RoleConstants.ROUTINE_DERIVE_TYPE)){
+        if (!StringUtils.equals(role.getType(), RoleConstants.ROUTINE_DERIVE_TYPE)) {
             SysOrganizeRole organizeRole = new SysOrganizeRole();
             organizeRole.setRoleId(role.getId());
-            if(StringUtils.equals(role.getType(), RoleConstants.DEPT_DERIVE_TYPE)){
+            if (StringUtils.equals(role.getType(), RoleConstants.DEPT_DERIVE_TYPE)) {
                 organizeRole.setDeriveDeptId(role.getDeriveId());
-            }else if(StringUtils.equals(role.getType(), RoleConstants.POST_DERIVE_TYPE)){
+            } else if (StringUtils.equals(role.getType(), RoleConstants.POST_DERIVE_TYPE)) {
                 organizeRole.setDerivePostId(role.getDeriveId());
-            }else if(StringUtils.equals(role.getType(), RoleConstants.USER_DERIVE_TYPE)){
+            } else if (StringUtils.equals(role.getType(), RoleConstants.USER_DERIVE_TYPE)) {
                 organizeRole.setDeriveUserId(role.getDeriveId());
-            }else if(StringUtils.equals(role.getType(), RoleConstants.ENTERPRISE_DERIVE_TYPE)){
+            } else if (StringUtils.equals(role.getType(), RoleConstants.ENTERPRISE_DERIVE_TYPE)) {
                 organizeRole.setDeriveEnterpriseId(role.getDeriveId());
             }
             organizeRoleMapper.insertOrganizeRole(organizeRole);
@@ -238,10 +238,10 @@ public class SysRoleServiceImpl implements ISysRoleService {
         SysSearch search = new SysSearch();
         search.getSearch().put("roleId", role.getRoleId());
         // 1.通过角色Id删除角色
-            // 1.删除角色和系统-菜单关联
-            roleSystemMenuMapper.deleteRoleSystemMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
-            // 2.删除角色和部门-岗位关联
-            roleDeptPostMapper.deleteRoleDeptPostByRoleId(search);//@param search 查询组件 | roleId 角色Id
+        // 1.删除角色和系统-菜单关联
+        roleSystemMenuMapper.deleteRoleSystemMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
+        // 2.删除角色和部门-岗位关联
+        roleDeptPostMapper.deleteRoleDeptPostByRoleId(search);//@param search 查询组件 | roleId 角色Id
         // 3.删除组织和角色关联
         organizeRoleMapper.deleteOrganizeRoleByRoleId(role);//role 角色信息 | roleId 角色Id
         return roleMapper.deleteRoleById(role);
@@ -256,16 +256,14 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     @Transactional
     public int deleteRoleByIds(SysRole role) {
-        int rs;
         SysSearch search = new SysSearch();
         search.getSearch().put("roleIds", role.getParams().get("Ids"));
         // 1.批量删除角色信息
-            // 1.批量删除角色和系统-菜单关联
-            roleSystemMenuMapper.deleteRoleSystemMenuByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
-            // 2.批量删除角色和部门-岗位关联
-            roleDeptPostMapper.deleteRoleDeptPostByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+        // 1.批量删除角色和系统-菜单关联
+        roleSystemMenuMapper.deleteRoleSystemMenuByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
+        // 2.批量删除角色和部门-岗位关联
+        roleDeptPostMapper.deleteRoleDeptPostByIds(search);//@param search 查询组件 | roleIds 需要删除的角色Ids(Long[])
         // 3.批量删除组织和角色关联
-        System.out.println(1);
         organizeRoleMapper.deleteOrganizeRoleByRoleIds(role);//role 角色信息 | params.Ids 需要删除的角色Ids组
         return roleMapper.deleteRoleByIds(role);
     }

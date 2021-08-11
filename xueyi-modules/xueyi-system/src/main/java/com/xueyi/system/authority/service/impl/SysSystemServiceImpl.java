@@ -173,7 +173,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
                 systemMenu.getParams().put("userId", SecurityUtils.getUserId());
                 list = roleSystemMenuService.selectPermitPersonal(systemMenu);
             }
-            if (StringUtils.equals(sysSystem.getSearchValue(), MenuConstants.PERMIT_PERSONAL_SCREEN_DERIVE)) {
+            if (StringUtils.equalsAny(sysSystem.getSearchValue(), MenuConstants.PERMIT_PERSONAL_SCREEN_DERIVE, MenuConstants.PERMIT_PERSONAL)) {
                 checkSystem.getParams().put("onlyList", list);
                 checkMenu.getParams().put("onlyList", list);
             } else {

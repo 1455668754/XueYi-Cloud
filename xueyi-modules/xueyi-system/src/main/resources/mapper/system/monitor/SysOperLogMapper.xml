@@ -28,8 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         u.user_name as user_name, u.nick_name as user_nick
         from sys_oper_log ol
 		left join sys_user u on u.user_id = ol.user_id
-# 		left join sys_post p on p.post_id = u.post_id
-# 		left join sys_dept d on d.dept_id = u.dept_id
+		left join sys_post p on p.post_id = u.post_id
+		left join sys_dept d on d.dept_id = u.dept_id
     </sql>
 
 	<sql id="updateVo">

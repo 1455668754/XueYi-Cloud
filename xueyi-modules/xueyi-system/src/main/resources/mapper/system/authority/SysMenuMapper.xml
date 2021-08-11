@@ -97,14 +97,42 @@
 		<if test="null == params.roleSystemPerms or params.roleSystemPerms.size == 0">
 			and 1 != 1
 		</if>
+		<choose>
+			<when test="params.onlyList != null and params.onlyList.size() > 0">
+				and m.menu_id in
+				<foreach collection="params.onlyList" index="index" item="item" open="(" separator="," close=")">
+					#{item.systemMenuId}
+				</foreach>
+			</when>
+			<when test="params.excludeList != null and params.excludeList.size() > 0">
+				and m.menu_id not in
+				<foreach collection="params.excludeList" index="index" item="item" open="(" separator="," close=")">
+					#{item.systemMenuId}
+				</foreach>
+			</when>
+		</choose>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		order by m.parent_id, m.sort
 	</select>
 
-	<select id="selectMenuTreeAll" parameterType="SysMenu" resultMap="SysMenuResult">
+	<select id="selectMenuTreeByAdminUserId" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectTreeVo"/>
 		where m.menu_type in ('M', 'C') and m.status = 0
+		<choose>
+			<when test="params.onlyList != null and params.onlyList.size() > 0">
+				and m.menu_id in
+				<foreach collection="params.onlyList" index="index" item="item" open="(" separator="," close=")">
+					#{item.systemMenuId}
+				</foreach>
+			</when>
+			<when test="params.excludeList != null and params.excludeList.size() > 0">
+				and m.menu_id not in
+				<foreach collection="params.excludeList" index="index" item="item" open="(" separator="," close=")">
+					#{item.systemMenuId}
+				</foreach>
+			</when>
+		</choose>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		order by m.parent_id, m.sort

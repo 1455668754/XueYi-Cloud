@@ -49,7 +49,7 @@ public interface SysMenuMapper {
      * @return 菜单列表
      */
     @DataScope(edAlias = "m", SYAlias = "m")
-    public List<SysMenu> selectMenuTreeAll(SysMenu menu);
+    public List<SysMenu> selectMenuTreeByAdminUserId(SysMenu menu);
 
     /**
      * 根据用户Id查询菜单
