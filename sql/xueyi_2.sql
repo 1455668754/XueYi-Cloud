@@ -65,7 +65,7 @@ create table sys_post
 -- 初始化-岗位信息表数据
 -- ----------------------------
 insert into sys_post (post_id, tenant_id, dept_id, post_code, post_name)
-values (1, -1, -1, 'ceo', '超级管理员'),
+values (-1, -1, -1, 'ceo', '超级管理员'),
        (2, 1, 100, 'ceo', '董事长'),
        (3, 1, 100, 'se', '项目经理'),
        (4, 1, 100, 'hr', '人力资源'),
@@ -143,12 +143,31 @@ create table sys_role (
 insert into sys_role (role_id, role_name, type, derive_id, tenant_id)
 values (-1, '超管衍生-1', '1', -1, -1),
        (-2, '租户衍生-1', '2', -1, -1),
-       (-3, '超管衍生1', '1', 1, 1),
-       (-4, '租户衍生1', '2', 1, 1);
+       (-3, '用户衍生-1', '5', -1, -1),
+       (-4, '岗位衍生-1', '4', -1, -1),
+       (-5, '部门衍生-1', '3', -1, -1),
+       (3, '超管衍生1', '1', 1, 1),
+       (4, '租户衍生1', '2', 1, 1),
+       (5, '用户衍生2', '5', 2, 1),
+       (6, '用户衍生3', '5', 3, 1),
+       (7, '岗位衍生2', '4', 2, 1),
+       (8, '岗位衍生3', '4', 3, 1),
+       (9, '岗位衍生4', '4', 4, 1),
+       (10, '岗位衍生5', '4', 5, 1),
+       (11, '部门衍生100', '3', 100, 1),
+       (12, '部门衍生101', '3', 101, 1),
+       (13, '部门衍生102', '3', 102, 1),
+       (14, '部门衍生103', '3', 103, 1),
+       (15, '部门衍生104', '3', 104, 1),
+       (16, '部门衍生105', '3', 105, 1),
+       (17, '部门衍生106', '3', 106, 1),
+       (18, '部门衍生107', '3', 107, 1),
+       (19, '部门衍生108', '3', 108, 1),
+       (20, '部门衍生109', '3', 109, 1);
 
 insert into sys_role (role_id, tenant_id, role_code, role_name, role_key, menu_check_strictly, dept_check_strictly, create_by, remark)
-values (2, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
-       (3, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色');
+values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
+       (2, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色');
 
 -- ----------------------------
 -- 5、角色和系统-菜单关联表  角色N-N系统-菜单
@@ -164,11 +183,6 @@ create table sys_role_system_menu (
 ) engine=innodb comment = '角色和系统-菜单关联表';
 
 -- ----------------------------
--- 初始化-角色和系统-菜单关联表数据
--- ----------------------------
-insert into sys_role_system_menu value (2, 12005 , 0, 0, 1);
-
--- ----------------------------
 -- 6、角色和部门-岗位关联表  角色N-N部门-岗位
 -- ----------------------------
 drop table if exists sys_role_dept_post;
@@ -180,11 +194,6 @@ create table sys_role_dept_post (
   tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(role_id, dept_post_id)
 ) engine=innodb comment = '角色和部门-岗位关联表';
-
--- ----------------------------
--- 初始化-角色和部门-岗位关联表数据
--- ----------------------------
-insert into sys_role_dept_post value (2, 107, 0, 0, 1);
 
 -- ----------------------------
 -- 7、组织和角色关联表  组织N-N角色
@@ -208,13 +217,40 @@ create table sys_organize_role (
 ) engine=innodb auto_increment=1 comment = '组织和角色关联表';
 
 -- ----------------------------
--- 初始化-角色和部门-岗位关联表数据
+-- 初始化-组织和角色关联表数据
 -- ----------------------------
-insert into sys_organize_role ( derive_tenant_id, derive_administrator_id, role_id, tenant_id )
-values (null, -1, -1, -1),
-       (-1, null, -2, -1),
-       (null, 1, -3, 1),
-       (1, null, -4, 1);
+insert into sys_organize_role ( derive_administrator_id, role_id, tenant_id )
+values (-1, -1, -1),
+       ( 1,  3,  1);
+
+insert into sys_organize_role ( derive_tenant_id, role_id, tenant_id )
+values (-1, -2, -1),
+       ( 1,  4,  1);
+
+insert into sys_organize_role ( derive_user_id, role_id, tenant_id )
+values (-1, -3, -1),
+       ( 2,  5,  1),
+       ( 3,  6,  1);
+
+insert into sys_organize_role ( derive_post_id, role_id, tenant_id )
+values (-1, -4, -1),
+       ( 2,  7,  1),
+       ( 3,  8,  1),
+       ( 4,  9,  1),
+       ( 5, 10,  1);
+
+insert into sys_organize_role ( derive_dept_id, role_id, tenant_id )
+values (-1, -5, -1),
+       (100, 11,  1),
+       (101, 12,  1),
+       (102, 13,  1),
+       (103, 14,  1),
+       (104, 15,  1),
+       (105, 16,  1),
+       (106, 17,  1),
+       (107, 18,  1),
+       (108, 19,  1),
+       (109, 20,  1);
 
 -- ----------------------------
 -- 8、素材信息表|管理素材信息
