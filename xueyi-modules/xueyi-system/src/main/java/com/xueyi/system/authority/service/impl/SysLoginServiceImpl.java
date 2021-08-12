@@ -14,6 +14,8 @@ import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,6 +28,7 @@ import java.util.Set;
  * @author xueyi
  */
 @Service
+@DS("main")
 public class SysLoginServiceImpl implements ISysLoginService {
     @Autowired
     private SysEnterpriseMapper enterpriseMapper;
@@ -64,6 +67,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
      */
     @Override
     @DS("#user.sourceName")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public SysUser checkLoginByEnterpriseIdANDUserName(SysUser user) {
         return userMapper.checkLoginByEnterpriseIdANDUserName(user);
     }
@@ -78,6 +82,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
      */
     @Override
     @DS("#sourceName")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Set<String> getRolePermission(String sourceName, SysRole role, String userType) {
         Set<String> roles = new HashSet<String>();
         // 管理员拥有所有权限
@@ -117,6 +122,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
      */
     @Override
     @DS("#sourceName")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Set<String> getMenuPermission(String sourceName, SysMenu menu, String userType) {
         Set<String> perms = new HashSet<String>();
         // 管理员拥有所有权限
@@ -136,7 +142,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @return 权限列表
      */
     @Override
-    @DS("main")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Set<String> checkLoginMenuPerms(SysMenu menu) {
         List<String> perms = menuMapper.checkLoginMenuPermission(menu);
         Set<String> permsSet = new HashSet<>();

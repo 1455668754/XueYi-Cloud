@@ -23,6 +23,7 @@ import com.xueyi.system.utils.vo.MetaVo;
 import com.xueyi.system.utils.vo.RouterVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.service.ISysMenuService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -77,6 +78,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
     @Override
     @DS("#isolate")
     @DataScope(eAlias = "rsm")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<SysRoleSystemMenu> selectSystemMenuListByUserId(SysMenu menu) {
         return roleSystemMenuMapper.selectSystemMenuListByUserId(menu);
     }

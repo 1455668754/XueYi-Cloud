@@ -38,6 +38,7 @@ public class SysRoleSystemMenuServiceImpl implements ISysRoleSystemMenuService {
      */
     @Override
     @DS("#systemMenu.sourceName")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public List<SysRoleSystemMenu> getEnterpriseMenuScopeById(SysRoleSystemMenu systemMenu){
         SysRole role = new SysRole();
         role.setType(RoleConstants.ADMINISTRATOR_DERIVE_TYPE);
@@ -55,6 +56,7 @@ public class SysRoleSystemMenuServiceImpl implements ISysRoleSystemMenuService {
      */
     @Override
     @DS("#systemMenu.sourceName")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public int authMenuScopeById(SysRoleSystemMenu systemMenu){
         SysRole role = new SysRole();
         role.setType(RoleConstants.ADMINISTRATOR_DERIVE_TYPE);
