@@ -21,6 +21,15 @@ public interface SysRoleMapper {
      */
     public List<SysRole> checkLoginRolePermission(SysRole role);
 
+
+    /**
+     * 根据衍生来源Id&角色类型查询指定衍生角色
+     *
+     * @param role 角色信息 | type 角色类型 | deriveId 衍生来源Id | enterpriseId 租户Id
+     * @return 角色Id
+     */
+    public Long selectDeriveRoleByEnterpriseId(SysRole role);
+
     /**
      * 查询所有角色 | exclude 衍生角色
      * 访问控制 r 租户查询

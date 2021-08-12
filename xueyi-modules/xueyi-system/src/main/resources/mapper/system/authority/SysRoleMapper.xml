@@ -56,6 +56,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE sor.dept_id = #{params.deptId} or sor.post_id = #{params.postId} or sor.user_id = #{params.userId} and r.del_flag = 0 and r.tenant_id = #{enterpriseId}
 	</select>
 
+	<select id="selectDeriveRoleByEnterpriseId" parameterType="SysRole" resultType="long">
+		select r.role_id
+		from sys_role r
+		WHERE r.type = #{type} and r.derive_id = #{deriveId} and r.del_flag = 0 and r.tenant_id = #{enterpriseId}
+	</select>
+
 	<select id="selectRoleAll" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="selectAllVo"/>
 		WHERE r.status = '0' and r.type = '0'

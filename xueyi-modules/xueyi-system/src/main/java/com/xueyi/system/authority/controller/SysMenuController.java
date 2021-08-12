@@ -2,6 +2,12 @@ package com.xueyi.system.authority.controller;
 
 import java.util.List;
 
+import com.xueyi.common.core.domain.R;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
+import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
+import com.xueyi.system.api.domain.source.Source;
+import com.xueyi.system.organize.service.ISysEnterpriseService;
+import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +38,31 @@ public class SysMenuController extends BaseController {
 
     @Autowired
     private ISysMenuService menuService;
+
+    @Autowired
+    private ISysEnterpriseService enterpriseService;
+
+    @Autowired
+    private ISysRoleSystemMenuService roleSystemMenuService;
+
+    /**
+     * 获取指定企业账号的租管衍生角色菜单范围信息 | 租管系统使用方法
+     */
+    @GetMapping("/getMenuScope/administrator")
+    public AjaxResult getMenuScope(SysRoleSystemMenu systemMenu) {
+        return AjaxResult.success(roleSystemMenuService.getEnterpriseMenuScopeById(getSourceMaster(systemMenu)));
+    }
+
+    /**
+     * 修改保存指定企业账号的租管衍生角色菜单权限 | 租管系统使用方法
+     */
+    @PreAuthorize(hasPermi = "tenant:tenant:edit")
+    @Log(title = "租户管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/authMenuScope/administrator")
+    public AjaxResult authMenuScope(@RequestBody SysRoleSystemMenu systemMenu) {
+        System.out.println(getSourceMaster(systemMenu).getSourceName());
+        return toAjax(roleSystemMenuService.authMenuScopeById(getSourceMaster(systemMenu)));
+    }
 
     /**
      * 根据菜单Id获取详细信息
@@ -99,5 +130,24 @@ public class SysMenuController extends BaseController {
     public AjaxResult getRouters(SysMenu menu) {
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(menu);
         return AjaxResult.success(menuService.buildMenus(menus));
+    }
+
+    /**
+     * 获取企业的主数据源
+     */
+    private SysRoleSystemMenu getSourceMaster(SysRoleSystemMenu systemMenu){
+        // 查询企业所有的主从库信息
+        Source source = new Source();
+        source.setEnterpriseId(systemMenu.getEnterpriseId());
+        List<Source> sources = enterpriseService.selectLoadDataSources(source);
+        Source master = new Source();
+        for (Source s : sources) {
+            if (s.getIsMain().equals("Y")) {
+                master = s;
+                break;
+            }
+        }
+        systemMenu.setSourceName(master.getMaster());
+        return systemMenu;
     }
 }

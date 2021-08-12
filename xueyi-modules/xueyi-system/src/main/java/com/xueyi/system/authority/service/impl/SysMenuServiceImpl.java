@@ -6,12 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.utilTool.SysSearch;
-import com.xueyi.system.role.domain.SysRoleSystemMenu;
+import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;

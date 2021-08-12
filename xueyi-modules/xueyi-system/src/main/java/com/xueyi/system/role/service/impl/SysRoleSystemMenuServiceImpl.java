@@ -1,7 +1,10 @@
 package com.xueyi.system.role.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.system.role.domain.SysRoleSystemMenu;
+import com.xueyi.common.core.constant.RoleConstants;
+import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
+import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,53 +25,87 @@ import java.util.List;
 public class SysRoleSystemMenuServiceImpl implements ISysRoleSystemMenuService {
 
     @Autowired
+    private SysRoleMapper roleMapper;
+
+    @Autowired
     private SysRoleSystemMenuMapper roleSystemMenuMapper;
 
     /**
+     * 获取指定企业账号的租管衍生角色菜单范围信息 | 租管系统使用方法
+     *
+     * @param systemMenu 角色和系统关联对象 | sourceName 指定源 | enterpriseId 租户Id
+     * @return 结果
+     */
+    @Override
+    @DS("#systemMenu.sourceName")
+    public List<SysRoleSystemMenu> getEnterpriseMenuScopeById(SysRoleSystemMenu systemMenu){
+        SysRole role = new SysRole();
+        role.setType(RoleConstants.ADMINISTRATOR_DERIVE_TYPE);
+        role.setDeriveId(systemMenu.getEnterpriseId());
+        role.setEnterpriseId(systemMenu.getEnterpriseId());
+        systemMenu.setRoleId(roleMapper.selectDeriveRoleByEnterpriseId(role));
+        return roleSystemMenuMapper.getEnterpriseMenuScopeByEnterpriseId(systemMenu);
+    }
+
+    /**
+     * 修改保存指定企业账号的租管衍生角色菜单权限 | 租管系统使用方法
+     *
+     * @param systemMenu 角色和系统关联对象 | sourceName 指定源 | params.systemMenuIds 模块&菜单Id集合 | enterpriseId 租户Id
+     * @return 结果
+     */
+    @Override
+    @DS("#systemMenu.sourceName")
+    public int authMenuScopeById(SysRoleSystemMenu systemMenu){
+        SysRole role = new SysRole();
+        role.setType(RoleConstants.ADMINISTRATOR_DERIVE_TYPE);
+        role.setDeriveId(systemMenu.getEnterpriseId());
+        role.setEnterpriseId(systemMenu.getEnterpriseId());
+        systemMenu.setRoleId(roleMapper.selectDeriveRoleByEnterpriseId(role));
+        roleSystemMenuMapper.deleteMenuScopeByEnterpriseId(systemMenu);
+        return roleSystemMenuMapper.authMenuScopeByEnterpriseId(systemMenu);
+    }
+
+    /**
      * 仅获取超管衍生权限内模块&菜单
-     * 访问控制 rsm 租户查询
      *
      * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id
      * @return 结果
      */
     @Override
-    public List<SysRoleSystemMenu> selectPermitAdministrator(SysRoleSystemMenu systemMenu){
+    public List<SysRoleSystemMenu> selectPermitAdministrator(SysRoleSystemMenu systemMenu) {
         return roleSystemMenuMapper.selectPermitAdministrator(systemMenu);
     }
 
     /**
      * 仅获取租户衍生权限内模块&菜单
-     * 访问控制 rsm 租户查询
      *
      * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id
      * @return 结果
      */
     @Override
-    public List<SysRoleSystemMenu> selectPermitEnterprise(SysRoleSystemMenu systemMenu){
+    public List<SysRoleSystemMenu> selectPermitEnterprise(SysRoleSystemMenu systemMenu) {
         return roleSystemMenuMapper.selectPermitEnterprise(systemMenu);
     }
 
     /**
      * 仅获取个人权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
-     * 访问控制 rsm 租户查询
      *
      * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id | params.userId 用户Id
      * @return 结果
      */
     @Override
-    public List<SysRoleSystemMenu> selectPermitPersonalScreenDerive(SysRoleSystemMenu systemMenu){
+    public List<SysRoleSystemMenu> selectPermitPersonalScreenDerive(SysRoleSystemMenu systemMenu) {
         return roleSystemMenuMapper.selectPermitPersonalScreenDerive(systemMenu);
     }
 
     /**
      * 仅获取个人衍生权限内模块&菜单
-     * 访问控制 rsm 租户查询
      *
      * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id | params.userId 用户Id
      * @return 结果
      */
     @Override
-    public List<SysRoleSystemMenu> selectPermitPersonal(SysRoleSystemMenu systemMenu){
+    public List<SysRoleSystemMenu> selectPermitPersonal(SysRoleSystemMenu systemMenu) {
         return roleSystemMenuMapper.selectPermitPersonal(systemMenu);
     }
 }

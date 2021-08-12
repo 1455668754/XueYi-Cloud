@@ -140,11 +140,11 @@ create table sys_role (
 -- ----------------------------
 -- 初始化-角色信息表数据
 -- ----------------------------
-insert into sys_role (role_id, role_name, type, tenant_id)
-values (-1, '超管衍生-1', '1', -1),
-       (-2, '租户衍生-1', '2', -1),
-       (-3, '超管衍生1', '1', 1),
-       (-4, '租户衍生1', '2', 1);
+insert into sys_role (role_id, role_name, type, derive_id, tenant_id)
+values (-1, '超管衍生-1', '1', -1, -1),
+       (-2, '租户衍生-1', '2', -1, -1),
+       (-3, '超管衍生1', '1', 1, 1),
+       (-4, '租户衍生1', '2', 1, 1);
 
 insert into sys_role (role_id, tenant_id, role_code, role_name, role_key, menu_check_strictly, dept_check_strictly, create_by, remark)
 values (2, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),

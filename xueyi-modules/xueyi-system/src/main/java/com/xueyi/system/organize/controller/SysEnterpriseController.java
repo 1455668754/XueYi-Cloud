@@ -12,12 +12,13 @@ import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.RemoteFileService;
+import com.xueyi.system.api.feign.RemoteFileService;
 import com.xueyi.system.api.domain.material.SysFile;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
+import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class SysEnterpriseController extends BaseController {
     private RemoteFileService remoteFileService;
 
     /**
-     * 获取当前用户信息
+     * 获取指定企业账号的数据源
      */
     @GetMapping("/loadDataSources/{enterpriseId}")
     public R<List<Source>> info(@PathVariable("enterpriseId") Long enterpriseId) {

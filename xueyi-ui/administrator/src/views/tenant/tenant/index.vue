@@ -4,7 +4,7 @@
       <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
         <el-form-item label="租户Id" prop="tenantId">
           <el-input
-            v-model="queryParams.tenantName"
+            v-model="queryParams.tenantId"
             placeholder="请输入租户Id"
             type="number"
             clearable
@@ -170,6 +170,15 @@
             <el-button
               size="mini"
               type="text"
+              icon="el-icon-circle-check"
+              @click="handleMenuScope(scope.row)"
+              v-hasPermi="['tenant:tenant:edit']"
+              v-if="scope.row.isChange === 'N'"
+            >菜单屏蔽配置
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['tenant:tenant:remove']"
@@ -254,13 +263,58 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 分配角色菜单配置对话框 -->
+    <el-dialog :title="title" :visible.sync="openMenuScope" width="500px" append-to-body>
+      <el-form ref="form" :model="form" label-width="80px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="租户账号" prop="roleName">
+              <el-input v-model="form.tenantName" readonly/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="菜单权限">
+              <el-checkbox v-model="menuExpand" @change="handleCheckedTreeExpand($event)">展开/折叠
+              </el-checkbox>
+              <el-checkbox v-model="menuNodeAll" @change="handleCheckedTreeNodeAll($event)">全选/全不选
+              </el-checkbox>
+              <el-tree
+                class="tree-border"
+                :data="systemMenuOptions"
+                show-checkbox
+                ref="systemMenu"
+                node-key="id"
+                :check-strictly="false"
+                empty-text="加载中，请稍后"
+                :props="defaultProps"
+              ></el-tree>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" :loading="submitLoading" @click="submitMenuScope">确 定</el-button>
+        <el-button @click="cancelMenuScope">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {listTenant, getTenant, delTenant, addTenant, updateTenant, updateTenantSort} from '@/api/tenant/tenant'
+import {
+  addTenant,
+  delTenant,
+  getMenuScope,
+  getTenant,
+  listTenant,
+  menuScope,
+  updateTenant,
+  updateTenantSort
+} from '@/api/tenant/tenant'
 import Sortable from 'sortablejs'
 import {listStrategyExclude} from '@/api/tenant/strategy'
+import {treeSelectPermitAllOnlyPublic as treeSelectPermitAllOnlyPublic} from "@/api/common/temporary"
 
 export default {
   name: 'Tenant',
@@ -298,6 +352,12 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
+      // 是否显示弹出层（菜单配置）
+      openMenuScope: false,
+      menuExpand: false,
+      menuNodeAll: false,
+      // 模块&菜单列表
+      systemMenuOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -310,6 +370,11 @@ export default {
       },
       // 表单参数
       form: {},
+      systemMenuForm:{},
+      defaultProps: {
+        children: "children",
+        label: "label"
+      },
       // 表单校验
       rules: {
         tenantName: [
@@ -349,8 +414,16 @@ export default {
       this.open = false
       this.reset()
     },
+    // 取消按钮（菜单权限）
+    cancelMenuScope() {
+      this.openMenuScope = false
+      this.reset()
+    },
     // 表单重置
     reset() {
+      if (this.$refs.systemMenu !== undefined) {
+        this.$refs.systemMenu.setCheckedKeys([])
+      }
       this.form = {
         tenantId: null,
         strategyId: null,
@@ -362,9 +435,14 @@ export default {
         sort: 0,
         status: '0',
         remark: null,
+
         values: [],
         isChange: 0,
         hasMain: false
+      }
+      this.systemMenuForm = {
+        enterpriseId:null,
+        params:{}
       }
       this.resetForm('form')
     },
@@ -384,6 +462,17 @@ export default {
       this.idNames = selection.map(item => item.name)
       this.single = selection.length !== 1
       this.multiple = !selection.length
+    },
+    // 树权限（展开/折叠）
+    handleCheckedTreeExpand(value) {
+        let treeList = this.systemMenuOptions
+        for (let i = 0; i < treeList.length; i++) {
+          this.$refs.systemMenu.store.nodesMap[treeList[i].id].expanded = value
+        }
+    },
+    // 树权限（全选/全不选）
+    handleCheckedTreeNodeAll(value) {
+        this.$refs.systemMenu.setCheckedNodes(value ? this.systemMenuOptions : [])
     },
     /** 获取可用策略组 */
     getStrategyList() {
@@ -415,6 +504,51 @@ export default {
       }).catch(() => {
         row.status = row.status === '0' ? '1' : '0'
       })
+    },
+    /** 分配菜单权限操作 */
+    handleMenuScope(row) {
+      this.reset()
+      this.getSystemMenuTreeSelect()
+      const menuScope = this.getMenuScope(row.tenantId)
+      getTenant({tenantId: row.tenantId}).then(response => {
+        this.form = response.data
+        menuScope.then(res => {
+          this.$refs.systemMenu.setCheckedKeys(Array.from(res.data, x => x.systemMenuId))
+        })
+        this.openMenuScope = true
+        this.title = "屏蔽菜单权限"
+      })
+    },
+    /** 查询模块&菜单树结构 */
+    getSystemMenuTreeSelect() {
+      treeSelectPermitAllOnlyPublic({ status: '0' }).then(response => {
+        this.systemMenuOptions = response.data
+      })
+    },
+    /** 根据角色Id查询模块&菜单树结构 */
+    getMenuScope(Id) {
+      return getMenuScope({ enterpriseId: Id }).then(response => {
+        return response
+      })
+    },
+    // 所有模块&菜单节点数据
+    getSystemMenuAllCheckedKeys() {
+      // 目前被选中的菜单节点
+      return this.$refs.systemMenu.getCheckedKeys()
+    },
+    /** 提交按钮（菜单权限） */
+    submitMenuScope: function () {
+      this.submitLoading = true
+      this.systemMenuForm.enterpriseId = this.form.tenantId
+      if (this.systemMenuForm.enterpriseId !== undefined) {
+        this.systemMenuForm.params.systemMenuIds = this.getSystemMenuAllCheckedKeys()
+        menuScope(this.systemMenuForm).then(response => {
+          this.msgSuccess("修改成功")
+          this.openMenuScope = false
+          this.getList()
+        })
+      }
+      this.submitLoading = false
     },
     /** 提交按钮 */
     submitForm() {

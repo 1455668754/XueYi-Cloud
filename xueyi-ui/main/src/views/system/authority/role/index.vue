@@ -403,7 +403,7 @@ export default {
           label: "仅本人数据权限"
         }
       ],
-      // 系统-菜单列表
+      // 模块&菜单列表
       systemMenuOptions: [],
       // 部门-岗位列表
       deptPostOptions: [],
@@ -455,7 +455,7 @@ export default {
         }
       )
     },
-    /** 查询系统-菜单树结构 */
+    /** 查询模块&菜单树结构 */
     getSystemMenuTreeSelect() {
       roleSystemMenuTreeSelect({ status: '0' }).then(response => {
         this.systemMenuOptions = response.data
@@ -467,7 +467,7 @@ export default {
         this.deptPostOptions = response.data
       })
     },
-    // 所有系统-菜单节点数据
+    // 所有模块&菜单节点数据
     getSystemMenuAllCheckedKeys() {
       // 目前被选中的菜单节点
       let checkedKeys = this.$refs.systemMenu.getCheckedKeys()
@@ -481,7 +481,7 @@ export default {
       // 目前被选中的部门节点
       return this.$refs.deptPost.getCheckedKeys()
     },
-    /** 根据角色Id查询系统-菜单树结构 */
+    /** 根据角色Id查询模块&菜单树结构 */
     getMenuScope(roleId) {
       return getMenuScope({roleId: roleId}).then(response => {
         return response

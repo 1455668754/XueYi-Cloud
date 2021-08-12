@@ -74,6 +74,7 @@ public class SysUserServiceImpl implements ISysUserService {
      * @param user 用户信息 | enterpriseId 租户Id | userName 用户账号
      * @return 用户对象信息
      */
+    @Override
     public SysUser checkUserByUserName(SysUser user) {
         return userMapper.checkUserByUserName(user);
     }

@@ -27,6 +27,7 @@ public class SysMaterialServiceImpl implements ISysMaterialService {
      *
      * @return 素材信息集合
      */
+    @Override
     public List<SysMaterial> selectList() {
         SysSearch search = new SysSearch();
         return materialMapper.selectList(search);
@@ -49,6 +50,7 @@ public class SysMaterialServiceImpl implements ISysMaterialService {
      * @param folderId 素材分类Id
      * @return 素材信息
      */
+    @Override
     public List<SysMaterial> selectMaterialListByFolderId(Long folderId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("folderId", folderId);
@@ -122,6 +124,7 @@ public class SysMaterialServiceImpl implements ISysMaterialService {
      * @param folderId 素材分类Id
      * @return 结果
      */
+    @Override
     public int deleteMaterialByFolderId(Long folderId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("folderId", folderId);
@@ -134,6 +137,7 @@ public class SysMaterialServiceImpl implements ISysMaterialService {
      * @param folderIds 素材分类Id集合
      * @return 结果
      */
+    @Override
     public int deleteMaterialByFolderIds(Long[] folderIds) {
         SysSearch search = new SysSearch();
         search.getSearch().put("folderIds", folderIds);

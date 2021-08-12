@@ -51,6 +51,9 @@ public class Tenant extends BaseEntity
     /** 策略信息 */
     private TenantStrategy strategy;
 
+    /** 系统-菜单组（菜单权限） */
+    private Long[] systemMenuIds;
+
     public Long getTenantId() {
         return tenantId;
     }
@@ -129,6 +132,14 @@ public class Tenant extends BaseEntity
 
     public void setStrategy(TenantStrategy strategy) {
         this.strategy = strategy;
+    }
+
+    public Long[] getSystemMenuIds() {
+        return systemMenuIds;
+    }
+
+    public void setSystemMenuIds(Long[] systemMenuIds) {
+        this.systemMenuIds = systemMenuIds;
     }
 
     @Override

@@ -36,6 +36,15 @@ export function treeSelectPermitAll(query) {
   })
 }
 
+// 查询系统-菜单树结构 - 获取所有权限内模块&菜单 | 无衍生角色 | 仅公共数据
+export function treeSelectPermitAllOnlyPublic(query) {
+  return request({
+    url: '/system/system/systemMenuTreePermitAllOnlyPublic',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询系统-菜单树结构 - 仅获取超管权限内模块&菜单 | 衍生角色仅获取超管衍生
 export function treeSelectPermitAdministrator(query) {
   return request({

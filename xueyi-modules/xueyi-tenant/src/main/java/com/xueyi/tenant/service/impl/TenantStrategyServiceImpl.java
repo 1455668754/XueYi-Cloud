@@ -42,6 +42,7 @@ public class TenantStrategyServiceImpl implements ITenantStrategyService {
      * @param tenantStrategy 数据源策略
      * @return 数据源策略集合
      */
+    @Override
     public List<TenantStrategy> selectTenantStrategyListExclude(TenantStrategy tenantStrategy) {
         return tenantStrategyMapper.selectTenantStrategyListExclude(tenantStrategy);
     }

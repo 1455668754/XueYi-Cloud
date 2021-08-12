@@ -9,7 +9,7 @@ import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.role.domain.SysOrganizeRole;
 import com.xueyi.system.role.domain.SysRoleDeptPost;
-import com.xueyi.system.role.domain.SysRoleSystemMenu;
+import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.*;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -310,6 +310,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @param role 角色信息 | roleId  角色Id | roleKey 角色权限
      * @return 结果
      */
+    @Override
     public String checkRoleKeyUnique(SysRole role) {
         if (StringUtils.isNull(role.getRoleId())) {
             role.setRoleId(-1L);

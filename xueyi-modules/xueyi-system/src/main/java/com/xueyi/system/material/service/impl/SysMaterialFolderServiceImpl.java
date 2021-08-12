@@ -27,6 +27,7 @@ public class SysMaterialFolderServiceImpl implements ISysMaterialFolderService {
      *
      * @return 素材分类集合
      */
+    @Override
     public List<SysMaterialFolder> selectList() {
         SysSearch search = new SysSearch();
         return materialFolderMapper.selectList(search);
@@ -49,6 +50,7 @@ public class SysMaterialFolderServiceImpl implements ISysMaterialFolderService {
      * @param folderId 素材分类Id
      * @return 素材分类
      */
+    @Override
     public SysMaterialFolder selectMaterialFolderById(Long folderId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("folderId", folderId);
@@ -61,6 +63,7 @@ public class SysMaterialFolderServiceImpl implements ISysMaterialFolderService {
      * @param ancestors 祖级列表
      * @return 素材分类列表
      */
+    @Override
     public List<SysMaterialFolder> selectParentMaterialFolderByAncestors(String ancestors) {
         SysSearch search = new SysSearch();
         search.getSearch().put("ancestors", ancestors);
@@ -73,6 +76,7 @@ public class SysMaterialFolderServiceImpl implements ISysMaterialFolderService {
      * @param folderId 素材分类Id
      * @return 素材分类列表
      */
+    @Override
     public List<SysMaterialFolder> selectDirectChildrenMaterialFolderById(Long folderId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("folderId", folderId);
@@ -85,6 +89,7 @@ public class SysMaterialFolderServiceImpl implements ISysMaterialFolderService {
      * @param folderId 素材分类Id
      * @return 素材分类列表
      */
+    @Override
     public List<SysMaterialFolder> selectChildrenMaterialFolderById(Long folderId) {
         SysSearch search = new SysSearch();
         search.getSearch().put("folderId", folderId);

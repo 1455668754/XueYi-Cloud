@@ -12,7 +12,7 @@ import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysSystemMapper;
 import com.xueyi.system.authority.service.ISysSystemService;
-import com.xueyi.system.role.domain.SysRoleSystemMenu;
+import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import com.xueyi.system.utils.vo.TreeSelect;
@@ -127,6 +127,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
      * @param system 子系统模块
      * @return 结果
      */
+    @Override
     public int updateSystemStatus(SysSystem system) {
         return systemMapper.updateSystemStatus(system);
     }

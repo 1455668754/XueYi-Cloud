@@ -2,7 +2,7 @@ package com.xueyi.auth.service;
 
 import com.xueyi.auth.form.RegisterBody;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
-import com.xueyi.tenant.api.RemoteTenantService;
+import com.xueyi.tenant.api.feign.RemoteTenantService;
 import com.xueyi.tenant.api.model.TenantRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,8 +17,8 @@ import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.ip.IpUtils;
 import com.xueyi.system.api.domain.monitor.SysLoginInfo;
-import com.xueyi.system.api.RemoteLogService;
-import com.xueyi.system.api.RemoteUserService;
+import com.xueyi.system.api.feign.RemoteLogService;
+import com.xueyi.system.api.feign.RemoteUserService;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.model.LoginUser;
 

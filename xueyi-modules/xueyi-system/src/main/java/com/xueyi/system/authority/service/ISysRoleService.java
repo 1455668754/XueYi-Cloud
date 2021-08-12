@@ -5,7 +5,7 @@ import java.util.List;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.domain.SysMenu;
 import com.xueyi.system.role.domain.SysRoleDeptPost;
-import com.xueyi.system.role.domain.SysRoleSystemMenu;
+import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 
 /**
  * 角色业务层
@@ -22,7 +22,6 @@ public interface ISysRoleService {
      */
 
     public List<SysRole> selectRoleList(SysRole role);
-
 
     /**
      * 查询所有角色

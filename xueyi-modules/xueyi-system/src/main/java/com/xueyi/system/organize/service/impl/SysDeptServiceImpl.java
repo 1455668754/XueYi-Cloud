@@ -318,6 +318,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      * @param dept 部门信息 | deptId 子级Id | parentId 父级Id
      * @return 结果
      */
+    @Override
     public String checkIsChild(SysDept dept) {
         SysDept info = deptMapper.checkIsChild(dept);
         if (StringUtils.isNotNull(info)) {

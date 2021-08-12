@@ -82,7 +82,7 @@ public class SysUserController extends BaseController {
         Source checkSource = new Source();
         checkSource.setEnterpriseId(sysEnterprise.getEnterpriseId());
         List<Source> source = enterpriseService.selectLoadDataSources(checkSource);
-        Source master = null;
+        Source master = new Source();
         for (Source s : source) {
             if (s.getIsMain().equals("Y")) {
                 master = s;

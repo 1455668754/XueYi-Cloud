@@ -1,4 +1,4 @@
-package com.xueyi.system.role.domain;
+package com.xueyi.system.api.domain.role;
 
 import com.xueyi.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;

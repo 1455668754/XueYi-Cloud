@@ -3,8 +3,7 @@ package com.xueyi.system.role.mapper;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.domain.SysMenu;
-import com.xueyi.system.role.domain.SysOrganizeRole;
-import com.xueyi.system.role.domain.SysRoleSystemMenu;
+import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 
 import java.util.List;
 
@@ -16,8 +15,31 @@ import java.util.List;
 public interface SysRoleSystemMenuMapper {
 
     /**
+     * 获取指定衍生角色菜单范围信息
+     *
+     * @param systemMenu 角色和系统关联对象 | roleId 角色Id | enterpriseId 租户Id
+     * @return 结果
+     */
+    public List<SysRoleSystemMenu> getEnterpriseMenuScopeByEnterpriseId(SysRoleSystemMenu systemMenu);
+
+    /**
+     * 修改保存指定衍生角色菜单权限
+     *
+     * @param systemMenu 角色和系统关联对象 | params.systemMenuIds 模块&菜单Id集合 | enterpriseId 租户Id
+     * @return 结果
+     */
+    public int authMenuScopeByEnterpriseId(SysRoleSystemMenu systemMenu);
+
+    /**
+     * 删除指定衍生角色菜单权限
+     *
+     * @param systemMenu 角色和系统关联对象 | enterpriseId 租户Id
+     * @return 结果
+     */
+    public int deleteMenuScopeByEnterpriseId(SysRoleSystemMenu systemMenu);
+
+    /**
      * 查询当前用户Id拥有权限的模块&菜单即可（构建前端路由 | 前端产品中心）
-     * 访问控制 rsm 租户查询
      *
      * @param menu 菜单信息 | systemId 系统Id | params.userId 用户Id | enterpriseId 租户Id
      * @return 结果

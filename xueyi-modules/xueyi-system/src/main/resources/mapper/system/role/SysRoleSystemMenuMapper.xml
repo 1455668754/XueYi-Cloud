@@ -91,6 +91,11 @@
         from sys_role_system_menu rsm
     </sql>
 
+    <select id="getEnterpriseMenuScopeByEnterpriseId" parameterType="SysRoleSystemMenu" resultMap="SysRoleSystemMenuResult">
+        <include refid="selectVo"/>
+        where rsm.role_id = #{roleId} and rsm.tenant_id = #{enterpriseId}
+    </select>
+
     <select id="selectSystemMenuListByUserId" parameterType="SysMenu" resultMap="SysRoleSystemMenuResult">
         <include refid="permsVo"/>
     </select>
@@ -150,6 +155,18 @@
             (#{search.roleId}, #{systemMenuId}, #{enterpriseId})
         </foreach>
     </insert>
+
+    <insert id="authMenuScopeByEnterpriseId" parameterType="SysRoleSystemMenu">
+        insert into sys_role_system_menu (role_id, system_menu_id, tenant_id) values
+        <foreach item="systemMenuId" collection="params.systemMenuIds" separator=",">
+            (#{roleId}, #{systemMenuId}, #{enterpriseId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteMenuScopeByEnterpriseId" parameterType="SysRoleSystemMenu">
+        delete from sys_role_system_menu
+        where role_id = #{roleId} and tenant_id = #{enterpriseId}
+    </delete>
 
     <delete id="deleteRoleSystemMenuByRoleId" parameterType="com.xueyi.system.api.utilTool.SysSearch">
         delete from sys_role_system_menu

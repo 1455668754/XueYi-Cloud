@@ -9,13 +9,30 @@ export function listTenant(query) {
   })
 }
 
-
 // 查询租户信息详细
 export function getTenant(query) {
   return request({
     url: '/tenant/tenant/byId',
     method: 'get',
     params: query
+  })
+}
+
+// 租户衍生角色菜单权限获取
+export function getMenuScope(query) {
+  return request({
+    url: '/system/menu/getMenuScope/administrator',
+    method: 'get',
+    params: query
+  })
+}
+
+// 修改保存租户衍生角色菜单权限
+export function menuScope(data) {
+  return request({
+    url: '/system/menu/authMenuScope/administrator',
+    method: 'put',
+    data: data
   })
 }
 

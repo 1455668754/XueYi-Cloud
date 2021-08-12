@@ -102,7 +102,8 @@ public class TenantServiceImpl implements ITenantService {
      * @param tenant 租户信息
      * @return 结果
      */
-    public Boolean registerTenant(Tenant tenant){
+    @Override
+    public Boolean registerTenant(Tenant tenant) {
         int row = tenantService.insertTenant(tenant);
         return row > 0;
     }
@@ -157,7 +158,8 @@ public class TenantServiceImpl implements ITenantService {
      * @param tenant 租户信息 | tenantName 租户Id
      * @return 结果
      */
-    public String checkTenantNameUnique(Tenant tenant){
+    @Override
+    public String checkTenantNameUnique(Tenant tenant) {
         Tenant info = tenantMapper.checkTenantNameUnique(tenant);
         if (StringUtils.isNotNull(info)) {
             return UserConstants.NOT_UNIQUE;

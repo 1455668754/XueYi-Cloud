@@ -7,7 +7,7 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.system.api.RemoteFileService;
+import com.xueyi.system.api.feign.RemoteFileService;
 import com.xueyi.system.api.domain.material.SysFile;
 import com.xueyi.system.api.domain.material.SysMaterial;
 import com.xueyi.system.api.domain.material.SysMaterialFolder;
