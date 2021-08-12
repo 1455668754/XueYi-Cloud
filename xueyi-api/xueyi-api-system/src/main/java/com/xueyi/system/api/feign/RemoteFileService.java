@@ -1,4 +1,4 @@
-package com.xueyi.system.api;
+package com.xueyi.system.api.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.xueyi.common.core.constant.ServiceNameConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.domain.material.SysFile;
-import com.xueyi.system.api.factory.RemoteFileFallbackFactory;
+import com.xueyi.system.api.feign.factory.RemoteFileFallbackFactory;
 
 /**
  * 文件服务

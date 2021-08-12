@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.xueyi.tenant.api.factory.RemoteTenantFallbackFactory
+  com.xueyi.tenant.api.feign.factory.RemoteTenantFallbackFactory

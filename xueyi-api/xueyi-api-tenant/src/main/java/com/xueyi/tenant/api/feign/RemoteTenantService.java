@@ -1,6 +1,6 @@
-package com.xueyi.tenant.api;
+package com.xueyi.tenant.api.feign;
 
-import com.xueyi.tenant.api.factory.RemoteTenantFallbackFactory;
+import com.xueyi.tenant.api.feign.factory.RemoteTenantFallbackFactory;
 import com.xueyi.tenant.api.model.TenantRegister;
 import org.springframework.cloud.openfeign.FeignClient;
 import com.xueyi.common.core.constant.ServiceNameConstants;

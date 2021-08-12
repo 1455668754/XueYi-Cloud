@@ -1,4 +1,4 @@
-package com.xueyi.system.api;
+package com.xueyi.system.api.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,7 +9,7 @@ import com.xueyi.common.core.constant.ServiceNameConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.domain.monitor.SysLoginInfo;
 import com.xueyi.system.api.domain.monitor.SysOperLog;
-import com.xueyi.system.api.factory.RemoteLogFallbackFactory;
+import com.xueyi.system.api.feign.factory.RemoteLogFallbackFactory;
 
 /**
  * 日志服务
@@ -18,6 +18,7 @@ import com.xueyi.system.api.factory.RemoteLogFallbackFactory;
  */
 @FeignClient(contextId = "remoteLogService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteLogFallbackFactory.class)
 public interface RemoteLogService {
+
     /**
      * 保存系统日志
      *

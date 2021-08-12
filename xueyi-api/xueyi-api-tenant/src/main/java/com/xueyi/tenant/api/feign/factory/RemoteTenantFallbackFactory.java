@@ -1,7 +1,7 @@
-package com.xueyi.tenant.api.factory;
+package com.xueyi.tenant.api.feign.factory;
 
 import com.xueyi.common.core.domain.R;
-import com.xueyi.tenant.api.RemoteTenantService;
+import com.xueyi.tenant.api.feign.RemoteTenantService;
 import com.xueyi.tenant.api.model.TenantRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

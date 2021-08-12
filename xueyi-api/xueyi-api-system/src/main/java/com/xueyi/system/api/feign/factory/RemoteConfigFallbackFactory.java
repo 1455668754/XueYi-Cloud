@@ -1,6 +1,6 @@
-package com.xueyi.system.api.factory;
+package com.xueyi.system.api.feign.factory;
 
-import com.xueyi.system.api.RemoteConfigService;
+import com.xueyi.system.api.feign.RemoteConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
