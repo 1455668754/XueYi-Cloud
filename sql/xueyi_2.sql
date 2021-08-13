@@ -27,7 +27,7 @@ create table sys_dept (
 -- 初始化-部门表数据
 -- ----------------------------
 insert into sys_dept (dept_id, tenant_id, dept_code, parent_id, ancestors, dept_name)
-values (-1, -1, '1', 0, '0', '雪忆科技'),
+values (-4, -1, '-4', 0, '0', '雪忆科技'),
        (100, 1, '100', 0, '0', '雪忆科技'),
        (101, 1, '101', 100, '0,100', '深圳总公司'),
        (102, 1, '102',  100, '0,100', '长沙分公司'),
@@ -65,7 +65,7 @@ create table sys_post
 -- 初始化-岗位信息表数据
 -- ----------------------------
 insert into sys_post (post_id, tenant_id, dept_id, post_code, post_name)
-values (-1, -1, -1, 'ceo', '超级管理员'),
+values (-3, -1, -4, 'ceo', '超级管理员'),
        (2, 1, 100, 'ceo', '董事长'),
        (3, 1, 100, 'se', '项目经理'),
        (4, 1, 100, 'hr', '人力资源'),
@@ -107,7 +107,7 @@ create table sys_user (
 -- 初始化-用户信息表数据
 -- ----------------------------
 insert into sys_user (user_id, tenant_id, dept_id, post_id, user_code, user_name, nick_name,user_type, password, remark)
-values (-1, -1, -1, -1, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
+values (-2, -1, -4, -3, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
        (2, 1, 100, 2, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员'),
        (3, 1, 100, 2, '002', 'xy', 'xy', '01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '管理员');
 
@@ -143,9 +143,9 @@ create table sys_role (
 insert into sys_role (role_id, role_name, type, derive_id, tenant_id)
 values (-1, '超管衍生-1', '1', -1, -1),
        (-2, '租户衍生-1', '2', -1, -1),
-       (-3, '用户衍生-1', '5', -1, -1),
-       (-4, '岗位衍生-1', '4', -1, -1),
-       (-5, '部门衍生-1', '3', -1, -1),
+       (-3, '用户衍生-1', '5', -2, -1),
+       (-4, '岗位衍生-1', '4', -3, -1),
+       (-5, '部门衍生-1', '3', -4, -1),
        (3, '超管衍生1', '1', 1, 1),
        (4, '租户衍生1', '2', 1, 1),
        (5, '用户衍生2', '5', 2, 1),
@@ -228,19 +228,19 @@ values (-1, -2, -1),
        ( 1,  4,  1);
 
 insert into sys_organize_role ( derive_user_id, role_id, tenant_id )
-values (-1, -3, -1),
+values (-2, -3, -1),
        ( 2,  5,  1),
        ( 3,  6,  1);
 
 insert into sys_organize_role ( derive_post_id, role_id, tenant_id )
-values (-1, -4, -1),
+values (-3, -4, -1),
        ( 2,  7,  1),
        ( 3,  8,  1),
        ( 4,  9,  1),
        ( 5, 10,  1);
 
 insert into sys_organize_role ( derive_dept_id, role_id, tenant_id )
-values (-1, -5, -1),
+values (-4, -5, -1),
        (100, 11,  1),
        (101, 12,  1),
        (102, 13,  1),

@@ -1,0 +1,25 @@
+第一步：下载并安装erlang
+原因：RabbitMQ服务端代码是使用并发式语言Erlang编写的，安装Rabbit MQ的前提是安装Erlang。
+下载地址：http://www.erlang.org/downloads
+
+第二步：系统环境新建变量配置
+变量名：ERLANG_HOME
+变量值：刚才erlang的安装地址
+
+检验：
+cmd控制台输入erl，看到版本号就说明erlang安装成功
+
+第三步：下载并安装RabbitMQ
+下载地址：http://www.rabbitmq.com/download.html
+
+下载完后直接安装
+
+第四步：安装RabbitMQ-Plugins
+（1）打开命令行cmd，cd到RabbitMQ的sbin目录
+（2）输入 rabbitmq-plugins enable rabbitmq_management 命令进行安装
+（3）输入 rabbitmqctl status 检验是否安装成功
+
+第五步：运行
+打开sbin目录，双击rabbitmq-server.bat
+等几秒钟看到这个界面后，访问http://localhost:15672
+默认用户名和密码都是guest
