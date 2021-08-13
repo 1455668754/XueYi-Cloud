@@ -69,8 +69,8 @@ export const constantRoutes = [
       {
         path: 'index',
         component: (resolve) => require(['@/views/index'], resolve),
-        name: homePageName,
-        meta: { title: homePageName, icon: homePageIcon, noCache: true, affix: true }
+        name: 'Index',
+        meta: { title: homePageName, icon: homePageIcon, affix: true }
       }
     ]
   },

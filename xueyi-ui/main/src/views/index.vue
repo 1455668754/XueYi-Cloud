@@ -27,7 +27,7 @@
 import { viewListSystem } from '@/api/login';
 
 export default {
-  name: "index",
+  name: "Index",
   data() {
     return {
       list: [],
