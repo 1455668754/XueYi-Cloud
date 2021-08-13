@@ -1,9 +1,14 @@
 'use strict'
 const path = require('path')
 
-function resolve(dir) {
+function join(dir) {
   return path.join(__dirname, dir)
 }
+
+function resolve(dir) {
+  return path.resolve(__dirname, dir)
+}
+
 
 const name = process.env.VUE_APP_TITLE || '雪忆管理系统' // 网页标题
 
@@ -47,7 +52,7 @@ module.exports = {
     name: name,
     resolve: {
       alias: {
-        '@': resolve('src')
+        '@': join('src')
       }
     },
   },
@@ -55,15 +60,16 @@ module.exports = {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
 
+    // alert(path)
     // set svg-sprite-loader
     config.module
       .rule('svg')
-      .exclude.add(resolve('src/assets/icons'))
+      .exclude.add(resolve('node_modules/common/src/assets/icons'))
       .end()
     config.module
       .rule('icons')
       .test(/\.svg$/)
-      .include.add(resolve('src/assets/icons'))
+      .include.add(resolve('node_modules/common/src/assets/icons'))
       .end()
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
@@ -100,7 +106,7 @@ module.exports = {
               },
               commons: {
                 name: 'chunk-commons',
-                test: resolve('src/components'), // can customize your rules
+                test: join('src/components'), // can customize your rules
                 minChunks: 3, //  minimum common number
                 priority: 5,
                 reuseExistingChunk: true

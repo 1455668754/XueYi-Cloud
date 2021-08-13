@@ -16,7 +16,7 @@ import router from './router'
 import directive from './directive' //directive
 import { download } from './utils/request'
 
-import './assets/icons' // icon
+import 'common/src/assets/icons' // icon
 import './permission' // permission control
 import { getDicts } from "./api/common/common"
 import { getConfigKey } from "./api/common/common"
