@@ -1,0 +1,1 @@
+存放前端xueyi-ui/main构建好的静态文件，用于nginx请求访问。
