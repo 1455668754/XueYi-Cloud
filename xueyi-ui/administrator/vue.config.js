@@ -1,9 +1,14 @@
 'use strict'
 const path = require('path')
 
-function resolve(dir) {
+function join(dir) {
   return path.join(__dirname, dir)
 }
+
+function resolve(dir) {
+  return path.resolve(__dirname, dir)
+}
+
 
 const name = process.env.VUE_APP_TITLE || '租户管理系统' // 网页标题
 
@@ -17,7 +22,7 @@ module.exports = {
   // 默认情况下，Vue CLI 会假设你的应用是被部署在一个域名的根路径上
   // 例如 https://xueyitt.cn/。如果应用被部署在一个子路径上，你就需要用这个选项指定这个子路径。例如，如果你的应用被部署在 https://xueyitt.cn/admin/，则设置 baseUrl 为 /admin/。
   publicPath: process.env.NODE_ENV === "production" ? "/" : "/",
-  // publicPath: process.env.NODE_ENV === "production" ? "/administrator/" : "/administrator/",
+  // publicPath: process.env.NODE_ENV === "production" ? "/main/" : "/main/",
   // 在npm run build 或 yarn build 时 ，生成文件的目录名称（要和baseUrl的生产环境路径一致）（默认dist）
   outputDir: 'dist',
   // 用于放置生成的静态资源 (js、css、img、fonts) 的；（项目打包之后，静态资源会放在这个文件夹下）
@@ -47,7 +52,7 @@ module.exports = {
     name: name,
     resolve: {
       alias: {
-        '@': resolve('src')
+        '@': join('src')
       }
     },
   },
@@ -55,15 +60,16 @@ module.exports = {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
 
+    // alert(path)
     // set svg-sprite-loader
     config.module
       .rule('svg')
-      .exclude.add(resolve('src/assets/icons'))
+      .exclude.add(resolve('node_modules/common/src/assets/icons'))
       .end()
     config.module
       .rule('icons')
       .test(/\.svg$/)
-      .include.add(resolve('src/assets/icons'))
+      .include.add(resolve('node_modules/common/src/assets/icons'))
       .end()
       .use('svg-sprite-loader')
       .loader('svg-sprite-loader')
@@ -100,7 +106,7 @@ module.exports = {
               },
               commons: {
                 name: 'chunk-commons',
-                test: resolve('src/components'), // can customize your rules
+                test: join('src/components'), // can customize your rules
                 minChunks: 3, //  minimum common number
                 priority: 5,
                 reuseExistingChunk: true
@@ -116,3 +122,4 @@ module.exports = {
       )
   }
 }
+

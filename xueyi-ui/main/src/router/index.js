@@ -69,7 +69,7 @@ export const constantRoutes = [
       {
         path: 'index',
         component: (resolve) => require(['@/views/index'], resolve),
-        name: 'Index',
+        name: homePageName,
         meta: { title: homePageName, icon: homePageIcon, affix: true }
       }
     ]
