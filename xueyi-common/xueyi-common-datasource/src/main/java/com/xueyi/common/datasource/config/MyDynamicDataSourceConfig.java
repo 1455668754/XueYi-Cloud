@@ -4,11 +4,13 @@ import com.baomidou.dynamic.datasource.processor.DsHeaderProcessor;
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSessionProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSpelExpressionProcessor;
+import com.xueyi.common.datasource.processor.DsIsolateExpressionProcessor;
+import com.xueyi.common.datasource.processor.DsMainExpressionProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 注入数据访问策略
+ * 源访问策略注入
  *
  * @author xueyi
  */

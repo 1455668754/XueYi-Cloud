@@ -26,13 +26,10 @@ public class ScheduleConstants
 
     public enum Status
     {
-        /**
-         * 正常
-         */
+        /** 正常 */
         NORMAL("0"),
-        /**
-         * 暂停
-         */
+
+        /** 暂停 */
         PAUSE("1");
 
         private String value;

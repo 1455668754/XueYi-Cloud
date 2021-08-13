@@ -89,15 +89,16 @@ public class TenantSourceController extends BaseController {
         check.setSourceId(tenantSource.getSourceId());
         TenantSource oldSource = tenantSourceService.selectTenantSourceById(check);
         if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.DISABLE, tenantSource.getStatus())) {
-            ds = 3;
+            ds = TenantConstants.SYNC_TYPE_DELETE;
         } else if (StringUtils.equals(TenantConstants.DISABLE, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus())) {
-            ds = 2;
+            ds = TenantConstants.SYNC_TYPE_ADD;
         } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, tenantSource.getStatus()) && !(StringUtils.equals(oldSource.getDriverClassName(), tenantSource.getDriverClassName()) && StringUtils.equals(oldSource.getUrl(), tenantSource.getUrl()) && StringUtils.equals(oldSource.getUsername(), tenantSource.getUsername()) && StringUtils.equals(oldSource.getPassword(), tenantSource.getPassword()))) {
-            ds = 1;
+            ds = TenantConstants.SYNC_TYPE_REFRESH;
         } else {
-            ds = 0;
+            ds = TenantConstants.SYNC_TYPE_UNCHANGED;
         }
-        if (!key && ds != 0) {
+        tenantSource.setSyncType(ds);
+        if (!key && ds != TenantConstants.SYNC_TYPE_UNCHANGED) {
             tenantSource.setSlave(oldSource.getSlave());
             tenantSource.setDriverClassName(oldSource.getDriverClassName());
             tenantSource.setUrl(oldSource.getUrl());

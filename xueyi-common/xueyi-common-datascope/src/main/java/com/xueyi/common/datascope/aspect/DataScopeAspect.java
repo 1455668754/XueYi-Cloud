@@ -31,44 +31,28 @@ import com.xueyi.system.api.model.LoginUser;
 @Component
 public class DataScopeAspect {
 
-    /**
-     * 全部数据权限
-     */
+    /** 全部数据权限 */
     public static final String DATA_SCOPE_ALL = "1";
 
-    /**
-     * 自定义数据权限
-     */
+    /** 自定义数据权限 */
     public static final String DATA_SCOPE_CUSTOM = "2";
 
-    /**
-     * 本部门数据权限
-     */
+    /** 本部门数据权限 */
     public static final String DATA_SCOPE_DEPT = "3";
 
-    /**
-     * 本部门及以下数据权限
-     */
+    /** 本部门及以下数据权限 */
     public static final String DATA_SCOPE_DEPT_AND_CHILD = "4";
 
-    /**
-     * 本岗位数据权限
-     */
+    /** 本岗位数据权限 */
     public static final String DATA_SCOPE_POST = "5";
 
-    /**
-     * 仅本人数据权限
-     */
+    /** 仅本人数据权限 */
     public static final String DATA_SCOPE_SELF = "6";
 
-    /**
-     * 数据权限过滤关键字
-     */
+    /** 数据权限过滤关键字 */
     public static final String DATA_SCOPE = "dataScope";
 
-    /**
-     * 数据权限过滤关键字|更新
-     */
+    /** 数据权限过滤关键字|更新 */
     public static final String UPDATE_SCOPE = "updateScope";
 
     @Autowired

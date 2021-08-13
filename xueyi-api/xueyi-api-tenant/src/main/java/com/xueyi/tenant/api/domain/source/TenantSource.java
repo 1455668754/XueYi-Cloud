@@ -69,6 +69,9 @@ public class TenantSource extends BaseEntity
     /** 读写分离 读 */
     private List<TenantSourceValue> values;
 
+    /** 源同步策略（0不变 1刷新 2启动 3删除） */
+    private int syncType;
+
     public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
     }
@@ -179,6 +182,14 @@ public class TenantSource extends BaseEntity
 
     public void setValues(List<TenantSourceValue> values) {
         this.values = values;
+    }
+
+    public int getSyncType() {
+        return syncType;
+    }
+
+    public void setSyncType(int syncType) {
+        this.syncType = syncType;
     }
 
     @Override

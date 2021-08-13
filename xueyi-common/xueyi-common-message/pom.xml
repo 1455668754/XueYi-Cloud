@@ -17,5 +17,23 @@
 
     <dependencies>
 
+        <!-- XueYi Common Core-->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-common-core</artifactId>
+        </dependency>
+
+        <!-- XueYi Common Redis-->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-common-redis</artifactId>
+        </dependency>
+
+        <!-- SpringBoot Boot RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

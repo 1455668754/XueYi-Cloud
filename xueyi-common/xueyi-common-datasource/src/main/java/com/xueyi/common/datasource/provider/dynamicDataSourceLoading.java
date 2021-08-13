@@ -14,12 +14,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 从数据库中获取数据库连接信息
+ * 源加载
  *
  * @author xueyi
  */
 @Configuration
 public class dynamicDataSourceLoading {
+
     @Value("${spring.datasource.dynamic.datasource.master.driver-class-name}")
     private String Driver;
     @Value("${spring.datasource.dynamic.datasource.master.url}")

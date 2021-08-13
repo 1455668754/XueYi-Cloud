@@ -7,23 +7,15 @@ package com.xueyi.common.core.constant;
  */
 public class ServiceNameConstants
 {
-    /**
-     * 认证服务的serviceId
-     */
+    /** 认证服务的serviceId */
     public static final String AUTH_SERVICE = "xueyi-auth";
 
-    /**
-     * 系统模块的serviceId
-     */
+    /** 系统模块的serviceId */
     public static final String SYSTEM_SERVICE = "xueyi-system";
 
-    /**
-     * 文件服务的serviceId
-     */
+    /** 文件服务的serviceId */
     public static final String FILE_SERVICE = "xueyi-file";
 
-    /**
-     * 租管模块的serviceId
-     */
+    /** 租管模块的serviceId */
     public static final String TENANT_SERVICE = "xueyi-tenant";
 }

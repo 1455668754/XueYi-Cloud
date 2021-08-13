@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.tenant.api.domain.source.TenantSourceValue;
@@ -73,7 +74,9 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
             tenantSource.setSlave("master" + tenantSource.getId().toString());
         }
         // 将数据新增的的数据源添加到数据源库
+        tenantSource.setSyncType(TenantConstants.SYNC_TYPE_ADD);
         DSUtils.addDs(tenantSource);
+        DSUtils.syncDS(tenantSource);
         return tenantSourceMapper.insertTenantSource(tenantSource);
     }
 
@@ -87,16 +90,17 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
     @Override
     public int updateTenantSource(TenantSource tenantSource, int ds) {
         int res = tenantSourceMapper.updateTenantSource(tenantSource);
-        if (res > 0) {
+        if (res > 0 && ds != TenantConstants.SYNC_TYPE_UNCHANGED) {
             //ds 0不变 1刷新 2启动 3删除
-            if (ds == 1) {
+            if (ds == TenantConstants.SYNC_TYPE_REFRESH) {
                 DSUtils.delDs(tenantSource.getSlave());
                 DSUtils.addDs(tenantSource);
-            } else if (ds == 2) {
+            } else if (ds == TenantConstants.SYNC_TYPE_ADD) {
                 DSUtils.addDs(tenantSource);
-            } else if (ds == 3) {
+            } else if (ds == TenantConstants.SYNC_TYPE_DELETE) {
                 DSUtils.delDs(tenantSource.getSlave());
             }
+            DSUtils.syncDS(tenantSource);
         }
         return res;
     }
@@ -124,7 +128,9 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
         tenantSourceMapper.deleteTenantSeparationByValueId(tenantSource);
         int res = tenantSourceMapper.deleteTenantSourceById(tenantSource);
         if (res > 0) {
+            tenantSource.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
             DSUtils.delDs(tenantSource.getSlave());
+            DSUtils.syncDS(tenantSource);
         }
         return res;
     }
@@ -143,7 +149,9 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
         int res = tenantSourceMapper.deleteTenantSourceByIds(tenantSource);
         if (res > 0 && DsIds.size() > 0) {
             for (TenantSource Ds : DsIds) {
+                Ds.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
                 DSUtils.delDs(Ds.getSlave());
+                DSUtils.syncDS(Ds);
             }
         }
         return res;

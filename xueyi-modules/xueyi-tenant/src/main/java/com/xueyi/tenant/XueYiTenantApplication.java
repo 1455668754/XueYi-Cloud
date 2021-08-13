@@ -1,5 +1,6 @@
 package com.xueyi.tenant;
 
+import com.xueyi.common.datasource.synchronization.SourceSynchronization;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.xueyi.common.security.annotation.EnableCustomConfig;
@@ -14,7 +15,7 @@ import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
-@SpringBootApplication
+@SpringBootApplication(exclude = { SourceSynchronization.class })
 public class XueYiTenantApplication
 {
     public static void main(String[] args)

@@ -1,5 +1,10 @@
 package com.xueyi.common.core.constant;
 
+/**
+ * 菜单常量信息
+ *
+ * @author ruoyi
+ */
 public class MenuConstants {
 
     /** 控制参数 - 获取所有权限内模块&菜单 | 无衍生角色 */

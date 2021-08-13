@@ -42,5 +42,12 @@
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-security</artifactId>
         </dependency>
+
+        <!-- XueYi Common Message -->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-common-message</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

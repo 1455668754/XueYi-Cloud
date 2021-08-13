@@ -1,4 +1,4 @@
-package com.xueyi.common.datasource.config;
+package com.xueyi.common.datasource.processor;
 
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import com.xueyi.common.core.constant.TenantConstants;
@@ -6,7 +6,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
 
 /**
- * 返回主数据源策略
+ * 主库源策略
  *
  * @author xueyi
  */

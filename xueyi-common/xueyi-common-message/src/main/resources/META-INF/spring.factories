@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.xueyi.common.message.config.MessageConfig, \
+  com.xueyi.common.message.service.impl.ProducerServiceImpl

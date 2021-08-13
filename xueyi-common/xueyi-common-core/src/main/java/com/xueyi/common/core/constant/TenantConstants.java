@@ -39,4 +39,16 @@ public class TenantConstants {
 
     /** 数据源只写类型 */
     public static final String SOURCE_WRITE = "2";
+
+    /** 源同步策略类型 - 不变 */
+    public static final int SYNC_TYPE_UNCHANGED = 0;
+
+    /** 源同步策略类型 - 刷新 */
+    public static final int SYNC_TYPE_REFRESH = 1;
+
+    /** 源同步策略类型 - 新增 */
+    public static final int SYNC_TYPE_ADD = 2;
+
+    /** 源同步策略类型 - 删除 */
+    public static final int SYNC_TYPE_DELETE = 3;
 }

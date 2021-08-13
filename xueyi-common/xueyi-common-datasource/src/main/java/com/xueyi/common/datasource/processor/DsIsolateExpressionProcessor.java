@@ -1,4 +1,4 @@
-package com.xueyi.common.datasource.config;
+package com.xueyi.common.datasource.processor;
 
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import com.xueyi.common.core.utils.SpringUtils;
@@ -9,7 +9,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
 
 /**
- * 获取并返回租户的数据源策略
+ * 租户库源策略
  *
  * @author xueyi
  */
