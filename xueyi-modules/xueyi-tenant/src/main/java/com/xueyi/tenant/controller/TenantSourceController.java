@@ -188,10 +188,10 @@ public class TenantSourceController extends BaseController {
                 DsIds.add(delDs);
             }
         }
-        if (Ids.size() <= 0) {
-            return AjaxResult.error("删除失败，数据源已被应用于策略或主从！");
+        if (DsIds.size() <= 0) {
+            return AjaxResult.error("主数据源或已被应用于策略或主从的数据源无法被删除！");
         }
-        int res = tenantSourceService.deleteTenantSourceByIds(tenantSource, DsIds);
+        int res = tenantSourceService.deleteTenantSourceByIds(DsIds);
         if(key){
             return AjaxResult.error("已被应用于策略或主从的数据源未成功删除！");
         }

@@ -63,11 +63,10 @@ public interface ITenantSourceService {
     /**
      * 批量删除数据源
      *
-     * @param tenantSource 数据源
-     * @param DsIds        需停用的数据源
+     * @param DsIds 需停用的数据源集合
      * @return 结果
      */
-    public int deleteTenantSourceByIds(TenantSource tenantSource, List<TenantSource> DsIds);
+    public int deleteTenantSourceByIds(List<TenantSource> DsIds);
 
     /**
      * 校验数据源是否已应用于策略

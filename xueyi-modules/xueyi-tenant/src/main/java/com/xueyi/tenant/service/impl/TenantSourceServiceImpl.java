@@ -59,15 +59,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
     @Transactional
     @DataScope(ueAlias = "empty")
     public int insertTenantSource(TenantSource tenantSource) {
-        if (tenantSource.getType().equals("0")) {
-            TenantSourceValue value = new TenantSourceValue();
-            value.setSourceId(tenantSource.getId());
-            List<TenantSourceValue> values = new ArrayList<>();
-            values.add(value);
-            tenantSource.setValues(values);
-            tenantSource.setSourceId(tenantSource.getId());
-            tenantSourceMapper.batchTenantSeparation(tenantSource);
-        }
+
         if (tenantSource.getType().equals("2")) {
             tenantSource.setSlave("slave" + tenantSource.getId().toString());
         } else {
@@ -77,6 +69,15 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
         tenantSource.setSyncType(TenantConstants.SYNC_TYPE_ADD);
         DSUtils.addDs(tenantSource);
         DSUtils.syncDS(tenantSource);
+        if (tenantSource.getType().equals("0")) {
+            TenantSourceValue value = new TenantSourceValue();
+            value.setSourceId(tenantSource.getId());
+            List<TenantSourceValue> values = new ArrayList<>();
+            values.add(value);
+            tenantSource.setValues(values);
+            tenantSource.setSourceId(tenantSource.getId());
+            tenantSourceMapper.batchTenantSeparation(tenantSource);
+        }
         return tenantSourceMapper.insertTenantSource(tenantSource);
     }
 
@@ -89,9 +90,8 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
      */
     @Override
     public int updateTenantSource(TenantSource tenantSource, int ds) {
-        int res = tenantSourceMapper.updateTenantSource(tenantSource);
-        if (res > 0 && ds != TenantConstants.SYNC_TYPE_UNCHANGED) {
-            //ds 0不变 1刷新 2启动 3删除
+
+        if (ds != TenantConstants.SYNC_TYPE_UNCHANGED) {
             if (ds == TenantConstants.SYNC_TYPE_REFRESH) {
                 DSUtils.delDs(tenantSource.getSlave());
                 DSUtils.addDs(tenantSource);
@@ -102,7 +102,7 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
             }
             DSUtils.syncDS(tenantSource);
         }
-        return res;
+        return tenantSourceMapper.updateTenantSource(tenantSource);
     }
 
     /**
@@ -125,36 +125,30 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
     @Override
     @Transactional
     public int deleteTenantSourceById(TenantSource tenantSource) {
+        tenantSource.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
+        DSUtils.delDs(tenantSource.getSlave());
+        DSUtils.syncDS(tenantSource);
         tenantSourceMapper.deleteTenantSeparationByValueId(tenantSource);
-        int res = tenantSourceMapper.deleteTenantSourceById(tenantSource);
-        if (res > 0) {
-            tenantSource.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
-            DSUtils.delDs(tenantSource.getSlave());
-            DSUtils.syncDS(tenantSource);
-        }
-        return res;
+        return tenantSourceMapper.deleteTenantSourceById(tenantSource);
     }
 
     /**
      * 批量删除数据源
      *
-     * @param tenantSource 数据源
-     * @param DsIds        需停用的数据源
+     * @param DsIds 需停用的数据源集合
      * @return 结果
      */
     @Override
     @Transactional
-    public int deleteTenantSourceByIds(TenantSource tenantSource, List<TenantSource> DsIds) {
-        tenantSourceMapper.deleteTenantSeparationByValueId(tenantSource);
-        int res = tenantSourceMapper.deleteTenantSourceByIds(tenantSource);
-        if (res > 0 && DsIds.size() > 0) {
-            for (TenantSource Ds : DsIds) {
-                Ds.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
-                DSUtils.delDs(Ds.getSlave());
-                DSUtils.syncDS(Ds);
-            }
+    public int deleteTenantSourceByIds(List<TenantSource> DsIds) {
+        for (TenantSource Ds : DsIds) {
+            Ds.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
+            DSUtils.delDs(Ds.getSlave());
+            DSUtils.syncDS(Ds);
+            tenantSourceMapper.deleteTenantSourceById(Ds);
+            tenantSourceMapper.deleteTenantSeparationByValueId(Ds);
         }
-        return res;
+        return DsIds.size();
     }
 
     /**

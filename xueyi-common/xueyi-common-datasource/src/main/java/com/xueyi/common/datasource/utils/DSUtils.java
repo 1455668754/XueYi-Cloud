@@ -4,14 +4,13 @@ import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.xueyi.common.core.constant.MessageConstant;
+import com.xueyi.common.core.exception.CustomException;
 import com.xueyi.common.core.utils.IdUtils;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.bean.BeanUtils;
 import com.xueyi.common.message.domain.Message;
 import com.xueyi.common.message.service.ProducerService;
 import com.xueyi.tenant.api.domain.source.TenantSource;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.sql.DataSource;
 
@@ -26,9 +25,8 @@ public class DSUtils {
      * 添加一个数据源到数据源库中
      *
      * @param tenantSource 数据源对象
-     * @return 结果
      */
-    public static boolean addDs(TenantSource tenantSource) {
+    public static void addDs(TenantSource tenantSource) {
         try {
             DefaultDataSourceCreator dataSourceCreator = SpringUtils.getBean(DefaultDataSourceCreator.class);
             DataSourceProperty dataSourceProperty = new DataSourceProperty();
@@ -37,10 +35,9 @@ public class DSUtils {
             DynamicRoutingDataSource ds = (DynamicRoutingDataSource) dataSource;
             dataSource = dataSourceCreator.createDataSource(dataSourceProperty);
             ds.addDataSource(tenantSource.getSlave(), dataSource);
-            return true;
-        } catch (BeansException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw new CustomException("数据源添加失败");
         }
     }
 
@@ -48,16 +45,14 @@ public class DSUtils {
      * 从数据源库中删除一个数据源
      *
      * @param slave 数据源编码
-     * @return 结果
      */
-    public static boolean delDs(String slave) {
+    public static void delDs(String slave) {
         try {
             DynamicRoutingDataSource ds = (DynamicRoutingDataSource) SpringUtils.getBean(DataSource.class);
             ds.removeDataSource(slave);
-            return true;
-        } catch (BeansException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw new CustomException("数据源删除失败");
         }
     }
 
@@ -74,8 +69,7 @@ public class DSUtils {
      *
      * @param tenantSource 数据源对象
      */
-    public static void syncDS(TenantSource tenantSource)
-    {
+    public static void syncDS(TenantSource tenantSource) {
         ProducerService producerService = SpringUtils.getBean(ProducerService.class);
         Message message = new Message(IdUtils.randomUUID(), tenantSource);
         producerService.sendMsg(message, MessageConstant.EXCHANGE_SOURCE, MessageConstant.ROUTING_KEY_SOURCE);
