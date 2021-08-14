@@ -1,5 +1,5 @@
-import request from '@utils/request'
-import { acquisition } from '@utils/xueyi'
+import request from '../utils/request'
+import { acquisition } from '../utils/xueyi'
 
 // 获取路由
 export const getRouters = () => {

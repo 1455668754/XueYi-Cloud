@@ -1,4 +1,4 @@
-import request from '@utils/request'
+import request from '../utils/request'
 
 // 登录方法
 export function login(enterpriseName, userName, password, code, uuid) {
@@ -30,6 +30,14 @@ export function getEnterpriseProfile() {
   return request({
     url: '/system/enterprise/profile',
     method: 'get',
+  })
+}
+
+// 获取首页可展示子系统模块列表
+export function viewListSystem() {
+  return request({
+    url: '/system/system/viewList',
+    method: 'get'
   })
 }
 

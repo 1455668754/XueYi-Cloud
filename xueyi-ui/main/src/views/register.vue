@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { getCodeImg, register } from "@/api/login";
+import { getCodeImg, register } from "@api/login";
 
 export default {
   name: "Register",

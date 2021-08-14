@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@utils/request'
 #set($AOP=[])
 #foreach ($column in $columns)
 #foreach ($item in $excisionAOP.entrySet())
@@ -8,7 +8,7 @@ import request from '@/utils/request'
 #end
 #end
 #if($AOP.size() > 0)
-import { acquisition } from "@/utils/xueyi";
+import { acquisition } from "@utils/xueyi";
 #end
 
 // 查询${functionName}列表

@@ -12,13 +12,7 @@
 
 基于本系统还有许多内容是希望加入进来的，但限于时间问题，后续慢慢更新进来，如遇bug，请提Issues。
 
-走过路过，点个star :kissing_heart: 
-
-## 后续计划
-* 1.集成RabbitMQ完善服务间源同步  
-* 2.服务独立源管理实现，服务可添加独立源&&公共源  
-* 3.站内信模块完善  
-* 4.常规优化  
+走过路过，点个star :kissing_heart:
 
 ## 在线体验
 - 普通账户
@@ -45,6 +39,9 @@ QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https:
 ~~~
 com.xueyi     
 ├── xueyi-ui              // 前端框架 [80、81]
+│       └── common                                    // 公共组件
+│       └── main                                      // 默认系统 [80]
+│       └── administrator                             // 租管系统 [81]
 ├── xueyi-gateway         // 网关模块 [8080]
 ├── xueyi-auth            // 认证中心 [9200]
 ├── xueyi-api             // 接口模块
@@ -53,25 +50,25 @@ com.xueyi
 │       └── xueyi-common-core                         // 核心模块
 │       └── xueyi-common-datascope                    // 权限范围
 │       └── xueyi-common-datasource                   // 多数据源
-│       └── xueyi-common-log                          // 日志记录
 │       └── xueyi-common-message                      // 消息队列
+│       └── xueyi-common-log                          // 日志记录
 │       └── xueyi-common-redis                        // 缓存服务
 │       └── xueyi-common-security                     // 安全模块
 │       └── xueyi-common-swagger                      // 系统接口
 ├── xueyi-modules         // 业务模块
 │       └── xueyi-system                              // 系统模块 [9600]
 │               └── authority                         // 权限模块
-│               └── dict                              // 字典配置
+│               └── dict                              // 参数字典
 │               └── material                          // 素材模块
 │               └── monitor                           // 监控模块
 │               └── notice                            // 公告模块
 │               └── organize                          // 组织模块
 │               └── role                              // 权限关系
 │               └── source                            // 源策略
+│       └── xueyi-tenant                              // 租管模块 [9700]
 │       └── xueyi-gen                                 // 代码生成 [9400]
 │       └── xueyi-job                                 // 定时任务 [9500]
 │       └── xueyi-file                                // 文件服务 [9300]
-│       └── xueyi-tenant                              // 租管模块 [9700]
 ├── xueyi-visual          // 图形化管理模块
 │       └── xueyi-visual-monitor                      // 监控中心 [9100]
 ├──pom.xml                // 公共依赖
@@ -86,23 +83,27 @@ com.xueyi
 
 <table>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/142108_5c0567fd_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/151423_c5168169_7382127.jpeg"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140513_48ff7abd_7382127.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0507/132106_c1b9451d_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/151634_fee2ab95_7382127.png"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2021/0507/131952_3b892800_7382127.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140524_ec4af10e_7382127.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140534_98a211b1_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/151708_cef1f3ed_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/151737_4c4174db_7382127.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140545_9c62338d_7382127.png"/></td>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140558_1c729ee4_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/151824_752e5b07_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/151842_48c3407a_7382127.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://images.gitee.com/uploads/images/2021/0501/140607_d6697a5a_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/151937_3b66dcc6_7382127.png"/></td>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/151949_008cd20b_7382127.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://images.gitee.com/uploads/images/2021/0814/152034_e32f2b9a_7382127.png"/></td>
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png"/></td>
     </tr>
 </table>

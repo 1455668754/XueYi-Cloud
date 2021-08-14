@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { viewListSystem } from '@/api/login';
+import { viewListSystem } from '@api/login';
 
 export default {
   name: "Index",
