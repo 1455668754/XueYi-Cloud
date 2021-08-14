@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import ThemePicker from '@components/ThemePicker'
+import ThemePicker from '@basicsComponents/ThemePicker'
 import dark from  '@assets/images/dark.svg'
 import light from  '@assets/images/light.svg'
 

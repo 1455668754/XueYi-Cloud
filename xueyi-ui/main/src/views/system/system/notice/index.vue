@@ -182,7 +182,7 @@
 
 <script>
 import {listNotice, getNotice, delNotice, addNotice, updateNotice} from "@/api/system/notice"
-import Editor from '@components/Editor'
+import Editor from '@basicsComponents/Editor'
 
 export default {
   name: "Notice",

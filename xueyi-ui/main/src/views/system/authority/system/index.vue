@@ -233,7 +233,7 @@
 <script>
 
 import {listSystem, getSystem, delSystem, addSystem, updateSystem, changeSystemStatus} from "@/api/system/system"
-import ImageBox from "@components/XyComponents/ImageBox"
+import ImageBox from "@customComponents/ImageBox"
 import store from "@/store"
 
 export default {

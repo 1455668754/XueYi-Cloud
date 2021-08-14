@@ -55,7 +55,9 @@ module.exports = {
         '@api': resolve('node_modules/common/src/api'),
         '@utils': resolve('node_modules/common/src/utils'),
         '@assets': resolve('node_modules/common/src/assets'),
-        '@components': resolve('node_modules/common/src/components')
+        '@components': resolve('node_modules/common/src/components'),
+        '@basicsComponents': resolve('node_modules/common/src/components/basics'),
+        '@customComponents': resolve('node_modules/common/src/components/custom')
       }
     },
   },

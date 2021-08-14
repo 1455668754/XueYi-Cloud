@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Material from "../Material/index";
+import Material from "../Material";
 import draggable from '~../../vuedraggable';
 
 export default {
@@ -251,7 +251,7 @@ export default {
 </template>
 
 <script>
-import Material from "../Material/index";
+import Material from "../Material";
 import draggable from '~../../vuedraggable';
 
 export default {
@@ -459,7 +459,7 @@ export default {
 </template>
 
 <script>
-import Material from "../Material/index";
+import Material from "../Material";
 import draggable from '~../../vuedraggable';
 
 export default {
@@ -667,7 +667,7 @@ export default {
 </template>
 
 <script>
-import Material from "../Material/index";
+import Material from "../Material";
 import draggable from '~../../vuedraggable';
 
 export default {

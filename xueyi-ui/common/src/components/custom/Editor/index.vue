@@ -1,69 +1,54 @@
 <template>
   <div>
-    <el-upload
-      :action="uploadUrl"
-      :before-upload="handleBeforeUpload"
-      :on-success="handleUploadSuccess"
-      :on-error="handleUploadError"
-      name="file"
-      :show-file-list="false"
-      :headers="headers"
-      style="display: none"
-      ref="upload"
-      v-if="this.type == 'url'"
-    >
-    </el-upload>
     <div class="editor" ref="editor" :style="styles"></div>
+    <Material ref="material" visible="true" v-model="imageList" :visible.sync="imageChoice.visible" :max="5"
+              clear="clear"/>
   </div>
 </template>
 
 <script>
-import Quill from "~../../quill"
-import "~../../quill/dist/quill.core.css"
-import "~../../quill/dist/quill.snow.css"
-import "~../../quill/dist/quill.bubble.css"
-import {getToken} from "../../utils/auth"
+import Quill from "~../../quill";
+import Material from "../Material";
+import "~../../quill/dist/quill.core.css";
+import "~../../quill/dist/quill.snow.css";
+import "~../../quill/dist/quill.bubble.css";
+import {getToken} from "../../../utils/auth";
 
 export default {
   name: "Editor",
+  components: {Material},
   props: {
     /* 编辑器的内容 */
     value: {
       type: String,
-      default: ""
+      default: "",
     },
     /* 高度 */
     height: {
       type: Number,
-      default: null
+      default: null,
     },
     /* 最小高度 */
     minHeight: {
       type: Number,
-      default: null
+      default: null,
     },
     /* 只读 */
     readOnly: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    // 上传文件大小限制(MB)
-    fileSize: {
-      type: Number,
-      default: 5
-    },
-    /* 类型（base64格式、url格式） */
-    type: {
-      type: String,
-      default: "url"
-    }
   },
   data() {
     return {
-      uploadUrl: process.env.VUE_APP_BASE_API + "/file/upload", // 上传的图片服务器地址
       headers: {
         Authorization: "Bearer " + getToken()
       },
+      imageChoice: {
+        focus: false,
+        visible: false
+      },
+      imageList: [],
       Quill: null,
       currentValue: "",
       options: {
@@ -73,121 +58,117 @@ export default {
         modules: {
           // 工具栏配置
           toolbar: [
-            ["bold", "italic", "underline", "strike"],       // 加粗 斜体 下划线 删除线
-            ["blockquote", "code-block"],                    // 引用  代码块
-            [{list: "ordered"}, {list: "bullet"}],       // 有序、无序列表
-            [{indent: "-1"}, {indent: "+1"}],            // 缩进
-            [{size: ["small", false, "large", "huge"]}],   // 字体大小
-            [{header: [1, 2, 3, 4, 5, 6, false]}],         // 标题
-            [{color: []}, {background: []}],             // 字体颜色、字体背景颜色
-            [{align: []}],                                 // 对齐方式
-            ["clean"],                                       // 清除文本格式
-            ["link", "image", "video"]                       // 链接、图片、视频
-          ]
+            ["bold", "italic", "underline", "strike"],        // 加粗 斜体 下划线 删除线
+            ["blockquote", "code-block"],                     // 引用  代码块
+            [{list: "ordered"}, {list: "bullet"}],            // 有序、无序列表
+            [{indent: "-1"}, {indent: "+1"}],                 // 缩进
+            [{size: ["small", false, "large", "huge"]}],      // 字体大小
+            [{header: [1, 2, 3, 4, 5, 6, false]}],            // 标题
+            [{color: []}, {background: []}],                  // 字体颜色、字体背景颜色
+            [{align: []}],                                    // 对齐方式
+            ["clean"],                                        // 清除文本格式
+            ["link", "image"]                                 // 链接、图片
+          ],
         },
         placeholder: "请输入内容",
-        readOnly: this.readOnly
-      }
-    }
+        readOnly: this.readOnly,
+      },
+    };
   },
   computed: {
     styles() {
-      let style = {}
+      let style = {};
       if (this.minHeight) {
-        style.minHeight = `${this.minHeight}px`
+        style.minHeight = `${this.minHeight}px`;
       }
       if (this.height) {
-        style.height = `${this.height}px`
+        style.height = `${this.height}px`;
       }
-      return style
-    }
+      return style;
+    },
   },
   watch: {
     value: {
       handler(val) {
         if (val !== this.currentValue) {
-          this.currentValue = val === null ? "" : val
+          this.currentValue = val === null ? "" : val;
           if (this.Quill) {
-            this.Quill.pasteHTML(this.currentValue)
+            this.Quill.pasteHTML(this.currentValue);
           }
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
+    imageList(val, oldVal) {
+      this.handleSuccess();
+    },
   },
   mounted() {
-    this.init()
+    this.init();
   },
   beforeDestroy() {
-    this.Quill = null
+    this.Quill = null;
   },
   methods: {
     init() {
-      const editor = this.$refs.editor
-      this.Quill = new Quill(editor, this.options)
-      // 如果设置了上传地址则自定义图片上传事件
-      if (this.type == 'url') {
-        let toolbar = this.Quill.getModule("toolbar")
-        toolbar.addHandler("image", (value) => {
-          this.uploadType = "image"
-          if (value) {
-            this.$refs.upload.$children[0].$refs.input.click()
-          } else {
-            this.quill.format("image", false)
-          }
-        })
-      }
-      this.Quill.pasteHTML(this.currentValue)
-      this.Quill.on("text-change", (delta, oldDelta, source) => {
-        const html = this.$refs.editor.children[0].innerHTML
-        const text = this.Quill.getText()
-        const quill = this.Quill
-        this.currentValue = html
-        this.$emit("input", html)
-        this.$emit("on-change", {html, text, quill})
-      })
-      this.Quill.on("text-change", (delta, oldDelta, source) => {
-        this.$emit("on-text-change", delta, oldDelta, source)
-      })
-      this.Quill.on("selection-change", (range, oldRange, source) => {
-        this.$emit("on-selection-change", range, oldRange, source)
-      })
-      this.Quill.on("editor-change", (eventName, ...args) => {
-        this.$emit("on-editor-change", eventName, ...args)
-      })
-    },
-    // 上传前校检格式和大小
-    handleBeforeUpload(file) {
-      // 校检文件大小
-      if (this.fileSize) {
-        const isLt = file.size / 1024 / 1024 < this.fileSize
-        if (!isLt) {
-          this.$message.error(`上传文件大小不能超过 ${this.fileSize} MB!`)
-          return false
+      const editor = this.$refs.editor;
+      this.Quill = new Quill(editor, this.options);
+      // 素材模块接管上传事件
+      let toolbar = this.Quill.getModule("toolbar");
+      toolbar.addHandler("image", (value) => {
+        this.uploadType = "image";
+        if (value) {
+          this.imageChoice.visible = true;
+        } else {
+          this.quill.format("image", false);
         }
-      }
-      return true
+      });
+      toolbar.addHandler("video", (value) => {
+        this.uploadType = "video";
+        if (value) {
+          this.imageChoice.visible = true;
+        } else {
+          this.quill.format("video", false);
+        }
+      });
+      this.Quill.pasteHTML(this.currentValue);
+      this.Quill.on("text-change", (delta, oldDelta, source) => {
+        const html = this.$refs.editor.children[0].innerHTML;
+        const text = this.Quill.getText();
+        const quill = this.Quill;
+        this.currentValue = html;
+        this.$emit("input", html);
+        this.$emit("on-change", {html, text, quill});
+      });
+      this.Quill.on("text-change", (delta, oldDelta, source) => {
+        this.$emit("on-text-change", delta, oldDelta, source);
+      });
+      this.Quill.on("selection-change", (range, oldRange, source) => {
+        this.$emit("on-selection-change", range, oldRange, source);
+      });
+      this.Quill.on("editor-change", (eventName, ...args) => {
+        this.$emit("on-editor-change", eventName, ...args);
+      });
     },
-    handleUploadSuccess(res, file) {
-      // 获取富文本组件实例
-      let quill = this.Quill
-      // 如果上传成功
-      if (res.code == 200) {
-        // 获取光标所在位置
-        let length = quill.getSelection().index
-        // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(length, "image", res.data.url)
-        // 调整光标到最后
-        quill.setSelection(length + 1)
-      } else {
-        this.$message.error("图片插入失败")
+    handleSuccess() {
+      if (this.imageList.length > 0) {
+        // 获取富文本组件实例
+        let quill = this.Quill;
+        // 如果上传成功
+        for (let i = 0; i < this.imageList.length; i++) {
+          // 获取光标所在位置
+          let length = quill.getSelection().index;
+          // 插入图片  res.url为服务器返回的图片地址
+          quill.insertEmbed(length, "image", this.imageList[i].materialOriginalUrl);
+          // 调整光标到最后
+          quill.setSelection(length + 1);
+        }
+        //重置imageList参数
+        this.imageList = []
       }
-    },
-    handleUploadError() {
-      this.$message.error("图片插入失败")
     }
   }
-}
+};
 </script>
 
 <style>

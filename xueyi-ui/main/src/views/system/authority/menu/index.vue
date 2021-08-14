@@ -258,7 +258,7 @@ import {getMenu, delMenu, addMenu, updateMenu} from "@/api/system/menu"
 import {treeSelectPermitPersonal as systemMenuTreeSelect} from "@/api/system/system"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
-import IconSelect from "@components/IconSelect"
+import IconSelect from "@basicsComponents/IconSelect"
 import store from "@/store"
 
 export default {

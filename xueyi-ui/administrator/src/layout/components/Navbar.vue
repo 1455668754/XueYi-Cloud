@@ -39,13 +39,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import Breadcrumb from '@components/Breadcrumb'
-import TopNav from '@components/TopNav'
-import Hamburger from '@components/Hamburger'
-import Screenfull from '@components/Screenfull'
-import SizeSelect from '@components/SizeSelect'
-import Search from '@components/HeaderSearch'
-import Notice from '@components/XyComponents/Notice'
+import Breadcrumb from '@basicsComponents/Breadcrumb'
+import TopNav from '@basicsComponents/TopNav'
+import Hamburger from '@basicsComponents/Hamburger'
+import Screenfull from '@basicsComponents/Screenfull'
+import SizeSelect from '@basicsComponents/SizeSelect'
+import Search from '@basicsComponents/HeaderSearch'
+import Notice from '@customComponents/Notice'
 
 export default {
   components: {

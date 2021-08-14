@@ -9,35 +9,26 @@ import '@assets/styles/index.scss' // global css
 import '@assets/styles/ruoyi.scss' // ruoyi css
 import '@assets/styles/xueyi.scss' //xueyi css element-UI重置
 
+import '@assets/icons' // icon
 import '@utils/element' //js element-UI重置
+import './permission' // permission control
 import App from './App'
 import store from './store'
 import router from './router'
 import directive from './directive' //directive
-import { download } from '@utils/request'
+import {download} from '@utils/request'
 
-import '@assets/icons' // icon
-import './permission' // permission control
-import { getDicts } from "@api/common/common"
-import { getConfigKey } from "@api/common/common"
-import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@utils/ruoyi"
-import { acquisition, updateParamIds } from "@utils/xueyi"  // 控制方法(必须)
-import { sortOrderListOnlyDynamic, sortOrderList, excludeEmptyList, excludeRepeatList, mergeTableRow, isMobile } from "@utils/xueyi"  // 普通方法
-import Pagination from "@components/Pagination"
-// 图片管理组件
-import ImageBox from "@components/XyComponents/ImageBox"
-// 自定义表格工具组件
-import RightToolbar from "@components/RightToolbar"
-// 富文本组件
-import Editor from "@components/Editor"
-// 文件上传组件
-import FileUpload from "@components/FileUpload"
-// 图片上传组件
-import ImageUpload from "@components/ImageUpload"
-// 字典标签组件
-import DictTag from '@components/DictTag'
-// 头部标签组件
-import VueMeta from 'vue-meta'
+import {getDicts, getConfigKey} from "@api/common/common"
+import {parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree} from "@utils/ruoyi"
+import {acquisition, updateParamIds, sortOrderListOnlyDynamic, excludeRepeatList, excludeEmptyList, sortOrderList, mergeTableRow, isMobile} from "@utils/xueyi"
+import RightToolbar from "@basicsComponents/RightToolbar"   // 自定义表格工具组件
+import ImageUpload from "@basicsComponents/ImageUpload"   // 图片上传组件
+import FileUpload from "@basicsComponents/FileUpload"   // 文件上传组件
+import Pagination from "@basicsComponents/Pagination"
+import ImageBox from "@customComponents/ImageBox"   // 图片管理组件
+import DictTag from '@basicsComponents/DictTag'   // 字典标签组件
+import Editor from "@basicsComponents/Editor"   // 富文本组件
+import VueMeta from 'vue-meta'    // 头部标签组件
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
