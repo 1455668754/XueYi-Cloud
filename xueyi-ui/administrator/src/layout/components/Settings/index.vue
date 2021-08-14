@@ -78,9 +78,9 @@
 </template>
 
 <script>
-import ThemePicker from '@/components/ThemePicker'
-import dark from  'common/src/assets/images/dark.svg'
-import light from  'common/src/assets/images/light.svg'
+import ThemePicker from '@components/ThemePicker'
+import dark from  '@assets/images/dark.svg'
+import light from  '@assets/images/light.svg'
 
 export default {
   components: {ThemePicker},

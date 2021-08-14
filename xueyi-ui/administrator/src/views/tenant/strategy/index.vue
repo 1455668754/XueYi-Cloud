@@ -236,7 +236,6 @@ import {
 } from '@/api/tenant/strategy'
 import Sortable from 'sortablejs'
 import {writeSeparation} from '@/api/tenant/separation'
-import {updateTenant} from "@/api/tenant/tenant"
 
 export default {
   name: 'Strategy',

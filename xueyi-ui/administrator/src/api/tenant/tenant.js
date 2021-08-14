@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@utils/request'
 
 // 查询租户信息列表
 export function listTenant(query) {

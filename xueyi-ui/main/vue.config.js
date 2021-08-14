@@ -9,7 +9,6 @@ function resolve(dir) {
   return path.resolve(__dirname, dir)
 }
 
-
 const name = process.env.VUE_APP_TITLE || '雪忆管理系统' // 网页标题
 
 const port = process.env.port || process.env.npm_config_port || 80 // 端口
@@ -52,7 +51,11 @@ module.exports = {
     name: name,
     resolve: {
       alias: {
-        '@': join('src')
+        '@': join('src'),
+        '@api': resolve('node_modules/common/src/api'),
+        '@utils': resolve('node_modules/common/src/utils'),
+        '@assets': resolve('node_modules/common/src/assets'),
+        '@components': resolve('node_modules/common/src/components')
       }
     },
   },
@@ -106,7 +109,7 @@ module.exports = {
               },
               commons: {
                 name: 'chunk-commons',
-                test: join('src/components'), // can customize your rules
+                test: resolve('node_modules/common/src/components'), // can customize your rules
                 minChunks: 3, //  minimum common number
                 priority: 5,
                 reuseExistingChunk: true

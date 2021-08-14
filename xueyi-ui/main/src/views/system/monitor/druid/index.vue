@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import iFrame from "@/components/Iframe/index";
+import iFrame from "@components/Iframe/index";
 
 export default {
   name: "Druid",

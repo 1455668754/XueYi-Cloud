@@ -150,14 +150,14 @@ import {
 } from '@/utils/generator/config'
 import {
   exportDefault, beautifierConf, isNumberStr, titleCase
-} from '@/utils/index'
+} from '@utils/index'
 import {
   makeUpHtml, vueTemplate, vueScript, cssStyle
 } from '@/utils/generator/html'
 import { makeUpJs } from '@/utils/generator/js'
 import { makeUpCss } from '@/utils/generator/css'
 import drawingDefalut from '@/utils/generator/drawingDefalut'
-import logo from 'common/src/assets/logo/logo.png'
+import logo from '@assets/logo/logo.png'
 import CodeTypeDialog from './CodeTypeDialog'
 import DraggableItem from './DraggableItem'
 

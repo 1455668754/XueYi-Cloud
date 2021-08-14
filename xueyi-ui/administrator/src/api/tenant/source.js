@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@utils/request'
 
 // 查询数据源列表
 export function listSource(query) {

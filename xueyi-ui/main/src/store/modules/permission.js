@@ -1,7 +1,7 @@
 import {constantRoutes} from '@/router'
 import {getRouters} from '@/api/menu'
 import Layout from '@/layout/index'
-import ParentView from '@/components/ParentView'
+import ParentView from '@components/ParentView'
 import InnerLink from '@/layout/components/InnerLink'
 
 const permission = {

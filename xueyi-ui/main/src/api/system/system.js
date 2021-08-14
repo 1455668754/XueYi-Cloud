@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@utils/request'
 
 // 查询子系统模块列表
 export function listSystem(query) {

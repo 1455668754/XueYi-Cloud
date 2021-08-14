@@ -1,5 +1,5 @@
-import request from '@/utils/request'
-import { addSystem } from '@/utils/xueyi'
+import request from '@utils/request'
+import { addSystem } from '@utils/xueyi'
 
 // 查询菜单列表
 export function listMenu(data) {

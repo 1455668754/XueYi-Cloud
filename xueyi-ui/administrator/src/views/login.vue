@@ -64,7 +64,7 @@
 <script>
 import {getCodeImg} from "@/api/login";
 import Cookies from "js-cookie";
-import {encrypt, decrypt} from '@/utils/jsencrypt'
+import {encrypt, decrypt} from '@utils/jsencrypt'
 
 export default {
   name: "Login",
@@ -171,7 +171,7 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-image: url("~common/src/assets/images/login-background.jpg");
+  background-image: url("~@assets/images/login-background.jpg");
   background-size: cover;
 }
 

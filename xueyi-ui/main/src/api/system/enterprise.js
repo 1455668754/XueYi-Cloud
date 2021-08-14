@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@utils/request'
 
 // 企业logo上传
 export function uploadLogo(data) {

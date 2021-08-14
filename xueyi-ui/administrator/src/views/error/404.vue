@@ -26,10 +26,10 @@
 </template>
 
 <script>
-import errImages1 from 'common/src/assets/404_images/404.png'
-import errImages2 from 'common/src/assets/404_images/404_cloud.png'
-import errImages3 from 'common/src/assets/404_images/404_cloud.png'
-import errImages4 from 'common/src/assets/404_images/404_cloud.png'
+import errImages1 from '@assets/404_images/404.png'
+import errImages2 from '@assets/404_images/404_cloud.png'
+import errImages3 from '@assets/404_images/404_cloud.png'
+import errImages4 from '@assets/404_images/404_cloud.png'
 
 export default {
   name: 'Page404',

@@ -418,7 +418,7 @@ import {
   changeUserStatus,
   changeUserRole
 } from "@/api/system/user"
-import {getToken} from "@/utils/auth"
+import {getToken} from "@utils/auth"
 import {treeSelect} from "@/api/system/post"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
