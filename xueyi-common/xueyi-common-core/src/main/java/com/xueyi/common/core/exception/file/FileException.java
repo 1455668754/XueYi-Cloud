@@ -1,6 +1,6 @@
 package com.xueyi.common.core.exception.file;
 
-import com.xueyi.common.core.exception.BaseException;
+import com.xueyi.common.core.exception.base.BaseException;
 
 /**
  * 文件信息异常类

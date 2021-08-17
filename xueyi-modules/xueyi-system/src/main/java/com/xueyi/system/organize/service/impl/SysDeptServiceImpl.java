@@ -3,7 +3,7 @@ package com.xueyi.system.organize.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.RoleConstants;
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.exception.CustomException;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
@@ -93,7 +93,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
         parentDept.setDeptId(dept.getParentId());
         SysDept info = deptMapper.selectDeptById(parentDept);
         if (!UserConstants.DEPT_NORMAL.equals(info.getStatus())) {
-            throw new CustomException("部门停用，不允许新增");
+            throw new ServiceException("部门停用，不允许新增");
         }
         dept.setAncestors(info.getAncestors() + "," + dept.getParentId());
         int row = deptMapper.insertDept(dept);
@@ -133,7 +133,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
             if (UserConstants.DEPT_DISABLE.equals(checkDeptStatus(checkDept))) {
                 dept.setStatus(UserConstants.DEPT_DISABLE);
                 try {
-                    throw new CustomException(String.format("%1$s上级部门已停用,无法启用该部门", dept.getDeptName()));
+                    throw new ServiceException(String.format("%1$s上级部门已停用,无法启用该部门", dept.getDeptName()));
                 } catch (Exception ignored) {
                 }
                 updateDeptStatus(dept);

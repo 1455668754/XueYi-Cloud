@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.exception.CustomException;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -140,7 +140,7 @@ public class SysUserServiceImpl implements ISysUserService {
         if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
             user.setStatus(UserConstants.USER_DISABLE);
             try {
-                throw new CustomException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
+                throw new ServiceException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
             } catch (Exception ignored) {
             }
         }
@@ -171,7 +171,7 @@ public class SysUserServiceImpl implements ISysUserService {
         if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
             user.setStatus(UserConstants.USER_DISABLE);
             try {
-                throw new CustomException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
+                throw new ServiceException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
             } catch (Exception ignored) {
             }
         }
@@ -300,7 +300,7 @@ public class SysUserServiceImpl implements ISysUserService {
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName) {
         SysSearch search = new SysSearch();
         if (StringUtils.isNull(userList) || userList.size() == 0) {
-            throw new CustomException("导入用户数据不能为空！");
+            throw new ServiceException("导入用户数据不能为空！");
         }
         int successNum = 0;
         int failureNum = 0;
@@ -335,7 +335,7 @@ public class SysUserServiceImpl implements ISysUserService {
         }
         if (failureNum > 0) {
             failureMsg.insert(0, "很抱歉，导入失败！共 " + failureNum + " 条数据格式不正确，错误如下：");
-            throw new CustomException(failureMsg.toString());
+            throw new ServiceException(failureMsg.toString());
         } else {
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
@@ -422,7 +422,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public void checkUserAllowed(SysUser user) {
         if (SysUser.isAdmin(user.getUserType())) {
-            throw new CustomException("不允许操作超级管理员用户");
+            throw new ServiceException("不允许操作超级管理员用户");
         }
     }
 }

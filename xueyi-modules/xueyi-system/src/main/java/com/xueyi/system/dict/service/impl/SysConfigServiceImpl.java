@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.exception.CustomException;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.text.Convert;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
@@ -125,7 +125,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
         for (Long configId : configIds) {
             SysConfig config = selectConfigById(configId);
             if (StringUtils.equals(UserConstants.YES, config.getConfigType())) {
-                throw new CustomException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
+                throw new ServiceException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
             SysSearch search = new SysSearch();
             search.getSearch().put("configId", configId);

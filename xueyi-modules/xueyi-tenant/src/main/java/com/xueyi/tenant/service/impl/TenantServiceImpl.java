@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.exception.CustomException;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.domain.TenantStrategy;
@@ -90,7 +90,7 @@ public class TenantServiceImpl implements ITenantService {
             }
         }
         try {
-            throw new CustomException(String.format("创建失败，%1$s未设置主数据源,无法应用该策略", strategy.getName()));
+            throw new ServiceException(String.format("创建失败，%1$s未设置主数据源,无法应用该策略", strategy.getName()));
         } catch (Exception ignored) {
         }
         return 0;

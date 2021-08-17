@@ -25,7 +25,7 @@ import org.apache.commons.collections4.list.TreeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.exception.CustomException;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.organize.service.ISysPostService;
@@ -98,7 +98,7 @@ public class SysPostServiceImpl implements ISysPostService {
             if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
                 post.setStatus(UserConstants.POST_DISABLE);
                 try {
-                    throw new CustomException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
+                    throw new ServiceException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
                 } catch (Exception ignored) {
                 }
             }
@@ -131,7 +131,7 @@ public class SysPostServiceImpl implements ISysPostService {
             if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
                 post.setStatus(UserConstants.POST_DISABLE);
                 try {
-                    throw new CustomException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
+                    throw new ServiceException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
                 } catch (Exception ignored) {
                 }
                 updatePostStatus(post);//修改保存岗位状态

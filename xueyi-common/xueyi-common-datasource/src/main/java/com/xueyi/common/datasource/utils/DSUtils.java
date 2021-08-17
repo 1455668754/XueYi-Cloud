@@ -4,7 +4,7 @@ import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.xueyi.common.core.constant.MessageConstant;
-import com.xueyi.common.core.exception.CustomException;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.IdUtils;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.bean.BeanUtils;
@@ -37,7 +37,7 @@ public class DSUtils {
             ds.addDataSource(tenantSource.getSlave(), dataSource);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomException("数据源添加失败");
+            throw new ServiceException("数据源添加失败");
         }
     }
 
@@ -52,7 +52,7 @@ public class DSUtils {
             ds.removeDataSource(slave);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CustomException("数据源删除失败");
+            throw new ServiceException("数据源删除失败");
         }
     }
 

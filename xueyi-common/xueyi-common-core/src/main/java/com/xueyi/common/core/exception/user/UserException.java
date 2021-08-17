@@ -1,6 +1,6 @@
 package com.xueyi.common.core.exception.user;
 
-import com.xueyi.common.core.exception.BaseException;
+import com.xueyi.common.core.exception.base.BaseException;
 
 /**
  * 用户信息异常类
