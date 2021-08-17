@@ -11,7 +11,7 @@ public class TenantConstants {
     public static final Long REGISTER_TENANT_STRATEGY_ID = 1L;
 
     /** 注册租户默认策略数据源 */
-    public static final String REGISTER_TENANT_STRATEGY_SOURCE = "slave1";
+    public static final String REGISTER_TENANT_STRATEGY_SOURCE = "slave";
 
     /** 默认主数据源 */
     public static final String MAIN_SOURCE = "master";

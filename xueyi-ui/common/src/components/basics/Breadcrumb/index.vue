@@ -45,7 +45,7 @@ export default {
       if (!name) {
         return false
       }
-      return name.trim() === this.$store.state.settings.homePageName
+      return name.trim() === 'Index'
     },
     handleLink(item) {
       const { redirect, path } = item

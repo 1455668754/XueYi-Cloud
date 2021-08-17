@@ -34,44 +34,44 @@ QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https:
 * 注册中心、配置中心选型Nacos，权限认证使用Redis。         
 * 流量控制框架选型Sentinel，分布式事务选型Seata。            
 
-## 系统模块
+## 系统结构
 
 ~~~
 com.xueyi     
 ├── xueyi-ui              // 前端框架 [80、81]
-│       └── common                                    // 公共组件
-│       └── main                                      // 默认系统 [80]
+│       ├── common                                    // 公共组件
+│       ├── main                                      // 默认系统 [80]
 │       └── administrator                             // 租管系统 [81]
 ├── xueyi-gateway         // 网关模块 [8080]
 ├── xueyi-auth            // 认证中心 [9200]
 ├── xueyi-api             // 接口模块
 │       └── xueyi-api-system                          // 系统接口
 ├── xueyi-common          // 通用模块
-│       └── xueyi-common-core                         // 核心模块
-│       └── xueyi-common-datascope                    // 权限范围
-│       └── xueyi-common-datasource                   // 多数据源
-│       └── xueyi-common-message                      // 消息队列
-│       └── xueyi-common-log                          // 日志记录
-│       └── xueyi-common-redis                        // 缓存服务
-│       └── xueyi-common-security                     // 安全模块
+│       ├── xueyi-common-core                         // 核心模块
+│       ├── xueyi-common-datascope                    // 权限范围
+│       ├── xueyi-common-datasource                   // 多数据源
+│       ├── xueyi-common-message                      // 消息队列
+│       ├── xueyi-common-log                          // 日志记录
+│       ├── xueyi-common-redis                        // 缓存服务
+│       ├── xueyi-common-security                     // 安全模块
 │       └── xueyi-common-swagger                      // 系统接口
 ├── xueyi-modules         // 业务模块
+│       ├── xueyi-file                                // 文件服务 [9300]
+│       ├── xueyi-gen                                 // 代码生成 [9400]
+│       ├── xueyi-job                                 // 定时任务 [9500]
+│       ├── xueyi-tenant                              // 租管模块 [9700]
 │       └── xueyi-system                              // 系统模块 [9600]
-│               └── authority                         // 权限模块
-│               └── dict                              // 参数字典
-│               └── material                          // 素材模块
-│               └── monitor                           // 监控模块
-│               └── notice                            // 公告模块
-│               └── organize                          // 组织模块
-│               └── role                              // 权限关系
+│               ├── authority                         // 权限模块
+│               ├── dict                              // 参数字典
+│               ├── material                          // 素材模块
+│               ├── monitor                           // 监控模块
+│               ├── notice                            // 公告模块
+│               ├── organize                          // 组织模块
+│               ├── role                              // 权限关系
 │               └── source                            // 源策略
-│       └── xueyi-tenant                              // 租管模块 [9700]
-│       └── xueyi-gen                                 // 代码生成 [9400]
-│       └── xueyi-job                                 // 定时任务 [9500]
-│       └── xueyi-file                                // 文件服务 [9300]
 ├── xueyi-visual          // 图形化管理模块
 │       └── xueyi-visual-monitor                      // 监控中心 [9100]
-├──pom.xml                // 公共依赖
+└── pom.xml                // 公共依赖
 ~~~
 
 ## 架构图
