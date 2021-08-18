@@ -107,8 +107,8 @@ public class SysPostServiceImpl implements ISysPostService {
         if(row>0){
             SysRole role = new SysRole();
             role.setType(RoleConstants.POST_DERIVE_TYPE);
-            role.setDeriveId(post.getId());
-            role.setRoleName("岗位衍生"+post.getId());
+            role.setDeriveId(post.getSnowflakeId());
+            role.setRoleName("岗位衍生"+post.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;

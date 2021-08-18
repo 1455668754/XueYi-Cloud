@@ -84,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insertJob" parameterType="SysJob" useGeneratedKeys="true" keyProperty="jobId">
 		insert into sys_job
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">							job_id					,</if>
+			<if test="snowflakeId != null">							    job_id					,</if>
 			<if test="jobName != null and jobName != ''">				job_name				,</if>
 			<if test="jobGroup != null and jobGroup != ''">				job_group				,</if>
 			<if test="invokeTarget != null and invokeTarget != ''">		invoke_target			,</if>
@@ -97,7 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="enterpriseId != null">                           	tenant_id               ,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">							#{Id}					,</if>
+			<if test="snowflakeId != null">							    #{snowflakeId}			,</if>
 			<if test="jobName != null and jobName != ''">				#{jobName}				,</if>
 			<if test="jobGroup != null and jobGroup != ''">				#{jobGroup}				,</if>
 			<if test="invokeTarget != null and invokeTarget != ''">		#{invokeTarget}			,</if>

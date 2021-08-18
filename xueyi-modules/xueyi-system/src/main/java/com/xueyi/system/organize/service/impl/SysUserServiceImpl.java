@@ -148,8 +148,8 @@ public class SysUserServiceImpl implements ISysUserService {
         if(row>0){
             SysRole role = new SysRole();
             role.setType(RoleConstants.USER_DERIVE_TYPE);
-            role.setDeriveId(user.getId());
-            role.setRoleName("用户衍生"+user.getId());
+            role.setDeriveId(user.getSnowflakeId());
+            role.setRoleName("用户衍生"+user.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;

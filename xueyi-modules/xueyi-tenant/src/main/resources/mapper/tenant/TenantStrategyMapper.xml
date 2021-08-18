@@ -73,7 +73,7 @@
     <insert id="insertTenantStrategy" parameterType="TenantStrategy">
         insert into xy_tenant_strategy
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                        strategy_id                          ,</if>
+            <if test="snowflakeId != null">                               strategy_id                          ,</if>
             <if test="name != null and name != ''">                       name                                 ,</if>
             <if test="sourceAmount != null">                              source_amount                        ,</if>
             <if test="sort != null and sort != ''">                       sort                                 ,</if>
@@ -81,7 +81,7 @@
             <if test="createBy != null">                                  create_by                            ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                        #{Id}                                ,</if>
+            <if test="snowflakeId != null">                               #{snowflakeId}                       ,</if>
             <if test="name != null and name != ''">                       #{name}                              ,</if>
             <if test="sourceAmount != null">                              #{sourceAmount}                      ,</if>
             <if test="sort != null and sort != ''">                       #{sort}                              ,</if>

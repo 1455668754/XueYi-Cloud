@@ -109,7 +109,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insertPost" parameterType="SysPost">
 		insert into sys_post
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">                                post_id            ,</if>
+			<if test="snowflakeId != null">                                   post_id            ,</if>
 			<if test="deptId != null and deptId != 0">                        dept_id            ,</if>
 			<if test="postCode != null and postCode != ''">                   post_code          ,</if>
 			<if test="postName != null and postName != ''">                   post_name          ,</if>
@@ -120,7 +120,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="enterpriseId != null">            					  tenant_id          ,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">                                #{Id}              ,</if>
+			<if test="snowflakeId != null">                                   #{snowflakeId}     ,</if>
 			<if test="deptId != null and deptId != 0">                        #{deptId}          ,</if>
 			<if test="postCode != null and postCode != ''">                   #{postCode}        ,</if>
 			<if test="postName != null and postName != ''">                   #{postName}        ,</if>

@@ -142,7 +142,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public int insertRole(SysRole role) {
         if (!StringUtils.equals(role.getType(), RoleConstants.ROUTINE_DERIVE_TYPE)) {
             SysOrganizeRole organizeRole = new SysOrganizeRole();
-            organizeRole.setRoleId(role.getId());
+            organizeRole.setRoleId(role.getSnowflakeId());
             if (StringUtils.equals(role.getType(), RoleConstants.DEPT_DERIVE_TYPE)) {
                 organizeRole.setDeriveDeptId(role.getDeriveId());
             } else if (StringUtils.equals(role.getType(), RoleConstants.POST_DERIVE_TYPE)) {

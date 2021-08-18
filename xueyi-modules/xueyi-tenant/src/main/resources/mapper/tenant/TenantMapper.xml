@@ -63,7 +63,7 @@
     <insert id="insertTenant" parameterType="Tenant">
         insert into xy_tenant
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                             tenant_id                                      ,</if>
+            <if test="snowflakeId != null">                                    tenant_id                                      ,</if>
             <if test="strategyId != null">                                     strategy_id                                    ,</if>
             <if test="tenantName != null and tenantName != ''">                tenant_name                                    ,</if>
             <if test="tenantSystemName != null and tenantSystemName != ''">    tenant_system_name                             ,</if>
@@ -76,7 +76,7 @@
             <if test="remark != null">                                         remark                                         ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                             #{Id}                                          ,</if>
+            <if test="snowflakeId != null">                                    #{snowflakeId}                                 ,</if>
             <if test="strategyId != null">                                     #{strategyId}                                  ,</if>
             <if test="tenantName != null and tenantName != ''">                #{tenantName}                                  ,</if>
             <if test="tenantSystemName != null and tenantSystemName != ''">    #{tenantSystemName}                            ,</if>

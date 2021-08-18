@@ -112,7 +112,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insertRole" parameterType="SysRole">
 		insert into sys_role
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">							role_id					        ,</if>
+			<if test="snowflakeId != null">							    role_id					        ,</if>
 			<if test="roleCode != null and roleCode != ''">				role_code				        ,</if>
 			<if test="roleName != null and roleName != ''">				role_name				        ,</if>
 			<if test="roleKey != null and roleKey != ''">				role_key				        ,</if>
@@ -128,7 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="enterpriseId != null">							tenant_id				        ,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">							#{Id}					        ,</if>
+			<if test="snowflakeId != null">							    #{snowflakeId}					,</if>
 			<if test="roleCode != null and roleCode != ''">				#{roleCode}				        ,</if>
 			<if test="roleName != null and roleName != ''">				#{roleName}				        ,</if>
 			<if test="roleKey != null and roleKey != ''">				#{roleKey}				        ,</if>

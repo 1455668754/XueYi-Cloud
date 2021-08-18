@@ -182,7 +182,7 @@ public class SysJobServiceImpl implements ISysJobService {
         job.setStatus(ScheduleConstants.Status.PAUSE.getValue());
         int rows = jobMapper.insertJob(job);
         if (rows > 0) {
-            job.setJobId(job.getId());
+            job.setJobId(job.getSnowflakeId());
             ScheduleUtils.createScheduleJob(scheduler, job);
         }
         return rows;

@@ -170,7 +170,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<insert id="insertUser" parameterType="SysUser">
 		insert into sys_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">                        user_id                             ,</if>
+			<if test="snowflakeId != null">                           user_id                             ,</if>
 			<if test="deptId != null and deptId != 0">                dept_id                             ,</if>
 			<if test="postId != null and postId != 0">                post_id                             ,</if>
 			<if test="userCode != null and userCode != ''">           user_code                           ,</if>
@@ -189,7 +189,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="enterpriseId != null">    					  tenant_id                           ,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">                        #{Id}                               ,</if>
+			<if test="snowflakeId != null">                           #{snowflakeId}                      ,</if>
 			<if test="deptId != null and deptId != 0">                #{deptId}                           ,</if>
 			<if test="postId != null and postId != 0">                #{postId}                           ,</if>
 			<if test="userCode != null and userCode != ''">           #{userCode}                         ,</if>

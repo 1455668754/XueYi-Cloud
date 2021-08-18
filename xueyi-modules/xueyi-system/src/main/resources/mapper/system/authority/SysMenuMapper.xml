@@ -186,7 +186,7 @@
 	<insert id="insertMenu" parameterType="SysMenu">
 		insert into sys_menu
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">                            menu_id                         ,</if>
+			<if test="snowflakeId != null">                               menu_id                         ,</if>
 			<if test="systemId != null">                                  system_id                       ,</if>
 			<if test="parentId != null and parentId != 0">                parent_id                       ,</if>
 			<if test="menuName != null and menuName != ''">               menu_name                       ,</if>
@@ -205,7 +205,7 @@
 			<if test="enterpriseId != null">		  					  tenant_id	                      ,</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="Id != null and Id != 0">                            #{Id}                           ,</if>
+			<if test="snowflakeId != null">                               #{snowflakeId}                  ,</if>
 			<if test="systemId != null">                                  #{systemId}                     ,</if>
 			<if test="parentId != null and parentId != 0">                #{parentId}                     ,</if>
 			<if test="menuName != null and menuName != ''">               #{menuName}                     ,</if>

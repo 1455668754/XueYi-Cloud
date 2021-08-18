@@ -71,7 +71,7 @@ public class TenantStrategyServiceImpl implements ITenantStrategyService {
         int rows = tenantStrategyMapper.insertTenantStrategy(tenantStrategy);
         if (tenantStrategy.getValues() != null && tenantStrategy.getValues().size() > 0) {
             /**获取生成雪花Id，并赋值给主键，加入至子表对应外键中*/
-            tenantStrategy.setStrategyId(tenantStrategy.getId());
+            tenantStrategy.setStrategyId(tenantStrategy.getSnowflakeId());
             tenantStrategyMapper.batchTenantSource(tenantStrategy);
         }
         return rows;

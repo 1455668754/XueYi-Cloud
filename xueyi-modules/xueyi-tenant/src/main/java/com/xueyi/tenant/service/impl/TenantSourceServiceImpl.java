@@ -61,9 +61,9 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
     public int insertTenantSource(TenantSource tenantSource) {
 
         if (tenantSource.getType().equals("2")) {
-            tenantSource.setSlave("slave" + tenantSource.getId().toString());
+            tenantSource.setSlave("slave" + tenantSource.getSnowflakeId().toString());
         } else {
-            tenantSource.setSlave("master" + tenantSource.getId().toString());
+            tenantSource.setSlave("master" + tenantSource.getSnowflakeId().toString());
         }
         // 将数据新增的的数据源添加到数据源库
         tenantSource.setSyncType(TenantConstants.SYNC_TYPE_ADD);
@@ -71,11 +71,11 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
         DSUtils.syncDS(tenantSource);
         if (tenantSource.getType().equals("0")) {
             TenantSourceValue value = new TenantSourceValue();
-            value.setSourceId(tenantSource.getId());
+            value.setSourceId(tenantSource.getSnowflakeId());
             List<TenantSourceValue> values = new ArrayList<>();
             values.add(value);
             tenantSource.setValues(values);
-            tenantSource.setSourceId(tenantSource.getId());
+            tenantSource.setSourceId(tenantSource.getSnowflakeId());
             tenantSourceMapper.batchTenantSeparation(tenantSource);
         }
         return tenantSourceMapper.insertTenantSource(tenantSource);

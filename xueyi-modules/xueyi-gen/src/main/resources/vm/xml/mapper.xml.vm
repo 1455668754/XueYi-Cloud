@@ -214,7 +214,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 #if($conceal)
 #if(!$pkColumn.increment && $column.columnName == $pkColumn.columnName)
-            <if test="Id != null">                                                         $column.columnName #set($maxStep=21 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
+            <if test="snowflakeId != null">                                                $column.columnName #set($maxStep=21 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
 #elseif($column.columnName != $pkColumn.columnName)
             <if test="$AttrName != null#if($column.javaType == 'String' && $column.required) and $AttrName != ''#end">#if($column.javaType == 'String' && $column.required)#set($maxStep=35 + 11 - ${AttrName.length()} * 2)#else#set($maxStep=35 + 22 - ${AttrName.length()})#end#foreach($step in[0..$maxStep]) #end $column.columnName #set($maxStep=21 - ${column.columnName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
 #end
@@ -239,7 +239,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 #end
 #if($conceal)
 #if(!$pkColumn.increment && $column.columnName == $pkColumn.columnName)
-            <if test="Id != null">                                                         #{Id}                  ,</if>
+            <if test="snowflakeId != null">                                                #{snowflakeId}         ,</if>
 #elseif($column.columnName != $pkColumn.columnName)
             <if test="$AttrName != null#if($column.javaType == 'String' && $column.required) and $AttrName != ''#end">#if($column.javaType == 'String' && $column.required)#set($maxStep=35 + 11 - ${AttrName.length()} * 2)#else#set($maxStep=35 + 22 - ${AttrName.length()})#end#foreach($step in[0..$maxStep]) #end #{$AttrName} #set($maxStep=18 - ${AttrName.length()})#foreach($step in[0..$maxStep]) #end ,</if>
 #end

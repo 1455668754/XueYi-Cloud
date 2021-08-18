@@ -77,7 +77,7 @@
     <insert id="insertMaterialFolder" parameterType="SysMaterialFolder" useGeneratedKeys="true" keyProperty="folderId">
         insert into xy_material_folder
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                                 folder_id              ,</if>
+            <if test="snowflakeId != null">                                        folder_id              ,</if>
             <if test="parentId != null">                                           parent_id              ,</if>
             <if test="folderName != null and folderName != ''">                    folder_name            ,</if>
             <if test="ancestors != null">                                          ancestors              ,</if>
@@ -88,7 +88,7 @@
             <if test="enterpriseId != null">                                       tenant_id              ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                                 #{Id}                  ,</if>
+            <if test="snowflakeId != null">                                        #{snowflakeId}         ,</if>
             <if test="parentId != null">                                           #{parentId}            ,</if>
             <if test="folderName != null and folderName != ''">                    #{folderName}          ,</if>
             <if test="ancestors != null">                                          #{ancestors}           ,</if>

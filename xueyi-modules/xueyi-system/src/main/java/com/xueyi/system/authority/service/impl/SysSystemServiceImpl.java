@@ -185,7 +185,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
         }
         checkSystem.setStatus(system.getStatus());
         checkMenu.setStatus(system.getStatus());
-        checkMenu.setMenuId(system.getId());
+        checkMenu.setMenuId(system.getSnowflakeId());
         // 查询系统信息列表
         List<SysSystem> systemList = StringUtils.equals(system.getSearchValue(), MenuConstants.PERMIT_ALL_ONLY_PUBLIC) ? systemMapper.buildSystemMenuTreeSelectOnlyPublic(checkSystem) : systemMapper.buildSystemMenuTreeSelect(checkSystem);
         // 查询菜单信息列表

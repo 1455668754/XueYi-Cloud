@@ -74,7 +74,7 @@ public class TenantServiceImpl implements ITenantService {
     @DataScope(ueAlias = "empty")
     public int insertTenant(Tenant tenant) {
         /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
-        tenant.setTenantId(tenant.getId());
+        tenant.setTenantId(tenant.getSnowflakeId());
         TenantStrategy search = new TenantStrategy();
         search.setStrategyId(tenant.getStrategyId());
         TenantStrategy strategy = tenantStrategyMapper.selectTenantStrategyById(search);

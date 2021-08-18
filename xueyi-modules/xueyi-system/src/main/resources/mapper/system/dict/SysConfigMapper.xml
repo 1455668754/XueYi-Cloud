@@ -68,7 +68,7 @@
     <insert id="insertConfig" parameterType="SysConfig">
         insert into sys_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                      config_id                       ,</if>
+            <if test="snowflakeId != null">                             config_id                       ,</if>
             <if test="configName != null and configName != '' ">        config_name                     ,</if>
             <if test="configKey != null and configKey != '' ">          config_key                      ,</if>
             <if test="configValue != null and configValue != '' ">      config_value                    ,</if>
@@ -78,7 +78,7 @@
             tenant_id
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null">                                      #{Id}                           ,</if>
+            <if test="snowflakeId != null">                             #{snowflakeId}                  ,</if>
             <if test="configName != null and configName != ''">         #{configName}                   ,</if>
             <if test="configKey != null and configKey != ''">           #{configKey}                    ,</if>
             <if test="configValue != null and configValue != ''">       #{configValue}                  ,</if>

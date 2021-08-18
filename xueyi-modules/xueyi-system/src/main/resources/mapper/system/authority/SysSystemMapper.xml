@@ -114,7 +114,7 @@
     <insert id="insertSystem" parameterType="SysSystem">
         insert into xy_system
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="Id != null and Id != 0">                         system_id               ,</if>
+            <if test="snowflakeId != null">                            system_id               ,</if>
             <if test="systemName != null and systemName != ''">        system_name             ,</if>
             <if test="imageUrl != null and imageUrl != ''">            image_url               ,</if>
             <if test="type != null and type != ''">                    type                    ,</if>
@@ -127,7 +127,7 @@
             <if test="enterpriseId != null">                           tenant_id               ,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="Id != null and Id != 0">                         #{Id}                   ,</if>
+            <if test="snowflakeId != null">                            #{snowflakeId}          ,</if>
             <if test="systemName != null and systemName != ''">        #{systemName}           ,</if>
             <if test="imageUrl != null and imageUrl != ''">            #{imageUrl}             ,</if>
             <if test="type != null and type != ''">                    #{type}                 ,</if>

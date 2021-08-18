@@ -31,7 +31,7 @@ public class BaseEntity implements Serializable
     private Long libraryId;
 
     /** 雪花Id */
-    private Long Id;
+    private Long snowflakeId;
 
     /** 搜索值 */
     private String searchValue;
@@ -111,12 +111,12 @@ public class BaseEntity implements Serializable
         this.libraryId = libraryId;
     }
 
-    public Long getId() {
-        return Id;
+    public Long getSnowflakeId() {
+        return snowflakeId;
     }
 
-    public void setId(Long id) {
-        Id = id;
+    public void setSnowflakeId(Long snowflakeId) {
+        this.snowflakeId = snowflakeId;
     }
 
     public String getSearchValue()

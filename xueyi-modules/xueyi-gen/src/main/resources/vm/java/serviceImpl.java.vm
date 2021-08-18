@@ -92,7 +92,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
 #set($AttrName=$pkColumn.javaField.substring(0,1).toUpperCase() + ${pkColumn.javaField.substring(1)})
 #if(!$pkColumn.increment)
             /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
-            ${classNameNoPrefix}.set${AttrName}(${classNameNoPrefix}.getId());
+            ${classNameNoPrefix}.set${AttrName}(${classNameNoPrefix}.getSnowflakeId());
 #end
             ${classNameNoPrefix}Mapper.batch${subClassNameNoPrefix}(${classNameNoPrefix});
         }

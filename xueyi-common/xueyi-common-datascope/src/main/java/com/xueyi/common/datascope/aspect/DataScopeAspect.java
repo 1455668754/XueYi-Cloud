@@ -285,7 +285,7 @@ public class DataScopeAspect {
                     int datacenterId = 1;
                     Snowflake snowflake = IdUtil.getSnowflake(workerId, datacenterId);
                     Long id = snowflake.nextId();
-                    baseEntity.setId(id);
+                    baseEntity.setSnowflakeId(id);
                     baseEntity.setCreateBy(user.getUserId());
                     baseEntity.setUpdateBy(user.getUserId());
                     if (enterprise.getEnterpriseId() != -1) {
