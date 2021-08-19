@@ -61,7 +61,7 @@ public class DSUtils {
      */
     public static void getDs() {
         DynamicRoutingDataSource ds = (DynamicRoutingDataSource) SpringUtils.getBean(DataSource.class);
-        ds.getCurrentDataSources().keySet().forEach(System.out::println);
+        ds.getDataSources().keySet().forEach(System.out::println);
     }
 
     /**
