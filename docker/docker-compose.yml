@@ -57,7 +57,8 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/html/dist:/home/xueyi/projects/xueyi-ui
+      - ./nginx/html/main:/home/xueyi/projects/xueyi-ui/main
+      - ./nginx/html/administrator:/home/xueyi/projects/xueyi-ui/administrator
       - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/logs:/var/log/nginx
       - ./nginx/conf.d:/etc/nginx/conf.d
