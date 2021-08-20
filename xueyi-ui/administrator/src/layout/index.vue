@@ -8,7 +8,7 @@
         <tags-view v-if="needTagsView" />
       </div>
       <app-main />
-      <right-panel v-if="showSettings">
+      <right-panel>
         <settings />
       </right-panel>
     </div>
@@ -17,10 +17,10 @@
 
 <script>
 import RightPanel from '@basicsComponents/RightPanel'
+import variables from '@assets/styles/variables.scss'
 import { AppMain, Navbar, Settings, Sidebar, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
-import variables from '@assets/styles/variables.scss'
 
 export default {
   name: 'Layout',
@@ -39,7 +39,6 @@ export default {
       sideTheme: state => state.settings.sideTheme,
       sidebar: state => state.app.sidebar,
       device: state => state.app.device,
-      showSettings: state => state.settings.showSettings,
       needTagsView: state => state.settings.tagsView,
       fixedHeader: state => state.settings.fixedHeader
     }),
