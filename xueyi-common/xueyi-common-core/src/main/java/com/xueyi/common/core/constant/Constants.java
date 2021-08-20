@@ -16,6 +16,9 @@ public class Constants
     /** RMI 远程方法调用 */
     public static final String LOOKUP_RMI = "rmi://";
 
+    /** LDAP 远程方法调用 */
+    public static final String LOOKUP_LDAP = "ldap://";
+
     /** http请求 */
     public static final String HTTP = "http://";
 
