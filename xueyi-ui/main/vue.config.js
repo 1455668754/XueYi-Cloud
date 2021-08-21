@@ -53,6 +53,7 @@ module.exports = {
       alias: {
         '@': join('src'),
         '@api': resolve('node_modules/common/src/api'),
+        '@views': resolve('node_modules/common/src/views'),
         '@utils': resolve('node_modules/common/src/utils'),
         '@assets': resolve('node_modules/common/src/assets'),
         '@components': resolve('node_modules/common/src/components'),
