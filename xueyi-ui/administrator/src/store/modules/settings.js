@@ -1,11 +1,9 @@
 import variables from '@assets/styles/element-variables.scss'
 import defaultSettings from '@/settings'
 
-const { sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, libraryId, siteId, systemId, homePageName, homePageIcon, baseSystemUrl, dynamicTitle } = defaultSettings
+const { sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, homePageName, homePageIcon, baseSystemUrl, dynamicTitle } = defaultSettings
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
-const librarySetting = localStorage.getItem('library-setting') !== null ? JSON.parse(localStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
-const siteSetting = localStorage.getItem('site-setting') !== null ? JSON.parse(localStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
 
 const state = {
   title: '',
@@ -17,9 +15,6 @@ const state = {
   fixedHeader: storageSetting.fixedHeader === undefined ? fixedHeader : storageSetting.fixedHeader,
   sidebarLogo: storageSetting.sidebarLogo === undefined ? sidebarLogo : storageSetting.sidebarLogo,
   dynamicTitle: storageSetting.dynamicTitle === undefined ? dynamicTitle : storageSetting.dynamicTitle,
-  libraryId: librarySetting.libraryId === undefined ? libraryId : librarySetting.libraryId,
-  siteId: siteSetting.siteId === undefined ? siteId : siteSetting.siteId,
-  systemId: systemId,
   homePageName: homePageName,
   homePageIcon: homePageIcon,
   baseSystemUrl: baseSystemUrl

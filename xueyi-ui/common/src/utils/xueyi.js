@@ -14,13 +14,11 @@ export function acquisition(data, ...params){
     }
     if(paramsName === 'siteId'){
       const { siteId } = defaultSettings
-      const siteSetting = sessionStorage.getItem('site-setting') !== null ? JSON.parse(sessionStorage.getItem('site-setting').replace(/\"siteId\":(\d+)/, '"siteId": "$1"')) || '' : ''
-      search['siteId'] = siteSetting.siteId === undefined ? siteId : siteSetting.siteId
+      search['siteId'] = siteId
     }
     if(paramsName === 'libraryId'){
       const { libraryId } = defaultSettings
-      const librarySetting = sessionStorage.getItem('library-setting') !== null ? JSON.parse(sessionStorage.getItem('library-setting').replace(/\"libraryId\":(\d+)/, '"libraryId": "$1"')) || '' : ''
-      search['libraryId'] = librarySetting.libraryId === undefined ? libraryId : librarySetting.libraryId
+      search['libraryId'] = libraryId
     }
   }
   return search
