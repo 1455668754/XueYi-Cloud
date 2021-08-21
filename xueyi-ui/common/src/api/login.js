@@ -1,5 +1,17 @@
 import request from '../utils/request'
 
+// 注册方法
+export function register(data) {
+  return request({
+    url: '/auth/register',
+    headers: {
+      isToken: false
+    },
+    method: 'post',
+    data: data
+  })
+}
+
 // 登录方法
 export function login(enterpriseName, userName, password, code, uuid) {
   return request({

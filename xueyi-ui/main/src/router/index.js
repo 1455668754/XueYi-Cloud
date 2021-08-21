@@ -43,22 +43,22 @@ export const constantRoutes = [
   },
   {
     path: '/login',
-    component: (resolve) => require(['@/views/login'], resolve),
+    component: (resolve) => require(['@views/login'], resolve),
     hidden: true
   },
   {
     path: '/register',
-    component: (resolve) => require(['@/views/register'], resolve),
+    component: (resolve) => require(['@views/register'], resolve),
     hidden: true
   },
   {
     path: '/404',
-    component: (resolve) => require(['@/views/error/404'], resolve),
+    component: (resolve) => require(['@views/error/404'], resolve),
     hidden: true
   },
   {
     path: '/401',
-    component: (resolve) => require(['@/views/error/401'], resolve),
+    component: (resolve) => require(['@views/error/401'], resolve),
     hidden: true
   },
   {
