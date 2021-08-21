@@ -185,8 +185,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 #end
 #end
-#end
 
+#end
     <select id="select${ClassNameNoPrefix}By${pkColumn.capJavaField}" parameterType="${ClassName}" resultMap="${classNameNoPrefix}Result">
         <include refid="selectVo"/>
         where e.${pkColumn.columnName} = #{${pkColumn.javaField}}
