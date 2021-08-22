@@ -1,0 +1,11 @@
+# 基础镜像
+FROM rabbitmq:management
+# author
+MAINTAINER xueyi
+
+# 挂载目录
+VOLUME /home/xueyi/rabbitmq
+# 创建目录
+RUN mkdir -p /home/xueyi/rabbitmq
+# 指定路径
+WORKDIR /home/xueyi/rabbitmq

@@ -1,3 +1,12 @@
+# DROP DATABASE IF EXISTS `xy-seata`;
+#
+# CREATE DATABASE  `xy-seata` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+#
+# SET NAMES utf8mb4;
+# SET FOREIGN_KEY_CHECKS = 0;
+#
+# USE `xy-seata`;
+
 -- -------------------------------- The script used when storeMode is 'db' --------------------------------
 -- the table to store GlobalSession data
 CREATE TABLE IF NOT EXISTS `global_table`

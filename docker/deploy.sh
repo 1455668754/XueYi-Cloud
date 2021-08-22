@@ -15,6 +15,10 @@ port(){
 	firewall-cmd --add-port=9848/tcp --permanent
 	firewall-cmd --add-port=9849/tcp --permanent
 	firewall-cmd --add-port=6379/tcp --permanent
+	firewall-cmd --add-port=15672/tcp --permanent
+	firewall-cmd --add-port=4369/tcp --permanent
+	firewall-cmd --add-port=5672/tcp --permanent
+	firewall-cmd --add-port=25672/tcp --permanent
 	firewall-cmd --add-port=3306/tcp --permanent
 	firewall-cmd --add-port=9100/tcp --permanent
 	firewall-cmd --add-port=9200/tcp --permanent
@@ -28,7 +32,7 @@ port(){
 
 # 启动基础环境（必须）
 base(){
-	docker-compose up -d xueyi-mysql xueyi-redis xueyi-nacos xueyi-nginx
+	docker-compose up -d xueyi-mysql xueyi-redis xueyi-nacos xueyi-nginx xueyi-rabbit
 }
 
 # 启动程序模块（必须）

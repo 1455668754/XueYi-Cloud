@@ -18,7 +18,7 @@ services:
       - xueyi-mysql
   xueyi-mysql:
     container_name: xueyi-mysql
-    image: mysql:8.0
+    image: mysql:8.0.26
     build:
       context: ./mysql
     ports:
@@ -49,6 +49,24 @@ services:
       - ./redis/conf/redis.conf:/home/xueyi/redis/redis.conf
       - ./redis/data:/data
     command: redis-server /home/xueyi/redis/redis.conf
+  xueyi-rabbit:
+    container_name: xueyi-rabbit
+    image: rabbitmq:management
+    build:
+      context: ./rabbitmq
+    hostname: xueyi-rabbit
+    environment:
+      RABBITMQ_DEFAULT_VHOST: "xueyi-rabbit"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    ports:
+      - "15672:15672"
+      - "4369:4369"
+      - "5672:5672"
+      - "25672:25672"
+    volumes:
+      - ./rabbitmq/data:/home/xueyi/rabbitmq/data
+      - ./rabbitmq/log:/home/xueyi/rabbitmq/log
   xueyi-nginx:
     container_name: xueyi-nginx
     image: nginx
@@ -98,9 +116,11 @@ services:
     depends_on:
       - xueyi-redis
       - xueyi-mysql
+      - xueyi-rabbit
     links:
       - xueyi-redis
       - xueyi-mysql
+      - xueyi-rabbit
   xueyi-modules-system:
     container_name: xueyi-modules-system
     build:
@@ -111,9 +131,11 @@ services:
     depends_on:
       - xueyi-redis
       - xueyi-mysql
+      - xueyi-rabbit
     links:
       - xueyi-redis
       - xueyi-mysql
+      - xueyi-rabbit
   xueyi-modules-gen:
     container_name: xueyi-modules-gen
     build:
