@@ -47,7 +47,7 @@
             <artifactId>commons-pool2</artifactId>
         </dependency>
 
-        <!-- Pagehelper -->
+        <!-- PageHelper -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
@@ -83,7 +83,7 @@
             <artifactId>commons-io</artifactId>
         </dependency>
 
-        <!-- Commons Fileupload -->
+        <!-- Commons FileUpload -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
