@@ -18,7 +18,7 @@ public interface SysEnterpriseMapper {
      * @param enterprise 租户对象 | null
      * @return 租户对象
      */
-    public List<SysEnterprise> selectEnterpriseList(SysEnterprise enterprise);
+    public List<SysEnterprise> selectEnterpriseCacheList(SysEnterprise enterprise);
 
     /**
      * 通过企业账号查询租户信息

@@ -68,6 +68,16 @@ public interface ISysEnterpriseService {
     public String checkEnterpriseNameUnique(SysEnterprise enterprise);
 
     /**
+     * 根据企业 key 新增|更新 cache
+     */
+    public void refreshEnterpriseCache(SysEnterprise newEnterprise);
+
+    /**
+     * 刷新指定企业 cache 的 key
+     */
+    public void refreshEnterpriseKey(String oldEnterpriseName, SysEnterprise newEnterprise);
+
+    /**
      * 加载企业缓存数据
      */
     public void loadingEnterpriseCache();

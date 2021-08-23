@@ -80,7 +80,12 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public int updateLogo(SysEnterprise enterprise) {
-        return enterpriseMapper.updateLogo(enterprise);
+        int rows = enterpriseMapper.updateLogo(enterprise);
+        if(rows>0){
+            SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
+            refreshEnterpriseCache(newEnterprise);
+        }
+        return rows;
     }
 
     /**
@@ -91,7 +96,12 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public int updateEnterprise(SysEnterprise enterprise) {
-        return enterpriseMapper.updateEnterprise(enterprise);
+        int rows = enterpriseMapper.updateEnterprise(enterprise);
+        if(rows>0){
+            SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
+            refreshEnterpriseCache(newEnterprise);
+        }
+        return rows;
     }
 
     /**
@@ -102,7 +112,12 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public int changeEnterpriseName(SysEnterprise enterprise) {
-        return enterpriseMapper.changeEnterpriseName(enterprise);
+        int rows = enterpriseMapper.changeEnterpriseName(enterprise);
+        if(rows>0){
+            SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
+            refreshEnterpriseKey(enterprise.getEnterpriseName(),newEnterprise);
+        }
+        return rows;
     }
 
     /**
@@ -121,7 +136,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public void loadingEnterpriseCache() {
-        List<SysEnterprise> enterprisesList = enterpriseMapper.selectEnterpriseList(new SysEnterprise());
+        List<SysEnterprise> enterprisesList = enterpriseMapper.selectEnterpriseCacheList(new SysEnterprise());
         for (SysEnterprise enterprise : enterprisesList) {
             redisService.setCacheObject(getCacheKey(enterprise.getEnterpriseName()), enterprise);
         }
@@ -146,12 +161,39 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     }
 
     /**
+     * 根据企业 key 新增|更新 cache
+     */
+    @Override
+    public void refreshEnterpriseCache(SysEnterprise newEnterprise) {
+        redisService.setCacheObject(getCacheKey(newEnterprise.getEnterpriseName()), newEnterprise);
+    }
+
+    /**
+     * 刷新指定企业 cache 的 key
+     */
+    @Override
+    public void refreshEnterpriseKey(String oldEnterpriseName, SysEnterprise newEnterprise) {
+        redisService.deleteObject(delCacheKey(oldEnterpriseName));
+        redisService.setCacheObject(getCacheKey(newEnterprise.getEnterpriseName()), newEnterprise);
+    }
+
+    /**
      * 设置cache key
      *
      * @param enterpriseName 企业账号
      * @return 缓存键key
      */
     private String getCacheKey(String enterpriseName) {
+        return Constants.SYS_CONFIG_KEY + enterpriseName + ":" + enterpriseName;
+    }
+
+    /**
+     * 删除cache key
+     *
+     * @param enterpriseName 企业账号
+     * @return 缓存键key
+     */
+    private String delCacheKey(String enterpriseName) {
         return Constants.SYS_CONFIG_KEY + enterpriseName + ":" + enterpriseName;
     }
 }
