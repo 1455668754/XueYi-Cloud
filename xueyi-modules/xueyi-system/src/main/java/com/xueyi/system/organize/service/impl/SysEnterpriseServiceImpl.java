@@ -47,7 +47,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @return 数据源组集合
      */
     @Override
-    public List<Source> selectLoadDataSources(Source source){
+    public List<Source> selectLoadDataSources(Source source) {
         return dataSourceMapper.selectLoadDataSources(source);
     }
 
@@ -81,7 +81,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @Override
     public int updateLogo(SysEnterprise enterprise) {
         int rows = enterpriseMapper.updateLogo(enterprise);
-        if(rows>0){
+        if (rows > 0) {
             SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
             refreshEnterpriseCache(newEnterprise);
         }
@@ -97,7 +97,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @Override
     public int updateEnterprise(SysEnterprise enterprise) {
         int rows = enterpriseMapper.updateEnterprise(enterprise);
-        if(rows>0){
+        if (rows > 0) {
             SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
             refreshEnterpriseCache(newEnterprise);
         }
@@ -113,9 +113,9 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @Override
     public int changeEnterpriseName(SysEnterprise enterprise) {
         int rows = enterpriseMapper.changeEnterpriseName(enterprise);
-        if(rows>0){
+        if (rows > 0) {
             SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
-            refreshEnterpriseKey(enterprise.getEnterpriseName(),newEnterprise);
+            refreshEnterpriseKey(enterprise.getEnterpriseName(), newEnterprise);
         }
         return rows;
     }
@@ -162,6 +162,8 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
 
     /**
      * 根据企业 key 新增|更新 cache
+     *
+     * @param newEnterprise 企业对象
      */
     @Override
     public void refreshEnterpriseCache(SysEnterprise newEnterprise) {
@@ -170,6 +172,9 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
 
     /**
      * 刷新指定企业 cache 的 key
+     *
+     * @param oldEnterpriseName 原企业账号
+     * @param newEnterprise     企业对象
      */
     @Override
     public void refreshEnterpriseKey(String oldEnterpriseName, SysEnterprise newEnterprise) {

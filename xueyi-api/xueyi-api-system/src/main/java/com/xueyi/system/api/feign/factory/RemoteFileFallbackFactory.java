@@ -16,6 +16,7 @@ import com.xueyi.system.api.domain.material.SysFile;
  */
 @Component
 public class RemoteFileFallbackFactory implements FallbackFactory<RemoteFileService> {
+
     private static final Logger log = LoggerFactory.getLogger(RemoteFileFallbackFactory.class);
 
     @Override

@@ -17,6 +17,7 @@ import java.util.List;
  */
 @Component
 public class RemoteSourceFallbackFactory implements FallbackFactory<RemoteSourceService> {
+
     private static final Logger log = LoggerFactory.getLogger(RemoteSourceFallbackFactory.class);
 
     @Override

@@ -15,6 +15,7 @@ import com.xueyi.system.api.model.LoginUser;
  */
 @Component
 public class RemoteUserFallbackFactory implements FallbackFactory<RemoteUserService> {
+
     private static final Logger log = LoggerFactory.getLogger(RemoteUserFallbackFactory.class);
 
     @Override

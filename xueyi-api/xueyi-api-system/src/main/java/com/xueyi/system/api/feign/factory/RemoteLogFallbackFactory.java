@@ -16,6 +16,7 @@ import com.xueyi.system.api.domain.monitor.SysOperLog;
  */
 @Component
 public class RemoteLogFallbackFactory implements FallbackFactory<RemoteLogService> {
+
     private static final Logger log = LoggerFactory.getLogger(RemoteLogFallbackFactory.class);
 
     @Override

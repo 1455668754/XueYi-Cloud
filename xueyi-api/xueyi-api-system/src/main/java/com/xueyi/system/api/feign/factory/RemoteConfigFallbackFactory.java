@@ -14,6 +14,7 @@ import com.xueyi.common.core.domain.R;
  */
 @Component
 public class RemoteConfigFallbackFactory implements FallbackFactory<RemoteConfigService> {
+
     private static final Logger log = LoggerFactory.getLogger(RemoteConfigFallbackFactory.class);
 
     @Override

@@ -69,11 +69,16 @@ public interface ISysEnterpriseService {
 
     /**
      * 根据企业 key 新增|更新 cache
+     *
+     * @param newEnterprise 企业对象
      */
     public void refreshEnterpriseCache(SysEnterprise newEnterprise);
 
     /**
      * 刷新指定企业 cache 的 key
+     *
+     * @param oldEnterpriseName 原企业账号
+     * @param newEnterprise     企业对象
      */
     public void refreshEnterpriseKey(String oldEnterpriseName, SysEnterprise newEnterprise);
 

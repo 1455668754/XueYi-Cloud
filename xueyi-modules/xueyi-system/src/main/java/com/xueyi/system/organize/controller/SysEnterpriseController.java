@@ -132,4 +132,36 @@ public class SysEnterpriseController extends BaseController {
         }
         return toAjax(i);
     }
+
+    /**
+     * 根据企业 key 新增|更新 cache
+     *
+     * @param newEnterprise 企业对象
+     */
+    @GetMapping("/refreshEnterpriseCache")
+    public R<Boolean> refreshEnterpriseCache(SysEnterprise newEnterprise) {
+        enterpriseService.refreshEnterpriseCache(newEnterprise);
+        return R.ok(true);
+    }
+
+    /**
+     * 刷新指定企业 cache 的 key
+     *
+     * @param oldEnterpriseName 原企业账号
+     * @param newEnterprise     企业对象
+     */
+    @GetMapping("/refreshEnterpriseKey/{oldEnterpriseName}")
+    public R<Boolean> refreshEnterpriseKey(@PathVariable("oldEnterpriseName") String oldEnterpriseName, SysEnterprise newEnterprise) {
+        enterpriseService.refreshEnterpriseKey(oldEnterpriseName, newEnterprise);
+        return R.ok(true);
+    }
+
+    /**
+     * 重置企业缓存数据
+     */
+    @GetMapping("/resetEnterpriseCache")
+    public R<Boolean> resetEnterpriseCache() {
+        enterpriseService.resetEnterpriseCache();
+        return R.ok(true);
+    }
 }
