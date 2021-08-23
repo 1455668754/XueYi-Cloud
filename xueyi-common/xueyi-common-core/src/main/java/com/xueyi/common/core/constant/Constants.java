@@ -70,6 +70,12 @@ public class Constants
     /** 字典管理 cache key */
     public static final String SYS_DICT_KEY = "sys_dict:";
 
+    /** 企业管理 cache key */
+    public static final String SYS_ENTERPRISE_KEY = "sys_enterprise:";
+
+    /** 数据源管理 cache key */
+    public static final String SYS_SOURCE_KEY = "sys_source:";
+
     /** 资源映射路径 前缀 */
     public static final String RESOURCE_PREFIX = "/profile";
 }

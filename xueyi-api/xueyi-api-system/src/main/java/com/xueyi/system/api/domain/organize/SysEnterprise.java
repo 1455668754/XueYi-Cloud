@@ -11,6 +11,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author xueyi
  */
 public class SysEnterprise extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 企业账号 */

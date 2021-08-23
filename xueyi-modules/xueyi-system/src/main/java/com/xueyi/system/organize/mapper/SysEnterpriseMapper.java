@@ -3,12 +3,22 @@ package com.xueyi.system.organize.mapper;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 
+import java.util.List;
+
 /**
  * 租户表|租户信息表 数据层
  *
  * @author xueyi
  */
 public interface SysEnterpriseMapper {
+
+    /**
+     * 查询所有租户信息 | 用于缓存加载
+     *
+     * @param enterprise 租户对象 | null
+     * @return 租户对象
+     */
+    public List<SysEnterprise> selectEnterpriseList(SysEnterprise enterprise);
 
     /**
      * 通过企业账号查询租户信息

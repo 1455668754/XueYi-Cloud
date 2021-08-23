@@ -1,6 +1,8 @@
 package com.xueyi.system.organize.service.impl;
 
+import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
@@ -9,6 +11,8 @@ import com.xueyi.system.api.domain.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -24,6 +28,17 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
 
     @Autowired
     private DataSourceMapper dataSourceMapper;
+
+    @Autowired
+    private RedisService redisService;
+
+    /**
+     * 项目启动时，初始化参数到缓存
+     */
+    @PostConstruct
+    public void init() {
+        loadingEnterpriseCache();
+    }
 
     /**
      * 查询数据源列表
@@ -99,5 +114,44 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @Override
     public String checkEnterpriseNameUnique(SysEnterprise enterprise) {
         return enterpriseMapper.checkEnterpriseNameUnique(enterprise) == null ? UserConstants.UNIQUE : UserConstants.NOT_UNIQUE;
+    }
+
+    /**
+     * 加载企业缓存数据
+     */
+    @Override
+    public void loadingEnterpriseCache() {
+        List<SysEnterprise> enterprisesList = enterpriseMapper.selectEnterpriseList(new SysEnterprise());
+        for (SysEnterprise enterprise : enterprisesList) {
+            redisService.setCacheObject(getCacheKey(enterprise.getEnterpriseName()), enterprise);
+        }
+    }
+
+    /**
+     * 清空企业缓存数据
+     */
+    @Override
+    public void clearEnterpriseCache() {
+        Collection<String> keys = redisService.keys(Constants.SYS_ENTERPRISE_KEY + "*");
+        redisService.deleteObject(keys);
+    }
+
+    /**
+     * 重置企业缓存数据
+     */
+    @Override
+    public void resetEnterpriseCache() {
+        clearEnterpriseCache();
+        loadingEnterpriseCache();
+    }
+
+    /**
+     * 设置cache key
+     *
+     * @param enterpriseName 企业账号
+     * @return 缓存键key
+     */
+    private String getCacheKey(String enterpriseName) {
+        return Constants.SYS_CONFIG_KEY + enterpriseName + ":" + enterpriseName;
     }
 }

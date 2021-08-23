@@ -66,4 +66,19 @@ public interface ISysEnterpriseService {
      * @return 结果
      */
     public String checkEnterpriseNameUnique(SysEnterprise enterprise);
+
+    /**
+     * 加载企业缓存数据
+     */
+    public void loadingEnterpriseCache();
+
+    /**
+     * 清空企业缓存数据
+     */
+    public void clearEnterpriseCache();
+
+    /**
+     * 重置企业缓存数据
+     */
+    public void resetEnterpriseCache();
 }

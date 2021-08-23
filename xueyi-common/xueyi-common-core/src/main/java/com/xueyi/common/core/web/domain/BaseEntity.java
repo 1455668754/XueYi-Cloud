@@ -14,8 +14,8 @@ import javax.validation.constraints.Size;
  *
  * @author xueyi
  */
-public class BaseEntity implements Serializable
-{
+public class BaseEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     /** 租户Id */
@@ -27,7 +27,7 @@ public class BaseEntity implements Serializable
     /** 站点Id */
     private Long siteId;
 
-    /** 产品库Id */
+    /** 库Id */
     private Long libraryId;
 
     /** 雪花Id */

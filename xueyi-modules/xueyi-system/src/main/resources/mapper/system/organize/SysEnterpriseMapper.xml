@@ -35,6 +35,11 @@
         from xy_tenant e
     </sql>
 
+    <select id="selectEnterpriseList" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
+        <include refid="selectVo"/>
+        where e.del_flag = 0
+    </select>
+
     <select id="checkLoginByEnterpriseName" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
         <include refid="selectVo"/>
         where e.tenant_name=#{enterpriseName} and e.status = '0' and e.del_flag = 0
