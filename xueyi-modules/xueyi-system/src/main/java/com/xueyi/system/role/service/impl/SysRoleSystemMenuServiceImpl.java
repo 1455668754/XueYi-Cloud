@@ -64,7 +64,11 @@ public class SysRoleSystemMenuServiceImpl implements ISysRoleSystemMenuService {
         role.setEnterpriseId(systemMenu.getEnterpriseId());
         systemMenu.setRoleId(roleMapper.selectDeriveRoleByEnterpriseId(role));
         roleSystemMenuMapper.deleteMenuScopeByEnterpriseId(systemMenu);
-        return roleSystemMenuMapper.authMenuScopeByEnterpriseId(systemMenu);
+        List<Long> Ids = (List<Long>) systemMenu.getParams().get("systemMenuIds");
+        if(Ids.size()>0){
+            roleSystemMenuMapper.authMenuScopeByEnterpriseId(systemMenu);
+        }
+        return 1;
     }
 
     /**
