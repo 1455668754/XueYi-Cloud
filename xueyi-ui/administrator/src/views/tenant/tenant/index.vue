@@ -491,7 +491,8 @@ export default {
     handleUpdate(row) {
       this.reset()
       this.getStrategyList()
-      getTenant({tenantId: row.tenantId}).then(response => {
+      const tenantId = row.tenantId || this.ids[0]
+      getTenant({tenantId: tenantId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改租户信息'

@@ -366,7 +366,8 @@ export default {
     handleUpdate(row) {
       this.reset()
       this.getWriteSeparation()
-      getStrategy({strategyId: row.strategyId}).then(response => {
+      const strategyId = row.strategyId || this.ids[0]
+      getStrategy({strategyId: strategyId}).then(response => {
         this.form = response.data
         for (let i = 0; i < this.form.values.length; i++) {
           if (this.form.values[i].isMain === 'Y') {

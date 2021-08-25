@@ -714,7 +714,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      get${BusinessName}({${pkColumn.javaField}: row.${pkColumn.javaField}}).then(response => {
+      const ${pkColumn.javaField} = row.${pkColumn.javaField} || this.ids[0]
+      get${BusinessName}({${pkColumn.javaField}: ${pkColumn.javaField}}).then(response => {
         this.form = response.data;
 #foreach ($column in $columns)
 #if($column.htmlType == "checkbox")

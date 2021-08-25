@@ -597,7 +597,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getRole({roleId: row.roleId}).then(response => {
+      const roleId = row.roleId || this.ids[0]
+      getRole({roleId: roleId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = "修改角色"

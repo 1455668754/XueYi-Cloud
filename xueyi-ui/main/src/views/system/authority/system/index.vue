@@ -385,7 +385,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getSystem({systemId: row.systemId}).then(response => {
+      const systemId = row.systemId || this.ids[0]
+      getSystem({systemId: systemId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = "修改子系统模块"

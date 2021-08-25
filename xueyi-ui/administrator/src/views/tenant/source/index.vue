@@ -409,7 +409,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getSource({sourceId: row.sourceId}).then(response => {
+      const sourceId = row.sourceId || this.ids[0]
+      getSource({sourceId: sourceId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改数据源'

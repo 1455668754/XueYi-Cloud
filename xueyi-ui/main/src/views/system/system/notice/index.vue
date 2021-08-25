@@ -306,7 +306,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      getNotice({noticeId: row.noticeId}).then(response => {
+      const noticeId = row.noticeId || this.ids[0]
+      getNotice({noticeId: noticeId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = "修改公告"
