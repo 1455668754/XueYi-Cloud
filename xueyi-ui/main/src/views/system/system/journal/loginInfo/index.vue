@@ -112,16 +112,16 @@
                 :default-sort="defaultSort" @sort-change="handleSortChange">
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="用户账号 | 用户名称" align="center" :show-overflow-tooltip="true" sortable="custom"
-                         :sort-orders="['descending', 'ascending']">
+                         :sort-orders="['descending', 'ascending']" min-width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.userName }} | {{ scope.row.userNick }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="地址" align="center" prop="ipaddr" width="130" :show-overflow-tooltip="true"/>
-        <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat"/>
-        <el-table-column label="描述" align="center" prop="msg"/>
+        <el-table-column label="地址" align="center" prop="ipaddr" width="130" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" min-width="120"/>
+        <el-table-column label="描述" align="center" prop="msg" min-width="180"/>
         <el-table-column label="访问时间" align="center" prop="accessTime" sortable="custom"
-                         :sort-orders="['descending', 'ascending']" width="180">
+                         :sort-orders="['descending', 'ascending']" min-width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.accessTime) }}</span>
           </template>

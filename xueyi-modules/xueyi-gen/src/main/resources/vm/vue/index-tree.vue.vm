@@ -131,27 +131,27 @@
 #end
 #if($column.pk)
 #elseif($column.list && $column.htmlType == "datetime")
-      <el-table-column label="${comment}" align="center" prop="${javaField}" width="180">
+      <el-table-column label="${comment}" align="center" prop="${javaField}" min-width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.${javaField}, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
 #elseif($column.list && "" != $column.dictType)
-      <el-table-column label="${comment}" align="center" prop="${javaField}">
+      <el-table-column label="${comment}" align="center" prop="${javaField}" min-width="120">
         <template slot-scope="scope">
           <dict-tag :options="${javaField}Options" :value="scope.row.${javaField}"/>
         </template>
       </el-table-column>
 #elseif($column.list && "" != $column.javaField)
 #if(${foreach.index} == 1)
-      <el-table-column label="${comment}" prop="${javaField}" />
+      <el-table-column label="${comment}" prop="${javaField}" min-width="120"/>
 #else
-      <el-table-column label="${comment}" align="center" prop="${javaField}" />
+      <el-table-column label="${comment}" align="center" prop="${javaField}" min-width="120"/>
 #end
 #end
 #end
 #end
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
         <template slot-scope="scope">
           <el-button
             size="mini"

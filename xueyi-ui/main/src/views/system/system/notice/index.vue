@@ -71,7 +71,7 @@
 
       <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="序号" align="center">
+        <el-table-column label="序号" align="center" min-width="120">
           <template slot-scope="scope">
             <span>{{ queryParams.pageSize * (queryParams.pageNum - 1) + scope.$index + 1 }}</span>
           </template>
@@ -81,28 +81,28 @@
           align="center"
           prop="noticeTitle"
           :show-overflow-tooltip="true"
-        />
+          min-width="120"/>
         <el-table-column
           label="公告类型"
           align="center"
           prop="noticeType"
           :formatter="typeFormat"
-          width="100"
+          min-width="120"
         />
         <el-table-column
           label="状态"
           align="center"
           prop="status"
           :formatter="statusFormat"
-          width="100"
+          min-width="120"
         />
-        <el-table-column label="创建者" align="center" prop="createName"/>
-        <el-table-column label="创建时间" align="center" prop="createTime">
+        <el-table-column label="创建者" align="center" prop="createName" min-width="120"/>
+        <el-table-column label="创建时间" align="center" prop="createTime" min-width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

@@ -23,15 +23,15 @@
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
         :indent="40"
       >
-        <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true"/>
-        <el-table-column prop="icon" label="图标" align="center">
+        <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column prop="icon" label="图标" align="center" min-width="120">
           <template slot-scope="scope">
             <svg-icon :icon-class="scope.row.icon" v-if="scope.row.icon != undefined"/>
           </template>
         </el-table-column>
-        <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true"/>
-        <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true"></el-table-column>
-        <el-table-column prop="status" label="状态" width="80">
+        <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column prop="status" label="状态" min-width="80">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
@@ -43,7 +43,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

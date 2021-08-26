@@ -97,14 +97,14 @@
                 row-key="strategyId"
       >
         <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-        <el-table-column label="策略Id" align="center" prop="strategyId" class-name="allowDrag"/>
-        <el-table-column label="策略名称" align="center" prop="name" class-name="allowDrag"/>
-        <el-table-column label="数据源数量" align="center" prop="sourceAmount" class-name="allowDrag">
+        <el-table-column label="策略Id" align="center" prop="strategyId" class-name="allowDrag" min-width="120"/>
+        <el-table-column label="策略名称" align="center" prop="name" class-name="allowDrag" min-width="120"/>
+        <el-table-column label="数据源数量" align="center" prop="sourceAmount" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-tag>{{ scope.row.sourceAmount }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
+        <el-table-column label="状态" align="center" prop="status" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
@@ -115,7 +115,7 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

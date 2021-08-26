@@ -124,20 +124,20 @@
       <el-table v-loading="loading" :data="tenantList" @selection-change="handleSelectionChange" ref="dataTable"
                 row-key="tenantId">
         <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-        <el-table-column label="租户Id" align="center" prop="tenantId" class-name="allowDrag">
+        <el-table-column label="租户Id" align="center" prop="tenantId" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-tag type="danger">{{ scope.row.tenantId }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="租户账号" align="center" prop="tenantName" class-name="allowDrag"/>
-        <el-table-column label="系统名称" align="center" prop="tenantSystemName" class-name="allowDrag"/>
-        <el-table-column label="租户名称" align="center" prop="tenantNick" class-name="allowDrag"/>
-        <el-table-column label="数据策略" align="center" prop="strategy.name" class-name="allowDrag">
+        <el-table-column label="租户账号" align="center" prop="tenantName" class-name="allowDrag" min-width="120"/>
+        <el-table-column label="系统名称" align="center" prop="tenantSystemName" class-name="allowDrag" min-width="120"/>
+        <el-table-column label="租户名称" align="center" prop="tenantNick" class-name="allowDrag" min-width="120"/>
+        <el-table-column label="数据策略" align="center" prop="strategy.name" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-tag type="success">{{ scope.row.strategy.name }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="租户logo" align="center" prop="tenantLogo" class-name="allowDrag">
+        <el-table-column label="租户logo" align="center" prop="tenantLogo" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-image
               style="width: 60px; height: 60px"
@@ -146,7 +146,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
+        <el-table-column label="状态" align="center" prop="status" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
@@ -157,7 +157,7 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

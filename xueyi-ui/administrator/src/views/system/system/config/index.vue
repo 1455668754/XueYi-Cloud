@@ -116,22 +116,22 @@
 
       <el-table v-loading="loading" :data="configList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="参数主键" align="center">
+        <el-table-column label="参数主键" align="center" min-width="70">
           <template slot-scope="scope">
             <span>{{ queryParams.pageSize * (queryParams.pageNum - 1) + scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="参数名称" align="center" prop="configName" :show-overflow-tooltip="true"/>
-        <el-table-column label="参数键名" align="center" prop="configKey" :show-overflow-tooltip="true"/>
+        <el-table-column label="参数名称" align="center" prop="configName" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column label="参数键名" align="center" prop="configKey" :show-overflow-tooltip="true" min-width="120"/>
         <el-table-column label="参数键值" align="center" prop="configValue"/>
-        <el-table-column label="系统内置" align="center" prop="configType" :formatter="typeFormat"/>
-        <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <el-table-column label="系统内置" align="center" prop="configType" :formatter="typeFormat" min-width="120"/>
+        <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column label="创建时间" align="center" prop="createTime" min-width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

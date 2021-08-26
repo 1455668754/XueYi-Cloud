@@ -95,13 +95,13 @@
           </el-row>
 
           <el-table v-loading="loading" :data="postList">
-            <el-table-column label="岗位编码" align="center" prop="postCode" key="postCode" v-if="columns[0].visible"/>
+            <el-table-column label="岗位编码" align="center" prop="postCode" key="postCode" v-if="columns[0].visible" min-width="120"/>
             <el-table-column label="岗位名称" align="center" prop="postName" key="postName" v-if="columns[1].visible"
-                             :show-overflow-tooltip="true"/>
+                             :show-overflow-tooltip="true" min-width="120"/>
             <el-table-column label="归属部门" align="center" prop="dept.deptName" key="dept.deptName"
-                             v-if="columns[2].visible" :show-overflow-tooltip="true"/>
+                             v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="120"/>
             <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" key="status"
-                             v-if="columns[3].visible" :show-overflow-tooltip="true">
+                             v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="120">
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.status"
@@ -111,13 +111,13 @@
                 ></el-switch>
               </template>
             </el-table-column>
-            <el-table-column label="创建时间" align="center" prop="createTime" width="180" key="createTime"
+            <el-table-column label="创建时间" align="center" prop="createTime" min-width="180" key="createTime"
                              v-if="columns[4].visible" :show-overflow-tooltip="true">
               <template slot-scope="scope">
                 <span>{{ parseTime(scope.row.createTime) }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+            <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
               <template slot-scope="scope">
                 <el-button
                   size="mini"

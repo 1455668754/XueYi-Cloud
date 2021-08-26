@@ -125,31 +125,31 @@
                 row-key="sourceId"
       >
         <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-        <el-table-column label="编号" align="center" prop="sourceId" class-name="allowDrag">
+        <el-table-column label="编号" align="center" prop="sourceId" class-name="allowDrag" min-width="70">
           <template slot-scope="scope">
             <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + 1 + scope.$index }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="数据源名称" align="center" prop="name" class-name="allowDrag"/>
-        <el-table-column label="数据源编码" align="center" prop="slave" class-name="allowDrag">
+        <el-table-column label="数据源名称" align="center" prop="name" class-name="allowDrag" min-width="120"/>
+        <el-table-column label="数据源编码" align="center" prop="slave" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-tag type="info">{{ scope.row.slave }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag">
+        <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
             <el-tag type="success" v-else-if="scope.row.type === '1'">只读</el-tag>
             <el-tag type="warning" v-else-if="scope.row.type === '2'">只写</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="数据源类型" align="center" prop="databaseType" class-name="allowDrag">
+        <el-table-column label="数据源类型" align="center" prop="databaseType" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-tag type="success" v-if="scope.row.databaseType === '0'">从数据源</el-tag>
             <el-tag type="danger" v-else-if="scope.row.databaseType === '1'">主数据源</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="status" class-name="allowDrag">
+        <el-table-column label="状态" align="center" prop="status" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
@@ -159,7 +159,7 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

@@ -59,9 +59,9 @@
         row-key="deptId"
         default-expand-all
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-        <el-table-column prop="deptName" label="部门名称" width="260"/>
-        <el-table-column prop="deptCode" label="部门编码" width="260"/>
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="deptName" label="部门名称" min-width="120"/>
+        <el-table-column prop="deptCode" label="部门编码" min-width="120"/>
+        <el-table-column prop="status" label="状态" min-width="120">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
@@ -71,12 +71,12 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="200">
+        <el-table-column label="创建时间" align="center" prop="createTime" min-width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

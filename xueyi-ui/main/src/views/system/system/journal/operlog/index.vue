@@ -127,24 +127,24 @@
       <el-table ref="tables" v-loading="loading" :data="list" @selection-change="handleSelectionChange"
                 :default-sort="defaultSort" @sort-change="handleSortChange">
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="系统模块" align="center" prop="title"/>
-        <el-table-column label="操作类型" align="center" prop="businessType" :formatter="typeFormat"/>
-        <el-table-column label="请求方式" align="center" prop="requestMethod"/>
+        <el-table-column label="系统模块" align="center" prop="title" min-width="120"/>
+        <el-table-column label="操作类型" align="center" prop="businessType" :formatter="typeFormat" min-width="120"/>
+        <el-table-column label="请求方式" align="center" prop="requestMethod" min-width="120"/>
         <el-table-column label="操作账号 | 操作人员" align="center" :show-overflow-tooltip="true" sortable="custom"
-                         :sort-orders="['descending', 'ascending']" width="200">
+                         :sort-orders="['descending', 'ascending']" min-width="120">
           <template slot-scope="scope">
             <span>{{ scope.row.userName }} | {{ scope.row.userNick }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="主机" align="center" prop="operIp" width="130" :show-overflow-tooltip="true"/>
-        <el-table-column label="操作状态" align="center" prop="status" :formatter="statusFormat"/>
+        <el-table-column label="主机" align="center" prop="operIp" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column label="操作状态" align="center" prop="status" :formatter="statusFormat" min-width="120"/>
         <el-table-column label="操作日期" align="center" prop="operTime" sortable="custom"
-                         :sort-orders="['descending', 'ascending']" width="180">
+                         :sort-orders="['descending', 'ascending']" min-width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.operTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

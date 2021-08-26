@@ -42,31 +42,31 @@
         <right-toolbar :showSearch.sync="showSearch" :sortVisible="false" @queryTable="getList"/>
       </el-row>
       <el-table v-loading="loading" :data="separationList">
-        <el-table-column label="编号" align="center" prop="sourceId">
+        <el-table-column label="编号" align="center" prop="sourceId" min-width="70">
           <template slot-scope="scope">
             <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + 1 + scope.$index }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="数据源名称" align="center" prop="name"/>
-        <el-table-column label="数据源编码" align="center" prop="slave">
+        <el-table-column label="数据源名称" align="center" prop="name" min-width="120"/>
+        <el-table-column label="数据源编码" align="center" prop="slave" min-width="120">
           <template slot-scope="scope">
             <el-tag type="info">{{ scope.row.slave }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="读写类型" align="center" prop="type">
+        <el-table-column label="读写类型" align="center" prop="type" min-width="120">
           <template slot-scope="scope">
             <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
             <el-tag type="success" v-else-if="scope.row.type === '1'">只读</el-tag>
             <el-tag type="warning" v-else-if="scope.row.type === '2'">只写</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="数据源类型" align="center" prop="databaseType">
+        <el-table-column label="数据源类型" align="center" prop="databaseType" min-width="120">
           <template slot-scope="scope">
             <el-tag type="success" v-if="scope.row.databaseType === '0'">从数据源</el-tag>
             <el-tag type="danger" v-else-if="scope.row.databaseType === '1'">主数据源</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"

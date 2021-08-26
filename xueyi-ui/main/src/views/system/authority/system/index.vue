@@ -92,9 +92,9 @@
       <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="系统名称" align="center" prop="systemName" v-if="columns[0].visible"
-                         :show-overflow-tooltip="true"/>
+                         :show-overflow-tooltip="true" min-width="120"/>
         <el-table-column label="系统图片" align="center" prop="imageUrl" v-if="columns[1].visible"
-                         :show-overflow-tooltip="true">
+                         :show-overflow-tooltip="true" min-width="120">
           <template slot-scope="scope">
             <el-image
               style="width: 80px; height: 80px"
@@ -103,15 +103,15 @@
           </template>
         </el-table-column>
         <el-table-column label="跳转类型" align="center" prop="type" v-if="columns[2].visible"
-                         :show-overflow-tooltip="true">
+                         :show-overflow-tooltip="true" min-width="120">
           <template slot-scope="scope">
             <el-tag :type="scope.row.type==='0'?'success':'warning'">{{ typeFormat(scope.row) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="路由|外链" align="center" prop="route" v-if="columns[3].visible"
-                         :show-overflow-tooltip="true"/>
+                         :show-overflow-tooltip="true" min-width="120"/>
         <el-table-column label="状态" align="center" prop="status" v-if="columns[4].visible"
-                         :show-overflow-tooltip="true">
+                         :show-overflow-tooltip="true" min-width="120">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
@@ -121,8 +121,8 @@
           </template>
         </el-table-column>
         <el-table-column label="系统简介" align="center" prop="remark" v-if="columns[5].visible"
-                         :show-overflow-tooltip="true"/>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+                         :show-overflow-tooltip="true" min-width="180"/>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
             <el-button
               size="mini"
