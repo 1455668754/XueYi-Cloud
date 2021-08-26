@@ -88,6 +88,11 @@ public class TenantController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Tenant tenant)
     {
+        Tenant check = new Tenant();
+        check.setTenantName(tenant.getTenantName());
+        if (UserConstants.NOT_UNIQUE.equals(tenantService.checkTenantNameUnique(check))) {
+            return AjaxResult.error("新增失败，该租户账号已存在，请修改后重试！");
+        }
         return toAjax(tenantService.insertTenant(tenant));
     }
 
@@ -105,8 +110,7 @@ public class TenantController extends BaseController
         }
         Tenant tenant = new Tenant();
         tenant.setTenantName(register.getEnterpriseName());
-        if (UserConstants.NOT_UNIQUE.equals(tenantService.checkTenantNameUnique(tenant)))
-        {
+        if (UserConstants.NOT_UNIQUE.equals(tenantService.checkTenantNameUnique(tenant))) {
             return R.fail("注册租户'" + register.getEnterpriseSystemName() + "'失败，注册账号已存在");
         }
         //租户信息

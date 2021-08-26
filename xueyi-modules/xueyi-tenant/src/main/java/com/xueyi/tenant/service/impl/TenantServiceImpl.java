@@ -89,10 +89,6 @@ public class TenantServiceImpl implements ITenantService {
                 return tenantMapper.insertTenant(tenant);
             }
         }
-        try {
-            throw new ServiceException(String.format("创建失败，%1$s未设置主数据源,无法应用该策略", strategy.getName()));
-        } catch (Exception ignored) {
-        }
         return 0;
     }
 
