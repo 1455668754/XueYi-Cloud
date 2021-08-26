@@ -151,7 +151,7 @@
     </div>
 
     <!-- 调度日志详细 -->
-    <el-dialog title="调度日志详细" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog title="调度日志详细" :visible.sync="open" width="700px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" label-width="100px" size="mini">
         <el-row>
           <el-col :span="12">

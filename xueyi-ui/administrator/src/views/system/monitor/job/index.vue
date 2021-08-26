@@ -149,7 +149,7 @@
     </div>
 
     <!-- 添加或修改定时任务对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-row>
           <el-col :span="12">
@@ -228,7 +228,7 @@
     </el-dialog>
 
     <!-- 任务日志详细 -->
-    <el-dialog title="任务详细" :visible.sync="openView" width="700px" append-to-body>
+    <el-dialog title="任务详细" :visible.sync="openView" width="700px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" label-width="120px" size="mini">
         <el-row>
           <el-col :span="12">

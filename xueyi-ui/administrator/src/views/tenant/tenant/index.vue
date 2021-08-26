@@ -198,7 +198,7 @@
     </div>
 
     <!-- 添加或修改租户信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="12">
@@ -265,7 +265,7 @@
     </el-dialog>
 
     <!-- 分配角色菜单配置对话框 -->
-    <el-dialog :title="title" :visible.sync="openMenuScope" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="openMenuScope" width="500px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="12">

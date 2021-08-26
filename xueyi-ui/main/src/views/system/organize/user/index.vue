@@ -254,7 +254,7 @@
     </el-row>
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="85px">
         <el-row>
           <el-col :span="24">
@@ -332,7 +332,7 @@
     </el-dialog>
 
     <!-- 修改用户权限对话框 -->
-    <el-dialog :title="title" :visible.sync="roleOpen" width="350px" center append-to-body>
+    <el-dialog :title="title" :visible.sync="roleOpen" width="350px" center append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="24">
@@ -373,7 +373,7 @@
     </el-dialog>
 
     <!-- 用户导入对话框 -->
-    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body>
+    <el-dialog :title="upload.title" :visible.sync="upload.open" width="400px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-upload
         ref="upload"
         :limit="1"

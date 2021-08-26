@@ -89,7 +89,7 @@
     </div>
 
     <!-- 添加或修改数据源对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="写数据源" prop="name">
           <el-input v-model="form.name" placeholder="请输入写数据源" readonly/>

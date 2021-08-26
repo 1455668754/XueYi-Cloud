@@ -159,7 +159,7 @@
     </el-row>
 
     <!-- 添加或修改岗位对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="24">
@@ -209,7 +209,7 @@
     </el-dialog>
 
     <!-- 修改岗位权限对话框 -->
-    <el-dialog :title="title" :visible.sync="roleOpen" width="350px" center append-to-body>
+    <el-dialog :title="title" :visible.sync="roleOpen" width="350px" center append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="24">

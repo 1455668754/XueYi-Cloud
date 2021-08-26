@@ -153,7 +153,7 @@
     </div>
 
     <!-- 添加或修改子系统模块对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-click-modal="false">
+    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-click-modal="false" v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="系统名称" prop="systemName">
           <el-input v-model="form.systemName" placeholder="请输入系统名称" maxlength="7" show-word-limit/>

@@ -162,7 +162,7 @@
     </div>
 
     <!-- 添加或修改参数配置对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="参数名称" prop="configName">
           <el-input v-model="form.configName" placeholder="请输入参数名称"/>
