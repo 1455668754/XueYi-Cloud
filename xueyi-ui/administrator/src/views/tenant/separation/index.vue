@@ -39,7 +39,7 @@
 
     <div class="wrapper-container">
       <el-row :gutter="10" class="mb8">
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"/>
+        <right-toolbar :showSearch.sync="showSearch" :sortVisible="false" @queryTable="getList"/>
       </el-row>
       <el-table v-loading="loading" :data="separationList">
         <el-table-column label="编号" align="center" prop="sourceId">

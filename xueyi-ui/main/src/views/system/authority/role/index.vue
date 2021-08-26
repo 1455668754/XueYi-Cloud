@@ -116,14 +116,14 @@
           >导出
           </el-button>
         </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        <right-toolbar :showSearch.sync="showSearch" :sortVisible="false" @queryTable="getList"/>
       </el-row>
 
       <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="角色编码" prop="roleCode" width="150" align="center"/>
-        <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" width="150" align="center"/>
-        <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" width="150" align="center"/>
+        <el-table-column label="角色编码" prop="roleCode" min-width="150" align="center"/>
+        <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" min-width="150" align="center"/>
+        <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" min-width="150" align="center"/>
         <el-table-column label="状态" align="center" width="100">
           <template slot-scope="scope">
             <el-switch
@@ -134,12 +134,12 @@
             ></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" prop="createTime" width="180">
+        <el-table-column label="创建时间" align="center" prop="createTime" min-width="180">
           <template slot-scope="scope">
             <span>{{ parseTime(scope.row.createTime) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <el-table-column label="操作" align="center" min-width="120" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button
               size="mini"

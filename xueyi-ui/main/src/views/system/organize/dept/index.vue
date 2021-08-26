@@ -50,7 +50,7 @@
           >新增
           </el-button>
         </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+        <right-toolbar :showSearch.sync="showSearch" :sortVisible="false" @queryTable="getList"/>
       </el-row>
 
       <el-table
