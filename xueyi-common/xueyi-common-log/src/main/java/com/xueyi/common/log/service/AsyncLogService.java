@@ -10,7 +10,7 @@ import com.xueyi.common.core.constant.SecurityConstants;
 /**
  * 异步调用日志服务
  *
- * @author ruoyi
+ * @author xueyi
  */
 @Service
 public class AsyncLogService

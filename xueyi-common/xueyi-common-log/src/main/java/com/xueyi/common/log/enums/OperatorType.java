@@ -2,23 +2,17 @@ package com.xueyi.common.log.enums;
 
 /**
  * 操作人类别
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
-public enum OperatorType
-{
-    /**
-     * 其它
-     */
+public enum OperatorType {
+    
+    /** 其它 */
     OTHER,
 
-    /**
-     * 后台用户
-     */
+    /** 后台用户 */
     MANAGE,
 
-    /**
-     * 手机端用户
-     */
+    /** 手机端用户 */
     MOBILE
 }

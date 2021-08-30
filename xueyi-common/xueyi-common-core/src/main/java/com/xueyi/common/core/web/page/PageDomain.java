@@ -7,8 +7,8 @@ import com.xueyi.common.core.utils.StringUtils;
  * 
  * @author ruoyi
  */
-public class PageDomain
-{
+public class PageDomain {
+
     /** 当前记录起始索引 */
     private Integer pageNum;
 
