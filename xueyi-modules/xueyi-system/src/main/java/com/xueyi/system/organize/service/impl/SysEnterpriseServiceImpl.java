@@ -189,7 +189,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @return 缓存键key
      */
     private String getCacheKey(String enterpriseName) {
-        return Constants.SYS_CONFIG_KEY + enterpriseName + ":" + enterpriseName;
+        return Constants.SYS_ENTERPRISE_KEY + enterpriseName + ":" + Constants.SYS_ENTERPRISE;
     }
 
     /**
@@ -199,6 +199,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @return 缓存键key
      */
     private String delCacheKey(String enterpriseName) {
-        return Constants.SYS_CONFIG_KEY + enterpriseName + ":" + enterpriseName;
+        return Constants.SYS_ENTERPRISE_KEY + enterpriseName + ":" + Constants.SYS_ENTERPRISE;
     }
 }
