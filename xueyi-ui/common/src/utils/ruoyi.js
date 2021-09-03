@@ -172,7 +172,6 @@ export function handleTree(data, id, parentId, children) {
             }
         }
     }
-
     return tree
 }
 
