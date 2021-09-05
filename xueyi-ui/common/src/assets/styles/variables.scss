@@ -11,20 +11,20 @@ $panGreen: #30B08F;
 // sidebar
 
 // 默认菜单主题风格
-$base-menu-color: #c5c5c8;                //未关注菜单栏样式
-$base-menu-color-active: #ffffff;         //当前激活菜单的上级菜单栏
-$base-menu-text-color-active: #ffffff;    //当前激活菜单的文字颜色
-$base-menu-background: #282c34;           //主菜单栏背景
-$base-logo-title-color: #ffffff;          //标题样式
+$base-menu-color: #c5c5c8;                      //未关注菜单栏样式
+$base-menu-color-active: #ffffff;               //当前激活菜单上级菜单栏的文字颜色
+$base-menu-text-color-active: #ffffff;          //当前激活菜单的文字颜色
+$base-menu-background: #282c34;                 //主菜单栏背景
+$base-logo-title-color: #ffffff;                //标题样式
 
-$base-sub-menu-background: #000c17;       //子菜单栏背景
-$base-sub-menu-hover: #1890ff;            //鼠标关注菜单栏
+$base-sub-menu-background: #000c17;             //子菜单栏背景
+$base-sub-menu-hover: #1890ff;                  //鼠标关注菜单栏
 
 // 白色菜单主题风格
-$base-menu-light-color:rgba(0,0,0,.70);   //未关注菜单栏样式
+$base-menu-light-color:rgba(0,0,0,.70);         //未关注菜单栏样式
 $base-menu-light-text-color-active: #409EFF;    //当前激活菜单的文字颜色
-$base-menu-light-background:#ffffff;      //主菜单栏背景
-$base-logo-light-title-color: #001529;    //标题样式
+$base-menu-light-background:#ffffff;            //主菜单栏背景
+$base-logo-light-title-color: #001529;          //标题样式
 
 // 自定义暗色菜单风格
 //$base-menu-color:hsla(0,0%,100%,.65);
