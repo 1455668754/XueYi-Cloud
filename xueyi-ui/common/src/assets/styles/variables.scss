@@ -11,43 +11,28 @@ $panGreen: #30B08F;
 // sidebar
 
 // 默认菜单主题风格
-$base-menu-color:#bfcbd9;
-$base-menu-color-active:#f4f4f5;
-$base-menu-background:#304156;
-$base-logo-title-color: #ffffff;
+$base-menu-color: #c5c5c8;                //未关注菜单栏样式
+$base-menu-color-active: #ffffff;         //当前激活菜单的上级菜单栏
+$base-menu-text-color-active: #ffffff;    //当前激活菜单的文字颜色
+$base-menu-background: #282c34;           //主菜单栏背景
+$base-logo-title-color: #ffffff;          //标题样式
 
-$base-menu-light-color:rgba(0,0,0,.70);
-$base-menu-light-background:#ffffff;
-$base-logo-light-title-color: #001529;
+$base-sub-menu-background: #000c17;       //子菜单栏背景
+$base-sub-menu-hover: #1890ff;            //鼠标关注菜单栏
 
-$base-sub-menu-background:#1f2d3d;
-$base-sub-menu-hover:#001528;
+// 白色菜单主题风格
+$base-menu-light-color:rgba(0,0,0,.70);   //未关注菜单栏样式
+$base-menu-light-text-color-active: #409EFF;    //当前激活菜单的文字颜色
+$base-menu-light-background:#ffffff;      //主菜单栏背景
+$base-logo-light-title-color: #001529;    //标题样式
 
 // 自定义暗色菜单风格
-/**
-$base-menu-color:hsla(0,0%,100%,.65);
-$base-menu-color-active:#fff;
-$base-menu-background:#001529;
-$base-logo-title-color: #ffffff;
- */
+//$base-menu-color:hsla(0,0%,100%,.65);
+//$base-menu-color-active:#fff;
+//$base-menu-background:#001529;
+//$base-logo-title-color: #ffffff;
+
 $base-sidebar-width: 200px;
-
-$menuText:#c5c5c8;             //样式1 未关注菜单栏样式
-$menuActiveText:#409EFF;       // 未发现用途
-$subMenuActiveText:#ffffff;    //样式1 当前关注菜单的上级菜单栏
-
-$menuBg:#282c34;               //样式1 主菜单栏背景
-$menuHover:#263445;            // 未发现用途
-$sidebarTitle:#ffffff;         //样式1 菜单栏系统标题样式
-
-$menuLightBg:#ffffff;          //样式2 菜单栏背景
-$menuLightHover:#f0f1f5;       // 未发现用途
-$sidebarLightTitle:#001529;    //样式2 菜单栏系统标题样式
-
-$subMenuBg:#000c17;            //样式1 子菜单栏背景
-$subMenuHover:#1890ff;         //样式1 鼠标关注菜单栏
-
-$sideBarWidth: 200px;
 
 // the :export directive is the magic sauce for webpack
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
@@ -55,6 +40,8 @@ $sideBarWidth: 200px;
   menuColor: $base-menu-color;
   menuLightColor: $base-menu-light-color;
   menuColorActive: $base-menu-color-active;
+  menuLightColorActive: $base-menu-light-text-color-active;
+  menuTextColorActive: $base-menu-text-color-active;
   menuBackground: $base-menu-background;
   menuLightBackground: $base-menu-light-background;
   subMenuBackground: $base-sub-menu-background;
