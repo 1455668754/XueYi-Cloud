@@ -14,7 +14,7 @@
         @contextmenu.prevent.native="openMenu(tag,$event)"
       >
         {{ tag.title }}
-        <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+        <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)"/>
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
@@ -32,7 +32,7 @@ import ScrollPane from './ScrollPane'
 import path from 'path'
 
 export default {
-  components: { ScrollPane },
+  components: {ScrollPane},
   data() {
     return {
       visible: false,
@@ -50,7 +50,7 @@ export default {
       return this.$store.state.permission.routes
     },
     theme() {
-      return this.$store.state.settings.theme;
+      return this.$store.state.settings.theme
     }
   },
   watch: {
@@ -75,11 +75,11 @@ export default {
       return route.path === this.$route.path
     },
     activeStyle(tag) {
-      if (!this.isActive(tag)) return {};
+      if (!this.isActive(tag)) return {}
       return {
         "background-color": this.theme,
         "border-color": this.theme
-      };
+      }
     },
     isAffix(tag) {
       return tag.meta && tag.meta.affix
@@ -100,7 +100,7 @@ export default {
             fullPath: tagPath,
             path: tagPath,
             name: route.name,
-            meta: { ...route.meta }
+            meta: {...route.meta}
           })
         }
         if (route.children) {
@@ -122,7 +122,7 @@ export default {
       }
     },
     addTags() {
-      const { name } = this.$route
+      const {name} = this.$route
       if (name) {
         this.$store.dispatch('tagsView/addView', this.$route)
       }
@@ -145,7 +145,7 @@ export default {
     },
     refreshSelectedTag(view) {
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
-        const { fullPath } = view
+        const {fullPath} = view
         this.$nextTick(() => {
           this.$router.replace({
             path: '/redirect' + fullPath
@@ -154,7 +154,7 @@ export default {
       })
     },
     closeSelectedTag(view) {
-      this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
+      this.$store.dispatch('tagsView/delView', view).then(({visitedViews}) => {
         if (this.isActive(view)) {
           this.toLastView(visitedViews, view)
         }
@@ -168,13 +168,14 @@ export default {
       })
     },
     closeOthersTags() {
-      this.$router.push(this.selectedTag).catch(()=>{});
+      this.$router.push(this.selectedTag).catch(() => {
+      })
       this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
         this.moveToCurrentTag()
       })
     },
     closeAllTags(view) {
-      this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
+      this.$store.dispatch('tagsView/delAllViews').then(({visitedViews}) => {
         if (this.affixTags.some(tag => tag.path === this.$route.path)) {
           return
         }
@@ -190,7 +191,7 @@ export default {
         // you can adjust it according to your needs.
         if (view.name === 'Dashboard') {
           // to reload home page
-          this.$router.replace({ path: '/redirect' + view.fullPath })
+          this.$router.replace({path: '/redirect' + view.fullPath})
         } else {
           this.$router.push('/')
         }
@@ -230,6 +231,7 @@ export default {
   background: #fff;
   border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -244,16 +246,20 @@ export default {
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+
       &:first-of-type {
         margin-left: 15px;
       }
+
       &:last-of-type {
         margin-right: 15px;
       }
+
       &.active {
         background-color: #42b983;
         color: #fff;
         border-color: #42b983;
+
         &::before {
           content: '';
           background: #fff;
@@ -267,6 +273,7 @@ export default {
       }
     }
   }
+
   .contextmenu {
     margin: 0;
     background: #fff;
@@ -279,10 +286,12 @@ export default {
     font-weight: 400;
     color: #333;
     box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+
     li {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
+
       &:hover {
         background: #eee;
       }
@@ -303,11 +312,13 @@ export default {
       text-align: center;
       transition: all .3s cubic-bezier(.645, .045, .355, 1);
       transform-origin: 100% 50%;
+
       &:before {
         transform: scale(.6);
         display: inline-block;
         vertical-align: -3px;
       }
+
       &:hover {
         background-color: #b4bccc;
         color: #fff;
