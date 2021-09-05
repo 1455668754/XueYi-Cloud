@@ -1,20 +1,25 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container"
+               @toggleClick="toggleSideBar"/>
 
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!topNav"/>
     <top-nav id="topmenu-container" class="topmenu-container" v-if="topNav"/>
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
+        <search id="header-search" class="right-menu-item"/>
 
         <Notice id="head-notice" class="right-menu-item hover-effect"/>
 
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <screenfull id="screenfull" class="right-menu-item hover-effect"/>
+
+        <div class="right-menu-item hover-effect" @click="setting = true">
+          <SvgIcon iconClass="xy_renovation"/>
+        </div>
 
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
-          <size-select id="size-select" class="right-menu-item hover-effect" />
+          <size-select id="size-select" class="right-menu-item hover-effect"/>
         </el-tooltip>
       </template>
 
@@ -38,10 +43,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import Breadcrumb from '@basicsComponents/Breadcrumb'
 import TopNav from '@basicsComponents/TopNav'
 import Hamburger from '@basicsComponents/Hamburger'
+import SvgIcon from '@basicsComponents/SvgIcon'
 import Screenfull from '@basicsComponents/Screenfull'
 import SizeSelect from '@basicsComponents/SizeSelect'
 import Search from '@basicsComponents/HeaderSearch'
@@ -52,6 +58,7 @@ export default {
     Breadcrumb,
     TopNav,
     Hamburger,
+    SvgIcon,
     Screenfull,
     SizeSelect,
     Search,
@@ -91,20 +98,21 @@ export default {
         type: 'warning'
       }).then(() => {
         this.$store.dispatch('LogOut').then(() => {
-          location.href = '/index';
+          location.href = '/index'
           // location.href = this.$router.options.base + '/index';
         })
-      }).catch(() => {});
+      }).catch(() => {
+      })
     },
     jumpBaseSystem(type) {
-      let url;
+      let url
       if (type === '1') {//跳转个人中心
         url = this.$store.state.settings.baseSystemUrl + '/user/profile'
       } else if (type === '2') {//跳转主系统企业中心
         url = this.$store.state.settings.baseSystemUrl
       }
       // window.open(url, '_blank') // 在新窗口打开外链接
-      window.location.href = url;  //在本页面打开外部链接
+      window.location.href = url  //在本页面打开外部链接
     }
   }
 }
@@ -116,7 +124,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
 
   .hamburger-container {
     line-height: 46px;
@@ -124,7 +132,7 @@ export default {
     float: left;
     cursor: pointer;
     transition: background .3s;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover {
       background: rgba(0, 0, 0, .025)

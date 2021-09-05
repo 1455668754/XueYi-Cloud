@@ -13,6 +13,10 @@
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
+        <div class="right-menu-item hover-effect" @click="setting = true">
+          <SvgIcon iconClass="xy_renovation"/>
+        </div>
+
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
@@ -43,6 +47,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@basicsComponents/Breadcrumb'
 import TopNav from '@basicsComponents/TopNav'
 import Hamburger from '@basicsComponents/Hamburger'
+import SvgIcon from '@basicsComponents/SvgIcon'
 import Screenfull from '@basicsComponents/Screenfull'
 import SizeSelect from '@basicsComponents/SizeSelect'
 import Search from '@basicsComponents/HeaderSearch'
@@ -53,6 +58,7 @@ export default {
     Breadcrumb,
     TopNav,
     Hamburger,
+    SvgIcon,
     Screenfull,
     SizeSelect,
     Search,
