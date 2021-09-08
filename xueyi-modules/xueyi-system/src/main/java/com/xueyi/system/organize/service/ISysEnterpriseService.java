@@ -83,6 +83,14 @@ public interface ISysEnterpriseService {
     public void refreshEnterpriseKey(String oldEnterpriseName, SysEnterprise newEnterprise);
 
     /**
+     * 根据企业账号查询企业信息
+     *
+     * @param enterpriseName 企业账号
+     * @return 参数键值
+     */
+    public SysEnterprise selectEnterpriseByKey(String enterpriseName);
+
+    /**
      * 加载企业缓存数据
      */
     public void loadingEnterpriseCache();

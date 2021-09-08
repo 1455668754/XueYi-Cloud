@@ -1,5 +1,5 @@
 -- ----------------------------
--- 1、租户信息表|管理租户账户信息
+-- 1、租户信息表
 -- ----------------------------
 drop table if exists xy_tenant;
 create table xy_tenant (
@@ -31,7 +31,7 @@ values (-1, 'Y', 1, 'administrator', '租户管理系统', 'xueYi1', 'http://127
        ( 1, 'N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
 
 -- ----------------------------
--- 2、数据源策略表|管理数据源策略信息
+-- 2、策略信息表
 -- ----------------------------
 drop table if exists xy_tenant_strategy;
 create table xy_tenant_strategy (
@@ -51,7 +51,7 @@ primary key (strategy_id)
 ) engine=innodb comment = '数据源策略表';
 
 -- ----------------------------
--- 初始化-数据源策略表数据
+-- 初始化-策略信息表数据
 -- ----------------------------
 insert into xy_tenant_strategy(strategy_id, name, tenant_amount, source_amount, is_change, sort)
 values (1, '默认注册策略', 2, 1, 1, 1);

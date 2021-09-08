@@ -72,6 +72,7 @@ public class SysUserController extends BaseController {
     @InnerAuth
     @GetMapping("/info/{enterpriseName}/{userName}")
     public R<LoginUser> info(@PathVariable("enterpriseName") String enterpriseName, @PathVariable("userName") String userName) {
+        enterpriseService.selectEnterpriseByKey(enterpriseName);
         SysEnterprise checkEnterprise = new SysEnterprise();
         checkEnterprise.setEnterpriseName(enterpriseName);
         SysEnterprise sysEnterprise = loginService.checkLoginByEnterpriseName(checkEnterprise);

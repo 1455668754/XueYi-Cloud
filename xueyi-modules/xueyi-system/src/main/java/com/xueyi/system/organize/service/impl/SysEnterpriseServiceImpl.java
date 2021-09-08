@@ -183,6 +183,16 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     }
 
     /**
+     * 根据企业账号查询企业信息
+     *
+     * @param enterpriseName 企业账号
+     * @return 参数键值
+     */
+    public SysEnterprise selectEnterpriseByKey(String enterpriseName) {
+        return redisService.getCacheObject(getCacheKey(enterpriseName));
+    }
+
+    /**
      * 设置cache key
      *
      * @param enterpriseName 企业账号
