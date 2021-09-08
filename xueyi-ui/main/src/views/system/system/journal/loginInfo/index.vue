@@ -77,7 +77,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            :loading="submitLoading"
             v-hasPermi="['system:loginInfo:remove']"
           >删除
           </el-button>
@@ -89,7 +88,6 @@
             icon="el-icon-delete"
             size="mini"
             @click="handleClean"
-            :loading="submitLoading"
             v-hasPermi="['system:loginInfo:remove']"
           >清空
           </el-button>
@@ -222,7 +220,6 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.submitLoading = true
       const infoIds = row.infoId || this.ids
       let $this = this
       this.$confirm('是否确认删除访问编号为"' + infoIds + '"的数据项?', "警告", {
@@ -236,11 +233,9 @@ export default {
         this.msgSuccess("删除成功")
       }).catch(() => {
       })
-      this.submitLoading = false
     },
     /** 清空按钮操作 */
     handleClean() {
-      this.submitLoading = true
       this.$confirm('是否确认清空所有登录日志?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -252,7 +247,6 @@ export default {
         this.msgSuccess("清空成功")
       }).catch(() => {
       })
-      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {

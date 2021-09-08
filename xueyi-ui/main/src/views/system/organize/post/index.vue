@@ -399,6 +399,7 @@ export default {
         roleIds: []
       }
       this.resetForm("form")
+      this.submitLoading = false
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -472,9 +473,10 @@ export default {
               this.getList()
             })
           }
+        }else{
+          this.submitLoading = false
         }
       })
-      this.submitLoading = false
     },
     /** 岗位权限提交按钮 */
     submitRoleForm: function () {
@@ -485,8 +487,9 @@ export default {
           this.roleOpen = false
           this.getList()
         })
+      }else{
+        this.submitLoading = false
       }
-      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {

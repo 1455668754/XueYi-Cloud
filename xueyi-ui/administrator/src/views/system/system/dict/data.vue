@@ -71,7 +71,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            :loading="submitLoading"
             v-hasPermi="['system:dict:remove']"
           >删除
           </el-button>
@@ -329,6 +328,7 @@ export default {
         remark: undefined
       }
       this.resetForm("form")
+      this.submitLoading = false
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -382,13 +382,13 @@ export default {
               this.getList()
             })
           }
+        }else{
+          this.submitLoading = false
         }
       })
-      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.submitLoading = true
       const dictCodes = row.dictCode || this.ids
       this.$confirm('是否确认删除字典编码为"' + dictCodes + '"的数据项?', "警告", {
         confirmButtonText: "确定",
@@ -401,7 +401,6 @@ export default {
         this.msgSuccess("删除成功")
       }).catch(() => {
       })
-      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {

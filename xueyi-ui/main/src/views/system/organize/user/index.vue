@@ -140,7 +140,6 @@
                 size="mini"
                 :disabled="multiple"
                 @click="handleDelete"
-                :loading="submitLoading"
                 v-hasPermi="['system:user:remove']"
               >删除
               </el-button>
@@ -639,6 +638,7 @@ export default {
         roleIds: []
       }
       this.resetForm("form")
+      this.submitLoading = false
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -739,9 +739,10 @@ export default {
               this.getList()
             })
           }
+        }else{
+          this.submitLoading = false
         }
       })
-      this.submitLoading = false
     },
     /** 用户权限提交按钮 */
     submitRoleForm: function () {
@@ -752,12 +753,12 @@ export default {
           this.roleOpen = false
           this.getList()
         })
+      }else{
+        this.submitLoading = false
       }
-      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.submitLoading = true
       const userIds = row.userId || this.ids
       const text = row.nickName || this.idsText
       let $this = this
@@ -772,7 +773,6 @@ export default {
         this.msgSuccess("删除成功")
       }).catch(() => {
       })
-      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {

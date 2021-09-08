@@ -89,7 +89,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            :loading="submitLoading"
             v-hasPermi="['tenant:tenant:remove']"
           >删除
           </el-button>
@@ -113,7 +112,6 @@
             size="mini"
             @click="handleSort"
             v-show="sortVisible"
-            :loading="submitLoading"
             v-hasPermi="['tenant:tenant:edit']"
           >保存排序
           </el-button>
@@ -445,6 +443,7 @@ export default {
         params:{}
       }
       this.resetForm('form')
+      this.submitLoading = false
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -548,8 +547,9 @@ export default {
           this.openMenuScope = false
           this.getList()
         })
+      }else{
+        this.submitLoading = false
       }
-      this.submitLoading = false
     },
     /** 提交按钮 */
     submitForm() {
@@ -564,6 +564,7 @@ export default {
                 this.getList()
               })
             } else {
+              this.submitLoading = false
               this.$message({
                 message: '系统租户不允许进行修改操作',
                 type: 'warning'
@@ -576,13 +577,13 @@ export default {
               this.getList()
             })
           }
+        }else{
+          this.submitLoading = false
         }
       })
-      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.submitLoading = true
       const tenantIds = row.tenantId || this.ids
       const names = row.name || this.idNames
       let that = this
@@ -597,7 +598,6 @@ export default {
         this.msgSuccess('删除成功')
       }).catch(() => {
       })
-      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {
@@ -607,7 +607,6 @@ export default {
     },
     /** 保存排序按钮操作 */
     handleSort() {
-      this.submitLoading = true
       this.$confirm('是否确认保存新排序?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -622,7 +621,6 @@ export default {
         this.sortVisible = false
         this.msgSuccess('保存成功')
       }).catch(() => {})
-      this.submitLoading = false
     },
     /** 排序开关 */
     handleSortable(sortable) {

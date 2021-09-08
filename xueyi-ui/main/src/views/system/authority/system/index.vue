@@ -80,7 +80,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            :loading="submitLoading"
             v-hasPermi="['system:system:remove']"
           >删除
           </el-button>
@@ -358,6 +357,7 @@ export default {
         remark: null
       }
       this.resetForm("form")
+      this.submitLoading = false
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -410,9 +410,10 @@ export default {
               this.getList()
             })
           }
+        }else{
+          this.submitLoading = false
         }
       })
-      this.submitLoading = false
     },
     // 模块状态修改
     handleStatusChange(row) {
@@ -432,7 +433,6 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.submitLoading = true
       const systemIds = row.systemId || this.ids
       const name = row.name || this.idNames
       let $this = this
@@ -447,7 +447,6 @@ export default {
         this.msgSuccess("删除成功")
       }).catch((err) => {
       })
-      this.submitLoading = false
     }
   }
 }

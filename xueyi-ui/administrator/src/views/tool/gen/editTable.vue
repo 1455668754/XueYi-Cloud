@@ -179,7 +179,6 @@ export default {
   methods: {
     /** 提交按钮 */
     submitForm() {
-      this.submitLoading = true
       const basicForm = this.$refs.basicInfo.$refs.basicInfoForm
       const genForm = this.$refs.genInfo.$refs.genInfoForm
       Promise.all([basicForm, genForm].map(this.getFormPromise)).then(res => {
@@ -204,7 +203,6 @@ export default {
           this.msgError("表单校验未通过，请重新检查提交内容")
         }
       })
-      this.submitLoading = false
     },
     getFormPromise(form) {
       return new Promise(resolve => {

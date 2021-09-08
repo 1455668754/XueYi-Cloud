@@ -71,7 +71,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            :loading="submitLoading"
             v-hasPermi="['monitor:job:remove']"
           >删除
           </el-button>
@@ -413,6 +412,7 @@ export default {
         status: "0"
       }
       this.resetForm("form")
+      this.submitLoading = false
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -528,13 +528,13 @@ export default {
               this.getList()
             })
           }
+        }else{
+          this.submitLoading = false
         }
       })
-      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.submitLoading = true
       const jobIds = row.jobId || this.ids
       this.$confirm('是否确认删除定时任务编号为"' + jobIds + '"的数据项?', "警告", {
         confirmButtonText: "确定",
@@ -547,7 +547,6 @@ export default {
         this.msgSuccess("删除成功")
       }).catch(() => {
       })
-      this.submitLoading = false
     },
     /** 导出按钮操作 */
     handleExport() {

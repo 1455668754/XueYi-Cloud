@@ -83,7 +83,6 @@
             size="mini"
             :disabled="multiple"
             @click="handleDelete"
-            :loading="submitLoading"
             v-hasPermi="['tool:gen:remove']"
           >删除
           </el-button>
@@ -340,7 +339,6 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.submitLoading = true
       const tableIds = row.tableId || this.ids
       this.$confirm('是否确认删除表编号为"' + tableIds + '"的数据项?', "警告", {
         confirmButtonText: "确定",
@@ -353,7 +351,6 @@ export default {
         this.msgSuccess("删除成功")
       }).catch((err) => {
       })
-      this.submitLoading = false
     }
   }
 }

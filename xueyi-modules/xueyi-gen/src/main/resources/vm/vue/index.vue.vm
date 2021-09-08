@@ -115,7 +115,6 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          :loading="submitLoading"
           v-hasPermi="['${moduleName}:${businessName}:remove']"
         >删除</el-button>
       </el-col>
@@ -138,7 +137,6 @@
           size="mini"
           @click="handleSort"
           v-show="sortVisible"
-          :loading="submitLoading"
           v-hasPermi="['${moduleName}:${businessName}:edit']"
         >保存排序</el-button>
       </el-col>
@@ -677,6 +675,7 @@ export default {
       this.subList = [];
 #end
       this.resetForm("form");
+      this.submitLoading = false;
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -768,13 +767,13 @@ export default {
               this.getList();
             });
           }
+        }else{
+          this.submitLoading = false;
         }
       });
-      this.submitLoading = false;
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.submitLoading = true;
       const ${pkColumn.javaField}s = row.${pkColumn.javaField} || this.ids;
 #set($nameVo=0)
 #foreach ($column in $columns)
@@ -798,7 +797,6 @@ export default {
           this.getList();
           this.msgSuccess("删除成功");
         }).catch(() => {});
-      this.submitLoading = false;
     },
 #if($table.sub)
 	/** ${subTable.functionName}序号 */
@@ -858,7 +856,6 @@ export default {
     }#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort'),
     /** 保存排序按钮操作 */
     handleSort(){
-      this.submitLoading = true;
       this.$confirm('是否确认保存新排序?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -873,7 +870,6 @@ export default {
         this.sortVisible = false;
         this.msgSuccess("保存成功");
       }).catch(() => {});
-      this.submitLoading = false;
     },
     /** 排序开关 */
     handleSortable(sortable) {

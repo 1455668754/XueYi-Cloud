@@ -215,6 +215,7 @@ export default {
         values: []
       }
       this.resetForm('form')
+      this.submitLoading = false
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -242,8 +243,7 @@ export default {
     submitForm() {
       this.submitLoading = true
       this.$refs['form'].validate(valid => {
-        if (valid) {
-          if (this.form.sourceId != null) {
+        if (valid && this.form.sourceId != null) {
             if (this.valueCheck()) {
               updateSeparation(this.form).then(response => {
                 this.msgSuccess('配置成功')
@@ -251,10 +251,10 @@ export default {
                 this.getList()
               })
             }
-          }
+        }else{
+          this.submitLoading = false
         }
       })
-      this.submitLoading = false
     },
     valueAdd() {
       const newData = {

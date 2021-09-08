@@ -381,6 +381,7 @@ export default {
         status: "0"
       }
       this.resetForm("form")
+      this.submitLoading = false
     },
     /** 新增按钮操作 */
     handleAdd(row) {
@@ -430,9 +431,10 @@ export default {
               this.getList()
             })
           }
+        }else{
+          this.submitLoading = false
         }
       })
-      this.submitLoading = false
     },
     /** 删除按钮操作 */
     handleDelete(row) {
