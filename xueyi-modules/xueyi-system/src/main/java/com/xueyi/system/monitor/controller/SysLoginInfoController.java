@@ -25,6 +25,7 @@ import com.xueyi.system.monitor.service.ISysLoginInfoService;
 @RestController
 @RequestMapping("/loginInfo")
 public class SysLoginInfoController extends BaseController {
+
     @Autowired
     private ISysLoginInfoService loginInfoService;
 

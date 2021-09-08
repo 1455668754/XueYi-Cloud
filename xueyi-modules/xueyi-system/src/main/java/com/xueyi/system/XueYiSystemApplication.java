@@ -8,17 +8,15 @@ import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
 
 /**
  * 系统模块
- * 
+ *
  * @author xueyi
  */
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
 @SpringBootApplication
-public class XueYiSystemApplication
-{
-    public static void main(String[] args)
-    {
+public class XueYiSystemApplication {
+    public static void main(String[] args) {
         SpringApplication.run(XueYiSystemApplication.class, args);
         System.out.println("(♥◠‿◠)ﾉﾞ  系统模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
