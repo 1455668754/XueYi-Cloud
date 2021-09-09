@@ -37,6 +37,9 @@ public class SystemMenuVo  extends BaseEntity
     /** 组件路径 */
     private String component;
 
+    /** 路由参数：如 {"id": 1, "name": "xy"} */
+    private String query;
+
     /** 系统默认（0非默认 1默认） */
     private String isMain;
 
@@ -105,6 +108,14 @@ public class SystemMenuVo  extends BaseEntity
 
     public void setComponent(String component) {
         this.component = component;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     public String getIsMain() {
