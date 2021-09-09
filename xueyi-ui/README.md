@@ -104,7 +104,6 @@ xueyi-ui              // 前端框架 [80、81]
 │     ├── package.json                // package.json
 │     └── vue.config.js               // vue.config.js
 │   
-├── initialized                       // 空模板,用于复制新增模块
 │
 ├── .gitignore                        // git 忽略项
 └── package.json                      // package.json
