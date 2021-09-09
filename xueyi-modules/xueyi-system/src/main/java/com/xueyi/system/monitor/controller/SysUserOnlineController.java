@@ -33,6 +33,7 @@ import com.xueyi.system.monitor.service.ISysUserOnlineService;
 @RestController
 @RequestMapping("/online")
 public class SysUserOnlineController extends BaseController {
+
     @Autowired
     private ISysUserOnlineService userOnlineService;
 

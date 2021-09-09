@@ -11,8 +11,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class SysOperLog extends BaseEntity
-{
+public class SysOperLog extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 日志主键 */

@@ -10,8 +10,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class TenantSourceValue extends BaseEntity
-{
+public class TenantSourceValue extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 数据源Id */

@@ -11,8 +11,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class SysLoginInfo extends BaseEntity
-{
+public class SysLoginInfo extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** ID */
