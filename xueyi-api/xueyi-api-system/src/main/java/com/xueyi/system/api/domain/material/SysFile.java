@@ -8,8 +8,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  *
  * @author xueyi
  */
-public class SysFile
-{
+public class SysFile {
+
     /** 文件Id */
     private Long id;
 

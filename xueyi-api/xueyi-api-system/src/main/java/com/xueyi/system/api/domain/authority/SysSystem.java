@@ -10,8 +10,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  *
  * @author xueyi
  */
-public class SysSystem extends BaseEntity
-{
+public class SysSystem extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 系统名称 */

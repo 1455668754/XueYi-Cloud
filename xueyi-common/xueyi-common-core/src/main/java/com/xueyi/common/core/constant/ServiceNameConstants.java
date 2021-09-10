@@ -5,8 +5,8 @@ package com.xueyi.common.core.constant;
  * 
  * @author ruoyi
  */
-public class ServiceNameConstants
-{
+public class ServiceNameConstants {
+
     /** 认证服务的serviceId */
     public static final String AUTH_SERVICE = "xueyi-auth";
 

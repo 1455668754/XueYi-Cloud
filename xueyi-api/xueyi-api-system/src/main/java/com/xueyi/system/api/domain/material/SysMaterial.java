@@ -12,8 +12,8 @@ import java.math.BigDecimal;
  *
  * @author xueyi
  */
-public class SysMaterial extends BaseEntity
-{
+public class SysMaterial extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 素材Id */

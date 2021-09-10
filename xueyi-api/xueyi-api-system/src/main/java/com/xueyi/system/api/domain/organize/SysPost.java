@@ -17,8 +17,8 @@ import java.util.List;
  *
  * @author xueyi
  */
-public class SysPost extends BaseEntity
-{
+public class SysPost extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 岗位序号 */

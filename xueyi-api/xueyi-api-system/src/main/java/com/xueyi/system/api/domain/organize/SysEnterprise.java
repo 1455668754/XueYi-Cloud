@@ -14,6 +14,9 @@ public class SysEnterprise extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
+    /** 策略Id */
+    private Long strategyId;
+
     /** 企业账号 */
     private String enterpriseName;
 
@@ -29,16 +32,17 @@ public class SysEnterprise extends BaseEntity {
     /** 企业账号修改次数 */
     private Long enterpriseNameFrequency;
 
-    /** 企业访问库(master默认数据库) */
-    private String datasource;
-
-    /** 归属数据库(0默认库 1独立库) */
-    @Excel(name = "归属数据库(0默认库 1独立库)")
-    private Long attributionDatabase;
-
     /** 状态（0正常 1停用） */
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
+
+    public Long getStrategyId() {
+        return strategyId;
+    }
+
+    public void setStrategyId(Long strategyId) {
+        this.strategyId = strategyId;
+    }
 
     public String getEnterpriseName() {
         return enterpriseName;
@@ -80,22 +84,6 @@ public class SysEnterprise extends BaseEntity {
         this.enterpriseNameFrequency = enterpriseNameFrequency;
     }
 
-    public String getDatasource() {
-        return datasource;
-    }
-
-    public void setDatasource(String datasource) {
-        this.datasource = datasource;
-    }
-
-    public Long getAttributionDatabase() {
-        return attributionDatabase;
-    }
-
-    public void setAttributionDatabase(Long attributionDatabase) {
-        this.attributionDatabase = attributionDatabase;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -113,8 +101,6 @@ public class SysEnterprise extends BaseEntity {
                 .append("enterpriseNick", getEnterpriseNick())
                 .append("logo", getLogo())
                 .append("enterpriseNameFrequency", getEnterpriseNameFrequency())
-                .append("datasource", getDatasource())
-                .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())
                 .append("createName", getCreateName())

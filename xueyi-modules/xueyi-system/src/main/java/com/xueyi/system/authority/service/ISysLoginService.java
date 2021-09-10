@@ -15,14 +15,6 @@ import java.util.Set;
 public interface ISysLoginService {
 
     /**
-     * 通过企业账号查询租户
-     *
-     * @param enterprise 租户对象 | enterpriseName 企业账号
-     * @return 租户对象
-     */
-    public SysEnterprise checkLoginByEnterpriseName(SysEnterprise enterprise);
-
-    /**
      * 通过租户Id&用户账号查询用户（登录校验）
      *
      * @param user 用户信息 | enterpriseId 租户Id | userName 用户账号

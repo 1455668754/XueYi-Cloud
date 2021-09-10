@@ -18,7 +18,6 @@ import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
-import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -65,7 +64,7 @@ public class SysEnterpriseController extends BaseController {
      */
     @GetMapping("/profile")
     public AjaxResult profile() {
-        return AjaxResult.success(enterpriseService.selectEnterpriseById());
+        return AjaxResult.success(enterpriseService.mainSelectEnterpriseById());
     }
 
     /**
@@ -84,7 +83,7 @@ public class SysEnterpriseController extends BaseController {
             String url = fileResult.getData().getUrl();
             SysEnterprise enterprise = new SysEnterprise();
             enterprise.setLogo(url);
-            if (enterpriseService.updateLogo(enterprise) > 0) {
+            if (enterpriseService.mainUpdateEnterpriseLogo(enterprise) > 0) {
                 String oldLogoUrl = loginUser.getSysEnterprise().getLogo();
                 if (StringUtils.isNotEmpty(oldLogoUrl)) {
                     remoteFileService.delete(oldLogoUrl);
@@ -107,7 +106,7 @@ public class SysEnterpriseController extends BaseController {
     @Log(title = "企业资料修改", businessType = BusinessType.UPDATE)
     @PutMapping("/updateEnterprise")
     public AjaxResult updateEnterprise(@Validated @RequestBody SysEnterprise enterprise) {
-        return toAjax(enterpriseService.updateEnterprise(enterprise));
+        return toAjax(enterpriseService.mainUpdateEnterpriseMinor(enterprise));
     }
 
     /**
@@ -117,10 +116,10 @@ public class SysEnterpriseController extends BaseController {
     @Log(title = "企业账号修改", businessType = BusinessType.UPDATE)
     @PutMapping("/changeEnterpriseName")
     public AjaxResult changeEnterpriseName(@Validated @RequestBody SysEnterprise enterprise) {
-        if (StringUtils.equals(UserConstants.NOT_UNIQUE, enterpriseService.checkEnterpriseNameUnique(enterprise))) {
+        if (StringUtils.equals(UserConstants.NOT_UNIQUE, enterpriseService.mainCheckEnterpriseNameUnique(enterprise))) {
             return AjaxResult.error("修改失败，该企业账号名不可用，请换一个账号名！");
         }
-        int i = enterpriseService.changeEnterpriseName(enterprise);
+        int i = enterpriseService.mainUpdateEnterpriseName(enterprise);
         Collection<String> keys = redisService.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
         LoginUser mine = tokenService.getLoginUser();
         //强退当前企业账户所有在线账号
@@ -131,37 +130,5 @@ public class SysEnterpriseController extends BaseController {
             }
         }
         return toAjax(i);
-    }
-
-    /**
-     * 根据企业 key 新增|更新 cache
-     *
-     * @param newEnterprise 企业对象
-     */
-    @GetMapping("/refreshEnterpriseCache")
-    public R<Boolean> refreshEnterpriseCache(SysEnterprise newEnterprise) {
-        enterpriseService.refreshEnterpriseCache(newEnterprise);
-        return R.ok(true);
-    }
-
-    /**
-     * 刷新指定企业 cache 的 key
-     *
-     * @param oldEnterpriseName 原企业账号
-     * @param newEnterprise     企业对象
-     */
-    @GetMapping("/refreshEnterpriseKey/{oldEnterpriseName}")
-    public R<Boolean> refreshEnterpriseKey(@PathVariable("oldEnterpriseName") String oldEnterpriseName, SysEnterprise newEnterprise) {
-        enterpriseService.refreshEnterpriseKey(oldEnterpriseName, newEnterprise);
-        return R.ok(true);
-    }
-
-    /**
-     * 重置企业缓存数据
-     */
-    @GetMapping("/resetEnterpriseCache")
-    public R<Boolean> resetEnterpriseCache() {
-        enterpriseService.resetEnterpriseCache();
-        return R.ok(true);
     }
 }

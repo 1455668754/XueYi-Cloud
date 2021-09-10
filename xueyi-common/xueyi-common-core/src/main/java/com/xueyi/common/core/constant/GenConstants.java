@@ -5,8 +5,8 @@ package com.xueyi.common.core.constant;
  *
  * @author xueyi
  */
-public class GenConstants
-{
+public class GenConstants {
+
     /** 单表（增删改查） */
     public static final String TPL_CRUD = "crud";
 

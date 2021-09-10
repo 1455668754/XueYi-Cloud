@@ -20,8 +20,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class SysUser extends BaseEntity
-{
+public class SysUser extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 用户ID */

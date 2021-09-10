@@ -15,8 +15,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class SysDept extends BaseEntity
-{
+public class SysDept extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 部门ID */

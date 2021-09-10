@@ -5,8 +5,8 @@ package com.xueyi.common.core.constant;
  * 
  * @author ruoyi
  */
-public class Constants
-{
+public class Constants {
+
     /** UTF-8 字符集 */
     public static final String UTF8 = "UTF-8";
 
@@ -70,11 +70,17 @@ public class Constants
     /** 字典管理 cache key */
     public static final String SYS_DICT_KEY = "sys_dict:";
 
+    /** 登录验证-企业信息 cache key */
+    public static final String LOGIN_ENTERPRISE_KEY = "login_enterprise:";
+
     /** 企业管理 cache key */
     public static final String SYS_ENTERPRISE_KEY = "sys_enterprise:";
 
-    /** 企业管理 cache key */
-    public static final String SYS_ENTERPRISE = "enterprise";
+    /** 企业信息 cache key */
+    public static final String ENTERPRISE_KEY = "enterprise";
+
+    /** 企业源策略 cache key */
+    public static final String STRATEGY_KEY = "Strategy";
 
     /** 数据源管理 cache key */
     public static final String SYS_SOURCE_KEY = "sys_source:";

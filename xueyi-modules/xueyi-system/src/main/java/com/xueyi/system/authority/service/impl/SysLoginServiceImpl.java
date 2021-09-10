@@ -30,6 +30,7 @@ import java.util.Set;
 @Service
 @DS("main")
 public class SysLoginServiceImpl implements ISysLoginService {
+
     @Autowired
     private SysEnterpriseMapper enterpriseMapper;
 
@@ -47,17 +48,6 @@ public class SysLoginServiceImpl implements ISysLoginService {
 
     @Autowired
     private ISysLoginService loginService;
-
-    /**
-     * 通过企业账号查询租户信息（登录校验）
-     *
-     * @param enterprise 租户对象 | enterpriseName 企业账号
-     * @return 租户对象信息
-     */
-    @Override
-    public SysEnterprise checkLoginByEnterpriseName(SysEnterprise enterprise) {
-        return enterpriseMapper.checkLoginByEnterpriseName(enterprise);
-    }
 
     /**
      * 通过租户Id&用户账号查询用户（登录校验）

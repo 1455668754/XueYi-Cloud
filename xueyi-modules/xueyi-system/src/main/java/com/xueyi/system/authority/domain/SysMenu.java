@@ -14,8 +14,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class SysMenu extends BaseEntity
-{
+public class SysMenu extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 菜单Id */

@@ -14,6 +14,7 @@ import com.xueyi.common.core.domain.R;
  */
 @FeignClient(contextId = "remoteConfigService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteConfigFallbackFactory.class)
 public interface RemoteConfigService {
+
     /**
      * 查询参数
      *

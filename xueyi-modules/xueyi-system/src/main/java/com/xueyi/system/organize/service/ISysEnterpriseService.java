@@ -6,11 +6,19 @@ import com.xueyi.system.api.domain.source.Source;
 import java.util.List;
 
 /**
- * 租户 业务层
+ * 企业 业务层
  *
  * @author xueyi
  */
 public interface ISysEnterpriseService {
+
+    /**
+     * 根据企业账号查询账号信息
+     *
+     * @param enterpriseName 企业账号
+     * @return 数据源组集合
+     */
+    public SysEnterprise mainGetEnterpriseProfileByEnterpriseName(String enterpriseName);
 
     /**
      * 查询数据源列表
@@ -21,74 +29,43 @@ public interface ISysEnterpriseService {
     public List<Source> selectLoadDataSources(Source source);
 
     /**
-     * 通过企业账号查询租户信息
+     * 查询企业信息
      *
-     * @param enterprise 租户对象 | enterpriseName 企业账号
-     * @return 租户对象
+     * @return 企业对象
      */
-    public SysEnterprise checkLoginByEnterpriseName(SysEnterprise enterprise);
-
-    /**
-     * 查询租户信息
-     *
-     * @return 租户对象
-     */
-    public SysEnterprise selectEnterpriseById();
+    public SysEnterprise mainSelectEnterpriseById();
 
     /**
      * 更新Logo
      *
-     * @param enterprise 租户对象 | logo logo地址
+     * @param enterprise 企业对象 | logo logoUrl
      * @return 结果
      */
-    public int updateLogo(SysEnterprise enterprise);
+    public int mainUpdateEnterpriseLogo(SysEnterprise enterprise);
 
     /**
-     * 更新租户信息
+     * 更新企业次要信息
      *
-     * @param enterprise 租户对象
+     * @param enterprise 企业对象
      * @return 结果
      */
-    public int updateEnterprise(SysEnterprise enterprise);
+    public int mainUpdateEnterpriseMinor(SysEnterprise enterprise);
 
     /**
-     * 更新租户账号
+     * 修改企业账号
      *
-     * @param enterprise 租户对象
+     * @param enterprise 企业对象 | enterpriseName 企业账号
      * @return 结果
      */
-    public int changeEnterpriseName(SysEnterprise enterprise);
+    public int mainUpdateEnterpriseName(SysEnterprise enterprise);
 
     /**
-     * 校验租户账号是否唯一
+     * 校验企业账号是否唯一
      *
-     * @param enterprise 租户对象
+     * @param enterprise 企业对象 | enterpriseName 企业账号
      * @return 结果
      */
-    public String checkEnterpriseNameUnique(SysEnterprise enterprise);
-
-    /**
-     * 根据企业 key 新增|更新 cache
-     *
-     * @param newEnterprise 企业对象
-     */
-    public void refreshEnterpriseCache(SysEnterprise newEnterprise);
-
-    /**
-     * 刷新指定企业 cache 的 key
-     *
-     * @param oldEnterpriseName 原企业账号
-     * @param newEnterprise     企业对象
-     */
-    public void refreshEnterpriseKey(String oldEnterpriseName, SysEnterprise newEnterprise);
-
-    /**
-     * 根据企业账号查询企业信息
-     *
-     * @param enterpriseName 企业账号
-     * @return 参数键值
-     */
-    public SysEnterprise selectEnterpriseByKey(String enterpriseName);
+    public String mainCheckEnterpriseNameUnique(SysEnterprise enterprise);
 
     /**
      * 加载企业缓存数据

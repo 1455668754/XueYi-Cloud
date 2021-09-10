@@ -5,6 +5,7 @@ import com.xueyi.common.core.web.domain.BaseEntity;
 import java.util.List;
 
 public class Source extends BaseEntity{
+
     private static final long serialVersionUID = 1L;
 
     /** 主库 */

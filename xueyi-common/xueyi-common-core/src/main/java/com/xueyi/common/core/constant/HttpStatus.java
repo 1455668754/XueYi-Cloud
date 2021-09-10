@@ -5,8 +5,8 @@ package com.xueyi.common.core.constant;
  * 
  * @author ruoyi
  */
-public class HttpStatus
-{
+public class HttpStatus {
+
     /** 操作成功 */
     public static final int SUCCESS = 200;
 

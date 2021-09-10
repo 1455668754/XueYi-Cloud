@@ -6,6 +6,7 @@
 
     <resultMap type="SysEnterprise" id="SysEnterpriseResult">
         <id     property="enterpriseId"                 column="tenant_id"                  />
+        <result property="strategyId"                   column="strategy_id"                />
         <result property="enterpriseName"               column="tenant_name"                />
         <result property="enterpriseSystemName"         column="tenant_system_name"         />
         <result property="enterpriseNick"               column="tenant_nick"                />
@@ -40,24 +41,19 @@
         from xy_tenant e
     </sql>
 
-    <select id="selectEnterpriseCacheList" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
+    <select id="mainSelectEnterpriseCacheList" resultMap="SysEnterpriseResult">
         <include refid="cacheVo"/>
-        where e.del_flag = 0
+        where e.del_flag = 0 and e.status = '0'
     </select>
 
-    <select id="checkLoginByEnterpriseName" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
-        <include refid="selectVo"/>
-        where e.tenant_name=#{enterpriseName} and e.status = '0' and e.del_flag = 0
-    </select>
-
-    <select id="selectEnterpriseById" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
+    <select id="mainSelectEnterpriseById" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
         <include refid="checkVo"/>
         where 1 = 1
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
 
-    <update id="updateLogo" parameterType="SysEnterprise">
+    <update id="mainUpdateEnterpriseLogo" parameterType="SysEnterprise">
         update xy_tenant
         <trim prefix="SET" suffixOverrides=",">
             <if test="logo != null and logo != ''">	                          tenant_logo = #{logo}	                ,</if>
@@ -68,7 +64,7 @@
         ${params.updateScope}
     </update>
 
-    <update id="updateEnterprise" parameterType="SysEnterprise">
+    <update id="mainUpdateEnterpriseMinor" parameterType="SysEnterprise">
         update xy_tenant
         <trim prefix="SET" suffixOverrides=",">
             <if test="enterpriseSystemName != null and enterpriseSystemName != ''">	        tenant_system_name = #{enterpriseSystemName}	    ,</if>
@@ -80,7 +76,7 @@
         ${params.updateScope}
     </update>
 
-    <update id="changeEnterpriseName" parameterType="SysEnterprise">
+    <update id="mainUpdateEnterpriseName" parameterType="SysEnterprise">
         update xy_tenant
         <trim prefix="SET" suffixOverrides=",">
             <if test="enterpriseName != null and enterpriseName != ''">	      tenant_name = #{enterpriseName}	                    ,</if>
@@ -92,7 +88,7 @@
         ${params.updateScope}
     </update>
 
-    <select id="checkEnterpriseNameUnique" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
+    <select id="mainCheckEnterpriseNameUnique" parameterType="SysEnterprise" resultMap="SysEnterpriseResult">
         <include refid="checkVo"/>
         where tenant_name = #{enterpriseName}
     </select>

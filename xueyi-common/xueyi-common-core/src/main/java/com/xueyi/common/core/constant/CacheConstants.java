@@ -5,8 +5,7 @@ package com.xueyi.common.core.constant;
  *
  * @author ruoyi
  */
-public class CacheConstants
-{
+public class CacheConstants {
 
     /** 权限缓存前缀 */
     public final static String LOGIN_TOKEN_KEY = "login_tokens:";

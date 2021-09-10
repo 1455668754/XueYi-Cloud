@@ -1,8 +1,11 @@
 package com.xueyi.system.organize.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
+import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
@@ -16,7 +19,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * 租户信息 业务层处理
+ * 企业信息 业务层处理
  *
  * @author xueyi
  */
@@ -30,6 +33,9 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     private DataSourceMapper dataSourceMapper;
 
     @Autowired
+    private TokenService tokenService;
+
+    @Autowired
     private RedisService redisService;
 
     /**
@@ -38,6 +44,18 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @PostConstruct
     public void init() {
         loadingEnterpriseCache();
+    }
+
+    /**
+     * 根据企业账号查询账号信息
+     *
+     * @param enterpriseName 企业账号
+     * @return 数据源组集合
+     */
+    @Override
+    public SysEnterprise mainGetEnterpriseProfileByEnterpriseName(String enterpriseName) {
+        Long enterpriseId = redisService.getCacheObject(EnterpriseUtils.getLoginCacheKey(enterpriseName));
+        return ObjectUtil.equals(enterpriseId, null) ? null : redisService.getCacheObject(EnterpriseUtils.getEnterpriseCacheKey(enterpriseId));
     }
 
     /**
@@ -52,83 +70,70 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     }
 
     /**
-     * 通过企业账号查询租户信息
+     * 查询企业信息
      *
-     * @param enterprise 租户对象 | enterpriseName 企业账号
-     * @return 租户对象
+     * @return 企业对象
      */
     @Override
-    public SysEnterprise checkLoginByEnterpriseName(SysEnterprise enterprise) {
-        return enterpriseMapper.checkLoginByEnterpriseName(enterprise);
-    }
-
-    /**
-     * 查询租户信息
-     *
-     * @return 租户对象
-     */
-    @Override
-    public SysEnterprise selectEnterpriseById() {
-        return enterpriseMapper.selectEnterpriseById(new SysEnterprise());
+    public SysEnterprise mainSelectEnterpriseById() {
+        return getEnterpriseProfile();
     }
 
     /**
      * 更新Logo
      *
-     * @param enterprise 租户对象 | logo logo地址
+     * @param enterprise 企业对象 | logo logoUrl
      * @return 结果
      */
     @Override
-    public int updateLogo(SysEnterprise enterprise) {
-        int rows = enterpriseMapper.updateLogo(enterprise);
+    public int mainUpdateEnterpriseLogo(SysEnterprise enterprise) {
+        int rows = enterpriseMapper.mainUpdateEnterpriseLogo(enterprise);
         if (rows > 0) {
-            SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
-            refreshEnterpriseCache(newEnterprise);
+            refreshCache();
         }
         return rows;
     }
 
     /**
-     * 更新租户信息
+     * 更新企业次要信息
      *
-     * @param enterprise 租户对象
+     * @param enterprise 企业对象
      * @return 结果
      */
     @Override
-    public int updateEnterprise(SysEnterprise enterprise) {
-        int rows = enterpriseMapper.updateEnterprise(enterprise);
+    public int mainUpdateEnterpriseMinor(SysEnterprise enterprise) {
+        int rows = enterpriseMapper.mainUpdateEnterpriseMinor(enterprise);
         if (rows > 0) {
-            SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
-            refreshEnterpriseCache(newEnterprise);
+            refreshCache();
         }
         return rows;
     }
 
     /**
-     * 更新租户账号
+     * 修改企业账号
      *
-     * @param enterprise 租户对象
+     * @param enterprise 企业对象 | enterpriseName 企业账号
      * @return 结果
      */
     @Override
-    public int changeEnterpriseName(SysEnterprise enterprise) {
-        int rows = enterpriseMapper.changeEnterpriseName(enterprise);
+    public int mainUpdateEnterpriseName(SysEnterprise enterprise) {
+        int rows = enterpriseMapper.mainUpdateEnterpriseName(enterprise);
         if (rows > 0) {
-            SysEnterprise newEnterprise = enterpriseMapper.selectEnterpriseById(new SysEnterprise());
-            refreshEnterpriseKey(enterprise.getEnterpriseName(), newEnterprise);
+            refreshCache();
+            refreshLoginCache();
         }
         return rows;
     }
 
     /**
-     * 校验租户账号是否唯一
+     * 校验企业账号是否唯一
      *
-     * @param enterprise 租户对象
+     * @param enterprise 企业对象 | enterpriseName 企业账号
      * @return 结果
      */
     @Override
-    public String checkEnterpriseNameUnique(SysEnterprise enterprise) {
-        return enterpriseMapper.checkEnterpriseNameUnique(enterprise) == null ? UserConstants.UNIQUE : UserConstants.NOT_UNIQUE;
+    public String mainCheckEnterpriseNameUnique(SysEnterprise enterprise) {
+        return enterpriseMapper.mainCheckEnterpriseNameUnique(enterprise) == null ? UserConstants.UNIQUE : UserConstants.NOT_UNIQUE;
     }
 
     /**
@@ -136,9 +141,11 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public void loadingEnterpriseCache() {
-        List<SysEnterprise> enterprisesList = enterpriseMapper.selectEnterpriseCacheList(new SysEnterprise());
+        List<SysEnterprise> enterprisesList = enterpriseMapper.mainSelectEnterpriseCacheList();
         for (SysEnterprise enterprise : enterprisesList) {
-            redisService.setCacheObject(getCacheKey(enterprise.getEnterpriseName()), enterprise);
+            redisService.setCacheObject(EnterpriseUtils.getEnterpriseCacheKey(enterprise.getEnterpriseId()), enterprise);
+            redisService.setCacheObject(EnterpriseUtils.getStrategyCacheKey(enterprise.getEnterpriseId()), enterprise.getStrategyId());
+            redisService.setCacheObject(EnterpriseUtils.getLoginCacheKey(enterprise.getEnterpriseName()), enterprise.getEnterpriseId());
         }
     }
 
@@ -149,6 +156,8 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     public void clearEnterpriseCache() {
         Collection<String> keys = redisService.keys(Constants.SYS_ENTERPRISE_KEY + "*");
         redisService.deleteObject(keys);
+        Collection<String> loginKeys = redisService.keys(Constants.LOGIN_ENTERPRISE_KEY + "*");
+        redisService.deleteObject(loginKeys);
     }
 
     /**
@@ -161,54 +170,29 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     }
 
     /**
-     * 根据企业 key 新增|更新 cache
-     *
-     * @param newEnterprise 企业对象
+     * 更新当前企业的cache
      */
-    @Override
-    public void refreshEnterpriseCache(SysEnterprise newEnterprise) {
-        redisService.setCacheObject(getCacheKey(newEnterprise.getEnterpriseName()), newEnterprise);
+    private void refreshCache() {
+        SysEnterprise enterprise = enterpriseMapper.mainSelectEnterpriseById(new SysEnterprise());
+        redisService.setCacheObject(EnterpriseUtils.getEnterpriseCacheKey(enterprise.getEnterpriseId()), enterprise);
     }
 
     /**
-     * 刷新指定企业 cache 的 key
-     *
-     * @param oldEnterpriseName 原企业账号
-     * @param newEnterprise     企业对象
+     * 更新当前企业登录验证的cache
      */
-    @Override
-    public void refreshEnterpriseKey(String oldEnterpriseName, SysEnterprise newEnterprise) {
-        redisService.deleteObject(delCacheKey(oldEnterpriseName));
-        redisService.setCacheObject(getCacheKey(newEnterprise.getEnterpriseName()), newEnterprise);
+    private void refreshLoginCache() {
+        SysEnterprise oldEnterprise = getEnterpriseProfile();
+        SysEnterprise newEnterprise = enterpriseMapper.mainSelectEnterpriseById(new SysEnterprise());
+        redisService.deleteObject(EnterpriseUtils.getLoginCacheKey(oldEnterprise.getEnterpriseName()));
+        redisService.setCacheObject(EnterpriseUtils.getLoginCacheKey(newEnterprise.getEnterpriseName()), newEnterprise.getEnterpriseId());
     }
 
     /**
-     * 根据企业账号查询企业信息
+     * 查询当前账户的企业信息
      *
-     * @param enterpriseName 企业账号
      * @return 参数键值
      */
-    public SysEnterprise selectEnterpriseByKey(String enterpriseName) {
-        return redisService.getCacheObject(getCacheKey(enterpriseName));
-    }
-
-    /**
-     * 设置cache key
-     *
-     * @param enterpriseName 企业账号
-     * @return 缓存键key
-     */
-    private String getCacheKey(String enterpriseName) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseName + ":" + Constants.SYS_ENTERPRISE;
-    }
-
-    /**
-     * 删除cache key
-     *
-     * @param enterpriseName 企业账号
-     * @return 缓存键key
-     */
-    private String delCacheKey(String enterpriseName) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseName + ":" + Constants.SYS_ENTERPRISE;
+    private SysEnterprise getEnterpriseProfile() {
+        return redisService.getCacheObject(EnterpriseUtils.getEnterpriseCacheKey(tokenService.getLoginUser().getEnterpriseId()));
     }
 }

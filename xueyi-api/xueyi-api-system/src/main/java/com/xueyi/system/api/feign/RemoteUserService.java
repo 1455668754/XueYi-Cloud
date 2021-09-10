@@ -17,6 +17,7 @@ import com.xueyi.system.api.model.LoginUser;
  */
 @FeignClient(contextId = "remoteUserService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteUserFallbackFactory.class)
 public interface RemoteUserService {
+
     /**
      * 通过用户名查询用户信息
      *

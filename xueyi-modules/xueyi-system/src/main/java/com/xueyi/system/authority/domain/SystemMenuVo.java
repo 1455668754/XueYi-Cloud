@@ -9,8 +9,8 @@ import java.util.List;
  *
  * @author xueyi
  */
-public class SystemMenuVo  extends BaseEntity
-{
+public class SystemMenuVo  extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** Id */

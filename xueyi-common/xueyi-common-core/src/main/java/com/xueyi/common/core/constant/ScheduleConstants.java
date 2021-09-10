@@ -5,8 +5,8 @@ package com.xueyi.common.core.constant;
  * 
  * @author ruoyi
  */
-public class ScheduleConstants
-{
+public class ScheduleConstants {
+
     public static final String TASK_CLASS_NAME = "TASK_CLASS_NAME";
 
     /** 执行目标key */

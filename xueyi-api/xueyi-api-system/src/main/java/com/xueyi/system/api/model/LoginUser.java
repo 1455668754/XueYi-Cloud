@@ -12,8 +12,8 @@ import com.xueyi.system.api.domain.source.Source;
  *
  * @author xueyi
  */
-public class LoginUser implements Serializable
-{
+public class LoginUser implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     /** 用户唯一标识 */

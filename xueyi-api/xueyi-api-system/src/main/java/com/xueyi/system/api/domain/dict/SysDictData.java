@@ -14,8 +14,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class SysDictData extends BaseEntity
-{
+public class SysDictData extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 字典编码 */
