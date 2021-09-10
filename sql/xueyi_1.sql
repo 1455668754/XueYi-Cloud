@@ -64,6 +64,7 @@ create table xy_tenant_source (
   source_id		            bigint	            not null                                comment '数据源Id',
   name		                varchar(50)	        not null                                comment '数据源名称',
   database_type             char(1)	            not null default '0'	                comment '数据源类型（0子数据源 1主数据源）',
+  is_change                 char(1)             not null default 'N'	                comment '系统主源（Y是 N否）',
   slave		                varchar(500)	    not null default ''	                    comment '数据源编码',
   driver_class_name		    varchar(500)	    not null default ''	                    comment '驱动',
   url_prepend	            varchar(500)	    not null default ''	                    comment '连接地址',
@@ -84,9 +85,9 @@ primary key (source_id)
 -- ----------------------------
 -- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
 -- ----------------------------
-insert into xy_tenant_source(source_id, name, database_type, slave, driver_class_name, url_prepend, url_append, username, password, type)
-values (0, '默认数据源', '1', 'master', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0'),
-       (1, '注册数据源', '1', 'slave', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
+insert into xy_tenant_source(source_id, name, database_type, is_change, slave, driver_class_name, url_prepend, url_append, username, password, type)
+values (0, '默认数据源', '1', 'Y', 'master', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0'),
+       (1, '注册数据源', '0', 'Y', 'slave', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
 
 -- ----------------------------
 -- 4、主从库关联表  写1-n读
