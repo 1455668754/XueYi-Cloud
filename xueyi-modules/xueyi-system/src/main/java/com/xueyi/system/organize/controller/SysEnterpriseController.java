@@ -10,6 +10,7 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.feign.RemoteFileService;
@@ -47,6 +48,15 @@ public class SysEnterpriseController extends BaseController {
 
     @Autowired
     private RemoteFileService remoteFileService;
+
+    /**
+     * 获取当前用户信息
+     */
+    @InnerAuth
+    @GetMapping("/byId/{enterpriseId}")
+    public R<SysEnterprise> getInfo(@PathVariable("enterpriseId") Long enterpriseId){
+        return R.ok(enterpriseService.mainSelectEnterpriseByEnterpriseId(enterpriseId));
+    }
 
     /**
      * 获取指定企业账号的数据源

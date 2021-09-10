@@ -21,6 +21,14 @@ public interface ISysEnterpriseService {
     public SysEnterprise mainGetEnterpriseProfileByEnterpriseName(String enterpriseName);
 
     /**
+     * 根据企业Id查询企业信息
+     *
+     * @param enterpriseId 企业Id
+     * @return 企业对象
+     */
+    public SysEnterprise mainSelectEnterpriseByEnterpriseId(Long enterpriseId);
+
+    /**
      * 查询数据源列表
      *
      * @param source 数据源组

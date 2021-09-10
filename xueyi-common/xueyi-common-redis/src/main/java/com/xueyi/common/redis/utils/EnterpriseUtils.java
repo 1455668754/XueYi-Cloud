@@ -25,12 +25,22 @@ public class EnterpriseUtils {
     }
 
     /**
+     * 获取企业cache目录 key
+     *
+     * @param enterpriseId 企业Id
+     * @return 缓存键key
+     */
+    public static String getCacheFolderKey(Long enterpriseId) {
+        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":*";
+    }
+
+    /**
      * 获取源策略Id key
      *
      * @param enterpriseId 企业Id
      * @return 缓存键key
      */
     public static String getStrategyCacheKey(Long enterpriseId) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.ENTERPRISE_KEY;
+        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.STRATEGY_KEY;
     }
 }

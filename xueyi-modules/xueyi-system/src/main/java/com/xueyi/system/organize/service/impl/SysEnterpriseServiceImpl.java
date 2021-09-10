@@ -55,7 +55,18 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @Override
     public SysEnterprise mainGetEnterpriseProfileByEnterpriseName(String enterpriseName) {
         Long enterpriseId = redisService.getCacheObject(EnterpriseUtils.getLoginCacheKey(enterpriseName));
-        return ObjectUtil.equals(enterpriseId, null) ? null : redisService.getCacheObject(EnterpriseUtils.getEnterpriseCacheKey(enterpriseId));
+        return redisService.getCacheObject(EnterpriseUtils.getEnterpriseCacheKey(enterpriseId));
+    }
+
+    /**
+     * 根据企业Id查询企业信息
+     *
+     * @param enterpriseId 企业Id
+     * @return 企业对象
+     */
+    @Override
+    public SysEnterprise mainSelectEnterpriseByEnterpriseId(Long enterpriseId){
+        return enterpriseMapper.mainSelectEnterpriseByEnterpriseId(enterpriseId);
     }
 
     /**

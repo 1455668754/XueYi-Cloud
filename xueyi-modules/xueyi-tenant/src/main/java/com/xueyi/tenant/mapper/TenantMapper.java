@@ -72,16 +72,6 @@ public interface TenantMapper {
     public int deleteTenantById(Tenant tenant);
 
     /**
-     * 批量删除租户信息
-     * 访问控制 empty 租户更新（无前缀）
-     *
-     * @param tenant 租户信息
-     * @return 结果
-     */
-    @DataScope(ueAlias = "empty")
-    public int deleteTenantByIds(Tenant tenant);
-
-    /**
      * 校验租户账号是否唯一
      * 访问控制 empty 租户更新（无前缀）
      *

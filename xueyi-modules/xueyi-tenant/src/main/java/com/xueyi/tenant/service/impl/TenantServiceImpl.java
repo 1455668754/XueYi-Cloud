@@ -3,9 +3,17 @@ package com.xueyi.tenant.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.SecurityConstants;
+import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
+import com.xueyi.system.api.feign.RemoteConfigService;
+import com.xueyi.system.api.feign.RemoteEnterpriseService;
 import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.domain.TenantStrategy;
 import com.xueyi.tenant.mapper.TenantStrategyMapper;
@@ -39,6 +47,12 @@ public class TenantServiceImpl implements ITenantService {
 
     @Autowired
     private ITenantCreationService tenantCreationService;
+
+    @Autowired
+    private RemoteEnterpriseService remoteEnterpriseService;
+
+    @Autowired
+    private RedisService redisService;
 
     /**
      * 查询租户信息列表
@@ -86,7 +100,11 @@ public class TenantServiceImpl implements ITenantService {
                 tenantCreationService.organizeCreation(tenant);
                 //1.新建租户的衍生角色&&模块|菜单屏蔽信息
                 tenantCreationService.deriveRoleCreation(tenant);
-                return tenantMapper.insertTenant(tenant);
+                int rows = tenantMapper.insertTenant(tenant);
+                if (rows > 0) {
+                    refreshCache(tenant.getTenantId());
+                }
+                return rows;
             }
         }
         return 0;
@@ -112,7 +130,12 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public int updateTenant(Tenant tenant) {
-        return tenantMapper.updateTenant(tenant);
+        int rows = tenantMapper.updateTenant(tenant);
+        if (rows > 0) {
+            deleteCache(tenant.getTenantId());
+            refreshCache(tenant.getTenantId());
+        }
+        return rows;
     }
 
     /**
@@ -134,7 +157,12 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public int deleteTenantById(Tenant tenant) {
-        return tenantMapper.deleteTenantById(tenant);
+        int rows = tenantMapper.deleteTenantById(tenant);
+        if (rows > 0) {
+            deleteCache(tenant.getTenantId());
+            deleteCacheFolder(tenant.getTenantId());
+        }
+        return rows;
     }
 
     /**
@@ -145,7 +173,14 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public int deleteTenantByIds(Tenant tenant) {
-        return tenantMapper.deleteTenantByIds(tenant);
+        List<Long> Ids = (List<Long>) tenant.getParams().get("Ids");
+        int rows = 0;
+        Tenant delTenant = new Tenant();
+        for (Long Id : Ids) {
+            delTenant.setTenantId(Id);
+            rows += deleteTenantById(delTenant);
+        }
+        return rows;
     }
 
     /**
@@ -161,5 +196,44 @@ public class TenantServiceImpl implements ITenantService {
             return UserConstants.NOT_UNIQUE;
         }
         return UserConstants.UNIQUE;
+    }
+
+    /**
+     * 新增指定租户Id cache
+     *
+     * @param tenantId 租户Id
+     */
+    private void refreshCache(Long tenantId) {
+        R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenantId, SecurityConstants.INNER);
+        if (R.FAIL == enterprise.getCode()) {
+            throw new ServiceException(enterprise.getMsg());
+        }
+        if (StringUtils.equals(enterprise.getData().getStatus(), TenantConstants.NORMAL)) {
+            redisService.setCacheObject(EnterpriseUtils.getEnterpriseCacheKey(tenantId), enterprise);
+            redisService.setCacheObject(EnterpriseUtils.getLoginCacheKey(enterprise.getData().getEnterpriseName()), enterprise.getData().getEnterpriseId());
+        }
+    }
+
+    /**
+     * 删除指定租户Id cache
+     *
+     * @param tenantId 租户Id
+     */
+    private void deleteCache(Long tenantId) {
+        R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenantId, SecurityConstants.INNER);
+        if (R.FAIL == enterprise.getCode()) {
+            throw new ServiceException(enterprise.getMsg());
+        }
+        redisService.deleteObject(EnterpriseUtils.getEnterpriseCacheKey(tenantId));
+        redisService.deleteObject(EnterpriseUtils.getLoginCacheKey(enterprise.getData().getEnterpriseName()));
+    }
+
+    /**
+     * 删除指定租户Id cache目录
+     *
+     * @param tenantId 租户Id
+     */
+    private void deleteCacheFolder(Long tenantId) {
+        redisService.deleteObject(EnterpriseUtils.getCacheFolderKey(tenantId));
     }
 }

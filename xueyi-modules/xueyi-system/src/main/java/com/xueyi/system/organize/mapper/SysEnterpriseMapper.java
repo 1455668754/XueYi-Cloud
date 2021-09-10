@@ -20,6 +20,14 @@ public interface SysEnterpriseMapper {
     public List<SysEnterprise> mainSelectEnterpriseCacheList();
 
     /**
+     * 根据企业Id查询企业信息
+     *
+     * @param enterpriseId 企业Id
+     * @return 企业对象
+     */
+    public SysEnterprise mainSelectEnterpriseByEnterpriseId(Long enterpriseId);
+
+    /**
      * 查询企业信息
      * 访问控制 e 企业查询
      *

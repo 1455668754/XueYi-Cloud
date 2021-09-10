@@ -123,15 +123,6 @@
         where tenant_id = #{tenantId} and is_change = 'N' and del_flag = 0
     </delete>
 
-    <delete id="deleteTenantByIds" parameterType="Tenant">
-        update xy_tenant
-        set del_flag = 1
-        where is_change = 'N' and del_flag = 0 and tenant_id in
-        <foreach item="tenantId" collection="params.Ids" open="(" separator="," close=")">
-            #{tenantId}
-        </foreach>
-    </delete>
-
     <select id="checkTenantNameUnique" parameterType="Tenant" resultMap="TenantResult">
         <include refid="checkVo"/>
         where e.tenant_name = #{tenantName}
