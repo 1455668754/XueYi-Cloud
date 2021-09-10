@@ -10,7 +10,7 @@ import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.bean.BeanUtils;
 import com.xueyi.common.message.domain.Message;
 import com.xueyi.common.message.service.ProducerService;
-import com.xueyi.tenant.api.domain.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.Source;
 
 import javax.sql.DataSource;
 
@@ -24,17 +24,17 @@ public class DSUtils {
     /**
      * 添加一个数据源到数据源库中
      *
-     * @param tenantSource 数据源对象
+     * @param source 数据源对象
      */
-    public static void addDs(TenantSource tenantSource) {
+    public static void addDs(Source source) {
         try {
             DefaultDataSourceCreator dataSourceCreator = SpringUtils.getBean(DefaultDataSourceCreator.class);
             DataSourceProperty dataSourceProperty = new DataSourceProperty();
-            BeanUtils.copyProperties(tenantSource, dataSourceProperty);
+            BeanUtils.copyProperties(source, dataSourceProperty);
             DataSource dataSource = SpringUtils.getBean(DataSource.class);
             DynamicRoutingDataSource ds = (DynamicRoutingDataSource) dataSource;
             dataSource = dataSourceCreator.createDataSource(dataSourceProperty);
-            ds.addDataSource(tenantSource.getSlave(), dataSource);
+            ds.addDataSource(source.getSlave(), dataSource);
         } catch (Exception e) {
             e.printStackTrace();
             throw new ServiceException("数据源添加失败");
@@ -67,11 +67,11 @@ public class DSUtils {
     /**
      * 异步同步数据源到数据源库
      *
-     * @param tenantSource 数据源对象
+     * @param source 数据源对象
      */
-    public static void syncDS(TenantSource tenantSource) {
+    public static void syncDS(Source source) {
         ProducerService producerService = SpringUtils.getBean(ProducerService.class);
-        Message message = new Message(IdUtils.randomUUID(), tenantSource);
+        Message message = new Message(IdUtils.randomUUID(), source);
         producerService.sendMsg(message, MessageConstant.EXCHANGE_SOURCE, MessageConstant.ROUTING_KEY_SOURCE);
     }
 }

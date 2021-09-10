@@ -2,15 +2,15 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xueyi.tenant.mapper.TenantSourceMapper">
+<mapper namespace="com.xueyi.tenant.mapper.SourceMapper">
 
-    <resultMap type="TenantSource" id="TenantSourceResult">
+    <resultMap type="Source" id="SourceResult">
         <id     property="sourceId"         column="source_id"                              />
         <result property="name"             column="name"                                   />
         <result property="databaseType"     column="database_type"                          />
+        <result property="isChange"         column="is_change"                              />
         <result property="slave"            column="slave"                                  />
         <result property="driverClassName"  column="driver_class_name"                      />
-        <result property="url"              column="url"                                    />
         <result property="urlPrepend"       column="url_prepend"                            />
         <result property="urlAppend"        column="url_append"                             />
         <result property="username"         column="username"                               />
@@ -27,13 +27,15 @@
         <collection property="values" javaType="java.util.List" resultMap="valuesResult"    />
     </resultMap>
 
-    <resultMap type="TenantSourceValue" id="valuesResult">
+    <resultMap type="Source" id="valuesResult">
         <id     property="sourceId"         column="sub_source_id"                          />
         <result property="name"             column="sub_name"                               />
         <result property="databaseType"     column="sub_database_type"                      />
+        <result property="isChange"         column="sub_is_change"                          />
         <result property="slave"            column="sub_slave"                              />
         <result property="driverClassName"  column="sub_driver_class_name"                  />
-        <result property="url"              column="sub_url"                                />
+        <result property="urlPrepend"       column="sub_url_prepend"                        />
+        <result property="urlAppend"        column="sub_url_append"                         />
         <result property="username"         column="sub_username"                           />
         <result property="password"         column="sub_password"                           />
         <result property="type"             column="sub_type"                               />
@@ -42,12 +44,12 @@
     </resultMap>
 
     <sql id="listVo">
-        select e.source_id, e.name, e.database_type, e.slave, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
+        select e.source_id, e.name, e.database_type, e.is_change, e.slave, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
         from xy_tenant_source e
     </sql>
 
     <sql id="selectVo">
-        select e.source_id, e.name, e.database_type, e.slave, e.driver_class_name, e.url, e.url_prepend, e.url_append, e.username, e.password, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
+        select e.source_id, e.name, e.database_type, e.is_change, e.slave, e.driver_class_name, e.url, e.url_prepend, e.url_append, e.username, e.password, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
         from xy_tenant_source e
     </sql>
 
@@ -59,23 +61,23 @@
                  left join xy_tenant_source b on b.source_id = ts.read_id
     </sql>
 
-    <select id="selectTenantSourceList" parameterType="TenantSource" resultMap="TenantSourceResult">
+    <select id="mainSelectSourceList" parameterType="Source" resultMap="SourceResult">
         <include refid="listVo"/>
         where e.del_flag = 0
         <if test="name != null  and name != ''"> and e.name like concat('%', #{name}, '%')</if>
         <if test="databaseType != null  and databaseType != ''"> and e.database_type = #{databaseType}</if>
-        <if test="slave != null  and slave != ''"> and e.slave = #{slave}</if>
+        <if test="slave != null  and slave != ''"> and e.slave like concat('%', #{slave}, '%')</if>
         <if test="type != null  and type != ''"> and e.type = #{type}</if>
         <if test="status != null  and status != ''"> and e.status = #{status}</if>
         order by e.sort
     </select>
 
-    <select id="selectTenantSourceById" parameterType="TenantSource" resultMap="TenantSourceResult">
+    <select id="mainSelectSourceBySourceId" parameterType="Source" resultMap="SourceResult">
         <include refid="selectVo"/>
         where e.source_id = #{sourceId} and e.del_flag = 0
     </select>
 
-    <select id="selectTenantSeparationList" parameterType="TenantSource" resultMap="TenantSourceResult">
+    <select id="selectTenantSeparationList" parameterType="Source" resultMap="SourceResult">
         <include refid="subVo"/>
         where ( e.type = '0' or e.type = '2' )
         and e.status = '0' and e.del_flag = 0 and ( b.source_id is null or ( b.source_id is not null and b.status = '0' and b.del_flag = 0 ) )
@@ -85,7 +87,7 @@
         order by e.sort
     </select>
 
-    <select id="selectContainReadList" parameterType="TenantSource" resultMap="TenantSourceResult">
+    <select id="selectContainReadList" parameterType="Source" resultMap="SourceResult">
         <include refid="listVo"/>
         left join xy_tenant_separation ts on ts.read_id = e.source_id
         where e.status = '0' and e.del_flag = 0 and ( ( e.type = '1' and ts.read_id is null ) or ( ts.write_id = #{sourceId} )
@@ -93,25 +95,24 @@
         order by e.sort
     </select>
 
-    <select id="selectContainWriteList" parameterType="TenantSource" resultMap="TenantSourceResult">
+    <select id="selectContainWriteList" parameterType="Source" resultMap="SourceResult">
         <include refid="listVo"/>
         where e.status = '0' and e.del_flag = 0 and ( e.type = '0' or e.type = '2' ) and e.slave != 'master'
         order by e.sort
     </select>
 
-    <select id="selectTenantSeparationById" parameterType="TenantSource" resultMap="TenantSourceResult">
+    <select id="selectTenantSeparationById" parameterType="Source" resultMap="SourceResult">
         <include refid="subVo"/>
         where e.source_id = #{sourceId} and e.status = '0' and e.del_flag = 0
     </select>
 
-    <insert id="insertTenantSource" parameterType="TenantSource">
+    <insert id="mainInsertSource" parameterType="Source">
         insert into xy_tenant_source
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="snowflakeId != null">                               source_id                    ,</if>
             <if test="name != null and name != ''">                       name                         ,</if>
             <if test="driverClassName != null and driverClassName != ''"> driver_class_name            ,</if>
             <if test="slave != null and slave != ''">                     slave                        ,</if>
-            <if test="url != null and url != ''">                         url                          ,</if>
             <if test="urlPrepend != null and urlPrepend != ''">           url_prepend                  ,</if>
             <if test="urlAppend != null and urlAppend != ''">             url_append                   ,</if>
             <if test="username != null and username != ''">               username                     ,</if>
@@ -126,7 +127,6 @@
             <if test="name != null and name != ''">                       #{name}                      ,</if>
             <if test="driverClassName != null and driverClassName != ''"> #{driverClassName}           ,</if>
             <if test="slave != null and slave != ''">                     #{slave}                     ,</if>
-            <if test="url != null and url != ''">                         #{url}                       ,</if>
             <if test="urlPrepend != null and urlPrepend != ''">           #{urlPrepend}                ,</if>
             <if test="urlAppend != null and urlAppend != ''">             #{urlAppend}                 ,</if>
             <if test="username != null and username != ''">               #{username}                  ,</if>
@@ -138,13 +138,12 @@
         </trim>
     </insert>
 
-    <update id="updateTenantSource" parameterType="TenantSource">
+    <update id="mainUpdateSource" parameterType="Source">
         update xy_tenant_source
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null and name != ''">                        name = #{name}                            ,</if>
             <if test="driverClassName != null and driverClassName != ''">  driver_class_name = #{driverClassName}    ,</if>
             <if test="slave != null and slave != ''">                      slave = #{slave}                          ,</if>
-            <if test="url != null and url != ''">                          url = #{url}                              ,</if>
             <if test="urlPrepend != null and urlPrepend != ''">            url_prepend = #{urlPrepend}               ,</if>
             <if test="urlAppend != null and urlAppend != ''">              url_append = #{urlAppend}                 ,</if>
             <if test="username != null and username != ''">                username = #{username}                    ,</if>
@@ -154,10 +153,10 @@
             <if test="status != null and status != ''">                    status = #{status}                        ,</if>
             <if test="updateBy != null">                                   update_by = #{updateBy}                   ,</if>
         </trim>
-        where source_id = #{sourceId} and database_type != '1' and del_flag = 0
+        where source_id = #{sourceId} and is_change != 'Y' and del_flag = 0
     </update>
 
-    <update id="updateTenantSourceSort" parameterType="TenantSource">
+    <update id="mainUpdateSourceSort" parameterType="Source">
         update xy_tenant_source set sort =
         <foreach collection="params.Ids" item="item" index="index" separator=" " open="case source_id" close="end">
             when #{item.sourceId} then #{item.sort}
@@ -168,22 +167,13 @@
         </foreach>
     </update>
 
-    <delete id="deleteTenantSourceById" parameterType="TenantSource">
+    <delete id="mainDeleteSourceById" parameterType="Source">
         update xy_tenant_source
         set del_flag = 1
         where source_id = #{sourceId} and database_type != '1' and del_flag = 0
     </delete>
 
-    <delete id="deleteTenantSourceByIds" parameterType="TenantSource">
-        update xy_tenant_source
-        set del_flag = 1
-        where del_flag = 0 and database_type != '1' and source_id in
-        <foreach item="sourceId" collection="params.Ids" open="(" separator="," close=")">
-            #{sourceId}
-        </foreach>
-    </delete>
-
-    <delete id="deleteTenantSeparationByValueId" parameterType="TenantSource">
+    <delete id="deleteTenantSeparationByValueId" parameterType="Source">
         delete ts
         from xy_tenant_separation ts
         left join xy_tenant_source s1 on ts.write_id = s1.source_id
@@ -197,30 +187,30 @@
         </foreach> )
     </delete>
 
-    <delete id="deleteTenantSeparationBySourceId" parameterType="TenantSource">
+    <delete id="deleteTenantSeparationBySourceId" parameterType="Source">
         delete from xy_tenant_separation
         where write_id = #{sourceId}
         <if test="type != null and type == '0'"> and read_id != #{sourceId}</if>
     </delete>
 
-    <insert id="batchTenantSeparation" parameterType="TenantSource">
+    <insert id="batchTenantSeparation" parameterType="Source">
         insert into xy_tenant_separation( write_id, read_id) values
         <foreach item="item" index="index" collection="values" separator=",">
             ( #{sourceId}, #{item.sourceId} )
         </foreach>
     </insert>
 
-    <select id="checkStrategySourceBySourceId" parameterType="TenantSource" resultType="int">
+    <select id="checkStrategySourceBySourceId" parameterType="Source" resultType="int">
         select count(source_id) from xy_tenant_strategy_source e
         where e.source_id = #{sourceId} and e.del_flag = 0
     </select>
 
-    <select id="checkSeparationSourceByWriteId" parameterType="TenantSource" resultType="int">
+    <select id="checkSeparationSourceByWriteId" parameterType="Source" resultType="int">
         select count(write_id) from xy_tenant_separation e
         where e.write_id = #{sourceId} and e.del_flag = 0
     </select>
 
-    <select id="checkSeparationSourceByReadId" parameterType="TenantSource" resultType="int">
+    <select id="checkSeparationSourceByReadId" parameterType="Source" resultType="int">
         select count(read_id) from xy_tenant_separation e
         where e.read_id = #{sourceId} and e.del_flag = 0
     </select>

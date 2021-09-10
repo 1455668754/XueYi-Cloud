@@ -2,10 +2,9 @@ package com.xueyi.tenant.domain;
 
 import java.util.List;
 
-import com.xueyi.tenant.api.domain.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.Source;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.web.domain.BaseEntity;
 
 /**
@@ -39,7 +38,7 @@ public class TenantStrategy extends BaseEntity {
     private String status;
 
     /** 数据源信息 */
-    private List<TenantSource> values;
+    private List<Source> values;
 
     public void setStrategyId(Long strategyId) {
         this.strategyId = strategyId;
@@ -97,11 +96,11 @@ public class TenantStrategy extends BaseEntity {
         return status;
     }
 
-    public List<TenantSource> getValues() {
+    public List<Source> getValues() {
         return values;
     }
 
-    public void setValues(List<TenantSource> values) {
+    public void setValues(List<Source> values) {
         this.values = values;
     }
 

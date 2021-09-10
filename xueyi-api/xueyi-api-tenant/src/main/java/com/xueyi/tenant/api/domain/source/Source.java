@@ -2,7 +2,6 @@ package com.xueyi.tenant.api.domain.source;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.web.domain.BaseEntity;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  *
  * @author xueyi
  */
-public class TenantSource extends BaseEntity {
+public class Source extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -56,7 +55,7 @@ public class TenantSource extends BaseEntity {
     private String status;
 
     /** 读写分离 读 */
-    private List<TenantSource> values;
+    private List<Source> values;
 
     /** 源同步策略（0不变 1刷新 2启动 3删除） */
     private int syncType;
@@ -165,11 +164,11 @@ public class TenantSource extends BaseEntity {
         return status;
     }
 
-    public List<TenantSource> getValues() {
+    public List<Source> getValues() {
         return values;
     }
 
-    public void setValues(List<TenantSource> values) {
+    public void setValues(List<Source> values) {
         this.values = values;
     }
 

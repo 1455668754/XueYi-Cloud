@@ -13,7 +13,7 @@ import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.feign.RemoteEnterpriseService;
-import com.xueyi.tenant.api.domain.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.Source;
 import com.xueyi.tenant.domain.TenantStrategy;
 import com.xueyi.tenant.mapper.TenantStrategyMapper;
 import com.xueyi.tenant.service.ITenantCreationService;
@@ -91,7 +91,7 @@ public class TenantServiceImpl implements ITenantService {
         TenantStrategy search = new TenantStrategy();
         search.setStrategyId(tenant.getStrategyId());
         TenantStrategy strategy = tenantStrategyMapper.selectTenantStrategyById(search);
-        for (TenantSource source : strategy.getValues()) {
+        for (Source source : strategy.getValues()) {
             if (source.getIsMain().equals("Y")) {
                 tenant.setSourceName(source.getSlave());
                 //新建租户时同步新建信息

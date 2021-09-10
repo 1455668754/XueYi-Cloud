@@ -8,7 +8,7 @@ import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.common.core.constant.MessageConstant;
 import com.xueyi.common.message.domain.Message;
 import com.xueyi.common.message.listener.BaseListener;
-import com.xueyi.tenant.api.domain.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.*;
@@ -56,7 +56,7 @@ public class SourceSynchronization extends BaseListener {
     @Override
     protected void execute(Message message) {
         if (message.getData() != null) {
-            TenantSource source = JSONObject.toJavaObject(JSON.parseObject(message.getData().toString()), TenantSource.class);
+            Source source = JSONObject.toJavaObject(JSON.parseObject(message.getData().toString()), Source.class);
             if (source.getSyncType() == TenantConstants.SYNC_TYPE_REFRESH) {
                 DSUtils.delDs(source.getSlave());
                 DSUtils.addDs(source);

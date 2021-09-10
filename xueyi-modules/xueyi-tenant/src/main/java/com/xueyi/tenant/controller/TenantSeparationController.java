@@ -2,7 +2,7 @@ package com.xueyi.tenant.controller;
 
 import java.util.List;
 
-import com.xueyi.tenant.api.domain.source.TenantSource;
+import com.xueyi.tenant.api.domain.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,9 +34,9 @@ public class TenantSeparationController extends BaseController {
      */
     @PreAuthorize(hasPermi = "tenant:separation:list")
     @GetMapping("/list")
-    public TableDataInfo list(TenantSource tenantSource) {
+    public TableDataInfo list(Source source) {
         startPage();
-        List<TenantSource> list = tenantSeparationService.selectTenantSeparationList(tenantSource);
+        List<Source> list = tenantSeparationService.mainSelectSeparationList(source);
         return getDataTable(list);
     }
 
@@ -44,16 +44,16 @@ public class TenantSeparationController extends BaseController {
      * 查询 只读 数据源集合
      */
     @GetMapping("/containRead")
-    public AjaxResult containRead(TenantSource tenantSource) {
-        return AjaxResult.success(tenantSeparationService.selectContainReadList(tenantSource));
+    public AjaxResult containRead(Source source) {
+        return AjaxResult.success(tenantSeparationService.selectContainReadList(source));
     }
 
     /**
      * 查询 含写 数据源集合
      */
     @GetMapping("/containWrite")
-    public AjaxResult containWrite(TenantSource tenantSource) {
-        return AjaxResult.success(tenantSeparationService.selectContainWriteList(tenantSource));
+    public AjaxResult containWrite(Source source) {
+        return AjaxResult.success(tenantSeparationService.selectContainWriteList(source));
     }
 
     /**
@@ -61,8 +61,8 @@ public class TenantSeparationController extends BaseController {
      */
     @PreAuthorize(hasPermi = "tenant:separation:query")
     @GetMapping(value = "/byId")
-    public AjaxResult getInfo(TenantSource tenantSource) {
-        return AjaxResult.success(tenantSeparationService.selectTenantSeparationById(tenantSource));
+    public AjaxResult getInfo(Source source) {
+        return AjaxResult.success(tenantSeparationService.selectTenantSeparationById(source));
     }
 
     /**
@@ -71,7 +71,7 @@ public class TenantSeparationController extends BaseController {
     @PreAuthorize(hasPermi = "tenant:separation:edit")
     @Log(title = "数据源读写分离", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TenantSource tenantSource) {
-        return toAjax(tenantSeparationService.updateTenantSeparation(tenantSource));
+    public AjaxResult edit(@RequestBody Source source) {
+        return toAjax(tenantSeparationService.updateTenantSeparation(source));
     }
 }
