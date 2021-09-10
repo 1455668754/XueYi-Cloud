@@ -39,7 +39,7 @@ create table xy_tenant_strategy (
   name                      varchar(500)	    not null default ''	                    comment '策略名称',
   tenant_amount		        int unsigned        not null default 0	                    comment '租户数量',
   source_amount		        int unsigned        not null default 0	                    comment '数据源数量',
-  is_change                 tinyint             not null default 0	                    comment '可修改（0是 1否）',
+  is_change                 char(1)             not null default 'N'	                comment '系统策略（Y是 N否）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',
@@ -66,7 +66,6 @@ create table xy_tenant_source (
   database_type             char(1)	            not null default '0'	                comment '数据源类型（0子数据源 1主数据源）',
   slave		                varchar(500)	    not null default ''	                    comment '数据源编码',
   driver_class_name		    varchar(500)	    not null default ''	                    comment '驱动',
-  url	                    varchar(500)	    not null default ''	                    comment '地址',
   url_prepend	            varchar(500)	    not null default ''	                    comment '连接地址',
   url_append	            varchar(500)	    not null default ''	                    comment '连接参数',
   username	                varchar(500)	    not null default ''	                    comment '用户名',
@@ -85,17 +84,19 @@ primary key (source_id)
 -- ----------------------------
 -- 初始化-数据源表数据 | 这条数据为我的基础库，实际使用时调整成自己的库即可
 -- ----------------------------
-insert into xy_tenant_source(source_id, name, database_type, slave, driver_class_name, url, url_prepend, url_append, username, password, type)
-values (0, '默认数据源', '1', 'master', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0'),
-       (1, '注册数据源', '1', 'slave', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
+insert into xy_tenant_source(source_id, name, database_type, slave, driver_class_name, url_prepend, url_append, username, password, type)
+values (0, '默认数据源', '1', 'master', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0'),
+       (1, '注册数据源', '1', 'slave', 'com.mysql.cj.jdbc.Driver', 'jdbc:mysql://localhost:3306/xy-cloud', '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8', 'root', 'password', '0');
 
 -- ----------------------------
 -- 4、主从库关联表  写1-n读
 -- ----------------------------
 drop table if exists xy_tenant_separation;
 create table xy_tenant_separation (
-  write_id		            bigint	            not null                                comment '写数据源Id',
-  read_id		            bigint	            not null                                comment '读数据源Id',
+  write_id		            bigint	            not null                                comment '写源Id',
+  write_slave		        varchar(50)	        not null	                            comment '写源编码',
+  read_id		            bigint	            not null                                comment '读源Id',
+  read_slave		        varchar(50)	        not null	                            comment '读源编码',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (read_id)
 ) engine=innodb comment = '主从库关联表';
@@ -103,8 +104,8 @@ primary key (read_id)
 -- ----------------------------
 -- 初始化-主从库关联表数据
 -- ----------------------------
-insert into xy_tenant_separation(write_id, read_id)
-values (1, 1);
+insert into xy_tenant_separation(write_id, write_slave, read_id, read_slave)
+values (1,'slave', 1, 'slave');
 
 -- ----------------------------
 -- 5、策略-数据源关联表  策略n-n写数据源 | 数据源仅为写|读写的类型
@@ -113,7 +114,7 @@ drop table if exists xy_tenant_strategy_source;
 create table xy_tenant_strategy_source (
   strategy_id		        bigint	            not null                                comment '策略Id',
   source_id		            bigint	            not null                                comment '数据源Id',
-  status		            char(1)	            not null default 'N'                    comment '主数据源（Y是 N否）',
+  is_main		            char(1)	            not null default 'N'                    comment '主数据源（Y是 N否）',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
 primary key (strategy_id, source_id)
 ) engine=innodb comment = '策略-数据源关联表';
@@ -121,7 +122,7 @@ primary key (strategy_id, source_id)
 -- ----------------------------
 -- 初始化-策略-数据源关联表数据
 -- ----------------------------
-insert into xy_tenant_strategy_source(strategy_id, source_id, status)
+insert into xy_tenant_strategy_source(strategy_id, source_id, is_main)
 values (1, 1, 'Y');
 
 -- ----------------------------
