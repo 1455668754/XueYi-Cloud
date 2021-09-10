@@ -170,7 +170,7 @@
     <delete id="mainDeleteSourceById" parameterType="Source">
         update xy_tenant_source
         set del_flag = 1
-        where source_id = #{sourceId} and database_type != '1' and del_flag = 0
+        where source_id = #{sourceId} and is_change != 'Y' and del_flag = 0
     </delete>
 
     <delete id="deleteTenantSeparationByValueId" parameterType="Source">

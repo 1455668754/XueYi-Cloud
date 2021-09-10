@@ -58,17 +58,12 @@ public class SourceServiceImpl implements ISourceService {
     @Transactional
     @DataScope(ueAlias = "empty")
     public int mainInsertSource(Source source) {
-
-        if (source.getType().equals("2")) {
-            source.setSlave("slave" + source.getSnowflakeId().toString());
-        } else {
-            source.setSlave("master" + source.getSnowflakeId().toString());
-        }
+        source.setSlave((source.getType().equals(TenantConstants.SOURCE_WRITE)? "slave": "master") + source.getSnowflakeId().toString());
         // 将数据新增的的数据源添加到数据源库
         source.setSyncType(TenantConstants.SYNC_TYPE_ADD);
         DSUtils.addDs(source);
         DSUtils.syncDS(source);
-        if (source.getType().equals("0")) {
+        if (source.getType().equals(TenantConstants.SOURCE_READ_WRITE)) {
             Source value = new Source();
             value.setSourceId(source.getSnowflakeId());
             List<Source> values = new ArrayList<>();
