@@ -65,7 +65,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @return 企业对象
      */
     @Override
-    public SysEnterprise mainSelectEnterpriseByEnterpriseId(Long enterpriseId){
+    public SysEnterprise mainSelectEnterpriseByEnterpriseId(Long enterpriseId) {
         return enterpriseMapper.mainSelectEnterpriseByEnterpriseId(enterpriseId);
     }
 
