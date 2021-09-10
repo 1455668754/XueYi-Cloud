@@ -11,8 +11,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class Tenant extends BaseEntity
-{
+public class Tenant extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 租户Id */

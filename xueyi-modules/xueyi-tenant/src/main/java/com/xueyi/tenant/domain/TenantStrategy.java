@@ -13,23 +13,20 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class TenantStrategy extends BaseEntity
-{
+public class TenantStrategy extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 策略Id */
     private Long strategyId;
 
     /** 策略名称 */
-    @Excel(name = "策略名称")
     private String name;
 
     /** 租户数量 */
-    @Excel(name = "租户数量")
     private String tenantAmount;
 
     /** 数据源数量 */
-    @Excel(name = "数据源数量")
     private String sourceAmount;
 
     /** 是否有主数据源 */
@@ -39,7 +36,6 @@ public class TenantStrategy extends BaseEntity
     private Long isChange;
 
     /** 状态（0正常 1停用） */
-    @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
     /** 数据源信息 */

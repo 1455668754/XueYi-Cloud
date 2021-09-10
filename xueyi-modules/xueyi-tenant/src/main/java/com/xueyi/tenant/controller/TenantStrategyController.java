@@ -55,18 +55,6 @@ public class TenantStrategyController extends BaseController {
     }
 
     /**
-     * 导出数据源策略列表
-     */
-    @PreAuthorize(hasPermi = "tenant:strategy:export")
-    @Log(title = "数据源策略", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, TenantStrategy tenantStrategy) throws IOException {
-        List<TenantStrategy> list = tenantStrategyService.selectTenantStrategyList(tenantStrategy);
-        ExcelUtil<TenantStrategy> util = new ExcelUtil<TenantStrategy>(TenantStrategy.class);
-        util.exportExcel(response, list, "数据源策略数据");
-    }
-
-    /**
      * 获取数据源策略详细信息
      */
     @PreAuthorize(hasPermi = "tenant:strategy:query")

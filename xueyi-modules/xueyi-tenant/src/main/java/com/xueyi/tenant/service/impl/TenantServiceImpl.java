@@ -12,7 +12,6 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
-import com.xueyi.system.api.feign.RemoteConfigService;
 import com.xueyi.system.api.feign.RemoteEnterpriseService;
 import com.xueyi.tenant.api.domain.source.TenantSource;
 import com.xueyi.tenant.domain.TenantStrategy;

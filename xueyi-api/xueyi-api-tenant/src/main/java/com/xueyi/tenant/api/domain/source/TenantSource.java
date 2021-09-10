@@ -12,62 +12,51 @@ import java.util.List;
  *
  * @author xueyi
  */
-public class TenantSource extends BaseEntity
-{
+public class TenantSource extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 数据源Id */
     private Long sourceId;
 
     /** 数据源名称 */
-    @Excel(name = "数据源名称")
     private String name;
 
     /** 数据库(0普通数据源 1默认数据源) */
-    @Excel(name = "数据源类型", readConverterExp = "0=普通数据源,1=默认数据源")
     private String databaseType;
 
     /** 数据源编码 */
-    @Excel(name = "数据源编码")
     private String slave;
 
     /** 驱动 */
-    @Excel(name = "驱动")
     private String driverClassName;
 
     /** 地址 */
-    @Excel(name = "地址")
     private String url;
 
     /** 连接地址 */
-    @Excel(name = "连接地址")
     private String urlPrepend;
 
     /** 连接参数 */
-    @Excel(name = "连接参数")
     private String urlAppend;
 
     /** 用户名 */
-    @Excel(name = "用户名")
     private String username;
 
     /** 密码 */
     private String password;
 
     /** 主数据源（Y是 N否） */
-    @Excel(name = "主数据源", readConverterExp = "Y=是,N=否")
     private String isMain;
 
     /** 读写类型(0读&写 1只读 2只写) */
-    @Excel(name = "读写类型", readConverterExp = "0=读&写,1=只读,2=只写")
     private String type;
 
     /** 状态（0正常 1停用） */
-    @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
     /** 读写分离 读 */
-    private List<TenantSourceValue> values;
+    private List<TenantSource> values;
 
     /** 源同步策略（0不变 1刷新 2启动 3删除） */
     private int syncType;
@@ -176,11 +165,11 @@ public class TenantSource extends BaseEntity
         return status;
     }
 
-    public List<TenantSourceValue> getValues() {
+    public List<TenantSource> getValues() {
         return values;
     }
 
-    public void setValues(List<TenantSourceValue> values) {
+    public void setValues(List<TenantSource> values) {
         this.values = values;
     }
 

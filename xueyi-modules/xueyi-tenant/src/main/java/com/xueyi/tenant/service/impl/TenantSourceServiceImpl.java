@@ -7,7 +7,6 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
-import com.xueyi.tenant.api.domain.source.TenantSourceValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.tenant.mapper.TenantSourceMapper;
@@ -70,9 +69,9 @@ public class TenantSourceServiceImpl implements ITenantSourceService {
         DSUtils.addDs(tenantSource);
         DSUtils.syncDS(tenantSource);
         if (tenantSource.getType().equals("0")) {
-            TenantSourceValue value = new TenantSourceValue();
+            TenantSource value = new TenantSource();
             value.setSourceId(tenantSource.getSnowflakeId());
-            List<TenantSourceValue> values = new ArrayList<>();
+            List<TenantSource> values = new ArrayList<>();
             values.add(value);
             tenantSource.setValues(values);
             tenantSource.setSourceId(tenantSource.getSnowflakeId());

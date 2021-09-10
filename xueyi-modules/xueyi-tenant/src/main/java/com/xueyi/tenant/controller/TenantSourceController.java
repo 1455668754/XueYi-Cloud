@@ -44,18 +44,6 @@ public class TenantSourceController extends BaseController {
     }
 
     /**
-     * 导出数据源列表
-     */
-    @PreAuthorize(hasPermi = "tenant:source:export")
-    @Log(title = "数据源", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, TenantSource tenantSource) throws IOException {
-        List<TenantSource> list = tenantSourceService.selectTenantSourceList(tenantSource);
-        ExcelUtil<TenantSource> util = new ExcelUtil<TenantSource>(TenantSource.class);
-        util.exportExcel(response, list, "数据源数据");
-    }
-
-    /**
      * 获取数据源详细信息
      */
     @PreAuthorize(hasPermi = "tenant:source:query")
