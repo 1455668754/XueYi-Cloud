@@ -1,5 +1,6 @@
 package com.xueyi.tenant.domain;
 
+import com.xueyi.tenant.api.domain.strategy.Strategy;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xueyi.common.core.annotation.Excel;
@@ -35,9 +36,6 @@ public class Tenant extends BaseEntity {
     /** 租户logo */
     @Excel(name = "租户logo")
     private String tenantLogo;
-
-    /** 系统账户（Y是 N否） */
-    private String isChange;
 
     /** 租户账号修改次数 */
     @Excel(name = "租户账号修改次数")
@@ -99,14 +97,6 @@ public class Tenant extends BaseEntity {
 
     public String getTenantLogo() {
         return tenantLogo;
-    }
-
-    public String getIsChange() {
-        return isChange;
-    }
-
-    public void setIsChange(String isChange) {
-        this.isChange = isChange;
     }
 
     public void setTenantNameFrequency(Long tenantNameFrequency) {

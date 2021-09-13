@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.tenant.domain.Strategy;
+import com.xueyi.tenant.api.domain.strategy.Strategy;
 import com.xueyi.tenant.service.IStrategyService;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;

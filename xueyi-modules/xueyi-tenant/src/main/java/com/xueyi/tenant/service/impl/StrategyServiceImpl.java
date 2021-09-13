@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.xueyi.common.datascope.annotation.DataScope;
 import org.springframework.transaction.annotation.Transactional;
 import com.xueyi.tenant.mapper.StrategyMapper;
-import com.xueyi.tenant.domain.Strategy;
+import com.xueyi.tenant.api.domain.strategy.Strategy;
 import com.xueyi.tenant.service.IStrategyService;
 
 /**

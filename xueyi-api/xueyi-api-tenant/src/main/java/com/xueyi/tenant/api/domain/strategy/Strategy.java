@@ -1,4 +1,4 @@
-package com.xueyi.tenant.domain;
+package com.xueyi.tenant.api.domain.strategy;
 
 import java.util.List;
 
@@ -30,9 +30,6 @@ public class Strategy extends BaseEntity {
 
     /** 是否有主数据源 */
     private Boolean hasMain;
-
-    /** 是否可修改 */
-    private Long isChange;
 
     /** 状态（0正常 1停用） */
     private String status;
@@ -78,14 +75,6 @@ public class Strategy extends BaseEntity {
 
     public void setHasMain(Boolean hasMain) {
         this.hasMain = hasMain;
-    }
-
-    public Long getIsChange() {
-        return isChange;
-    }
-
-    public void setIsChange(Long isChange) {
-        this.isChange = isChange;
     }
 
     public void setStatus(String status) {

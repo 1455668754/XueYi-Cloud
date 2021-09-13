@@ -14,7 +14,7 @@ import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.feign.RemoteEnterpriseService;
 import com.xueyi.tenant.api.domain.source.Source;
-import com.xueyi.tenant.domain.Strategy;
+import com.xueyi.tenant.api.domain.strategy.Strategy;
 import com.xueyi.tenant.mapper.StrategyMapper;
 import com.xueyi.tenant.service.ICreationService;
 import io.seata.spring.annotation.GlobalTransactional;

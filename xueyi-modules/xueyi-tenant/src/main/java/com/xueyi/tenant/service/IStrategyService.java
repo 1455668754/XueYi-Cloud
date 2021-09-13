@@ -2,7 +2,7 @@ package com.xueyi.tenant.service;
 
 import java.util.List;
 
-import com.xueyi.tenant.domain.Strategy;
+import com.xueyi.tenant.api.domain.strategy.Strategy;
 
 /**
  * 数据源策略 业务层

@@ -92,10 +92,13 @@
       </el-row>
 
       <el-table v-loading="loading" :data="strategyList" @selection-change="handleSelectionChange" ref="dataTable"
-                row-key="strategyId"
-      >
+                row-key="strategyId">
         <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-        <el-table-column label="策略Id" align="center" prop="strategyId" class-name="allowDrag" min-width="120"/>
+        <el-table-column label="序号" align="center" class-name="allowDrag" min-width="120">
+          <template slot-scope="scope">
+            <span>{{ queryParams.pageSize * (queryParams.pageNum - 1) + scope.$index + 1 }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="策略名称" align="center" prop="name" class-name="allowDrag" min-width="120"/>
         <el-table-column label="数据源数量" align="center" prop="sourceAmount" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
@@ -109,7 +112,7 @@
               active-value="0"
               inactive-value="1"
               @change="handleStatusChange(scope.row)"
-              :disabled="scope.row.isChange === '1'"
+              :disabled="scope.row.isChange === 'Y'"
             ></el-switch>
           </template>
         </el-table-column>
