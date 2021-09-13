@@ -45,14 +45,14 @@ public class SeparationServiceImpl implements ISeparationService {
     }
 
     /**
-     * 查询数据源
+     * 根据Id查询数据源及其分离策略
      *
      * @param source 数据源
      * @return 数据源
      */
     @Override
-    public Source selectTenantSeparationById(Source source) {
-        return sourceMapper.mainSelectTenantSeparationById(source);
+    public Source mainSelectSeparationById(Source source) {
+        return sourceMapper.mainSelectSeparationById(source);
     }
 
     /**

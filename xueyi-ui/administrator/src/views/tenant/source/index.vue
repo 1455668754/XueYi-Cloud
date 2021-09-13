@@ -200,7 +200,6 @@
     <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        {{ containReadList }}
         <el-form-item label="数据源名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入数据源名称"/>
         </el-form-item>
@@ -261,9 +260,21 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" :loading="submitLoading" @click="submitForm" v-if="form.databaseType !== '1'">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm" v-if="form.databaseType !== '1'">确 定
+        </el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
+    </el-dialog>
+
+    <!-- 添加或修改数据源对话框 -->
+    <el-dialog :title="title" :visible.sync="openSeparation" width="650px" append-to-body v-dialogDrag
+               v-dialogDragHeight>
+      {{ separationList }}
+      <el-transfer
+        v-model="separationList"
+        :props="separationProps"
+        :data="containReadList"
+        :titles="separationTitles"/>
     </el-dialog>
   </div>
 </template>
@@ -299,14 +310,19 @@ export default {
       oldSourceList: [],
       // 具备读 数据源集合
       containReadList: [],
+      // 源分离配置数组
+      separationList: [],
+      //源分离配置穿梭框标题
+      separationTitles: ["未使用读源", "当前读源"],
       // 排序保存按钮显示
       sortVisible: false,
       // 排序参数
-      sortable:null,
+      sortable: null,
       // 弹出层标题
       title: '',
       // 是否显示弹出层
       open: false,
+      openSeparation: false,
       // 数据源类型字典
       databaseTypeOptions: [],
       // 读写类型字典
@@ -325,6 +341,11 @@ export default {
       },
       // 表单参数
       form: {},
+      //分离设置字段别名
+      separationProps: {
+        key: 'sourceId',
+        label: 'name'
+      },
       // 表单校验
       rules: {
         name: [
@@ -393,6 +414,7 @@ export default {
         sort: 0,
         status: '0'
       }
+      this.separationList = []
       this.resetForm('form')
       this.submitLoading = false
     },
@@ -433,13 +455,31 @@ export default {
     handleDeploy(row) {
       this.reset()
       readSeparation({sourceId: row.sourceId, type: row.type}).then(response => {
-        this.containReadList = response.data
+        this.containReadList = []
+        for (let data of response.data) {
+          this.containReadList.push({
+            sourceId: {sourceId: data.sourceId, slave: data.slave},
+            // sourceId: data.sourceId,
+            name: data.name
+            // disabled: data.sourceId === row.sourceId
+          })
+        }
       })
-      getSource({sourceId: row.sourceId}).then(response => {
+      getSeparation({sourceId: row.sourceId}).then(response => {
         this.form = response.data
-        this.open = true
-        this.title = '配置分离策略'
+        for (let data of response.data.values) {
+          this.separationList.push({
+              sourceId: data.sourceId, slave: data.slave
+          })
+        }
+        this.openSeparation = true
+        this.title = this.form.name + '分离策略'
       })
+      // getSource({sourceId: row.sourceId}).then(response => {
+      //   this.form = response.data
+      //   this.openSeparation = true
+      //   this.title = '配置分离策略'
+      // })
     },
     /** 修改数据源地址 */
     databaseUrlChange() {
@@ -477,7 +517,7 @@ export default {
               this.getList()
             })
           }
-        }else{
+        } else {
           this.submitLoading = false
         }
       })
@@ -514,7 +554,8 @@ export default {
         this.getList()
         this.sortVisible = false
         this.msgSuccess('保存成功')
-      }).catch(() => {})
+      }).catch(() => {
+      })
     },
     /** 排序开关 */
     handleSortable(sortable) {

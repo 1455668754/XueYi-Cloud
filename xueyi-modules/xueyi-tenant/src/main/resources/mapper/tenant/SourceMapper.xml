@@ -61,10 +61,9 @@
 
     <sql id="subVo">
         select e.source_id, e.name, e.database_type, e.slave, e.type, e.sort, e.status,
-               b.source_id as sub_source_id, b.name as sub_name, b.database_type as sub_database_type, b.slave as sub_slave, b.type as sub_type, b.sort as sub_sort, b.status as sub_status
+               ts.read_id as sub_source_id, ts.read_slave as sub_slave
         from xy_tenant_source e
                  left join xy_tenant_separation ts on ts.write_id = e.source_id
-                 left join xy_tenant_source b on b.source_id = ts.read_id
     </sql>
 
     <select id="mainSelectSourceList" parameterType="Source" resultMap="SourceResult">
@@ -96,9 +95,9 @@
         order by e.sort
     </select>
 
-    <select id="selectTenantSeparationById" parameterType="Source" resultMap="SourceResult">
+    <select id="mainSelectSeparationById" parameterType="Source" resultMap="SourceResult">
         <include refid="subVo"/>
-        where e.source_id = #{sourceId} and e.status = '0' and e.del_flag = 0
+        where e.source_id = #{sourceId} and e.del_flag = 0
     </select>
 
     <insert id="mainInsertSource" parameterType="Source">

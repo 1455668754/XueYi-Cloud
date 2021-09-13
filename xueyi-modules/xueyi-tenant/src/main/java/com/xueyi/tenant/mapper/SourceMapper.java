@@ -45,12 +45,12 @@ public interface SourceMapper {
     public List<Source> mainSelectContainWriteList(Source source);
 
     /**
-     * 查询数据源
+     * 根据Id查询数据源及其分离策略
      *
      * @param source 数据源
      * @return 数据源
      */
-    public Source mainSelectTenantSeparationById(Source source);
+    public Source mainSelectSeparationById(Source source);
 
     /**
      * 新增数据源

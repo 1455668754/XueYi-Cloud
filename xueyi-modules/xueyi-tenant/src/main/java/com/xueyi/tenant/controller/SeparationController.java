@@ -43,12 +43,12 @@ public class SeparationController extends BaseController {
     }
 
     /**
-     * 获取数据源详细信息
+     * 获取数据源及其分离策略详细信息
      */
     @PreAuthorize(hasPermi = "tenant:separation:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(Source source) {
-        return AjaxResult.success(separationService.selectTenantSeparationById(source));
+        return AjaxResult.success(separationService.mainSelectSeparationById(source));
     }
 
     /**

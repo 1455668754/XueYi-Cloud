@@ -28,12 +28,12 @@ public interface ISeparationService {
     public List<Source> mainSelectContainWriteList(Source source);
 
     /**
-     * 查询数据源
+     * 根据Id查询数据源及其分离策略
      *
      * @param source 数据源
      * @return 数据源
      */
-    public Source selectTenantSeparationById(Source source);
+    public Source mainSelectSeparationById(Source source);
 
     /**
      * 修改数据源
