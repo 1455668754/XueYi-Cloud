@@ -25,7 +25,7 @@
         <association property="strategy"    column="sub_strategy_id" javaType="TenantStrategy" resultMap="strategyResult" />
     </resultMap>
 
-    <resultMap type="TenantStrategy" id="strategyResult">
+    <resultMap type="Strategy" id="strategyResult">
         <id     property="strategyId"               column="sub_strategy_id"            />
         <result property="name"                     column="sub_name"                   />
         <result property="status"                   column="sub_status"                 />
