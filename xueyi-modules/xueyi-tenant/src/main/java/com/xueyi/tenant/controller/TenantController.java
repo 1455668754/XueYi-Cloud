@@ -53,7 +53,7 @@ public class TenantController extends BaseController
     public TableDataInfo list(Tenant tenant)
     {
         startPage();
-        List<Tenant> list = tenantService.selectTenantList(tenant);
+        List<Tenant> list = tenantService.mainSelectTenantList(tenant);
         return getDataTable(list);
     }
 
@@ -65,7 +65,7 @@ public class TenantController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, Tenant tenant) throws IOException
     {
-        List<Tenant> list = tenantService.selectTenantList(tenant);
+        List<Tenant> list = tenantService.mainSelectTenantList(tenant);
         ExcelUtil<Tenant> util = new ExcelUtil<Tenant>(Tenant.class);
         util.exportExcel(response, list, "租户信息数据");
     }
@@ -77,7 +77,7 @@ public class TenantController extends BaseController
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(Tenant tenant)
     {
-        return AjaxResult.success(tenantService.selectTenantById(tenant));
+        return AjaxResult.success(tenantService.mainSelectTenantById(tenant));
     }
 
     /**
@@ -90,10 +90,10 @@ public class TenantController extends BaseController
     {
         Tenant check = new Tenant();
         check.setTenantName(tenant.getTenantName());
-        if (UserConstants.NOT_UNIQUE.equals(tenantService.checkTenantNameUnique(check))) {
+        if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(check))) {
             return AjaxResult.error("新增失败，该租户账号已存在，请修改后重试！");
         }
-        return toAjax(tenantService.insertTenant(tenant));
+        return toAjax(tenantService.mainInsertTenant(tenant));
     }
 
     /**
@@ -110,7 +110,7 @@ public class TenantController extends BaseController
         }
         Tenant tenant = new Tenant();
         tenant.setTenantName(register.getEnterpriseName());
-        if (UserConstants.NOT_UNIQUE.equals(tenantService.checkTenantNameUnique(tenant))) {
+        if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(tenant))) {
             return R.fail("注册租户'" + register.getEnterpriseSystemName() + "'失败，注册账号已存在");
         }
         //租户信息
@@ -135,7 +135,7 @@ public class TenantController extends BaseController
         user.setProfile(register.getProfile());
         user.setPassword(register.getPassword());
         tenant.getParams().put("user",user);
-        return R.ok(tenantService.registerTenant(tenant));
+        return R.ok(tenantService.mainRegisterTenant(tenant));
     }
 
     /**
@@ -149,7 +149,7 @@ public class TenantController extends BaseController
         if(tenant.getIsChange().equals("Y")){
             return AjaxResult.error("禁止操作系统租户");
         }
-        return toAjax(tenantService.updateTenant(tenant));
+        return toAjax(tenantService.mainUpdateTenant(tenant));
     }
 
     /**
@@ -160,7 +160,7 @@ public class TenantController extends BaseController
     @PutMapping(value = "/sort")
     public AjaxResult updateSort(@RequestBody Tenant tenant)
     {
-        return toAjax(tenantService.updateTenantSort(tenant));
+        return toAjax(tenantService.mainUpdateTenantSort(tenant));
     }
 
     /**
@@ -171,6 +171,6 @@ public class TenantController extends BaseController
     @DeleteMapping
     public AjaxResult remove(@RequestBody Tenant tenant)
     {
-        return toAjax(tenantService.deleteTenantByIds(tenant));
+        return toAjax(tenantService.mainDeleteTenantByIds(tenant));
     }
 }

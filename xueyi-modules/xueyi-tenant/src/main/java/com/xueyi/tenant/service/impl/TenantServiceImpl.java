@@ -14,9 +14,9 @@ import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.feign.RemoteEnterpriseService;
 import com.xueyi.tenant.api.domain.source.Source;
-import com.xueyi.tenant.domain.TenantStrategy;
-import com.xueyi.tenant.mapper.TenantStrategyMapper;
-import com.xueyi.tenant.service.ITenantCreationService;
+import com.xueyi.tenant.domain.Strategy;
+import com.xueyi.tenant.mapper.StrategyMapper;
+import com.xueyi.tenant.service.ICreationService;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,10 +42,10 @@ public class TenantServiceImpl implements ITenantService {
     private ITenantService tenantService;
 
     @Autowired
-    private TenantStrategyMapper tenantStrategyMapper;
+    private StrategyMapper strategyMapper;
 
     @Autowired
-    private ITenantCreationService tenantCreationService;
+    private ICreationService creationService;
 
     @Autowired
     private RemoteEnterpriseService remoteEnterpriseService;
@@ -60,8 +60,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 租户信息
      */
     @Override
-    public List<Tenant> selectTenantList(Tenant tenant) {
-        return tenantMapper.selectTenantList(tenant);
+    public List<Tenant> mainSelectTenantList(Tenant tenant) {
+        return tenantMapper.mainSelectTenantList(tenant);
     }
 
     /**
@@ -71,8 +71,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 租户信息
      */
     @Override
-    public Tenant selectTenantById(Tenant tenant) {
-        return tenantMapper.selectTenantById(tenant);
+    public Tenant mainSelectTenantById(Tenant tenant) {
+        return tenantMapper.mainSelectTenantById(tenant);
     }
 
     /**
@@ -85,21 +85,21 @@ public class TenantServiceImpl implements ITenantService {
     @Transactional
     @GlobalTransactional
     @DataScope(ueAlias = "empty")
-    public int insertTenant(Tenant tenant) {
+    public int mainInsertTenant(Tenant tenant) {
         /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
         tenant.setTenantId(tenant.getSnowflakeId());
-        TenantStrategy search = new TenantStrategy();
+        Strategy search = new Strategy();
         search.setStrategyId(tenant.getStrategyId());
-        TenantStrategy strategy = tenantStrategyMapper.selectTenantStrategyById(search);
+        Strategy strategy = strategyMapper.mainSelectStrategyById(search);
         for (Source source : strategy.getValues()) {
             if (source.getIsMain().equals("Y")) {
                 tenant.setSourceName(source.getSlave());
                 //新建租户时同步新建信息
                 //1.新建租户的部门|岗位|超管用户信息
-                tenantCreationService.organizeCreation(tenant);
+                creationService.organizeCreation(tenant);
                 //1.新建租户的衍生角色&&模块|菜单屏蔽信息
-                tenantCreationService.deriveRoleCreation(tenant);
-                int rows = tenantMapper.insertTenant(tenant);
+                creationService.deriveRoleCreation(tenant);
+                int rows = tenantMapper.mainInsertTenant(tenant);
                 if (rows > 0) {
                     refreshCache(tenant.getTenantId());
                 }
@@ -116,8 +116,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    public Boolean registerTenant(Tenant tenant) {
-        int row = tenantService.insertTenant(tenant);
+    public Boolean mainRegisterTenant(Tenant tenant) {
+        int row = tenantService.mainInsertTenant(tenant);
         return row > 0;
     }
 
@@ -128,8 +128,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    public int updateTenant(Tenant tenant) {
-        int rows = tenantMapper.updateTenant(tenant);
+    public int mainUpdateTenant(Tenant tenant) {
+        int rows = tenantMapper.mainUpdateTenant(tenant);
         if (rows > 0) {
             deleteCache(tenant.getTenantId());
             refreshCache(tenant.getTenantId());
@@ -144,8 +144,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    public int updateTenantSort(Tenant tenant) {
-        return tenantMapper.updateTenantSort(tenant);
+    public int mainUpdateTenantSort(Tenant tenant) {
+        return tenantMapper.mainUpdateTenantSort(tenant);
     }
 
     /**
@@ -155,8 +155,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    public int deleteTenantById(Tenant tenant) {
-        int rows = tenantMapper.deleteTenantById(tenant);
+    public int mainDeleteTenantById(Tenant tenant) {
+        int rows = tenantMapper.mainDeleteTenantById(tenant);
         if (rows > 0) {
             deleteCache(tenant.getTenantId());
             deleteCacheFolder(tenant.getTenantId());
@@ -171,13 +171,13 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    public int deleteTenantByIds(Tenant tenant) {
+    public int mainDeleteTenantByIds(Tenant tenant) {
         List<Long> Ids = (List<Long>) tenant.getParams().get("Ids");
         int rows = 0;
         Tenant delTenant = new Tenant();
         for (Long Id : Ids) {
             delTenant.setTenantId(Id);
-            rows += deleteTenantById(delTenant);
+            rows += mainDeleteTenantById(delTenant);
         }
         return rows;
     }
@@ -189,8 +189,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    public String checkTenantNameUnique(Tenant tenant) {
-        Tenant info = tenantMapper.checkTenantNameUnique(tenant);
+    public String mainCheckTenantNameUnique(Tenant tenant) {
+        Tenant info = tenantMapper.mainCheckTenantNameUnique(tenant);
         if (StringUtils.isNotNull(info)) {
             return UserConstants.NOT_UNIQUE;
         }

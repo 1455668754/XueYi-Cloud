@@ -12,7 +12,7 @@ import com.xueyi.common.core.web.domain.BaseEntity;
  *
  * @author xueyi
  */
-public class TenantStrategy extends BaseEntity {
+public class Strategy extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 

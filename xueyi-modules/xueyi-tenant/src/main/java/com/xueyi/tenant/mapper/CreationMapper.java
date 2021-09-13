@@ -9,7 +9,7 @@ import com.xueyi.tenant.domain.Tenant;
  *
  * @author xueyi
  */
-public interface TenantCreationMapper {
+public interface CreationMapper {
 
     /**
      * 创建新租户部门

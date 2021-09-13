@@ -8,8 +8,8 @@ import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.tenant.domain.Tenant;
-import com.xueyi.tenant.mapper.TenantCreationMapper;
-import com.xueyi.tenant.service.ITenantCreationService;
+import com.xueyi.tenant.mapper.CreationMapper;
+import com.xueyi.tenant.service.ICreationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -21,10 +21,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author xueyi
  */
 @Service
-public class TenantCreationServiceImpl implements ITenantCreationService {
+public class CreationServiceImpl implements ICreationService {
 
     @Autowired
-    private TenantCreationMapper tenantCreationMapper;
+    private CreationMapper creationMapper;
 
     /**
      * 租户新增-创建组织信息
@@ -61,9 +61,9 @@ public class TenantCreationServiceImpl implements ITenantCreationService {
         if (!tenant.getParams().containsKey("user")) {
             tenant.getParams().put("user", user);
         }
-        d = tenantCreationMapper.createDeptByTenantId(tenant);
-        p = tenantCreationMapper.createPostByTenantId(tenant);
-        u = tenantCreationMapper.createUserByTenantId(tenant);
+        d = creationMapper.createDeptByTenantId(tenant);
+        p = creationMapper.createPostByTenantId(tenant);
+        u = creationMapper.createUserByTenantId(tenant);
         return d + p + u;
     }
 
@@ -94,8 +94,8 @@ public class TenantCreationServiceImpl implements ITenantCreationService {
         deriveTenant.setType(RoleConstants.ENTERPRISE_DERIVE_TYPE);
         deriveTenant.setRoleName("租户衍生" + deriveTenantId);
         tenant.getParams().put("deriveRole", deriveTenant);
-        r = tenantCreationMapper.createRoleByTenantId(tenant);
-        or = tenantCreationMapper.createOrganizeRoleByTenantId(tenant);
+        r = creationMapper.createRoleByTenantId(tenant);
+        or = creationMapper.createOrganizeRoleByTenantId(tenant);
         return r + or;
     }
 }

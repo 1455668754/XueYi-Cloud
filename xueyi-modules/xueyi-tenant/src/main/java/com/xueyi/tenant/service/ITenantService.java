@@ -17,7 +17,7 @@ public interface ITenantService {
      * @param tenant 租户信息
      * @return 租户信息集合
      */
-    public List<Tenant> selectTenantList(Tenant tenant);
+    public List<Tenant> mainSelectTenantList(Tenant tenant);
 
     /**
      * 查询租户信息
@@ -25,7 +25,7 @@ public interface ITenantService {
      * @param tenant 租户信息
      * @return 租户信息
      */
-    public Tenant selectTenantById(Tenant tenant);
+    public Tenant mainSelectTenantById(Tenant tenant);
 
     /**
      * 新增租户信息
@@ -33,7 +33,7 @@ public interface ITenantService {
      * @param tenant 租户信息
      * @return 结果
      */
-    public int insertTenant(Tenant tenant);
+    public int mainInsertTenant(Tenant tenant);
 
     /**
      * 注册租户信息
@@ -41,7 +41,7 @@ public interface ITenantService {
      * @param tenant 租户信息
      * @return 结果
      */
-    public Boolean registerTenant(Tenant tenant);
+    public Boolean mainRegisterTenant(Tenant tenant);
 
     /**
      * 修改租户信息
@@ -49,7 +49,7 @@ public interface ITenantService {
      * @param tenant 租户信息
      * @return 结果
      */
-    public int updateTenant(Tenant tenant);
+    public int mainUpdateTenant(Tenant tenant);
 
     /**
      * 修改租户信息排序
@@ -57,7 +57,7 @@ public interface ITenantService {
      * @param tenant 租户信息
      * @return 结果
      */
-    public int updateTenantSort(Tenant tenant);
+    public int mainUpdateTenantSort(Tenant tenant);
 
     /**
      * 删除租户信息信息
@@ -65,7 +65,7 @@ public interface ITenantService {
      * @param tenant 租户信息
      * @return 结果
      */
-    public int deleteTenantById(Tenant tenant);
+    public int mainDeleteTenantById(Tenant tenant);
 
     /**
      * 批量删除租户信息
@@ -73,7 +73,7 @@ public interface ITenantService {
      * @param tenant 租户信息
      * @return 结果
      */
-    public int deleteTenantByIds(Tenant tenant);
+    public int mainDeleteTenantByIds(Tenant tenant);
 
     /**
      * 校验租户账号是否唯一
@@ -81,5 +81,5 @@ public interface ITenantService {
      * @param tenant 租户信息 | tenantName 租户Id
      * @return 结果
      */
-    public String checkTenantNameUnique(Tenant tenant);
+    public String mainCheckTenantNameUnique(Tenant tenant);
 }

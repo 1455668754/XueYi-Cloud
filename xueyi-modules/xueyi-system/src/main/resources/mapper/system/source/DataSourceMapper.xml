@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="loadDataSources">
-        select ts1.slave as master_name, tss.status as is_main,ts2.slave as slave_name
+        select ts1.slave as master_name, tss.is_main as is_main,ts2.slave as slave_name
         from xy_tenant t
         left join xy_tenant_strategy_source tss on tss.strategy_id = t.strategy_id
         left join xy_tenant_source ts1 on ts1.source_id = tss.source_id

@@ -1,6 +1,5 @@
 package com.xueyi.tenant.domain;
 
-import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.xueyi.common.core.annotation.Excel;
@@ -49,7 +48,7 @@ public class Tenant extends BaseEntity {
     private String status;
 
     /** 策略信息 */
-    private TenantStrategy strategy;
+    private Strategy strategy;
 
     /** 系统-菜单组（菜单权限） */
     private Long[] systemMenuIds;
@@ -126,11 +125,11 @@ public class Tenant extends BaseEntity {
         return status;
     }
 
-    public TenantStrategy getStrategy() {
+    public Strategy getStrategy() {
         return strategy;
     }
 
-    public void setStrategy(TenantStrategy strategy) {
+    public void setStrategy(Strategy strategy) {
         this.strategy = strategy;
     }
 

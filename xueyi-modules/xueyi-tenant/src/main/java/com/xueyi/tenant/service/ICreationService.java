@@ -7,7 +7,7 @@ import com.xueyi.tenant.domain.Tenant;
  *
  * @author xueyi
  */
-public interface ITenantCreationService {
+public interface ICreationService {
 
     /**
      * 租户新增-创建组织信息

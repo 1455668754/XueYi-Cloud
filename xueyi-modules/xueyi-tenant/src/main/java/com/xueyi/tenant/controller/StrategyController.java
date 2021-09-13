@@ -1,26 +1,22 @@
 package com.xueyi.tenant.controller;
 
 import java.util.List;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.tenant.domain.TenantStrategy;
-import com.xueyi.tenant.service.ITenantStrategyService;
+import com.xueyi.tenant.domain.Strategy;
+import com.xueyi.tenant.service.IStrategyService;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.page.TableDataInfo;
 
 /**
@@ -30,19 +26,19 @@ import com.xueyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/strategy")
-public class TenantStrategyController extends BaseController {
+public class StrategyController extends BaseController {
 
     @Autowired
-    private ITenantStrategyService tenantStrategyService;
+    private IStrategyService tenantStrategyService;
 
     /**
      * 查询数据源策略列表
      */
     @PreAuthorize(hasPermi = "tenant:strategy:list")
     @GetMapping("/list")
-    public TableDataInfo list(TenantStrategy tenantStrategy) {
+    public TableDataInfo list(Strategy strategy) {
         startPage();
-        List<TenantStrategy> list = tenantStrategyService.selectTenantStrategyList(tenantStrategy);
+        List<Strategy> list = tenantStrategyService.mainSelectStrategyList(strategy);
         return getDataTable(list);
     }
 
@@ -50,8 +46,8 @@ public class TenantStrategyController extends BaseController {
      * 查询数据源策略列表（排除停用）
      */
     @GetMapping("/exclude")
-    public AjaxResult exclude(TenantStrategy tenantStrategy) {
-        return AjaxResult.success(tenantStrategyService.selectTenantStrategyListExclude(tenantStrategy));
+    public AjaxResult exclude(Strategy strategy) {
+        return AjaxResult.success(tenantStrategyService.mainSelectStrategyListExclude(strategy));
     }
 
     /**
@@ -59,8 +55,8 @@ public class TenantStrategyController extends BaseController {
      */
     @PreAuthorize(hasPermi = "tenant:strategy:query")
     @GetMapping(value = "/byId")
-    public AjaxResult getInfo(TenantStrategy tenantStrategy) {
-        return AjaxResult.success(tenantStrategyService.selectTenantStrategyById(tenantStrategy));
+    public AjaxResult getInfo(Strategy strategy) {
+        return AjaxResult.success(tenantStrategyService.mainSelectStrategyById(strategy));
     }
 
     /**
@@ -69,8 +65,8 @@ public class TenantStrategyController extends BaseController {
     @PreAuthorize(hasPermi = "tenant:strategy:add")
     @Log(title = "数据源策略", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TenantStrategy tenantStrategy) {
-        return toAjax(tenantStrategyService.insertTenantStrategy(tenantStrategy));
+    public AjaxResult add(@RequestBody Strategy strategy) {
+        return toAjax(tenantStrategyService.mainInsertStrategy(strategy));
     }
 
     /**
@@ -79,11 +75,11 @@ public class TenantStrategyController extends BaseController {
     @PreAuthorize(hasPermi = "tenant:strategy:edit")
     @Log(title = "数据源策略", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TenantStrategy tenantStrategy) {
-        if (tenantStrategy.getIsChange()!= null && tenantStrategy.getIsChange() == 1) {
+    public AjaxResult edit(@RequestBody Strategy strategy) {
+        if (strategy.getIsChange()!= null && strategy.getIsChange() == 1) {
             return AjaxResult.error("禁止操作默认策略");
         }
-        return toAjax(tenantStrategyService.updateTenantStrategy(tenantStrategy));
+        return toAjax(tenantStrategyService.mainUpdateStrategy(strategy));
     }
 
     /**
@@ -92,8 +88,8 @@ public class TenantStrategyController extends BaseController {
     @PreAuthorize(hasPermi = "tenant:strategy:edit")
     @Log(title = "数据源策略", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
-    public AjaxResult updateSort(@RequestBody TenantStrategy tenantStrategy) {
-        return toAjax(tenantStrategyService.updateTenantStrategySort(tenantStrategy));
+    public AjaxResult updateSort(@RequestBody Strategy strategy) {
+        return toAjax(tenantStrategyService.mainUpdateStrategySort(strategy));
     }
 
     /**
@@ -102,7 +98,7 @@ public class TenantStrategyController extends BaseController {
     @PreAuthorize(hasPermi = "tenant:strategy:remove")
     @Log(title = "数据源策略", businessType = BusinessType.DELETE)
     @DeleteMapping
-    public AjaxResult remove(@RequestBody TenantStrategy tenantStrategy) {
-        return toAjax(tenantStrategyService.deleteTenantStrategyByIds(tenantStrategy));
+    public AjaxResult remove(@RequestBody Strategy strategy) {
+        return toAjax(tenantStrategyService.mainDeleteStrategyByIds(strategy));
     }
 }
