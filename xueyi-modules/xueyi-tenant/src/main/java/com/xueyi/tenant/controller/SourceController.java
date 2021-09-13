@@ -24,10 +24,10 @@ import com.xueyi.common.core.web.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/source")
-public class TenantSourceController extends BaseController {
+public class SourceController extends BaseController {
 
     @Autowired
-    private ISourceService tenantSourceService;
+    private ISourceService sourceService;
 
     /**
      * 查询数据源列表
@@ -36,7 +36,7 @@ public class TenantSourceController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(Source source) {
         startPage();
-        List<Source> list = tenantSourceService.mainSelectSourceList(source);
+        List<Source> list = sourceService.mainSelectSourceList(source);
         return getDataTable(list);
     }
 
@@ -46,7 +46,7 @@ public class TenantSourceController extends BaseController {
     @PreAuthorize(hasPermi = "tenant:source:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(Source source) {
-        return AjaxResult.success(tenantSourceService.mainSelectSourceBySourceId(source));
+        return AjaxResult.success(sourceService.mainSelectSourceBySourceId(source));
     }
 
     /**
@@ -56,7 +56,7 @@ public class TenantSourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Source source) {
-        return toAjax(tenantSourceService.mainInsertSource(source));
+        return toAjax(sourceService.mainInsertSource(source));
     }
 
     /**
@@ -72,7 +72,7 @@ public class TenantSourceController extends BaseController {
         int update;
         Source check = new Source();
         check.setSourceId(source.getSourceId());
-        Source oldSource = tenantSourceService.mainSelectSourceBySourceId(check);
+        Source oldSource = sourceService.mainSelectSourceBySourceId(check);
         if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.DISABLE, source.getStatus())) {
             ds = TenantConstants.SYNC_TYPE_DELETE;
         } else if (StringUtils.equals(TenantConstants.DISABLE, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, source.getStatus())) {
@@ -91,10 +91,10 @@ public class TenantSourceController extends BaseController {
             source.setPassword(oldSource.getPassword());
         }
         if (StringUtils.equals(TenantConstants.SOURCE_WRITE, source.getType()) && StringUtils.equals(TenantConstants.NORMAL, source.getStatus())) {
-            if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && tenantSourceService.mainCheckSeparationSourceByWriteId(check) == 0) {
+            if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && sourceService.mainCheckSeparationSourceByWriteId(check) == 0) {
                 source.setStatus(oldSource.getStatus());
                 if (key) {
-                    update = tenantSourceService.mainUpdateSource(source, ds);
+                    update = sourceService.mainUpdateSource(source, ds);
                     if (update == 0) {
                         return AjaxResult.error("修改失败，请检查修改信息，且该数据源未配置从数据源,无法启用！");
                     } else {
@@ -106,10 +106,10 @@ public class TenantSourceController extends BaseController {
             }
         } else if (StringUtils.equals(TenantConstants.DISABLE, source.getStatus())) {
             if (StringUtils.equals(TenantConstants.SOURCE_WRITE, source.getType()) || StringUtils.equals(TenantConstants.SOURCE_READ_WRITE, source.getType())) {
-                if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && tenantSourceService.mainCheckStrategySourceBySourceId(check) > 0) {
+                if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && sourceService.mainCheckStrategySourceBySourceId(check) > 0) {
                     if (key) {
                         source.setStatus(oldSource.getStatus());
-                        update = tenantSourceService.mainUpdateSource(source, ds);
+                        update = sourceService.mainUpdateSource(source, ds);
                         if (update == 0) {
                             return AjaxResult.error("修改失败，请检查修改信息，该数据源已被应用于策略,无法禁用！");
                         } else {
@@ -120,10 +120,10 @@ public class TenantSourceController extends BaseController {
                     }
                 }
             } else if (StringUtils.equals(TenantConstants.SOURCE_READ, source.getType())) {
-                if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && tenantSourceService.mainCheckSeparationSourceByReadId(check) > 0) {
+                if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && sourceService.mainCheckSeparationSourceByReadId(check) > 0) {
                     if (key) {
                         source.setStatus(oldSource.getStatus());
-                        update = tenantSourceService.mainUpdateSource(source, ds);
+                        update = sourceService.mainUpdateSource(source, ds);
                         if (update == 0) {
                             return AjaxResult.error("修改失败，请检查修改信息，该数据源已被应用于主从库,无法禁用！");
                         } else {
@@ -135,7 +135,7 @@ public class TenantSourceController extends BaseController {
                 }
             }
         }
-        return toAjax(tenantSourceService.mainUpdateSource(source, ds));
+        return toAjax(sourceService.mainUpdateSource(source, ds));
     }
 
     /**
@@ -145,7 +145,7 @@ public class TenantSourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
     public AjaxResult updateSort(@RequestBody Source source) {
-        return toAjax(tenantSourceService.mainUpdateSourceSort(source));
+        return toAjax(sourceService.mainUpdateSourceSort(source));
     }
 
     /**
@@ -162,8 +162,8 @@ public class TenantSourceController extends BaseController {
             Source check = new Source();
             String sourceId = String.valueOf(Ids.get(i));
             check.setSourceId(Long.valueOf(sourceId));
-            Source oldSource = tenantSourceService.mainSelectSourceBySourceId(check);
-            if (StringUtils.equals(TenantConstants.MASTER_SOURCE, oldSource.getDatabaseType()) || ((StringUtils.equals(TenantConstants.SOURCE_WRITE, oldSource.getType()) || StringUtils.equals(TenantConstants.SOURCE_READ_WRITE, oldSource.getType())) && tenantSourceService.mainCheckStrategySourceBySourceId(check) > 0) || (StringUtils.equals(TenantConstants.SOURCE_READ, oldSource.getType()) && tenantSourceService.mainCheckSeparationSourceByReadId(check) > 0)) {
+            Source oldSource = sourceService.mainSelectSourceBySourceId(check);
+            if (StringUtils.equals(TenantConstants.MASTER_SOURCE, oldSource.getDatabaseType()) || ((StringUtils.equals(TenantConstants.SOURCE_WRITE, oldSource.getType()) || StringUtils.equals(TenantConstants.SOURCE_READ_WRITE, oldSource.getType())) && sourceService.mainCheckStrategySourceBySourceId(check) > 0) || (StringUtils.equals(TenantConstants.SOURCE_READ, oldSource.getType()) && sourceService.mainCheckSeparationSourceByReadId(check) > 0)) {
                 Ids.remove(i);
                 key = true;
             } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus())) {
@@ -176,7 +176,7 @@ public class TenantSourceController extends BaseController {
         if (DsIds.size() <= 0) {
             return AjaxResult.error("主数据源或已被应用于策略或主从的数据源无法被删除！");
         }
-        int res = tenantSourceService.mainDeleteSourceByIds(DsIds);
+        int res = sourceService.mainDeleteSourceByIds(DsIds);
         if(key){
             return AjaxResult.error("已被应用于策略或主从的数据源未成功删除！");
         }

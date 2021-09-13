@@ -49,8 +49,14 @@
     </sql>
 
     <sql id="selectVo">
-        select e.source_id, e.name, e.database_type, e.is_change, e.slave, e.driver_class_name, e.url, e.url_prepend, e.url_append, e.username, e.password, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
+        select e.source_id, e.name, e.database_type, e.is_change, e.slave, e.driver_class_name, e.url_prepend, e.url_append, e.username, e.password, e.type, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time
         from xy_tenant_source e
+    </sql>
+
+    <sql id="containVo">
+        select e.source_id, e.name, e.database_type, e.is_change, e.slave, e.type, e.status
+        from xy_tenant_source e
+        left join xy_tenant_separation ts on ts.read_id = e.source_id
     </sql>
 
     <sql id="subVo">
@@ -77,25 +83,14 @@
         where e.source_id = #{sourceId} and e.del_flag = 0
     </select>
 
-    <select id="selectTenantSeparationList" parameterType="Source" resultMap="SourceResult">
-        <include refid="subVo"/>
-        where ( e.type = '0' or e.type = '2' )
-        and e.status = '0' and e.del_flag = 0 and ( b.source_id is null or ( b.source_id is not null and b.status = '0' and b.del_flag = 0 ) )
-        <if test="name != null  and name != ''"> and e.name like concat('%', #{name}, '%')</if>
-        <if test="databaseType != null  and databaseType != ''"> and e.database_type = #{databaseType}</if>
-        <if test="slave != null  and slave != ''"> and e.slave = #{slave}</if>
-        order by e.sort
-    </select>
-
-    <select id="selectContainReadList" parameterType="Source" resultMap="SourceResult">
-        <include refid="listVo"/>
-        left join xy_tenant_separation ts on ts.read_id = e.source_id
+    <select id="mainSelectContainReadList" parameterType="Source" resultMap="SourceResult">
+        <include refid="containVo"/>
         where e.status = '0' and e.del_flag = 0 and ( ( e.type = '1' and ts.read_id is null ) or ( ts.write_id = #{sourceId} )
         <if test="sourceId != null"> or (e.type = '0' and e.source_id = #{sourceId} )</if> )
         order by e.sort
     </select>
 
-    <select id="selectContainWriteList" parameterType="Source" resultMap="SourceResult">
+    <select id="mainSelectContainWriteList" parameterType="Source" resultMap="SourceResult">
         <include refid="listVo"/>
         where e.status = '0' and e.del_flag = 0 and ( e.type = '0' or e.type = '2' ) and e.slave != 'master'
         order by e.sort
@@ -193,10 +188,10 @@
         <if test="type != null and type == '0'"> and read_id != #{sourceId}</if>
     </delete>
 
-    <insert id="batchTenantSeparation" parameterType="Source">
-        insert into xy_tenant_separation( write_id, read_id) values
+    <insert id="mainBatchSeparation" parameterType="Source">
+        insert into xy_tenant_separation( write_id, write_slave, read_id, read_slave) values
         <foreach item="item" index="index" collection="values" separator=",">
-            ( #{sourceId}, #{item.sourceId} )
+            ( #{sourceId}, #{slave}, #{item.sourceId}, #{item.slave} )
         </foreach>
     </insert>
 

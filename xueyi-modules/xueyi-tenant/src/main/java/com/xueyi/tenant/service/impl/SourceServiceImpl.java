@@ -58,7 +58,7 @@ public class SourceServiceImpl implements ISourceService {
     @Transactional
     @DataScope(ueAlias = "empty")
     public int mainInsertSource(Source source) {
-        source.setSlave((source.getType().equals(TenantConstants.SOURCE_WRITE)? "slave": "master") + source.getSnowflakeId().toString());
+        source.setSlave((source.getType().equals(TenantConstants.SOURCE_READ) ? "slave" : "master") + source.getSnowflakeId().toString());
         // 将数据新增的的数据源添加到数据源库
         source.setSyncType(TenantConstants.SYNC_TYPE_ADD);
         DSUtils.addDs(source);
@@ -66,11 +66,12 @@ public class SourceServiceImpl implements ISourceService {
         if (source.getType().equals(TenantConstants.SOURCE_READ_WRITE)) {
             Source value = new Source();
             value.setSourceId(source.getSnowflakeId());
+            value.setSlave(source.getSlave());
             List<Source> values = new ArrayList<>();
             values.add(value);
             source.setValues(values);
             source.setSourceId(source.getSnowflakeId());
-            sourceMapper.mainBatchTenantSeparation(source);
+            sourceMapper.mainBatchSeparation(source);
         }
         return sourceMapper.mainInsertSource(source);
     }
@@ -79,12 +80,11 @@ public class SourceServiceImpl implements ISourceService {
      * 修改数据源
      *
      * @param source 数据源
-     * @param ds           数据源新增|更新|删除判断
+     * @param ds     数据源新增|更新|删除判断
      * @return 结果
      */
     @Override
     public int mainUpdateSource(Source source, int ds) {
-
         if (ds != TenantConstants.SYNC_TYPE_UNCHANGED) {
             if (ds == TenantConstants.SYNC_TYPE_REFRESH) {
                 DSUtils.delDs(source.getSlave());

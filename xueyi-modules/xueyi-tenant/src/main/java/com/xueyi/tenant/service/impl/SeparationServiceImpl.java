@@ -8,7 +8,7 @@ import com.xueyi.tenant.mapper.SourceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.xueyi.tenant.service.ITenantSeparationService;
+import com.xueyi.tenant.service.ISeparationService;
 
 /**
  * 数据源 业务层处理
@@ -17,21 +17,10 @@ import com.xueyi.tenant.service.ITenantSeparationService;
  */
 @Service
 @DS("#main")
-public class TenantSeparationServiceImpl implements ITenantSeparationService {
+public class SeparationServiceImpl implements ISeparationService {
 
     @Autowired
-    private SourceMapper tenantSourceMapper;
-
-    /**
-     * 查询数据源列表
-     *
-     * @param source 数据源
-     * @return 数据源
-     */
-    @Override
-    public List<Source> mainSelectSeparationList(Source source) {
-        return tenantSourceMapper.mainSelectSeparationList(source);
-    }
+    private SourceMapper sourceMapper;
 
     /**
      * 查询 只读 数据源集合
@@ -40,8 +29,8 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService {
      * @return 数据源集合
      */
     @Override
-    public List<Source> selectContainReadList(Source source) {
-        return tenantSourceMapper.mainSelectContainReadList(source);
+    public List<Source> mainSelectContainReadList(Source source) {
+        return sourceMapper.mainSelectContainReadList(source);
     }
 
     /**
@@ -51,8 +40,8 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService {
      * @return 数据源集合
      */
     @Override
-    public List<Source> selectContainWriteList(Source source) {
-        return tenantSourceMapper.mainSelectContainWriteList(source);
+    public List<Source> mainSelectContainWriteList(Source source) {
+        return sourceMapper.mainSelectContainWriteList(source);
     }
 
     /**
@@ -63,7 +52,7 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService {
      */
     @Override
     public Source selectTenantSeparationById(Source source) {
-        return tenantSourceMapper.mainSelectTenantSeparationById(source);
+        return sourceMapper.mainSelectTenantSeparationById(source);
     }
 
     /**
@@ -75,9 +64,9 @@ public class TenantSeparationServiceImpl implements ITenantSeparationService {
     @Override
     @Transactional
     public int updateTenantSeparation(Source source) {
-        int k=tenantSourceMapper.mainDeleteTenantSeparationBySourceId(source);
+        int k= sourceMapper.mainDeleteTenantSeparationBySourceId(source);
         if (source.getValues() != null && source.getValues().size() > 0) {
-            tenantSourceMapper.mainBatchTenantSeparation(source);
+            sourceMapper.mainBatchSeparation(source);
         }
         return k;
     }

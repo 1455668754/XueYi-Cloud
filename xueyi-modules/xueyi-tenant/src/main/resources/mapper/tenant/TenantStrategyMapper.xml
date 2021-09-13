@@ -21,7 +21,7 @@
         <collection property="values" javaType="java.util.List" resultMap="valuesResult" />
     </resultMap>
 
-    <resultMap type="TenantSource" id="valuesResult">
+    <resultMap type="Source" id="valuesResult">
         <id     property="sourceId"             column="sub_source_id"          />
         <result property="name"                 column="sub_name"               />
         <result property="isMain"               column="is_main"                />

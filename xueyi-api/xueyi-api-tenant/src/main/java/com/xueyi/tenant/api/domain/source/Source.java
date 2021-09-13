@@ -24,6 +24,9 @@ public class Source extends BaseEntity {
     /** 数据库(0普通数据源 1默认数据源) */
     private String databaseType;
 
+    /** 系统主源（Y是 N否） */
+    private String isChange;
+
     /** 数据源编码 */
     private String slave;
 
@@ -82,6 +85,14 @@ public class Source extends BaseEntity {
 
     public String getDatabaseType() {
         return databaseType;
+    }
+
+    public String getIsChange() {
+        return isChange;
+    }
+
+    public void setIsChange(String isChange) {
+        this.isChange = isChange;
     }
 
     public String getSlave() {
@@ -186,6 +197,7 @@ public class Source extends BaseEntity {
                 .append("sourceId", getSourceId())
                 .append("name", getName())
                 .append("databaseType", getDatabaseType())
+                .append("isChange", getIsChange())
                 .append("slave", getSlave())
                 .append("driverClassName", getDriverClassName())
                 .append("url", getUrl())

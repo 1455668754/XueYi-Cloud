@@ -29,14 +29,6 @@ public interface SourceMapper {
     public Source mainSelectSourceBySourceId(Source source);
 
     /**
-     * 查询数据源列表
-     *
-     * @param source 数据源
-     * @return 数据源集合
-     */
-    public List<Source> mainSelectSeparationList(Source source);
-
-    /**
      * 查询 只读 数据源集合
      *
      * @param source 数据源
@@ -62,7 +54,7 @@ public interface SourceMapper {
 
     /**
      * 新增数据源
-     * 访问控制 empty 租户更新（无前缀） | 控制方法位于TenantSourceServiceImpl insertTenantSource
+     * 访问控制 empty 租户更新（无前缀） | 控制方法位于SourceServiceImpl mainInsertSource
      *
      * @param source 数据源
      * @return 结果
@@ -109,7 +101,7 @@ public interface SourceMapper {
      * @param source 数据源
      * @return 结果
      */
-    public int mainBatchTenantSeparation(Source source);
+    public int mainBatchSeparation(Source source);
 
     /**
      * 通过写数据源Id删除读数据源关联信息

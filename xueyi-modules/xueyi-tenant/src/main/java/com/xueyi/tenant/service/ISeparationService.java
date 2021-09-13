@@ -9,15 +9,7 @@ import com.xueyi.tenant.api.domain.source.Source;
  *
  * @author xueyi
  */
-public interface ITenantSeparationService {
-
-    /**
-     * 查询数据源列表
-     *
-     * @param source 数据源
-     * @return 数据源集合
-     */
-    public List<Source> mainSelectSeparationList(Source source);
+public interface ISeparationService {
 
     /**
      * 查询 只读 数据源集合
@@ -25,7 +17,7 @@ public interface ITenantSeparationService {
      * @param source 数据源
      * @return 数据源集合
      */
-    public List<Source> selectContainReadList(Source source);
+    public List<Source> mainSelectContainReadList(Source source);
 
     /**
      * 查询 含写 数据源集合
@@ -33,7 +25,7 @@ public interface ITenantSeparationService {
      * @param source 数据源
      * @return 数据源集合
      */
-    public List<Source> selectContainWriteList(Source source);
+    public List<Source> mainSelectContainWriteList(Source source);
 
     /**
      * 查询数据源

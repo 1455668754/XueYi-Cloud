@@ -154,6 +154,7 @@
               active-value="0"
               inactive-value="1"
               @change="handleStatusChange(scope.row)"
+              :disabled="scope.row.isChange === 'Y'"
             ></el-switch>
           </template>
         </el-table-column>
@@ -170,10 +171,18 @@
             <el-button
               size="mini"
               type="text"
+              icon="el-icon-edit"
+              @click="handleDeploy(scope.row)"
+              v-hasPermi="['tenant:source:edit']"
+            >分离配置
+            </el-button>
+            <el-button
+              size="mini"
+              type="text"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['tenant:source:remove']"
-              v-if="scope.row.databaseType !== '1'"
+              v-if="scope.row.isChange !== 'Y'"
             >删除
             </el-button>
           </template>
@@ -191,6 +200,7 @@
     <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        {{ containReadList }}
         <el-form-item label="数据源名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入数据源名称"/>
         </el-form-item>
@@ -244,6 +254,7 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
+              :disabled="form.isChange === 'Y'"
             >{{ dict.dictLabel }}
             </el-radio>
           </el-radio-group>
@@ -260,6 +271,7 @@
 <script>
 import {listSource, getSource, delSource, addSource, updateSource, updateSourceSort} from '@/api/tenant/source'
 import Sortable from 'sortablejs'
+import {getSeparation, readSeparation} from "@/api/tenant/separation"
 
 export default {
   name: 'Source',
@@ -285,6 +297,8 @@ export default {
       sourceList: [],
       // 数据源表格原始数据
       oldSourceList: [],
+      // 具备读 数据源集合
+      containReadList: [],
       // 排序保存按钮显示
       sortVisible: false,
       // 排序参数
@@ -415,6 +429,18 @@ export default {
         this.title = '修改数据源'
       })
     },
+    /** 配置按钮操作 */
+    handleDeploy(row) {
+      this.reset()
+      readSeparation({sourceId: row.sourceId, type: row.type}).then(response => {
+        this.containReadList = response.data
+      })
+      getSource({sourceId: row.sourceId}).then(response => {
+        this.form = response.data
+        this.open = true
+        this.title = '配置分离策略'
+      })
+    },
     /** 修改数据源地址 */
     databaseUrlChange() {
       this.form.url = this.form.urlPrepend + this.form.urlAppend
@@ -472,12 +498,6 @@ export default {
         this.msgSuccess('删除成功')
       }).catch(() => {
       })
-    },
-    /** 导出按钮操作 */
-    handleExport() {
-      this.download('tenant/source/export', {
-        ...this.queryParams
-      }, `数据源数据.xlsx`)
     },
     /** 保存排序按钮操作 */
     handleSort() {
