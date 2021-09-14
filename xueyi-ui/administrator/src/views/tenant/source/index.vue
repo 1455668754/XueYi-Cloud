@@ -71,30 +71,6 @@
         </el-col>
         <el-col :span="1.5">
           <el-button
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-            v-hasPermi="['tenant:source:edit']"
-          >修改
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="danger"
-            plain
-            icon="el-icon-delete"
-            size="mini"
-            :disabled="multiple"
-            @click="handleDelete"
-            v-hasPermi="['tenant:source:remove']"
-          >删除
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
             type="warning"
             plain
             icon="el-icon-sort"
@@ -108,9 +84,7 @@
         <right-toolbar :showSearch.sync="showSearch" @controlSortable="handleSortable" @queryTable="getList"/>
       </el-row>
 
-      <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange" ref="dataTable"
-                row-key="sourceId">
-        <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
+      <el-table v-loading="loading" :data="sourceList" ref="dataTable" row-key="sourceId">
         <el-table-column label="编号" align="center" prop="sourceId" class-name="allowDrag" min-width="70">
           <template slot-scope="scope">
             <span>{{ (queryParams.pageNum - 1) * queryParams.pageSize + 1 + scope.$index }}</span>
@@ -295,13 +269,6 @@ export default {
       loading: true,
       // 提交状态
       submitLoading: false,
-      // 选中数组
-      ids: [],
-      idNames: [],
-      // 非单个禁用
-      single: true,
-      // 非多个禁用
-      multiple: true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -384,10 +351,10 @@ export default {
     },
     /** 查询字典信息 */
     getDict() {
-      this.getDicts('sys_tenant_resource_type').then(response => {
+      this.getDicts('sys_database_type').then(response => {
         this.databaseTypeOptions = response.data
       })
-      this.getDicts('sys_tenant_read_type').then(response => {
+      this.getDicts('sys_source_type').then(response => {
         this.typeOptions = response.data
       })
       this.getDicts('sys_normal_disable').then(response => {
@@ -434,13 +401,6 @@ export default {
       this.resetForm('queryForm')
       this.handleQuery()
     },
-    // 多选框选中数据
-    handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.sourceId)
-      this.idNames = selection.map(item => item.name)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
-    },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset()
@@ -450,8 +410,7 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset()
-      const sourceId = row.sourceId || this.ids[0]
-      getSource({sourceId: sourceId}).then(response => {
+      getSource({sourceId: row.sourceId}).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改数据源'
@@ -515,7 +474,7 @@ export default {
       if (this.form.values.length > 0) {
         updateSeparation(this.form).then(response => {
           this.msgSuccess('配置成功')
-          this.open = false
+          this.openSeparation = false
           this.getList()
         })
       } else {
@@ -531,7 +490,7 @@ export default {
           if (this.form.sourceId != null) {
             updateSource(this.form).then(response => {
               this.msgSuccess('修改成功')
-              this.open = false
+              this.op = false
               this.getList()
             })
           } else {
@@ -548,15 +507,12 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const sourceIds = row.sourceId || this.ids
-      const names = row.name || this.idNames
-      let that = this
-      this.$confirm('是否确认删除数据源"' + names + '"?', '警告', {
+      this.$confirm('是否确认删除数据源"' + row.name + '"?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(function () {
-        return delSource(that.updateParamIds(sourceIds))
+        return delSource({sourceId: row.sourceId})
       }).then(() => {
         this.getList()
         this.msgSuccess('删除成功')

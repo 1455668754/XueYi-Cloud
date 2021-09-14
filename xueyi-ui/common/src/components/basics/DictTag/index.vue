@@ -6,16 +6,13 @@
             v-if="item.listClass == 'default' || item.listClass == ''"
             :key="item.dictValue"
             :index="index"
-            :class="item.cssClass"
-        >{{ item.dictLabel }}</span
-        >
+            :class="item.cssClass">{{ item.dictLabel }}</span>
         <el-tag
             v-else
             :key="item.dictValue"
             :index="index"
             :type="item.listClass == 'primary' ? '' : item.listClass"
-            :class="item.cssClass"
-        >
+            :class="item.cssClass">
           {{ item.dictLabel }}
         </el-tag>
       </template>

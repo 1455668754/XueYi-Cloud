@@ -90,6 +90,7 @@ public class Constants {
 
     /** 系统默认值 是 */
     public static final String SYSTEM_DEFAULT_TRUE = "Y";
+
     /** 系统默认值 否 */
     public static final String SYSTEM_DEFAULT_FALSE = "N";
 }

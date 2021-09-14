@@ -93,7 +93,7 @@ public interface SourceMapper {
      * @param source 数据源
      * @return 结果
      */
-    public int mainDeleteTenantSeparationByValueId(Source source);
+    public int mainDeleteSeparationByValueId(Source source);
 
     /**
      * 批量新增写-读数据源

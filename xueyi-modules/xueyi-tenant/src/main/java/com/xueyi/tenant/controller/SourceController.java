@@ -3,6 +3,7 @@ package com.xueyi.tenant.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.StringUtils;
@@ -155,31 +156,34 @@ public class SourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody Source source) {
-        boolean key = false;
-        List<Long> Ids = (List<Long>) source.getParams().get("Ids");
-        List<Source> DsIds = new ArrayList<>();
-        for (int i = Ids.size() - 1; i >= 0; i--) {
-            Source check = new Source();
-            String sourceId = String.valueOf(Ids.get(i));
-            check.setSourceId(Long.valueOf(sourceId));
-            Source oldSource = sourceService.mainSelectSourceBySourceId(check);
-            if (StringUtils.equals(TenantConstants.MASTER_SOURCE, oldSource.getDatabaseType()) || ((StringUtils.equals(TenantConstants.SOURCE_WRITE, oldSource.getType()) || StringUtils.equals(TenantConstants.SOURCE_READ_WRITE, oldSource.getType())) && sourceService.mainCheckStrategySourceBySourceId(check) > 0) || (StringUtils.equals(TenantConstants.SOURCE_READ, oldSource.getType()) && sourceService.mainCheckSeparationSourceByReadId(check) > 0)) {
-                Ids.remove(i);
-                key = true;
-            } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus())) {
-                Source delDs = new Source();
-                delDs.setSourceId(oldSource.getSourceId());
-                delDs.setSlave(oldSource.getSlave());
-                DsIds.add(delDs);
-            }
+//        boolean key = false;
+//        List<Long> Ids = (List<Long>) source.getParams().get("Ids");
+//        List<Source> DsIds = new ArrayList<>();
+//        for (int i = Ids.size() - 1; i >= 0; i--) {
+//            Source check = new Source();
+//            String sourceId = String.valueOf(Ids.get(i));
+//            check.setSourceId(Long.valueOf(sourceId));
+//            Source oldSource = sourceService.mainSelectSourceBySourceId(check);
+//            if (StringUtils.equals(TenantConstants.MASTER_SOURCE, oldSource.getDatabaseType()) || ((StringUtils.equals(TenantConstants.SOURCE_WRITE, oldSource.getType()) || StringUtils.equals(TenantConstants.SOURCE_READ_WRITE, oldSource.getType())) && sourceService.mainCheckStrategySourceBySourceId(check) > 0) || (StringUtils.equals(TenantConstants.SOURCE_READ, oldSource.getType()) && sourceService.mainCheckSeparationSourceByReadId(check) > 0)) {
+//                Ids.remove(i);
+//                key = true;
+//            } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus())) {
+//                Source delDs = new Source();
+//                delDs.setSourceId(oldSource.getSourceId());
+//                delDs.setSlave(oldSource.getSlave());
+//                DsIds.add(delDs);
+//            }
+//        }
+        Source check = sourceService.mainSelectSourceBySourceId(source);
+        if(StringUtils.equals(check.getStatus(), TenantConstants.NORMAL)){
+            return AjaxResult.error("请先停用数据源后再删除！");
+        }else if(StringUtils.equals(check.getIsChange(), Constants.SYSTEM_DEFAULT_TRUE)){
+            return AjaxResult.error("系统默认数据源无法被删除！");
+        } else if(StringUtils.equals(check.getType(),TenantConstants.SOURCE_READ) && sourceService.mainCheckSeparationSourceByReadId(check)>0){
+            return AjaxResult.error("该读数据源已被应用于主从，无法直接删除！");
+        }else if(StringUtils.equals(check.getType(),TenantConstants.SOURCE_READ_WRITE) || StringUtils.equals(check.getType(),TenantConstants.SOURCE_WRITE) && sourceService.mainCheckStrategySourceBySourceId(check)>0){
+            return AjaxResult.error("该数据源已被应用于策略，无法直接删除！");
         }
-        if (DsIds.size() <= 0) {
-            return AjaxResult.error("主数据源或已被应用于策略或主从的数据源无法被删除！");
-        }
-        int res = sourceService.mainDeleteSourceByIds(DsIds);
-        if(key){
-            return AjaxResult.error("已被应用于策略或主从的数据源未成功删除！");
-        }
-        return toAjax(res);
+        return toAjax(sourceService.mainDeleteSourceById(check));
     }
 }

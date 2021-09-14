@@ -122,27 +122,8 @@ public class SourceServiceImpl implements ISourceService {
         source.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
         DSUtils.delDs(source.getSlave());
         DSUtils.syncDS(source);
-        sourceMapper.mainDeleteTenantSeparationByValueId(source);
+        sourceMapper.mainDeleteSeparationByValueId(source);
         return sourceMapper.mainDeleteSourceById(source);
-    }
-
-    /**
-     * 批量删除数据源
-     *
-     * @param DsIds 需停用的数据源集合
-     * @return 结果
-     */
-    @Override
-    @Transactional
-    public int mainDeleteSourceByIds(List<Source> DsIds) {
-        for (Source Ds : DsIds) {
-            Ds.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
-            DSUtils.delDs(Ds.getSlave());
-            DSUtils.syncDS(Ds);
-            sourceMapper.mainDeleteSourceById(Ds);
-            sourceMapper.mainDeleteTenantSeparationByValueId(Ds);
-        }
-        return DsIds.size();
     }
 
     /**

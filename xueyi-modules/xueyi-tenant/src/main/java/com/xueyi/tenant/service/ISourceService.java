@@ -61,14 +61,6 @@ public interface ISourceService {
     public int mainDeleteSourceById(Source source);
 
     /**
-     * 批量删除数据源
-     *
-     * @param DsIds 需停用的数据源集合
-     * @return 结果
-     */
-    public int mainDeleteSourceByIds(List<Source> DsIds);
-
-    /**
      * 校验数据源是否已应用于策略
      *
      * @param source 数据源
