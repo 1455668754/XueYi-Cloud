@@ -40,7 +40,7 @@ public class BaseEntity implements Serializable {
     private String isCommon;
 
     /** 系统默认（Y是 N否） */
-    private Long isChange;
+    private String isChange;
 
     /** 更新类型（0正常更新 1状态更新） */
     private String updateType;
@@ -140,11 +140,11 @@ public class BaseEntity implements Serializable {
         this.isCommon = isCommon;
     }
 
-    public Long getIsChange() {
+    public String getIsChange() {
         return isChange;
     }
 
-    public void setIsChange(Long isChange) {
+    public void setIsChange(String isChange) {
         this.isChange = isChange;
     }
 

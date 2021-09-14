@@ -2,6 +2,8 @@ package com.xueyi.tenant.controller;
 
 import java.util.List;
 
+import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -76,7 +78,7 @@ public class StrategyController extends BaseController {
     @Log(title = "数据源策略", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Strategy strategy) {
-        if (strategy.getIsChange()!= null && strategy.getIsChange() == 1) {
+        if (StringUtils.equals(strategy.getIsChange(), Constants.SYSTEM_DEFAULT_TRUE)) {
             return AjaxResult.error("禁止操作默认策略");
         }
         return toAjax(tenantStrategyService.mainUpdateStrategy(strategy));
