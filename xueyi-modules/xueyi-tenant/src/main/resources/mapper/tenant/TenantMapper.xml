@@ -22,7 +22,7 @@
         <result property="updateName"   	        column="update_name"                />
         <result property="updateTime"               column="update_time"                />
         <result property="remark"                   column="remark"                     />
-        <association property="strategy"    column="sub_strategy_id" javaType="TenantStrategy" resultMap="strategyResult" />
+        <association property="strategy"    column="sub_strategy_id" javaType="Strategy" resultMap="strategyResult" />
     </resultMap>
 
     <resultMap type="Strategy" id="strategyResult">

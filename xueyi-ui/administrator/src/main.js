@@ -15,7 +15,7 @@ import './permission' // permission control
 import App from './App'
 import store from './store'
 import router from './router'
-import directive from './directive' //directive
+import directive from '@common/directive' //directive
 import {download} from '@utils/request'
 
 import {getDicts, getConfigKey} from "@api/common/common"

@@ -3,7 +3,7 @@
  * Copyright (c) 2019 ruoyi
  */
 
-import store from '~../../../../src/store'
+import store from '~../../../src/store'
 
 export default {
   inserted(el, binding, vnode) {
