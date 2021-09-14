@@ -97,17 +97,6 @@
           <el-button
             type="warning"
             plain
-            icon="el-icon-download"
-            size="mini"
-            @click="handleExport"
-            v-hasPermi="['tenant:source:export']"
-          >导出
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
-            type="warning"
-            plain
             icon="el-icon-sort"
             size="mini"
             @click="handleSort"
@@ -120,8 +109,7 @@
       </el-row>
 
       <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange" ref="dataTable"
-                row-key="sourceId"
-      >
+                row-key="sourceId">
         <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
         <el-table-column label="编号" align="center" prop="sourceId" class-name="allowDrag" min-width="70">
           <template slot-scope="scope">
@@ -136,15 +124,12 @@
         </el-table-column>
         <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.type === SOURCE_TYPE.SOURCE_READ_WRITE">读&写</el-tag>
-            <el-tag type="success" v-else-if="scope.row.type === SOURCE_TYPE.SOURCE_WRITE">只读</el-tag>
-            <el-tag type="warning" v-else-if="scope.row.type === SOURCE_TYPE.SOURCE_READ">只写</el-tag>
+            <dict-tag :options="typeOptions" :value="scope.row.type"/>
           </template>
         </el-table-column>
         <el-table-column label="数据源类型" align="center" prop="databaseType" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
-            <el-tag type="success" v-if="scope.row.databaseType === DATABASE_TYPE.SLAVE_SOURCE">子数据源</el-tag>
-            <el-tag type="danger" v-else-if="scope.row.databaseType === DATABASE_TYPE.MASTER_SOURCE">主数据源</el-tag>
+            <dict-tag :options="databaseTypeOptions" :value="scope.row.databaseType"/>
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center" prop="status" class-name="allowDrag" min-width="120">
@@ -155,7 +140,7 @@
               inactive-value="1"
               @change="handleStatusChange(scope.row)"
               :disabled="scope.row.isChange === SYSTEM_DEFAULT.TRUE"
-            ></el-switch>
+            />
           </template>
         </el-table-column>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width allowDrag" min-width="120">
@@ -171,10 +156,11 @@
             <el-button
               size="mini"
               type="text"
-              icon="el-icon-edit"
+              icon="el-icon-setting"
               @click="handleDeploy(scope.row)"
-              v-hasPermi="['tenant:source:edit']"
-            >分离配置
+              v-hasPermi="['tenant:separation:edit']"
+              v-if="scope.row.type !== SOURCE_TYPE.SOURCE_READ"
+            >主从配置
             </el-button>
             <el-button
               size="mini"
