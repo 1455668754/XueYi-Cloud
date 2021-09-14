@@ -16,7 +16,7 @@ public class UserConstants {
     /** 异常状态 */
     public static final String EXCEPTION = "1";
 
-    /** 状态更新指令 */
+    /** 更新状态指令 */
     public static final String STATUS_UPDATE_OPERATION = "1";
 
     /** 用户正常状态 */

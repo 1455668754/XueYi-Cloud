@@ -57,6 +57,7 @@ module.exports = {
         '@views': resolve('node_modules/common/src/views'),
         '@utils': resolve('node_modules/common/src/utils'),
         '@assets': resolve('node_modules/common/src/assets'),
+        '@constant': resolve('node_modules/common/src/constant'),
         '@components': resolve('node_modules/common/src/components'),
         '@basicsComponents': resolve('node_modules/common/src/components/basics'),
         '@customComponents': resolve('node_modules/common/src/components/custom')

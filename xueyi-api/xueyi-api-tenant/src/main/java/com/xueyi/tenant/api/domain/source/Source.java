@@ -21,7 +21,7 @@ public class Source extends BaseEntity {
     /** 数据源名称 */
     private String name;
 
-    /** 数据库(0普通数据源 1默认数据源) */
+    /** 数据源类型(0子数据源 1主数据源) */
     private String databaseType;
 
     /** 数据源编码 */

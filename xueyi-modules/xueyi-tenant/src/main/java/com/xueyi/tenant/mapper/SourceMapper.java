@@ -109,7 +109,7 @@ public interface SourceMapper {
      * @param source 数据源
      * @return 结果
      */
-    public int mainDeleteTenantSeparationBySourceId(Source source);
+    public int mainDeleteSeparationBySourceId(Source source);
 
     /**
      * 校验数据源是否已应用于策略

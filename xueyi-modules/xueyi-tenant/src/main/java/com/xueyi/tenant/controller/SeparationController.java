@@ -58,6 +58,6 @@ public class SeparationController extends BaseController {
     @Log(title = "数据源读写分离", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Source source) {
-        return toAjax(separationService.updateTenantSeparation(source));
+        return toAjax(separationService.mainUpdateSeparation(source));
     }
 }

@@ -63,8 +63,8 @@ public class SeparationServiceImpl implements ISeparationService {
      */
     @Override
     @Transactional
-    public int updateTenantSeparation(Source source) {
-        int k= sourceMapper.mainDeleteTenantSeparationBySourceId(source);
+    public int mainUpdateSeparation(Source source) {
+        int k= sourceMapper.mainDeleteSeparationBySourceId(source);
         if (source.getValues() != null && source.getValues().size() > 0) {
             sourceMapper.mainBatchSeparation(source);
         }

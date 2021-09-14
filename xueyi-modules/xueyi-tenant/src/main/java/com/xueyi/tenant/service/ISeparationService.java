@@ -41,5 +41,5 @@ public interface ISeparationService {
      * @param source 数据源
      * @return 结果
      */
-    public int updateTenantSeparation(Source source);
+    public int mainUpdateSeparation(Source source);
 }

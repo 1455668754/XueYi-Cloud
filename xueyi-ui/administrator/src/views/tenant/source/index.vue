@@ -136,15 +136,15 @@
         </el-table-column>
         <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.type === '0'">读&写</el-tag>
-            <el-tag type="success" v-else-if="scope.row.type === '1'">只读</el-tag>
-            <el-tag type="warning" v-else-if="scope.row.type === '2'">只写</el-tag>
+            <el-tag v-if="scope.row.type === SOURCE_TYPE.SOURCE_READ_WRITE">读&写</el-tag>
+            <el-tag type="success" v-else-if="scope.row.type === SOURCE_TYPE.SOURCE_WRITE">只读</el-tag>
+            <el-tag type="warning" v-else-if="scope.row.type === SOURCE_TYPE.SOURCE_READ">只写</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="数据源类型" align="center" prop="databaseType" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
-            <el-tag type="success" v-if="scope.row.databaseType === '0'">从数据源</el-tag>
-            <el-tag type="danger" v-else-if="scope.row.databaseType === '1'">主数据源</el-tag>
+            <el-tag type="success" v-if="scope.row.databaseType === DATABASE_TYPE.SLAVE_SOURCE">子数据源</el-tag>
+            <el-tag type="danger" v-else-if="scope.row.databaseType === DATABASE_TYPE.MASTER_SOURCE">主数据源</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center" prop="status" class-name="allowDrag" min-width="120">
@@ -154,7 +154,7 @@
               active-value="0"
               inactive-value="1"
               @change="handleStatusChange(scope.row)"
-              :disabled="scope.row.isChange === 'Y'"
+              :disabled="scope.row.isChange === SYSTEM_DEFAULT.TRUE"
             ></el-switch>
           </template>
         </el-table-column>
@@ -182,7 +182,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['tenant:source:remove']"
-              v-if="scope.row.isChange !== 'Y'"
+              v-if="scope.row.isChange === SYSTEM_DEFAULT.FALSE"
             >删除
             </el-button>
           </template>
@@ -248,19 +248,21 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status"
-                          :disabled="form.isChange === 'N' || ( form.sourceId == undefined && form.type === '2' )">
+                          :disabled="form.isChange === SYSTEM_DEFAULT.FALSE || ( form.sourceId == undefined && form.type === SOURCE_TYPE.SOURCE_READ )">
             <el-radio
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-              :disabled="form.isChange === 'Y'"
+              :disabled="form.isChange === SYSTEM_DEFAULT.TRUE"
             >{{ dict.dictLabel }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
+      <div>{{ form }}</div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" :loading="submitLoading" @click="submitForm" v-if="form.isChange === 'N'">确 定
+        <el-button type="primary" :loading="submitLoading" @click="submitForm"
+                   v-if="form.isChange !== SYSTEM_DEFAULT.TRUE">确 定
         </el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -286,15 +288,23 @@
 </template>
 
 <script>
-import {listSource, getSource, delSource, addSource, updateSource, updateSourceSort} from '@/api/tenant/source'
 import Sortable from 'sortablejs'
-import {getSeparation, readSeparation} from "@/api/tenant/separation"
+import {listSource, getSource, delSource, addSource, updateSource, updateSourceSort} from '@/api/tenant/source'
+import {getSeparation, readSeparation, updateSeparation} from "@/api/tenant/separation"
+import {SYSTEM_DEFAULT, STATUS, STATUS_UPDATE_OPERATION} from '@constant/constants'
+import {DATABASE_TYPE, SOURCE_TYPE} from '@constant/tenantConstants'
 
 export default {
   name: 'Source',
   components: {},
   data() {
     return {
+      //常量区
+      SYSTEM_DEFAULT: SYSTEM_DEFAULT,
+      STATUS: STATUS,
+      STATUS_UPDATE_OPERATION: STATUS_UPDATE_OPERATION,
+      DATABASE_TYPE: DATABASE_TYPE,
+      SOURCE_TYPE: SOURCE_TYPE,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -413,16 +423,16 @@ export default {
         sourceId: null,
         name: null,
         slave: null,
-        databaseType: '0',
+        databaseType: DATABASE_TYPE.SLAVE_SOURCE,
         driverClassName: 'com.mysql.cj.jdbc.Driver',
         url: null,
         urlPrepend: 'jdbc:mysql://localhost:3306/',
         urlAppend: '?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8',
         username: null,
         password: null,
-        type: '0',
+        type: SOURCE_TYPE.SOURCE_READ_WRITE,
         sort: 0,
-        status: '0'
+        status: STATUS.NORMAL
       }
       this.separationList = []
       this.resetForm('form')
@@ -490,25 +500,41 @@ export default {
     },
     /** 修改数据源读写类型 | 仅新增 */
     TypeChange() {
-      if (this.form.sourceId == undefined && this.form.type === '2') {
-        this.form.status = '1'
+      if (this.form.sourceId == undefined && this.form.type === SOURCE_TYPE.SOURCE_WRITE) {
+        this.form.status = STATUS.DISABLE
       }
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
-      updateSource({sourceId: row.sourceId, type: row.type, status: row.status, updateType: '1'}).then(response => {
+      updateSource({
+        sourceId: row.sourceId,
+        type: row.type,
+        status: row.status,
+        updateType: STATUS_UPDATE_OPERATION
+      }).then(response => {
         this.msgSuccess('修改成功')
       }).catch(() => {
-        row.status = row.status === '0' ? '1' : '0'
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     submitSeparationForm() {
+      this.form.values = []
       for (let index of this.separationList) {
         for (let data of this.containReadList) {
-          if(index === data.sourceId){
+          if (index === data.sourceId) {
             this.form.values.push(data.value)
           }
         }
+      }
+      if (this.form.values.length > 0) {
+        updateSeparation(this.form).then(response => {
+          this.msgSuccess('配置成功')
+          this.open = false
+          this.getList()
+        })
+      } else {
+        this.msgWarning('请添加读数据源后再保存')
+        this.submitLoading = false
       }
     },
     /** 提交按钮 */

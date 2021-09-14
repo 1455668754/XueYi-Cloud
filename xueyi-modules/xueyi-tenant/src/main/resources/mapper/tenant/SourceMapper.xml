@@ -181,7 +181,7 @@
         </foreach> )
     </delete>
 
-    <delete id="deleteTenantSeparationBySourceId" parameterType="Source">
+    <delete id="mainDeleteSeparationBySourceId" parameterType="Source">
         delete from xy_tenant_separation
         where write_id = #{sourceId}
         <if test="type != null and type == '0'"> and read_id != #{sourceId}</if>
