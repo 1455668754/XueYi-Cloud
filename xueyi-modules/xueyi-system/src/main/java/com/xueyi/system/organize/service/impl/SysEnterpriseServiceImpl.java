@@ -10,7 +10,6 @@ import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.source.mapper.DataSourceMapper;
-import com.xueyi.system.api.domain.source.Source;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +28,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
 
     @Autowired
     private SysEnterpriseMapper enterpriseMapper;
-
-    @Autowired
-    private DataSourceMapper dataSourceMapper;
 
     @Autowired
     private TokenService tokenService;
