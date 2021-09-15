@@ -41,23 +41,17 @@ public class CreationServiceImpl implements ICreationService {
         Long postId = IdUtil.getSnowflake(0, 0).nextId();
         Long userId = IdUtil.getSnowflake(0, 0).nextId();
         // 1.建立新租户初始部门信息
-        SysDept dept = tenant.getParams().containsKey("dept") ? (SysDept) tenant.getParams().get("dept") : new SysDept();
-        dept.setDeptId(deptId);
+        SysDept dept = tenant.getParams().containsKey("dept") ? (SysDept) tenant.getParams().get("dept") : new SysDept(deptId);
         if (!tenant.getParams().containsKey("dept")) {
             tenant.getParams().put("dept", dept);
         }
         // 2.建立新租户初始岗位信息
-        SysPost post = tenant.getParams().containsKey("post") ? (SysPost) tenant.getParams().get("post") : new SysPost();
-        post.setDeptId(deptId);
-        post.setPostId(postId);
+        SysPost post = tenant.getParams().containsKey("post") ? (SysPost) tenant.getParams().get("post") : new SysPost(postId, deptId);
         if (!tenant.getParams().containsKey("post")) {
             tenant.getParams().put("post", post);
         }
         // 3.建立新租户初始用户信息
-        SysUser user = tenant.getParams().containsKey("user") ? (SysUser) tenant.getParams().get("user") : new SysUser();
-        user.setDeptId(deptId);
-        user.setPostId(postId);
-        user.setUserId(userId);
+        SysUser user = tenant.getParams().containsKey("user") ? (SysUser) tenant.getParams().get("user") : new SysUser(userId, postId, deptId);
         if (!tenant.getParams().containsKey("user")) {
             tenant.getParams().put("user", user);
         }
@@ -81,16 +75,14 @@ public class CreationServiceImpl implements ICreationService {
         Long deriveAdministratorId = IdUtil.getSnowflake(0, 0).nextId();
         Long deriveTenantId = IdUtil.getSnowflake(0, 0).nextId();
         // 1.建立新租户初始租管衍生角色信息
-        SysRole deriveAdministrator = tenant.getParams().containsKey("role") ? (SysRole) tenant.getParams().get("role") : new SysRole();
-        deriveAdministrator.setRoleId(deriveAdministratorId);
+        SysRole deriveAdministrator = tenant.getParams().containsKey("role") ? (SysRole) tenant.getParams().get("role") : new SysRole(deriveAdministratorId);
         deriveAdministrator.setType(RoleConstants.ADMINISTRATOR_DERIVE_TYPE);
         deriveAdministrator.setRoleName("超管衍生" + deriveAdministratorId);
         if (!tenant.getParams().containsKey("role")) {
             tenant.getParams().put("role", deriveAdministrator);
         }
         // 2.建立新租户初始租户衍生角色信息
-        SysRole deriveTenant = new SysRole();
-        deriveTenant.setRoleId(deriveTenantId);
+        SysRole deriveTenant = new SysRole(deriveTenantId);
         deriveTenant.setType(RoleConstants.ENTERPRISE_DERIVE_TYPE);
         deriveTenant.setRoleName("租户衍生" + deriveTenantId);
         tenant.getParams().put("deriveRole", deriveTenant);

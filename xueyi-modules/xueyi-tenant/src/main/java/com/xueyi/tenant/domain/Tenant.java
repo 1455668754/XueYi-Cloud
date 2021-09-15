@@ -51,6 +51,18 @@ public class Tenant extends BaseEntity {
     /** 系统-菜单组（菜单权限） */
     private Long[] systemMenuIds;
 
+    public Tenant() {
+
+    }
+
+    public Tenant(Long tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public Tenant(String tenantName) {
+        this.tenantName = tenantName;
+    }
+
     public Long getTenantId() {
         return tenantId;
     }

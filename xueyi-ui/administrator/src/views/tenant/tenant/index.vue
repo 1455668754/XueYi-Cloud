@@ -546,6 +546,8 @@ export default {
           this.msgSuccess("修改成功")
           this.openMenuScope = false
           this.getList()
+        }).catch(() => {
+          this.submitLoading = false
         })
       }else{
         this.submitLoading = false
@@ -562,6 +564,8 @@ export default {
                 this.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
+              }).catch(() => {
+                this.submitLoading = false
               })
             } else {
               this.submitLoading = false
@@ -575,6 +579,8 @@ export default {
               this.msgSuccess('新增成功')
               this.open = false
               this.getList()
+            }).catch(() => {
+              this.submitLoading = false
             })
           }
         }else{

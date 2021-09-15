@@ -165,8 +165,7 @@ public class SysUserController extends BaseController {
     @PreAuthorize(hasPermi = "system:user:query")
     @GetMapping(value = {"/", "/{userId}"})
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
-        SysUser user = new SysUser();
-        user.setUserId(userId);
+        SysUser user = new SysUser(userId);
         return AjaxResult.success(userService.selectUserById(user));
     }
 
@@ -245,8 +244,7 @@ public class SysUserController extends BaseController {
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysUser user) {
         userService.checkUserAllowed(user);
-        SysPost post = new SysPost();
-        post.setPostId(user.getPostId());
+        SysPost post = new SysPost(user.getPostId());
         if (StringUtils.equals(UserConstants.USER_NORMAL, user.getStatus())
                 && UserConstants.POST_DISABLE.equals(postService.checkPostStatus(post))) {
             return AjaxResult.error("启用失败，该用户的归属岗位已被禁用！");

@@ -37,6 +37,15 @@ export function updateSource(data) {
   })
 }
 
+// 修改数据源状态
+export function updateSourceStatus(data) {
+  return request({
+    url: '/tenant/source/status',
+    method: 'put',
+    data: data
+  })
+}
+
 // 修改数据源排序
 export function updateSourceSort(data) {
   return request({

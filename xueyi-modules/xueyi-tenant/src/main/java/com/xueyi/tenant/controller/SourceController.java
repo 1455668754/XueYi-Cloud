@@ -67,76 +67,47 @@ public class SourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Source source) {
-        boolean key;
-        int ds;//0不变 1刷新 2启动 3删除
-        key = !StringUtils.equals(UserConstants.STATUS_UPDATE_OPERATION, source.getUpdateType());
-        int update;
-        Source check = new Source();
-        check.setSourceId(source.getSourceId());
+        return toAjax(sourceService.mainUpdateSource(source));
+    }
+
+    /**
+     * 修改数据源状态
+     */
+    @PreAuthorize(hasPermi = "tenant:source:edit")
+    @Log(title = "数据源", businessType = BusinessType.UPDATE)
+    @PutMapping("/status")
+    public AjaxResult editStatus(@RequestBody Source source) {
+        Source check = new Source(source.getSourceId());
         Source oldSource = sourceService.mainSelectSourceBySourceId(check);
-        if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.DISABLE, source.getStatus())) {
-            ds = TenantConstants.SYNC_TYPE_DELETE;
-        } else if (StringUtils.equals(TenantConstants.DISABLE, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, source.getStatus())) {
-            ds = TenantConstants.SYNC_TYPE_ADD;
-        } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus()) && StringUtils.equals(TenantConstants.NORMAL, source.getStatus()) && !(StringUtils.equals(oldSource.getDriverClassName(), source.getDriverClassName()) && StringUtils.equals(oldSource.getUrl(), source.getUrl()) && StringUtils.equals(oldSource.getUsername(), source.getUsername()) && StringUtils.equals(oldSource.getPassword(), source.getPassword()))) {
-            ds = TenantConstants.SYNC_TYPE_REFRESH;
+
+        if(StringUtils.equals(TenantConstants.NORMAL, source.getStatus())){
+            if(StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_WRITE) && sourceService.mainCheckSeparationSourceByWriteId(check)){
+                return AjaxResult.error("该数据源未配置读数据源,请先进行读写配置再启用！");
+            }
+        }else if(StringUtils.equals(TenantConstants.DISABLE, source.getStatus())){
+            if(StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_READ) && sourceService.mainCheckSeparationSourceByReadId(check)){
+                return AjaxResult.error("该数据源已被应用于读写配置,请先从对应读写配置中取消关联后再禁用！");
+            }else if((StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_READ_WRITE) || StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_WRITE)) && sourceService.mainCheckStrategySourceBySourceId(check)){
+                return AjaxResult.error("该数据源已被应用于数据源策略,请先从对应策略中取消关联后再禁用！");
+            }
+        }
+
+        if (StringUtils.equals(source.getStatus(), oldSource.getStatus())) {
+            source.setSyncType(TenantConstants.SYNC_TYPE_UNCHANGED);
+            return AjaxResult.error("无状态调整！");
         } else {
-            ds = TenantConstants.SYNC_TYPE_UNCHANGED;
-        }
-        source.setSyncType(ds);
-        if (!key && ds != TenantConstants.SYNC_TYPE_UNCHANGED) {
+            if (StringUtils.equals(source.getStatus(), TenantConstants.DISABLE)) {
+                source.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
+            } else if (StringUtils.equals(source.getStatus(), TenantConstants.NORMAL)) {
+                source.setSyncType(TenantConstants.SYNC_TYPE_ADD);
+                source.setDriverClassName(oldSource.getDriverClassName());
+                source.setUrl(oldSource.getUrlPrepend().concat(oldSource.getUrlAppend()));
+                source.setUsername(oldSource.getUsername());
+                source.setPassword(oldSource.getPassword());
+            }
             source.setSlave(oldSource.getSlave());
-            source.setDriverClassName(oldSource.getDriverClassName());
-            source.setUrl(oldSource.getUrl());
-            source.setUsername(oldSource.getUsername());
-            source.setPassword(oldSource.getPassword());
         }
-        if (StringUtils.equals(TenantConstants.SOURCE_WRITE, source.getType()) && StringUtils.equals(TenantConstants.NORMAL, source.getStatus())) {
-            if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && sourceService.mainCheckSeparationSourceByWriteId(check) == 0) {
-                source.setStatus(oldSource.getStatus());
-                if (key) {
-                    update = sourceService.mainUpdateSource(source, ds);
-                    if (update == 0) {
-                        return AjaxResult.error("修改失败，请检查修改信息，且该数据源未配置从数据源,无法启用！");
-                    } else {
-                        return AjaxResult.error("修改成功但启用失败，该数据源未配置从数据源,无法启用！");
-                    }
-                } else {
-                    return AjaxResult.error("启用失败，该数据源未配置从数据源,无法启用！");
-                }
-            }
-        } else if (StringUtils.equals(TenantConstants.DISABLE, source.getStatus())) {
-            if (StringUtils.equals(TenantConstants.SOURCE_WRITE, source.getType()) || StringUtils.equals(TenantConstants.SOURCE_READ_WRITE, source.getType())) {
-                if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && sourceService.mainCheckStrategySourceBySourceId(check) > 0) {
-                    if (key) {
-                        source.setStatus(oldSource.getStatus());
-                        update = sourceService.mainUpdateSource(source, ds);
-                        if (update == 0) {
-                            return AjaxResult.error("修改失败，请检查修改信息，该数据源已被应用于策略,无法禁用！");
-                        } else {
-                            return AjaxResult.error("修改成功但禁用失败，该数据源已被应用于策略,无法禁用！");
-                        }
-                    } else {
-                        return AjaxResult.error("禁用失败，该数据源已被应用于策略,无法禁用！");
-                    }
-                }
-            } else if (StringUtils.equals(TenantConstants.SOURCE_READ, source.getType())) {
-                if (!StringUtils.equals(oldSource.getStatus(), source.getStatus()) && sourceService.mainCheckSeparationSourceByReadId(check) > 0) {
-                    if (key) {
-                        source.setStatus(oldSource.getStatus());
-                        update = sourceService.mainUpdateSource(source, ds);
-                        if (update == 0) {
-                            return AjaxResult.error("修改失败，请检查修改信息，该数据源已被应用于主从库,无法禁用！");
-                        } else {
-                            return AjaxResult.error("修改成功但禁用失败，该数据源已被应用于主从库,无法禁用！");
-                        }
-                    } else {
-                        return AjaxResult.error("禁用失败，该数据源已被应用于策略,无法禁用！");
-                    }
-                }
-            }
-        }
-        return toAjax(sourceService.mainUpdateSource(source, ds));
+        return toAjax(sourceService.mainUpdateSourceStatus(source));
     }
 
     /**
@@ -150,39 +121,17 @@ public class SourceController extends BaseController {
     }
 
     /**
-     * 删除数据源 | 葫芦娃救爷爷，一个个判断是否允许删除
+     * 删除数据源 | 单个删除
      */
     @PreAuthorize(hasPermi = "tenant:source:remove")
     @Log(title = "数据源", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody Source source) {
-//        boolean key = false;
-//        List<Long> Ids = (List<Long>) source.getParams().get("Ids");
-//        List<Source> DsIds = new ArrayList<>();
-//        for (int i = Ids.size() - 1; i >= 0; i--) {
-//            Source check = new Source();
-//            String sourceId = String.valueOf(Ids.get(i));
-//            check.setSourceId(Long.valueOf(sourceId));
-//            Source oldSource = sourceService.mainSelectSourceBySourceId(check);
-//            if (StringUtils.equals(TenantConstants.MASTER_SOURCE, oldSource.getDatabaseType()) || ((StringUtils.equals(TenantConstants.SOURCE_WRITE, oldSource.getType()) || StringUtils.equals(TenantConstants.SOURCE_READ_WRITE, oldSource.getType())) && sourceService.mainCheckStrategySourceBySourceId(check) > 0) || (StringUtils.equals(TenantConstants.SOURCE_READ, oldSource.getType()) && sourceService.mainCheckSeparationSourceByReadId(check) > 0)) {
-//                Ids.remove(i);
-//                key = true;
-//            } else if (StringUtils.equals(TenantConstants.NORMAL, oldSource.getStatus())) {
-//                Source delDs = new Source();
-//                delDs.setSourceId(oldSource.getSourceId());
-//                delDs.setSlave(oldSource.getSlave());
-//                DsIds.add(delDs);
-//            }
-//        }
         Source check = sourceService.mainSelectSourceBySourceId(source);
-        if(StringUtils.equals(check.getStatus(), TenantConstants.NORMAL)){
+        if (StringUtils.equals(check.getStatus(), TenantConstants.NORMAL)) {
             return AjaxResult.error("请先停用数据源后再删除！");
-        }else if(StringUtils.equals(check.getIsChange(), Constants.SYSTEM_DEFAULT_TRUE)){
+        } else if (StringUtils.equals(check.getIsChange(), Constants.SYSTEM_DEFAULT_TRUE)) {
             return AjaxResult.error("系统默认数据源无法被删除！");
-        } else if(StringUtils.equals(check.getType(),TenantConstants.SOURCE_READ) && sourceService.mainCheckSeparationSourceByReadId(check)>0){
-            return AjaxResult.error("该读数据源已被应用于主从，无法直接删除！");
-        }else if(StringUtils.equals(check.getType(),TenantConstants.SOURCE_READ_WRITE) || StringUtils.equals(check.getType(),TenantConstants.SOURCE_WRITE) && sourceService.mainCheckStrategySourceBySourceId(check)>0){
-            return AjaxResult.error("该数据源已被应用于策略，无法直接删除！");
         }
         return toAjax(sourceService.mainDeleteSourceById(check));
     }

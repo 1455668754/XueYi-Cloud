@@ -25,11 +25,23 @@ public class deptPostVo extends BaseEntity
     /** 状态 */
     private String status;
 
-    /** 类型（0部门 1岗位） */
+    /** 类型（0 部门 1 岗位） */
     private String type;
 
     /** 子部门/岗位 */
     private List<deptPostVo> children = new ArrayList<deptPostVo>();
+
+    public deptPostVo() {
+
+    }
+
+    public deptPostVo(Long Uid, Long FUid, String name, String status, String type) {
+        this.Uid = Uid;
+        this.FUid = FUid;
+        this.name = name;
+        this.status = status;
+        this.type = type;
+    }
 
     public Long getUid() {
         return Uid;

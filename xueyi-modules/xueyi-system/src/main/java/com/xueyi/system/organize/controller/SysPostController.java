@@ -109,8 +109,7 @@ public class SysPostController extends BaseController {
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysPost post) {
-        SysDept dept = new SysDept();
-        dept.setDeptId(post.getDeptId());
+        SysDept dept = new SysDept(post.getDeptId());
         if (StringUtils.equals(UserConstants.POST_NORMAL, post.getStatus())
                 && UserConstants.DEPT_DISABLE.equals(deptService.checkDeptStatus(dept))) {
             return AjaxResult.error("启用失败，该岗位的归属部门已被禁用！");

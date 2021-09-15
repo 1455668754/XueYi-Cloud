@@ -88,8 +88,7 @@ public class TenantServiceImpl implements ITenantService {
     public int mainInsertTenant(Tenant tenant) {
         /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
         tenant.setTenantId(tenant.getSnowflakeId());
-        Strategy search = new Strategy();
-        search.setStrategyId(tenant.getStrategyId());
+        Strategy search = new Strategy(tenant.getStrategyId());
         Strategy strategy = strategyMapper.mainSelectStrategyById(search);
         for (Source source : strategy.getValues()) {
             if (source.getIsMain().equals("Y")) {
@@ -174,10 +173,8 @@ public class TenantServiceImpl implements ITenantService {
     public int mainDeleteTenantByIds(Tenant tenant) {
         List<Long> Ids = (List<Long>) tenant.getParams().get("Ids");
         int rows = 0;
-        Tenant delTenant = new Tenant();
         for (Long Id : Ids) {
-            delTenant.setTenantId(Id);
-            rows += mainDeleteTenantById(delTenant);
+            rows += mainDeleteTenantById(new Tenant(Id));
         }
         return rows;
     }

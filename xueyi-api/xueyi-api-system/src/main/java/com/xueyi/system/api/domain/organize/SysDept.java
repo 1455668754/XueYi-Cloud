@@ -19,13 +19,13 @@ public class SysDept extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /** 部门ID */
+    /** 部门Id */
     private Long deptId;
 
     /** 部门编码 */
     private String deptCode;
 
-    /** 父部门ID */
+    /** 父部门Id */
     private Long parentId;
 
     /** 祖级列表 */
@@ -57,6 +57,13 @@ public class SysDept extends BaseEntity {
 
     /** 角色组 */
     private Long[] roleIds;
+
+    public SysDept() {
+    }
+
+    public SysDept(Long deptId) {
+        this.deptId = deptId;
+    }
 
     public Long getDeptId() {
         return deptId;

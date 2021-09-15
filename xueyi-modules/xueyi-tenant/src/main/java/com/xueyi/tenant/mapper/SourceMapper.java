@@ -65,11 +65,21 @@ public interface SourceMapper {
      * 修改数据源
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param source 数据源
+     * @param source 数据源 | sourceId 数据源Id | name 数据源名称
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
     public int mainUpdateSource(Source source);
+
+    /**
+     * 启用/禁用数据源
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param source 数据源 | sourceId 数据源Id | status 状态 | isChange 系统默认
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int mainUpdateSourceStatus(Source source);
 
     /**
      * 修改数据源排序

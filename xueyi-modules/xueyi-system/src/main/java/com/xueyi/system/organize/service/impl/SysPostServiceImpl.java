@@ -92,8 +92,7 @@ public class SysPostServiceImpl implements ISysPostService {
     public int insertPost(SysPost post) {
         // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
         if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
-            SysDept dept = new SysDept();
-            dept.setDeptId(post.getDeptId());
+            SysDept dept = new SysDept(post.getDeptId());
             SysDept info = deptMapper.selectDeptById(dept);
             if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
                 post.setStatus(UserConstants.POST_DISABLE);
@@ -125,8 +124,7 @@ public class SysPostServiceImpl implements ISysPostService {
     public int updatePost(SysPost post) {
         // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
         if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
-            SysDept dept = new SysDept();
-            dept.setDeptId(post.getDeptId());
+            SysDept dept = new SysDept(post.getDeptId());
             SysDept info = deptMapper.selectDeptById(dept);
             if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
                 post.setStatus(UserConstants.POST_DISABLE);
@@ -136,8 +134,7 @@ public class SysPostServiceImpl implements ISysPostService {
                 }
                 updatePostStatus(post);//修改保存岗位状态
             }
-            SysPost check = new SysPost();
-            check.setPostId(post.getPostId());
+            SysPost check = new SysPost(post.getPostId());
             SysPost oldPost = postMapper.selectPostById(check);
             if(StringUtils.isNotNull(info) && !Objects.equals(oldPost.getDeptId(), post.getDeptId())){
                 SysUser user = new SysUser();
@@ -318,21 +315,11 @@ public class SysPostServiceImpl implements ISysPostService {
         List<deptPostVo> deptPostList = new TreeList<>();
         deptPostVo deptPost;
         for (SysDept dept : deptList) {
-            deptPost = new deptPostVo();
-            deptPost.setUid(dept.getDeptId());
-            deptPost.setFUid(dept.getParentId());
-            deptPost.setName("部门|" + dept.getDeptName());
-            deptPost.setStatus(dept.getStatus());
-            deptPost.setType("0");
+            deptPost = new deptPostVo(dept.getDeptId(), dept.getParentId(), "部门|" + dept.getDeptName(), dept.getStatus(), "0");
             deptPostList.add(deptPost);
         }
         for (SysPost post : postList) {
-            deptPost = new deptPostVo();
-            deptPost.setUid(post.getPostId());
-            deptPost.setFUid(post.getDeptId());
-            deptPost.setName("岗位|" + post.getPostName());
-            deptPost.setStatus(post.getStatus());
-            deptPost.setType("1");
+            deptPost = new deptPostVo(post.getPostId(), post.getDeptId(), "岗位|" + post.getPostName(), post.getStatus(), "1");
             deptPostList.add(deptPost);
         }
         List<deptPostVo> trees = buildDeptPostTree(deptPostList);

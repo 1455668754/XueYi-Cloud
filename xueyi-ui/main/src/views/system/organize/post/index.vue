@@ -465,12 +465,16 @@ export default {
               this.msgSuccess("修改成功")
               this.open = false
               this.getList()
+            }).catch(() => {
+              this.submitLoading = false
             })
           } else {
             addPost(this.form).then(response => {
               this.msgSuccess("新增成功")
               this.open = false
               this.getList()
+            }).catch(() => {
+              this.submitLoading = false
             })
           }
         }else{
@@ -486,6 +490,8 @@ export default {
           this.msgSuccess("岗位权限修改成功")
           this.roleOpen = false
           this.getList()
+        }).catch(() => {
+          this.submitLoading = false
         })
       }else{
         this.submitLoading = false

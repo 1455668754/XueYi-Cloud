@@ -113,6 +113,12 @@ public class SysUser extends BaseEntity {
         this.userId = userId;
     }
 
+    public SysUser(Long userId, Long postId, Long deptId) {
+        this.userId = userId;
+        this.postId = postId;
+        this.deptId = deptId;
+    }
+
     public Long getUserId() {
         return userId;
     }

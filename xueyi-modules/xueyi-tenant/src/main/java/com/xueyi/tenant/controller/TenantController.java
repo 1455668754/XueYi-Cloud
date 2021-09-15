@@ -88,8 +88,7 @@ public class TenantController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody Tenant tenant)
     {
-        Tenant check = new Tenant();
-        check.setTenantName(tenant.getTenantName());
+        Tenant check = new Tenant(tenant.getTenantName());
         if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(check))) {
             return AjaxResult.error("新增失败，该租户账号已存在，请修改后重试！");
         }
@@ -108,8 +107,7 @@ public class TenantController extends BaseController
         {
             return R.fail("当前系统没有开启注册功能！");
         }
-        Tenant tenant = new Tenant();
-        tenant.setTenantName(register.getEnterpriseName());
+        Tenant tenant = new Tenant(register.getEnterpriseName());
         if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(tenant))) {
             return R.fail("注册租户'" + register.getEnterpriseSystemName() + "'失败，注册账号已存在");
         }

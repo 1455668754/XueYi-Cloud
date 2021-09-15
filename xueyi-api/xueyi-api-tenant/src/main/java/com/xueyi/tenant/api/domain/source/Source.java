@@ -60,6 +60,13 @@ public class Source extends BaseEntity {
     /** 源同步策略（0不变 1刷新 2启动 3删除） */
     private int syncType;
 
+    public Source() {
+    }
+
+    public Source(Long sourceId) {
+        this.sourceId = sourceId;
+    }
+
     public void setSourceId(Long sourceId) {
         this.sourceId = sourceId;
     }

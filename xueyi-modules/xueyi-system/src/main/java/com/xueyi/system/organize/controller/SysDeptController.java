@@ -123,13 +123,12 @@ public class SysDeptController extends BaseController {
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysDept dept) {
-        SysDept parent = new SysDept();
-        parent.setDeptId(dept.getParentId());
+
         if (StringUtils.equals(UserConstants.DEPT_DISABLE, dept.getStatus())
                 && deptService.checkNormalChildrenCount(dept) > 0) {
             return AjaxResult.error("该部门包含未停用的子部门！");
         } else if (StringUtils.equals(UserConstants.DEPT_NORMAL, dept.getStatus())
-                && UserConstants.DEPT_DISABLE.equals(deptService.checkDeptStatus(parent))) {
+                && UserConstants.DEPT_DISABLE.equals(deptService.checkDeptStatus(new SysDept(dept.getParentId())))) {
             return AjaxResult.error("启用失败，该部门的父级部门已被禁用！");
         }
         return toAjax(deptService.updateDeptStatus(dept));

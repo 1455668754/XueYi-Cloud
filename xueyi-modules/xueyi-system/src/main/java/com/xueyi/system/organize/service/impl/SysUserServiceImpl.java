@@ -133,8 +133,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @DataScope(ueAlias = "empty")
     public int insertUser(SysUser user) {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
-        SysPost post = new SysPost();
-        post.setPostId(user.getPostId());
+        SysPost post = new SysPost(user.getPostId());
         SysPost info = postMapper.selectPostById(post);
         user.setDeptId(info.getDeptId());
         if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
@@ -164,8 +163,7 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public int updateUser(SysUser user) {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
-        SysPost post = new SysPost();
-        post.setPostId(user.getPostId());
+        SysPost post = new SysPost(user.getPostId());
         SysPost info = postMapper.selectPostById(post);
         user.setDeptId(info.getDeptId());
         if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {

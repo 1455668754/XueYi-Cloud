@@ -37,6 +37,14 @@ public class Strategy extends BaseEntity {
     /** 数据源信息 */
     private List<Source> values;
 
+    public Strategy() {
+
+    }
+
+    public Strategy(Long strategyId) {
+        this.strategyId = strategyId;
+    }
+
     public void setStrategyId(Long strategyId) {
         this.strategyId = strategyId;
     }

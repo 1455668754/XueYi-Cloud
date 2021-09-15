@@ -160,13 +160,13 @@
     <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="650px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="数据源名称" prop="name">
+        <el-form-item label="源名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入数据源名称"/>
         </el-form-item>
-        <el-form-item label="数据源编码" prop="slave" v-if="form.sourceId != undefined">
+        <el-form-item label="源编码" prop="slave" v-if="form.sourceId != undefined">
           <el-input v-model="form.slave" readonly/>
         </el-form-item>
-        <el-form-item label="数据源类型">
+        <el-form-item label="源类型">
           <el-radio-group v-model="form.databaseType" disabled>
             <el-radio
               v-for="dict in databaseTypeOptions"
@@ -176,28 +176,29 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="数据源驱动" prop="driverClassName">
-          <el-input v-model="form.driverClassName" placeholder="请输入数据源驱动"/>
+        <el-form-item label="源驱动" prop="driverClassName">
+          <el-input v-model="form.driverClassName" placeholder="请输入数据源驱动" :readonly="form.sourceId != undefined"/>
         </el-form-item>
         <el-form-item label="连接地址" prop="urlPrepend" @input.native="databaseUrlChange">
           <el-input v-model="form.urlPrepend" type="urlPrepend" :autosize="{ minRows: 3, maxRows: 6}"
-                    placeholder="请输入连接地址"/>
+                    placeholder="请输入连接地址" :readonly="form.sourceId != undefined"/>
         </el-form-item>
         <el-form-item label="连接参数" prop="urlAppend" @input.native="databaseUrlChange">
           <el-input v-model="form.urlAppend" type="textarea" :autosize="{ minRows: 3, maxRows: 6}"
-                    placeholder="请输入连接参数"/>
+                    placeholder="请输入连接参数" :readonly="form.sourceId != undefined"/>
         </el-form-item>
         <el-form-item label="连接信息" prop="url">
           <el-input v-model="form.url" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" disabled/>
         </el-form-item>
-        <el-form-item label="数据源账号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入数据源账号"/>
+        <el-form-item label="源账号" prop="username">
+          <el-input v-model="form.username" placeholder="请输入数据源账号" :readonly="form.sourceId != undefined"/>
         </el-form-item>
-        <el-form-item label="数据源密码" prop="password">
-          <el-input v-model="form.password" :show-password="true" placeholder="请输入数据源密码"/>
+        <el-form-item label="源密码" prop="password">
+          <el-input v-model="form.password" :show-password="true" placeholder="请输入数据源密码"
+                    :readonly="form.sourceId != undefined"/>
         </el-form-item>
         <el-form-item label="读写类型">
-          <el-radio-group v-model="form.type" :disabled="form.sourceId !==null" @change="TypeChange">
+          <el-radio-group v-model="form.type" :disabled="form.sourceId != undefined" @change="TypeChange">
             <el-radio
               v-for="dict in typeOptions"
               :key="dict.dictValue"
@@ -207,8 +208,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态">
-          <el-radio-group v-model="form.status"
-                          :disabled="form.isChange === SYSTEM_DEFAULT.FALSE || ( form.sourceId == undefined && form.type === SOURCE_TYPE.SOURCE_READ )">
+          <el-radio-group v-model="form.status" :disabled="form.sourceId != undefined">
             <el-radio
               v-for="dict in statusOptions"
               :key="dict.dictValue"
@@ -219,11 +219,8 @@
           </el-radio-group>
         </el-form-item>
       </el-form>
-      <div>{{ form }}</div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" :loading="submitLoading" @click="submitForm"
-                   v-if="form.isChange !== SYSTEM_DEFAULT.TRUE">确 定
-        </el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -231,16 +228,13 @@
     <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="openSeparation" width="650px" append-to-body v-dialogDrag
                v-dialogDragHeight>
-      <span>separationList:{{ separationList }}</span>
-      <div>{{ form }}</div>
       <el-transfer
         v-model="separationList"
         :props="separationProps"
         :data="containReadList"
         :titles="separationTitles"/>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" :loading="submitLoading" @click="submitSeparationForm">确 定
-        </el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitSeparationForm">确 定</el-button>
         <el-button @click="separationCancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -249,7 +243,15 @@
 
 <script>
 import Sortable from 'sortablejs'
-import {listSource, getSource, delSource, addSource, updateSource, updateSourceSort} from '@/api/tenant/source'
+import {
+  listSource,
+  getSource,
+  delSource,
+  addSource,
+  updateSource,
+  updateSourceSort,
+  updateSourceStatus
+} from '@/api/tenant/source'
 import {getSeparation, readSeparation, updateSeparation} from "@/api/tenant/separation"
 import {SYSTEM_DEFAULT, STATUS, STATUS_UPDATE_OPERATION} from '@constant/constants'
 import {DATABASE_TYPE, SOURCE_TYPE} from '@constant/tenantConstants'
@@ -447,16 +449,13 @@ export default {
     TypeChange() {
       if (this.form.sourceId == undefined && this.form.type === SOURCE_TYPE.SOURCE_WRITE) {
         this.form.status = STATUS.DISABLE
+      }else{
+        this.form.status = STATUS.NORMAL
       }
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
-      updateSource({
-        sourceId: row.sourceId,
-        type: row.type,
-        status: row.status,
-        updateType: STATUS_UPDATE_OPERATION
-      }).then(response => {
+      updateSourceStatus({sourceId: row.sourceId, status: row.status}).then(response => {
         this.msgSuccess('修改成功')
       }).catch(() => {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
@@ -476,6 +475,8 @@ export default {
           this.msgSuccess('配置成功')
           this.openSeparation = false
           this.getList()
+        }).catch(() => {
+          this.submitLoading = false
         })
       } else {
         this.msgWarning('请添加读数据源后再保存')
@@ -492,12 +493,16 @@ export default {
               this.msgSuccess('修改成功')
               this.op = false
               this.getList()
+            }).catch(() => {
+              this.submitLoading = false
             })
           } else {
             addSource(this.form).then(response => {
               this.msgSuccess('新增成功')
               this.open = false
               this.getList()
+            }).catch(() => {
+              this.submitLoading = false
             })
           }
         } else {

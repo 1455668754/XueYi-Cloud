@@ -81,6 +81,14 @@ public class ${ClassName} extends ${Entity} {
     private List<${subClassName}> subList;
 
 #end
+
+    public ${ClassName}() {
+    }
+
+    public ${ClassName}(${pkColumn.javaType} ${pkColumn.javaField}) {
+        this.${pkColumn.javaField} = ${pkColumn.javaField};
+    }
+
 #foreach ($column in $columns)
 #set($conceal = true)
 #foreach($item in $excisionEntity)
@@ -121,13 +129,11 @@ public class ${ClassName} extends ${Entity} {
 #end
 #end
 #if($table.sub)
-    public List<${subClassName}> getSubList()
-    {
+    public List<${subClassName}> getSubList(){
         return subList;
     }
 
-    public void setSubList(List<${subClassName}> subList)
-    {
+    public void setSubList(List<${subClassName}> subList){
         this.subList = subList;
     }
 

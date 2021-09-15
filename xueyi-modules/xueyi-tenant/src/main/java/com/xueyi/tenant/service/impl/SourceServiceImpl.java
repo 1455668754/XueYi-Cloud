@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,8 +65,7 @@ public class SourceServiceImpl implements ISourceService {
         DSUtils.addDs(source);
         DSUtils.syncDS(source);
         if (source.getType().equals(TenantConstants.SOURCE_READ_WRITE)) {
-            Source value = new Source();
-            value.setSourceId(source.getSnowflakeId());
+            Source value = new Source(source.getSnowflakeId());
             value.setSlave(source.getSlave());
             List<Source> values = new ArrayList<>();
             values.add(value);
@@ -79,24 +79,33 @@ public class SourceServiceImpl implements ISourceService {
     /**
      * 修改数据源
      *
-     * @param source 数据源
-     * @param ds     数据源新增|更新|删除判断
+     * @param source 数据源 | sourceId 数据源Id | name 数据源名称
      * @return 结果
      */
     @Override
-    public int mainUpdateSource(Source source, int ds) {
-        if (ds != TenantConstants.SYNC_TYPE_UNCHANGED) {
-            if (ds == TenantConstants.SYNC_TYPE_REFRESH) {
-                DSUtils.delDs(source.getSlave());
-                DSUtils.addDs(source);
-            } else if (ds == TenantConstants.SYNC_TYPE_ADD) {
-                DSUtils.addDs(source);
-            } else if (ds == TenantConstants.SYNC_TYPE_DELETE) {
-                DSUtils.delDs(source.getSlave());
-            }
-            DSUtils.syncDS(source);
-        }
+    public int mainUpdateSource(Source source) {
         return sourceMapper.mainUpdateSource(source);
+    }
+
+    /**
+     * 启用/禁用数据源
+     *
+     * @param source 数据源 | sourceId 数据源Id | status 状态 | isChange 系统默认
+     * @return 结果
+     */
+    @Override
+    public int mainUpdateSourceStatus(Source source) {
+        int rows = sourceMapper.mainUpdateSourceStatus(source);
+        if (rows > 0) {
+            if (TenantConstants.SYNC_TYPE_ADD == source.getSyncType()) {
+                DSUtils.addDs(source);
+                DSUtils.syncDS(source);
+            } else if (TenantConstants.SYNC_TYPE_DELETE == source.getSyncType()) {
+                DSUtils.delDs(source.getSlave());
+                DSUtils.syncDS(source);
+            }
+        }
+        return rows;
     }
 
     /**
@@ -130,32 +139,32 @@ public class SourceServiceImpl implements ISourceService {
      * 校验数据源是否已应用于策略
      *
      * @param source 数据源
-     * @return 结果
+     * @return 结果 (true 已应用 false 未应用)
      */
     @Override
-    public int mainCheckStrategySourceBySourceId(Source source) {
-        return sourceMapper.mainCheckStrategySourceBySourceId(source);
+    public boolean mainCheckStrategySourceBySourceId(Source source) {
+        return sourceMapper.mainCheckStrategySourceBySourceId(source) > 0;
     }
 
     /**
      * 校验写数据源是否已设置主从配置
      *
      * @param source 数据源
-     * @return 结果
+     * @return 结果 (true 已设置 false 未设置)
      */
     @Override
-    public int mainCheckSeparationSourceByWriteId(Source source) {
-        return sourceMapper.mainCheckSeparationSourceByWriteId(source);
+    public boolean mainCheckSeparationSourceByWriteId(Source source) {
+        return sourceMapper.mainCheckSeparationSourceByWriteId(source) > 0;
     }
 
     /**
      * 校验读数据源是否已应用于主从配置
      *
      * @param source 数据源
-     * @return 结果
+     * @return 结果 (true 已应用 false 未应用)
      */
     @Override
-    public int mainCheckSeparationSourceByReadId(Source source) {
-        return sourceMapper.mainCheckSeparationSourceByReadId(source);
+    public boolean mainCheckSeparationSourceByReadId(Source source) {
+        return sourceMapper.mainCheckSeparationSourceByReadId(source) > 0;
     }
 }

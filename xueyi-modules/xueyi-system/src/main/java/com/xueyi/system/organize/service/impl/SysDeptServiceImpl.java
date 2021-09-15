@@ -89,8 +89,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @DataScope(ueAlias = "empty")
     public int insertDept(SysDept dept) {
         // 查询父节点是否正常状态,不正常则不允许新增子节点
-        SysDept parentDept = new SysDept();
-        parentDept.setDeptId(dept.getParentId());
+        SysDept parentDept = new SysDept(dept.getParentId());
         SysDept info = deptMapper.selectDeptById(parentDept);
         if (!UserConstants.DEPT_NORMAL.equals(info.getStatus())) {
             throw new ServiceException("部门停用，不允许新增");
@@ -116,8 +115,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     @Transactional
     public int updateDept(SysDept dept) {
-        SysDept checkDept = new SysDept();
-        checkDept.setDeptId(dept.getParentId());
+        SysDept checkDept = new SysDept(dept.getParentId());
         SysDept newParentDept = deptMapper.selectDeptById(checkDept);
         checkDept.setDeptId(dept.getDeptId());
         SysDept oldDept = deptMapper.selectDeptById(checkDept);
@@ -201,8 +199,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     public void updateDeptChildren(Long deptId, String newAncestors, String oldAncestors) {
         SysSearch search = new SysSearch();
         search.getSearch().put("deptId", deptId);
-        SysDept dept = new SysDept();
-        dept.setDeptId(deptId);
+        SysDept dept = new SysDept(deptId);
         List<SysDept> children = deptMapper.selectChildrenDeptById(dept);
         for (SysDept child : children) {
             child.setAncestors(child.getAncestors().replaceFirst(oldAncestors, newAncestors));

@@ -57,6 +57,17 @@ public class SysPost extends BaseEntity {
     /** 角色组 */
     private Long[] roleIds;
 
+    public SysPost() {
+    }
+
+    public SysPost(Long postId) {
+        this.postId = postId;
+    }
+
+    public SysPost(Long postId, Long deptId) {
+        this.postId = postId;
+        this.deptId = deptId;
+    }
 
     public Long getPostId()
     {

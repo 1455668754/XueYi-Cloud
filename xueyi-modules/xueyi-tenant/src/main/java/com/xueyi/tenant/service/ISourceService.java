@@ -38,11 +38,18 @@ public interface ISourceService {
     /**
      * 修改数据源
      *
-     * @param source 数据源
-     * @param ds           数据源新增|更新|删除判断
+     * @param source 数据源 | sourceId 数据源Id | name 数据源名称
      * @return 结果
      */
-    public int mainUpdateSource(Source source, int ds);
+    public int mainUpdateSource(Source source);
+
+    /**
+     * 启用/禁用数据源
+     *
+     * @param source 数据源 | sourceId 数据源Id | status 状态 | isChange 系统默认
+     * @return 结果
+     */
+    public int mainUpdateSourceStatus(Source source);
 
     /**
      * 修改数据源排序
@@ -64,23 +71,23 @@ public interface ISourceService {
      * 校验数据源是否已应用于策略
      *
      * @param source 数据源
-     * @return 结果
+     * @return 结果 (true 已应用 false 未应用)
      */
-    public int mainCheckStrategySourceBySourceId(Source source);
+    public boolean mainCheckStrategySourceBySourceId(Source source);
 
     /**
      * 校验写数据源是否已设置主从配置
      *
      * @param source 数据源
-     * @return 结果
+     * @return 结果 (true 已设置 false 未设置)
      */
-    public int mainCheckSeparationSourceByWriteId(Source source);
+    public boolean mainCheckSeparationSourceByWriteId(Source source);
 
     /**
      * 校验读数据源是否已应用于主从配置
      *
      * @param source 数据源
-     * @return 结果
+     * @return 结果 (true 已应用 false 未应用)
      */
-    public int mainCheckSeparationSourceByReadId(Source source);
+    public boolean mainCheckSeparationSourceByReadId(Source source);
 }

@@ -331,12 +331,16 @@ export default {
               this.msgSuccess("修改成功")
               this.open = false
               this.getList()
+            }).catch(() => {
+              this.submitLoading = false
             })
           } else {
             addType(this.form).then(response => {
               this.msgSuccess("新增成功")
               this.open = false
               this.getList()
+            }).catch(() => {
+              this.submitLoading = false
             })
           }
         }else{

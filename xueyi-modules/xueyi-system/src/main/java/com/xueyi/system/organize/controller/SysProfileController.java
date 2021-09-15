@@ -100,8 +100,7 @@ public class SysProfileController extends BaseController {
         if (SecurityUtils.matchesPassword(newPassword, password)) {
             return AjaxResult.error("新密码不能与旧密码相同");
         }
-        SysUser upUser = new SysUser();
-        upUser.setUserId(userId);
+        SysUser upUser = new SysUser(userId);
         upUser.setPassword(SecurityUtils.encryptPassword(newPassword));
         if (userService.resetUserPwd(upUser) > 0) {
             // 更新缓存用户密码
@@ -126,8 +125,7 @@ public class SysProfileController extends BaseController {
                 return AjaxResult.error("文件服务异常，请联系管理员");
             }
             String url = fileResult.getData().getUrl();
-            SysUser user = new SysUser();
-            user.setUserId(loginUser.getUserId());
+            SysUser user = new SysUser(loginUser.getUserId());
             user.setAvatar(url);
             if (userService.updateUserAvatar(user)) {
                 String oldAvatarUrl = loginUser.getSysUser().getAvatar();
