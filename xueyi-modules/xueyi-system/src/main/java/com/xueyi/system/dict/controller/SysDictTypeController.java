@@ -31,8 +31,7 @@ import com.xueyi.system.dict.service.ISysDictTypeService;
  */
 @RestController
 @RequestMapping("/dict/type")
-public class SysDictTypeController extends BaseController
-{
+public class SysDictTypeController extends BaseController {
     @Autowired
     private ISysDictTypeService dictTypeService;
 

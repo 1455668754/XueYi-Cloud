@@ -289,7 +289,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     /**
      * 校验角色名称是否唯一
      *
-     * @param role 角色信息 | roleId   角色Id | roleName 角色名称
+     * @param role 角色信息 | roleId   角色Id | name 角色名称
      * @return 结果
      */
     @Override

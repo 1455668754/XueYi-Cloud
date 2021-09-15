@@ -59,17 +59,6 @@ public class SysEnterpriseController extends BaseController {
     }
 
     /**
-     * 获取指定企业账号的数据源
-     */
-    @GetMapping("/loadDataSources/{enterpriseId}")
-    public R<List<Source>> info(@PathVariable("enterpriseId") Long enterpriseId) {
-        Source source = new Source();
-        source.setEnterpriseId(enterpriseId);
-        List<Source> sources = enterpriseService.selectLoadDataSources(source);
-        return R.ok(sources);
-    }
-
-    /**
      * 获取租户信息
      */
     @GetMapping("/profile")

@@ -58,10 +58,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="SysRole" id="roleResult">
 		<id     property="roleId"       column="role_id"        />
 		<result property="roleCode"     column="role_code"      />
-		<result property="roleName"     column="role_name"      />
+		<result property="name"     	column="name"      		/>
 		<result property="roleKey"      column="role_key"       />
 		<result property="roleSort"     column="role_sort"      />
-		<result property="dataScope"     column="data_scope"    />
+		<result property="dataScope"    column="data_scope"     />
 		<result property="status"       column="role_status"    />
 	</resultMap>
 
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.profile, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
 			   d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email,d.status as dept_status,
 			   p.post_id, p.dept_id, p.post_code, p.post_name,p.status as post_status,
-			   r.role_id, r.role_code, r.role_name, r.role_key, r.sort, r.data_scope, r.status as role_status
+			   r.role_id, r.role_code, r.name, r.role_key, r.sort, r.data_scope, r.status as role_status
 		from sys_user u
 				 left join sys_dept d on u.dept_id = d.dept_id
 				 left join sys_post p on u.post_id = p.post_id
@@ -90,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select u.user_id, u.dept_id, u.post_id, u.user_code, u.user_name, u.user_type, u.nick_name, u.phone, u.email, u.sex, u.avatar, u.profile, u.password, u.login_ip, u.login_date, u.sort, u.status, u.create_by, u.create_time, u.update_by, u.update_time, u.remark,
 			   d.dept_id, d.parent_id, d.dept_code, d.dept_name, d.ancestors, d.leader, d.phone, d.email,d.status as dept_status,
 			   p.post_id, p.dept_id, p.post_code, p.post_name,p.status as post_status,
-			   r.role_id, r.role_code, r.role_name, r.role_key, r.sort, r.data_scope, r.status as role_status
+			   r.role_id, r.role_code, r.name, r.role_key, r.sort, r.data_scope, r.status as role_status
 		from sys_user u
 				 left join sys_dept d on u.dept_id = d.dept_id
 				 left join sys_post p on u.post_id = p.post_id

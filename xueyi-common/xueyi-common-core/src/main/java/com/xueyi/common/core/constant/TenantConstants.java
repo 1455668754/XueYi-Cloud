@@ -51,4 +51,10 @@ public class TenantConstants {
 
     /** 源同步策略类型 - 删除 */
     public static final int SYNC_TYPE_DELETE = 3;
+
+    /** 主数据源 Y是 */
+    public static final String IS_MAIN_TRUE = "Y";
+
+    /** 主数据源 N否 */
+    public static final String IS_MAIN_FALSE = "N";
 }

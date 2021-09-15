@@ -82,9 +82,9 @@
     </insert>
 
     <insert id="createRoleByTenantId" parameterType="Tenant">
-        insert into sys_role ( role_id, role_name, type, derive_id, tenant_id ) values
-                             ( #{params.role.roleId}, #{params.role.roleName}, #{params.role.type}, #{tenantId}, #{tenantId} ),
-                             ( #{params.deriveRole.roleId}, #{params.deriveRole.roleName}, #{params.deriveRole.type}, #{tenantId}, #{tenantId} );
+        insert into sys_role ( role_id, name, type, derive_id, tenant_id ) values
+                             ( #{params.role.roleId}, #{params.role.name}, #{params.role.type}, #{tenantId}, #{tenantId} ),
+                             ( #{params.deriveRole.roleId}, #{params.deriveRole.name}, #{params.deriveRole.type}, #{tenantId}, #{tenantId} );
     </insert>
 
     <insert id="createOrganizeRoleByTenantId" parameterType="Tenant">

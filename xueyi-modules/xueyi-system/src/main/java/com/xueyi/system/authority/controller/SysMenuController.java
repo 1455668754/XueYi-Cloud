@@ -2,8 +2,6 @@ package com.xueyi.system.authority.controller;
 
 import java.util.List;
 
-import com.xueyi.common.core.domain.R;
-import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.organize.service.ISysEnterpriseService;

@@ -1,6 +1,6 @@
 package com.xueyi.system.organize.service.impl;
 
-import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.redis.service.RedisService;
@@ -24,6 +24,7 @@ import java.util.List;
  * @author xueyi
  */
 @Service
+@DS("#main")
 public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
 
     @Autowired
@@ -39,7 +40,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     private RedisService redisService;
 
     /**
-     * 项目启动时，初始化参数到缓存
+     * 项目启动时，初始化企业信息到缓存
      */
     @PostConstruct
     public void init() {

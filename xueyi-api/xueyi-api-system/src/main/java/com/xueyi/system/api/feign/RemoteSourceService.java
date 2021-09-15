@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import java.util.List;
 
 /**
- * 租户数据源加载服务
+ * 数据源策略加载服务
  *
  * @author xueyi
  */
@@ -21,11 +21,12 @@ import java.util.List;
 public interface RemoteSourceService {
 
     /**
-     * 查询租户可加载数据源
+     * 根据策略Id刷新策略缓存
      *
-     * @param enterpriseId 企业Id
+     * @param strategyId 策略Id
+     *                       @param source         请求来源
      * @return 结果
      */
-    @GetMapping(value = "/enterprise/loadDataSources/{enterpriseId}")
-    public R<List<Source>> getLoadDataSources(@PathVariable("enterpriseId") Long enterpriseId);
+    @GetMapping(value = "/dataSource/refreshSource/{strategyId}")
+    public R<Boolean> refreshSource(@PathVariable("strategyId") Long strategyId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 }

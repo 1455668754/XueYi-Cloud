@@ -118,7 +118,7 @@ drop table if exists sys_role;
 create table sys_role (
   role_id                   bigint	            not null                                comment '角色Id',
   role_code                 varchar(64)         default null                            comment '角色编码',
-  role_name                 varchar(30)         not null                                comment '角色名称',
+  name                      varchar(30)         not null                                comment '角色名称',
   role_key                  varchar(100)        default null                            comment '角色权限字符串',
   data_scope                char(1)             default '1'                             comment '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限 5：本岗位数据权限  6：仅本人数据权限）',
   menu_check_strictly       tinyint             default 1                               comment '菜单树选择项是否关联显示',
@@ -140,7 +140,7 @@ create table sys_role (
 -- ----------------------------
 -- 初始化-角色信息表数据
 -- ----------------------------
-insert into sys_role (role_id, role_name, type, derive_id, tenant_id)
+insert into sys_role (role_id, name, type, derive_id, tenant_id)
 values (-1, '超管衍生-1', '1', -1, -1),
        (-2, '租户衍生-1', '2', -1, -1),
        (-3, '用户衍生-1', '5', -2, -1),
@@ -165,7 +165,7 @@ values (-1, '超管衍生-1', '1', -1, -1),
        (19, '部门衍生108', '3', 108, 1),
        (20, '部门衍生109', '3', 109, 1);
 
-insert into sys_role (role_id, tenant_id, role_code, role_name, role_key, menu_check_strictly, dept_check_strictly, create_by, remark)
+insert into sys_role (role_id, tenant_id, role_code, name, role_key, menu_check_strictly, dept_check_strictly, create_by, remark)
 values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
        (2, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色');
 

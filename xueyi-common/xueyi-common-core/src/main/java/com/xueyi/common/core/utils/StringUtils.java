@@ -12,8 +12,7 @@ import com.xueyi.common.core.text.StrFormatter;
  * 
  * @author ruoyi
  */
-public class StringUtils extends org.apache.commons.lang3.StringUtils
-{
+public class StringUtils extends org.apache.commons.lang3.StringUtils {
     /** 空字符串 */
     private static final String NULLSTR = "";
 

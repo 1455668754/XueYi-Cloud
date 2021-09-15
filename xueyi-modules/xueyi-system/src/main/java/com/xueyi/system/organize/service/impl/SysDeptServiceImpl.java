@@ -100,7 +100,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
             SysRole role = new SysRole();
             role.setType(RoleConstants.DEPT_DERIVE_TYPE);
             role.setDeriveId(dept.getSnowflakeId());
-            role.setRoleName("部门衍生"+dept.getSnowflakeId());
+            role.setName("部门衍生"+dept.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;

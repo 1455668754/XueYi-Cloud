@@ -33,8 +33,8 @@ import com.xueyi.system.dict.service.ISysConfigService;
  */
 @RestController
 @RequestMapping("/config")
-public class SysConfigController extends BaseController
-{
+public class SysConfigController extends BaseController {
+
     @Autowired
     private ISysConfigService configService;
 

@@ -32,7 +32,7 @@ import com.xueyi.system.organize.service.ISysPostService;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * 岗位信息 服务层处理
+ * 岗位信息 业务层处理
  *
  * @author xueyi
  */
@@ -107,7 +107,7 @@ public class SysPostServiceImpl implements ISysPostService {
             SysRole role = new SysRole();
             role.setType(RoleConstants.POST_DERIVE_TYPE);
             role.setDeriveId(post.getSnowflakeId());
-            role.setRoleName("岗位衍生"+post.getSnowflakeId());
+            role.setName("岗位衍生"+post.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;

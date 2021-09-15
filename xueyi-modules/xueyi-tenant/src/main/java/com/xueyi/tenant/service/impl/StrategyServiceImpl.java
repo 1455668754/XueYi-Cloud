@@ -3,8 +3,12 @@ package com.xueyi.tenant.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.SecurityConstants;
+import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.system.api.feign.RemoteSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -24,6 +28,9 @@ public class StrategyServiceImpl implements IStrategyService {
 
     @Autowired
     private StrategyMapper strategyMapper;
+
+    @Autowired
+    private RemoteSourceService remoteSourceService;
 
     /**
      * 查询数据源策略列表
@@ -74,6 +81,9 @@ public class StrategyServiceImpl implements IStrategyService {
             strategy.setStrategyId(strategy.getSnowflakeId());
             strategyMapper.mainBatchSource(strategy);
         }
+        if (rows > 0 && StringUtils.equals(TenantConstants.NORMAL, strategy.getStatus())) {
+            remoteSourceService.refreshSource(strategy.getStrategyId(), SecurityConstants.INNER);
+        }
         return rows;
     }
 
@@ -92,7 +102,9 @@ public class StrategyServiceImpl implements IStrategyService {
                 strategyMapper.mainBatchSource(strategy);
             }
         }
-        return strategyMapper.mainUpdateStrategy(strategy);
+        int rows = strategyMapper.mainUpdateStrategy(strategy);
+        remoteSourceService.refreshSource(strategy.getStrategyId(), SecurityConstants.INNER);
+        return rows;
     }
 
     /**
@@ -116,7 +128,9 @@ public class StrategyServiceImpl implements IStrategyService {
     @Transactional
     public int mainDeleteStrategyById(Strategy strategy) {
         strategyMapper.mainDeleteSourceByStrategyId(strategy);
-        return strategyMapper.mainDeleteStrategyById(strategy);
+        int rows = strategyMapper.mainDeleteStrategyById(strategy);
+        DataSourceUtils.deleteCache(strategy.getStrategyId());
+        return rows;
     }
 
     /**
@@ -128,7 +142,9 @@ public class StrategyServiceImpl implements IStrategyService {
     @Override
     @Transactional
     public int mainDeleteStrategyByIds(Strategy strategy) {
-        strategyMapper.mainDeleteSourceByStrategyIds(strategy);
-        return strategyMapper.mainDeleteStrategyByIds(strategy);
+//        strategyMapper.mainDeleteSourceByStrategyIds(strategy);
+//        int rows = strategyMapper.mainDeleteStrategyByIds(strategy);
+        DataSourceUtils.deleteCaches((List<Long>)strategy.getParams().get("Ids"));
+        return 1;
     }
 }

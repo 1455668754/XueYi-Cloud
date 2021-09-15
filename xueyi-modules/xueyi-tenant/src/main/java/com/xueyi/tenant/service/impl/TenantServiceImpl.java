@@ -1,5 +1,6 @@
 package com.xueyi.tenant.service.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -9,6 +10,7 @@ import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
@@ -171,7 +173,7 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public int mainDeleteTenantByIds(Tenant tenant) {
-        List<Long> Ids = (List<Long>) tenant.getParams().get("Ids");
+        List<Long> Ids = ParamsUtils.IdsObjectToLongList(tenant.getParams().get("Ids"));
         int rows = 0;
         for (Long Id : Ids) {
             rows += mainDeleteTenantById(new Tenant(Id));

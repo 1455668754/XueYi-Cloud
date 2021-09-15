@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="SysRole" id="SysRoleResult">
 		<id     property="roleId"             	column="role_id"               />
 		<result property="roleCode"           	column="role_code"             />
-		<result property="roleName"           	column="role_name"             />
+		<result property="name"           		column="name"             	   />
 		<result property="roleKey"            	column="role_key"              />
 		<result property="dataScope"          	column="data_scope"            />
 		<result property="menuCheckStrictly"  	column="menu_check_strictly"   />
@@ -26,13 +26,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 
 	<sql id="permVo">
-		select distinct r.role_id, r.role_code, r.role_name, r.role_key, r.data_scope, r.status
+		select distinct r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.status
 		from sys_role r
 				 left join sys_organize_role sor on sor.role_id = r.role_id
 	</sql>
 
 	<sql id="selectVo">
-		select distinct r.role_id, r.role_code, r.role_name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.sort, r.status, r.create_by, r.create_time, r.update_by, r.update_time, r.remark
+		select distinct r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.sort, r.status, r.create_by, r.create_time, r.update_by, r.update_time, r.remark
 		from sys_role r
 				 left join sys_organize_role sor on sor.role_id = r.role_id
 				 left join sys_user u on u.user_id = sor.user_id
@@ -41,12 +41,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</sql>
 
 	<sql id="selectAllVo">
-		select distinct r.role_id, r.role_code, r.role_name, r.role_key
+		select distinct r.role_id, r.role_code, r.name, r.role_key
 		from sys_role r
 	</sql>
 
 	<sql id="checkVo">
-		select distinct r.role_id, r.role_code, r.role_name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.sort, r.status, r.create_by, r.create_time, r.update_by, r.update_time, r.remark
+		select distinct r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.sort, r.status, r.create_by, r.create_time, r.update_by, r.update_time, r.remark
 		from sys_role r
 	</sql>
 
@@ -82,8 +82,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="roleCode != null and roleCode != ''">
 			AND r.role_code like concat('%', #{roleCode}, '%')
 		</if>
-		<if test="roleName != null and roleName != ''">
-			AND r.role_name like concat('%', #{roleName}, '%')
+		<if test="name != null and name != ''">
+			AND r.name like concat('%', #{name}, '%')
 		</if>
 		<if test="status != null and status != ''">
 			AND r.status = #{status}
@@ -114,7 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="snowflakeId != null">							    role_id					        ,</if>
 			<if test="roleCode != null and roleCode != ''">				role_code				        ,</if>
-			<if test="roleName != null and roleName != ''">				role_name				        ,</if>
+			<if test="name != null and name != ''">						name				        	,</if>
 			<if test="roleKey != null and roleKey != ''">				role_key				        ,</if>
 			<if test="dataScope != null and dataScope != ''">			data_scope				        ,</if>
 			<if test="menuCheckStrictly != null">						menu_check_strictly		        ,</if>
@@ -130,7 +130,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="snowflakeId != null">							    #{snowflakeId}					,</if>
 			<if test="roleCode != null and roleCode != ''">				#{roleCode}				        ,</if>
-			<if test="roleName != null and roleName != ''">				#{roleName}				        ,</if>
+			<if test="name != null and name != ''">						#{name}				        ,</if>
 			<if test="roleKey != null and roleKey != ''">				#{roleKey}				        ,</if>
 			<if test="dataScope != null and dataScope != ''">			#{dataScope}			        ,</if>
 			<if test="menuCheckStrictly != null">						#{menuCheckStrictly}	        ,</if>
@@ -149,7 +149,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		update sys_role
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="roleCode != null and roleCode != ''">							role_code = #{roleCode}						,</if>
-			<if test="roleName != null and roleName != ''">							role_name = #{roleName}						,</if>
+			<if test="name != null and name != ''">									name = #{name}							,</if>
 			<if test="roleKey != null and roleKey != ''">							role_key = #{roleKey}						,</if>
 			<if test="dataScope != null and dataScope != ''">						data_scope = #{dataScope}					,</if>
 			<if test="menuCheckStrictly != null">									menu_check_strictly = #{menuCheckStrictly}	,</if>
@@ -232,7 +232,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="checkRoleNameUnique" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="checkVo"/>
-		where r.role_name=#{roleName}
+		where r.name=#{name}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1

@@ -161,7 +161,7 @@ public interface SysRoleMapper {
      * 校验角色名称是否唯一
      * 访问控制 r 租户查询
      *
-     * @param role 角色信息 | roleName 角色名称
+     * @param role 角色信息 | name 角色名称
      * @return 角色信息
      */
     @DataScope(eAlias = "r")

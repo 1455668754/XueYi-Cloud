@@ -12,9 +12,9 @@
             @keyup.enter.native="handleQuery"
           />
         </el-form-item>
-        <el-form-item label="角色名称" prop="roleName">
+        <el-form-item label="角色名称" prop="name">
           <el-input
-            v-model="queryParams.roleName"
+            v-model="queryParams.name"
             placeholder="请输入角色名称"
             clearable
             size="small"
@@ -121,7 +121,7 @@
       <el-table v-loading="loading" :data="roleList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="角色编码" prop="roleCode" min-width="120" align="center"/>
-        <el-table-column label="角色名称" prop="roleName" :show-overflow-tooltip="true" min-width="120" align="center"/>
+        <el-table-column label="角色名称" prop="name" :show-overflow-tooltip="true" min-width="120" align="center"/>
         <el-table-column label="权限字符" prop="roleKey" :show-overflow-tooltip="true" min-width="120" align="center"/>
         <el-table-column label="状态" align="center" min-width="120">
           <template slot-scope="scope">
@@ -194,8 +194,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="角色名称" prop="roleName">
-              <el-input v-model="form.roleName" placeholder="请输入角色名称"/>
+            <el-form-item label="角色名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入角色名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -249,8 +249,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="角色名称" prop="roleName">
-              <el-input v-model="form.roleName" placeholder="请输入角色名称" readonly/>
+            <el-form-item label="角色名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入角色名称" readonly/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -283,7 +283,7 @@
     <el-dialog :title="title" :visible.sync="openDataScope" width="500px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form :model="form" label-width="80px">
         <el-form-item label="角色名称">
-          <el-input v-model="form.roleName" :disabled="true"/>
+          <el-input v-model="form.name" :disabled="true"/>
         </el-form-item>
         <el-form-item label="权限字符">
           <el-input v-model="form.roleKey" :disabled="true"/>
@@ -412,7 +412,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         roleCode: undefined,
-        roleName: undefined,
+        name: undefined,
         roleKey: undefined,
         status: undefined
       },
@@ -427,7 +427,7 @@ export default {
         roleCode: [
           {required: true, message: "角色编码不能为空", trigger: "blur"}
         ],
-        roleName: [
+        name: [
           {required: true, message: "角色名称不能为空", trigger: "blur"}
         ],
         roleKey: [
@@ -495,7 +495,7 @@ export default {
     // 角色状态修改
     handleStatusChange(row) {
       let text = row.status === "0" ? "启用" : "停用"
-      this.$confirm('确认要"' + text + '""' + row.roleName + '"角色吗?', "警告", {
+      this.$confirm('确认要"' + text + '""' + row.name + '"角色吗?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -534,7 +534,7 @@ export default {
       this.form = {
         roleId: undefined,
         roleCode: undefined,
-        roleName: undefined,
+        name: undefined,
         roleKey: undefined,
         dataScope: '1',
         sort: 0,

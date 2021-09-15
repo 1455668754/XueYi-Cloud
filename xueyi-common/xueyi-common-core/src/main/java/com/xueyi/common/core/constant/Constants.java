@@ -76,11 +76,14 @@ public class Constants {
     /** 企业管理 cache key */
     public static final String SYS_ENTERPRISE_KEY = "sys_enterprise:";
 
+    /** 数据源策略组管理 cache key */
+    public static final String DATA_SOURCE_KEY = "data_source:";
+
     /** 企业信息 cache key */
     public static final String ENTERPRISE_KEY = "enterprise";
 
     /** 企业源策略 cache key */
-    public static final String STRATEGY_KEY = "Strategy";
+    public static final String STRATEGY_KEY = "strategy";
 
     /** 数据源管理 cache key */
     public static final String SYS_SOURCE_KEY = "sys_source:";

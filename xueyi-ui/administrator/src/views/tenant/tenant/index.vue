@@ -267,7 +267,7 @@
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="租户账号" prop="roleName">
+            <el-form-item label="租户账号" prop="name">
               <el-input v-model="form.tenantName" readonly/>
             </el-form-item>
           </el-col>
@@ -458,7 +458,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.tenantId)
-      this.idNames = selection.map(item => item.name)
+      this.idNames = selection.map(item => item.tenantName)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -591,7 +591,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const tenantIds = row.tenantId || this.ids
-      const names = row.name || this.idNames
+      const names = row.tenantName || this.idNames
       let that = this
       this.$confirm('是否确认删除租户"' + names + '"?', '警告', {
         confirmButtonText: '确定',

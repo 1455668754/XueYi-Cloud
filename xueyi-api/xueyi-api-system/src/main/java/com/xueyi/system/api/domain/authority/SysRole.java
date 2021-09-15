@@ -8,8 +8,6 @@ import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.annotation.Excel.ColumnType;
 import com.xueyi.common.core.web.domain.BaseEntity;
 
-import java.util.List;
-
 /**
  * 角色表 sys_role
  *
@@ -28,7 +26,7 @@ public class SysRole extends BaseEntity {
 
     /** 角色名称 */
     @Excel(name = "角色名称")
-    private String roleName;
+    private String name;
 
     /** 角色权限 */
     @Excel(name = "角色权限")
@@ -91,12 +89,12 @@ public class SysRole extends BaseEntity {
 
     @NotBlank(message = "角色名称不能为空")
     @Size(min = 0, max = 30, message = "角色名称长度不能超过30个字符")
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getDeriveId() {
@@ -185,7 +183,7 @@ public class SysRole extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("roleId", getRoleId())
                 .append("roleCode", getRoleCode())
-                .append("roleName", getRoleName())
+                .append("name", getName())
                 .append("roleKey", getRoleKey())
                 .append("menuCheckStrictly", isMenuCheckStrictly())
                 .append("deptCheckStrictly", isDeptCheckStrictly())

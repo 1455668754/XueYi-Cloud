@@ -42,7 +42,7 @@ public class BaseEntity implements Serializable {
     /** 系统默认（Y是 N否） */
     private String isChange;
 
-    /** 更新类型（0正常更新 1状态更新） */
+    /** 更新类型（0 正常更新 1 状态更新） */
     private String updateType;
 
     /** 数据源名称 */

@@ -92,7 +92,7 @@
             <if test="status != null and status != ''">                    status = #{status}                  ,</if>
             <if test="updateBy != null">                                   update_by = #{updateBy}             ,</if>
         </trim>
-        where strategy_id = #{strategyId} and del_flag = 0 and is_change = 0
+        where strategy_id = #{strategyId} and del_flag = 0 and is_change = 'N'
     </update>
 
     <update id="mainUpdateStrategySort" parameterType="Strategy">
@@ -110,13 +110,13 @@
         update xy_tenant_strategy
         set del_flag = 1
         where strategy_id = #{strategyId}
-          and del_flag = 0 and is_change = 0
+          and del_flag = 0 and is_change = 'N'
     </delete>
 
     <delete id="mainDeleteStrategyByIds" parameterType="Strategy">
         update xy_tenant_strategy
         set del_flag = 1
-        where del_flag = 0 and is_change = 0 and strategy_id in
+        where del_flag = 0 and is_change = 'N' and strategy_id in
         <foreach item="strategyId" collection="params.Ids" open="(" separator="," close=")">
             #{strategyId}
         </foreach>
@@ -126,14 +126,14 @@
         delete tsc
         from xy_tenant_strategy_source tsc
         left join xy_tenant_strategy ts on ts.strategy_id = tsc.strategy_id
-        where ts.is_change = 0 and tsc.strategy_id = #{strategyId}
+        where ts.is_change = 'N' and tsc.strategy_id = #{strategyId}
     </delete>
 
     <delete id="mainDeleteSourceByStrategyIds" parameterType="Strategy">
         delete tsc
         from xy_tenant_strategy_source tsc
         left join xy_tenant_strategy ts on ts.strategy_id = tsc.strategy_id
-        where ts.is_change = 0 and tsc.strategy_id in
+        where ts.is_change = 'N' and tsc.strategy_id in
         <foreach item="strategyId" collection="params.Ids" open="(" separator="," close=")">
             #{strategyId}
         </foreach>

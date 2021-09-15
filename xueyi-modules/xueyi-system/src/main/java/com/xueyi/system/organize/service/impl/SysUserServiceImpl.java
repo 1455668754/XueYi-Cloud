@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.RoleConstants;
-import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysRoleService;
 import com.xueyi.system.role.domain.SysOrganizeRole;
@@ -114,7 +113,7 @@ public class SysUserServiceImpl implements ISysUserService {
         List<SysRole> list = roleMapper.selectRolesByUserName(checkRole);
         StringBuffer idsStr = new StringBuffer();
         for (SysRole role : list) {
-            idsStr.append(role.getRoleName()).append(",");
+            idsStr.append(role.getName()).append(",");
         }
         if (StringUtils.isNotEmpty(idsStr.toString())) {
             return idsStr.substring(0, idsStr.length() - 1);
@@ -148,7 +147,7 @@ public class SysUserServiceImpl implements ISysUserService {
             SysRole role = new SysRole();
             role.setType(RoleConstants.USER_DERIVE_TYPE);
             role.setDeriveId(user.getSnowflakeId());
-            role.setRoleName("用户衍生"+user.getSnowflakeId());
+            role.setName("用户衍生"+user.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;
@@ -296,7 +295,6 @@ public class SysUserServiceImpl implements ISysUserService {
      */
     @Override
     public String importUser(List<SysUser> userList, Boolean isUpdateSupport, String operName) {
-        SysSearch search = new SysSearch();
         if (StringUtils.isNull(userList) || userList.size() == 0) {
             throw new ServiceException("导入用户数据不能为空！");
         }

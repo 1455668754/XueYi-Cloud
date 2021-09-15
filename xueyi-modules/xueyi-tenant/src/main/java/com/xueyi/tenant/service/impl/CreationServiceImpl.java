@@ -77,14 +77,14 @@ public class CreationServiceImpl implements ICreationService {
         // 1.建立新租户初始租管衍生角色信息
         SysRole deriveAdministrator = tenant.getParams().containsKey("role") ? (SysRole) tenant.getParams().get("role") : new SysRole(deriveAdministratorId);
         deriveAdministrator.setType(RoleConstants.ADMINISTRATOR_DERIVE_TYPE);
-        deriveAdministrator.setRoleName("超管衍生" + deriveAdministratorId);
+        deriveAdministrator.setName("超管衍生" + deriveAdministratorId);
         if (!tenant.getParams().containsKey("role")) {
             tenant.getParams().put("role", deriveAdministrator);
         }
         // 2.建立新租户初始租户衍生角色信息
         SysRole deriveTenant = new SysRole(deriveTenantId);
         deriveTenant.setType(RoleConstants.ENTERPRISE_DERIVE_TYPE);
-        deriveTenant.setRoleName("租户衍生" + deriveTenantId);
+        deriveTenant.setName("租户衍生" + deriveTenantId);
         tenant.getParams().put("deriveRole", deriveTenant);
         r = creationMapper.createRoleByTenantId(tenant);
         or = creationMapper.createOrganizeRoleByTenantId(tenant);
