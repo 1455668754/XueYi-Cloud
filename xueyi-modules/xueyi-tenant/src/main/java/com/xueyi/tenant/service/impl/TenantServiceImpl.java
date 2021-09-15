@@ -1,6 +1,5 @@
 package com.xueyi.tenant.service.impl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
@@ -100,11 +99,7 @@ public class TenantServiceImpl implements ITenantService {
                 creationService.organizeCreation(tenant);
                 //1.新建租户的衍生角色&&模块|菜单屏蔽信息
                 creationService.deriveRoleCreation(tenant);
-                int rows = tenantMapper.mainInsertTenant(tenant);
-                if (rows > 0) {
-                    refreshCache(tenant.getTenantId());
-                }
-                return rows;
+                return tenantMapper.mainInsertTenant(tenant);
             }
         }
         return 0;
@@ -118,8 +113,11 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public Boolean mainRegisterTenant(Tenant tenant) {
-        int row = tenantService.mainInsertTenant(tenant);
-        return row > 0;
+        int rows = tenantService.mainInsertTenant(tenant);
+        if (rows > 0) {
+            refreshTenantCache(tenant.getTenantId());
+        }
+        return rows > 0;
     }
 
     /**
@@ -133,7 +131,7 @@ public class TenantServiceImpl implements ITenantService {
         int rows = tenantMapper.mainUpdateTenant(tenant);
         if (rows > 0) {
             deleteCache(tenant.getTenantId());
-            refreshCache(tenant.getTenantId());
+            refreshTenantCache(tenant.getTenantId());
         }
         return rows;
     }
@@ -201,7 +199,8 @@ public class TenantServiceImpl implements ITenantService {
      *
      * @param tenantId 租户Id
      */
-    private void refreshCache(Long tenantId) {
+    @Override
+    public void refreshTenantCache(Long tenantId) {
         R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenantId, SecurityConstants.INNER);
         if (R.FAIL == enterprise.getCode()) {
             throw new ServiceException(enterprise.getMsg());

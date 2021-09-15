@@ -71,17 +71,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     }
 
     /**
-     * 查询数据源列表
-     *
-     * @param source 数据源组
-     * @return 数据源组集合
-     */
-    @Override
-    public List<Source> selectLoadDataSources(Source source) {
-        return dataSourceMapper.selectLoadDataSources(source);
-    }
-
-    /**
      * 查询企业信息
      *
      * @return 企业对象

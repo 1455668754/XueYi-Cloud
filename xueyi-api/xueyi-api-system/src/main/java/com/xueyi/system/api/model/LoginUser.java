@@ -52,8 +52,8 @@ public class LoginUser implements Serializable {
     /** 主数据源 */
     private String mainSource;
 
-    /** 数据库列表 */
-    private List<Source> source;
+    /** 源策略组 */
+    private Source source;
 
     /** 企业信息 */
     private SysEnterprise sysEnterprise;
@@ -157,11 +157,11 @@ public class LoginUser implements Serializable {
         this.mainSource = mainSource;
     }
 
-    public List<Source> getSource() {
+    public Source getSource() {
         return source;
     }
 
-    public void setSource(List<Source> source) {
+    public void setSource(Source source) {
         this.source = source;
     }
 

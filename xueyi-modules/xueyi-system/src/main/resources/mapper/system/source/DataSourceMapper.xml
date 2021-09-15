@@ -20,15 +20,6 @@
         <result column="slave_name"                                                     />
     </resultMap>
 
-    <sql id="loadDataSources">
-        select ts1.slave as master_name, tss.is_main as is_main,ts2.slave as slave_name
-        from xy_tenant t
-                 left join xy_tenant_strategy_source tss on tss.strategy_id = t.strategy_id
-                 left join xy_tenant_source ts1 on ts1.source_id = tss.source_id
-                 left join xy_tenant_separation tsp on tsp.write_id = tss.source_id
-                 left join xy_tenant_source ts2 on ts2.source_id = tsp.write_id
-    </sql>
-
     <sql id="cacheVo">
         select ts.strategy_id, ts.is_change, tss.is_main as is_main, tst.write_slave as master_name, tst.read_slave as slave_name
         from xy_tenant_strategy ts
@@ -44,12 +35,6 @@
     <select id="mainSelectDataSourceCacheByStrategyId" parameterType="Long" resultMap="sourceResult">
         <include refid="cacheVo"/>
         where ts.strategy_id = #{strategyId} and ts.del_flag = 0 and ts.status = '0'
-    </select>
-
-    <select id="selectLoadDataSources" parameterType="Source" resultMap="sourceResult">
-        <include refid="loadDataSources"/>
-        where t.tenant_id = #{enterpriseId}
-        order by IF((is_main = 'Y'), 0, 1)
     </select>
 
 </mapper>

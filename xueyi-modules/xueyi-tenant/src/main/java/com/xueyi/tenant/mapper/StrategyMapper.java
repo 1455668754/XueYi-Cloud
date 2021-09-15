@@ -60,14 +60,6 @@ public interface StrategyMapper {
     public int mainUpdateStrategySort(Strategy strategy);
 
     /**
-     * 删除数据源策略
-     *
-     * @param strategy 数据源策略
-     * @return 结果
-     */
-    public int mainDeleteStrategyById(Strategy strategy);
-
-    /**
      * 批量删除数据源策略
      *
      * @param strategy 数据源策略

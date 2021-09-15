@@ -6,6 +6,7 @@ import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
+import com.xueyi.system.source.service.IDataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +39,9 @@ public class SysMenuController extends BaseController {
     private ISysMenuService menuService;
 
     @Autowired
+    private IDataSourceService dataSourceService;
+
+    @Autowired
     private ISysEnterpriseService enterpriseService;
 
     @Autowired
@@ -58,7 +62,6 @@ public class SysMenuController extends BaseController {
     @Log(title = "租户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/authMenuScope/administrator")
     public AjaxResult authMenuScope(@RequestBody SysRoleSystemMenu systemMenu) {
-        System.out.println(getSourceMaster(systemMenu).getSourceName());
         return toAjax(roleSystemMenuService.authMenuScopeById(getSourceMaster(systemMenu)));
     }
 
@@ -134,18 +137,8 @@ public class SysMenuController extends BaseController {
      * 获取企业的主数据源
      */
     private SysRoleSystemMenu getSourceMaster(SysRoleSystemMenu systemMenu){
-        // 查询企业所有的主从库信息
-        Source source = new Source();
-        source.setEnterpriseId(systemMenu.getEnterpriseId());
-        List<Source> sources = enterpriseService.selectLoadDataSources(source);
-        Source master = new Source();
-        for (Source s : sources) {
-            if (s.getIsMain().equals("Y")) {
-                master = s;
-                break;
-            }
-        }
-        systemMenu.setSourceName(master.getMaster());
+        Source source = dataSourceService.getSourceByEnterpriseId(systemMenu.getEnterpriseId());
+        systemMenu.setSourceName(source.getMaster());
         return systemMenu;
     }
 }

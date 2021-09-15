@@ -7,6 +7,7 @@ import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.system.api.feign.RemoteSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,6 @@ public class StrategyServiceImpl implements IStrategyService {
 
     @Autowired
     private StrategyMapper strategyMapper;
-
-    @Autowired
-    private RemoteSourceService remoteSourceService;
 
     /**
      * 查询数据源策略列表
@@ -81,9 +79,6 @@ public class StrategyServiceImpl implements IStrategyService {
             strategy.setStrategyId(strategy.getSnowflakeId());
             strategyMapper.mainBatchSource(strategy);
         }
-        if (rows > 0 && StringUtils.equals(TenantConstants.NORMAL, strategy.getStatus())) {
-            remoteSourceService.refreshSource(strategy.getStrategyId(), SecurityConstants.INNER);
-        }
         return rows;
     }
 
@@ -102,9 +97,7 @@ public class StrategyServiceImpl implements IStrategyService {
                 strategyMapper.mainBatchSource(strategy);
             }
         }
-        int rows = strategyMapper.mainUpdateStrategy(strategy);
-        remoteSourceService.refreshSource(strategy.getStrategyId(), SecurityConstants.INNER);
-        return rows;
+        return strategyMapper.mainUpdateStrategy(strategy);
     }
 
     /**
@@ -119,21 +112,6 @@ public class StrategyServiceImpl implements IStrategyService {
     }
 
     /**
-     * 删除数据源策略信息
-     *
-     * @param strategy 数据源策略
-     * @return 结果
-     */
-    @Override
-    @Transactional
-    public int mainDeleteStrategyById(Strategy strategy) {
-        strategyMapper.mainDeleteSourceByStrategyId(strategy);
-        int rows = strategyMapper.mainDeleteStrategyById(strategy);
-        DataSourceUtils.deleteCache(strategy.getStrategyId());
-        return rows;
-    }
-
-    /**
      * 批量删除数据源策略
      *
      * @param strategy 数据源策略
@@ -142,9 +120,7 @@ public class StrategyServiceImpl implements IStrategyService {
     @Override
     @Transactional
     public int mainDeleteStrategyByIds(Strategy strategy) {
-//        strategyMapper.mainDeleteSourceByStrategyIds(strategy);
-//        int rows = strategyMapper.mainDeleteStrategyByIds(strategy);
-        DataSourceUtils.deleteCaches((List<Long>)strategy.getParams().get("Ids"));
-        return 1;
+        strategyMapper.mainDeleteSourceByStrategyIds(strategy);
+        return strategyMapper.mainDeleteStrategyByIds(strategy);
     }
 }

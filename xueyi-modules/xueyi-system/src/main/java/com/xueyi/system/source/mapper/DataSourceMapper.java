@@ -24,12 +24,4 @@ public interface DataSourceMapper {
      * @return 源策略信息
      */
     public Source mainSelectDataSourceCacheByStrategyId(Long strategyId);
-
-    /**
-     * 查询数据源列表
-     *
-     * @param source 数据源组
-     * @return 数据源组集合
-     */
-    public List<Source> selectLoadDataSources(Source source);
 }

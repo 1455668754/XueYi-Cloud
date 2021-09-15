@@ -2,8 +2,11 @@ package com.xueyi.system.source.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.source.mapper.DataSourceMapper;
 import com.xueyi.system.source.service.IDataSourceService;
@@ -25,12 +28,24 @@ public class DataSourceServiceImpl implements IDataSourceService {
     @Autowired
     private DataSourceMapper dataSourceMapper;
 
+    @Autowired
+    private RedisService redisService;
+
     /**
      * 项目启动时，初始化数据源策略组到缓存
      */
     @PostConstruct
     public void init() {
         loadingSourceCache();
+    }
+
+    /**
+     * 删除所有源策略 cache目录
+     */
+    @Override
+    public Source getSourceByEnterpriseId(Long enterpriseId) {
+        Long strategyId = redisService.getCacheObject(EnterpriseUtils.getStrategyCacheKey(enterpriseId));
+        return redisService.getCacheObject(DataSourceUtils.getSourceCacheKey(strategyId));
     }
 
     /**

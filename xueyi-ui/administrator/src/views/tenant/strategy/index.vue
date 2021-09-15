@@ -132,6 +132,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['tenant:strategy:remove']"
+              v-if="scope.row.isChange === SYSTEM_DEFAULT.FALSE"
             >删除
             </el-button>
           </template>
@@ -237,12 +238,16 @@ import {
 } from '@/api/tenant/strategy'
 import Sortable from 'sortablejs'
 import {writeSeparation} from '@/api/tenant/separation'
+import {STATUS, SYSTEM_DEFAULT} from "@constant/constants"
 
 export default {
   name: 'Strategy',
   components: {},
   data() {
     return {
+      //常量区
+      SYSTEM_DEFAULT: SYSTEM_DEFAULT,
+      STATUS: STATUS,
       // 遮罩层
       loading: true,
       // 提交状态

@@ -2,8 +2,9 @@ package com.xueyi.common.redis.utils;
 
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.SpringUtils;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
-
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class DataSourceUtils {
@@ -46,6 +47,7 @@ public class DataSourceUtils {
     public static void deleteCache(Long strategyId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getSourceCacheKey(strategyId));
+        redisService.getCacheObject(getSourceCacheKey(strategyId));
     }
 
     /**
@@ -55,13 +57,18 @@ public class DataSourceUtils {
      */
     public static <T> void deleteCaches(List<Long> strategyIds) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
-            for (int i = 0; i < strategyIds.size(); i++) {
-                Long Id = strategyIds.get(i);
+        for (Long Id : strategyIds) {
             T source = redisService.getCacheObject(getSourceCacheKey(Id));
-            try {
-                System.out.println(source.getClass().getField("isChange"));
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+            if (source != null) {
+                try {
+                    Field fileId = source.getClass().getSuperclass().getDeclaredField("isChange");
+                    fileId.setAccessible(true);
+                    if (StringUtils.equals(Constants.SYSTEM_DEFAULT_FALSE, (CharSequence) fileId.get(source))) {
+                        deleteCache(Id);
+                    }
+                } catch (NoSuchFieldException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

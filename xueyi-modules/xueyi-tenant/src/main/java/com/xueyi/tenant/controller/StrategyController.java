@@ -3,7 +3,12 @@ package com.xueyi.tenant.controller;
 import java.util.List;
 
 import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.SecurityConstants;
+import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
+import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.system.api.feign.RemoteSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +37,9 @@ public class StrategyController extends BaseController {
 
     @Autowired
     private IStrategyService tenantStrategyService;
+
+    @Autowired
+    private RemoteSourceService remoteSourceService;
 
     /**
      * 查询数据源策略列表
@@ -68,7 +76,11 @@ public class StrategyController extends BaseController {
     @Log(title = "数据源策略", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Strategy strategy) {
-        return toAjax(tenantStrategyService.mainInsertStrategy(strategy));
+        int rows = tenantStrategyService.mainInsertStrategy(strategy);
+        if (rows > 0 && StringUtils.equals(TenantConstants.NORMAL, strategy.getStatus())) {
+            remoteSourceService.refreshSource(strategy.getStrategyId(), SecurityConstants.INNER);
+        }
+        return toAjax(rows);
     }
 
     /**
@@ -81,7 +93,9 @@ public class StrategyController extends BaseController {
         if (StringUtils.equals(strategy.getIsChange(), Constants.SYSTEM_DEFAULT_TRUE)) {
             return AjaxResult.error("禁止操作默认策略");
         }
-        return toAjax(tenantStrategyService.mainUpdateStrategy(strategy));
+        int rows = tenantStrategyService.mainUpdateStrategy(strategy);
+        remoteSourceService.refreshSource(strategy.getStrategyId(), SecurityConstants.INNER);
+        return toAjax(rows);
     }
 
     /**
@@ -101,6 +115,8 @@ public class StrategyController extends BaseController {
     @Log(title = "数据源策略", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody Strategy strategy) {
-        return toAjax(tenantStrategyService.mainDeleteStrategyByIds(strategy));
+        int rows = tenantStrategyService.mainDeleteStrategyByIds(strategy);
+        DataSourceUtils.deleteCaches(ParamsUtils.IdsObjectToLongList(strategy.getParams().get("Ids")));
+        return toAjax(rows);
     }
 }

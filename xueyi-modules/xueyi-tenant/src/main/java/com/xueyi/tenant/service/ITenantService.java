@@ -60,6 +60,12 @@ public interface ITenantService {
     public int mainUpdateTenantSort(Tenant tenant);
 
     /**
+     * 新增指定租户Id cache
+     *
+     * @param tenantId 租户Id
+     */
+    public void refreshTenantCache(Long tenantId);
+    /**
      * 删除租户信息信息
      *
      * @param tenant 租户信息

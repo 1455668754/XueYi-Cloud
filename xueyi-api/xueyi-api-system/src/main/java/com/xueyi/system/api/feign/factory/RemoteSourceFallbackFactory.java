@@ -2,13 +2,10 @@ package com.xueyi.system.api.feign.factory;
 
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.feign.RemoteSourceService;
-import com.xueyi.system.api.domain.source.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * 数据源策略加载服务降级处理

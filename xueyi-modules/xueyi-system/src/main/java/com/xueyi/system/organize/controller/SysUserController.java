@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.HttpServletResponse;
 
+import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
@@ -16,6 +17,7 @@ import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
 import com.xueyi.system.api.domain.source.Source;
+import com.xueyi.system.source.service.IDataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -64,6 +66,9 @@ public class SysUserController extends BaseController {
     private TokenService tokenService;
 
     @Autowired
+    private IDataSourceService dataSourceService;
+
+    @Autowired
     private ISysEnterpriseService enterpriseService;
 
     /**
@@ -76,20 +81,11 @@ public class SysUserController extends BaseController {
         if (StringUtils.isNull(sysEnterprise)) {
             return R.fail("账号或密码错误，请检查");
         }
-        //查询租户所有的主从库信息
-        Source checkSource = new Source();
-        checkSource.setEnterpriseId(sysEnterprise.getEnterpriseId());
-        List<Source> source = enterpriseService.selectLoadDataSources(checkSource);
-        Source master = new Source();
-        for (Source s : source) {
-            if (s.getIsMain().equals("Y")) {
-                master = s;
-                break;
-            }
-        }
+        //查询租户的主从库信息
+        Source source = dataSourceService.getSourceByEnterpriseId(sysEnterprise.getEnterpriseId());
         //开始进入对应的主数据库
         SysUser checkUser = new SysUser();
-        checkUser.setSourceName(master.getMaster());
+        checkUser.setSourceName(source.getMaster());
         checkUser.setEnterpriseId(sysEnterprise.getEnterpriseId());
         checkUser.setUserName(userName);
         SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(checkUser);
@@ -102,14 +98,14 @@ public class SysUserController extends BaseController {
         checkRole.getParams().put("deptId", sysUser.getDeptId());
         checkRole.getParams().put("postId", sysUser.getPostId());
         checkRole.getParams().put("userId", sysUser.getUserId());
-        Set<String> roles = loginService.getRolePermission(master.getMaster(), checkRole, sysUser.getUserType());
+        Set<String> roles = loginService.getRolePermission(source.getMaster(), checkRole, sysUser.getUserType());
         // 权限集合
         SysMenu checkMenu = new SysMenu();
         checkMenu.setEnterpriseId(sysEnterprise.getEnterpriseId());
         checkMenu.getParams().put("userId", sysUser.getUserId());
-        Set<String> permissions = loginService.getMenuPermission(master.getMaster(), checkMenu, sysUser.getUserType());
+        Set<String> permissions = loginService.getMenuPermission(source.getMaster(), checkMenu, sysUser.getUserType());
         LoginUser sysUserVo = new LoginUser();
-        sysUserVo.setMainSource(master.getMaster());
+        sysUserVo.setMainSource(source.getMaster());
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setUserType(sysUser.getUserType());
         sysUserVo.setSysEnterprise(sysEnterprise);
@@ -259,13 +255,13 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysUser user) {
-        List<Long> Ids = (List<Long>) user.getParams().get("Ids");
+        List<Long> Ids = ParamsUtils.IdsObjectToLongList(user.getParams().get("Ids"));
         for (int i = Ids.size() - 1; i >= 0; i--) {
-            if(Objects.equals(SecurityUtils.getUserId(), Long.valueOf(String.valueOf(Ids.get(i))))){
+            if(Objects.equals(SecurityUtils.getUserId(), Ids.get(i))){
                 Ids.remove(i);
                 if(Ids.size()<=0){
                     return AjaxResult.error("删除失败，不能删除自己！");
-                }else{
+                } else {
                     userService.deleteUserByIds(user);
                     return AjaxResult.error("删除成功但未删除自己信息！");
                 }

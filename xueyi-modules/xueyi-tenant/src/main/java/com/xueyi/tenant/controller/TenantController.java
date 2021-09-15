@@ -92,7 +92,11 @@ public class TenantController extends BaseController
         if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(check))) {
             return AjaxResult.error("新增失败，该租户账号已存在，请修改后重试！");
         }
-        return toAjax(tenantService.mainInsertTenant(tenant));
+        int rows = tenantService.mainInsertTenant(tenant);
+        if (rows > 0) {
+            tenantService.refreshTenantCache(tenant.getTenantId());
+        }
+        return toAjax(rows);
     }
 
     /**
