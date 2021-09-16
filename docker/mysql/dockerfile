@@ -3,5 +3,11 @@ FROM mysql:8.0.26
 # author
 MAINTAINER xueyi
 
+# 设置docker默认编码db初始化数据乱码
+ENV LANG C.UTF-8
+
 # 执行sql脚本
 ADD ./db/*.sql /docker-entrypoint-initdb.d/
+
+# 增加执行权限，解决启动mysql容器后，不自动执行sql脚本的问题
+RUN chmod a+x /docker-entrypoint-initdb.d
