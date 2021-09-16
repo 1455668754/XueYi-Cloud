@@ -187,8 +187,8 @@
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.status"
-                  active-value="0"
-                  inactive-value="1"
+                  :active-value="STATUS.NORMAL"
+                  :inactive-value="STATUS.DISABLE"
                   @change="handleStatusChange(scope.row)"
                 ></el-switch>
               </template>
@@ -229,7 +229,6 @@
                 >修改
                 </el-button>
                 <el-button
-                  v-if="scope.row.userId !== 1"
                   size="mini"
                   type="text"
                   icon="el-icon-delete"
@@ -358,7 +357,7 @@
                   :key="item.roleId"
                   :label="item.name"
                   :value="item.roleId"
-                  :disabled="item.status === 1">
+                  :disabled="item.status === STATUS.DISABLE">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -422,12 +421,15 @@ import {treeSelect} from "@/api/system/post"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import {optionSelect} from "@/api/system/role"
+import {STATUS} from "@constant/constants"
 
 export default {
   name: "User",
   components: {Treeselect},
   data() {
     return {
+      //常量区
+      STATUS: STATUS,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -591,7 +593,7 @@ export default {
         id: node.id,
         label: node.label,
         children: node.children,
-        isDisabled: node.status === '1'
+        isDisabled: node.status === STATUS.DISABLE
       }
     },
     // 筛选节点
@@ -633,7 +635,7 @@ export default {
         phone: undefined,
         email: undefined,
         sex: undefined,
-        status: "0",
+        status: STATUS.NORMAL,
         remark: undefined,
         roleIds: []
       }
@@ -708,7 +710,7 @@ export default {
     },
     /** 用户状态修改 */
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用"
+      let text = row.status === STATUS.NORMAL ? "启用" : "停用"
       this.$confirm('确认要"' + text + '""' + row.userName + '"用户吗?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -718,7 +720,7 @@ export default {
       }).then(() => {
         this.msgSuccess(text + "成功")
       }).catch(function () {
-        row.status = row.status === "0" ? "1" : "0"
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     /** 提交按钮 */

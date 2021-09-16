@@ -455,8 +455,9 @@ export default {
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
+      let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
       updateSourceStatus({sourceId: row.sourceId, status: row.status}).then(response => {
-        this.msgSuccess('修改成功')
+        this.msgSuccess(msg + "成功")
       }).catch(() => {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })

@@ -196,7 +196,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
             SystemMenuVo systemVo = new SystemMenuVo();
             systemVo.setUid(sys.getSystemId());
             systemVo.setFUid(MenuConstants.TOP_NODE);
-            systemVo.setName(sys.getSystemName());
+            systemVo.setName(sys.getName());
             systemVo.setStatus(sys.getStatus());
             systemVo.setType("0");
             systemVo.setSystemId(sys.getSystemId());

@@ -2,9 +2,9 @@
   <div class="app-container">
     <div class="wrapper-container" v-show="showSearch">
       <el-form :model="queryParams" ref="queryForm" :inline="true" label-width="68px">
-        <el-form-item label="系统名称" prop="systemName">
+        <el-form-item label="系统名称" prop="name">
           <el-input
-            v-model="queryParams.systemName"
+            v-model="queryParams.name"
             placeholder="请输入系统名称"
             clearable
             size="small"
@@ -90,7 +90,7 @@
 
       <el-table v-loading="loading" :data="list" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="系统名称" align="center" prop="systemName" v-if="columns[0].visible"
+        <el-table-column label="系统名称" align="center" prop="name" v-if="columns[0].visible"
                          :show-overflow-tooltip="true" min-width="120"/>
         <el-table-column label="系统图片" align="center" prop="imageUrl" v-if="columns[1].visible"
                          :show-overflow-tooltip="true" min-width="120">
@@ -114,8 +114,8 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              active-value="0"
-              inactive-value="1"
+              :active-value="STATUS.NORMAL"
+              :inactive-value="STATUS.DISABLE"
               @change="handleStatusChange(scope.row)"/>
           </template>
         </el-table-column>
@@ -154,8 +154,8 @@
     <!-- 添加或修改子系统模块对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-click-modal="false" v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="系统名称" prop="systemName">
-          <el-input v-model="form.systemName" placeholder="请输入系统名称" maxlength="7" show-word-limit/>
+        <el-form-item label="系统名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入系统名称" maxlength="7" show-word-limit/>
         </el-form-item>
         <el-form-item label="系统简介" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" maxlength="14" show-word-limit/>
@@ -229,17 +229,20 @@
     </el-dialog>
   </div>
 </template>
-<script>
 
+<script>
 import {listSystem, getSystem, delSystem, addSystem, updateSystem, changeSystemStatus} from "@/api/system/system"
 import ImageBox from "@customComponents/ImageBox"
 import store from "@/store"
+import {STATUS} from "@constant/constants"
 
 export default {
   name: "System",
   components: {ImageBox},
   data() {
     return {
+      //常量区
+      STATUS: STATUS,
       enterpriseName: store.getters.enterpriseName,
       dialogImageUrl: '',
       dialogVisible: false,
@@ -273,7 +276,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        systemName: null,
+        name: null,
         type: null,
         route: null,
         status: null
@@ -292,7 +295,7 @@ export default {
       open: false,
       // 表单校验
       rules: {
-        systemName: [
+        name: [
           {required: true, message: "系统名称不能为空", trigger: "blur"}
         ],
         type: [
@@ -346,14 +349,14 @@ export default {
     reset() {
       this.form = {
         systemId: null,
-        systemName: null,
+        name: null,
         imageUrl: null,
         isCommon: "N",
         isNew: "Y",
         type: "0",
         route: null,
         sort: null,
-        status: "0",
+        status: STATUS.NORMAL,
         remark: null
       }
       this.resetForm("form")
@@ -421,8 +424,8 @@ export default {
     },
     // 模块状态修改
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用"
-      this.$confirm('确认要"' + text + '""' + row.systemName + '"模块吗?', "警告", {
+      let text = row.status === STATUS.NORMAL ? "启用" : "停用"
+      this.$confirm('确认要"' + text + '""' + row.name + '"模块吗?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -431,7 +434,7 @@ export default {
       }).then(() => {
         this.msgSuccess(text + "成功")
       }).catch(function () {
-        row.status = row.status === 0 ? 1 : 0
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       }).catch((err) => {
       })
     },

@@ -109,10 +109,10 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              active-value="0"
-              inactive-value="1"
+              :active-value="STATUS.NORMAL"
+              :inactive-value="STATUS.DISABLE"
               @change="handleStatusChange(scope.row)"
-              :disabled="scope.row.isChange === 'Y'"
+              :disabled="scope.row.isChange === SYSTEM_DEFAULT.TRUE"
             ></el-switch>
           </template>
         </el-table-column>
@@ -187,9 +187,9 @@
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.isMain"
-                  active-value="Y"
-                  inactive-value="N"
-                  :disabled="form.hasMain === true && scope.row.isMain=== 'N'"
+                  :active-value="IS_MAIN.TRUE"
+                  :inactive-value="IS_MAIN.FALSE"
+                  :disabled="form.hasMain === true && scope.row.isMain === IS_MAIN.FALSE"
                   @change="valueMainChange(scope.row.isMain)"
                 ></el-switch>
               </template>
@@ -238,7 +238,8 @@ import {
 } from '@/api/tenant/strategy'
 import Sortable from 'sortablejs'
 import {writeSeparation} from '@/api/tenant/separation'
-import {STATUS, SYSTEM_DEFAULT} from "@constant/constants"
+import {STATUS, STATUS_UPDATE_OPERATION, SYSTEM_DEFAULT} from "@constant/constants"
+import {IS_MAIN} from "@constant/tenantConstants"
 
 export default {
   name: 'Strategy',
@@ -248,6 +249,8 @@ export default {
       //常量区
       SYSTEM_DEFAULT: SYSTEM_DEFAULT,
       STATUS: STATUS,
+      IS_MAIN:IS_MAIN,
+      STATUS_UPDATE_OPERATION: STATUS_UPDATE_OPERATION,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -332,9 +335,9 @@ export default {
         name: null,
         sourceAmount: 0,
         sort: 0,
-        status: '0',
+        status: STATUS.NORMAL,
         values: [],
-        isChange: 0,
+        isChange: SYSTEM_DEFAULT.FALSE,
         hasMain: false
       }
       this.resetForm('form')
@@ -377,7 +380,7 @@ export default {
       getStrategy({strategyId: strategyId}).then(response => {
         this.form = response.data
         for (let i = 0; i < this.form.values.length; i++) {
-          if (this.form.values[i].isMain === 'Y') {
+          if (this.form.values[i].isMain === IS_MAIN.TRUE) {
             this.form.hasMain = true
           }
         }
@@ -387,10 +390,11 @@ export default {
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
-      updateStrategy({strategyId: row.strategyId, isChange: row.isChange, status: row.status, updateType: '1'}).then(response => {
-        this.msgSuccess('修改成功')
+      let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
+      updateStrategy({strategyId: row.strategyId, isChange: row.isChange, status: row.status, updateType: STATUS_UPDATE_OPERATION}).then(response => {
+        this.msgSuccess(msg + "成功")
       }).catch(() => {
-        row.status = row.status === '0' ? '1' : '0'
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     /** 提交按钮 */
@@ -400,7 +404,7 @@ export default {
         if (valid) {
           if (this.valueCheck()) {
             if (this.form.strategyId != null) {
-              if (this.form.isChange === '0') {
+              if (this.form.isChange === SYSTEM_DEFAULT.FALSE) {
                 updateStrategy(this.form).then(response => {
                   this.msgSuccess('修改成功')
                   this.open = false
@@ -474,8 +478,8 @@ export default {
     valueAdd() {
       const newData = {
         sourceId: '',
-        isMain: 'N',
-        status: '1'
+        isMain: IS_MAIN.FALSE,
+        status: STATUS.DISABLE
       }
       this.form.values.push(newData)
     },
@@ -489,7 +493,7 @@ export default {
       data[0].status = writeData[0].status
     },
     valueMainChange(isMain) {
-      this.form.hasMain = isMain !== 'N'
+      this.form.hasMain = isMain !== IS_MAIN.FALSE
     },
     valueDelete(row) {
       if (row !== undefined) {
@@ -501,13 +505,13 @@ export default {
       let key = 0
       for (let i = 0; i < this.form.values.length; i++) {
         let increase = 0
-        if (this.form.values[i].isMain === 'Y') {
+        if (this.form.values[i].isMain === IS_MAIN.TRUE) {
           key++
           increase = 1
         }
         for (let j = 0; j < this.form.values.length; j++) {
           if (this.form.values[i].sourceId === null || this.form.values[i].sourceId === '') {
-            if (this.form.values[i].isMain === 'Y') {
+            if (this.form.values[i].isMain === IS_MAIN.TRUE) {
               this.form.hasMain = false
             }
             this.form.values.splice(i--, 1)
@@ -516,7 +520,7 @@ export default {
             }
             break
           } else if (i !== j && this.form.values[i].sourceId === this.form.values[j].sourceId) {
-            if (this.form.values[j].isMain === 'Y') {
+            if (this.form.values[j].isMain === IS_MAIN.TRUE) {
               this.form.hasMain = false
             }
             this.form.values.splice(j--, 1)

@@ -148,10 +148,10 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              active-value="0"
-              inactive-value="1"
+              :active-value="STATUS.NORMAL"
+              :inactive-value="STATUS.DISABLE"
               @change="handleStatusChange(scope.row)"
-              :disabled="scope.row.isChange === 'Y'"
+              :disabled="scope.row.isChange === SYSTEM_DEFAULT.TRUE"
             ></el-switch>
           </template>
         </el-table-column>
@@ -171,7 +171,7 @@
               icon="el-icon-circle-check"
               @click="handleMenuScope(scope.row)"
               v-hasPermi="['tenant:tenant:edit']"
-              v-if="scope.row.isChange === 'N'"
+              v-if="scope.row.isChange === SYSTEM_DEFAULT.FALSE"
             >菜单屏蔽配置
             </el-button>
             <el-button
@@ -180,7 +180,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['tenant:tenant:remove']"
-              v-if="scope.row.isChange === 'N'"
+              v-if="scope.row.isChange === SYSTEM_DEFAULT.FALSE"
             >删除
             </el-button>
           </template>
@@ -313,12 +313,17 @@ import {
 import Sortable from 'sortablejs'
 import {listStrategyExclude} from '@/api/tenant/strategy'
 import {treeSelectPermitAllOnlyPublic as treeSelectPermitAllOnlyPublic} from "@/api/common/temporary"
+import {STATUS, STATUS_UPDATE_OPERATION, SYSTEM_DEFAULT} from "@constant/constants"
 
 export default {
   name: 'Tenant',
   components: {},
   data() {
     return {
+      //常量区
+      SYSTEM_DEFAULT: SYSTEM_DEFAULT,
+      STATUS: STATUS,
+      STATUS_UPDATE_OPERATION: STATUS_UPDATE_OPERATION,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -431,11 +436,10 @@ export default {
         tenantLogo: null,
         tenantNameFrequency: 1,
         sort: 0,
-        status: '0',
+        status: STATUS.NORMAL,
         remark: null,
-
         values: [],
-        isChange: 0,
+        isChange: SYSTEM_DEFAULT.FALSE,
         hasMain: false
       }
       this.systemMenuForm = {
@@ -499,10 +503,11 @@ export default {
     },
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
-      updateTenant({tenantId: row.tenantId, isChange: row.isChange, status: row.status, updateType: '1'}).then(response => {
-        this.msgSuccess('修改成功')
+      let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
+      updateTenant({tenantId: row.tenantId, isChange: row.isChange, status: row.status, updateType: STATUS_UPDATE_OPERATION}).then(response => {
+        this.msgSuccess(msg + "成功")
       }).catch(() => {
-        row.status = row.status === '0' ? '1' : '0'
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     /** 分配菜单权限操作 */
@@ -521,7 +526,7 @@ export default {
     },
     /** 查询模块&菜单树结构 */
     getSystemMenuTreeSelect() {
-      treeSelectPermitAllOnlyPublic({ status: '0' }).then(response => {
+      treeSelectPermitAllOnlyPublic({ status: STATUS.NORMAL }).then(response => {
         this.systemMenuOptions = response.data
       })
     },
@@ -559,7 +564,7 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.tenantId != null) {
-            if (this.form.isChange === 'N') {
+            if (this.form.isChange === SYSTEM_DEFAULT.FALSE) {
               updateTenant(this.form).then(response => {
                 this.msgSuccess('修改成功')
                 this.open = false

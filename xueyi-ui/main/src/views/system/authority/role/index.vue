@@ -127,8 +127,8 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              active-value="0"
-              inactive-value="1"
+              :active-value="STATUS.NORMAL"
+              :inactive-value="STATUS.DISABLE"
               @change="handleStatusChange(scope.row)"
             ></el-switch>
           </template>
@@ -337,11 +337,14 @@ import {
 } from "@/api/system/role"
 import {treeSelect as roleDeptTreeSelect} from "@/api/system/post"
 import {treeSelectPermitEnterprise as roleSystemMenuTreeSelect} from "@/api/system/system"
+import {STATUS} from "@constant/constants"
 
 export default {
   name: "Role",
   data() {
     return {
+      //常量区
+      STATUS: STATUS,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -456,7 +459,7 @@ export default {
     },
     /** 查询模块&菜单树结构 */
     getSystemMenuTreeSelect() {
-      roleSystemMenuTreeSelect({ status: '0' }).then(response => {
+      roleSystemMenuTreeSelect({ status: STATUS.NORMAL }).then(response => {
         this.systemMenuOptions = response.data
       })
     },
@@ -494,7 +497,7 @@ export default {
     },
     // 角色状态修改
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用"
+      let text = row.status === STATUS.NORMAL ? "启用" : "停用"
       this.$confirm('确认要"' + text + '""' + row.name + '"角色吗?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -504,7 +507,7 @@ export default {
       }).then(() => {
         this.msgSuccess(text + "成功")
       }).catch(function () {
-        row.status = row.status === "0" ? "1" : "0"
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     // 取消按钮
@@ -538,7 +541,7 @@ export default {
         roleKey: undefined,
         dataScope: '1',
         sort: 0,
-        status: '0',
+        status: STATUS.NORMAL,
         systemMenuIds: [],
         deptPostIds: [],
         menuCheckStrictly: true,

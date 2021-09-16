@@ -6,7 +6,7 @@ module.exports = {
         FALSE :'N'
     },
 
-    /** 系统默认值（0启用 1禁用）*/
+    /** 状态（0启用 1禁用）*/
     STATUS :{
         NORMAL :'0',
         DISABLE :'1'

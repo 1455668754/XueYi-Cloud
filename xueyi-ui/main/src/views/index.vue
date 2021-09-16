@@ -11,7 +11,7 @@
         </div>
         <div class="card-text">
           <div>
-            <span class="card-text-main">{{ item.systemName }}</span>
+            <span class="card-text-main">{{ item.name }}</span>
             <el-button size="mini" class="card-text-button" @click="jumpClick(item)" round>去管理></el-button>
           </div>
           <div class="card-text-remark">

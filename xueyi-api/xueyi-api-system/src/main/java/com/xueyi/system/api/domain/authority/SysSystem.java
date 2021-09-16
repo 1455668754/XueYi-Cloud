@@ -16,7 +16,7 @@ public class SysSystem extends BaseEntity {
 
     /** 系统名称 */
     @Excel(name = "系统名称")
-    private String systemName;
+    private String name;
 
     /** 图片地址 */
     @Excel(name = "图片地址")
@@ -40,14 +40,14 @@ public class SysSystem extends BaseEntity {
     /** 系统默认（0非默认 1默认） */
     private String isMain;
 
-    public void setSystemName(String systemName)
+    public void setName(String name)
     {
-        this.systemName = systemName;
+        this.name = name;
     }
 
-    public String getSystemName()
+    public String getName()
     {
-        return systemName;
+        return name;
     }
 
     public String getImageUrl() {
@@ -108,12 +108,13 @@ public class SysSystem extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("systemId", getSystemId())
-                .append("systemName", getSystemName())
+                .append("name", getName())
                 .append("imageUrl", getImageUrl())
                 .append("type", getType())
                 .append("route", getRoute())
                 .append("isMain", getIsMain())
                 .append("isNew", getIsNew())
+                .append("isChange", getIsChange())
                 .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())

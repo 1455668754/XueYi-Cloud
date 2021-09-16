@@ -105,8 +105,8 @@
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.status"
-                  active-value="0"
-                  inactive-value="1"
+                  :active-value="STATUS.NORMAL"
+                  :inactive-value="STATUS.DISABLE"
                   @change="handleStatusChange(scope.row)"
                 ></el-switch>
               </template>
@@ -236,7 +236,7 @@
                   :key="item.roleId"
                   :label="item.name"
                   :value="item.roleId"
-                  :disabled="item.status === 1">
+                  :disabled="item.status === STATUS.NORMAL">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -257,12 +257,15 @@ import {treeSelect} from "@/api/system/dept"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import {optionSelect} from "@/api/system/role"
+import {STATUS} from "@constant/constants"
 
 export default {
   name: "Post",
   components: {Treeselect},
   data() {
     return {
+      //常量区
+      STATUS: STATUS,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -361,7 +364,7 @@ export default {
         id: node.id,
         label: node.label,
         children: node.children,
-        isDisabled: node.status === '1'
+        isDisabled: node.status === STATUS.DISABLE
       }
     },
     // 筛选节点
@@ -394,7 +397,7 @@ export default {
         postCode: undefined,
         postName: undefined,
         sort: 0,
-        status: "0",
+        status: STATUS.NORMAL,
         remark: undefined,
         roleIds: []
       }
@@ -441,8 +444,8 @@ export default {
     },
     /** 岗位状态修改 */
     handleStatusChange(row) {
-      let msg = row.status === "0" ? "启用" : "停用"
-      let text = row.status === "0" ? '启用岗位"' + row.postName + '"吗?' : '停用岗位"' + row.postName + '"吗?停用岗位会同步停用所有归属用户，且归属用户将无法启用！'
+      let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
+      let text = row.status === STATUS.NORMAL ? '启用岗位"' + row.postName + '"吗?' : '停用岗位"' + row.postName + '"吗?停用岗位会同步停用所有归属用户，且归属用户将无法启用！'
       this.$confirm('确认要' + text, "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -452,7 +455,7 @@ export default {
       }).then(() => {
         this.msgSuccess(msg + "成功")
       }).catch(function () {
-        row.status = row.status === "0" ? "1" : "0"
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     /** 提交按钮 */

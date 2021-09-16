@@ -35,8 +35,8 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              active-value="0"
-              inactive-value="1"
+              :active-value="STATUS.NORMAL"
+              :inactive-value="STATUS.DISABLE"
               active-color="#13ce66"
               inactive-color="#ff4949"
               disabled>
@@ -271,12 +271,15 @@ import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import IconSelect from "@basicsComponents/IconSelect"
 import store from "@/store"
+import {STATUS} from "@constant/constants"
 
 export default {
   name: "Menu",
   components: {Treeselect, IconSelect},
   data() {
     return {
+      //常量区
+      STATUS: STATUS,
       enterpriseName: store.getters.enterpriseName,
       // 遮罩层
       loading: true,
@@ -389,7 +392,7 @@ export default {
         isFrame: "1",
         isCache: "0",
         visible: "0",
-        status: "0"
+        status: STATUS.NORMAL
       }
       this.resetForm("form")
       this.submitLoading = false

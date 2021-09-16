@@ -65,8 +65,8 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              active-value="0"
-              inactive-value="1"
+              :active-value="STATUS.NORMAL"
+              :inactive-value="STATUS.DISABLE"
               @change="handleStatusChange(scope.row)"
             ></el-switch>
           </template>
@@ -209,9 +209,10 @@
                   :key="item.roleId"
                   :label="item.name"
                   :value="item.roleId"
-                  :disabled="item.status === 1">
+                  :disabled="item.status === STATUS.DISABLE">
                 </el-option>
               </el-select>
+              {{roleOptions}}
             </el-form-item>
           </el-col>
         </el-row>
@@ -238,12 +239,15 @@ import {
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import {optionSelect} from "@/api/system/role"
+import {STATUS} from "@constant/constants"
 
 export default {
   name: "Dept",
   components: {Treeselect},
   data() {
     return {
+      //常量区
+      STATUS: STATUS,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -350,7 +354,7 @@ export default {
         leader: undefined,
         phone: undefined,
         email: undefined,
-        status: '0',
+        status: STATUS.NORMAL,
         remark: undefined,
         roleIds: []
       }
@@ -411,8 +415,8 @@ export default {
     },
     /** 部门状态修改 */
     handleStatusChange(row) {
-      let msg = row.status === "0" ? "启用" : "停用"
-      let text = row.status === "0" ? '启用部门"' + row.deptName + '"吗?' : '停用部门"' + row.deptName + '"吗?停用部门会同步停用所有归属岗位及用户，且归属岗位与用户将无法启用！'
+      let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
+      let text = row.status === STATUS.NORMAL ? '启用部门"' + row.deptName + '"吗?' : '停用部门"' + row.deptName + '"吗?停用部门会同步停用所有归属岗位及用户，且归属岗位与用户将无法启用！'
       this.$confirm('确认要' + text, "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -422,7 +426,7 @@ export default {
       }).then(() => {
         this.msgSuccess(msg + "成功")
       }).catch(function () {
-        row.status = row.status === "0" ? "1" : "0"
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     /** 提交按钮 */

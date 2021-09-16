@@ -54,7 +54,7 @@ primary key (strategy_id)
 -- 初始化-策略信息表数据
 -- ----------------------------
 insert into xy_tenant_strategy(strategy_id, name, tenant_amount, source_amount, is_change, sort)
-values (1, '默认注册策略', 2, 1, 1, 1);
+values (1, '默认注册策略', 2, 1, 'Y', 1);
 
 -- ----------------------------
 -- 3、数据源表|管理系统数据源信息 | 主库有且只能有一个，用途：主要用于存储公共数据，具体看后续文档或视频
@@ -132,10 +132,10 @@ values (1, 1, 'Y');
 drop table if exists xy_system;
 create table xy_system (
   system_id		            bigint	            not null                                comment '系统Id',
-  system_name		        varchar(50)	        not null	                            comment '系统名称',
+  name		                varchar(50)	        not null	                            comment '系统名称',
   image_url                 varchar(5000)	    default null 	        	            comment '图片地址',
   is_main                   char(1)             not null default 'N'	                comment '主系统（Y是 N否）',
-  is_default                char(1)             not null default 'N'	                comment '默认系统（Y是 N否）',
+  is_change                 char(1)             not null default 'N'	                comment '默认系统（Y是 N否）',
   type		                char(1)	            not null default '1'	                comment '跳转类型（0内部跳转 1外部跳转）',
   is_new		            char(1)	            not null default 'Y'	                comment '新页面（Y是 N否）',
   route                     varchar(500)        not null	                            comment '跳转路由',
@@ -154,11 +154,11 @@ create table xy_system (
 # ----------------------------
 # 初始化-租户信息表数据
 # ----------------------------
-insert into xy_system (system_id, system_name, is_main, is_default, route, remark, tenant_id)
+insert into xy_system (system_id, name, is_main, is_change, route, remark, tenant_id)
 values (0, '默认系统' ,    'Y', 'Y', '', '默认系统', 0),
        (2, '租户管理系统' , 'Y', 'N', 'http://localhost:81' , '雪忆租户管理系统', -1);
 
-insert into xy_system (system_id, system_name, image_url, route, remark, tenant_id)
+insert into xy_system (system_id, name, image_url, route, remark, tenant_id)
 values (1 , '商城' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , 'http://localhost:82' , '轻松打造在线商城', 0),
        (3 , '系统3' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
        (4 , '系统4' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
