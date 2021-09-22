@@ -31,6 +31,12 @@ public class Constants {
     /** wss请求 */
     public static final String WSS = "wss://";
 
+    /** ws请求匹配头 */
+    public static final String DEFAULT_FILTER_PATH = "/ws/";
+
+    /** ws请求端口偏移 */
+    public static final int WS_PORT = 10;
+
     /** 成功标记 */
     public static final Integer SUCCESS = 200;
 

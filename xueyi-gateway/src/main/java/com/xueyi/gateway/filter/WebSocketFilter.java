@@ -1,5 +1,6 @@
 package com.xueyi.gateway.filter;
 
+import com.xueyi.common.core.constant.Constants;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -11,10 +12,13 @@ import java.net.URI;
 
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
 
+/**
+ * webSocket连接转发
+ *
+ * @author xueyi
+ */
 @Component
 public class WebSocketFilter implements GlobalFilter, Ordered {
-
-    private final static String DEFAULT_FILTER_PATH = "/ws/";
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -22,9 +26,9 @@ public class WebSocketFilter implements GlobalFilter, Ordered {
         String scheme = requestUrl.getScheme();
         if (!"ws".equals(scheme) && !"wss".equals(scheme)) {
             return chain.filter(exchange);
-        } else if (requestUrl.getPath().startsWith(DEFAULT_FILTER_PATH)) {
+        } else if (requestUrl.getPath().startsWith(Constants.DEFAULT_FILTER_PATH)) {
             String wsScheme = convertWsToHttp(scheme);
-            URI wsRequestUrl = UriComponentsBuilder.fromUri(requestUrl).scheme(wsScheme).build().toUri();
+            URI wsRequestUrl = UriComponentsBuilder.fromUri(requestUrl).scheme(wsScheme).port(requestUrl.getPort()+Constants.WS_PORT).build().toUri();
             exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, wsRequestUrl);
         }
         return chain.filter(exchange);

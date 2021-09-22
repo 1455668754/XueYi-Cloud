@@ -16,7 +16,7 @@ public class ConfigureConfig {
     @Value("${socket.host:0.0.0.0}")
     public String host;
 
-    @Value("${socket.port}")
+    @Value("${server.port}")
     public String port;
 
     @Value("${socket.bossGroup:1}")
