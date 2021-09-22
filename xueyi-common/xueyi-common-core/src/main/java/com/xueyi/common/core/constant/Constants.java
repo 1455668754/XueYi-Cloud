@@ -25,6 +25,12 @@ public class Constants {
     /** https请求 */
     public static final String HTTPS = "https://";
 
+    /** ws请求 */
+    public static final String WS = "ws://";
+
+    /** wss请求 */
+    public static final String WSS = "wss://";
+
     /** 成功标记 */
     public static final Integer SUCCESS = 200;
 
