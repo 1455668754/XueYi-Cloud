@@ -81,10 +81,10 @@
                 style="width: 240px"
               >
                 <el-option
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
                 />
               </el-select>
             </el-form-item>

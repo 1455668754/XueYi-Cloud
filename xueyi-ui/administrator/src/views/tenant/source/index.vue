@@ -110,8 +110,8 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              active-value="0"
-              inactive-value="1"
+              :active-value="STATUS.NORMAL"
+              :inactive-value="STATUS.DISABLE"
               @change="handleStatusChange(scope.row)"
               :disabled="scope.row.isChange === SYSTEM_DEFAULT.TRUE"
             />

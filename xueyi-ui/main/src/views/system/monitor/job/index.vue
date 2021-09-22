@@ -117,8 +117,8 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
-              active-value="0"
-              inactive-value="1"
+              :active-value="STATUS.NORMAL"
+              :inactive-value="STATUS.DISABLE"
               @change="handleStatusChange(scope.row)"
             ></el-switch>
           </template>
@@ -312,6 +312,7 @@
 <script>
 import Crontab from '@basicsComponents/Crontab'
 import {listJob, getJob, delJob, addJob, updateJob, runJob, changeJobStatus} from "@/api/monitor/job"
+import {STATUS} from "@constant/constants"
 
 export default {
   name: "Job",
@@ -319,6 +320,8 @@ export default {
   components: {Crontab},
   data() {
     return {
+      //常量区
+      STATUS: STATUS,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -401,7 +404,7 @@ export default {
         cronExpression: undefined,
         misfirePolicy: 1,
         concurrent: 1,
-        status: "0"
+        status: STATUS.NORMAL
       }
       this.resetForm("form")
       this.submitLoading = false
@@ -440,7 +443,7 @@ export default {
     },
     // 任务状态修改
     handleStatusChange(row) {
-      let text = row.status === "0" ? "启用" : "停用"
+      let text = row.status === STATUS.NORMAL ? "启用" : "停用"
       this.$confirm('确认要"' + text + '""' + row.jobName + '"任务吗?', "警告", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -450,7 +453,7 @@ export default {
       }).then(() => {
         this.msgSuccess(text + "成功")
       }).catch(function () {
-        row.status = row.status === "0" ? "1" : "0"
+        row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     /* 立即执行一次 */
