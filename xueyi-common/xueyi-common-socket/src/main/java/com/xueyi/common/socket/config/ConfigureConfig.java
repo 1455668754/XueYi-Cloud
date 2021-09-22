@@ -1,5 +1,6 @@
 package com.xueyi.common.socket.config;
 
+import com.xueyi.common.core.constant.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -133,7 +134,7 @@ public class ConfigureConfig {
     }
 
     public String getPort(String port) {
-        return StringUtils.isNotBlank(port) ? port : this.port;
+        return StringUtils.isNotBlank(port) ? port : String.valueOf(Integer.parseInt(this.port) + Constants.WS_PORT);
     }
 
     public String getBossGroup(String bossGroup) {
