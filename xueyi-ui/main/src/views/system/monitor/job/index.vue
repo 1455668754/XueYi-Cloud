@@ -14,20 +14,20 @@
         <el-form-item label="任务组名" prop="jobGroup">
           <el-select v-model="queryParams.jobGroup" placeholder="请选择任务组名" clearable size="small">
             <el-option
-              v-for="dict in jobGroupOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_job_group"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
         <el-form-item label="任务状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择任务状态" clearable size="small">
             <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_job_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -102,11 +102,17 @@
 
       <el-table v-loading="loading" :data="jobList" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center"/>
-        <el-table-column label="任务编号" width="100" align="center" prop="jobId" />
+        <el-table-column label="任务编号" width="100" align="center" prop="jobId"/>
         <el-table-column label="任务名称" align="center" prop="jobName" :show-overflow-tooltip="true" min-width="120"/>
-        <el-table-column label="任务组名" align="center" prop="jobGroup" :formatter="jobGroupFormat" min-width="120"/>
-        <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true" min-width="120"/>
-        <el-table-column label="cron执行表达式" align="center" prop="cronExpression" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column label="任务组名" align="center" prop="jobGroup" min-width="120">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.sys_job_group" :value="scope.row.jobGroup"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" :show-overflow-tooltip="true"
+                         min-width="120"/>
+        <el-table-column label="cron执行表达式" align="center" prop="cronExpression" :show-overflow-tooltip="true"
+                         min-width="120"/>
         <el-table-column label="状态" align="center" min-width="120">
           <template slot-scope="scope">
             <el-switch
@@ -177,10 +183,10 @@
             <el-form-item label="任务分组" prop="jobGroup">
               <el-select v-model="form.jobGroup" placeholder="请选择">
                 <el-option
-                  v-for="dict in jobGroupOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  v-for="dict in dict.type.sys_job_group"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -234,11 +240,10 @@
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_job_status"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -310,7 +315,8 @@ import {listJob, getJob, delJob, addJob, updateJob, runJob, changeJobStatus} fro
 
 export default {
   name: "Job",
-  components: { Crontab },
+  dicts: ['sys_job_group', 'sys_job_status'],
+  components: {Crontab},
   data() {
     return {
       // 遮罩层
@@ -339,10 +345,6 @@ export default {
       openCron: false,
       // 传入的表达式
       expression: "",
-      // 任务组名字典
-      jobGroupOptions: [],
-      // 状态字典
-      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -369,12 +371,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDicts("sys_job_group").then(response => {
-      this.jobGroupOptions = response.data
-    })
-    this.getDicts("sys_job_status").then(response => {
-      this.statusOptions = response.data
-    })
   },
   methods: {
     /** 查询定时任务列表 */
@@ -388,11 +384,7 @@ export default {
     },
     // 任务组名字典翻译
     jobGroupFormat(row, column) {
-      return this.selectDictLabel(this.jobGroupOptions, row.jobGroup)
-    },
-    // 状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
+      return this.selectDictLabel(this.dict.type.sys_job_group, row.jobGroup);
     },
     // 取消按钮
     cancel() {
@@ -532,7 +524,7 @@ export default {
               this.submitLoading = false
             })
           }
-        }else{
+        } else {
           this.submitLoading = false
         }
       })

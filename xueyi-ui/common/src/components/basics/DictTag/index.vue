@@ -1,20 +1,20 @@
 <template>
   <div>
     <template v-for="(item, index) in options">
-      <template v-if="values.includes(item.dictValue)">
+      <template v-if="values.includes(item.value)">
         <span
-            v-if="item.listClass == 'default' || item.listClass == ''"
-            :key="item.dictValue"
+            v-if="item.raw.listClass == 'default' || item.raw.listClass == ''"
+            :key="item.value"
             :index="index"
-            :class="item.cssClass">{{ item.dictLabel }}</span>
+            :class="item.raw.cssClass">{{ item.label }}</span>
         <el-tag
             v-else
             :disable-transitions="true"
-            :key="item.dictValue"
+            :key="item.value"
             :index="index"
-            :type="item.listClass == 'primary' ? '' : item.listClass"
-            :class="item.cssClass">
-          {{ item.dictLabel }}
+            :type="item.raw.listClass == 'primary' ? '' : item.raw.listClass"
+            :class="item.raw.cssClass">
+          {{ item.label }}
         </el-tag>
       </template>
     </template>

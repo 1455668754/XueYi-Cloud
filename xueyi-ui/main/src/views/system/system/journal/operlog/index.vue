@@ -41,10 +41,10 @@
             style="width: 240px"
           >
             <el-option
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_oper_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -57,10 +57,10 @@
             style="width: 240px"
           >
             <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_common_status"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -126,7 +126,11 @@
                 :default-sort="defaultSort" @sort-change="handleSortChange">
         <el-table-column type="selection" width="55" align="center"/>
         <el-table-column label="系统模块" align="center" prop="title" min-width="120"/>
-        <el-table-column label="操作类型" align="center" prop="businessType" :formatter="typeFormat" min-width="120"/>
+        <el-table-column label="操作类型" align="center" prop="businessType" min-width="120">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.sys_oper_type" :value="scope.row.businessType"/>
+          </template>
+        </el-table-column>
         <el-table-column label="请求方式" align="center" prop="requestMethod" min-width="120"/>
         <el-table-column label="操作账号 | 操作人员" align="center" :show-overflow-tooltip="true" sortable="custom"
                          :sort-orders="['descending', 'ascending']" min-width="120">
@@ -135,7 +139,11 @@
           </template>
         </el-table-column>
         <el-table-column label="主机" align="center" prop="operIp" :show-overflow-tooltip="true" min-width="120"/>
-        <el-table-column label="操作状态" align="center" prop="status" :formatter="statusFormat" min-width="120"/>
+        <el-table-column label="操作状态" align="center" prop="status" min-width="120">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.sys_common_status" :value="scope.row.status"/>
+          </template>
+        </el-table-column>
         <el-table-column label="操作日期" align="center" prop="operTime" sortable="custom"
                          :sort-orders="['descending', 'ascending']" min-width="180">
           <template slot-scope="scope">
@@ -214,6 +222,7 @@ import {list, delOperlog, cleanOperlog} from "@/api/system/operlog"
 
 export default {
   name: "Operlog",
+  dicts: ['sys_oper_type', 'sys_common_status'],
   data() {
     return {
       // 遮罩层
@@ -232,10 +241,6 @@ export default {
       list: [],
       // 是否显示弹出层
       open: false,
-      // 类型数据字典
-      typeOptions: [],
-      // 类型数据字典
-      statusOptions: [],
       // 日期范围
       dateRange: [],
       // 默认排序
@@ -256,12 +261,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDicts("sys_oper_type").then(response => {
-      this.typeOptions = response.data
-    })
-    this.getDicts("sys_common_status").then(response => {
-      this.statusOptions = response.data
-    })
   },
   methods: {
     /** 查询登录日志 */
@@ -274,13 +273,9 @@ export default {
         }
       )
     },
-    // 操作日志状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
-    },
     // 操作日志类型字典翻译
     typeFormat(row, column) {
-      return this.selectDictLabel(this.typeOptions, row.businessType)
+      return this.selectDictLabel(this.dict.type.sys_oper_type, row.businessType);
     },
     /** 搜索按钮操作 */
     handleQuery() {

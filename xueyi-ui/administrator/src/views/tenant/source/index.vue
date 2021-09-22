@@ -14,10 +14,10 @@
         <el-form-item label="数据源类型" prop="databaseType">
           <el-select v-model="queryParams.databaseType" placeholder="请选择数据源类型" clearable size="small">
             <el-option
-              v-for="dict in databaseTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_database_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -33,20 +33,20 @@
         <el-form-item label="读写类型" prop="type">
           <el-select v-model="queryParams.type" placeholder="请选择读写类型" clearable size="small">
             <el-option
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_source_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
             <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_normal_disable"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -98,12 +98,12 @@
         </el-table-column>
         <el-table-column label="读写类型" align="center" prop="type" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
-            <dict-tag :options="typeOptions" :value="scope.row.type"/>
+            <dict-tag :options="dict.type.sys_source_type" :value="scope.row.type"/>
           </template>
         </el-table-column>
         <el-table-column label="数据源类型" align="center" prop="databaseType" class-name="allowDrag" min-width="120">
           <template slot-scope="scope">
-            <dict-tag :options="databaseTypeOptions" :value="scope.row.databaseType"/>
+            <dict-tag :options="dict.type.sys_database_type" :value="scope.row.databaseType"/>
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center" prop="status" class-name="allowDrag" min-width="120">
@@ -169,11 +169,10 @@
         <el-form-item label="源类型">
           <el-radio-group v-model="form.databaseType" disabled>
             <el-radio
-              v-for="dict in databaseTypeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
+              v-for="dict in dict.type.sys_database_type"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="源驱动" prop="driverClassName">
@@ -200,22 +199,20 @@
         <el-form-item label="读写类型">
           <el-radio-group v-model="form.type" :disabled="form.sourceId != undefined" @change="TypeChange">
             <el-radio
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
+              v-for="dict in dict.type.sys_source_type"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status" :disabled="form.sourceId != undefined">
             <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
+              v-for="dict in dict.type.sys_normal_disable"
               :disabled="form.isChange === SYSTEM_DEFAULT.TRUE"
-            >{{ dict.dictLabel }}
-            </el-radio>
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -258,6 +255,7 @@ import {DATABASE_TYPE, SOURCE_TYPE} from '@constant/tenantConstants'
 
 export default {
   name: 'Source',
+  dicts: ['sys_database_type','sys_source_type','sys_normal_disable'],
   components: {},
   data() {
     return {
@@ -294,12 +292,6 @@ export default {
       // 是否显示弹出层
       open: false,
       openSeparation: false,
-      // 数据源类型字典
-      databaseTypeOptions: [],
-      // 读写类型字典
-      typeOptions: [],
-      // 状态字典
-      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -339,7 +331,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDict()
   },
   methods: {
     /** 查询数据源列表 */
@@ -349,18 +340,6 @@ export default {
         this.sourceList = response.rows
         this.total = response.total
         this.loading = false
-      })
-    },
-    /** 查询字典信息 */
-    getDict() {
-      this.getDicts('sys_database_type').then(response => {
-        this.databaseTypeOptions = response.data
-      })
-      this.getDicts('sys_source_type').then(response => {
-        this.typeOptions = response.data
-      })
-      this.getDicts('sys_normal_disable').then(response => {
-        this.statusOptions = response.data
       })
     },
     // 取消按钮

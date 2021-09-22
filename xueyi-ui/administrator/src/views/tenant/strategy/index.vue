@@ -14,10 +14,10 @@
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
             <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_normal_disable"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -156,10 +156,10 @@
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
             <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
+              v-for="dict in dict.type.sys_normal_disable"
+              :key="dict.value"
+              :label="dict.value"
+            >{{ dict.label }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
@@ -243,6 +243,7 @@ import {IS_MAIN} from "@constant/tenantConstants"
 
 export default {
   name: 'Strategy',
+  dicts: ['sys_normal_disable'],
   components: {},
   data() {
     return {
@@ -280,8 +281,6 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
-      // 状态字典
-      statusOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -301,7 +300,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDict()
   },
   methods: {
     /** 查询数据源策略列表 */
@@ -312,16 +310,6 @@ export default {
         this.total = response.total
         this.loading = false
       })
-    },
-    /** 查询字典信息 */
-    getDict() {
-      this.getDicts('sys_normal_disable').then(response => {
-        this.statusOptions = response.data
-      })
-    },
-    // 状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {

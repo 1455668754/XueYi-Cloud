@@ -14,10 +14,10 @@
         <el-form-item label="类型" prop="noticeType">
           <el-select v-model="queryParams.noticeType" placeholder="公告类型" clearable size="small">
             <el-option
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_notice_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -75,26 +75,17 @@
             <span>{{ queryParams.pageSize * (queryParams.pageNum - 1) + scope.$index + 1 }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="公告标题"
-          align="center"
-          prop="noticeTitle"
-          :show-overflow-tooltip="true"
-          min-width="120"/>
-        <el-table-column
-          label="公告类型"
-          align="center"
-          prop="noticeType"
-          :formatter="typeFormat"
-          min-width="120"
-        />
-        <el-table-column
-          label="状态"
-          align="center"
-          prop="status"
-          :formatter="statusFormat"
-          min-width="120"
-        />
+        <el-table-column label="公告标题" align="center" prop="noticeTitle" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column label="公告类型" align="center" prop="noticeType" min-width="120">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.sys_notice_type" :value="scope.row.noticeType"/>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center" prop="status" min-width="120">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.sys_notice_status" :value="scope.row.status"/>
+          </template>
+        </el-table-column>
         <el-table-column label="创建者" align="center" prop="createName" min-width="120"/>
         <el-table-column label="创建时间" align="center" prop="createTime" min-width="180">
           <template slot-scope="scope">
@@ -144,10 +135,10 @@
             <el-form-item label="公告类型" prop="noticeType">
               <el-select v-model="form.noticeType" placeholder="请选择">
                 <el-option
-                  v-for="dict in typeOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  v-for="dict in dict.type.sys_notice_type"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -156,11 +147,10 @@
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_notice_status"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -185,6 +175,7 @@ import Editor from '@basicsComponents/Editor'
 
 export default {
   name: "Notice",
+  dicts: ['sys_notice_status', 'sys_notice_type'],
   components: {
     Editor
   },
@@ -212,10 +203,6 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 类型数据字典
-      statusOptions: [],
-      // 状态数据字典
-      typeOptions: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -238,12 +225,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDicts("sys_notice_status").then(response => {
-      this.statusOptions = response.data
-    })
-    this.getDicts("sys_notice_type").then(response => {
-      this.typeOptions = response.data
-    })
   },
   methods: {
     /** 查询公告列表 */
@@ -254,14 +235,6 @@ export default {
         this.total = response.total
         this.loading = false
       })
-    },
-    // 公告状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
-    },
-    // 公告状态字典翻译
-    typeFormat(row, column) {
-      return this.selectDictLabel(this.typeOptions, row.noticeType)
     },
     // 取消按钮
     cancel() {
@@ -335,7 +308,7 @@ export default {
               this.submitLoading = false
             })
           }
-        }else{
+        } else {
           this.submitLoading = false
         }
       })

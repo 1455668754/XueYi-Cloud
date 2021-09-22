@@ -53,10 +53,10 @@
             <el-form-item label="状态" prop="status">
               <el-select v-model="queryParams.status" placeholder="岗位状态" clearable size="small">
                 <el-option
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
                 />
               </el-select>
             </el-form-item>
@@ -100,7 +100,7 @@
                              :show-overflow-tooltip="true" min-width="120"/>
             <el-table-column label="归属部门" align="center" prop="dept.deptName" key="dept.deptName"
                              v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="120"/>
-            <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" key="status"
+            <el-table-column label="状态" align="center" prop="status" key="status"
                              v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="120">
               <template slot-scope="scope">
                 <el-switch
@@ -187,11 +187,10 @@
             <el-form-item label="岗位状态" prop="status">
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -261,6 +260,7 @@ import {STATUS} from "@constant/constants"
 
 export default {
   name: "Post",
+  dicts: ['sys_normal_disable'],
   components: {Treeselect},
   data() {
     return {
@@ -278,8 +278,6 @@ export default {
       postList: [],
       // 权限数据选项
       roleOptions: [],
-      // 状态数据字典
-      statusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -335,9 +333,6 @@ export default {
   created() {
     this.getList()
     this.getTreeSelect()
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data
-    })
   },
   methods: {
     /** 查询岗位列表 */
@@ -376,10 +371,6 @@ export default {
     handleNodeClick(data) {
       this.queryParams.deptId = data.id
       this.getList()
-    },
-    // 岗位状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {

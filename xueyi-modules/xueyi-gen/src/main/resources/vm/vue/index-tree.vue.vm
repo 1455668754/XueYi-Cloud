@@ -40,10 +40,10 @@
       <el-form-item label="${comment}" prop="${AttrName}">
         <el-select v-model="queryParams.${AttrName}" placeholder="请选择${comment}" clearable size="small">
           <el-option
-            v-for="dict in ${AttrName}Options"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+            v-for="dict in dict.type.${dictType}"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
           />
         </el-select>
       </el-form-item>
@@ -139,7 +139,7 @@
 #elseif($column.list && "" != $column.dictType)
       <el-table-column label="${comment}" align="center" prop="${javaField}" min-width="120">
         <template slot-scope="scope">
-          <dict-tag :options="${javaField}Options" :value="scope.row.${javaField}"/>
+          <dict-tag :options="dict.type.${column.dictType}" :value="scope.row.${javaField}"/>
         </template>
       </el-table-column>
 #elseif($column.list && "" != $column.javaField)
@@ -233,10 +233,10 @@
         <el-form-item label="${comment}" prop="${field}">
           <el-select v-model="form.${field}" placeholder="请选择${comment}">
             <el-option
-              v-for="dict in ${field}Options"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              #if($column.javaType == "Integer" || $column.javaType == "Long"):value="parseInt(dict.dictValue)"#else:value="dict.dictValue"#end
+              v-for="dict in dict.type.${dictType}"
+              :key="dict.value"
+              :label="dict.label"
+              #if($column.javaType == "Integer" || $column.javaType == "Long"):value="parseInt(dict.value)"#else:value="dict.value"#end
 
             ></el-option>
           </el-select>
@@ -251,10 +251,10 @@
         <el-form-item label="${comment}">
           <el-checkbox-group v-model="form.${field}">
             <el-checkbox
-              v-for="dict in ${field}Options"
-              :key="dict.dictValue"
-              :label="dict.dictValue">
-              {{dict.dictLabel}}
+              v-for="dict in dict.type.${dictType}"
+              :key="dict.value"
+              :label="dict.lalue">
+              {{dict.label}}
             </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
@@ -268,11 +268,11 @@
         <el-form-item label="${comment}">
           <el-radio-group v-model="form.${field}">
             <el-radio
-              v-for="dict in ${field}Options"
-              :key="dict.dictValue"
-              #if($column.javaType == "Integer" || $column.javaType == "Long"):label="parseInt(dict.dictValue)"#else:label="dict.dictValue"#end
+              v-for="dict in dict.type.${dictType}"
+              :key="dict.value"
+              #if($column.javaType == "Integer" || $column.javaType == "Long"):label="parseInt(dict.value)"#else:label="dict.value"#end
 
-            >{{dict.dictLabel}}</el-radio>
+            >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
 #elseif($column.htmlType == "radio" && $dictType)
@@ -315,6 +315,9 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 export default {
   name: "${BusinessName}",
+#if(${dicts} != '')
+  dicts: [${dicts}],
+#end
   components: {
     TreeSelect
   },
@@ -335,16 +338,7 @@ export default {
       // 是否显示弹出层
       open: false,
 #foreach ($column in $columns)
-#set($parentheseIndex=$column.columnComment.indexOf("（"))
-#if($parentheseIndex != -1)
-#set($comment=$column.columnComment.substring(0, $parentheseIndex))
-#else
-#set($comment=$column.columnComment)
-#end
-#if(${column.dictType} != '')
-      // $comment字典
-      ${column.javaField}Options: [],
-#elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+#if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
       // $comment时间范围
       daterange${AttrName}: [],
@@ -414,12 +408,6 @@ export default {
   },
   created() {
     this.getList();
-#foreach ($column in $columns)
-#if(${column.dictType} != '')
-    this.getDict();
-#break
-#end
-#end
   },
   methods: {
     /** 查询${functionName}列表 */
@@ -465,21 +453,6 @@ export default {
         this.${businessName}Options.push(data);
       });
     },
-#foreach ($column in $columns)
-#if(${column.dictType} != '')
-    /** 查询字典信息 */
-    getDict(){
-#foreach ($column in $columns)
-#if(${column.dictType} != '')
-        this.getDicts("${column.dictType}").then(response => {
-        this.${column.javaField}Options = response.data;
-      });
-#end
-#end
-    },
-#break
-#end
-#end
     // 取消按钮
     cancel() {
       this.open = false;

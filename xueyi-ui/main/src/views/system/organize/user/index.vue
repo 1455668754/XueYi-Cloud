@@ -296,10 +296,10 @@
             <el-form-item label="用户性别">
               <el-select v-model="form.sex" placeholder="请选择">
                 <el-option
-                  v-for="dict in sexOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="dict.dictValue"
+                  v-for="dict in dict.type.sys_user_sex"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -308,11 +308,10 @@
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -425,6 +424,7 @@ import {STATUS} from "@constant/constants"
 
 export default {
   name: "User",
+  dicts: ['sys_normal_disable', 'sys_user_sex'],
   components: {Treeselect},
   data() {
     return {
@@ -462,10 +462,6 @@ export default {
       initPassword: undefined,
       // 日期范围
       dateRange: [],
-      // 状态数据字典
-      statusOptions: [],
-      // 性别状态字典
-      sexOptions: [],
       // 岗位选项
       postOptions: [],
       // 角色选项
@@ -522,7 +518,8 @@ export default {
           {required: true, message: "用户编码不能为空", trigger: "blur"}
         ],
         userName: [
-          {required: true, message: "用户账号不能为空", trigger: "blur"}
+          {required: true, message: "用户账号不能为空", trigger: "blur"},
+          { min: 2, max: 20, message: '用户账号长度必须介于 2 和 20 之间', trigger: 'blur' }
         ],
         nickName: [
           {required: true, message: "用户名称不能为空", trigger: "blur"}
@@ -557,12 +554,6 @@ export default {
   created() {
     this.getList()
     this.getTreeSelect()
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data
-    })
-    this.getDicts("sys_user_sex").then(response => {
-      this.sexOptions = response.data
-    })
     this.getConfigKey("sys.user.initPassword").then(response => {
       this.initPassword = response.msg
     })

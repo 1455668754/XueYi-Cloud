@@ -23,10 +23,10 @@
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="部门状态" clearable size="small">
             <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_normal_disable"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -160,11 +160,10 @@
             <el-form-item label="部门状态">
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -243,6 +242,7 @@ import {STATUS} from "@constant/constants"
 
 export default {
   name: "Dept",
+  dicts: ['sys_normal_disable'],
   components: {Treeselect},
   data() {
     return {
@@ -260,8 +260,6 @@ export default {
       deptOptions: [],
       // 权限数据选项
       roleOptions: [],
-      // 状态数据字典
-      statusOptions: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -306,9 +304,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data
-    })
   },
   methods: {
     /** 查询部门列表 */
@@ -329,10 +324,6 @@ export default {
         label: node.deptName,
         children: node.children
       }
-    },
-    // 字典状态字典翻译
-    statusFormat(row, column) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 取消按钮
     cancel() {

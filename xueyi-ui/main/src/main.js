@@ -29,6 +29,7 @@ import ImageBox from "@customComponents/ImageBox"   // 图片管理组件
 import DictTag from '@basicsComponents/DictTag'   // 字典标签组件
 import Editor from "@basicsComponents/Editor"   // 富文本组件
 import VueMeta from 'vue-meta'    // 头部标签组件
+import DictData from '@basicsComponents/DictData'   // 字典数据组件
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
@@ -78,6 +79,8 @@ Vue.component('ImageUpload', ImageUpload)
 
 Vue.use(directive)
 Vue.use(VueMeta)
+DictData.install()
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

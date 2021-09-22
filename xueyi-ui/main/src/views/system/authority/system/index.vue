@@ -14,10 +14,10 @@
         <el-form-item label="跳转类型" prop="type">
           <el-select v-model="queryParams.type" placeholder="请选择跳转类型" clearable size="small">
             <el-option
-              v-for="dict in typeOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_jump_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -33,10 +33,10 @@
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
             <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_show_hide"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -104,7 +104,7 @@
         <el-table-column label="跳转类型" align="center" prop="type" v-if="columns[2].visible"
                          :show-overflow-tooltip="true" min-width="120">
           <template slot-scope="scope">
-            <el-tag :type="scope.row.type==='0'?'success':'warning'">{{ typeFormat(scope.row) }}</el-tag>
+            <dict-tag :options="dict.type.sys_jump_type" :value="scope.row.type"/>
           </template>
         </el-table-column>
         <el-table-column label="路由|外链" align="center" prop="route" v-if="columns[3].visible"
@@ -165,11 +165,10 @@
             <el-form-item label="跳转类型">
               <el-radio-group v-model="form.type">
                 <el-radio
-                  v-for="dict in typeOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_jump_type"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -177,11 +176,10 @@
             <el-form-item label="跳转新页" v-if="form.type==='1'">
               <el-radio-group v-model="form.isNew">
                 <el-radio
-                  v-for="dict in choiceOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_yes_no"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -189,11 +187,10 @@
         <el-form-item label="公共系统" v-if="enterpriseName === 'administrator' && form.systemId == undefined">
           <el-radio-group v-model="form.isCommon">
             <el-radio
-              v-for="dict in choiceOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
+              v-for="dict in dict.type.sys_yes_no"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="form.type==='0'?'跳转路由':'跳转链接'" prop="route">
@@ -204,11 +201,10 @@
             <el-form-item label="显示状态">
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_show_hide"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -238,6 +234,7 @@ import {STATUS} from "@constant/constants"
 
 export default {
   name: "System",
+  dicts: ['sys_jump_type','sys_show_hide','sys_yes_no'],
   components: {ImageBox},
   data() {
     return {
@@ -281,12 +278,6 @@ export default {
         route: null,
         status: null
       },
-      // 跳转类型字典
-      typeOptions: [],
-      // 状态字典
-      statusOptions: [],
-      // 选择字典
-      choiceOptions: [],
       // 表单参数
       form: {},
       // 弹出层标题
@@ -312,7 +303,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDict()
   },
   methods: {
     /** 查询子系统模块列表 */
@@ -323,22 +313,6 @@ export default {
         this.total = response.total
         this.loading = false
       })
-    },
-    /** 查询字典 */
-    getDict() {
-      this.getDicts("sys_jump_type").then(response => {
-        this.typeOptions = response.data
-      })
-      this.getDicts("sys_show_hide").then(response => {
-        this.statusOptions = response.data
-      })
-      this.getDicts("sys_yes_no").then(response => {
-        this.choiceOptions = response.data
-      })
-    },
-    /** 字典内容转化 */
-    typeFormat(row, column) {
-      return this.selectDictLabel(this.typeOptions, row.type)
     },
     // 取消按钮
     cancel() {

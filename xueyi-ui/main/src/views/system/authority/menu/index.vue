@@ -106,11 +106,10 @@
             <el-form-item label="公共菜单" v-if="enterpriseName === 'administrator' && form.menuId == undefined">
               <el-radio-group v-model="form.isCommon">
                 <el-radio
-                  v-for="dict in choiceOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_yes_no"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -228,11 +227,10 @@
               </span>
               <el-radio-group v-model="form.visible">
                 <el-radio
-                  v-for="dict in visibleOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_show_hide"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -246,11 +244,10 @@
               </span>
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
-                </el-radio>
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -275,6 +272,7 @@ import {STATUS} from "@constant/constants"
 
 export default {
   name: "Menu",
+  dicts: ['sys_show_hide', 'sys_normal_disable'],
   components: {Treeselect, IconSelect},
   data() {
     return {
@@ -295,12 +293,6 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 显示状态数据字典
-      visibleOptions: [],
-      // 菜单状态数据字典
-      statusOptions: [],
-      // 选择字典
-      choiceOptions: [],
       //本参数用于判断当前父级是模块Id还是菜单Id
       checkSystem: false,
       // 表单参数
@@ -318,15 +310,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDicts("sys_show_hide").then(response => {
-      this.visibleOptions = response.data
-    })
-    this.getDicts("sys_normal_disable").then(response => {
-      this.statusOptions = response.data
-    })
-    this.getDicts("sys_yes_no").then(response => {
-      this.choiceOptions = response.data
-    })
   },
   methods: {
     // 选择图标

@@ -42,10 +42,10 @@
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
             <el-option
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictLabel"
-              :value="dict.dictValue"
+              v-for="dict in dict.type.sys_normal_disable"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
             />
           </el-select>
         </el-form-item>
@@ -233,10 +233,10 @@
             <el-form-item label="状态">
               <el-radio-group v-model="form.status">
                 <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                >{{ dict.dictLabel }}
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{ dict.label }}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
@@ -317,6 +317,7 @@ import {STATUS, STATUS_UPDATE_OPERATION, SYSTEM_DEFAULT} from "@constant/constan
 
 export default {
   name: 'Tenant',
+  dicts: ['sys_normal_disable'],
   components: {},
   data() {
     return {
@@ -345,8 +346,6 @@ export default {
       oldTenantList: [],
       // 可用策略集合
       strategyList: [],
-      // 状态字典
-      statusOptions: [],
       // 排序保存按钮显示
       sortVisible: false,
       // 排序参数
@@ -394,7 +393,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getDict()
   },
   methods: {
     /** 查询租户信息列表 */
@@ -404,12 +402,6 @@ export default {
         this.tenantList = response.rows
         this.total = response.total
         this.loading = false
-      })
-    },
-    /** 查询字典信息 */
-    getDict() {
-      this.getDicts('sys_normal_disable').then(response => {
-        this.statusOptions = response.data
       })
     },
     // 取消按钮
