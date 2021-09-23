@@ -1,7 +1,6 @@
 package com.xueyi.tenant.service.impl;
 
 import java.util.List;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.constant.TenantConstants;
@@ -10,7 +9,6 @@ import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
-import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.feign.RemoteEnterpriseService;
@@ -50,9 +48,6 @@ public class TenantServiceImpl implements ITenantService {
 
     @Autowired
     private RemoteEnterpriseService remoteEnterpriseService;
-
-    @Autowired
-    private RedisService redisService;
 
     /**
      * 查询租户信息列表
@@ -206,9 +201,9 @@ public class TenantServiceImpl implements ITenantService {
             throw new ServiceException(enterprise.getMsg());
         }
         if (StringUtils.equals(enterprise.getData().getStatus(), TenantConstants.NORMAL)) {
-            redisService.setCacheObject(EnterpriseUtils.getEnterpriseCacheKey(tenantId), enterprise.getData());
-            redisService.setCacheObject(EnterpriseUtils.getStrategyCacheKey(tenantId), enterprise.getData().getStrategyId());
-            redisService.setCacheObject(EnterpriseUtils.getLoginCacheKey(enterprise.getData().getEnterpriseName()), enterprise.getData().getEnterpriseId());
+            EnterpriseUtils.refreshEnterpriseCache(tenantId, enterprise.getData());
+            EnterpriseUtils.refreshStrategyCache(tenantId, enterprise.getData().getStrategyId());
+            EnterpriseUtils.refreshLoginCache(enterprise.getData().getEnterpriseName(), enterprise.getData().getEnterpriseId());
         }
     }
 
@@ -222,9 +217,9 @@ public class TenantServiceImpl implements ITenantService {
         if (R.FAIL == enterprise.getCode()) {
             throw new ServiceException(enterprise.getMsg());
         }
-        redisService.deleteObject(EnterpriseUtils.getEnterpriseCacheKey(tenantId));
-        redisService.deleteObject(EnterpriseUtils.getStrategyCacheKey(tenantId));
-        redisService.deleteObject(EnterpriseUtils.getLoginCacheKey(enterprise.getData().getEnterpriseName()));
+        EnterpriseUtils.deleteLoginCache(enterprise.getData().getEnterpriseName());
+        EnterpriseUtils.deleteEnterpriseCache(tenantId);
+        EnterpriseUtils.deleteStrategyCache(tenantId);
     }
 
     /**
@@ -233,6 +228,7 @@ public class TenantServiceImpl implements ITenantService {
      * @param tenantId 租户Id
      */
     private void deleteCacheFolder(Long tenantId) {
-        redisService.deleteObject(EnterpriseUtils.getCacheFolderKey(tenantId));
+        R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenantId, SecurityConstants.INNER);
+        EnterpriseUtils.deleteCacheFolder(tenantId, enterprise.getData().getEnterpriseName());
     }
 }

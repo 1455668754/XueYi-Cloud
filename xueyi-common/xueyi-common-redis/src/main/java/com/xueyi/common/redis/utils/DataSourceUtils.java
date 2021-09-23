@@ -7,6 +7,11 @@ import com.xueyi.common.redis.service.RedisService;
 import java.lang.reflect.Field;
 import java.util.List;
 
+/**
+ * 源策略缓存管理工具类
+ *
+ * @author xueyi
+ */
 public class DataSourceUtils {
 
     /**
@@ -47,7 +52,6 @@ public class DataSourceUtils {
     public static void deleteCache(Long strategyId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getSourceCacheKey(strategyId));
-        redisService.getCacheObject(getSourceCacheKey(strategyId));
     }
 
     /**

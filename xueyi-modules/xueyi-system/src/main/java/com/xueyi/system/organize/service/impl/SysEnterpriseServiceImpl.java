@@ -9,7 +9,6 @@ import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
-import com.xueyi.system.source.mapper.DataSourceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -140,9 +139,9 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     public void loadingEnterpriseCache() {
         List<SysEnterprise> enterprisesList = enterpriseMapper.mainSelectEnterpriseCacheList();
         for (SysEnterprise enterprise : enterprisesList) {
-            redisService.setCacheObject(EnterpriseUtils.getEnterpriseCacheKey(enterprise.getEnterpriseId()), enterprise);
-            redisService.setCacheObject(EnterpriseUtils.getStrategyCacheKey(enterprise.getEnterpriseId()), enterprise.getStrategyId());
-            redisService.setCacheObject(EnterpriseUtils.getLoginCacheKey(enterprise.getEnterpriseName()), enterprise.getEnterpriseId());
+            EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(),enterprise);
+            EnterpriseUtils.refreshStrategyCache(enterprise.getEnterpriseId(),enterprise.getStrategyId());
+            EnterpriseUtils.refreshLoginCache(enterprise.getEnterpriseName(),enterprise.getEnterpriseId());
         }
     }
 
@@ -171,7 +170,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     private void refreshCache() {
         SysEnterprise enterprise = enterpriseMapper.mainSelectEnterpriseById(new SysEnterprise());
-        redisService.setCacheObject(EnterpriseUtils.getEnterpriseCacheKey(enterprise.getEnterpriseId()), enterprise);
+        EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(),enterprise);
     }
 
     /**
@@ -180,8 +179,8 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     private void refreshLoginCache() {
         SysEnterprise oldEnterprise = getEnterpriseProfile();
         SysEnterprise newEnterprise = enterpriseMapper.mainSelectEnterpriseById(new SysEnterprise());
-        redisService.deleteObject(EnterpriseUtils.getLoginCacheKey(oldEnterprise.getEnterpriseName()));
-        redisService.setCacheObject(EnterpriseUtils.getLoginCacheKey(newEnterprise.getEnterpriseName()), newEnterprise.getEnterpriseId());
+        EnterpriseUtils.deleteLoginCache(oldEnterprise.getEnterpriseName());
+        EnterpriseUtils.refreshLoginCache(newEnterprise.getEnterpriseName(), newEnterprise.getEnterpriseId());
     }
 
     /**

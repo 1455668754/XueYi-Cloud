@@ -13,7 +13,7 @@ import java.net.URI;
 import static org.springframework.cloud.gateway.support.ServerWebExchangeUtils.GATEWAY_REQUEST_URL_ATTR;
 
 /**
- * webSocket连接转发
+ * webSocket转发过滤器
  *
  * @author xueyi
  */
