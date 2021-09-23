@@ -122,7 +122,7 @@
       <el-table v-loading="loading" :data="tenantList" @selection-change="handleSelectionChange" ref="dataTable"
                 row-key="tenantId">
         <el-table-column type="selection" width="55" align="center" class-name="allowDrag"/>
-        <el-table-column label="租户Id" align="center" prop="tenantId" class-name="allowDrag" min-width="120">
+        <el-table-column label="租户Id" align="center" prop="tenantId" class-name="allowDrag" min-width="140">
           <template slot-scope="scope">
             <el-tag type="danger">{{ scope.row.tenantId }}</el-tag>
           </template>

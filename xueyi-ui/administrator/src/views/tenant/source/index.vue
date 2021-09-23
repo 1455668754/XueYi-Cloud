@@ -91,7 +91,7 @@
           </template>
         </el-table-column>
         <el-table-column label="数据源名称" align="center" prop="name" class-name="allowDrag" min-width="120"/>
-        <el-table-column label="数据源编码" align="center" prop="slave" class-name="allowDrag" min-width="120">
+        <el-table-column label="数据源编码" align="center" prop="slave" class-name="allowDrag" min-width="170">
           <template slot-scope="scope">
             <el-tag type="info">{{ scope.row.slave }}</el-tag>
           </template>

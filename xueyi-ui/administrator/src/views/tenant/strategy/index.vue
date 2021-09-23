@@ -416,6 +416,8 @@ export default {
                 this.submitLoading = false
               })
             }
+          }else{
+            this.submitLoading = false
           }
         }else{
           this.submitLoading = false
