@@ -117,7 +117,7 @@ public class EnterpriseUtils {
     /**
      * 删除指定租户缓存 cache目录
      *
-     * @param enterpriseId 企业Id
+     * @param enterpriseId   企业Id
      * @param enterpriseName 企业账号
      */
     public static void deleteCacheFolder(Long enterpriseId, String enterpriseName) {

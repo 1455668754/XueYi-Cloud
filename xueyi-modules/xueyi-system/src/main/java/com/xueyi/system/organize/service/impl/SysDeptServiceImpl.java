@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 部门管理 服务实现
+ * 部门管理 业务层处理
  *
  * @author xueyi
  */

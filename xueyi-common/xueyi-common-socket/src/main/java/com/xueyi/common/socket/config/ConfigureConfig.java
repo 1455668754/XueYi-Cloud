@@ -5,6 +5,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * socket参数配置
+ *
+ * @author xueyi
+ */
 @Component
 public class ConfigureConfig {
 

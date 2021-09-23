@@ -1,6 +1,7 @@
 package com.xueyi.tenant.service.impl;
 
 import java.util.List;
+
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.constant.TenantConstants;
@@ -150,10 +151,13 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public int mainDeleteTenantById(Tenant tenant) {
+        R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenant.getTenantId(), SecurityConstants.INNER);
+        if (R.FAIL == enterprise.getCode()) {
+            throw new ServiceException(enterprise.getMsg());
+        }
         int rows = tenantMapper.mainDeleteTenantById(tenant);
         if (rows > 0) {
-            deleteCache(tenant.getTenantId());
-            deleteCacheFolder(tenant.getTenantId());
+            EnterpriseUtils.deleteCacheFolder(tenant.getTenantId(), enterprise.getData().getEnterpriseName());
         }
         return rows;
     }
@@ -220,15 +224,5 @@ public class TenantServiceImpl implements ITenantService {
         EnterpriseUtils.deleteLoginCache(enterprise.getData().getEnterpriseName());
         EnterpriseUtils.deleteEnterpriseCache(tenantId);
         EnterpriseUtils.deleteStrategyCache(tenantId);
-    }
-
-    /**
-     * 删除指定租户Id cache目录
-     *
-     * @param tenantId 租户Id
-     */
-    private void deleteCacheFolder(Long tenantId) {
-        R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenantId, SecurityConstants.INNER);
-        EnterpriseUtils.deleteCacheFolder(tenantId, enterprise.getData().getEnterpriseName());
     }
 }
