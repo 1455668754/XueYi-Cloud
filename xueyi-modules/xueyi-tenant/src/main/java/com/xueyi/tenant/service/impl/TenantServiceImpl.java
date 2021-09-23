@@ -207,6 +207,7 @@ public class TenantServiceImpl implements ITenantService {
         }
         if (StringUtils.equals(enterprise.getData().getStatus(), TenantConstants.NORMAL)) {
             redisService.setCacheObject(EnterpriseUtils.getEnterpriseCacheKey(tenantId), enterprise.getData());
+            redisService.setCacheObject(EnterpriseUtils.getStrategyCacheKey(tenantId), enterprise.getData().getStrategyId());
             redisService.setCacheObject(EnterpriseUtils.getLoginCacheKey(enterprise.getData().getEnterpriseName()), enterprise.getData().getEnterpriseId());
         }
     }
@@ -222,6 +223,7 @@ public class TenantServiceImpl implements ITenantService {
             throw new ServiceException(enterprise.getMsg());
         }
         redisService.deleteObject(EnterpriseUtils.getEnterpriseCacheKey(tenantId));
+        redisService.deleteObject(EnterpriseUtils.getStrategyCacheKey(tenantId));
         redisService.deleteObject(EnterpriseUtils.getLoginCacheKey(enterprise.getData().getEnterpriseName()));
     }
 
