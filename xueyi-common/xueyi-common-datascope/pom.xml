@@ -23,13 +23,6 @@
             <artifactId>xueyi-common-security</artifactId>
         </dependency>
 
-        <!--自引用插件-->
-        <!-- huTool 工具类库-->
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-core</artifactId>
