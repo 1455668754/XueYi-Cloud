@@ -1,13 +1,14 @@
 package com.xueyi.common.socket.domain;
 
+import java.util.Date;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.xueyi.common.socket.pojo.Session;
-import java.util.Date;
+
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 /**
- * 共享
+ * socket 共享
  *
  * @author xueyi
  */
@@ -26,6 +27,7 @@ public class MyChannelHandlerMap {
 
     /**
      * 是否存在连接
+     *
      * @param session 通信
      * @return 状态
      */
@@ -34,31 +36,13 @@ public class MyChannelHandlerMap {
     }
 
     /**
-     * 查看用户量
-     *
-     * @return 用户量
-     */
-    public int userSize() {
-        return biDirectionHashMap.size();
-    }
-
-    /**
-     * 查看连接量
-     *
-     * @return 连接量
-     */
-    public int linkSize() {
-        return biDirectionHashMap.linkSize();
-    }
-
-    /**
      * 添加
      *
-     * @param user 用户
-     * @param session 通信信息
+     * @param consumer 用户
+     * @param session  通信信息
      */
-    public void put(String user, Session session) {
-        biDirectionHashMap.put(user, DigestUtil.md5Hex(session.channel().toString()), session);
+    public static void put(String consumer, Session session) {
+        biDirectionHashMap.put(consumer, DigestUtil.md5Hex(session.channel().toString()), session);
         refreshTime(session);
     }
 
@@ -67,29 +51,73 @@ public class MyChannelHandlerMap {
      *
      * @param session 通信信息
      */
-    public void refreshTime(Session session) {
+    public static void refreshTime(Session session) {
         lastUpdate.put(DigestUtil.md5Hex(session.channel().toString()), new Date());
     }
 
     /**
      * 根据用户删除
      *
-     * @param user 用户
+     * @param consumer 用户
      * @return 状态
      */
-    public boolean removeByUser(String user) {
-        biDirectionHashMap.getValueByKey(user).forEach((u,c) -> lastUpdate.remove(u));
-        return biDirectionHashMap.removeByKey(user);
+    public static boolean removeByConsumer(String consumer) {
+        biDirectionHashMap.getValueByKey(consumer).forEach((c, s) -> lastUpdate.remove(c));
+        return biDirectionHashMap.removeByKey(consumer);
     }
 
     /**
-     * 根据用户删除
+     * 根据session删除
      *
      * @param session 通信信息
      * @return 状态
      */
-    public boolean removeBySession(Session session) {
+    public static boolean removeBySession(Session session) {
         lastUpdate.remove(DigestUtil.md5Hex(session.channel().toString()));
         return biDirectionHashMap.removeByValue(DigestUtil.md5Hex(session.channel().toString()));
+    }
+
+    /**
+     * 给单个用户发送消息
+     *
+     * @param consumer 用户
+     * @param message 信息
+     * @return 状态
+     */
+    public static boolean sendMessageByConsumer(String consumer, String message) {
+        biDirectionHashMap.getValueByKey(consumer).forEach((u,v) -> v.sendText(message));
+        return true;
+    }
+
+
+    /**
+     * 给多个用户发送消息
+     *
+     * @param consumers 用户集合
+     * @param message 信息
+     * @return 状态
+     */
+    public static boolean sendMessageByConsumer(List<String> consumers, String message) {
+        consumers.forEach((consumer) -> biDirectionHashMap.getValueByKey(consumer).forEach((u,v) -> v.sendText(message)));
+        return true;
+    }
+
+
+    /**
+     * 查看用户量
+     *
+     * @return 用户量
+     */
+    public static int consumerSize() {
+        return biDirectionHashMap.size();
+    }
+
+    /**
+     * 查看连接量
+     *
+     * @return 连接量
+     */
+    public static int linkSize() {
+        return biDirectionHashMap.linkSize();
     }
 }

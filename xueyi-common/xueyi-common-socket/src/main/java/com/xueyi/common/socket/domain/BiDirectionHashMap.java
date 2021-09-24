@@ -3,12 +3,12 @@ package com.xueyi.common.socket.domain;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 双向HashMap， 可以实现O(1) 按值/键 查找、添加、删除元素对
+ * socket存储类
  *
  * @author xueyi
  */
 public class BiDirectionHashMap<K, V, S> {
-    private final ConcurrentHashMap<K, ConcurrentHashMap<V, V>> k2v; // key -> value
+    private final ConcurrentHashMap<K, ConcurrentHashMap<V, S>> k2v2s; // key -> value
     private final ConcurrentHashMap<V, K> v2k; // value -> key
     private final ConcurrentHashMap<V, S> v2s; // value -> session
 
@@ -16,7 +16,7 @@ public class BiDirectionHashMap<K, V, S> {
      * 默认构造函数
      */
     BiDirectionHashMap() {
-        this.k2v = new ConcurrentHashMap<>();
+        this.k2v2s = new ConcurrentHashMap<>();
         this.v2k = new ConcurrentHashMap<>();
         this.v2s = new ConcurrentHashMap<>();
     }
@@ -29,11 +29,11 @@ public class BiDirectionHashMap<K, V, S> {
      */
     public void put(K k, V v, S s) {
         if (containsKey(k)) {
-            getValueByKey(k).put(v, v);
+            getValueByKey(k).put(v, s);
         } else {
-            ConcurrentHashMap<V, V> v2v = new ConcurrentHashMap<>();
-            v2v.put(v, v);
-            k2v.put(k, v2v);
+            ConcurrentHashMap<V, S> v2s = new ConcurrentHashMap<>();
+            v2s.put(v, s);
+            k2v2s.put(k, v2s);
         }
         v2k.put(v, k);
         v2s.put(v,s);
@@ -45,7 +45,7 @@ public class BiDirectionHashMap<K, V, S> {
      * @return 大小
      */
     public int size() {
-        return k2v.size();
+        return k2v2s.size();
     }
 
     /**
@@ -64,7 +64,7 @@ public class BiDirectionHashMap<K, V, S> {
      * @return 状态
      */
     public boolean containsKey(K k) {
-        return k2v.containsKey(k);
+        return k2v2s.containsKey(k);
     }
 
     /**
@@ -84,11 +84,11 @@ public class BiDirectionHashMap<K, V, S> {
      * @return 状态
      */
     public boolean removeByKey(K k) {
-        if (!k2v.containsKey(k)) {
+        if (!k2v2s.containsKey(k)) {
             return false;
         }
-        k2v.get(k).forEach((u, v) -> {v2k.remove(u); v2s.remove(u);});
-        k2v.remove(k);
+        k2v2s.get(k).forEach((u, v) -> {v2k.remove(u); v2s.remove(u);});
+        k2v2s.remove(k);
         return true;
     }
 
@@ -103,9 +103,9 @@ public class BiDirectionHashMap<K, V, S> {
             return false;
         }
         K key = v2k.get(v);
-        k2v.get(key).remove(v);
-        if (k2v.get(key).isEmpty()) {
-            k2v.remove(key);
+        k2v2s.get(key).remove(v);
+        if (k2v2s.get(key).isEmpty()) {
+            k2v2s.remove(key);
         }
         v2k.remove(v);
         v2s.remove(v);
@@ -118,8 +118,8 @@ public class BiDirectionHashMap<K, V, S> {
      * @param k 键
      * @return v 值
      */
-    public ConcurrentHashMap<V, V> getValueByKey(K k) {
-        return k2v.getOrDefault(k, null);
+    public ConcurrentHashMap<V, S> getValueByKey(K k) {
+        return k2v2s.getOrDefault(k, null);
     }
 
     /**
