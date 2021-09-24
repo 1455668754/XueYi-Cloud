@@ -27,10 +27,11 @@ public class Session {
 
     /**
      * set subprotocols on {@link com.xueyi.common.socket.annotation.BeforeHandshake}
+     *
      * @param subprotocols
      */
     public void setSubprotocols(String subprotocols) {
-        setAttribute("subprotocols",subprotocols);
+        setAttribute("subprotocols", subprotocols);
     }
 
     public ChannelFuture sendText(String message) {
