@@ -308,29 +308,21 @@ export default {
     handleDelete(row) {
       const operIds = row.operId || this.ids
       let $this = this
-      this.$confirm('是否确认删除日志编号为"' + operIds + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除日志编号为"' + operIds + '"的数据项?').then(function () {
         return delOperlog($this.updateParamIds(operIds))
       }).then(() => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.$modal.msgSuccess("删除成功")
       }).catch(() => {
       })
     },
     /** 清空按钮操作 */
     handleClean() {
-      this.$confirm('是否确认清空所有操作日志?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认清空所有操作日志?').then(function () {
         return cleanOperlog()
       }).then(() => {
         this.getList()
-        this.msgSuccess("清空成功")
+        this.$modal.msgSuccess("清空成功")
       }).catch(() => {
       })
     },

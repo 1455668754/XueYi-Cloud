@@ -444,28 +444,20 @@ export default {
     // 任务状态修改
     handleStatusChange(row) {
       let text = row.status === STATUS.NORMAL ? "启用" : "停用"
-      this.$confirm('确认要"' + text + '""' + row.jobName + '"任务吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('确认要"' + text + '""' + row.jobName + '"任务吗?').then(function () {
         return changeJobStatus(row.jobId, row.status)
       }).then(() => {
-        this.msgSuccess(text + "成功")
+        this.$modal.msgSuccess(text + "成功")
       }).catch(function () {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
     },
     /* 立即执行一次 */
     handleRun(row) {
-      this.$confirm('确认要立即执行一次"' + row.jobName + '"任务吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('确认要立即执行一次"' + row.jobName + '"任务吗?').then(function () {
         return runJob(row.jobId, row.jobGroup)
       }).then(() => {
-        this.msgSuccess("执行成功")
+        this.$modal.msgSuccess("执行成功")
       })
     },
     /** 任务详细信息 */
@@ -512,7 +504,7 @@ export default {
         if (valid) {
           if (this.form.jobId != undefined) {
             updateJob(this.form).then(response => {
-              this.msgSuccess("修改成功")
+              this.$modal.msgSuccess("修改成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -520,7 +512,7 @@ export default {
             })
           } else {
             addJob(this.form).then(response => {
-              this.msgSuccess("新增成功")
+              this.$modal.msgSuccess("新增成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -535,15 +527,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const jobIds = row.jobId || this.ids
-      this.$confirm('是否确认删除定时任务编号为"' + jobIds + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除定时任务编号为"' + jobIds + '"的数据项?').then(function () {
         return delJob(jobIds)
       }).then(() => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.$modal.msgSuccess("删除成功")
       }).catch(() => {
       })
     },

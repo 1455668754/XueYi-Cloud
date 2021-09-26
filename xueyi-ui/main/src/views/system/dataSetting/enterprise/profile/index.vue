@@ -148,12 +148,12 @@ export default {
           this.loading = true;
           if (this.status === false && this.form.enterpriseName !== this.enterpriseName) {
             changeEnterpriseName(this.form).then(response => {
-              this.msgSuccess("企业账号修改成功");
+              this.$modal.msgSuccess("企业账号修改成功");
             });
 
           }
           updateEnterprise(this.form).then(response => {
-            this.msgSuccess("企业资料修改成功");
+            this.$modal.msgSuccess("企业资料修改成功");
           });
           store.commit('SET_ENTERPRISENAME', this.form.enterpriseName);
           this.enterpriseName = this.form.enterpriseName;

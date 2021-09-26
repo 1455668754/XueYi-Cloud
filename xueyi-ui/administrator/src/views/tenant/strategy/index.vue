@@ -380,7 +380,7 @@ export default {
     handleStatusChange(row) {
       let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
       updateStrategy({strategyId: row.strategyId, isChange: row.isChange, status: row.status, updateType: STATUS_UPDATE_OPERATION}).then(response => {
-        this.msgSuccess(msg + "成功")
+        this.$modal.msgSuccess(msg + "成功")
       }).catch(() => {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
@@ -394,7 +394,7 @@ export default {
             if (this.form.strategyId != null) {
               if (this.form.isChange === SYSTEM_DEFAULT.FALSE) {
                 updateStrategy(this.form).then(response => {
-                  this.msgSuccess('修改成功')
+                  this.$modal.msgSuccess('修改成功')
                   this.open = false
                   this.getList()
                 }).catch(() => {
@@ -409,7 +409,7 @@ export default {
               }
             } else {
               addStrategy(this.form).then(response => {
-                this.msgSuccess('新增成功')
+                this.$modal.msgSuccess('新增成功')
                 this.open = false
                 this.getList()
               }).catch(() => {
@@ -429,15 +429,11 @@ export default {
       const strategyIds = row.strategyId || this.ids
       const names = row.name || this.idNames
       let that = this
-      this.$confirm('是否确认删除数据源策略"' + names + '"?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(function () {
+      this.$modal.confirm('是否确认删除数据源策略"' + names + '"?').then(function () {
         return delStrategy(that.updateParamIds(strategyIds))
       }).then(() => {
         this.getList()
-        this.msgSuccess('删除成功')
+        this.$modal.msgSuccess('删除成功')
       }).catch(() => {
       })
     },
@@ -449,11 +445,7 @@ export default {
     },
     /** 保存排序按钮操作 */
     handleSort() {
-      this.$confirm('是否确认保存新排序?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      this.$modal.confirm('是否确认保存新排序?').then(() => {
         let params = this.sortOrderListOnlyDynamic(this.strategyList, this.oldStrategyList, 'strategyId')
         if (params.length > 0) {
           return updateStrategySort(this.updateParamIds(params))
@@ -461,7 +453,7 @@ export default {
       }).then(() => {
         this.getList()
         this.sortVisible = false
-        this.msgSuccess('保存成功')
+        this.$modal.msgSuccess('保存成功')
       }).catch(() => {
       })
     },

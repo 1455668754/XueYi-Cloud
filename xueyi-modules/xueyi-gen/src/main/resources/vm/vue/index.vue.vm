@@ -706,7 +706,7 @@ export default {
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
       update${BusinessName}({${pkColumn.javaField}: row.${pkColumn.javaField}, status: row.status, updateType: '1'}).then(response => {
-        this.msgSuccess(row.status === '0' ? '成功启用':'成功禁用')
+        this.#[[$modal]]#.msgSuccess(row.status === '0' ? '成功启用':'成功禁用')
       }).catch(() => {
         row.status = row.status === '0' ? '1' : '0'
       })
@@ -729,7 +729,7 @@ export default {
 #end
           if (this.form.${pkColumn.javaField} != null) {
             update${BusinessName}(this.form).then(response => {
-              this.msgSuccess("修改成功");
+              this.#[[$modal]]#.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             }).catch(() => {
@@ -737,7 +737,7 @@ export default {
             });
           } else {
             add${BusinessName}(this.form).then(response => {
-              this.msgSuccess("新增成功");
+              this.#[[$modal]]#.msgSuccess("新增成功");
               this.open = false;
               this.getList();
             }).catch(() => {
@@ -761,18 +761,14 @@ export default {
 #end
       let that = this;
 #if($nameVo==1)
-      this.$confirm('是否确认删除${functionName}"' + names + '"?', "警告", {
+      this.#[[$modal]]#.confirm('是否确认删除${functionName}"' + names + '"?').then(function() {
 #else
-      this.$confirm('是否确认删除${functionName}编号为"' + ${pkColumn.javaField}s + '"的数据项?', "警告", {
+      this.#[[$modal]]#.confirm('是否确认删除${functionName}编号为"' + ${pkColumn.javaField}s + '"的数据项?').then(function() {
 #end
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(function() {
           return del${BusinessName}(that.updateParamIds(${pkColumn.javaField}s));
         }).then(() => {
           this.getList();
-          this.msgSuccess("删除成功");
+          this.#[[$modal]]#.msgSuccess("删除成功");
         }).catch(() => {});
     },
 #if($table.sub)
@@ -833,11 +829,7 @@ export default {
     }#if($table.crud || $table.sub)#foreach ($co in $columns)#if($co.javaField == 'sort'),
     /** 保存排序按钮操作 */
     handleSort(){
-      this.$confirm('是否确认保存新排序?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
+      this.#[[$modal]]#.confirm('是否确认保存新排序?').then(() => {
         let params = this.sortOrderListOnlyDynamic(this.${businessName}List, this.old${BusinessName}List, "${pkColumn.javaField}");
         if(params.length>0) {
           return update${BusinessName}Sort(this.updateParamIds(params));
@@ -845,7 +837,7 @@ export default {
       }).then(() => {
         this.getList();
         this.sortVisible = false;
-        this.msgSuccess("保存成功");
+        this.#[[$modal]]#.msgSuccess("保存成功");
       }).catch(() => {});
     },
     /** 排序开关 */

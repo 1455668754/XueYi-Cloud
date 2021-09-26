@@ -297,7 +297,7 @@ export default {
     handleAddFolder() {
       this.upload.isUploading = true;
       addFolder(this.form).then(response => {
-        this.msgSuccess("新增成功");
+        this.$modal.msgSuccess("新增成功");
         this.getList();
         this.upload.isUploading = false;
       });
@@ -361,24 +361,19 @@ export default {
     updateMaterialNick(type, item, index) {
       if (type === 0) {
         updateFolder(item).then(response => {
-          this.msgSuccess("修改成功");
+          this.$modal.msgSuccess("修改成功");
           this.getList();
         });
       } else if (type === 1) {
         updateMaterial(item).then(response => {
-          this.msgSuccess("修改成功");
+          this.$modal.msgSuccess("修改成功");
           this.getList();
         });
       }
     },
     /** type 0文件夹 1图片 */
     imageDelete(type, item, index) {
-      this.$confirm(type === 0 ? '您确定将该文件夹以及该文件夹内的所有文件放入回收站吗？' : '将文件放入回收站会影响使用该文件的地方，确定放入回收站吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        center: true
-      }).then(function () {
+      this.$modal.confirm(type === 0 ? '您确定将该文件夹以及该文件夹内的所有文件放入回收站吗？' : '将文件放入回收站会影响使用该文件的地方，确定放入回收站吗？').then(function () {
         if (type === 0) {
           return delFolder(item.folderId);
         } else if (type === 1) {

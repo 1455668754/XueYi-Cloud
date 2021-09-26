@@ -493,14 +493,10 @@ export default {
     // 角色状态修改
     handleStatusChange(row) {
       let text = row.status === STATUS.NORMAL ? "启用" : "停用"
-      this.$confirm('确认要"' + text + '""' + row.name + '"角色吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('确认要"' + text + '""' + row.name + '"角色吗?').then(function () {
         return changeRoleStatus({roleId: row.roleId, status: row.status})
       }).then(() => {
-        this.msgSuccess(text + "成功")
+        this.$modal.msgSuccess(text + "成功")
       }).catch(function () {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
@@ -645,7 +641,7 @@ export default {
         if (valid) {
           if (this.form.roleId !== undefined) {
             updateRole(this.form).then(response => {
-              this.msgSuccess("修改成功")
+              this.$modal.msgSuccess("修改成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -653,7 +649,7 @@ export default {
             })
           } else {
             addRole(this.form).then(response => {
-              this.msgSuccess("新增成功")
+              this.$modal.msgSuccess("新增成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -671,7 +667,7 @@ export default {
       if (this.form.roleId !== undefined) {
         this.form.systemMenuIds = this.getSystemMenuAllCheckedKeys()
         menuScope(this.form).then(response => {
-          this.msgSuccess("修改成功")
+          this.$modal.msgSuccess("修改成功")
           this.openMenuScope = false
           this.getList()
         }).catch(() => {
@@ -687,7 +683,7 @@ export default {
       if (this.form.roleId !== undefined) {
         this.form.deptPostIds = this.getDeptPostAllCheckedKeys()
         dataScope(this.form).then(response => {
-          this.msgSuccess("修改成功")
+          this.$modal.msgSuccess("修改成功")
           this.openDataScope = false
           this.getList()
         }).catch(() => {
@@ -702,15 +698,11 @@ export default {
       const roleIds = row.roleId || this.ids
       const name = row.name || this.idNames
       let $this = this
-      this.$confirm('是否确认删除角色"' + name + '"?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除角色"' + name + '"?').then(function () {
         return delRole($this.updateParamIds(roleIds))
       }).then(() => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.$modal.msgSuccess("删除成功")
       }).catch((err) => {
       })
     },

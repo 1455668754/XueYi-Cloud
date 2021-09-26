@@ -194,13 +194,13 @@ export default {
             parentSystemId: genTable.parentSystemId
           }
           updateGenTable(genTable).then(res => {
-            this.msgSuccess(res.msg)
+            this.$modal.msgSuccess(res.msg)
             if (res.code === 200) {
               this.close()
             }
           })
         } else {
-          this.msgError("表单校验未通过，请重新检查提交内容")
+          this.$modal.msgError("表单校验未通过，请重新检查提交内容")
         }
       })
     },

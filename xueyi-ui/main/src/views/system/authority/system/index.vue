@@ -376,7 +376,7 @@ export default {
         if (valid) {
           if (this.form.systemId != null) {
             updateSystem(this.form).then(response => {
-              this.msgSuccess("修改成功")
+              this.$modal.msgSuccess("修改成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -384,7 +384,7 @@ export default {
             })
           } else {
             addSystem(this.form).then(response => {
-              this.msgSuccess("新增成功")
+              this.$modal.msgSuccess("新增成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -399,14 +399,10 @@ export default {
     // 模块状态修改
     handleStatusChange(row) {
       let text = row.status === STATUS.NORMAL ? "启用" : "停用"
-      this.$confirm('确认要"' + text + '""' + row.name + '"模块吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('确认要"' + text + '""' + row.name + '"模块吗?').then(function () {
         return changeSystemStatus({systemId: row.systemId, status: row.status})
       }).then(() => {
-        this.msgSuccess(text + "成功")
+        this.$modal.msgSuccess(text + "成功")
       }).catch(function () {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       }).catch((err) => {
@@ -417,15 +413,11 @@ export default {
       const systemIds = row.systemId || this.ids
       const name = row.name || this.idNames
       let $this = this
-      this.$confirm('是否确认删除模块"' + name + '"?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除模块"' + name + '"?', "警告").then(function () {
         return delSystem($this.updateParamIds(systemIds))
       }).then(() => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.$modal.msgSuccess("删除成功")
       }).catch((err) => {
       })
     }

@@ -436,7 +436,7 @@ export default {
     handleStatusChange(row) {
       let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
       updateSourceStatus({sourceId: row.sourceId, status: row.status}).then(response => {
-        this.msgSuccess(msg + "成功")
+        this.$modal.msgSuccess(msg + "成功")
       }).catch(() => {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
@@ -452,14 +452,14 @@ export default {
       }
       if (this.form.values.length > 0) {
         updateSeparation(this.form).then(response => {
-          this.msgSuccess('配置成功')
+          this.$modal.msgSuccess('配置成功')
           this.openSeparation = false
           this.getList()
         }).catch(() => {
           this.submitLoading = false
         })
       } else {
-        this.msgWarning('请添加读数据源后再保存')
+        this.$modal.msgWarning('请添加读数据源后再保存')
         this.submitLoading = false
       }
     },
@@ -470,7 +470,7 @@ export default {
         if (valid) {
           if (this.form.sourceId != null) {
             updateSource(this.form).then(response => {
-              this.msgSuccess('修改成功')
+              this.$modal.msgSuccess('修改成功')
               this.op = false
               this.getList()
             }).catch(() => {
@@ -478,7 +478,7 @@ export default {
             })
           } else {
             addSource(this.form).then(response => {
-              this.msgSuccess('新增成功')
+              this.$modal.msgSuccess('新增成功')
               this.open = false
               this.getList()
             }).catch(() => {
@@ -492,25 +492,17 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$confirm('是否确认删除数据源"' + row.name + '"?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(function () {
+      this.$modal.confirm('是否确认删除数据源"' + row.name + '"?').then(function () {
         return delSource({sourceId: row.sourceId})
       }).then(() => {
         this.getList()
-        this.msgSuccess('删除成功')
+        this.$modal.msgSuccess('删除成功')
       }).catch(() => {
       })
     },
     /** 保存排序按钮操作 */
     handleSort() {
-      this.$confirm('是否确认保存新排序?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      this.$modal.confirm('是否确认保存新排序?').then(() => {
         let params = this.sortOrderListOnlyDynamic(this.sourceList, this.oldSourceList, 'sourceId')
         if (params.length > 0) {
           return updateSourceSort(this.updateParamIds(params))
@@ -518,7 +510,7 @@ export default {
       }).then(() => {
         this.getList()
         this.sortVisible = false
-        this.msgSuccess('保存成功')
+        this.$modal.msgSuccess('保存成功')
       }).catch(() => {
       })
     },

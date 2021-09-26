@@ -16,6 +16,7 @@ import App from './App'
 import store from './store'
 import router from './router'
 import directive from '@common/directive' //directive
+import plugins from '@common/plugins' // plugins
 import {download} from '@utils/request'
 
 import {getDicts, getConfigKey} from "@api/common/common"
@@ -52,22 +53,6 @@ Vue.prototype.sortOrderListOnlyDynamic = sortOrderListOnlyDynamic
 Vue.prototype.mergeTableRow = mergeTableRow
 Vue.prototype.isMobile = isMobile
 
-Vue.prototype.msgSuccess = function (msg) {
-  this.$message({showClose: true, message: msg, type: "success"})
-}
-
-Vue.prototype.msgError = function (msg) {
-  this.$message({showClose: true, message: msg, type: "error"})
-}
-
-Vue.prototype.msgWarning = function (msg) {
-  this.$message({showClose: true, message: msg, type: "warning"})
-}
-
-Vue.prototype.msgInfo = function (msg) {
-  this.$message.info(msg)
-}
-
 // 全局组件挂载
 Vue.component('ImageBox', ImageBox)
 Vue.component('DictTag', DictTag)
@@ -78,8 +63,10 @@ Vue.component('FileUpload', FileUpload)
 Vue.component('ImageUpload', ImageUpload)
 
 Vue.use(directive)
+Vue.use(plugins)
 Vue.use(VueMeta)
 DictData.install()
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api

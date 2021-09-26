@@ -437,14 +437,10 @@ export default {
     handleStatusChange(row) {
       let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
       let text = row.status === STATUS.NORMAL ? '启用岗位"' + row.postName + '"吗?' : '停用岗位"' + row.postName + '"吗?停用岗位会同步停用所有归属用户，且归属用户将无法启用！'
-      this.$confirm('确认要' + text, "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('确认要' + text).then(function () {
         return changePostStatus({postId: row.postId, deptId: row.deptId, status: row.status})
       }).then(() => {
-        this.msgSuccess(msg + "成功")
+        this.$modal.msgSuccess(msg + "成功")
       }).catch(function () {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
@@ -456,7 +452,7 @@ export default {
         if (valid) {
           if (this.form.postId !== undefined) {
             updatePost(this.form).then(response => {
-              this.msgSuccess("修改成功")
+              this.$modal.msgSuccess("修改成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -464,7 +460,7 @@ export default {
             })
           } else {
             addPost(this.form).then(response => {
-              this.msgSuccess("新增成功")
+              this.$modal.msgSuccess("新增成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -481,7 +477,7 @@ export default {
       this.submitLoading = true
       if (this.form.postId !== undefined) {
         changePostRole(this.form).then(response => {
-          this.msgSuccess("岗位权限修改成功")
+          this.$modal.msgSuccess("岗位权限修改成功")
           this.roleOpen = false
           this.getList()
         }).catch(() => {
@@ -493,15 +489,11 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$confirm('是否确认删除岗位"' + row.postName + '"?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除岗位"' + row.postName + '"?').then(function () {
         return delPost({postId: row.postId})
       }).then(() => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.$modal.msgSuccess("删除成功")
       }).catch(() => {
       })
     },

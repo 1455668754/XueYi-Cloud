@@ -497,7 +497,7 @@ export default {
     handleStatusChange(row) {
       let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
       updateTenant({tenantId: row.tenantId, isChange: row.isChange, status: row.status, updateType: STATUS_UPDATE_OPERATION}).then(response => {
-        this.msgSuccess(msg + "成功")
+        this.$modal.msgSuccess(msg + "成功")
       }).catch(() => {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
@@ -540,7 +540,7 @@ export default {
       if (this.systemMenuForm.enterpriseId !== undefined) {
         this.systemMenuForm.params.systemMenuIds = this.getSystemMenuAllCheckedKeys()
         menuScope(this.systemMenuForm).then(response => {
-          this.msgSuccess("修改成功")
+          this.$modal.msgSuccess("修改成功")
           this.openMenuScope = false
           this.getList()
         }).catch(() => {
@@ -558,7 +558,7 @@ export default {
           if (this.form.tenantId != null) {
             if (this.form.isChange === SYSTEM_DEFAULT.FALSE) {
               updateTenant(this.form).then(response => {
-                this.msgSuccess('修改成功')
+                this.$modal.msgSuccess('修改成功')
                 this.open = false
                 this.getList()
               }).catch(() => {
@@ -573,7 +573,7 @@ export default {
             }
           } else {
             addTenant(this.form).then(response => {
-              this.msgSuccess('新增成功')
+              this.$modal.msgSuccess('新增成功')
               this.open = false
               this.getList()
             }).catch(() => {
@@ -590,15 +590,11 @@ export default {
       const tenantIds = row.tenantId || this.ids
       const names = row.tenantName || this.idNames
       let that = this
-      this.$confirm('是否确认删除租户"' + names + '"?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(function () {
+      this.$modal.confirm('是否确认删除租户"' + names + '"?').then(function () {
         return delTenant(that.updateParamIds(tenantIds))
       }).then(() => {
         this.getList()
-        this.msgSuccess('删除成功')
+        this.$modal.msgSuccess('删除成功')
       }).catch(() => {
       })
     },
@@ -610,11 +606,7 @@ export default {
     },
     /** 保存排序按钮操作 */
     handleSort() {
-      this.$confirm('是否确认保存新排序?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
+      this.$modal.confirm('是否确认保存新排序?').then(() => {
         let params = this.sortOrderListOnlyDynamic(this.tenantList, this.oldTenantList, 'tenantId')
         if (params.length > 0) {
           return updateTenantSort(this.updateParamIds(params))
@@ -622,7 +614,7 @@ export default {
       }).then(() => {
         this.getList()
         this.sortVisible = false
-        this.msgSuccess('保存成功')
+        this.$modal.msgSuccess('保存成功')
       }).catch(() => {})
     },
     /** 排序开关 */

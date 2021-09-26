@@ -293,8 +293,7 @@ export default {
       document.getElementById('copyNode').click()
     },
     empty() {
-      this.$confirm('确定要清空所有组件吗？', '提示', { type: 'warning' }).then(
-        () => {
+      this.$modal.confirm('确定要清空所有组件吗？').then(() => {
           this.drawingList = []
         }
       )

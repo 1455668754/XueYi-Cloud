@@ -681,7 +681,7 @@ export default {
         inputErrorMessage: "用户密码长度必须介于 6 和 20 之间"
       }).then(({value}) => {
         resetUserPwd(row.userId, value).then(response => {
-          this.msgSuccess("修改成功，新密码是：" + value)
+          this.$modal.msgSuccess("修改成功，新密码是：" + value)
         })
       }).catch(() => {
       })
@@ -702,14 +702,10 @@ export default {
     /** 用户状态修改 */
     handleStatusChange(row) {
       let text = row.status === STATUS.NORMAL ? "启用" : "停用"
-      this.$confirm('确认要"' + text + '""' + row.userName + '"用户吗?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('确认要"' + text + '""' + row.userName + '"用户吗?').then(function () {
         return changeUserStatus({userId: row.userId, status: row.status})
       }).then(() => {
-        this.msgSuccess(text + "成功")
+        this.$modal.msgSuccess(text + "成功")
       }).catch(function () {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
@@ -721,7 +717,7 @@ export default {
         if (valid) {
           if (this.form.userId !== undefined) {
             updateUser(this.form).then(response => {
-              this.msgSuccess("修改成功")
+              this.$modal.msgSuccess("修改成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -729,7 +725,7 @@ export default {
             })
           } else {
             addUser(this.form).then(response => {
-              this.msgSuccess("新增成功")
+              this.$modal.msgSuccess("新增成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -746,7 +742,7 @@ export default {
       this.submitLoading = true
       if (this.form.userId !== undefined) {
         changeUserRole(this.form).then(response => {
-          this.msgSuccess("用户权限修改成功")
+          this.$modal.msgSuccess("用户权限修改成功")
           this.roleOpen = false
           this.getList()
         }).catch(() => {
@@ -761,15 +757,11 @@ export default {
       const userIds = row.userId || this.ids
       const text = row.nickName || this.idsText
       let $this = this
-      this.$confirm('是否确认删除用户"' + text + '"?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除用户"' + text + '"?').then(function () {
         return delUser($this.updateParamIds(userIds))
       }).then(() => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.$modal.msgSuccess("删除成功")
       }).catch(() => {
       })
     },

@@ -323,7 +323,7 @@ export default {
         if (valid) {
           if (this.form.dictId != undefined) {
             updateType(this.form).then(response => {
-              this.msgSuccess("修改成功")
+              this.$modal.msgSuccess("修改成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -331,7 +331,7 @@ export default {
             })
           } else {
             addType(this.form).then(response => {
-              this.msgSuccess("新增成功")
+              this.$modal.msgSuccess("新增成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -346,15 +346,11 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const dictIds = row.dictId || this.ids
-      this.$confirm('是否确认删除字典编号为"' + dictIds + '"的数据项?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除字典编号为"' + dictIds + '"的数据项?', "警告").then(function () {
         return delType(dictIds)
       }).then(() => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.$modal.msgSuccess("删除成功")
       }).catch(() => {
       })
     },
@@ -367,7 +363,7 @@ export default {
     /** 刷新缓存按钮操作 */
     handleRefreshCache() {
       refreshCache().then(() => {
-        this.msgSuccess("刷新成功")
+        this.$modal.msgSuccess("刷新成功")
       })
     }
   }

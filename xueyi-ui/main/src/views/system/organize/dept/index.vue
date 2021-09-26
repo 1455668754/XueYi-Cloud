@@ -408,14 +408,10 @@ export default {
     handleStatusChange(row) {
       let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
       let text = row.status === STATUS.NORMAL ? '启用部门"' + row.deptName + '"吗?' : '停用部门"' + row.deptName + '"吗?停用部门会同步停用所有归属岗位及用户，且归属岗位与用户将无法启用！'
-      this.$confirm('确认要' + text, "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('确认要' + text).then(function () {
         return changeDeptStatus({deptId: row.deptId, parentId: row.parentId, status: row.status})
       }).then(() => {
-        this.msgSuccess(msg + "成功")
+        this.$modal.msgSuccess(msg + "成功")
       }).catch(function () {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
       })
@@ -427,7 +423,7 @@ export default {
         if (valid) {
           if (this.form.deptId !== undefined) {
             updateDept(this.form).then(response => {
-              this.msgSuccess("修改成功")
+              this.$modal.msgSuccess("修改成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -435,7 +431,7 @@ export default {
             })
           } else {
             addDept(this.form).then(response => {
-              this.msgSuccess("新增成功")
+              this.$modal.msgSuccess("新增成功")
               this.open = false
               this.getList()
             }).catch(() => {
@@ -452,7 +448,7 @@ export default {
       this.submitLoading = true
       if (this.form.deptId !== undefined) {
         changeDeptRole(this.form).then(response => {
-          this.msgSuccess("部门权限修改成功")
+          this.$modal.msgSuccess("部门权限修改成功")
           this.roleOpen = false
           this.getList()
         }).catch(() => {
@@ -464,15 +460,11 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      this.$confirm('是否确认删除部门"' + row.deptName + '"?', "警告", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(function () {
+      this.$modal.confirm('是否确认删除部门"' + row.deptName + '"?').then(function () {
         return delDept({deptId: row.deptId})
       }).then(() => {
         this.getList()
-        this.msgSuccess("删除成功")
+        this.$modal.msgSuccess("删除成功")
       }).catch(() => {
       })
     }
