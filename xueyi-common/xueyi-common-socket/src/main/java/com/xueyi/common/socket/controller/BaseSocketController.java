@@ -1,6 +1,5 @@
-package com.xueyi.common.socket.socket;
+package com.xueyi.common.socket.controller;
 
-import cn.hutool.crypto.digest.DigestUtil;
 import com.xueyi.common.socket.annotation.*;
 import com.xueyi.common.socket.domain.MyChannelHandlerMap;
 import com.xueyi.common.socket.pojo.Session;
@@ -16,7 +15,7 @@ import java.util.Map;
  *
  * @author xueyi
  */
-public class BaseSocket {
+public class BaseSocketController {
 
     @BeforeHandshake
     public void handshake(Session session, HttpHeaders headers, @RequestParam("req") String req, @RequestParam("user") String user, @RequestParam("t") String t, @RequestParam MultiValueMap reqMap, @PathVariable String arg, @PathVariable Map pathMap) {
@@ -30,17 +29,12 @@ public class BaseSocket {
     @OnOpen
     public void onOpen(Session session, HttpHeaders headers,  @RequestParam("req") String req,@RequestParam("user") String user, @RequestParam("t") String t, @RequestParam MultiValueMap reqMap, @PathVariable String arg, @PathVariable Map pathMap) {
         System.out.println("new connection");
-        System.out.println("open:"+ DigestUtil.md5Hex(session.channel().toString()));
-        System.out.println(MyChannelHandlerMap.linkSize());
         MyChannelHandlerMap.put(user,session);
-        System.out.println(MyChannelHandlerMap.linkSize());
     }
 
     @OnClose
     public void onClose(Session session) throws IOException {
         System.out.println("one connection closed");
-        System.out.println("OnClose:"+ DigestUtil.md5Hex(session.channel().toString()));
-        System.out.println(MyChannelHandlerMap.removeBySession(session));
     }
 
     @OnError

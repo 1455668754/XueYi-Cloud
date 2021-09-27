@@ -5,6 +5,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.xueyi.common.socket.pojo.Session;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -32,7 +33,7 @@ public class MyChannelHandlerMap {
      * @return 状态
      */
     public boolean existConnectionById(Session session) {
-        return biDirectionHashMap.containsKey(DigestUtil.md5Hex(session.channel().toString()));
+        return biDirectionHashMap.containsKey(DigestUtil.md5Hex(session.channel().id().toString()));
     }
 
     /**
@@ -42,7 +43,7 @@ public class MyChannelHandlerMap {
      * @param session  通信信息
      */
     public static void put(String consumer, Session session) {
-        biDirectionHashMap.put(consumer, DigestUtil.md5Hex(session.channel().toString()), session);
+        biDirectionHashMap.put(consumer, DigestUtil.md5Hex(session.channel().id().toString()), session);
         refreshTime(session);
     }
 
@@ -52,7 +53,7 @@ public class MyChannelHandlerMap {
      * @param session 通信信息
      */
     public static void refreshTime(Session session) {
-        lastUpdate.put(DigestUtil.md5Hex(session.channel().toString()), new Date());
+        lastUpdate.put(DigestUtil.md5Hex(session.channel().id().toString()), new Date());
     }
 
     /**
@@ -73,12 +74,12 @@ public class MyChannelHandlerMap {
      * @return 状态
      */
     public static boolean removeBySession(Session session) {
-        lastUpdate.remove(DigestUtil.md5Hex(session.channel().toString()));
-        return biDirectionHashMap.removeByValue(DigestUtil.md5Hex(session.channel().toString()));
+        lastUpdate.remove(DigestUtil.md5Hex(session.channel().id().toString()));
+        return biDirectionHashMap.removeByValue(DigestUtil.md5Hex(session.channel().id().toString()));
     }
 
     /**
-     * 给单个用户发送消息
+     * 给一个用户发送一条消息
      *
      * @param consumer 用户
      * @param message 信息
@@ -91,7 +92,7 @@ public class MyChannelHandlerMap {
 
 
     /**
-     * 给多个用户发送消息
+     * 给多个用户发送一条消息
      *
      * @param consumers 用户集合
      * @param message 信息
@@ -102,6 +103,16 @@ public class MyChannelHandlerMap {
         return true;
     }
 
+    /**
+     * 给多个用户发送多条消息（每个用户对应一条消息）
+     *
+     * @param map 用户 信息
+     * @return 状态
+     */
+    public static boolean sendMessageByConsumer(Map<String,String> map) {
+        map.forEach((consumer, message) -> biDirectionHashMap.getValueByKey(consumer).forEach((u,v) -> v.sendText(message)));
+        return true;
+    }
 
     /**
      * 查看用户量
