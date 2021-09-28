@@ -11,7 +11,7 @@ import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.organize.SysPost;
-import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.organize.service.ISysPostService;

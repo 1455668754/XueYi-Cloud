@@ -19,7 +19,7 @@
 		<result property="visible"          column="visible"        />
 		<result property="perms"            column="perms"          />
 		<result property="icon"             column="icon"           />
-		<result property="isMain"           column="is_main"     	/>
+		<result property="isCommon"         column="is_common"     	/>
 		<result property="sort"             column="sort"           />
 		<result property="status"           column="status"         />
 		<result property="createBy"   		column="create_by"      />
@@ -140,7 +140,7 @@
 	</select>
 
 	<select id="buildSystemMenuTreeSelect" parameterType="SysMenu" resultMap="SysMenuResult">
-		select m.menu_id, m.system_id, m.menu_name, if(m.parent_id = 0, m.system_id, m.parent_id) as parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, if(m.tenant_id = 0 and ( -1 != #{enterpriseId} or 0 != #{enterpriseId} ),'1','0') as is_main,
+		select m.menu_id, m.system_id, m.menu_name, if(m.parent_id = 0, m.system_id, m.parent_id) as parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, m.is_common,
 		ifnull(perms, '') as perms, m.icon, m.create_time
 		from sys_menu m
 		where 1 = 1
@@ -166,7 +166,7 @@
 	</select>
 
 	<select id="buildSystemMenuTreeSelectOnlyPublic" parameterType="SysMenu" resultMap="SysMenuResult">
-		select m.menu_id, m.system_id, m.menu_name, if(m.parent_id = 0, m.system_id, m.parent_id) as parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, if(m.tenant_id = 0 and ( -1 != #{enterpriseId} or 0 != #{enterpriseId} ),'1','0') as is_main,
+		select m.menu_id, m.system_id, m.menu_name, if(m.parent_id = 0, m.system_id, m.parent_id) as parent_id, m.sort, m.path, m.component, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, m.is_common,
 		ifnull(perms, '') as perms, m.icon, m.create_time
 		from sys_menu m
 		where m.tenant_id = 0

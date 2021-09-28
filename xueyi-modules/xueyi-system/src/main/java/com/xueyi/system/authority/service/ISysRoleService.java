@@ -3,7 +3,7 @@ package com.xueyi.system.authority.service;
 import java.util.List;
 
 import com.xueyi.system.api.domain.authority.SysRole;
-import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.role.domain.SysRoleDeptPost;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 

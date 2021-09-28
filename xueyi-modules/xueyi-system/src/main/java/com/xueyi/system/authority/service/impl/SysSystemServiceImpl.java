@@ -7,7 +7,7 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysSystemMapper;
@@ -200,7 +200,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
             systemVo.setStatus(sys.getStatus());
             systemVo.setType("0");
             systemVo.setSystemId(sys.getSystemId());
-            systemVo.setIsMain(sys.getIsMain());
+            systemVo.setIsCommon(sys.getIsCommon());
             systemMenuList.add(systemVo);
         }
         // 遍历菜单列表并添加进系统-菜单组装列表中
@@ -214,7 +214,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
             menuVo.setIcon(menu.getIcon());
             menuVo.setComponent(menu.getComponent());
             menuVo.setSystemId(menu.getSystemId());
-            menuVo.setIsMain(menu.getIsMain());
+            menuVo.setIsCommon(menu.getIsCommon());
             menuVo.setType("1");
             systemMenuList.add(menuVo);
         }

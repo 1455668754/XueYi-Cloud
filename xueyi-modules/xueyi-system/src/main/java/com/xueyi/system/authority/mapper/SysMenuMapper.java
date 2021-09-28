@@ -3,7 +3,7 @@ package com.xueyi.system.authority.mapper;
 import java.util.List;
 
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.api.domain.authority.SysMenu;
 
 /**
  * 菜单表 数据层

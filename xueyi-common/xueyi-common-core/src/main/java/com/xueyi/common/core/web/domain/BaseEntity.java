@@ -36,9 +36,6 @@ public class BaseEntity implements Serializable {
     /** 搜索值 */
     private String searchValue;
 
-    /** 公共控件 */
-    private String isCommon;
-
     /** 系统默认（Y是 N否） */
     private String isChange;
 
@@ -130,14 +127,6 @@ public class BaseEntity implements Serializable {
     public void setSearchValue(String searchValue)
     {
         this.searchValue = searchValue;
-    }
-
-    public String getIsCommon() {
-        return isCommon;
-    }
-
-    public void setIsCommon(String isCommon) {
-        this.isCommon = isCommon;
     }
 
     public String getIsChange() {

@@ -32,14 +32,6 @@ public class DataSourceServiceImpl implements IDataSourceService {
     private RedisService redisService;
 
     /**
-     * 项目启动时，初始化数据源策略组到缓存
-     */
-    @PostConstruct
-    public void init() {
-        loadingSourceCache();
-    }
-
-    /**
      * 删除所有源策略 cache目录
      */
     @Override

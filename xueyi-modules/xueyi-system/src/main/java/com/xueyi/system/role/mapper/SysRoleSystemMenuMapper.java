@@ -2,7 +2,7 @@ package com.xueyi.system.role.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.utilTool.SysSearch;
-import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 
 import java.util.List;

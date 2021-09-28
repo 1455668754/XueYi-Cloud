@@ -15,7 +15,7 @@ public interface SysEnterpriseMapper {
     /**
      * 查询所有企业信息 | 用于缓存加载
      *
-     * @return 企业对象
+     * @return 企业对象集合
      */
     public List<SysEnterprise> mainSelectEnterpriseCacheList();
 

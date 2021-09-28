@@ -5,6 +5,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.util.Set;
+
 /**
  * 子系统模块对象 xy_system
  *
@@ -33,12 +35,18 @@ public class SysSystem extends BaseEntity {
     @Excel(name = "跳转路由")
     private String route;
 
+    /** 页面展示（Y是 N否） */
+    private String visible;
+
     /** 状态（0正常 1停用） */
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
-    /** 系统默认（0非默认 1默认） */
-    private String isMain;
+    /** 公共模块（Y是 N否） */
+    private String isCommon;
+
+    /** 菜单集合 */
+    private Set<SysMenu> menuSet;
 
     public void setName(String name)
     {
@@ -86,6 +94,14 @@ public class SysSystem extends BaseEntity {
         return route;
     }
 
+    public String getVisible() {
+        return visible;
+    }
+
+    public void setVisible(String visible) {
+        this.visible = visible;
+    }
+
     public void setStatus(String status)
     {
         this.status = status;
@@ -96,12 +112,20 @@ public class SysSystem extends BaseEntity {
         return status;
     }
 
-    public String getIsMain() {
-        return isMain;
+    public String getIsCommon() {
+        return isCommon;
     }
 
-    public void setIsMain(String isMain) {
-        this.isMain = isMain;
+    public void setIsCommon(String isCommon) {
+        this.isCommon = isCommon;
+    }
+
+    public Set<SysMenu> getMenuSet() {
+        return menuSet;
+    }
+
+    public void setMenuSet(Set<SysMenu> menuSet) {
+        this.menuSet = menuSet;
     }
 
     @Override
@@ -112,10 +136,11 @@ public class SysSystem extends BaseEntity {
                 .append("imageUrl", getImageUrl())
                 .append("type", getType())
                 .append("route", getRoute())
-                .append("isMain", getIsMain())
-                .append("isNew", getIsNew())
+                .append("isCommon", getIsCommon())
                 .append("isChange", getIsChange())
+                .append("isNew", getIsNew())
                 .append("sort", getSort())
+                .append("visible", getVisible())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())
                 .append("createName", getCreateName())

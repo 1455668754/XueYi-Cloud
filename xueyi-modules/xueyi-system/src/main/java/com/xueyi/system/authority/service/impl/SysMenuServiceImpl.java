@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.utils.vo.MetaVo;
 import com.xueyi.system.utils.vo.RouterVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
@@ -46,6 +46,33 @@ public class SysMenuServiceImpl implements ISysMenuService {
 
     @Autowired
     private ISysMenuService menuService;
+
+//    /**
+//     * 根据当前用户Id查询菜单 | 菜单路由
+//     *
+//     * @param menu 菜单信息 | systemId 系统Id
+//     * @return 菜单列表
+//     */
+//    /**
+//     * 加载企业缓存数据
+//     */
+//    public void loadingMenuCache() {
+//
+//    }
+//    public List<SysMenu> mainSelectMenuCacheList(SysMenu menu) {
+//        List<SysMenu> menus;
+//        // 管理员显示所有菜单信息
+//        if (SysUser.isAdmin(SecurityUtils.getUserType())) {
+//            menu.getParams().put("excludeList", roleSystemMenuService.selectPermitAdministrator(new SysRoleSystemMenu()));
+//            menus = menuMapper.selectMenuTreeByAdminUserId(menu);
+//        } else {
+//            menu.getParams().put("userId", SecurityUtils.getUserId());
+//            menu.getParams().put("excludeList", roleSystemMenuService.selectPermitPersonal(new SysRoleSystemMenu()));
+//            menu.getParams().put("roleSystemPerms", menuService.selectSystemMenuListByUserId(menu));
+//            menus = menuMapper.selectMenuTreeByUserId(menu);
+//        }
+//        return getChildPerms(menus, 0L);
+//    }
 
     /**
      * 根据当前用户Id查询菜单 | 菜单路由

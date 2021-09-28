@@ -1,4 +1,4 @@
-package com.xueyi.system.authority.domain;
+package com.xueyi.system.api.domain.authority;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,8 +60,8 @@ public class SysMenu extends BaseEntity {
     /** 菜单图标 */
     private String icon;
 
-    /** 系统默认（0非默认 1默认） */
-    private String isMain;
+    /** 公共菜单（Y是 N否） */
+    private String isCommon;
 
     /** 子菜单 */
     private List<SysMenu> children = new ArrayList<SysMenu>();
@@ -210,12 +210,12 @@ public class SysMenu extends BaseEntity {
         this.icon = icon;
     }
 
-    public String getIsMain() {
-        return isMain;
+    public String getIsCommon() {
+        return isCommon;
     }
 
-    public void setIsMain(String isMain) {
-        this.isMain = isMain;
+    public void setIsCommon(String isCommon) {
+        this.isCommon = isCommon;
     }
 
     public List<SysMenu> getChildren()
@@ -229,6 +229,23 @@ public class SysMenu extends BaseEntity {
     }
 
     @Override
+    public int hashCode() {
+        return menuId.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof SysMenu) {
+            SysMenu menuVo = (SysMenu) anObject;
+            return this.menuId.equals(menuVo.getMenuId());
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("menuId", getMenuId())
@@ -238,13 +255,14 @@ public class SysMenu extends BaseEntity {
                 .append("path", getPath())
                 .append("component", getComponent())
                 .append("query", getQuery())
+                .append("isCommon", getIsCommon())
+                .append("isChange", getIsChange())
                 .append("isFrame", getIsFrame())
                 .append("IsCache", getIsCache())
                 .append("menuType", getMenuType())
                 .append("visible", getVisible())
                 .append("perms", getPerms())
                 .append("icon", getIcon())
-                .append("isMain", getIsMain())
                 .append("sort", getSort())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())

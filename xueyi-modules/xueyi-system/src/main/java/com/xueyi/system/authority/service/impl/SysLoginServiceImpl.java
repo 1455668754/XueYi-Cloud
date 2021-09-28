@@ -3,13 +3,11 @@ package com.xueyi.system.authority.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
-import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.authority.domain.SysMenu;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysLoginService;
-import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +28,6 @@ import java.util.Set;
 @Service
 @DS("main")
 public class SysLoginServiceImpl implements ISysLoginService {
-
-    @Autowired
-    private SysEnterpriseMapper enterpriseMapper;
 
     @Autowired
     private SysUserMapper userMapper;

@@ -51,7 +51,7 @@
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:menu:edit']"
-              v-if="scope.row.type === TYPE.MENU && scope.row.isMain === '0'"
+              v-if="scope.row.type === TYPE.MENU && (scope.row.isCommon === IS_COMMON.FALSE || IS_LESSOR)"
             >修改
             </el-button>
             <el-button
@@ -61,6 +61,7 @@
               @click="handleAdd(scope.row)"
               v-hasPermi="['system:menu:add']"
             >新增
+              {{(scope.row.isCommon === IS_COMMON.FALSE)}}
             </el-button>
             <el-button
               size="mini"
@@ -68,7 +69,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:menu:remove']"
-              v-if="scope.row.type === TYPE.MENU && scope.row.isMain === '0'"
+              v-if="scope.row.type === TYPE.MENU && (scope.row.isCommon === IS_COMMON.FALSE || IS_LESSOR)"
             >删除
             </el-button>
           </template>
@@ -103,7 +104,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="10">
-            <el-form-item label="公共菜单" v-if="enterpriseName === 'administrator' && form.menuId == undefined">
+            <el-form-item label="公共菜单" v-if="IS_LESSOR">
               <el-radio-group v-model="form.isCommon">
                 <el-radio
                   v-for="dict in dict.type.sys_yes_no"
@@ -268,7 +269,7 @@ import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import IconSelect from "@basicsComponents/IconSelect"
 import store from "@/store"
-import {STATUS} from "@constant/constants"
+import {STATUS, IS_COMMON} from "@constant/constants"
 import {TYPE, CACHE, FRAME, MENU_TYPE, VISIBLE} from "@constant/authorityContants"
 
 export default {
@@ -279,11 +280,13 @@ export default {
     return {
       //常量区
       STATUS: STATUS,
+      IS_COMMON:IS_COMMON,
       TYPE:TYPE,
       VISIBLE: VISIBLE,
       CACHE: CACHE,
       FRAME: FRAME,
       MENU_TYPE: MENU_TYPE,
+      IS_LESSOR: store.getters.isLessor,
       enterpriseName: store.getters.enterpriseName,
       // 遮罩层
       loading: true,
@@ -337,17 +340,17 @@ export default {
       }
       return {
         id: node.id,
-        label: node.type === '0' ? '模块 | ' + node.label : '菜单 | ' + node.label,
+        label: node.type === TYPE.SYSTEM ? '模块 | ' + node.label : '菜单 | ' + node.label,
         type: node.type,
         systemId: node.systemId,
         children: node.children
       }
     },
     treeSelectSelect(node, instanceId) {
-      if (node.type === '0') {
+      if (node.type === TYPE.SYSTEM) {
         this.form.systemId = node.systemId
         this.checkSystem = true
-      } else if (node.type === '1') {
+      } else if (node.type === TYPE.MENU) {
         this.form.systemId = node.systemId
         this.checkSystem = false
       }
@@ -355,7 +358,7 @@ export default {
     /** 查询菜单下拉树结构 */
     getTreeSelect(row) {
       let id = '0'
-      if (row != null && row.type === '1' && row.id) {
+      if (row != null && row.type === TYPE.MENU && row.id) {
         id = row.id
       }
       systemMenuTreeSelect({Id: id}).then(response => {
@@ -377,7 +380,7 @@ export default {
         icon: undefined,
         menuType: MENU_TYPE.DIR,
         sort: 0,
-        isCommon: "N",
+        isCommon: IS_COMMON.FALSE,
         isFrame: FRAME.NO,
         isCache: CACHE.YES,
         visible: VISIBLE.TRUE,
@@ -390,11 +393,11 @@ export default {
     handleAdd(row) {
       this.reset()
       this.getTreeSelect()
-      if (row != null && row.type === '0') {
+      if (row != null && row.type === TYPE.SYSTEM) {
         this.form.parentId = row.id
         this.form.systemId = row.id
         this.checkSystem = true
-      } else if (row != null && row.type === '1' && row.id) {
+      } else if (row != null && row.type === TYPE.MENU && row.id) {
         this.form.parentId = row.id
         this.form.systemId = row.systemId
         this.checkSystem = false

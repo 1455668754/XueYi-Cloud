@@ -3,6 +3,7 @@ import {getRouters} from '@api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@basicsComponents/ParentView'
 import InnerLink from '@/layout/components/InnerLink'
+import {COMPONENT} from "@constant/authorityContants"
 
 const permission = {
   state: {
@@ -62,11 +63,11 @@ function filterAsyncRouter(asyncRouterMap, lastRouter = false, type = false) {
     }
     if (route.component) {
       // Layout ParentView 组件特殊处理
-      if (route.component === 'Layout') {
+      if (route.component === COMPONENT.LAY_OUT) {
         route.component = Layout
-      } else if (route.component === 'ParentView') {
+      } else if (route.component === COMPONENT.PARENT_VIEW) {
         route.component = ParentView
-      } else if (route.component === 'InnerLink') {
+      } else if (route.component === COMPONENT.INNER_LINK) {
         route.component = InnerLink
       } else {
         route.component = loadView(route.component)

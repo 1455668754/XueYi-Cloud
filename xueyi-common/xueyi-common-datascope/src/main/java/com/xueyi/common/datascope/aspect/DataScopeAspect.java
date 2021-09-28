@@ -254,11 +254,6 @@ public class DataScopeAspect {
         if (StringUtils.isNotBlank(sqlString.toString()) || StringUtils.isNotBlank(upSqlString.toString())) {
             if (StringUtils.isNotNull(params) && params instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) params;
-                if (StringUtils.isNotNull(baseEntity.getIsCommon()) && baseEntity.getIsCommon().equals("Y") && enterprise.getEnterpriseId() == -1) {
-                    baseEntity.setEnterpriseId(0L);
-                } else {
-                    baseEntity.setEnterpriseId(enterprise.getEnterpriseId());
-                }
                 if (StringUtils.isNotBlank(sqlString.toString())) {
                     baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
                 }

@@ -35,11 +35,13 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     private RedisService redisService;
 
     /**
-     * 项目启动时，初始化企业信息到缓存
+     * 查询所有企业信息 | 用于缓存加载
+     *
+     * @return 企业对象集合
      */
-    @PostConstruct
-    public void init() {
-        loadingEnterpriseCache();
+    @Override
+    public List<SysEnterprise> mainSelectEnterpriseCacheList() {
+        return enterpriseMapper.mainSelectEnterpriseCacheList();
     }
 
     /**
@@ -136,12 +138,11 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * 加载企业缓存数据
      */
     @Override
-    public void loadingEnterpriseCache() {
-        List<SysEnterprise> enterprisesList = enterpriseMapper.mainSelectEnterpriseCacheList();
+    public void loadingEnterpriseCache(List<SysEnterprise> enterprisesList) {
         for (SysEnterprise enterprise : enterprisesList) {
-            EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(),enterprise);
-            EnterpriseUtils.refreshStrategyCache(enterprise.getEnterpriseId(),enterprise.getStrategyId());
-            EnterpriseUtils.refreshLoginCache(enterprise.getEnterpriseName(),enterprise.getEnterpriseId());
+            EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(), enterprise);
+            EnterpriseUtils.refreshStrategyCache(enterprise.getEnterpriseId(), enterprise.getStrategyId());
+            EnterpriseUtils.refreshLoginCache(enterprise.getEnterpriseName(), enterprise.getEnterpriseId());
         }
     }
 
@@ -161,8 +162,9 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public void resetEnterpriseCache() {
+        List<SysEnterprise> enterprisesList = enterpriseMapper.mainSelectEnterpriseCacheList();
         clearEnterpriseCache();
-        loadingEnterpriseCache();
+        loadingEnterpriseCache(enterprisesList);
     }
 
     /**
@@ -170,7 +172,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     private void refreshCache() {
         SysEnterprise enterprise = enterpriseMapper.mainSelectEnterpriseById(new SysEnterprise());
-        EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(),enterprise);
+        EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(), enterprise);
     }
 
     /**

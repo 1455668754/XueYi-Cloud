@@ -13,6 +13,13 @@ import java.util.List;
 public interface ISysEnterpriseService {
 
     /**
+     * 查询所有企业信息 | 用于缓存加载
+     *
+     * @return 企业对象集合
+     */
+    public List<SysEnterprise> mainSelectEnterpriseCacheList();
+
+    /**
      * 根据企业账号查询账号信息
      *
      * @param enterpriseName 企业账号
@@ -70,7 +77,7 @@ public interface ISysEnterpriseService {
     /**
      * 加载企业缓存数据
      */
-    public void loadingEnterpriseCache();
+    public void loadingEnterpriseCache(List<SysEnterprise> enterprisesList);
 
     /**
      * 清空企业缓存数据

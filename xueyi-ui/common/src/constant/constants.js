@@ -11,6 +11,11 @@ module.exports = {
         NORMAL: '0',
         DISABLE: '1'
     },
+    /** 公共控件（0启用 1禁用）*/
+    IS_COMMON: {
+        TRUE: 'Y',
+        FALSE: 'N'
+    },
 
     /** 超管租户（Y是 N否） */
     IS_LESSOR: {
@@ -19,5 +24,5 @@ module.exports = {
     },
 
     /** 更新状态指令 */
-    STATUS_UPDATE_OPERATION: "1"
+    STATUS_UPDATE_OPERATION: '1'
 }

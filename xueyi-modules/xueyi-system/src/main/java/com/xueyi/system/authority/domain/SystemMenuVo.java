@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author xueyi
  */
-public class SystemMenuVo  extends BaseEntity {
+public class SystemMenuVo extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class SystemMenuVo  extends BaseEntity {
     private String query;
 
     /** 系统默认（0非默认 1默认） */
-    private String isMain;
+    private String isCommon;
 
     /** 子部门/岗位 */
     private List<SystemMenuVo> children = new ArrayList<SystemMenuVo>();
@@ -118,12 +118,12 @@ public class SystemMenuVo  extends BaseEntity {
         this.query = query;
     }
 
-    public String getIsMain() {
-        return isMain;
+    public String getIsCommon() {
+        return isCommon;
     }
 
-    public void setIsMain(String isMain) {
-        this.isMain = isMain;
+    public void setIsCommon(String isCommon) {
+        this.isCommon = isCommon;
     }
 
     public List<SystemMenuVo> getChildren() {
