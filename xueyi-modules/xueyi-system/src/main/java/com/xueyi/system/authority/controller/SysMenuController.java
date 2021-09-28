@@ -5,7 +5,6 @@ import java.util.List;
 import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.api.domain.source.Source;
-import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import com.xueyi.system.source.service.IDataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +39,6 @@ public class SysMenuController extends BaseController {
 
     @Autowired
     private IDataSourceService dataSourceService;
-
-    @Autowired
-    private ISysEnterpriseService enterpriseService;
 
     @Autowired
     private ISysRoleSystemMenuService roleSystemMenuService;

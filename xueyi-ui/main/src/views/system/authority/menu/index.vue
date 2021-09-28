@@ -51,7 +51,7 @@
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:menu:edit']"
-              v-if="scope.row.type === '1' && scope.row.isMain === '0'"
+              v-if="scope.row.type === TYPE.MENU && scope.row.isMain === '0'"
             >修改
             </el-button>
             <el-button
@@ -68,7 +68,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:menu:remove']"
-              v-if="scope.row.type === '1' && scope.row.isMain === '0'"
+              v-if="scope.row.type === TYPE.MENU && scope.row.isMain === '0'"
             >删除
             </el-button>
           </template>
@@ -96,9 +96,9 @@
           <el-col :span="14">
             <el-form-item label="菜单类型" prop="menuType">
               <el-radio-group v-model="form.menuType">
-                <el-radio label="M">目录</el-radio>
-                <el-radio label="C">菜单</el-radio>
-                <el-radio label="F">按钮</el-radio>
+                <el-radio :label="MENU_TYPE.DIR">目录</el-radio>
+                <el-radio :label="MENU_TYPE.MENU">菜单</el-radio>
+                <el-radio :label="MENU_TYPE.BUTTON">按钮</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -114,7 +114,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item v-if="form.menuType != 'F'" label="菜单图标">
+            <el-form-item v-if="form.menuType !== MENU_TYPE.BUTTON" label="菜单图标">
               <el-popover
                 placement="bottom-start"
                 width="460"
@@ -146,7 +146,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'">
+            <el-form-item v-if="form.menuType !== MENU_TYPE.BUTTON">
               <span slot="label">
                 <el-tooltip content="选择是外链则路由地址需要以`http(s)://`开头" placement="top">
                 <i class="el-icon-question"></i>
@@ -154,13 +154,13 @@
                 是否外链
               </span>
               <el-radio-group v-model="form.isFrame">
-                <el-radio label="0">是</el-radio>
-                <el-radio label="1">否</el-radio>
+                <el-radio :label="FRAME.YES">是</el-radio>
+                <el-radio :label="FRAME.NO">否</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'" prop="path">
+            <el-form-item v-if="form.menuType !== MENU_TYPE.BUTTON" prop="path">
               <span slot="label">
                 <el-tooltip content="访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头" placement="top">
                 <i class="el-icon-question"></i>
@@ -170,7 +170,7 @@
               <el-input v-model="form.path" placeholder="请输入路由地址"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.menuType == 'C'">
+          <el-col :span="12" v-if="form.menuType === MENU_TYPE.BUTTON">
             <el-form-item prop="component">
               <span slot="label">
                 <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
@@ -182,7 +182,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'M'">
+            <el-form-item v-if="form.menuType !== MENU_TYPE.DIR">
               <el-input v-model="form.perms" placeholder="请输入权限标识" maxlength="100"/>
               <span slot="label">
                 <el-tooltip content="控制器中定义的权限字符，如：@PreAuthorize(`@ss.hasPermi('system:user:list')`)" placement="top">
@@ -193,7 +193,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType == 'C'">
+            <el-form-item v-if="form.menuType === MENU_TYPE.MENU">
               <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
               <span slot="label">
                 <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "xy"}`' placement="top">
@@ -204,7 +204,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType == 'C'">
+            <el-form-item v-if="form.menuType === MENU_TYPE.MENU">
               <span slot="label">
                 <el-tooltip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" placement="top">
                 <i class="el-icon-question"></i>
@@ -212,13 +212,13 @@
                 是否缓存
               </span>
               <el-radio-group v-model="form.isCache">
-                <el-radio label="0">缓存</el-radio>
-                <el-radio label="1">不缓存</el-radio>
+                <el-radio :label="CACHE.YES">缓存</el-radio>
+                <el-radio :label="CACHE.NO">不缓存</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'">
+            <el-form-item v-if="form.menuType !== MENU_TYPE.BUTTON">
               <span slot="label">
                 <el-tooltip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" placement="top">
                 <i class="el-icon-question"></i>
@@ -235,7 +235,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.menuType != 'F'">
+            <el-form-item v-if="form.menuType !== MENU_TYPE.BUTTON">
               <span slot="label">
                 <el-tooltip content="选择停用则路由将不会出现在侧边栏，也不能被访问" placement="top">
                 <i class="el-icon-question"></i>
@@ -269,15 +269,21 @@ import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import IconSelect from "@basicsComponents/IconSelect"
 import store from "@/store"
 import {STATUS} from "@constant/constants"
+import {TYPE, CACHE, FRAME, MENU_TYPE, VISIBLE} from "@constant/authorityContants"
 
 export default {
   name: "Menu",
-  dicts: ['sys_show_hide', 'sys_normal_disable'],
+  dicts: ['sys_show_hide', 'sys_normal_disable', 'sys_yes_no'],
   components: {Treeselect, IconSelect},
   data() {
     return {
       //常量区
       STATUS: STATUS,
+      TYPE:TYPE,
+      VISIBLE: VISIBLE,
+      CACHE: CACHE,
+      FRAME: FRAME,
+      MENU_TYPE: MENU_TYPE,
       enterpriseName: store.getters.enterpriseName,
       // 遮罩层
       loading: true,
@@ -369,12 +375,12 @@ export default {
         parentId: 0,
         menuName: undefined,
         icon: undefined,
-        menuType: "M",
+        menuType: MENU_TYPE.DIR,
         sort: 0,
         isCommon: "N",
-        isFrame: "1",
-        isCache: "0",
-        visible: "0",
+        isFrame: FRAME.NO,
+        isCache: CACHE.YES,
+        visible: VISIBLE.TRUE,
         status: STATUS.NORMAL
       }
       this.resetForm("form")

@@ -8,6 +8,8 @@ import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.annotation.Excel.ColumnType;
 import com.xueyi.common.core.web.domain.BaseEntity;
 
+import java.util.Set;
+
 /**
  * 角色表 sys_role
  *
@@ -40,7 +42,6 @@ public class SysRole extends BaseEntity {
     private boolean menuCheckStrictly;
 
     /** 部门树选择项是否关联显示（0：父子不互相关联显示 1：父子互相关联显示 ） */
-
     private boolean deptCheckStrictly;
 
     /** 角色类型（0常规 1租户衍生 2部门衍生 3岗位衍生 4用户衍生） */
@@ -59,6 +60,15 @@ public class SysRole extends BaseEntity {
 
     /** 系统-菜单组（菜单权限） */
     private Long[] systemMenuIds;
+
+    /** 系统-菜单组（全选菜单权限） */
+    private Set<Long> halfCheckedIds;
+
+    /** 系统-菜单组（半选菜单权限） */
+    private Set<Long> CheckedIds;
+
+    /** 系统组（角色 - 系统组） */
+    private Set<Long> SystemIds;
 
     /** 部门-岗位组（数据权限） */
     private Long[] deptPostIds;
