@@ -1,5 +1,6 @@
 import { login, logout, getInfo, refreshToken, getEnterpriseProfile} from '@api/login'
 import { getToken, setToken, setExpiresIn, removeToken } from '@utils/auth'
+import {IS_LESSOR} from "@constant/constants"
 
 const user = {
   state: {
@@ -9,6 +10,7 @@ const user = {
     enterpriseName: '',
     enterpriseSystemName: '',
     logo: '',
+    isLessor: false,
     roles: [],
     permissions: []
   },
@@ -23,17 +25,20 @@ const user = {
     SET_NAME: (state, name) => {
       state.name = name
     },
+    SET_AVATAR: (state, avatar) => {
+      state.avatar = avatar
+    },
     SET_ENTERPRISENAME: (state, enterpriseName) => {
       state.enterpriseName = enterpriseName
     },
     SET_ENTERPRISESYSTEMNAME: (state, enterpriseSystemName) => {
       state.enterpriseSystemName = enterpriseSystemName
     },
-    SET_AVATAR: (state, avatar) => {
-      state.avatar = avatar
-    },
     SET_LOGO: (state, logo) => {
       state.logo = logo
+    },
+    SET_IS_LESSOR:(state, isLessor) => {
+      state.isLessor = isLessor
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
@@ -87,9 +92,11 @@ const user = {
           const enterprise = res.data
           const systemName = enterprise.enterpriseSystemName === "" ? "雪忆管理系统" : enterprise.enterpriseSystemName;
           const logo = enterprise.logo === "" ? require("@assets/images/logo.jpg") : enterprise.logo;
+          const isLessor = enterprise.isLessor === IS_LESSOR.TRUE
           commit('SET_ENTERPRISENAME', enterprise.enterpriseName)
           commit('SET_ENTERPRISESYSTEMNAME', systemName)
           commit('SET_LOGO', logo)
+          commit('SET_IS_LESSOR', isLessor)
         }).catch(error => {
           reject(error)
         })

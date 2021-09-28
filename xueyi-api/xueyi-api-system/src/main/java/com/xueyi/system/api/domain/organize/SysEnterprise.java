@@ -29,6 +29,9 @@ public class SysEnterprise extends BaseEntity {
     /** 企业logo */
     private String logo;
 
+    /** 超管租户（Y是 N否） */
+    private String isLessor;
+
     /** 企业账号修改次数 */
     private Long enterpriseNameFrequency;
 
@@ -76,6 +79,14 @@ public class SysEnterprise extends BaseEntity {
         this.logo = logo;
     }
 
+    public String getIsLessor() {
+        return isLessor;
+    }
+
+    public void setIsLessor(String isLessor) {
+        this.isLessor = isLessor;
+    }
+
     public Long getEnterpriseNameFrequency() {
         return enterpriseNameFrequency;
     }
@@ -100,6 +111,7 @@ public class SysEnterprise extends BaseEntity {
                 .append("enterpriseName", getEnterpriseName())
                 .append("enterpriseNick", getEnterpriseNick())
                 .append("logo", getLogo())
+                .append("isLessor", getIsLessor())
                 .append("enterpriseNameFrequency", getEnterpriseNameFrequency())
                 .append("status", getStatus())
                 .append("createBy", getCreateBy())

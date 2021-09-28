@@ -10,6 +10,7 @@ create table xy_tenant (
   tenant_nick		        varchar(50)	        not null 	                            comment '租户名称',
   tenant_logo		        varchar(2000)	    default ''	                            comment '租户logo',
   tenant_name_frequency     tinyint             default 0                               comment '租户账号修改次数',
+  is_lessor                 char(1)             not null default 'N'	                comment '超管租户（Y是 N否）',
   is_change                 char(1)             not null default 'N'	                comment '系统租户（Y是 N否）',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
@@ -26,9 +27,9 @@ create table xy_tenant (
 -- ----------------------------
 -- 初始化-租户信息表数据
 -- ----------------------------
-insert into xy_tenant (tenant_id, is_change, strategy_id,  tenant_name, tenant_system_name, tenant_nick, tenant_logo)
-values (-1, 'Y', 1, 'administrator', '租户管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
-       ( 1, 'N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
+insert into xy_tenant (tenant_id, is_lessor, is_change, strategy_id,  tenant_name, tenant_system_name, tenant_nick, tenant_logo)
+values (-1, 'Y', 'Y', 1, 'administrator', '租户管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
+       ( 1, 'N', 'N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
 
 -- ----------------------------
 -- 2、策略信息表

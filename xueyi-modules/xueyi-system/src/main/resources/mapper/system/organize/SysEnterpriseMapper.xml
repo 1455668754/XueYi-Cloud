@@ -12,7 +12,7 @@
         <result property="enterpriseNick"               column="tenant_nick"                />
         <result property="logo"                         column="tenant_logo"                />
         <result property="enterpriseNameFrequency"      column="tenant_name_frequency"      />
-        <result property="datasource"                   column="datasource"                 />
+        <result property="isLessor"                     column="is_lessor"                  />
         <result property="createBy"   		            column="create_by"                  />
         <result property="createName"               	column="create_name"                />
         <result property="createTime" 	            	column="create_time"                />
@@ -21,23 +21,13 @@
         <result property="updateTime" 	            	column="update_time"                />
     </resultMap>
 
-    <sql id="selectVo">
-        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.create_by, e.create_time, e.update_by, e.update_time
+    <sql id="cacheVo">
+        select e.tenant_id, e.strategy_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_lessor, e.status, e.remark, e.create_by, e.create_time, e.update_by, e.update_time
         from xy_tenant e
     </sql>
 
     <sql id="checkVo">
-        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.create_by, e.create_time, e.update_by, e.update_time
-        from xy_tenant e
-    </sql>
-
-    <sql id="logoVo">
-        select e.tenant_system_name, e.tenant_logo
-        from xy_tenant e
-    </sql>
-
-    <sql id="cacheVo">
-        select e.tenant_id, e.strategy_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.status, e.remark, e.create_by, e.create_time, e.update_by, e.update_time
+        select e.tenant_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_lessor, e.status
         from xy_tenant e
     </sql>
 
