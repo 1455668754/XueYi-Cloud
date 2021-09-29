@@ -13,13 +13,14 @@
 		<result property="path"             column="path"           />
 		<result property="component"        column="component"      />
 		<result property="query"          	column="query"          />
+		<result property="isCommon"         column="is_common"     	/>
+		<result property="isChange"         column="is_change"     	/>
 		<result property="isFrame"          column="is_frame"       />
 		<result property="isCache"          column="is_cache"       />
 		<result property="menuType"         column="menu_type"      />
 		<result property="visible"          column="visible"        />
 		<result property="perms"            column="perms"          />
 		<result property="icon"             column="icon"           />
-		<result property="isCommon"         column="is_common"     	/>
 		<result property="sort"             column="sort"           />
 		<result property="status"           column="status"         />
 		<result property="createBy"   		column="create_by"      />

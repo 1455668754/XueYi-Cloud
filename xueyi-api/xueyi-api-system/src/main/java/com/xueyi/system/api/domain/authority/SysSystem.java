@@ -45,9 +45,6 @@ public class SysSystem extends BaseEntity {
     /** 公共模块（Y是 N否） */
     private String isCommon;
 
-    /** 菜单集合 */
-    private Set<SysMenu> menuSet;
-
     public void setName(String name)
     {
         this.name = name;
@@ -118,14 +115,6 @@ public class SysSystem extends BaseEntity {
 
     public void setIsCommon(String isCommon) {
         this.isCommon = isCommon;
-    }
-
-    public Set<SysMenu> getMenuSet() {
-        return menuSet;
-    }
-
-    public void setMenuSet(Set<SysMenu> menuSet) {
-        this.menuSet = menuSet;
     }
 
     @Override
