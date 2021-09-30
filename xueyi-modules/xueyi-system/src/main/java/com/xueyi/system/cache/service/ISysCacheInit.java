@@ -8,9 +8,9 @@ package com.xueyi.system.cache.service;
 public interface ISysCacheInit {
 
     /**
-     * 加载菜单缓存数据
+     * 加载模块-路由缓存数据
      */
-    public void loadingMenuCache();
+    public void loadingRouteCache();
 
     /**
      * 加载模块缓存数据

@@ -5,10 +5,8 @@ import com.xueyi.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import java.util.Set;
-
 /**
- * 子系统模块对象 xy_system
+ * 模块对象 xy_system
  *
  * @author xueyi
  */
@@ -16,7 +14,10 @@ public class SysSystem extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /** 系统名称 */
+    /** 模块Id */
+    private Long systemId;
+
+    /** 模块名称 */
     @Excel(name = "系统名称")
     private String name;
 
@@ -44,6 +45,14 @@ public class SysSystem extends BaseEntity {
 
     /** 公共模块（Y是 N否） */
     private String isCommon;
+
+    public Long getSystemId() {
+        return systemId;
+    }
+
+    public void setSystemId(Long systemId) {
+        this.systemId = systemId;
+    }
 
     public void setName(String name)
     {
@@ -115,6 +124,23 @@ public class SysSystem extends BaseEntity {
 
     public void setIsCommon(String isCommon) {
         this.isCommon = isCommon;
+    }
+
+    @Override
+    public int hashCode() {
+        return systemId != 0L ? systemId.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object anObject) {
+        if (this == anObject) {
+            return true;
+        }
+        if (anObject instanceof SysSystem) {
+            SysSystem systemVo = (SysSystem) anObject;
+            return this.systemId.equals(systemVo.getSystemId());
+        }
+        return false;
     }
 
     @Override

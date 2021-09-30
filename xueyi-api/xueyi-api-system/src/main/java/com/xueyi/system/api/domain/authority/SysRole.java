@@ -19,7 +19,7 @@ public class SysRole extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /** 角色ID */
+    /** 角色Id */
     @Excel(name = "角色序号", cellType = ColumnType.NUMERIC)
     private Long roleId;
 
@@ -62,10 +62,16 @@ public class SysRole extends BaseEntity {
     private Long[] systemMenuIds;
 
     /** 系统-菜单组（全选菜单权限） */
-    private Set<Long> halfCheckedIds;
+    private Set<SysMenu> halfMenuIds;
 
     /** 系统-菜单组（半选菜单权限） */
-    private Set<Long> CheckedIds;
+    private Set<SysMenu> wholeMenuIds;
+
+    /** 系统-菜单组（全选菜单权限） */
+    private Set<SysSystem> halfSystemIds;
+
+    /** 系统-菜单组（半选菜单权限） */
+    private Set<SysSystem> wholeSystemIds;
 
     /** 系统组（角色 - 系统组） */
     private Set<Long> SystemIds;

@@ -42,8 +42,8 @@ public class SysCacheInitImpl implements ISysCacheInit {
         enterpriseService.loadingEnterpriseCache(enterprisesList);
         /* 初始化数据源策略组缓存 */
         dataSourceService.loadingSourceCache();
-        /* 初始化菜单缓存 */
-        loadingMenuCache();
+        /* 初始化模块-路由缓存 */
+        loadingRouteCache();
         /* 初始化模块缓存 */
         loadingSystemCache();
         /* 初始化模块-菜单缓存 */
@@ -51,13 +51,13 @@ public class SysCacheInitImpl implements ISysCacheInit {
     }
 
     /**
-     * 加载菜单缓存数据
+     * 加载模块-路由缓存数据
      */
     @Override
-    public void loadingMenuCache() {
-        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectMenuCacheList();
+    public void loadingRouteCache() {
+        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectRouteCacheList();
         for (CacheInitVo cacheInitVo: cacheInitVos) {
-            AuthorityUtils.refreshMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getMenuSet());
+            AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getRouteSet());
         }
     }
 
@@ -79,7 +79,7 @@ public class SysCacheInitImpl implements ISysCacheInit {
     public void loadingSystemMenuCache() {
         List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemMenuCacheList();
         for (CacheInitVo cacheInitVo: cacheInitVos) {
-            AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getMenuSet());
+            AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemMenuSet());
         }
     }
 }

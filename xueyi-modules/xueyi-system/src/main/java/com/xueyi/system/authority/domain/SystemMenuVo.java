@@ -133,4 +133,5 @@ public class SystemMenuVo extends BaseEntity {
     public void setChildren(List<SystemMenuVo> children) {
         this.children = children;
     }
+
 }

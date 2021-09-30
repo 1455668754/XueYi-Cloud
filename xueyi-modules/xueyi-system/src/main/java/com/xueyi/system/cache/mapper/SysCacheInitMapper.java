@@ -12,11 +12,11 @@ import java.util.List;
 public interface SysCacheInitMapper {
 
     /**
-     * 查询所有菜单信息 | 用于缓存加载
+     * 查询所有模块-路由信息 | 用于缓存加载
      *
      * @return 通用缓存封装对象集合
      */
-    public List<CacheInitVo> mainSelectMenuCacheList();
+    public List<CacheInitVo> mainSelectRouteCacheList();
 
     /**
      * 查询所有模块信息 | 用于缓存加载

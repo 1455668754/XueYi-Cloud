@@ -97,8 +97,8 @@ public class Constants {
     /** 企业源策略 cache key */
     public static final String STRATEGY_KEY = "strategy";
 
-    /** 菜单 cache key */
-    public static final String MENU_KEY = "menu";
+    /** 模块-路由 cache key */
+    public static final String ROUTE_KEY = "route";
 
     /** 模块 cache key */
     public static final String SYSTEM_KEY = "system";

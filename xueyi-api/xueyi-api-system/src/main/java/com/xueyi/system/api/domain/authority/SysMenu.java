@@ -230,7 +230,7 @@ public class SysMenu extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return menuId.hashCode();
+        return menuId != 0L ? menuId.hashCode() : 0;
     }
 
     @Override

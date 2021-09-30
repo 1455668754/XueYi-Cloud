@@ -7,11 +7,12 @@
     <resultMap type="CacheInitVo" id="CacheInitResult">
         <result property="enterpriseId"     column="tenant_id"      />
         <result property="systemId"         column="system_id"      />
-        <collection  property="menuSet"    javaType="java.util.Set" resultMap="menuResult"   />
-        <collection  property="systemSet"  javaType="java.util.Set" resultMap="systemResult" />
+        <collection  property="routeSet"        javaType="java.util.Set" resultMap="routeResult"        />
+        <collection  property="systemSet"       javaType="java.util.Set" resultMap="systemResult"       />
+        <collection  property="systemMenuSet"   javaType="java.util.Set" resultMap="systemMenuResult"   />
     </resultMap>
 
-    <resultMap type="SysMenu" id="menuResult">
+    <resultMap type="SysMenu" id="routeResult">
         <id     property="menuId"           column="menu_menu_id"        />
         <result property="systemId"         column="menu_system_id"      />
         <result property="menuName"         column="menu_menu_name"      />
@@ -46,10 +47,18 @@
         <result property="status"       	column="system_status"      />
         <result property="remark" 			column="system_remark" 	    />
     </resultMap>
-    
-    <sql id="menuCacheVo">
-        select distinct m.tenant_id, m.menu_id as menu_menu_id, m.system_id as menu_system_id, m.menu_name as menu_menu_name, if(m.parent_id = 0, m.system_id, m.parent_id) as menu_parent_id, m.path as menu_path, m.component as menu_component, m.query as menu_query, m.is_common as menu_is_common,
-               m.is_change as menu_is_change, m.is_frame as menu_is_frame, m.is_cache as menu_is_cache, m.menu_type as menu_menu_type, m.visible as menu_visible, m.status as menu_status, ifnull(m.perms, '') as menu_perms, m.icon as menu_icon, m.sort as menu_sort
+
+    <resultMap type="SystemMenu" id="systemMenuResult">
+        <id     property="Uid"              column="s_m_uid"            />
+        <result property="FUid"             column="s_m_f_uid"          />
+        <result property="name"             column="s_m_name"           />
+        <result property="type"             column="s_m_type"           />
+        <result property="sort"             column="s_m_sort"           />
+    </resultMap>
+
+    <sql id="routeCacheVo">
+        select distinct m.tenant_id, m.system_id, m.menu_id as menu_menu_id, m.system_id as menu_system_id, m.menu_name as menu_menu_name, m.parent_id as menu_parent_id, m.path as menu_path, m.component as menu_component, m.query as menu_query, m.is_common as menu_is_common,
+                        m.is_change as menu_is_change, m.is_frame as menu_is_frame, m.is_cache as menu_is_cache, m.menu_type as menu_menu_type, m.visible as menu_visible, m.status as menu_status, ifnull(m.perms, '') as menu_perms, m.icon as menu_icon, m.sort as menu_sort
         from sys_menu m
     </sql>
 
@@ -60,14 +69,17 @@
     </sql>
 
     <sql id="systemMenuCacheVo">
-        select distinct m.tenant_id, m.system_id, m.menu_id as menu_menu_id, m.system_id as menu_system_id, m.menu_name as menu_menu_name, if(m.parent_id = 0, m.system_id, m.parent_id) as menu_parent_id, m.path as menu_path, m.component as menu_component, m.query as menu_query, m.is_common as menu_is_common,
-                        m.is_change as menu_is_change, m.is_frame as menu_is_frame, m.is_cache as menu_is_cache, m.menu_type as menu_menu_type, m.visible as menu_visible, m.status as menu_status, ifnull(m.perms, '') as menu_perms, m.icon as menu_icon, m.sort as menu_sort
-        from sys_menu m
+        select sm.tenant_id, s_m_uid, s_m_name, s_m_f_uid, s_m_sort, s_m_type
+        from ( select distinct m.tenant_id, m.menu_id as s_m_uid, m.menu_name as s_m_name, if(m.parent_id = 0, m.system_id, m.parent_id) as s_m_f_uid, m.sort as s_m_sort, 1 as s_m_type, m.status as status, m.del_flag as del_flag
+             from sys_menu m
+             union
+             select distinct s.tenant_id, s.system_id as s_m_uid, s.name as s_m_name, -1 as s_m_f_uid, s.sort as s_m_sort, 0 as s_m_type, s.status as status, s.del_flag as del_flag
+             from xy_system s ) sm
     </sql>
 
-    <select id="mainSelectMenuCacheList" parameterType="CacheInitVo" resultMap="CacheInitResult">
-        <include refid="menuCacheVo"/>
-        where m.status = 0 and m.del_flag = 0
+    <select id="mainSelectRouteCacheList" parameterType="CacheInitVo" resultMap="CacheInitResult">
+        <include refid="routeCacheVo"/>
+        where m.menu_type in ('M', 'C') and m.status = 0 and m.del_flag = 0
         order by m.sort
     </select>
 
@@ -79,8 +91,8 @@
 
     <select id="mainSelectSystemMenuCacheList" parameterType="CacheInitVo" resultMap="CacheInitResult">
         <include refid="systemMenuCacheVo"/>
-        where m.menu_type in ('M', 'C') and m.status = 0 and m.del_flag = 0
-        order by m.sort
+        where sm.status = 0 and sm.del_flag = 0
+        order by sm.s_m_sort
     </select>
 
 </mapper>
