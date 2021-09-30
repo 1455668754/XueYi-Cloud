@@ -4,6 +4,8 @@ import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
+import java.lang.reflect.Field;
+
 /**
  * 企业缓存管理工具类
  *
@@ -49,6 +51,26 @@ public class EnterpriseUtils {
      */
     public static String getStrategyCacheKey(Long enterpriseId) {
         return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.STRATEGY_KEY;
+    }
+
+    /**
+     * 获取企业策略主源 key
+     * @param enterpriseId 企业Id
+     * @return SourceName 策略主数据源
+     */
+    public static <T> String getMainSourceName(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        T source = redisService.getCacheObject(DataSourceUtils.getSourceCacheKey(redisService.getCacheObject(getStrategyCacheKey(enterpriseId))));
+        if (source != null) {
+            try {
+                Field fileId = source.getClass().getDeclaredField("master");
+                fileId.setAccessible(true);
+                return (String) fileId.get(source);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     /**

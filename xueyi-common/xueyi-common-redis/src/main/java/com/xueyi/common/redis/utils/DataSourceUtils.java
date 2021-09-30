@@ -6,6 +6,8 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,7 +33,22 @@ public class DataSourceUtils {
      * @return 缓存键key
      */
     public static String getCacheFolderKey() {
-        return Constants.DATA_SOURCE_KEY + ":*";
+        return Constants.DATA_SOURCE_KEY + "*";
+    }
+
+    /**
+     * 获取源策略组
+     *
+     * @return SourceList 源策略集合
+     */
+    public static<T> List<T> getSourceList() {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        Collection<String> keys = redisService.keys(getCacheFolderKey());
+        List<T> list = new ArrayList<>();
+        for (String key: keys) {
+            list.add(redisService.getCacheObject(key));
+        }
+        return list;
     }
 
     /**
