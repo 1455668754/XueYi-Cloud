@@ -106,6 +106,9 @@ public class Constants {
     /** 模块-菜单 cache key */
     public static final String SYSTEM_MENU_KEY = "system_menu";
 
+    /** 角色 cache key */
+    public static final String ROLE_KEY = "role";
+
     /** 数据源管理 cache key */
     public static final String SYS_SOURCE_KEY = "sys_source:";
 

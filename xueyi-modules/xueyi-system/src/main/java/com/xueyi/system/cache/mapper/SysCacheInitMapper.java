@@ -1,5 +1,6 @@
 package com.xueyi.system.cache.mapper;
 
+import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.cache.domain.CacheInitVo;
 
 import java.util.List;
@@ -31,4 +32,11 @@ public interface SysCacheInitMapper {
      * @return 通用缓存封装对象集合
      */
     public List<CacheInitVo> mainSelectSystemMenuCacheList();
+
+    /**
+     * 查询所有角色信息 | 用于缓存加载
+     *
+     * @return 通用缓存封装对象集合
+     */
+    public List<SysRole> mainSelectRoleCacheList();
 }

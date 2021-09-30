@@ -3,7 +3,7 @@ package com.xueyi.system.cache.domain;
 import com.xueyi.common.core.web.domain.BaseEntity;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysSystem;
-import com.xueyi.system.authority.domain.SystemMenu;
+import com.xueyi.system.api.domain.authority.SystemMenu;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

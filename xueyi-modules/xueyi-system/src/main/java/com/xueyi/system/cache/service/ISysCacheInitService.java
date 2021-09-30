@@ -5,7 +5,7 @@ package com.xueyi.system.cache.service;
  *
  * @author xueyi
  */
-public interface ISysCacheInit {
+public interface ISysCacheInitService {
 
     /**
      * 加载模块-路由缓存数据
@@ -21,4 +21,10 @@ public interface ISysCacheInit {
      * 加载模块-菜单缓存数据
      */
     public void loadingSystemMenuCache();
+
+    /**
+     * 加载角色缓存数据
+     * @param sourceName 数据源名称
+     */
+    public void loadingRoleCache(String sourceName);
 }

@@ -56,6 +56,31 @@
         <result property="sort"             column="s_m_sort"           />
     </resultMap>
 
+    <resultMap type="SysRole" id="RoleResult">
+        <id     property="roleId"             	column="role_id"               />
+        <result property="roleCode"           	column="role_code"             />
+        <result property="name"           		column="name"             	   />
+        <result property="roleKey"            	column="role_key"              />
+        <result property="dataScope"          	column="data_scope"            />
+        <result property="menuCheckStrictly"  	column="menu_check_strictly"   />
+        <result property="deptCheckStrictly"  	column="dept_check_strictly"   />
+        <result property="type"   				column="type"   	 		   />
+        <result property="deriveId"   			column="derive_id"   	 	   />
+        <result property="sort"   				column="sort"   	 		   />
+        <result property="status"     			column="status"      		   />
+        <result property="enterpriseId"     	column="tenant_id"             />
+        <collection  property="wholeIds"  notNullColumn="s_m_whole_uid"  javaType="java.util.Set" resultMap="wholeIdsResult"       />
+        <collection  property="halfIds"   notNullColumn="s_m_half_uid"   javaType="java.util.Set" resultMap="halfIdsResult"        />
+    </resultMap>
+
+    <resultMap type="SystemMenu" id="wholeIdsResult">
+        <id     property="Uid"              column="s_m_whole_uid"             />
+    </resultMap>
+
+    <resultMap type="SystemMenu" id="halfIdsResult">
+        <id     property="Uid"              column="s_m_half_uid"              />
+    </resultMap>
+
     <sql id="routeCacheVo">
         select distinct m.tenant_id, m.system_id, m.menu_id as menu_menu_id, m.system_id as menu_system_id, m.menu_name as menu_menu_name, m.parent_id as menu_parent_id, m.path as menu_path, m.component as menu_component, m.query as menu_query, m.is_common as menu_is_common,
                         m.is_change as menu_is_change, m.is_frame as menu_is_frame, m.is_cache as menu_is_cache, m.menu_type as menu_menu_type, m.visible as menu_visible, m.status as menu_status, ifnull(m.perms, '') as menu_perms, m.icon as menu_icon, m.sort as menu_sort
@@ -77,6 +102,22 @@
              from xy_system s ) sm
     </sql>
 
+    <sql id="roleCacheVo">
+        select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+               r.s_m_half_uid, r.s_m_whole_uid
+        from (
+            select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+                   null as s_m_half_uid, srsmw.system_menu_id as s_m_whole_uid
+            from sys_role r
+            left join sys_role_system_menu srsmw on r.role_id = srsmw.role_id and srsmw.checked = '0'
+            union
+            select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+                   srsmh.system_menu_id as s_m_half_uid, null as s_m_whole_uid
+            from sys_role r
+            left join sys_role_system_menu srsmh on r.role_id = srsmh.role_id and srsmh.checked = '1'
+        ) r
+    </sql>
+
     <select id="mainSelectRouteCacheList" parameterType="CacheInitVo" resultMap="CacheInitResult">
         <include refid="routeCacheVo"/>
         where m.menu_type in ('M', 'C') and m.status = 0 and m.del_flag = 0
@@ -93,6 +134,12 @@
         <include refid="systemMenuCacheVo"/>
         where sm.status = 0 and sm.del_flag = 0
         order by sm.s_m_sort
+    </select>
+
+    <select id="mainSelectRoleCacheList" parameterType="SysRole" resultMap="RoleResult">
+        <include refid="roleCacheVo"/>
+        where r.status = 0 and r.del_flag = 0
+        order by r.sort
     </select>
 
 </mapper>

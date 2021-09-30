@@ -179,7 +179,8 @@ drop table if exists sys_role_system_menu;
 create table sys_role_system_menu (
   role_id                   bigint              not null                                comment '角色Id',
   system_menu_id            bigint              not null                                comment '系统-菜单Id',
-  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1衍生 2租户）',
+  data_scope		        char(1)	            not null default '1'	                comment '数据范围（1全部数据权限 2自定数据权限 3本部门数据权限 4本部门及以下数据权限 5本岗位数据权限  6仅本人数据权限）',
+  checked		            char(1)	            not null default '0'	                comment '选中类型（0全选 1半选）',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
   tenant_id		            bigint	            not null                                comment '租户Id',
   primary key(role_id, system_menu_id)

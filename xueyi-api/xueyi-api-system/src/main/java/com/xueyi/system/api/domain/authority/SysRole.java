@@ -61,17 +61,11 @@ public class SysRole extends BaseEntity {
     /** 系统-菜单组（菜单权限） */
     private Long[] systemMenuIds;
 
-    /** 系统-菜单组（全选菜单权限） */
-    private Set<SysMenu> halfMenuIds;
+    /** 模块-菜单组（全选菜单权限） */
+    private Set<SystemMenu> halfIds;
 
-    /** 系统-菜单组（半选菜单权限） */
-    private Set<SysMenu> wholeMenuIds;
-
-    /** 系统-菜单组（全选菜单权限） */
-    private Set<SysSystem> halfSystemIds;
-
-    /** 系统-菜单组（半选菜单权限） */
-    private Set<SysSystem> wholeSystemIds;
+    /** 模块-菜单组（半选菜单权限） */
+    private Set<SystemMenu> wholeIds;
 
     /** 系统组（角色 - 系统组） */
     private Set<Long> SystemIds;
@@ -177,6 +171,22 @@ public class SysRole extends BaseEntity {
 
     public void setFlag(boolean flag) {
         this.flag = flag;
+    }
+
+    public Set<SystemMenu> getHalfIds() {
+        return halfIds;
+    }
+
+    public void setHalfIds(Set<SystemMenu> halfIds) {
+        this.halfIds = halfIds;
+    }
+
+    public Set<SystemMenu> getWholeIds() {
+        return wholeIds;
+    }
+
+    public void setWholeIds(Set<SystemMenu> wholeIds) {
+        this.wholeIds = wholeIds;
     }
 
     public Long[] getSystemMenuIds() {
