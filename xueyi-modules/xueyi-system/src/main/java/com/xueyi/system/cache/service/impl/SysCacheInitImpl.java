@@ -46,6 +46,8 @@ public class SysCacheInitImpl implements ISysCacheInit {
         loadingMenuCache();
         /* 初始化模块缓存 */
         loadingSystemCache();
+        /* 初始化模块-菜单缓存 */
+        loadingSystemMenuCache();
     }
 
     /**
@@ -67,6 +69,17 @@ public class SysCacheInitImpl implements ISysCacheInit {
         List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemCacheList();
         for (CacheInitVo cacheInitVo: cacheInitVos) {
             AuthorityUtils.refreshSystemCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemSet());
+        }
+    }
+
+    /**
+     * 加载模块-菜单缓存数据
+     */
+    @Override
+    public void loadingSystemMenuCache() {
+        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemMenuCacheList();
+        for (CacheInitVo cacheInitVo: cacheInitVos) {
+            AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getMenuSet());
         }
     }
 }

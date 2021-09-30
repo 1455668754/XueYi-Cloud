@@ -100,8 +100,11 @@ public class Constants {
     /** 菜单 cache key */
     public static final String MENU_KEY = "menu";
 
-    /** 菜单 cache key */
+    /** 模块 cache key */
     public static final String SYSTEM_KEY = "system";
+
+    /** 模块-菜单 cache key */
+    public static final String SYSTEM_MENU_KEY = "system_menu";
 
     /** 数据源管理 cache key */
     public static final String SYS_SOURCE_KEY = "sys_source:";

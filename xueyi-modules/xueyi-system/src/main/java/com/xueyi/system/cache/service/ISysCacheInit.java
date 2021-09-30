@@ -8,7 +8,6 @@ package com.xueyi.system.cache.service;
 public interface ISysCacheInit {
 
     /**
-     *
      * 加载菜单缓存数据
      */
     public void loadingMenuCache();
@@ -17,4 +16,9 @@ public interface ISysCacheInit {
      * 加载模块缓存数据
      */
     public void loadingSystemCache();
+
+    /**
+     * 加载模块-菜单缓存数据
+     */
+    public void loadingSystemMenuCache();
 }

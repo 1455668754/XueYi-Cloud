@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import java.util.Set;
 
 /**
- * 通用缓存封装工具类
+ * 通用缓存封装对象
  *
  * @author xueyi
  */

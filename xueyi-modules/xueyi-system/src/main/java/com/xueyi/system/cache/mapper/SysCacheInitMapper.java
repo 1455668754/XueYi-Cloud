@@ -14,14 +14,21 @@ public interface SysCacheInitMapper {
     /**
      * 查询所有菜单信息 | 用于缓存加载
      *
-     * @return 企业对象集合
+     * @return 通用缓存封装对象集合
      */
     public List<CacheInitVo> mainSelectMenuCacheList();
 
     /**
      * 查询所有模块信息 | 用于缓存加载
      *
-     * @return 企业对象集合
+     * @return 通用缓存封装对象集合
      */
     public List<CacheInitVo> mainSelectSystemCacheList();
+
+    /**
+     * 查询所有模块-菜单信息 | 用于缓存加载
+     *
+     * @return 通用缓存封装对象集合
+     */
+    public List<CacheInitVo> mainSelectSystemMenuCacheList();
 }

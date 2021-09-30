@@ -34,6 +34,17 @@ public class AuthorityUtils {
     }
 
     /**
+     * 获取模块-菜单 key
+     *
+     * @param enterpriseId 企业Id
+     * @param systemId     模块Id
+     * @return 缓存键key
+     */
+    public static String getSystemMenuCacheKey(Long enterpriseId, Long systemId) {
+        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.SYSTEM_MENU_KEY + ":" + systemId;
+    }
+
+    /**
      * 新增菜单缓存 cache
      *
      * @param enterpriseId 企业Id
@@ -73,5 +84,28 @@ public class AuthorityUtils {
     public static void deleteSystemCache(Long enterpriseId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getSystemCacheKey(enterpriseId));
+    }
+
+    /**
+     * 新增模块-菜单缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     * @param systemId     模块Id
+     * @param menuSet      菜单集合
+     */
+    public static <T> void refreshSystemMenuCache(Long enterpriseId, Long systemId, Set<T> menuSet) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        redisService.setCacheObject(getSystemMenuCacheKey(enterpriseId, systemId), menuSet);
+    }
+
+    /**
+     * 删除指定模块-菜单 cache
+     *
+     * @param enterpriseId 企业Id
+     * @param systemId     模块Id
+     */
+    public static void deleteSystemMenuCache(Long enterpriseId, Long systemId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        redisService.deleteObject(getSystemMenuCacheKey(enterpriseId, systemId));
     }
 }
