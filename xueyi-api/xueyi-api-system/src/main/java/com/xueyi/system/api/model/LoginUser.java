@@ -25,6 +25,9 @@ public class LoginUser implements Serializable {
     /** 企业账号 */
     private String enterpriseName;
 
+    /** 租户标识 */
+    private String isLessor;
+
     /** 用户名Id */
     private Long userId;
 
@@ -83,6 +86,14 @@ public class LoginUser implements Serializable {
 
     public void setEnterpriseName(String enterpriseName) {
         this.enterpriseName = enterpriseName;
+    }
+
+    public String getIsLessor() {
+        return isLessor;
+    }
+
+    public void setIsLessor(String isLessor) {
+        this.isLessor = isLessor;
     }
 
     public Long getUserId() {

@@ -43,6 +43,7 @@ public class TokenService
         loginUser.setToken(token);
         loginUser.setEnterpriseId(loginUser.getSysEnterprise().getEnterpriseId());
         loginUser.setEnterpriseName(loginUser.getSysEnterprise().getEnterpriseName());
+        loginUser.setIsLessor(loginUser.getSysEnterprise().getIsLessor());
         loginUser.setUserId(loginUser.getSysUser().getUserId());
         loginUser.setUserName(loginUser.getSysUser().getUserName());
         loginUser.setUserType(loginUser.getSysUser().getUserType());

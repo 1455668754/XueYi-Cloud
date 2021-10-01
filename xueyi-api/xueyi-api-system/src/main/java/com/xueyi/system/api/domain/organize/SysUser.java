@@ -5,6 +5,9 @@ import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import com.xueyi.common.core.constant.AuthorityConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -125,14 +128,6 @@ public class SysUser extends BaseEntity {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public boolean isAdmin() {
-        return isAdmin(this.userType);
-    }
-
-    public static boolean isAdmin(String userType) {
-        return userType != null && userType.equals("00");
     }
 
     public Long getDeptId() {
@@ -294,6 +289,14 @@ public class SysUser extends BaseEntity {
 
     public void setRoleIds(Long[] roleIds) {
         this.roleIds = roleIds;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin(this.userType);
+    }
+
+    public static boolean isAdmin(String userType) {
+        return StringUtils.equals(AuthorityConstants.USER_TYPE_ADMIN, userType);
     }
 
     @Override

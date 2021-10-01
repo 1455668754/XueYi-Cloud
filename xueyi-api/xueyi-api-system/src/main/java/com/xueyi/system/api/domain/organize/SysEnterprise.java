@@ -1,6 +1,8 @@
 package com.xueyi.system.api.domain.organize;
 
 import com.xueyi.common.core.annotation.Excel;
+import com.xueyi.common.core.constant.AuthorityConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -101,6 +103,14 @@ public class SysEnterprise extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin(this.isLessor);
+    }
+
+    public static boolean isAdmin(String isLessor) {
+        return StringUtils.equals(AuthorityConstants.TENANT_TYPE_ADMIN, isLessor);
     }
 
     @Override

@@ -83,7 +83,7 @@ create table sys_user (
   user_code                 varchar(64)         default null                            comment '用户编码',
   user_name                 varchar(30)         not null                                comment '用户账号',
   nick_name                 varchar(30)         not null                                comment '用户昵称',
-  user_type                 varchar(2)          default '01'                            comment '用户类型（00超级管理员 01系统用户）',
+  user_type                 varchar(2)          default '01'                            comment '用户类型（00超管用户 01普通用户）',
   phone                     varchar(11)         default ''                              comment '手机号码',
   email                     varchar(50)         default ''                              comment '用户邮箱',
   sex                       char(1)             default '2'                             comment '用户性别（0男 1女 2保密）',

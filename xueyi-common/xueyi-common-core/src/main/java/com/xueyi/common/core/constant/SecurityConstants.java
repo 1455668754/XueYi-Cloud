@@ -28,6 +28,9 @@ public class SecurityConstants {
     /** 用户类型字段 */
     public static final String DETAILS_TYPE = "userType";
 
+    /** 用户类型字段 */
+    public static final String DETAILS_IS_LESSOR = "isLessor";
+
     /** 授权信息字段 */
     public static final String AUTHORIZATION_HEADER = "authorization";
 

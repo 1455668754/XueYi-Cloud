@@ -71,6 +71,7 @@ public class AuthFilter implements GlobalFilter, Ordered
         String userId = cacheObj.getString("userId");
         String userName = cacheObj.getString("userName");
         String userType = cacheObj.getString("userType");
+        String isLessor = cacheObj.getString("isLessor");
         String enterpriseId = cacheObj.getString("enterpriseId");
         String enterpriseName = cacheObj.getString("enterpriseName");
         if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(userName))
@@ -84,6 +85,7 @@ public class AuthFilter implements GlobalFilter, Ordered
         addHeader(mutate, SecurityConstants.DETAILS_USER_ID, userId);
         addHeader(mutate, SecurityConstants.DETAILS_USERNAME, userName);
         addHeader(mutate, SecurityConstants.DETAILS_TYPE, userType);
+        addHeader(mutate, SecurityConstants.DETAILS_IS_LESSOR, isLessor);
         addHeader(mutate, SecurityConstants.DETAILS_ENTERPRISE_ID, enterpriseId);
         addHeader(mutate, SecurityConstants.DETAILS_ENTERPRISE_NAME, enterpriseName);
         // 内部请求来源参数清除

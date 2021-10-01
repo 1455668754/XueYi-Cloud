@@ -7,6 +7,21 @@ package com.xueyi.common.core.constant;
  */
 public class AuthorityConstants {
 
+    /** 用户类型 - 普通用户 */
+    public static final String USER_TYPE_NORMAL = "01";
+
+    /** 用户类型 - 超管用户 */
+    public static final String USER_TYPE_ADMIN = "00";
+
+    /** 租户类型 - 普通租户 */
+    public static final String TENANT_TYPE_NORMAL = "N";
+
+    /** 租户类型 - 超管租户 */
+    public static final String TENANT_TYPE_ADMIN = "Y";
+
+    /** 公共企业 */
+    public static final Long COMMON_ENTERPRISE = 0L;
+
     /** 角色类型 - 常规 */
     public static final String NORMAL_TYPE = "0";
 
