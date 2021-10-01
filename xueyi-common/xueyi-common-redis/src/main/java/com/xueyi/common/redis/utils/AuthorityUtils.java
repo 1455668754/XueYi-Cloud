@@ -4,6 +4,8 @@ import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -53,6 +55,17 @@ public class AuthorityUtils {
      */
     public static String getRoleCacheKey(Long enterpriseId, Long roleId) {
         return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.ROLE_KEY + ":" + roleId;
+    }
+
+    /**
+     * 获取模块-路由缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     * @param systemId     模块Id
+     */
+    public static <T> Set<T> getRouteCache(Long enterpriseId, Long systemId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        return redisService.getCacheObject(getRouteCacheKey(enterpriseId, systemId));
     }
 
     /**
@@ -117,6 +130,24 @@ public class AuthorityUtils {
     public static void deleteSystemMenuCache(Long enterpriseId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getSystemMenuCacheKey(enterpriseId));
+    }
+
+    /**
+     * 获取角色缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     * @param roleIds      角色Id集合
+     */
+    public static <T> List<T> getRoleListCache(Long enterpriseId, Set<Long> roleIds) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        List<T> roleList = new ArrayList<>();
+        for (Long roleId : roleIds) {
+            T role = redisService.getCacheObject(getRoleCacheKey(enterpriseId, roleId));
+            if (role != null) {
+                roleList.add(role);
+            }
+        }
+        return roleList;
     }
 
     /**

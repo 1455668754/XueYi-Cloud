@@ -223,6 +223,8 @@ public class SysRole extends BaseEntity {
                 .append("updateName", getUpdateName())
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
+                .append("halfIds", getHalfIds())
+                .append("wholeIds", getWholeIds())
                 .toString();
     }
 }

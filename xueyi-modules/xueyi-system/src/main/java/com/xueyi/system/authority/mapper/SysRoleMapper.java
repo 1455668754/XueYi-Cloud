@@ -1,6 +1,7 @@
 package com.xueyi.system.authority.mapper;
 
 import java.util.List;
+import java.util.Set;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
@@ -20,7 +21,6 @@ public interface SysRoleMapper {
      * @return 权限列表
      */
     public List<SysRole> checkLoginRolePermission(SysRole role);
-
 
     /**
      * 根据衍生来源Id&角色类型查询指定衍生角色

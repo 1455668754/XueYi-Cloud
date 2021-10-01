@@ -125,7 +125,7 @@ create table sys_role (
   data_scope                char(1)             default '1'                             comment '数据范围（1全部数据权限 2自定数据权限 3本部门数据权限 4本部门及以下数据权限 5本岗位数据权限  6仅本人数据权限）',
   menu_check_strictly       tinyint             default 1                               comment '菜单树选择项是否关联显示',
   dept_check_strictly       tinyint             default 1                               comment '部门树选择项是否关联显示',
-  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1超管衍生 2租户衍生 3部门衍生 4岗位衍生 5用户衍生）',
+  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1租户衍生 2企业衍生 3部门衍生 4岗位衍生 5用户衍生）',
   derive_id		            bigint	            default null	                        comment '衍生Id',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
@@ -211,23 +211,23 @@ create table sys_organize_role (
   derive_dept_id            bigint              default null                            comment '部门衍生id',
   derive_post_id            bigint              default null                            comment '岗位衍生id',
   derive_user_id            bigint              default null                            comment '用户衍生id',
+  derive_enterprise_id      bigint              default null                            comment '企业衍生id',
   derive_tenant_id          bigint              default null                            comment '租户衍生id',
-  derive_administrator_id   bigint              default null                            comment '超管衍生id',
   role_id                   bigint              not null                                comment '角色Id',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
   tenant_id		            bigint	            not null                                comment '租户Id',
   primary key(id)
-  ,unique (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_tenant_id, derive_administrator_id, role_id)
+  ,unique (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_enterprise_id, derive_tenant_id, role_id)
 ) engine=innodb auto_increment=1 comment = '组织和角色关联表';
 
 -- ----------------------------
 -- 初始化-组织和角色关联表数据
 -- ----------------------------
-insert into sys_organize_role ( derive_administrator_id, role_id, tenant_id )
+insert into sys_organize_role ( derive_tenant_id, role_id, tenant_id )
 values (-1, -1, -1),
        ( 1,  3,  1);
 
-insert into sys_organize_role ( derive_tenant_id, role_id, tenant_id )
+insert into sys_organize_role ( derive_enterprise_id, role_id, tenant_id )
 values (-1, -2, -1),
        ( 1,  4,  1);
 
