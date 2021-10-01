@@ -190,7 +190,6 @@ public class DataScopeAspect {
                 }
             }
         }
-
         // 租户级数据查询|更新分离模式
         if (StringUtils.isNotBlank(eAlias)) {
             sqlString.append(StringUtils.format(" AND {}.tenant_id = {} AND {}.del_flag = 0 ", eAlias, enterprise.getEnterpriseId(), eAlias));
@@ -254,6 +253,7 @@ public class DataScopeAspect {
         if (StringUtils.isNotBlank(sqlString.toString()) || StringUtils.isNotBlank(upSqlString.toString())) {
             if (StringUtils.isNotNull(params) && params instanceof BaseEntity) {
                 BaseEntity baseEntity = (BaseEntity) params;
+                baseEntity.setEnterpriseId(enterprise.getEnterpriseId());
                 if (StringUtils.isNotBlank(sqlString.toString())) {
                     baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
                 }
