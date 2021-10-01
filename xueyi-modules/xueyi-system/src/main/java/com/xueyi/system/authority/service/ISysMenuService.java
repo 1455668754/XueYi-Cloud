@@ -14,12 +14,12 @@ import com.xueyi.system.utils.vo.RouterVo;
 public interface ISysMenuService {
 
     /**
-     * 根据用户Id查询菜单 | 菜单路由
+     * 根据用户Id查询菜单路由
      *
      * @param menu 菜单信息 | systemId 系统Id
      * @return 菜单列表
      */
-    public List<SysMenu> selectMenuTreeByUserId(SysMenu menu);
+    public List<SysMenu> getRoute(SysMenu menu);
 
     /**
      * 根据当前用户Id查询模块&&菜单

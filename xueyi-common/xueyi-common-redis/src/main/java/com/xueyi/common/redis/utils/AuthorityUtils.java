@@ -1,10 +1,12 @@
 package com.xueyi.common.redis.utils;
 
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -65,7 +67,13 @@ public class AuthorityUtils {
      */
     public static <T> Set<T> getRouteCache(Long enterpriseId, Long systemId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
-        return redisService.getCacheObject(getRouteCacheKey(enterpriseId, systemId));
+        Set<T> privateSet = redisService.getCacheObject(getRouteCacheKey(enterpriseId, systemId));
+        Set<T> commonSet = redisService.getCacheObject(getRouteCacheKey(AuthorityConstants.COMMON_ENTERPRISE, systemId));
+        if (privateSet != null && commonSet != null) {
+            privateSet.addAll(commonSet);
+            return privateSet;
+        }
+        return privateSet == null && commonSet == null ? new HashSet<>() : privateSet == null ? commonSet : privateSet;
     }
 
     /**
@@ -141,10 +149,12 @@ public class AuthorityUtils {
     public static <T> List<T> getRoleListCache(Long enterpriseId, Set<Long> roleIds) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         List<T> roleList = new ArrayList<>();
-        for (Long roleId : roleIds) {
-            T role = redisService.getCacheObject(getRoleCacheKey(enterpriseId, roleId));
-            if (role != null) {
-                roleList.add(role);
+        if (!roleIds.isEmpty()) {
+            for (Long roleId : roleIds) {
+                T role = redisService.getCacheObject(getRoleCacheKey(enterpriseId, roleId));
+                if (role != null) {
+                    roleList.add(role);
+                }
             }
         }
         return roleList;

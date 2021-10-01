@@ -195,7 +195,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
         for (SysSystem sys : systemList) {
             SystemMenuVo systemVo = new SystemMenuVo();
             systemVo.setUid(sys.getSystemId());
-            systemVo.setFUid(MenuConstants.TOP_NODE);
+            systemVo.setFUid(MenuConstants.SYSTEM_TOP_NODE);
             systemVo.setName(sys.getName());
             systemVo.setStatus(sys.getStatus());
             systemVo.setType("0");
@@ -225,12 +225,12 @@ public class SysSystemServiceImpl implements ISysSystemService {
     }
 
     /**
-     * 删除顶级节点非 TOP_NODE 的值
+     * 删除顶级节点非 SYSTEM_TOP_NODE 的值
      *
      * @param systemMenuList 系统-菜单组装列表
      */
     public void deleteNoTopNode(List<SystemMenuVo> systemMenuList) {
-        systemMenuList.removeIf(systemMenuVo -> !Objects.equals(systemMenuVo.getFUid(), MenuConstants.TOP_NODE));
+        systemMenuList.removeIf(systemMenuVo -> !Objects.equals(systemMenuVo.getFUid(), MenuConstants.SYSTEM_TOP_NODE));
     }
 
     /**

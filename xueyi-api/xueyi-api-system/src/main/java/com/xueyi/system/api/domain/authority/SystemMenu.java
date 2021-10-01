@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 系统-菜单数组装结构
+ * 模块-菜单数组装结构
  *
  * @author xueyi
  */

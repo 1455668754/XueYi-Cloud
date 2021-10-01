@@ -18,7 +18,7 @@ public interface SysAuthorityMapper {
      * @param role 角色信息 | enterpriseId 租户Id
      * @return 角色集合
      */
-    @DataScope(eAlias = "sor")
+
     public Set<Long> selectRoleListByTenantId(SysRole role);
 
     /**

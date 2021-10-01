@@ -3,8 +3,8 @@ package com.xueyi.system.authority.controller;
 import java.util.List;
 
 import com.xueyi.common.core.constant.MenuConstants;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
-import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import com.xueyi.system.source.service.IDataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,8 @@ public class SysMenuController extends BaseController {
      */
     @GetMapping("/getMenuScope/administrator")
     public AjaxResult getMenuScope(SysRoleSystemMenu systemMenu) {
-        return AjaxResult.success(roleSystemMenuService.getEnterpriseMenuScopeById(getSourceMaster(systemMenu)));
+        systemMenu.setSourceName(EnterpriseUtils.getMainSourceName(systemMenu.getEnterpriseId()));
+        return AjaxResult.success(roleSystemMenuService.getEnterpriseMenuScopeById(systemMenu));
     }
 
     /**
@@ -58,7 +59,8 @@ public class SysMenuController extends BaseController {
     @Log(title = "租户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/authMenuScope/administrator")
     public AjaxResult authMenuScope(@RequestBody SysRoleSystemMenu systemMenu) {
-        return toAjax(roleSystemMenuService.authMenuScopeById(getSourceMaster(systemMenu)));
+        systemMenu.setSourceName(EnterpriseUtils.getMainSourceName(systemMenu.getEnterpriseId()));
+        return toAjax(roleSystemMenuService.authMenuScopeById(systemMenu));
     }
 
     /**
@@ -125,16 +127,7 @@ public class SysMenuController extends BaseController {
      */
     @GetMapping("getRouters")
     public AjaxResult getRouters(SysMenu menu) {
-        List<SysMenu> menus = menuService.selectMenuTreeByUserId(menu);
+        List<SysMenu> menus = menuService.getRoute(menu);
         return AjaxResult.success(menuService.buildMenus(menus));
-    }
-
-    /**
-     * 获取企业的主数据源
-     */
-    private SysRoleSystemMenu getSourceMaster(SysRoleSystemMenu systemMenu){
-        Source source = dataSourceService.getSourceByEnterpriseId(systemMenu.getEnterpriseId());
-        systemMenu.setSourceName(source.getMaster());
-        return systemMenu;
     }
 }

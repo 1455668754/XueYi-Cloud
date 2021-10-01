@@ -5,6 +5,7 @@ import java.util.*;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.core.utils.multiTenancy.SortUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
@@ -39,35 +40,36 @@ public class SysMenuServiceImpl implements ISysMenuService {
     private SysMenuMapper menuMapper;
 
     @Autowired
-    private ISysRoleSystemMenuService roleSystemMenuService;
-
-    @Autowired
     private SysRoleSystemMenuMapper roleSystemMenuMapper;
 
     @Autowired
-    private ISysMenuService menuService;
+    private ISysAuthorityService authorityService;
 
     /**
-     * 根据当前用户Id查询菜单 | 菜单路由
+     * 根据用户Id查询菜单路由
      *
      * @param menu 菜单信息 | systemId 系统Id
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> selectMenuTreeByUserId(SysMenu menu) {
+    public List<SysMenu> getRoute(SysMenu menu) {
         List<SysMenu> menus;
+        Set<SysMenu> menuSet = AuthorityUtils.getRouteCache(SecurityUtils.getEnterpriseId(), menu.getSystemId());
+        Set<SysMenu> rangeSet;
         // 管理员显示所有菜单信息
-        if (SysUser.isAdmin(SecurityUtils.getUserType())) {
-            AuthorityUtils.getRouteCache(SecurityUtils.getEnterpriseId(),menu.getSystemId());
-            menu.getParams().put("excludeList", roleSystemMenuService.selectPermitAdministrator(new SysRoleSystemMenu()));
-            menus = menuMapper.selectMenuTreeByAdminUserId(menu);
+        if (SecurityUtils.isAdminUser()) {
+            if (!SecurityUtils.isAdminTenant()) {
+                rangeSet = authorityService.selectSystemMenuSet(authorityService.selectRoleListByTenantId(new SysRole()));
+                menuSet.retainAll(rangeSet);
+            }
         } else {
-            menu.getParams().put("userId", SecurityUtils.getUserId());
-            menu.getParams().put("excludeList", roleSystemMenuService.selectPermitPersonal(new SysRoleSystemMenu()));
-            menu.getParams().put("roleSystemPerms", menuService.selectSystemMenuListByUserId(menu));
-            menus = menuMapper.selectMenuTreeByUserId(menu);
+            SysRole role = new SysRole();
+            role.getParams().put("userId", SecurityUtils.getUserId());
+            rangeSet = authorityService.selectSystemMenuSet(authorityService.selectRoleListByUserId(role));
+            menuSet.retainAll(rangeSet);
         }
-        return getChildPerms(menus, 0L);
+        menus= SortUtils.sortSetToList(menuSet);
+        return getChildPerms(menus, MenuConstants.MENU_TOP_NODE);
     }
 
     /**

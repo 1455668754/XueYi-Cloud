@@ -46,7 +46,6 @@ public class BaseEntity implements Serializable {
     private String sourceName;
 
     /** 显示顺序 */
-    @Excel(name = "显示顺序", type = Excel.Type.IMPORT)
     private Integer sort;
 
     /** 创建者Id */

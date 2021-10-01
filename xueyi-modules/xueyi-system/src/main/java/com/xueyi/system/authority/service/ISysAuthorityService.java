@@ -1,6 +1,7 @@
 package com.xueyi.system.authority.service;
 
 import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 
@@ -14,14 +15,6 @@ import java.util.Set;
  * @author xueyi
  */
 public interface ISysAuthorityService {
-
-    /**
-     * 根据用户Id查询角色信息集合
-     *
-     * @param roles 角色信息集合
-     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
-     */
-    public Map<String, Set<SystemMenu>> assembleSystemMenuSet(List<SysRole> roles);
 
     /**
      * 根据部门Id查询角色信息集合
@@ -62,4 +55,20 @@ public interface ISysAuthorityService {
      * @return 角色信息集合
      */
     public List<SysRole> selectRoleListByUserId(SysRole role);
+
+    /**
+     * 根据用户Id查询角色信息集合
+     *
+     * @param roles 角色信息集合
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> assembleSystemMenuSet(List<SysRole> roles);
+
+    /**
+     * 装配菜单集合
+     *
+     * @param roles 角色信息集合
+     * @return 菜单集合
+     */
+    public Set<SysMenu> selectSystemMenuSet(List<SysRole> roles);
 }

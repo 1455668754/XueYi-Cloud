@@ -26,7 +26,10 @@ public class MenuConstants {
     public static final String PERMIT_PERSONAL = "5";
 
     /** 模块&菜单树 - 顶级节点Id */
-    public static final Long TOP_NODE = -1L;
+    public static final Long SYSTEM_TOP_NODE = -1L;
+
+    /** 菜单树 - 顶级节点Id */
+    public static final Long MENU_TOP_NODE = 0L;
 
     /** 正常状态 */
     public static final String NORMAL = "0";

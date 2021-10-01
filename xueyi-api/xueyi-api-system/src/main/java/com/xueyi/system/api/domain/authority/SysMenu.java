@@ -66,6 +66,14 @@ public class SysMenu extends BaseEntity {
     /** 子菜单 */
     private List<SysMenu> children = new ArrayList<SysMenu>();
 
+    public SysMenu() {
+
+    }
+
+    public SysMenu(Long menuId) {
+        this.menuId = menuId;
+    }
+
     public Long getMenuId()
     {
         return menuId;
