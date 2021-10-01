@@ -14,7 +14,7 @@
 
         <screenfull id="screenfull" class="right-menu-item hover-effect"/>
 
-        <div class="right-menu-item hover-effect" @click="setting = true">
+        <div class="right-menu-item hover-effect" @click.stop="setting = true">
           <SvgIcon iconClass="xy_renovation"/>
         </div>
 
