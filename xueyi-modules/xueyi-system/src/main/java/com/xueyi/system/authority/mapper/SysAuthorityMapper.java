@@ -51,6 +51,29 @@ public interface SysAuthorityMapper {
      * @param role 角色信息 | params.userId 用户Id | enterpriseId 租户Id
      * @return 角色集合
      */
-    
     public Set<Long> selectRoleListByUserId(SysRole role);
+
+    /**
+     * 根据角色Id增加角色与模块-菜单关联 | 全选型
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | wholeIds 全选模块-菜单
+     */
+    public void insertWholeIdsMenuScope(SysRole role);
+
+    /**
+     * 根据角色Id增加角色与模块-菜单关联 | 半选型
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | halfIds 半选模块-菜单
+     */
+    public void insertHalfIdsMenuScope(SysRole role);
+
+    /**
+     * 根据角色Id删除角色与模块-菜单关联
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
+     */
+    public void deleteMenuScope(SysRole role);
+
+
+
 }

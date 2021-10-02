@@ -1,9 +1,12 @@
 package com.xueyi.system.authority.service;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -17,6 +20,22 @@ import java.util.Set;
 public interface ISysAuthorityService {
 
     /**
+     * 根据企业Id获取模块-菜单集合 | 租管级
+     *
+     * @param enterpriseId 企业Id
+     * @return 模块-菜单集合
+     */
+    public List<TreeSelect> selectLessorMenuScope(Long enterpriseId);
+
+    /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 租管级
+     *
+     * @param enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> selectLessorMenuRange(Long enterpriseId);
+
+    /**
      * 根据租户Id查询角色信息集合 | 租户级
      *
      * @param enterpriseId 企业Id
@@ -27,18 +46,18 @@ public interface ISysAuthorityService {
     /**
      * 根据企业Id获取模块-菜单集合 | 租户级
      *
-     * @param enterpriseId 企业Id
+     * @param role 角色信息 | enterpriseId 租户Id
      * @return 模块-菜单集合
      */
-    public List<TreeSelect> selectTenantMenuScope(Long enterpriseId);
+    public List<TreeSelect> selectTenantMenuScope(SysRole role);
 
     /**
      * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 租户级
      *
-     * @param enterpriseId 企业Id
+     * @param role 角色信息 | enterpriseId 租户Id
      * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
      */
-    public Map<String, Set<SystemMenu>> selectTenantMenuRange(Long enterpriseId);
+    public Map<String, Set<SystemMenu>> selectTenantMenuRange(SysRole role);
 
     /**
      * 根据租户Id查询角色信息集合 | 企业级
@@ -136,6 +155,21 @@ public interface ISysAuthorityService {
      * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
      */
     public Map<String, Set<SystemMenu>> selectUserMenuRange(SysRole role);
+
+    /**
+     * 根据角色信息更新模块-菜单集合
+     *
+     * @param role       角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | params.wholeIds 全选 | params.halfIds 半选
+     * @param sourceName 指定源
+     */
+    public void updateMenuScopeToSourceName(SysRole role, String sourceName);
+
+    /**
+     * 根据角色信息更新模块-菜单集合
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | params.wholeIds 全选 | params.halfIds 半选
+     */
+    public void updateMenuScope(SysRole role);
 
     /**
      * 根据用户Id查询角色信息集合

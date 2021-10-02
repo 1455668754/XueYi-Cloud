@@ -66,4 +66,22 @@
         ${params.dataScope}
     </select>
 
+    <insert id="insertWholeIdsMenuScope" parameterType="SysRole">
+        insert into sys_role_system_menu (role_id, system_menu_id, data_scope, checked, tenant_id)
+        values  <foreach item="Id" collection="params.wholeIds" separator=",">
+                    (#{roleId}, #{Id}, #{dataScope}, '0', #{enterpriseId})
+                </foreach>
+    </insert>
+
+    <insert id="insertHalfIdsMenuScope" parameterType="SysRole">
+        insert into sys_role_system_menu (role_id, system_menu_id, data_scope, checked, tenant_id)
+        values  <foreach item="Id" collection="params.halfIds" separator=",">
+                    (#{roleId}, #{Id}, #{dataScope}, '1', #{enterpriseId})
+                </foreach>
+    </insert>
+
+    <delete id="deleteMenuScope" parameterType="SysRole">
+        delete from sys_role_system_menu
+        where role_id = #{roleId} and tenant_id = #{enterpriseId} and del_flag = 0
+    </delete>
 </mapper>

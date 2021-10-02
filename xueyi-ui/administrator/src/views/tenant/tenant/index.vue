@@ -116,7 +116,8 @@
           >保存排序
           </el-button>
         </el-col>
-        <right-toolbar :showSearch.sync="showSearch" @controlSortable="handleSortable" @queryTable="getList"></right-toolbar>
+        <right-toolbar :showSearch.sync="showSearch" @controlSortable="handleSortable"
+                       @queryTable="getList"></right-toolbar>
       </el-row>
 
       <el-table v-loading="loading" :data="tenantList" @selection-change="handleSelectionChange" ref="dataTable"
@@ -263,7 +264,8 @@
     </el-dialog>
 
     <!-- 分配角色菜单配置对话框 -->
-    <el-dialog :title="title" :visible.sync="openMenuScope" width="500px" append-to-body v-dialogDrag v-dialogDragHeight>
+    <el-dialog :title="title" :visible.sync="openMenuScope" width="500px" append-to-body v-dialogDrag
+               v-dialogDragHeight>
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="12">
@@ -303,7 +305,6 @@
 import {
   addTenant,
   delTenant,
-  getMenuScope,
   getTenant,
   listTenant,
   menuScope,
@@ -312,8 +313,8 @@ import {
 } from '@/api/tenant/tenant'
 import Sortable from 'sortablejs'
 import {listStrategyExclude} from '@/api/tenant/strategy'
-import {treeSelectPermitAllOnlyPublic as treeSelectPermitAllOnlyPublic} from "@/api/common/temporary"
 import {IS_LESSOR, STATUS, STATUS_UPDATE_OPERATION, SYSTEM_DEFAULT} from "@constant/constants"
+import {getLessorMenuRange, getLessorMenuScope, setTenantMenuScope} from "@api/common/authority"
 
 export default {
   name: 'Tenant',
@@ -322,7 +323,7 @@ export default {
   data() {
     return {
       //常量区
-      IS_LESSOR:IS_LESSOR,
+      IS_LESSOR: IS_LESSOR,
       SYSTEM_DEFAULT: SYSTEM_DEFAULT,
       STATUS: STATUS,
       STATUS_UPDATE_OPERATION: STATUS_UPDATE_OPERATION,
@@ -350,7 +351,7 @@ export default {
       // 排序保存按钮显示
       sortVisible: false,
       // 排序参数
-      sortable:null,
+      sortable: null,
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -373,7 +374,7 @@ export default {
       },
       // 表单参数
       form: {},
-      systemMenuForm:{},
+      systemMenuForm: {},
       defaultProps: {
         children: "children",
         label: "label"
@@ -436,8 +437,8 @@ export default {
         hasMain: false
       }
       this.systemMenuForm = {
-        enterpriseId:null,
-        params:{}
+        enterpriseId: null,
+        params: {}
       }
       this.resetForm('form')
       this.submitLoading = false
@@ -461,14 +462,14 @@ export default {
     },
     // 树权限（展开/折叠）
     handleCheckedTreeExpand(value) {
-        let treeList = this.systemMenuOptions
-        for (let i = 0; i < treeList.length; i++) {
-          this.$refs.systemMenu.store.nodesMap[treeList[i].id].expanded = value
-        }
+      let treeList = this.systemMenuOptions
+      for (let i = 0; i < treeList.length; i++) {
+        this.$refs.systemMenu.store.nodesMap[treeList[i].id].expanded = value
+      }
     },
     // 树权限（全选/全不选）
     handleCheckedTreeNodeAll(value) {
-        this.$refs.systemMenu.setCheckedNodes(value ? this.systemMenuOptions : [])
+      this.$refs.systemMenu.setCheckedNodes(value ? this.systemMenuOptions : [])
     },
     /** 获取可用策略组 */
     getStrategyList() {
@@ -497,7 +498,12 @@ export default {
     /** 修改状态按钮操作 */
     handleStatusChange(row) {
       let msg = row.status === STATUS.NORMAL ? "启用" : "停用"
-      updateTenant({tenantId: row.tenantId, isChange: row.isChange, status: row.status, updateType: STATUS_UPDATE_OPERATION}).then(response => {
+      updateTenant({
+        tenantId: row.tenantId,
+        isChange: row.isChange,
+        status: row.status,
+        updateType: STATUS_UPDATE_OPERATION
+      }).then(response => {
         this.$modal.msgSuccess(msg + "成功")
       }).catch(() => {
         row.status = row.status === STATUS.NORMAL ? STATUS.DISABLE : STATUS.NORMAL
@@ -506,26 +512,26 @@ export default {
     /** 分配菜单权限操作 */
     handleMenuScope(row) {
       this.reset()
-      this.getSystemMenuTreeSelect()
+      this.getSystemMenuTreeSelect(row.tenantId)
       const menuScope = this.getMenuScope(row.tenantId)
       getTenant({tenantId: row.tenantId}).then(response => {
         this.form = response.data
         menuScope.then(res => {
-          this.$refs.systemMenu.setCheckedKeys(Array.from(res.data, x => x.systemMenuId))
+          this.$refs.systemMenu.setCheckedKeys(Array.from(res.data.wholeIds, x => x.uid))
         })
         this.openMenuScope = true
         this.title = "屏蔽菜单权限"
       })
     },
     /** 查询模块&菜单树结构 */
-    getSystemMenuTreeSelect() {
-      treeSelectPermitAllOnlyPublic({ status: STATUS.NORMAL }).then(response => {
+    getSystemMenuTreeSelect(tenantId) {
+      getLessorMenuScope(tenantId).then(response => {
         this.systemMenuOptions = response.data
       })
     },
     /** 根据角色Id查询模块&菜单树结构 */
-    getMenuScope(Id) {
-      return getMenuScope({ enterpriseId: Id }).then(response => {
+    getMenuScope(tenantId) {
+      return getLessorMenuRange(tenantId).then(response => {
         return response
       })
     },
@@ -535,19 +541,26 @@ export default {
       return this.$refs.systemMenu.getCheckedKeys()
     },
     /** 提交按钮（菜单权限） */
-    submitMenuScope: function () {
+    submitMenuScope() {
       this.submitLoading = true
       this.systemMenuForm.enterpriseId = this.form.tenantId
-      if (this.systemMenuForm.enterpriseId !== undefined) {
-        this.systemMenuForm.params.systemMenuIds = this.getSystemMenuAllCheckedKeys()
-        menuScope(this.systemMenuForm).then(response => {
+      if (this.systemMenuForm.enterpriseId != null) {
+        const wholeIds = this.$refs.systemMenu.getCheckedKeys()
+        if (wholeIds.length > 0) {
+          this.systemMenuForm.params.wholeIds = wholeIds
+        }
+        const halfIds = this.$refs.systemMenu.getHalfCheckedKeys()
+        if (halfIds.length > 0) {
+          this.systemMenuForm.params.halfIds = halfIds
+        }
+        setTenantMenuScope(this.systemMenuForm).then(response => {
           this.$modal.msgSuccess("修改成功")
           this.openMenuScope = false
           this.getList()
         }).catch(() => {
           this.submitLoading = false
         })
-      }else{
+      } else {
         this.submitLoading = false
       }
     },
@@ -581,7 +594,7 @@ export default {
               this.submitLoading = false
             })
           }
-        }else{
+        } else {
           this.submitLoading = false
         }
       })
@@ -616,7 +629,8 @@ export default {
         this.getList()
         this.sortVisible = false
         this.$modal.msgSuccess('保存成功')
-      }).catch(() => {})
+      }).catch(() => {
+      })
     },
     /** 排序开关 */
     handleSortable(sortable) {

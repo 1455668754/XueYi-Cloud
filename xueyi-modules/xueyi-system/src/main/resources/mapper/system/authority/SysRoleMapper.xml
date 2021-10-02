@@ -109,6 +109,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</select>
 
+	<select id="selectRoleIdByDeriveId" parameterType="SysRole" resultMap="SysRoleResult">
+		select distinct r.role_id, r.data_scope
+		from sys_role r
+		where r.type = #{type} and r.derive_id = #{deriveId} and r.tenant_id = #{enterpriseId} and r.del_flag = 0
+	</select>
+
+
 	<insert id="insertRole" parameterType="SysRole">
 		insert into sys_role
 		<trim prefix="(" suffix=")" suffixOverrides=",">

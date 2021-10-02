@@ -44,8 +44,8 @@ public class SysRole extends BaseEntity {
     /** 部门树选择项是否关联显示（0：父子不互相关联显示 1：父子互相关联显示 ） */
     private boolean deptCheckStrictly;
 
-    /** 角色类型（0常规 1租户衍生 2部门衍生 3岗位衍生 4用户衍生） */
-    @Excel(name = "角色类型", readConverterExp = "0=常规,1=租户衍生,2=部门衍生,3=岗位衍生,4=用户衍生")
+    /** 角色类型（0 常规 1 租户衍生 2 企业衍生 3 部门衍生 4 岗位衍生 5 用户衍生） */
+    @Excel(name = "角色类型", readConverterExp = "0=常规,1=租户衍生,2=企业衍生, 3=部门衍生,4=岗位衍生,5=用户衍生")
     private String type;
 
     /** 衍生Id */
@@ -67,9 +67,6 @@ public class SysRole extends BaseEntity {
     /** 模块-菜单组（半选菜单权限） */
     private Set<SystemMenu> wholeIds;
 
-    /** 系统组（角色 - 系统组） */
-    private Set<Long> SystemIds;
-
     /** 部门-岗位组（数据权限） */
     private Long[] deptPostIds;
 
@@ -79,6 +76,12 @@ public class SysRole extends BaseEntity {
 
     public SysRole(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public SysRole(String type, Long deriveId, Long enterpriseId) {
+        this.type = type;
+        this.deriveId = deriveId;
+        this.setEnterpriseId(enterpriseId);
     }
 
     public Long getRoleId() {
@@ -211,6 +214,7 @@ public class SysRole extends BaseEntity {
                 .append("roleCode", getRoleCode())
                 .append("name", getName())
                 .append("roleKey", getRoleKey())
+                .append("dataScope", getDataScope())
                 .append("menuCheckStrictly", isMenuCheckStrictly())
                 .append("deptCheckStrictly", isDeptCheckStrictly())
                 .append("type", getType())

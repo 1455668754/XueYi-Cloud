@@ -1,18 +1,45 @@
 import request from '../../utils/request'
 
-// 模块-菜单范围获取 | 租户级
-export function getTenantMenuScope(tenantId) {
+// 模块-菜单范围获取 | 租管级
+export function getLessorMenuScope(tenantId) {
     return request({
-        url: '/system/authority/tenantScope/' + tenantId,
+        url: '/system/authority/lessorScope/' + tenantId,
         method: 'get'
     })
 }
 
-// 获取模块-菜单选择 | halfIds 半选 | wholeIds 全选 | 租户级
-export function getTenantMenuRange(tenantId) {
+// 获取模块-菜单选择 | halfIds 半选 | wholeIds 全选 | 租管级
+export function getLessorMenuRange(tenantId) {
     return request({
-        url: '/system/authority/tenantRange/' + tenantId,
+        url: '/system/authority/lessorRange/' + tenantId,
         method: 'get'
+    })
+}
+
+// 模块-菜单范围获取 | 租户级
+export function getTenantMenuScope(query) {
+    return request({
+        url: '/system/authority/tenantScope',
+        method: 'get',
+        params: query
+    })
+}
+
+// 模块-菜单范围更新 | 租户级
+export function setTenantMenuScope(data) {
+    return request({
+        url: '/system/authority/tenantScopeSet',
+        method: 'put',
+        data: data
+    })
+}
+
+// 获取模块-菜单选择 | halfIds 半选 | wholeIds 全选 | 租户级
+export function getTenantMenuRange(query) {
+    return request({
+        url: '/system/authority/tenantRange',
+        method: 'get',
+        params: query
     })
 }
 
@@ -22,6 +49,15 @@ export function getEnterpriseMenuScope(query) {
         url: '/system/authority/enterpriseScope',
         method: 'get',
         params: query
+    })
+}
+
+// 模块-菜单范围更新 | 企业级
+export function setEnterpriseMenuScope(data) {
+    return request({
+        url: '/system/authority/enterpriseScopeSet',
+        method: 'put',
+        data: data
     })
 }
 
@@ -43,6 +79,15 @@ export function getDeptMenuScope(query) {
     })
 }
 
+// 模块-菜单范围更新 | 部门级
+export function setDeptMenuScope(data) {
+    return request({
+        url: '/system/authority/deptScopeSet',
+        method: 'put',
+        data: data
+    })
+}
+
 // 获取模块-菜单选择 | halfIds 半选 | wholeIds 全选 | 部门级
 export function getDeptMenuRange(query) {
     return request({
@@ -61,6 +106,15 @@ export function getPostMenuScope(query) {
     })
 }
 
+// 模块-菜单范围更新 | 岗位级
+export function setPostMenuScope(data) {
+    return request({
+        url: '/system/authority/postScopeSet',
+        method: 'put',
+        data: data
+    })
+}
+
 // 获取模块-菜单选择 | halfIds 半选 | wholeIds 全选 | 岗位级
 export function getPostMenuRange(query) {
     return request({
@@ -76,6 +130,15 @@ export function getUserMenuScope(query) {
         url: '/system/authority/userScope',
         method: 'get',
         params: query
+    })
+}
+
+// 模块-菜单范围更新 | 用户级
+export function setUserMenuScope(data) {
+    return request({
+        url: '/system/authority/userScopeSet',
+        method: 'put',
+        data: data
     })
 }
 

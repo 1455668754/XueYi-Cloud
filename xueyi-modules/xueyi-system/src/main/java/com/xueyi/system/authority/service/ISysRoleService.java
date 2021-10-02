@@ -38,6 +38,23 @@ public interface ISysRoleService {
     public SysRole selectRoleById(SysRole role);
 
     /**
+     * 通过类型和衍生Id查询角色Id与数据范围
+     *
+     * @param role       角色信息 | type 角色类型 | derive_id 衍生Id | enterpriseId 企业Id
+     * @param sourceName 指定源
+     * @return 角色Id
+     */
+    public SysRole selectRoleIdByDeriveIdToSourceName(SysRole role, String sourceName);
+
+    /**
+     * 通过类型和衍生Id查询角色Id与数据范围
+     *
+     * @param role 角色信息 | type 角色类型 | derive_id 衍生Id | enterpriseId 企业Id
+     * @return 角色Id
+     */
+    public SysRole selectRoleIdByDeriveId(SysRole role);
+
+    /**
      * 根据角色Id获取菜单范围信息
      *
      * @param role 角色信息 | roleId 角色Id

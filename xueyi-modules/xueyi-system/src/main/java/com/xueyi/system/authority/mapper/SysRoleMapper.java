@@ -71,6 +71,13 @@ public interface SysRoleMapper {
     public SysRole selectRoleById(SysRole role);
 
     /**
+     * 通过类型和衍生Id查询角色Id与数据范围
+     *
+     * @param role 角色信息 | type 角色类型 | derive_id 衍生Id | enterpriseId 企业Id
+     * @return 角色Id
+     */
+    public SysRole selectRoleIdByDeriveId(SysRole role);
+    /**
      * 新增角色信息
      * 访问控制 empty 租户更新（无前缀）
      *

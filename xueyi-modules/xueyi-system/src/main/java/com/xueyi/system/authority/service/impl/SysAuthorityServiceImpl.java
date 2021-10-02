@@ -4,11 +4,12 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
 import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
-import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SystemMenu;
@@ -17,6 +18,7 @@ import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,6 +39,41 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     private ISysAuthorityService authorityService;
 
     /**
+     * 根据企业Id获取模块-菜单集合 | 租管级
+     *
+     * @param enterpriseId 企业Id
+     * @return 模块-菜单集合
+     */
+    @Override
+    public List<TreeSelect> selectLessorMenuScope(Long enterpriseId) {
+        return buildSystemMenuTree(AuthorityUtils.getSystemMenuCache(enterpriseId));
+    }
+
+    /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 租管级
+     *
+     * @param enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @Override
+    public Map<String, Set<SystemMenu>> selectLessorMenuRange(Long enterpriseId) {
+        List<SysRole> roles = authorityService.selectRoleListByTenantId(enterpriseId);
+        Set<SystemMenu> halfSet, wholeSet;
+        halfSet = new HashSet<>();
+        wholeSet = new HashSet<>();
+        for (SysRole role : roles) {
+            if (StringUtils.equals(AuthorityConstants.DERIVE_TENANT_TYPE, role.getType())) {
+                halfSet.addAll(role.getHalfIds());
+                wholeSet.addAll(role.getWholeIds());
+            }
+        }
+        Map<String, Set<SystemMenu>> map = new HashMap<>();
+        map.put("halfIds", halfSet);
+        map.put("wholeIds", wholeSet);
+        return map;
+    }
+
+    /**
      * 根据租户Id查询角色信息集合 | 租户级
      *
      * @param enterpriseId 企业Id
@@ -51,23 +88,24 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     /**
      * 根据企业Id获取模块-菜单集合 | 租户级
      *
-     * @param enterpriseId 企业Id
+     * @param role 角色信息 | enterpriseId 企业Id
      * @return 模块-菜单集合
      */
     @Override
-    public List<TreeSelect> selectTenantMenuScope(Long enterpriseId) {
-        return buildSystemMenuTree(AuthorityUtils.getSystemMenuCache(enterpriseId));
+    public List<TreeSelect> selectTenantMenuScope(SysRole role) {
+        return selectSystemMenuTree(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant());
     }
+
 
     /**
      * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 租户级
      *
-     * @param enterpriseId 企业Id
+     * @param role 角色信息 | enterpriseId 企业Id
      * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
      */
     @Override
-    public Map<String, Set<SystemMenu>> selectTenantMenuRange(Long enterpriseId) {
-        return assembleSystemMenuSet(authorityService.selectRoleListByTenantId(enterpriseId), EnterpriseUtils.isAdminTenant(enterpriseId));
+    public Map<String, Set<SystemMenu>> selectTenantMenuRange(SysRole role) {
+        return assembleSystemMenuSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant());
     }
 
     /**
@@ -208,6 +246,46 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @Override
     public Map<String, Set<SystemMenu>> selectUserMenuRange(SysRole role) {
         return assembleSystemMenuSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant());
+    }
+
+    /**
+     * 根据角色信息更新模块-菜单集合
+     *
+     * @param role       角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | params.wholeIds 全选 | params.halfIds 半选
+     * @param sourceName 指定源
+     */
+    @Override
+    @Transactional
+    @DS("#sourceName")
+    public void updateMenuScopeToSourceName(SysRole role, String sourceName) {
+        refreshMenuScope(role);
+    }
+
+    /**
+     * 根据角色信息更新模块-菜单集合
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | params.wholeIds 全选 | params.halfIds 半选
+     */
+    @Override
+    @Transactional
+    @DataScope(ueAlias = "empty")
+    public void updateMenuScope(SysRole role) {
+        refreshMenuScope(role);
+    }
+
+    /**
+     * 根据角色信息更新模块-菜单集合
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | params.wholeIds 全选 | params.halfIds 半选
+     */
+    private void refreshMenuScope(SysRole role) {
+        authorityMapper.deleteMenuScope(role);
+        if (role.getParams().containsKey("wholeIds")) {
+            authorityMapper.insertWholeIdsMenuScope(role);
+        }
+        if (role.getParams().containsKey("halfIds")) {
+            authorityMapper.insertHalfIdsMenuScope(role);
+        }
     }
 
     /**
