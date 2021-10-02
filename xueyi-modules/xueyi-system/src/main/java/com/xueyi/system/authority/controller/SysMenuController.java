@@ -38,9 +38,6 @@ public class SysMenuController extends BaseController {
     private ISysMenuService menuService;
 
     @Autowired
-    private IDataSourceService dataSourceService;
-
-    @Autowired
     private ISysRoleSystemMenuService roleSystemMenuService;
 
     /**

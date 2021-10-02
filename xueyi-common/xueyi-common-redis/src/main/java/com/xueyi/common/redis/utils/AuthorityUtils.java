@@ -69,11 +69,7 @@ public class AuthorityUtils {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         Set<T> privateSet = redisService.getCacheObject(getRouteCacheKey(enterpriseId, systemId));
         Set<T> commonSet = redisService.getCacheObject(getRouteCacheKey(AuthorityConstants.COMMON_ENTERPRISE, systemId));
-        if (privateSet != null && commonSet != null) {
-            privateSet.addAll(commonSet);
-            return privateSet;
-        }
-        return privateSet == null && commonSet == null ? new HashSet<>() : privateSet == null ? commonSet : privateSet;
+        return assemble(privateSet, commonSet);
     }
 
     /**
@@ -117,6 +113,18 @@ public class AuthorityUtils {
     public static void deleteSystemCache(Long enterpriseId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getSystemCacheKey(enterpriseId));
+    }
+
+    /**
+     * 获取模块-菜单缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     */
+    public static <T> Set<T> getSystemMenuCache(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        Set<T> privateSet = redisService.getCacheObject(getSystemMenuCacheKey(enterpriseId));
+        Set<T> commonSet = redisService.getCacheObject(getSystemMenuCacheKey(AuthorityConstants.COMMON_ENTERPRISE));
+        return assemble(privateSet, commonSet);
     }
 
     /**
@@ -181,5 +189,19 @@ public class AuthorityUtils {
     public static void deleteRoleCache(Long enterpriseId, Long roleId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getRoleCacheKey(enterpriseId, roleId));
+    }
+
+    /**
+     * 拼接公共与私有数据 cache
+     *
+     * @param privateSet 私有数据
+     * @param commonSet  公共数据
+     */
+    private static <T> Set<T> assemble(Set<T> privateSet, Set<T> commonSet) {
+        if (privateSet != null && commonSet != null) {
+            privateSet.addAll(commonSet);
+            return privateSet;
+        }
+        return privateSet == null && commonSet == null ? new HashSet<>() : privateSet == null ? commonSet : privateSet;
     }
 }

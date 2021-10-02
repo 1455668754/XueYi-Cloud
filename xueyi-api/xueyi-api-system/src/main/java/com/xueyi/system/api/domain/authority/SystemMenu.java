@@ -1,6 +1,8 @@
 package com.xueyi.system.api.domain.authority;
 
 import com.xueyi.common.core.web.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,5 +86,16 @@ public class SystemMenu extends BaseEntity {
             return this.Uid.equals(menuVo.getUid());
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
+                .append("Uid", getUid())
+                .append("FUid", getFUid())
+                .append("name", getName())
+                .append("type", getType())
+                .append("children", getChildren())
+                .toString();
     }
 }

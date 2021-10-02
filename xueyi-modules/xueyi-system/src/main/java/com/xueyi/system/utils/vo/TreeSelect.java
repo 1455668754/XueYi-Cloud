@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.organize.domain.deptPostVo;
@@ -75,6 +76,13 @@ public class TreeSelect implements Serializable {
         this.status = (deptPostVo.getStatus().equals("1") || (StringUtils.isEmpty(deptPostVo.getChildren())) && deptPostVo.getType().equals("0"))?"1":"0";
         this.type = deptPostVo.getType();
         this.children = deptPostVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    public TreeSelect(SystemMenu systemMenu) {
+        this.id = systemMenu.getUid();
+        this.label = systemMenu.getName();
+        this.type = systemMenu.getType();
+        this.children = systemMenu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public TreeSelect(SystemMenuVo systemMenuVo) {

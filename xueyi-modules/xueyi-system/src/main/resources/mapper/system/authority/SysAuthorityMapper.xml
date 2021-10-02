@@ -32,9 +32,7 @@
 
     <select id="selectRoleListByTenantId" parameterType="SysRole" resultType="Long">
         <include refid="organizeVo"/>
-        where sor.derive_administrator_id = #{enterpriseId}
-        <!-- 数据范围过滤 -->
-        ${params.dataScope}
+        where sor.derive_administrator_id = #{enterpriseId} and sor.tenant_id = #{enterpriseId} and sor.del_flag = 0
     </select>
 
     <select id="selectRoleListByEnterpriseId" parameterType="SysRole" resultType="Long">

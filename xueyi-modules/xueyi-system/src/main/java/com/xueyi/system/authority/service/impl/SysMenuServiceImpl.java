@@ -9,12 +9,10 @@ import com.xueyi.common.core.utils.multiTenancy.SortUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
-import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
-import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.core.constant.Constants;
@@ -59,13 +57,13 @@ public class SysMenuServiceImpl implements ISysMenuService {
         // 管理员显示所有菜单信息
         if (SecurityUtils.isAdminUser()) {
             if (!SecurityUtils.isAdminTenant()) {
-                rangeSet = authorityService.selectSystemMenuSet(authorityService.selectRoleListByTenantId(new SysRole()));
+                rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant());
                 menuSet.retainAll(rangeSet);
             }
         } else {
             SysRole role = new SysRole();
             role.getParams().put("userId", SecurityUtils.getUserId());
-            rangeSet = authorityService.selectSystemMenuSet(authorityService.selectRoleListByUserId(role));
+            rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant());
             menuSet.retainAll(rangeSet);
         }
         menus= SortUtils.sortSetToList(menuSet);
