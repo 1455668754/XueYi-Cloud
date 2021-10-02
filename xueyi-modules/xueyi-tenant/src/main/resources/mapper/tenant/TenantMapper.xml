@@ -12,6 +12,7 @@
         <result property="tenantNick"               column="tenant_nick"                />
         <result property="tenantLogo"               column="tenant_logo"                />
         <result property="tenantNameFrequency"      column="tenant_name_frequency"      />
+        <result property="isLessor"                 column="is_lessor"                  />
         <result property="isChange"                 column="is_change"                  />
         <result property="sort"                     column="sort"                       />
         <result property="status"                   column="status"                     />
@@ -32,14 +33,14 @@
     </resultMap>
 
     <sql id="selectVo">
-        select e.tenant_id, e.strategy_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark,
+        select e.tenant_id, e.strategy_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_lessor, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark,
                b.strategy_id as sub_strategy_id, b.name as sub_name, b.status as sub_status
         from xy_tenant e
         left join xy_tenant_strategy b on b.strategy_id = e.strategy_id
     </sql>
 
     <sql id="checkVo">
-        select e.tenant_id, e.strategy_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark
+        select e.tenant_id, e.strategy_id, e.tenant_name, e.tenant_system_name, e.tenant_nick, e.tenant_logo, e.tenant_name_frequency, e.is_lessor, e.is_change, e.sort, e.status, e.create_by, e.create_time, e.update_by, e.update_time, e.remark
         from xy_tenant e
     </sql>
 
@@ -70,6 +71,7 @@
             <if test="tenantNick != null and tenantNick != ''">                tenant_nick                                    ,</if>
             <if test="tenantLogo != null">                                     tenant_logo                                    ,</if>
             <if test="tenantNameFrequency != null">                            tenant_name_frequency                          ,</if>
+            <if test="isLessor != null and isLessor != ''">                    is_lessor                                      ,</if>
             <if test="sort != null and sort != ''">                            sort                                           ,</if>
             <if test="status != null and status != ''">                        status                                         ,</if>
             <if test="createBy != null">                                       create_by                                      ,</if>
@@ -83,6 +85,7 @@
             <if test="tenantNick != null and tenantNick != ''">                #{tenantNick}                                  ,</if>
             <if test="tenantLogo != null">                                     #{tenantLogo}                                  ,</if>
             <if test="tenantNameFrequency != null">                            #{tenantNameFrequency}                         ,</if>
+            <if test="isLessor != null and isLessor != ''">                    #{isLessor}                                    ,</if>
             <if test="sort != null and sort != ''">                            #{sort}                                        ,</if>
             <if test="status != null and status != ''">                        #{status}                                      ,</if>
             <if test="createBy != null">                                       #{createBy}                                    ,</if>
@@ -98,6 +101,7 @@
             <if test="tenantNick != null and tenantNick != ''">                tenant_nick = #{tenantNick}                    ,</if>
             <if test="tenantLogo != null">                                     tenant_logo = #{tenantLogo}                    ,</if>
             <if test="tenantNameFrequency != null">                            tenant_name_frequency = #{tenantNameFrequency} ,</if>
+            <if test="isLessor != null and isLessor != ''">                    is_lessor = #{isLessor}                        ,</if>
             <if test="sort != null and sort != ''">                            sort = #{sort}                                 ,</if>
             <if test="status != null and status != ''">                        status = #{status}                             ,</if>
             <if test="updateBy != null">                                       update_by = #{updateBy}                        ,</if>

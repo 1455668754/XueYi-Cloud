@@ -58,7 +58,7 @@ export function resetForm(refName) {
 // 添加日期范围
 export function addDateRange(params, dateRange, propName) {
     let search = params
-    search.params = typeof (search.params) === 'object' && search.params !== null && !Array.isArray(search.params) ? search.params : {}
+    search.params = typeof (search.params) === 'object' && search.params  != null && !Array.isArray(search.params) ? search.params : {}
     dateRange = Array.isArray(dateRange) ? dateRange : []
     if (typeof (propName) === 'undefined') {
         search.params['beginTime'] = dateRange[0]
@@ -179,7 +179,7 @@ export function handleTree(data, id, parentId, children) {
     }
 
     function adaptToChildrenList(o) {
-        if (childrenListMap[o[config.id]] !== null) {
+        if (childrenListMap[o[config.id]]  != null) {
             o[config.childrenList] = childrenListMap[o[config.id]]
         }
         if (o[config.childrenList]) {
@@ -201,7 +201,7 @@ export function tansParams(params) {
     for (const propName of Object.keys(params)) {
         const value = params[propName]
         var part = encodeURIComponent(propName) + "="
-        if (value !== null && typeof (value) !== "undefined") {
+        if (value  != null && typeof (value) !== "undefined") {
             if (typeof value === 'object') {
                 for (const key of Object.keys(value)) {
                     if (value[key] !== null && typeof (value[key]) !== 'undefined') {

@@ -172,6 +172,7 @@
 <script>
 import {listNotice, getNotice, delNotice, addNotice, updateNotice} from "@/api/system/notice"
 import Editor from '@basicsComponents/Editor'
+import {STATUS} from "@constant/constants"
 
 export default {
   name: "Notice",
@@ -181,6 +182,8 @@ export default {
   },
   data() {
     return {
+      //常量区
+      STATUS:STATUS,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -248,7 +251,7 @@ export default {
         noticeTitle: undefined,
         noticeType: undefined,
         noticeContent: undefined,
-        status: "0"
+        status: STATUS.NORMAL
       }
       this.resetForm("form")
       this.submitLoading = false
@@ -291,7 +294,7 @@ export default {
       this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.noticeId != undefined) {
+          if (this.form.noticeId != null) {
             updateNotice(this.form).then(response => {
               this.$modal.msgSuccess("修改成功")
               this.open = false

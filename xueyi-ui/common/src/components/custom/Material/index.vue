@@ -266,7 +266,7 @@ export default {
     creatChoiceList() {
       this.choiceList = [];
       this.imageList = JSON.parse(JSON.stringify(this.list));
-      if (this.list !== null && this.clear !== true) {
+      if (this.list  != null && this.clear !== true) {
         for (let i = 0; i < this.imageList.length; i++) {
           this.choiceList.push({
             "materialId": this.imageList[i].materialId,

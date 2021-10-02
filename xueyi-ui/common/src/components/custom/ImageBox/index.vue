@@ -99,7 +99,7 @@ export default {
     /** 初始化方法 */
     init() {
       this.imageList = [];
-      if (this.list !== null && this.list !== '' && this.list !== ' ') {
+      if (this.list  != null && this.list !== '' && this.list !== ' ') {
         const newList= JSON.parse(this.list);
         if(Array.isArray(newList)){
           this.imageList = newList;
@@ -307,7 +307,7 @@ export default {
     /** 初始化方法 */
     init() {
       this.imageList = [];
-      if (this.list !== null && this.list !== '' && this.list !== ' ') {
+      if (this.list  != null && this.list !== '' && this.list !== ' ') {
         const newList= JSON.parse(this.list);
         if(Array.isArray(newList)){
           this.imageList = newList;
@@ -515,7 +515,7 @@ export default {
     /** 初始化方法 */
     init() {
       this.imageList = [];
-      if (this.list !== null && this.list !== '' && this.list !== ' ') {
+      if (this.list  != null && this.list !== '' && this.list !== ' ') {
         const newList= JSON.parse(this.list);
         if(Array.isArray(newList)){
           this.imageList = newList;
@@ -723,7 +723,7 @@ export default {
     /** 初始化方法 */
     init() {
       this.imageList = [];
-      if (this.list !== null && this.list !== '' && this.list !== ' ') {
+      if (this.list  != null && this.list !== '' && this.list !== ' ') {
         const newList= JSON.parse(this.list);
         if(Array.isArray(newList)){
           this.imageList = newList;

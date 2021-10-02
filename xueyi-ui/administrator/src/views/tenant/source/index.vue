@@ -163,7 +163,7 @@
         <el-form-item label="源名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入数据源名称"/>
         </el-form-item>
-        <el-form-item label="源编码" prop="slave" v-if="form.sourceId != undefined">
+        <el-form-item label="源编码" prop="slave" v-if="form.sourceId != null">
           <el-input v-model="form.slave" readonly/>
         </el-form-item>
         <el-form-item label="源类型">
@@ -176,28 +176,28 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="源驱动" prop="driverClassName">
-          <el-input v-model="form.driverClassName" placeholder="请输入数据源驱动" :readonly="form.sourceId != undefined"/>
+          <el-input v-model="form.driverClassName" placeholder="请输入数据源驱动" :readonly="form.sourceId != null"/>
         </el-form-item>
         <el-form-item label="连接地址" prop="urlPrepend" @input.native="databaseUrlChange">
           <el-input v-model="form.urlPrepend" type="urlPrepend" :autosize="{ minRows: 3, maxRows: 6}"
-                    placeholder="请输入连接地址" :readonly="form.sourceId != undefined"/>
+                    placeholder="请输入连接地址" :readonly="form.sourceId != null"/>
         </el-form-item>
         <el-form-item label="连接参数" prop="urlAppend" @input.native="databaseUrlChange">
           <el-input v-model="form.urlAppend" type="textarea" :autosize="{ minRows: 3, maxRows: 6}"
-                    placeholder="请输入连接参数" :readonly="form.sourceId != undefined"/>
+                    placeholder="请输入连接参数" :readonly="form.sourceId != null"/>
         </el-form-item>
         <el-form-item label="连接信息" prop="url">
           <el-input v-model="form.url" type="textarea" :autosize="{ minRows: 3, maxRows: 6}" disabled/>
         </el-form-item>
         <el-form-item label="源账号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入数据源账号" :readonly="form.sourceId != undefined"/>
+          <el-input v-model="form.username" placeholder="请输入数据源账号" :readonly="form.sourceId != null"/>
         </el-form-item>
         <el-form-item label="源密码" prop="password">
           <el-input v-model="form.password" :show-password="true" placeholder="请输入数据源密码"
-                    :readonly="form.sourceId != undefined"/>
+                    :readonly="form.sourceId != null"/>
         </el-form-item>
         <el-form-item label="读写类型">
-          <el-radio-group v-model="form.type" :disabled="form.sourceId != undefined" @change="TypeChange">
+          <el-radio-group v-model="form.type" :disabled="form.sourceId != null" @change="TypeChange">
             <el-radio
               v-for="dict in dict.type.sys_source_type"
               :key="dict.value"
@@ -206,7 +206,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="状态">
-          <el-radio-group v-model="form.status" :disabled="form.sourceId != undefined">
+          <el-radio-group v-model="form.status" :disabled="form.sourceId != null">
             <el-radio
               v-for="dict in dict.type.sys_normal_disable"
               :disabled="form.isChange === SYSTEM_DEFAULT.TRUE"

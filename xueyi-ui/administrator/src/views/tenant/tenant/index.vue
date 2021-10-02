@@ -170,9 +170,9 @@
               type="text"
               icon="el-icon-circle-check"
               @click="handleMenuScope(scope.row)"
-              v-hasPermi="['tenant:tenant:edit']"
-              v-if="scope.row.isChange === SYSTEM_DEFAULT.FALSE"
-            >菜单屏蔽配置
+              v-hasPermi="['tenant:tenant:role']"
+              v-if="scope.row.isLessor === IS_LESSOR.FALSE"
+            >菜单分配
             </el-button>
             <el-button
               size="mini"
@@ -206,7 +206,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="策略名称" prop="tenantName">
-              <el-select v-model="form.strategyId" placeholder="请选择" :disabled="form.tenantId != undefined">
+              <el-select v-model="form.strategyId" placeholder="请选择" :disabled="form.tenantId  != null">
                 <el-option
                   v-for="item in strategyList"
                   :key="item.strategyId"
@@ -313,7 +313,7 @@ import {
 import Sortable from 'sortablejs'
 import {listStrategyExclude} from '@/api/tenant/strategy'
 import {treeSelectPermitAllOnlyPublic as treeSelectPermitAllOnlyPublic} from "@/api/common/temporary"
-import {STATUS, STATUS_UPDATE_OPERATION, SYSTEM_DEFAULT} from "@constant/constants"
+import {IS_LESSOR, STATUS, STATUS_UPDATE_OPERATION, SYSTEM_DEFAULT} from "@constant/constants"
 
 export default {
   name: 'Tenant',
@@ -322,6 +322,7 @@ export default {
   data() {
     return {
       //常量区
+      IS_LESSOR:IS_LESSOR,
       SYSTEM_DEFAULT: SYSTEM_DEFAULT,
       STATUS: STATUS,
       STATUS_UPDATE_OPERATION: STATUS_UPDATE_OPERATION,

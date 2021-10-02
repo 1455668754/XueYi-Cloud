@@ -26,7 +26,7 @@
         <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true" min-width="120"/>
         <el-table-column prop="icon" label="图标" align="center" min-width="120">
           <template slot-scope="scope">
-            <svg-icon :icon-class="scope.row.icon" v-if="scope.row.icon != undefined"/>
+            <svg-icon :icon-class="scope.row.icon" v-if="scope.row.icon != null"/>
           </template>
         </el-table-column>
         <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true" min-width="120"/>
@@ -424,7 +424,7 @@ export default {
             this.form.parentId = 0
             this.checkSystem = false
           }
-          if (this.form.menuId != undefined) {
+          if (this.form.menuId != null) {
             updateMenu(this.form).then(response => {
               this.$modal.msgSuccess("修改成功")
               this.open = false

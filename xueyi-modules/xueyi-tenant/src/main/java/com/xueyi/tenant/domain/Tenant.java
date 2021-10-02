@@ -41,6 +41,9 @@ public class Tenant extends BaseEntity {
     @Excel(name = "租户账号修改次数")
     private Long tenantNameFrequency;
 
+    /** 超管租户（Y是 N否） */
+    private String isLessor;
+
     /** 状态（0正常 1停用） */
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
@@ -119,6 +122,14 @@ public class Tenant extends BaseEntity {
         return tenantNameFrequency;
     }
 
+    public String getIsLessor() {
+        return isLessor;
+    }
+
+    public void setIsLessor(String isLessor) {
+        this.isLessor = isLessor;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
@@ -153,6 +164,7 @@ public class Tenant extends BaseEntity {
                 .append("tenantLogo", getTenantLogo())
                 .append("isChange", getIsChange())
                 .append("tenantNameFrequency", getTenantNameFrequency())
+                .append("isLessor", getIsLessor())
                 .append("strategy", getStrategy())
                 .append("sort", getSort())
                 .append("status", getStatus())

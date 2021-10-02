@@ -321,7 +321,7 @@ export default {
       this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.dictId != undefined) {
+          if (this.form.dictId != null) {
             updateType(this.form).then(response => {
               this.$modal.msgSuccess("修改成功")
               this.open = false
