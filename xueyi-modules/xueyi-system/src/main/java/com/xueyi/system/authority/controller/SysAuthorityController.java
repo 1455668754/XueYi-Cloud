@@ -2,7 +2,6 @@ package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +23,42 @@ public class SysAuthorityController extends BaseController {
     private ISysAuthorityService authorityService;
 
     /**
-     * 根据租户Id获取菜单范围 | 租户级菜单
+     * 根据租户Id获取模块-菜单范围 | 租户级
      */
-    @PreAuthorize(hasPermi = "system:menu:query")
     @GetMapping(value = "/tenantScope/{enterpriseId}")
     public AjaxResult getTenantMenuScope(@PathVariable Long enterpriseId) {
         return AjaxResult.success(authorityService.selectTenantMenuScope(enterpriseId));
     }
 
     /**
-     * 根据企业Id获取菜单范围 | 企业级菜单
+     * 根据企业Id获取模块-菜单范围 | 企业级
      */
-    @PreAuthorize(hasPermi = "system:menu:query")
     @GetMapping(value = "/enterpriseScope")
     public AjaxResult getEnterpriseMenuScope(SysRole role) {
         return AjaxResult.success(authorityService.selectEnterpriseMenuScope(role));
+    }
+
+    /**
+     * 根据企业Id获取模块-菜单范围 | 部门级
+     */
+    @GetMapping(value = "/deptScope")
+    public AjaxResult getDeptMenuScope(SysRole role) {
+        return AjaxResult.success(authorityService.selectDeptMenuScope(role));
+    }
+
+    /**
+     * 根据企业Id获取模块-菜单范围 | 岗位级
+     */
+    @GetMapping(value = "/postScope")
+    public AjaxResult getPostMenuScope(SysRole role) {
+        return AjaxResult.success(authorityService.selectPostMenuScope(role));
+    }
+
+    /**
+     * 根据企业Id获取模块-菜单范围 | 用户级
+     */
+    @GetMapping(value = "/userScope")
+    public AjaxResult getUserMenuScope(SysRole role) {
+        return AjaxResult.success(authorityService.selectUserMenuScope(role));
     }
 }
