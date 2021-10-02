@@ -1,7 +1,9 @@
 package com.xueyi.common.redis.utils;
 
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.SpringUtils;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
 import java.lang.reflect.Field;
@@ -55,6 +57,7 @@ public class EnterpriseUtils {
 
     /**
      * 获取企业策略主源 key
+     *
      * @param enterpriseId 企业Id
      * @return SourceName 策略主数据源
      */
@@ -71,6 +74,27 @@ public class EnterpriseUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 检测是否为租管租户 key
+     *
+     * @param enterpriseId 企业Id
+     * @return 结果
+     */
+    public static <T> boolean isAdminTenant(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        T enterprise = redisService.getCacheObject(getEnterpriseCacheKey(enterpriseId));
+        if (enterprise != null) {
+            try {
+                Field fileId = enterprise.getClass().getDeclaredField("isLessor");
+                fileId.setAccessible(true);
+                return StringUtils.equals(AuthorityConstants.TENANT_TYPE_ADMIN, (String) fileId.get(enterprise));
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
     }
 
     /**
