@@ -33,6 +33,14 @@ public interface ISysAuthorityService {
     public List<TreeSelect> selectTenantMenuScope(Long enterpriseId);
 
     /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 租户级
+     *
+     * @param enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> selectTenantMenuRange(Long enterpriseId);
+
+    /**
      * 根据租户Id查询角色信息集合 | 企业级
      *
      * @param role 角色信息 | enterpriseId 租户Id
@@ -47,6 +55,14 @@ public interface ISysAuthorityService {
      * @return 模块-菜单集合
      */
     public List<TreeSelect> selectEnterpriseMenuScope(SysRole role);
+
+    /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 企业级
+     *
+     * @param role 角色信息 | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> selectEnterpriseMenuRange(SysRole role);
 
     /**
      * 根据部门Id查询角色信息集合 | 部门级
@@ -65,6 +81,14 @@ public interface ISysAuthorityService {
     public List<TreeSelect> selectDeptMenuScope(SysRole role);
 
     /**
+     * 根据部门Id获取模块-菜单选择 | 半选 | 全选 | 部门级
+     *
+     * @param role 角色信息 | params.deptId 部门Id | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> selectDeptMenuRange(SysRole role);
+
+    /**
      * 根据岗位Id查询角色信息集合 | 岗位级
      *
      * @param role 角色信息 | params.postId 岗位Id | enterpriseId 租户Id
@@ -79,6 +103,14 @@ public interface ISysAuthorityService {
      * @return 模块-菜单集合
      */
     public List<TreeSelect> selectPostMenuScope(SysRole role);
+
+    /**
+     * 根据岗位Id获取模块-菜单选择 | 半选 | 全选 | 岗位级
+     *
+     * @param role 角色信息 | params.postId 岗位Id | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> selectPostMenuRange(SysRole role);
 
     /**
      * 根据用户Id查询角色信息集合 | 用户级
@@ -96,6 +128,14 @@ public interface ISysAuthorityService {
      * @return 模块-菜单集合
      */
     public List<TreeSelect> selectUserMenuScope(SysRole role);
+
+    /**
+     * 根据用户Id获取模块-菜单选择 | 半选 | 全选 | 用户级
+     *
+     * @param role 角色信息 | params.userId 用户Id | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> selectUserMenuRange(SysRole role);
 
     /**
      * 根据用户Id查询角色信息集合

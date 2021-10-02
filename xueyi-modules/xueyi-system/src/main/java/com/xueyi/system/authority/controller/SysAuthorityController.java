@@ -31,11 +31,31 @@ public class SysAuthorityController extends BaseController {
     }
 
     /**
+     * 根据租户Id获取模块-菜单选择 | 半选 | 全选 | 租户级
+     *
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @GetMapping(value = "/tenantRange/{enterpriseId}")
+    public AjaxResult getTenantMenuRange(@PathVariable Long enterpriseId) {
+        return AjaxResult.success(authorityService.selectTenantMenuRange(enterpriseId));
+    }
+
+    /**
      * 根据企业Id获取模块-菜单范围 | 企业级
      */
     @GetMapping(value = "/enterpriseScope")
     public AjaxResult getEnterpriseMenuScope(SysRole role) {
         return AjaxResult.success(authorityService.selectEnterpriseMenuScope(role));
+    }
+
+    /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 企业级
+     *
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @GetMapping(value = "/enterpriseRange")
+    public AjaxResult getEnterpriseMenuRange(SysRole role) {
+        return AjaxResult.success(authorityService.selectEnterpriseMenuRange(role));
     }
 
     /**
@@ -47,6 +67,16 @@ public class SysAuthorityController extends BaseController {
     }
 
     /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 部门级
+     *
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @GetMapping(value = "/deptRange")
+    public AjaxResult getDeptMenuRange(SysRole role) {
+        return AjaxResult.success(authorityService.selectDeptMenuRange(role));
+    }
+
+    /**
      * 根据企业Id获取模块-菜单范围 | 岗位级
      */
     @GetMapping(value = "/postScope")
@@ -55,10 +85,30 @@ public class SysAuthorityController extends BaseController {
     }
 
     /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 岗位级
+     *
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @GetMapping(value = "/postRange")
+    public AjaxResult getPostMenuRange(SysRole role) {
+        return AjaxResult.success(authorityService.selectPostMenuRange(role));
+    }
+
+    /**
      * 根据企业Id获取模块-菜单范围 | 用户级
      */
     @GetMapping(value = "/userScope")
     public AjaxResult getUserMenuScope(SysRole role) {
         return AjaxResult.success(authorityService.selectUserMenuScope(role));
+    }
+
+    /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 用户级
+     *
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @GetMapping(value = "/userRange")
+    public AjaxResult getUserMenuRange(SysRole role) {
+        return AjaxResult.success(authorityService.selectUserMenuRange(role));
     }
 }

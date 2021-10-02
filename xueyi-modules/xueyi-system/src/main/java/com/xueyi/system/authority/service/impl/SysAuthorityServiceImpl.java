@@ -8,6 +8,7 @@ import com.xueyi.common.core.utils.multiTenancy.SortUtils;
 import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SystemMenu;
@@ -59,6 +60,17 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     }
 
     /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 租户级
+     *
+     * @param enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @Override
+    public Map<String, Set<SystemMenu>> selectTenantMenuRange(Long enterpriseId) {
+        return assembleSystemMenuSet(authorityService.selectRoleListByTenantId(enterpriseId), EnterpriseUtils.isAdminTenant(enterpriseId));
+    }
+
+    /**
      * 根据租户Id查询角色信息集合 | 企业级
      *
      * @param role 角色信息 | enterpriseId 企业Id
@@ -80,6 +92,17 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @Override
     public List<TreeSelect> selectEnterpriseMenuScope(SysRole role) {
         return selectSystemMenuTree(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByEnterpriseId(role), SecurityUtils.isAdminTenant());
+    }
+
+    /**
+     * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 企业级
+     *
+     * @param role 角色信息 | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @Override
+    public Map<String, Set<SystemMenu>> selectEnterpriseMenuRange(SysRole role) {
+        return assembleSystemMenuSet(authorityService.selectRoleListByEnterpriseId(role), SecurityUtils.isAdminTenant());
     }
 
     /**
@@ -107,6 +130,17 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     }
 
     /**
+     * 根据部门Id获取模块-菜单选择 | 半选 | 全选 | 部门级
+     *
+     * @param role 角色信息 | params.deptId 部门Id | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @Override
+    public Map<String, Set<SystemMenu>> selectDeptMenuRange(SysRole role) {
+        return assembleSystemMenuSet(authorityService.selectRoleListByDeptId(role), SecurityUtils.isAdminTenant());
+    }
+
+    /**
      * 根据岗位Id查询角色信息集合 | 岗位级
      *
      * @param role 角色信息 | params.postId 岗位Id | enterpriseId 企业Id
@@ -131,6 +165,17 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     }
 
     /**
+     * 根据岗位Id获取模块-菜单选择 | 半选 | 全选 | 岗位级
+     *
+     * @param role 角色信息 | params.postId 岗位Id | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @Override
+    public Map<String, Set<SystemMenu>> selectPostMenuRange(SysRole role) {
+        return assembleSystemMenuSet(authorityService.selectRoleListByPostId(role), SecurityUtils.isAdminTenant());
+    }
+
+    /**
      * 根据用户Id查询角色信息集合
      *
      * @param role 角色信息 | params.userId 用户Id | enterpriseId 企业Id
@@ -152,6 +197,17 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @Override
     public List<TreeSelect> selectUserMenuScope(SysRole role) {
         return selectSystemMenuTree(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant());
+    }
+
+    /**
+     * 根据用户Id获取模块-菜单选择 | 半选 | 全选 | 用户级
+     *
+     * @param role 角色信息 | params.userId 用户Id | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @Override
+    public Map<String, Set<SystemMenu>> selectUserMenuRange(SysRole role) {
+        return assembleSystemMenuSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant());
     }
 
     /**
