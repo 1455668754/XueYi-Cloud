@@ -221,7 +221,8 @@
                   v-for="dict in dict.type.sys_normal_disable"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -239,7 +240,8 @@
     </el-dialog>
 
     <!-- 分配角色菜单配置对话框 -->
-    <el-dialog :title="title" :visible.sync="openMenuScope" width="500px" append-to-body v-dialogDrag v-dialogDragHeight>
+    <el-dialog :title="title" :visible.sync="openMenuScope" width="500px" append-to-body v-dialogDrag
+               v-dialogDragHeight>
       <el-form ref="form" :model="form" label-width="80px">
         <el-row>
           <el-col :span="24">
@@ -264,10 +266,9 @@
                 show-checkbox
                 ref="systemMenu"
                 node-key="id"
-                :check-strictly="!form.menuCheckStrictly"
                 empty-text="加载中，请稍后"
                 :props="defaultProps"
-              ></el-tree>
+              />
             </el-form-item>
           </el-col>
         </el-row>
@@ -279,7 +280,8 @@
     </el-dialog>
 
     <!-- 分配角色数据权限对话框 -->
-    <el-dialog :title="title" :visible.sync="openDataScope" width="500px" append-to-body v-dialogDrag v-dialogDragHeight>
+    <el-dialog :title="title" :visible.sync="openDataScope" width="500px" append-to-body v-dialogDrag
+               v-dialogDragHeight>
       <el-form :model="form" label-width="80px">
         <el-form-item label="角色名称">
           <el-input v-model="form.name" :disabled="true"/>
@@ -307,10 +309,9 @@
             default-expand-all
             ref="deptPost"
             node-key="id"
-            :check-strictly="!form.deptCheckStrictly"
             empty-text="加载中，请稍后"
             :props="defaultProps"
-          ></el-tree>
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -337,7 +338,7 @@ import {
 import {treeSelect as roleDeptTreeSelect} from "@/api/system/post"
 import {treeSelectPermitEnterprise as roleSystemMenuTreeSelect} from "@/api/system/system"
 import {STATUS} from "@constant/constants"
-import {getEnterpriseMenuScope} from "common/src/api/common/authority"
+import {getEnterpriseMenuScope, getRoleMenuRange, setRoleMenuScope} from "common/src/api/common/authority"
 
 export default {
   name: "Role",
@@ -465,15 +466,6 @@ export default {
         this.deptPostOptions = response.data
       })
     },
-    // 所有模块&菜单节点数据
-    getSystemMenuAllCheckedKeys() {
-      // 目前被选中的菜单节点
-      let checkedKeys = this.$refs.systemMenu.getCheckedKeys()
-      // 半选中的菜单节点
-      let halfCheckedKeys = this.$refs.systemMenu.getHalfCheckedKeys()
-      checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
-      return checkedKeys
-    },
     // 所有部门-岗位节点数据
     getDeptPostAllCheckedKeys() {
       // 目前被选中的部门节点
@@ -481,7 +473,7 @@ export default {
     },
     /** 根据角色Id查询模块&菜单树结构 */
     getMenuScope(roleId) {
-      return getMenuScope({roleId: roleId}).then(response => {
+      return getRoleMenuRange({roleId: roleId}).then(response => {
         return response
       })
     },
@@ -534,10 +526,7 @@ export default {
         dataScope: '1',
         sort: 0,
         status: STATUS.NORMAL,
-        systemMenuIds: [],
         deptPostIds: [],
-        menuCheckStrictly: true,
-        deptCheckStrictly: true,
         remark: undefined
       }
       this.resetForm("form")
@@ -613,7 +602,7 @@ export default {
       getRole({roleId: row.roleId}).then(response => {
         this.form = response.data
         menuScope.then(res => {
-          this.$refs.systemMenu.setCheckedKeys(Array.from(res.data, x => x.systemMenuId))
+          this.$refs.systemMenu.setCheckedKeys(Array.from(res.data.wholeIds, x => x.uid))
         })
         this.openMenuScope = true
         this.title = "分配菜单权限"
@@ -657,26 +646,29 @@ export default {
               this.submitLoading = false
             })
           }
-        }else{
+        } else {
           this.submitLoading = false
         }
       })
     },
     /** 提交按钮（菜单权限） */
-    submitMenuScope: function () {
+    submitMenuScope() {
       this.submitLoading = true
-      if (this.form.roleId !== undefined) {
-        this.form.systemMenuIds = this.getSystemMenuAllCheckedKeys()
-        menuScope(this.form).then(response => {
-          this.$modal.msgSuccess("修改成功")
-          this.openMenuScope = false
-          this.getList()
-        }).catch(() => {
-          this.submitLoading = false
-        })
-      }else{
-        this.submitLoading = false
+      const wholeIds = this.$refs.systemMenu.getCheckedKeys()
+      if (wholeIds.length > 0) {
+        this.form.params.wholeIds = wholeIds
       }
+      const halfIds = this.$refs.systemMenu.getHalfCheckedKeys()
+      if (halfIds.length > 0) {
+        this.form.params.halfIds = halfIds
+      }
+      setRoleMenuScope(this.form).then(response => {
+        this.$modal.msgSuccess("修改成功")
+        this.openMenuScope = false
+        this.getList()
+      }).catch(() => {
+        this.submitLoading = false
+      })
     },
     /** 提交按钮（数据权限） */
     submitDataScope: function () {
@@ -690,7 +682,7 @@ export default {
         }).catch(() => {
           this.submitLoading = false
         })
-      }else{
+      } else {
         this.submitLoading = false
       }
     },

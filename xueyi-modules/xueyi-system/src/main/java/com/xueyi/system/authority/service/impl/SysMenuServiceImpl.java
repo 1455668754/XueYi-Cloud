@@ -57,31 +57,17 @@ public class SysMenuServiceImpl implements ISysMenuService {
         // 管理员显示所有菜单信息
         if (SecurityUtils.isAdminUser()) {
             if (!SecurityUtils.isAdminTenant()) {
-                rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant());
+                rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(),false);
                 menuSet.retainAll(rangeSet);
             }
         } else {
             SysRole role = new SysRole();
             role.getParams().put("userId", SecurityUtils.getUserId());
-            rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant());
+            rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(),true);
             menuSet.retainAll(rangeSet);
         }
         menus= SortUtils.sortSetToList(menuSet);
         return getChildPerms(menus, MenuConstants.MENU_TOP_NODE);
-    }
-
-    /**
-     * 根据当前用户Id查询模块&&菜单
-     *
-     * @param menu 菜单信息 | systemId 系统Id | params.userId 用户Id
-     * @return 模块&&菜单列表
-     */
-    @Override
-    @DS("#isolate")
-    @DataScope(eAlias = "rsm")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(SysMenu menu) {
-        return roleSystemMenuMapper.selectSystemMenuListByUserId(menu);
     }
 
     /**

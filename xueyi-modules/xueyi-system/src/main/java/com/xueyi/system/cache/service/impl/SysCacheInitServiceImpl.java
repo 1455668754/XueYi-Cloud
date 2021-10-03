@@ -129,6 +129,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
      */
     @Override
+    @DS("#isolate")
     @DataScope(eAlias = "sor")
     public void refreshRoleCacheByRoleId(SysRole role) {
         SysRole roleCache = cacheInitMapper.selectRoleCacheByRoleId(role);

@@ -7,10 +7,12 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
+import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysRoleService;
 import com.xueyi.system.cache.service.ISysCacheInitService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,12 +61,13 @@ public class SysAuthorityController extends BaseController {
     }
 
     /**
-     * 根据租户Id获取模块-菜单范围 | 租户级
+     * 根据租户Id更新模块-菜单范围 | 租户级
      */
-    @Log(title = "权限管理", businessType = BusinessType.UPDATE)
+    @PreAuthorize(hasPermi = "tenant:tenant:role")
+    @Log(title = "租户菜单配置", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/tenantScopeSet")
     public AjaxResult setTenantMenuScope(@RequestBody SysRole role) {
-        if(EnterpriseUtils.isAdminTenant(role.getEnterpriseId())){
+        if (EnterpriseUtils.isAdminTenant(role.getEnterpriseId())) {
             return AjaxResult.error("租管租户禁止进行菜单配置");
         }
         String sourceName = EnterpriseUtils.getMainSourceName(role.getEnterpriseId());
@@ -95,7 +98,7 @@ public class SysAuthorityController extends BaseController {
     }
 
     /**
-     * 根据企业Id获取模块-菜单范围 | 企业级
+     * 根据企业Id更新模块-菜单范围 | 企业级
      */
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/enterpriseScopeSet")
@@ -127,7 +130,7 @@ public class SysAuthorityController extends BaseController {
     }
 
     /**
-     * 根据部门Id获取模块-菜单范围 | 部门级
+     * 根据部门Id更新模块-菜单范围 | 部门级
      */
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/deptScopeSet")
@@ -159,7 +162,7 @@ public class SysAuthorityController extends BaseController {
     }
 
     /**
-     * 根据岗位Id获取模块-菜单范围 | 岗位级
+     * 根据岗位Id更新模块-菜单范围 | 岗位级
      */
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/postScopeSet")
@@ -191,7 +194,7 @@ public class SysAuthorityController extends BaseController {
     }
 
     /**
-     * 根据用户Id获取模块-菜单范围 | 用户级
+     * 根据用户Id更新模块-菜单范围 | 用户级
      */
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/userScopeSet")
@@ -212,5 +215,32 @@ public class SysAuthorityController extends BaseController {
     @GetMapping(value = "/userRange")
     public AjaxResult getUserMenuRange(SysRole role) {
         return AjaxResult.success(authorityService.selectUserMenuRange(role));
+    }
+
+    /**
+     * 根据角色Id更新模块-菜单范围 | 角色级
+     */
+    @Log(title = "权限管理", businessType = BusinessType.UPDATE)
+    @PutMapping(value = "/roleScopeSet")
+    public AjaxResult setRoleMenuScope(@RequestBody SysRole role) {
+        SysRole checkRole = roleService.selectRoleById(new SysRole(role.getRoleId()));
+        if (!StringUtils.equals(AuthorityConstants.NORMAL_TYPE, checkRole.getType())) {
+            return AjaxResult.error("衍生角色禁止修改");
+        }
+        role.setRoleId(checkRole.getRoleId());
+        role.setDataScope(checkRole.getDataScope());
+        authorityService.updateMenuScope(role);
+        cacheInitService.refreshRoleCacheByRoleId(role);
+        return toAjax(1);
+    }
+
+    /**
+     * 根据角色Id获取模块-菜单选择 | 半选 | 全选 | 角色级
+     *
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    @GetMapping(value = "/roleRange")
+    public AjaxResult getRoleMenuRange(SysRole role) {
+        return AjaxResult.success(authorityService.selectRoleMenuRange(role));
     }
 }

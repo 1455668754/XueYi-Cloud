@@ -62,8 +62,6 @@
         <result property="name"           		column="name"             	   />
         <result property="roleKey"            	column="role_key"              />
         <result property="dataScope"          	column="data_scope"            />
-        <result property="menuCheckStrictly"  	column="menu_check_strictly"   />
-        <result property="deptCheckStrictly"  	column="dept_check_strictly"   />
         <result property="type"   				column="type"   	 		   />
         <result property="deriveId"   			column="derive_id"   	 	   />
         <result property="sort"   				column="sort"   	 		   />
@@ -103,15 +101,15 @@
     </sql>
 
     <sql id="roleCacheVo">
-        select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+        select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
                r.s_m_half_uid, r.s_m_whole_uid
         from (
-            select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+            select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
                    null as s_m_half_uid, srsmw.system_menu_id as s_m_whole_uid
             from sys_role r
             left join sys_role_system_menu srsmw on r.role_id = srsmw.role_id and srsmw.checked = '0'
             union
-            select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.menu_check_strictly, r.dept_check_strictly, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+            select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
                    srsmh.system_menu_id as s_m_half_uid, null as s_m_whole_uid
             from sys_role r
             left join sys_role_system_menu srsmh on r.role_id = srsmh.role_id and srsmh.checked = '1'

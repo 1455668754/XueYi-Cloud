@@ -22,14 +22,6 @@ public interface ISysMenuService {
     public List<SysMenu> getRoute(SysMenu menu);
 
     /**
-     * 根据当前用户Id查询模块&&菜单
-     *
-     * @param menu 菜单信息 | systemId 系统Id
-     * @return 模块&&菜单列表
-     */
-    public List<SysRoleSystemMenu> selectSystemMenuListByUserId(SysMenu menu);
-
-    /**
      * 构建前端路由所需要的菜单
      *
      * @param menus 菜单列表

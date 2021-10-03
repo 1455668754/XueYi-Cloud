@@ -169,6 +169,17 @@ public class AuthorityUtils {
     }
 
     /**
+     * 获取角色缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     * @param roleId       角色Id
+     */
+    public static <T> T getRoleCache(Long enterpriseId, Long roleId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        return redisService.getCacheObject(getRoleCacheKey(enterpriseId, roleId));
+    }
+
+    /**
      * 新增角色缓存 cache
      *
      * @param enterpriseId 企业Id

@@ -1,7 +1,9 @@
 package com.xueyi.system.authority.mapper;
 
+import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -52,6 +54,14 @@ public interface SysAuthorityMapper {
      * @return 角色集合
      */
     public Set<Long> selectRoleListByUserId(SysRole role);
+
+    /**
+     * 根据角色Id查询角色信息集合 | 角色级
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 企业Id
+     * @return 角色信息集合
+     */
+    public Set<Long> selectRoleListByRoleId(SysRole role);
 
     /**
      * 根据角色Id增加角色与模块-菜单关联 | 全选型

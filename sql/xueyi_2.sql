@@ -168,9 +168,9 @@ values (-1, '超管衍生-1', '1', -1, -1),
        (19, '部门衍生108', '3', 108, 1),
        (20, '部门衍生109', '3', 109, 1);
 
-insert into sys_role (role_id, tenant_id, role_code, name, role_key, menu_check_strictly, dept_check_strictly, create_by, remark)
-values (1, 1, '001', '超级管理员', 'admin', 1, 1, 1, '超级管理员'),
-       (2, 1, '002', '管理员', 'common', 2, 1, 1, '普通角色');
+insert into sys_role (role_id, tenant_id, role_code, name, role_key, create_by, remark)
+values (1, 1, '001', '超级管理员', 'admin', 1, '超级管理员'),
+       (2, 1, '002', '管理员', 'common', 1, '普通角色');
 
 -- ----------------------------
 -- 5、角色和系统-菜单关联表  角色N-N系统-菜单

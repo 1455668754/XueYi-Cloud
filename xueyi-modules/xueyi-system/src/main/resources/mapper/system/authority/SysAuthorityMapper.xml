@@ -10,8 +10,6 @@
         <result property="name"           		column="name"             	   />
         <result property="roleKey"            	column="role_key"              />
         <result property="dataScope"          	column="data_scope"            />
-        <result property="menuCheckStrictly"  	column="menu_check_strictly"   />
-        <result property="deptCheckStrictly"  	column="dept_check_strictly"   />
         <result property="type"   				column="type"   	 		   />
         <result property="deriveId"   			column="derive_id"   	 	   />
         <result property="sort"   				column="sort"   	 		   />
@@ -37,7 +35,7 @@
 
     <select id="selectRoleListByEnterpriseId" parameterType="SysRole" resultType="Long">
         <include refid="organizeVo"/>
-        where sor.derive_tenant_id = #{enterpriseId} and sor.derive_administrator_id = #{enterpriseId}
+        where ( sor.derive_tenant_id = #{enterpriseId} or sor.derive_administrator_id = #{enterpriseId} )
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
@@ -65,6 +63,14 @@
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
+
+    <select id="selectRoleListByRoleId" parameterType="SysRole" resultType="Long">
+        <include refid="organizeVo"/>
+        where ( sor.role_id =#{roleId} or sor.derive_tenant_id = #{enterpriseId} or sor.derive_administrator_id = #{enterpriseId} )
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
 
     <insert id="insertWholeIdsMenuScope" parameterType="SysRole">
         insert into sys_role_system_menu (role_id, system_menu_id, data_scope, checked, tenant_id)

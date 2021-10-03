@@ -58,7 +58,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @Override
     @DS("#sourceName")
     public Map<String, Set<SystemMenu>> selectLessorMenuRange(Long enterpriseId, String sourceName) {
-        return assembleSystemMenuSet(enterpriseId,authorityService.selectRoleListByTenantId(enterpriseId), EnterpriseUtils.isAdminTenant(enterpriseId), false);
+        return assembleSystemMenuSet(enterpriseId, authorityService.selectRoleListByTenantId(enterpriseId), EnterpriseUtils.isAdminTenant(enterpriseId), false);
     }
 
     /**
@@ -93,7 +93,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     public Map<String, Set<SystemMenu>> selectTenantMenuRange(SysRole role) {
-        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(),authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
+        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
     }
 
     /**
@@ -128,7 +128,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     public Map<String, Set<SystemMenu>> selectEnterpriseMenuRange(SysRole role) {
-        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(),authorityService.selectRoleListByEnterpriseId(role), SecurityUtils.isAdminTenant(), false);
+        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByEnterpriseId(role), SecurityUtils.isAdminTenant(), false);
     }
 
     /**
@@ -163,7 +163,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     public Map<String, Set<SystemMenu>> selectDeptMenuRange(SysRole role) {
-        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(),authorityService.selectRoleListByDeptId(role), SecurityUtils.isAdminTenant(), true);
+        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByDeptId(role), SecurityUtils.isAdminTenant(), true);
     }
 
     /**
@@ -202,7 +202,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     }
 
     /**
-     * 根据用户Id查询角色信息集合
+     * 根据用户Id查询角色信息集合 | 用户级
      *
      * @param role 角色信息 | params.userId 用户Id | enterpriseId 企业Id
      * @return 角色信息集合
@@ -233,7 +233,30 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     public Map<String, Set<SystemMenu>> selectUserMenuRange(SysRole role) {
-        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(),authorityService.selectRoleListByUserId(role),  SecurityUtils.isAdminTenant(), true);
+        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
+    }
+
+    /**
+     * 根据角色Id查询角色信息集合 | 角色级
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 企业Id
+     * @return 角色信息集合
+     */
+    @Override
+    @DataScope(eAlias = "sor")
+    public List<SysRole> selectRoleListByRoleId(SysRole role) {
+        Set<Long> roleIds = authorityMapper.selectRoleListByRoleId(role);
+        return AuthorityUtils.getRoleListCache(SecurityUtils.getEnterpriseId(), roleIds);
+    }
+
+    /**
+     * 根据角色Id获取模块-菜单选择 | 半选 | 全选 | 角色级
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> selectRoleMenuRange(SysRole role) {
+        return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByRoleId(role), SecurityUtils.isAdminTenant(), true);
     }
 
     /**
@@ -341,12 +364,13 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      *
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
+     * @param hasNormal     有无普通角色权限
      * @return 菜单集合
      */
     @Override
-    public Set<SysMenu> selectMenuSet(List<SysRole> roles, boolean isAdminTenant) {
+    public Set<SysMenu> selectMenuSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
         Set<SystemMenu> systemMenuSet = new HashSet<>();
-        Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(SecurityUtils.getEnterpriseId(),roles,  SecurityUtils.isAdminTenant(), true);
+        Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), roles, SecurityUtils.isAdminTenant(), hasNormal);
         systemMenuSet.addAll(map.get("halfIds"));
         systemMenuSet.addAll(map.get("wholeIds"));
         return systemMenuSet.stream().map(item -> new SysMenu(item.getUid())).collect(Collectors.toSet());
@@ -363,7 +387,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     private List<TreeSelect> selectSystemMenuTree(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
         Set<SystemMenu> systemMenuSet = new HashSet<>();
-        Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(enterpriseId,roles,  isAdminTenant, hasNormal);
+        Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(enterpriseId, roles, isAdminTenant, hasNormal);
         systemMenuSet.addAll(map.get("halfIds"));
         systemMenuSet.addAll(map.get("wholeIds"));
         return buildSystemMenuTree(systemMenuSet);

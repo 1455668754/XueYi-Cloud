@@ -173,7 +173,7 @@
               @click="handleMenuScope(scope.row)"
               v-hasPermi="['tenant:tenant:role']"
               v-if="scope.row.isLessor === IS_LESSOR.FALSE"
-            >菜单分配
+            >菜单配置
             </el-button>
             <el-button
               size="mini"

@@ -1,9 +1,12 @@
 package com.xueyi.system.authority.service;
 
+import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Map;
@@ -155,6 +158,22 @@ public interface ISysAuthorityService {
     public Map<String, Set<SystemMenu>> selectUserMenuRange(SysRole role);
 
     /**
+     * 根据角色Id查询角色信息集合 | 角色级
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 企业Id
+     * @return 角色信息集合
+     */
+    public List<SysRole> selectRoleListByRoleId(SysRole role);
+
+    /**
+     * 根据角色Id获取模块-菜单选择 | 半选 | 全选 | 角色级
+     *
+     * @param role 角色信息 | params.userId 用户Id | enterpriseId 企业Id
+     * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
+     */
+    public Map<String, Set<SystemMenu>> selectRoleMenuRange(SysRole role);
+
+    /**
      * 根据角色信息更新模块-菜单集合
      *
      * @param role       角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | params.wholeIds 全选 | params.halfIds 半选
@@ -185,7 +204,8 @@ public interface ISysAuthorityService {
      *
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
+     * @param hasNormal     有无普通角色权限
      * @return 菜单集合
      */
-    public Set<SysMenu> selectMenuSet(List<SysRole> roles, boolean isAdminTenant);
+    public Set<SysMenu> selectMenuSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
 }

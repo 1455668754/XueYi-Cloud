@@ -150,3 +150,21 @@ export function getUserMenuRange(query) {
         params: query
     })
 }
+
+// 模块-菜单范围更新 | 角色级
+export function setRoleMenuScope(data) {
+    return request({
+        url: '/system/authority/roleScopeSet',
+        method: 'put',
+        data: data
+    })
+}
+
+// 获取模块-菜单选择 | halfIds 半选 | wholeIds 全选 | 角色级
+export function getRoleMenuRange(query) {
+    return request({
+        url: '/system/authority/roleRange',
+        method: 'get',
+        params: query
+    })
+}
