@@ -47,7 +47,7 @@ public class SysAuthorityController extends BaseController {
      */
     @GetMapping(value = "/lessorRange/{enterpriseId}")
     public AjaxResult getLessorMenuRange(@PathVariable Long enterpriseId) {
-        return AjaxResult.success(authorityService.selectLessorMenuRange(enterpriseId));
+        return AjaxResult.success(authorityService.selectLessorMenuRange(enterpriseId, EnterpriseUtils.getMainSourceName(enterpriseId)));
     }
 
     /**

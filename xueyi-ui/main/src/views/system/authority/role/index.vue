@@ -337,6 +337,7 @@ import {
 import {treeSelect as roleDeptTreeSelect} from "@/api/system/post"
 import {treeSelectPermitEnterprise as roleSystemMenuTreeSelect} from "@/api/system/system"
 import {STATUS} from "@constant/constants"
+import {getEnterpriseMenuScope} from "common/src/api/common/authority"
 
 export default {
   name: "Role",
@@ -454,7 +455,7 @@ export default {
     },
     /** 查询模块&菜单树结构 */
     getSystemMenuTreeSelect() {
-      roleSystemMenuTreeSelect({ status: STATUS.NORMAL }).then(response => {
+      getEnterpriseMenuScope().then(response => {
         this.systemMenuOptions = response.data
       })
     },

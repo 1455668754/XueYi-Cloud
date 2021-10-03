@@ -38,5 +38,12 @@ public interface SysCacheInitMapper {
      *
      * @return 通用缓存封装对象集合
      */
-    public List<SysRole> mainSelectRoleCacheList();
+    public List<SysRole> selectRoleCacheList();
+
+    /**
+     * 根据角色信息查找角色信息 | 用于更新单个角色缓存
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
+     */
+    public SysRole selectRoleCacheByRoleId(SysRole role);
 }

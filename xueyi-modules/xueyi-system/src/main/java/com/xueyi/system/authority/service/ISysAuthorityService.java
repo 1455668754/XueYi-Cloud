@@ -1,12 +1,9 @@
 package com.xueyi.system.authority.service;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -31,9 +28,10 @@ public interface ISysAuthorityService {
      * 根据企业Id获取模块-菜单选择 | 半选 | 全选 | 租管级
      *
      * @param enterpriseId 企业Id
+     * @param sourceName   指定源
      * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
      */
-    public Map<String, Set<SystemMenu>> selectLessorMenuRange(Long enterpriseId);
+    public Map<String, Set<SystemMenu>> selectLessorMenuRange(Long enterpriseId, String sourceName);
 
     /**
      * 根据租户Id查询角色信息集合 | 租户级
@@ -174,11 +172,13 @@ public interface ISysAuthorityService {
     /**
      * 根据用户Id查询角色信息集合
      *
+     * @param enterpriseId  企业Id
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
+     * @param hasNormal     有无普通角色权限
      * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
      */
-    public Map<String, Set<SystemMenu>> assembleSystemMenuSet(List<SysRole> roles, boolean isAdminTenant);
+    public Map<String, Set<SystemMenu>> assembleSystemMenuSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
 
     /**
      * 装配菜单集合

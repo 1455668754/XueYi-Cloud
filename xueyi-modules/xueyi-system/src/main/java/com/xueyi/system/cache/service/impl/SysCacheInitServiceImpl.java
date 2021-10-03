@@ -1,8 +1,8 @@
 package com.xueyi.system.cache.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.TenantConstants;
-import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
@@ -104,9 +104,34 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     @Override
     @DS("#sourceName")
     public void loadingRoleCache(String sourceName) {
-        List<SysRole> roles = cacheInitMapper.mainSelectRoleCacheList();
+        List<SysRole> roles = cacheInitMapper.selectRoleCacheList();
         for (SysRole role : roles) {
             AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), role);
         }
+    }
+
+    /**
+     * 根据角色信息更新角色缓存
+     *
+     * @param role       角色信息 | roleId 角色Id | enterpriseId 租户Id
+     * @param sourceName 指定源
+     */
+    @Override
+    @DS("#sourceName")
+    public void refreshRoleCacheByRoleIdToSourceName(SysRole role, String sourceName) {
+        SysRole roleCache = cacheInitMapper.selectRoleCacheByRoleId(role);
+        AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), roleCache);
+    }
+
+    /**
+     * 根据角色信息更新角色缓存
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
+     */
+    @Override
+    @DataScope(eAlias = "sor")
+    public void refreshRoleCacheByRoleId(SysRole role) {
+        SysRole roleCache = cacheInitMapper.selectRoleCacheByRoleId(role);
+        AuthorityUtils.refreshRoleCache(SecurityUtils.getEnterpriseId(), role.getRoleId(), roleCache);
     }
 }
