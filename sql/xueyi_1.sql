@@ -176,7 +176,7 @@ drop table if exists sys_menu;
 create table sys_menu (
   menu_id                   bigint              not null                                comment '菜单Id',
   parent_id                 bigint              default 0                               comment '父菜单Id',
-  menu_name                 varchar(50)         not null                                comment '菜单名称',
+  name                      varchar(50)         not null                                comment '菜单名称',
   path                      varchar(200)        default ''                              comment '路由地址',
   component                 varchar(255)        default null                            comment '组件路径',
   query                     varchar(255)        default null                            comment '路由参数',
@@ -204,7 +204,7 @@ create table sys_menu (
 -- ----------------------------
 -- 初始化-菜单信息表数据
 -- ----------------------------
-insert into sys_menu (menu_id, system_id, tenant_id, parent_id, menu_name, path, component, query, is_common, is_change, is_frame, is_cache, menu_type, visible, perms, icon, sort, create_by, remark)
+insert into sys_menu (menu_id, system_id, tenant_id, parent_id, name, path, component, query, is_common, is_change, is_frame, is_cache, menu_type, visible, perms, icon, sort, create_by, remark)
 values
 -- 系统Id 0 租户Id 0(公用)
        -- 一级菜单

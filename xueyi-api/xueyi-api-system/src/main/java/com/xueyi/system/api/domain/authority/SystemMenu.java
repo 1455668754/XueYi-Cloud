@@ -25,10 +25,25 @@ public class SystemMenu extends BaseEntity {
     /** 名称 */
     private String name;
 
-    /** 类型（0系统 1菜单） */
+    /** 类型（0模块 1菜单） */
     private String type;
 
-    /** 子部门/岗位 */
+    /** 组件路径 */
+    private String component;
+
+    /** 菜单状态（0显示 1隐藏） */
+    private String status;
+
+    /** 权限字符串 */
+    private String perms;
+
+    /** 菜单图标 */
+    private String icon;
+
+    /** 公共模块-菜单（Y是 N否） */
+    private String isCommon;
+
+    /** 子模块-菜单 */
     private List<SystemMenu> children = new ArrayList<SystemMenu>();
 
     public Long getUid() {
@@ -63,6 +78,46 @@ public class SystemMenu extends BaseEntity {
         this.type = type;
     }
 
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPerms() {
+        return perms;
+    }
+
+    public void setPerms(String perms) {
+        this.perms = perms;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getIsCommon() {
+        return isCommon;
+    }
+
+    public void setIsCommon(String isCommon) {
+        this.isCommon = isCommon;
+    }
+
     public List<SystemMenu> getChildren() {
         return children;
     }
@@ -95,6 +150,11 @@ public class SystemMenu extends BaseEntity {
                 .append("FUid", getFUid())
                 .append("name", getName())
                 .append("type", getType())
+                .append("component", getComponent())
+                .append("perms", getPerms())
+                .append("icon", getIcon())
+                .append("status", getStatus())
+                .append("isCommon", getIsCommon())
                 .append("children", getChildren())
                 .toString();
     }

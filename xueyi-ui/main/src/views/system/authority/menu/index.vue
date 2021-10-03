@@ -61,7 +61,6 @@
               @click="handleAdd(scope.row)"
               v-hasPermi="['system:menu:add']"
             >新增
-              {{(scope.row.isCommon === IS_COMMON.FALSE)}}
             </el-button>
             <el-button
               size="mini"
@@ -137,8 +136,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="form.menuName" placeholder="请输入菜单名称"/>
+            <el-form-item label="菜单名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入菜单名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -263,7 +262,7 @@
 </template>
 
 <script>
-import {getMenu, delMenu, addMenu, updateMenu} from "@/api/system/menu"
+import {getMenu, delMenu, addMenu, updateMenu, listSystemMenu} from "@/api/system/menu"
 import {treeSelectPermitPersonal as systemMenuTreeSelect} from "@/api/system/system"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
@@ -308,7 +307,7 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        menuName: [
+        name: [
           {required: true, message: "菜单名称不能为空", trigger: "blur"}
         ],
         path: [
@@ -328,7 +327,7 @@ export default {
     /** 查询菜单列表 */
     getList() {
       this.loading = true
-      systemMenuTreeSelect().then(response => {
+      listSystemMenu().then(response => {
         this.menuList = response.data
         this.loading = false
       })
@@ -376,7 +375,7 @@ export default {
         menuId: undefined,
         systemId: 0,
         parentId: 0,
-        menuName: undefined,
+        name: undefined,
         icon: undefined,
         menuType: MENU_TYPE.DIR,
         sort: 0,

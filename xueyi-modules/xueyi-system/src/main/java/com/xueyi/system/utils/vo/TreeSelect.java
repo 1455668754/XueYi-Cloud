@@ -18,24 +18,16 @@ import com.xueyi.system.organize.domain.deptPostVo;
 public class TreeSelect implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 节点Id
-     */
+    /** 节点Id */
     private Long id;
 
-    /**
-     * 节点名称
-     */
+    /** 节点名称 */
     private String label;
 
-    /**
-     * 节点状态
-     */
+    /** 节点状态 */
     private String status;
 
-    /**
-     * 节点类型
-     */
+    /** 节点类型 */
     private String type;
 
     /** 权限字符串 | 模块&&菜单专属 */
@@ -50,12 +42,10 @@ public class TreeSelect implements Serializable {
     /** 系统Id | 模块&&菜单专属 */
     private Long systemId;
 
-    /** 系统默认（0非默认 1默认） | 模块&&菜单专属 */
-    private String isMain;
+    /** 公共模块-菜单（Y是 N否） | 模块&&菜单专属 */
+    private String isCommon;
 
-    /**
-     * 子节点
-     */
+    /** 子节点 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TreeSelect> children;
 
@@ -82,6 +72,11 @@ public class TreeSelect implements Serializable {
         this.id = systemMenu.getUid();
         this.label = systemMenu.getName();
         this.type = systemMenu.getType();
+        this.status = systemMenu.getStatus();
+        this.perms = systemMenu.getPerms();
+        this.icon = systemMenu.getIcon();
+        this.component = systemMenu.getComponent();
+        this.isCommon = systemMenu.getIsCommon();
         this.children = systemMenu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
@@ -94,7 +89,7 @@ public class TreeSelect implements Serializable {
         this.icon = systemMenuVo.getIcon();
         this.component = systemMenuVo.getComponent();
         this.systemId = systemMenuVo.getSystemId();
-        this.isMain = systemMenuVo.getIsCommon();
+        this.isCommon = systemMenuVo.getIsCommon();
         this.children = systemMenuVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
@@ -162,12 +157,12 @@ public class TreeSelect implements Serializable {
         this.systemId = systemId;
     }
 
-    public String getIsMain() {
-        return isMain;
+    public String getIsCommon() {
+        return isCommon;
     }
 
-    public void setIsMain(String isMain) {
-        this.isMain = isMain;
+    public void setIsCommon(String isCommon) {
+        this.isCommon = isCommon;
     }
 
     public List<TreeSelect> getChildren() {

@@ -15,7 +15,7 @@
     <resultMap type="SysMenu" id="routeResult">
         <id     property="menuId"           column="menu_menu_id"        />
         <result property="systemId"         column="menu_system_id"      />
-        <result property="menuName"         column="menu_menu_name"      />
+        <result property="name"             column="menu_name"           />
         <result property="parentId"         column="menu_parent_id"      />
         <result property="parentName"       column="menu_parent_name"    />
         <result property="path"             column="menu_path"           />
@@ -80,7 +80,7 @@
     </resultMap>
 
     <sql id="routeCacheVo">
-        select distinct m.tenant_id, m.system_id, m.menu_id as menu_menu_id, m.system_id as menu_system_id, m.menu_name as menu_menu_name, m.parent_id as menu_parent_id, m.path as menu_path, m.component as menu_component, m.query as menu_query, m.is_common as menu_is_common,
+        select distinct m.tenant_id, m.system_id, m.menu_id as menu_menu_id, m.system_id as menu_system_id, m.name as menu_name, m.parent_id as menu_parent_id, m.path as menu_path, m.component as menu_component, m.query as menu_query, m.is_common as menu_is_common,
                         m.is_change as menu_is_change, m.is_frame as menu_is_frame, m.is_cache as menu_is_cache, m.menu_type as menu_menu_type, m.visible as menu_visible, m.status as menu_status, ifnull(m.perms, '') as menu_perms, m.icon as menu_icon, m.sort as menu_sort
         from sys_menu m
     </sql>
@@ -93,7 +93,7 @@
 
     <sql id="systemMenuCacheVo">
         select sm.tenant_id, s_m_uid, s_m_name, s_m_f_uid, s_m_sort, s_m_type
-        from ( select distinct m.tenant_id, m.menu_id as s_m_uid, m.menu_name as s_m_name, if(m.parent_id = 0, m.system_id, m.parent_id) as s_m_f_uid, m.sort as s_m_sort, 1 as s_m_type, m.status as status, m.del_flag as del_flag
+        from ( select distinct m.tenant_id, m.menu_id as s_m_uid, m.name as s_m_name, if(m.parent_id = 0, m.system_id, m.parent_id) as s_m_f_uid, m.sort as s_m_sort, 1 as s_m_type, m.status as status, m.del_flag as del_flag
              from sys_menu m
              union
              select distinct s.tenant_id, s.system_id as s_m_uid, s.name as s_m_name, -1 as s_m_f_uid, s.sort as s_m_sort, 0 as s_m_type, s.status as status, s.del_flag as del_flag

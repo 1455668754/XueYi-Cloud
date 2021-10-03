@@ -64,11 +64,11 @@ public class SysSystemServiceImpl implements ISysSystemService {
         Set<SysSystem> rangeSet;
         // 管理员显示所有模块信息
         if (SecurityUtils.isAdminUser()) {
-            rangeSet = authorityService.selectSystemSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
+            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(),authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
         } else {
             SysRole role = new SysRole();
             role.getParams().put("userId", SecurityUtils.getUserId());
-            rangeSet = authorityService.selectSystemSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
+            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
         }
         systemSet.retainAll(rangeSet);
         return SortUtils.sortSetToList(systemSet);
@@ -260,7 +260,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
             SystemMenuVo menuVo = new SystemMenuVo();
             menuVo.setUid(menu.getMenuId());
             menuVo.setFUid(menu.getParentId());
-            menuVo.setName(menu.getMenuName());
+            menuVo.setName(menu.getName());
             menuVo.setStatus(menu.getStatus());
             menuVo.setPerms(menu.getPerms());
             menuVo.setIcon(menu.getIcon());

@@ -369,11 +369,8 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @return 菜单集合
      */
     @Override
-    public Set<SysMenu> selectMenuSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
-        Set<SystemMenu> menuSet = new HashSet<>();
-        Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), roles, SecurityUtils.isAdminTenant(), hasNormal);
-        menuSet.addAll(map.get("halfIds"));
-        menuSet.addAll(map.get("wholeIds"));
+    public Set<SysMenu> selectMenuSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
+        Set<SystemMenu> menuSet = mergeSet(enterpriseId, roles, isAdminTenant, hasNormal);
         return menuSet.stream().map(item -> new SysMenu(item.getUid())).collect(Collectors.toSet());
     }
 
@@ -386,11 +383,8 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @return 模块集合
      */
     @Override
-    public Set<SysSystem> selectSystemSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
-        Set<SystemMenu> systemSet = new HashSet<>();
-        Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), roles, SecurityUtils.isAdminTenant(), hasNormal);
-        systemSet.addAll(map.get("halfIds"));
-        systemSet.addAll(map.get("wholeIds"));
+    public Set<SysSystem> selectSystemSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
+        Set<SystemMenu> systemSet = mergeSet(enterpriseId, roles, isAdminTenant, hasNormal);
         return systemSet.stream().map(item -> new SysSystem(item.getUid())).collect(Collectors.toSet());
     }
 
@@ -404,11 +398,24 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @return 模块-菜单树
      */
     private List<TreeSelect> selectSystemMenuTree(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
+        return buildSystemMenuTree(mergeSet(enterpriseId, roles, isAdminTenant, hasNormal));
+    }
+
+    /**
+     * 模块-菜单树装配 | 企业级 | 部门级 | 岗位级 | 用户级
+     *
+     * @param enterpriseId  企业Id
+     * @param roles         角色信息集合
+     * @param isAdminTenant 是否租管租户
+     * @param hasNormal     有无普通角色权限
+     * @return 模块-菜单树
+     */
+    private Set<SystemMenu> mergeSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
         Set<SystemMenu> systemMenuSet = new HashSet<>();
         Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(enterpriseId, roles, isAdminTenant, hasNormal);
         systemMenuSet.addAll(map.get("halfIds"));
         systemMenuSet.addAll(map.get("wholeIds"));
-        return buildSystemMenuTree(systemMenuSet);
+        return systemMenuSet;
     }
 
     /**

@@ -3,8 +3,8 @@ package com.xueyi.system.authority.service;
 import java.util.List;
 
 import com.xueyi.system.api.domain.authority.SysMenu;
-import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.utils.vo.RouterVo;
+import com.xueyi.system.utils.vo.TreeSelect;
 
 /**
  * 菜单 业务层
@@ -19,7 +19,7 @@ public interface ISysMenuService {
      * @param menu 菜单信息 | systemId 系统Id
      * @return 菜单列表
      */
-    public List<SysMenu> getRoute(SysMenu menu);
+    public List<SysMenu> getRoutes(SysMenu menu);
 
     /**
      * 构建前端路由所需要的菜单
@@ -30,12 +30,20 @@ public interface ISysMenuService {
     public List<RouterVo> buildMenus(List<SysMenu> menus);
 
     /**
+     * 查询模块-菜单信息列表
+     *
+     * @param menu 菜单信息
+     * @return 模块-菜单信息集合
+     */
+    public List<TreeSelect> mainSelectSystemMenuList(SysMenu menu);
+
+    /**
      * 根据菜单Id查询信息
      *
      * @param menu 菜单信息 | menuId 菜单Id
      * @return 菜单信息
      */
-    public SysMenu selectMenuById(SysMenu menu);
+    public SysMenu mainSelectMenuById(SysMenu menu);
 
     /**
      * 新增保存菜单信息
@@ -43,7 +51,7 @@ public interface ISysMenuService {
      * @param menu 菜单信息
      * @return 结果
      */
-    public int insertMenu(SysMenu menu);
+    public int mainInsertMenu(SysMenu menu);
 
     /**
      * 修改保存菜单信息
@@ -51,7 +59,7 @@ public interface ISysMenuService {
      * @param menu 菜单信息
      * @return 结果
      */
-    public int updateMenu(SysMenu menu);
+    public int mainUpdateMenu(SysMenu menu);
 
     /**
      * 删除菜单管理信息
@@ -59,7 +67,7 @@ public interface ISysMenuService {
      * @param menu 菜单信息 | menuId 菜单Id
      * @return 结果
      */
-    public int deleteMenuById(SysMenu menu);
+    public int mainDeleteMenuById(SysMenu menu);
 
     /**
      * 校验菜单名称是否唯一
@@ -67,7 +75,7 @@ public interface ISysMenuService {
      * @param menu 菜单信息 | menuId   菜单Id | parentId 父级菜单Id | menuName 菜单名称
      * @return 结果
      */
-    public boolean checkMenuNameUnique(SysMenu menu);
+    public boolean mainCheckMenuNameUnique(SysMenu menu);
 
     /**
      * 校验是否存在菜单子节点
@@ -75,7 +83,7 @@ public interface ISysMenuService {
      * @param menu 菜单信息 | menuId 菜单Id
      * @return 结果 true 存在 false 不存在
      */
-    public boolean hasChildByMenuId(SysMenu menu);
+    public boolean mainHasChildByMenuId(SysMenu menu);
 
     /**
      * 校验菜单是否存在角色
@@ -83,5 +91,5 @@ public interface ISysMenuService {
      * @param menu 菜单信息 | menuId 菜单Id
      * @return 结果 true 存在 false 不存在
      */
-    public boolean checkMenuExistRole(SysMenu menu);
+    public boolean mainCheckMenuExistRole(SysMenu menu);
 }

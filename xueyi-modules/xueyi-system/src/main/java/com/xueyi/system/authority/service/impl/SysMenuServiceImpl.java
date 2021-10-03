@@ -1,18 +1,20 @@
 package com.xueyi.system.authority.service.impl;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
-import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.api.utilTool.SysSearch;
-import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
+import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.core.constant.Constants;
@@ -22,8 +24,6 @@ import com.xueyi.system.utils.vo.MetaVo;
 import com.xueyi.system.utils.vo.RouterVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.service.ISysMenuService;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 菜单 业务层处理
@@ -50,16 +50,16 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> getRoute(SysMenu menu) {
+    public List<SysMenu> getRoutes(SysMenu menu) {
         Set<SysMenu> menuSet = AuthorityUtils.getRouteCache(SecurityUtils.getEnterpriseId(), menu.getSystemId());
         Set<SysMenu> rangeSet;
         // 管理员显示所有菜单信息
         if (SecurityUtils.isAdminUser()) {
-            rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
+            rangeSet = authorityService.selectMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
         } else {
             SysRole role = new SysRole();
             role.getParams().put("userId", SecurityUtils.getUserId());
-            rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
+            rangeSet = authorityService.selectMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
         }
         menuSet.retainAll(rangeSet);
         return getChildPerms(SortUtils.sortSetToList(menuSet), MenuConstants.MENU_TOP_NODE);
@@ -81,7 +81,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
             router.setPath(getRouterPath(menu));
             router.setComponent(getComponent(menu));
             router.setQuery(menu.getQuery());
-            router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals(MenuConstants.NO_CACHE, menu.getIsCache()), menu.getPath()));
+            router.setMeta(new MetaVo(menu.getName(), menu.getIcon(), StringUtils.equals(MenuConstants.NO_CACHE, menu.getIsCache()), menu.getPath()));
             List<SysMenu> cMenus = menu.getChildren();
             if (!cMenus.isEmpty() && cMenus.size() > 0 && MenuConstants.TYPE_DIR.equals(menu.getMenuType())) {
                 router.setAlwaysShow(true);
@@ -94,11 +94,11 @@ public class SysMenuServiceImpl implements ISysMenuService {
                 children.setPath(menu.getPath());
                 children.setComponent(menu.getComponent());
                 children.setName(StringUtils.capitalize(menu.getPath()));
-                children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals(MenuConstants.NO_CACHE, menu.getIsCache()), menu.getPath()));
+                children.setMeta(new MetaVo(menu.getName(), menu.getIcon(), StringUtils.equals(MenuConstants.NO_CACHE, menu.getIsCache()), menu.getPath()));
                 childrenList.add(children);
                 router.setChildren(childrenList);
             } else if (menu.getParentId().intValue() == 0 && isInnerLink(menu)) {
-                router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon()));
+                router.setMeta(new MetaVo(menu.getName(), menu.getIcon()));
                 router.setPath("/inner");
                 List<RouterVo> childrenList = new ArrayList<RouterVo>();
                 RouterVo children = new RouterVo();
@@ -106,7 +106,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
                 children.setPath(routerPath);
                 children.setComponent(MenuConstants.INNER_LINK);
                 children.setName(StringUtils.capitalize(routerPath));
-                children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), menu.getPath()));
+                children.setMeta(new MetaVo(menu.getName(), menu.getIcon(), menu.getPath()));
                 childrenList.add(children);
                 router.setChildren(childrenList);
             }
@@ -116,14 +116,38 @@ public class SysMenuServiceImpl implements ISysMenuService {
     }
 
     /**
+     * 查询模块-菜单信息列表
+     *
+     * @param menu 菜单信息
+     * @return 模块-菜单信息集合
+     */
+    @Override
+    public List<TreeSelect> mainSelectSystemMenuList(SysMenu menu) {
+        Set<SystemMenu> menuSet = new HashSet<>();
+        Map<String, Set<SystemMenu>> map;
+        if (SecurityUtils.isAdminUser()) {
+            map = authorityService.assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
+        } else {
+            SysRole role = new SysRole();
+            role.getParams().put("userId", SecurityUtils.getUserId());
+            map = authorityService.assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
+        }
+        menuSet.addAll(map.get("halfIds"));
+        menuSet.addAll(map.get("wholeIds"));
+        menu.getParams().put("insideIds", menuSet);
+        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuMapper.mainSelectSystemMenuList(menu)), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE);
+        return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
+    }
+
+    /**
      * 根据菜单Id查询信息
      *
      * @param menu 菜单信息 | menuId 菜单Id
      * @return 菜单信息
      */
     @Override
-    public SysMenu selectMenuById(SysMenu menu) {
-        return menuMapper.selectMenuById(menu);
+    public SysMenu mainSelectMenuById(SysMenu menu) {
+        return menuMapper.mainSelectMenuById(menu);
     }
 
     /**
@@ -133,8 +157,8 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    public int insertMenu(SysMenu menu) {
-        return menuMapper.insertMenu(menu);
+    public int mainInsertMenu(SysMenu menu) {
+        return menuMapper.mainInsertMenu(menu);
     }
 
     /**
@@ -144,8 +168,8 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    public int updateMenu(SysMenu menu) {
-        return menuMapper.updateMenu(menu);
+    public int mainUpdateMenu(SysMenu menu) {
+        return menuMapper.mainUpdateMenu(menu);
     }
 
     /**
@@ -155,9 +179,8 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    @Transactional
-    public int deleteMenuById(SysMenu menu) {
-        return menuMapper.deleteMenuById(menu);
+    public int mainDeleteMenuById(SysMenu menu) {
+        return menuMapper.mainDeleteMenuById(menu);
     }
 
     /**
@@ -167,11 +190,11 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    public boolean checkMenuNameUnique(SysMenu menu) {
+    public boolean mainCheckMenuNameUnique(SysMenu menu) {
         if (StringUtils.isNull(menu.getMenuId())) {
             menu.setMenuId(-1L);
         }
-        SysMenu info = menuMapper.checkMenuNameUnique(menu);
+        SysMenu info = menuMapper.mainCheckMenuNameUnique(menu);
         if (StringUtils.isNotNull(info) && info.getMenuId().longValue() != menu.getMenuId().longValue()) {
             return false;
         }
@@ -185,8 +208,8 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    public boolean hasChildByMenuId(SysMenu menu) {
-        int result = menuMapper.hasChildByMenuId(menu);
+    public boolean mainHasChildByMenuId(SysMenu menu) {
+        int result = menuMapper.mainHasChildByMenuId(menu);
         return result > 0;
     }
 
@@ -197,7 +220,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    public boolean checkMenuExistRole(SysMenu menu) {
+    public boolean mainCheckMenuExistRole(SysMenu menu) {
         SysSearch search = new SysSearch();
         search.getSearch().put("systemMenuId", menu.getMenuId());
         int result = roleSystemMenuMapper.checkSystemMenuExistRole(search);//@param search 万用组件 | systemMenuId 系统-菜单Id

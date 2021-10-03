@@ -6,7 +6,6 @@ import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
-import com.xueyi.system.source.service.IDataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,6 +40,99 @@ public class SysMenuController extends BaseController {
     private ISysRoleSystemMenuService roleSystemMenuService;
 
     /**
+     * 查询模块-菜单信息列表
+     */
+    @PreAuthorize(hasPermi = "system:menu:list")
+    @GetMapping("/list")
+    public AjaxResult list(SysMenu menu) {
+        return AjaxResult.success(menuService.mainSelectSystemMenuList(menu));
+    }
+
+    /**
+     * 根据菜单Id获取详细信息
+     */
+    @PreAuthorize(hasPermi = "system:menu:query")
+    @GetMapping(value = "/byId")
+    public AjaxResult getInfo(SysMenu menu) {
+        return AjaxResult.success(menuService.mainSelectMenuById(menu));
+    }
+
+    /**
+     * 新增菜单
+     */
+    @PreAuthorize(hasPermi = "system:menu:add")
+    @Log(title = "菜单管理", businessType = BusinessType.INSERT)
+    @PostMapping
+    public AjaxResult add(@Validated @RequestBody SysMenu menu) {
+        if (!menuService.mainCheckMenuNameUnique(menu)) {
+            return AjaxResult.error("新增菜单'" + menu.getName() + "'失败，菜单名称已存在");
+        }else if (MenuConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())){
+            return AjaxResult.error("新增菜单'" + menu.getName() + "'失败，地址必须以http(s)://开头");
+        }
+        return toAjax(menuService.mainInsertMenu(menu));
+    }
+
+    /**
+     * 修改菜单
+     */
+    @PreAuthorize(hasPermi = "system:menu:edit")
+    @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
+    @PutMapping
+    public AjaxResult edit(@Validated @RequestBody SysMenu menu) {
+        if (!menuService.mainCheckMenuNameUnique(menu)) {
+            return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，菜单名称已存在");
+        }else if (MenuConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())){
+            return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，地址必须以http(s)://开头");
+        } else if (menu.getMenuId().equals(menu.getParentId())) {
+            return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，上级菜单不能选择自己");
+        }
+        return toAjax(menuService.mainUpdateMenu(menu));
+    }
+
+    /**
+     * 删除菜单
+     */
+    @PreAuthorize(hasPermi = "system:menu:remove")
+    @Log(title = "菜单管理", businessType = BusinessType.DELETE)
+    @DeleteMapping
+    public AjaxResult remove(@RequestBody SysMenu menu) {
+        if (menuService.mainHasChildByMenuId(menu)) {
+            return AjaxResult.error("存在子菜单,不允许删除");
+        }
+        if (menuService.mainCheckMenuExistRole(menu)) {
+            return AjaxResult.error("菜单已分配,不允许删除");
+        }
+        return toAjax(menuService.mainDeleteMenuById(menu));
+    }
+
+    /**
+     * 获取路由信息
+     *
+     * @return 路由信息
+     */
+    @GetMapping("getRouters")
+    public AjaxResult getRouters(SysMenu menu) {
+        List<SysMenu> menus = menuService.getRoutes(menu);
+        return AjaxResult.success(menuService.buildMenus(menus));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /**
      * 获取指定企业账号的租管衍生角色菜单范围信息 | 租管系统使用方法
      */
     @GetMapping("/getMenuScope/administrator")
@@ -58,73 +150,5 @@ public class SysMenuController extends BaseController {
     public AjaxResult authMenuScope(@RequestBody SysRoleSystemMenu systemMenu) {
         systemMenu.setSourceName(EnterpriseUtils.getMainSourceName(systemMenu.getEnterpriseId()));
         return toAjax(roleSystemMenuService.authMenuScopeById(systemMenu));
-    }
-
-    /**
-     * 根据菜单Id获取详细信息
-     */
-    @PreAuthorize(hasPermi = "system:menu:query")
-    @GetMapping(value = "/byId")
-    public AjaxResult getInfo(SysMenu menu) {
-        return AjaxResult.success(menuService.selectMenuById(menu));
-    }
-
-    /**
-     * 新增菜单
-     */
-    @PreAuthorize(hasPermi = "system:menu:add")
-    @Log(title = "菜单管理", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysMenu menu) {
-        if (!menuService.checkMenuNameUnique(menu)) {
-            return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
-        }else if (MenuConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())){
-            return AjaxResult.error("新增菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
-        }
-        return toAjax(menuService.insertMenu(menu));
-    }
-
-    /**
-     * 修改菜单
-     */
-    @PreAuthorize(hasPermi = "system:menu:edit")
-    @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysMenu menu) {
-        if (!menuService.checkMenuNameUnique(menu)) {
-            return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
-        }else if (MenuConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())){
-            return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
-        } else if (menu.getMenuId().equals(menu.getParentId())) {
-            return AjaxResult.error("修改菜单'" + menu.getMenuName() + "'失败，上级菜单不能选择自己");
-        }
-        return toAjax(menuService.updateMenu(menu));
-    }
-
-    /**
-     * 删除菜单
-     */
-    @PreAuthorize(hasPermi = "system:menu:remove")
-    @Log(title = "菜单管理", businessType = BusinessType.DELETE)
-    @DeleteMapping
-    public AjaxResult remove(@RequestBody SysMenu menu) {
-        if (menuService.hasChildByMenuId(menu)) {
-            return AjaxResult.error("存在子菜单,不允许删除");
-        }
-        if (menuService.checkMenuExistRole(menu)) {
-            return AjaxResult.error("菜单已分配,不允许删除");
-        }
-        return toAjax(menuService.deleteMenuById(menu));
-    }
-
-    /**
-     * 获取路由信息
-     *
-     * @return 路由信息
-     */
-    @GetMapping("getRouters")
-    public AjaxResult getRouters(SysMenu menu) {
-        List<SysMenu> menus = menuService.getRoute(menu);
-        return AjaxResult.success(menuService.buildMenus(menus));
     }
 }

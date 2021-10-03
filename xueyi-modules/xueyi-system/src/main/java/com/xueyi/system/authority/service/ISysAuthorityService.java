@@ -203,20 +203,22 @@ public interface ISysAuthorityService {
     /**
      * 装配菜单集合
      *
+     * @param enterpriseId  企业Id
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
      * @param hasNormal     有无普通角色权限
      * @return 菜单集合
      */
-    public Set<SysMenu> selectMenuSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
+    public Set<SysMenu> selectMenuSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
 
     /**
      * 装配模块集合
      *
+     * @param enterpriseId  企业Id
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
      * @param hasNormal     有无普通角色权限
      * @return 模块集合
      */
-    public Set<SysSystem> selectSystemSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
+    public Set<SysSystem> selectSystemSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
 }

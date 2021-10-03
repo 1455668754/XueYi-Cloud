@@ -9,8 +9,7 @@ import java.util.List;
  * @author ruoyi
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class RouterVo
-{
+public class RouterVo {
     /** 路由名字 */
     private String name;
 

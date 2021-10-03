@@ -22,7 +22,7 @@ public class SysMenu extends BaseEntity {
     private Long menuId;
 
     /** 菜单名称 */
-    private String menuName;
+    private String name;
 
     /** 父菜单名称 */
     private String parentName;
@@ -86,14 +86,14 @@ public class SysMenu extends BaseEntity {
 
     @NotBlank(message = "菜单名称不能为空")
     @Size(min = 0, max = 50, message = "菜单名称长度不能超过50个字符")
-    public String getMenuName()
+    public String getName()
     {
-        return menuName;
+        return name;
     }
 
-    public void setMenuName(String menuName)
+    public void setName(String name)
     {
-        this.menuName = menuName;
+        this.name = name;
     }
 
     public String getParentName()
@@ -258,7 +258,7 @@ public class SysMenu extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("menuId", getMenuId())
                 .append("systemId", getSystemId())
-                .append("menuName", getMenuName())
+                .append("name", getName())
                 .append("parentId", getParentId())
                 .append("path", getPath())
                 .append("component", getComponent())
