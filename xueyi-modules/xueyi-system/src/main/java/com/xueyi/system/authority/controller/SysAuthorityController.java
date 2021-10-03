@@ -10,6 +10,7 @@ import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysRoleService;
+import com.xueyi.system.cache.service.ISysCacheInitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,9 @@ public class SysAuthorityController extends BaseController {
 
     @Autowired
     private ISysAuthorityService authorityService;
+
+    @Autowired
+    private ISysCacheInitService cacheInitService;
 
     @Autowired
     private ISysRoleService roleService;
@@ -65,6 +69,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScopeToSourceName(role, sourceName);
+        cacheInitService.refreshRoleCacheByRoleIdToSourceName(role, sourceName);
         return toAjax(1);
     }
 
@@ -96,6 +101,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
+        cacheInitService.refreshRoleCacheByRoleId(role);
         return toAjax(1);
     }
 
@@ -127,6 +133,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
+        cacheInitService.refreshRoleCacheByRoleId(role);
         return toAjax(1);
     }
 
@@ -158,6 +165,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
+        cacheInitService.refreshRoleCacheByRoleId(role);
         return toAjax(1);
     }
 
@@ -189,6 +197,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
+        cacheInitService.refreshRoleCacheByRoleId(role);
         return toAjax(1);
     }
 

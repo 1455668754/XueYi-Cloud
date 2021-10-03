@@ -307,7 +307,6 @@ import {
   delTenant,
   getTenant,
   listTenant,
-  menuScope,
   updateTenant,
   updateTenantSort
 } from '@/api/tenant/tenant'

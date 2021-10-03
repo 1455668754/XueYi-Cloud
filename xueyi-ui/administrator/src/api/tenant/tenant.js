@@ -18,24 +18,6 @@ export function getTenant(query) {
   })
 }
 
-// 租户衍生角色菜单权限获取
-export function getMenuScope(query) {
-  return request({
-    url: '/system/menu/getMenuScope/administrator',
-    method: 'get',
-    params: query
-  })
-}
-
-// 修改保存租户衍生角色菜单权限
-export function menuScope(data) {
-  return request({
-    url: '/system/menu/authMenuScope/administrator',
-    method: 'put',
-    data: data
-  })
-}
-
 // 新增租户信息
 export function addTenant(data) {
   return request({
