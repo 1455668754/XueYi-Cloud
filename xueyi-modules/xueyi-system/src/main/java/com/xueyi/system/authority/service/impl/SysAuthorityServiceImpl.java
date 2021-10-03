@@ -11,6 +11,7 @@ import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.authority.mapper.SysAuthorityMapper;
 import com.xueyi.system.authority.service.ISysAuthorityService;
@@ -369,11 +370,28 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     public Set<SysMenu> selectMenuSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
-        Set<SystemMenu> systemMenuSet = new HashSet<>();
+        Set<SystemMenu> menuSet = new HashSet<>();
         Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), roles, SecurityUtils.isAdminTenant(), hasNormal);
-        systemMenuSet.addAll(map.get("halfIds"));
-        systemMenuSet.addAll(map.get("wholeIds"));
-        return systemMenuSet.stream().map(item -> new SysMenu(item.getUid())).collect(Collectors.toSet());
+        menuSet.addAll(map.get("halfIds"));
+        menuSet.addAll(map.get("wholeIds"));
+        return menuSet.stream().map(item -> new SysMenu(item.getUid())).collect(Collectors.toSet());
+    }
+
+    /**
+     * 装配模块集合
+     *
+     * @param roles         角色信息集合
+     * @param isAdminTenant 是否租管租户
+     * @param hasNormal     有无普通角色权限
+     * @return 模块集合
+     */
+    @Override
+    public Set<SysSystem> selectSystemSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
+        Set<SystemMenu> systemSet = new HashSet<>();
+        Map<String, Set<SystemMenu>> map = assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), roles, SecurityUtils.isAdminTenant(), hasNormal);
+        systemSet.addAll(map.get("halfIds"));
+        systemSet.addAll(map.get("wholeIds"));
+        return systemSet.stream().map(item -> new SysSystem(item.getUid())).collect(Collectors.toSet());
     }
 
     /**

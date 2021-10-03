@@ -55,14 +55,6 @@ public interface ISysRoleService {
     public SysRole selectRoleIdByDeriveId(SysRole role);
 
     /**
-     * 根据角色Id获取菜单范围信息
-     *
-     * @param role 角色信息 | roleId 角色Id
-     * @return 系统-菜单对象信息集合
-     */
-    public List<SysRoleSystemMenu> selectMenuScopeById(SysRole role);
-
-    /**
      * 根据角色Id获取菜单范围信息 - 获取尾级模块|菜单
      *
      * @return 结果
@@ -108,14 +100,6 @@ public interface ISysRoleService {
      * @return 结果
      */
     public int updateRoleStatus(SysRole role);
-
-    /**
-     * 修改菜单权限信息
-     *
-     * @param role 角色信息
-     * @return 结果
-     */
-    public int authMenuScope(SysRole role);
 
     /**
      * 修改数据权限信息

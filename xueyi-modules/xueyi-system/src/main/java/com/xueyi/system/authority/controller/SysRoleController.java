@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.xueyi.system.cache.service.ISysCacheInitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +37,9 @@ public class SysRoleController extends BaseController {
     @Autowired
     private ISysRoleService roleService;
 
+    @Autowired
+    private ISysCacheInitService cacheInitService;
+
     /**
      * 获取角色列表
      */
@@ -54,15 +58,6 @@ public class SysRoleController extends BaseController {
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(SysRole role) {
         return AjaxResult.success(roleService.selectRoleById(role));
-    }
-
-    /**
-     * 根据角色Id获取菜单范围信息
-     */
-    @PreAuthorize(hasPermi = "system:role:query")
-    @GetMapping(value = "/menuScope")
-    public AjaxResult getMenuScope(SysRole role) {
-        return AjaxResult.success(roleService.selectMenuScopeById(role));
     }
 
     /**
@@ -106,16 +101,6 @@ public class SysRoleController extends BaseController {
             return AjaxResult.error("修改角色'" + role.getName() + "'失败，角色权限已存在");
         }
         return toAjax(roleService.updateRole(role));
-    }
-
-    /**
-     * 修改保存菜单权限
-     */
-    @PreAuthorize(hasPermi = "system:role:edit")
-    @Log(title = "角色管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/menuScope/save")
-    public AjaxResult menuScope(@RequestBody SysRole role) {
-        return toAjax(roleService.authMenuScope(role));
     }
 
     /**

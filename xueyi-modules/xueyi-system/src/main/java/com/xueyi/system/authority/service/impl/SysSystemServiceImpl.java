@@ -4,13 +4,17 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.multiTenancy.SortUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.common.redis.utils.AuthorityUtils;
+import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysSystemMapper;
+import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysSystemService;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
@@ -34,6 +38,9 @@ import java.util.stream.Collectors;
 public class SysSystemServiceImpl implements ISysSystemService {
 
     @Autowired
+    private ISysAuthorityService authorityService;
+
+    @Autowired
     private SysMenuMapper menuMapper;
 
     @Autowired
@@ -45,24 +52,25 @@ public class SysSystemServiceImpl implements ISysSystemService {
     @Autowired
     private SysRoleSystemMenuMapper roleSystemMenuMapper;
 
-    @Autowired
-    private ISysSystemService systemService;
-
     /**
      * 当前用户首页可展示的模块列表
      *
      * @return 子系统模块集合
      */
     @Override
-    public List<SysSystem> homePageView() {
-        if (SysUser.isAdmin(SecurityUtils.getUserType())) {
-            return systemMapper.AdminHomePageView(new SysSystem());
+    public List<SysSystem> getSystemRoutes() {
+        Set<SysSystem> systemSet = AuthorityUtils.getSystemCache(SecurityUtils.getEnterpriseId());
+        Set<SysSystem> rangeSet;
+        // 管理员显示所有模块信息
+        if (SecurityUtils.isAdminUser()) {
+            rangeSet = authorityService.selectSystemSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
+        } else {
+            SysRole role = new SysRole();
+            role.getParams().put("userId", SecurityUtils.getUserId());
+            rangeSet = authorityService.selectSystemSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
         }
-        SysSystem system = new SysSystem();
-        SysMenu menu = new SysMenu();
-        menu.getParams().put("userId", SecurityUtils.getUserId());
-        system.getParams().put("roleSystemPerms", systemService.userHomePageView(menu));
-        return systemMapper.selectSystemViewList(system);
+        systemSet.retainAll(rangeSet);
+        return SortUtils.sortSetToList(systemSet);
     }
 
     /**

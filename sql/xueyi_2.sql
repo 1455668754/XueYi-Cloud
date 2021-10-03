@@ -123,8 +123,6 @@ create table sys_role (
   name                      varchar(30)         not null                                comment '角色名称',
   role_key                  varchar(100)        default null                            comment '角色权限字符串',
   data_scope                char(1)             default '1'                             comment '数据范围（1全部数据权限 2自定数据权限 3本部门数据权限 4本部门及以下数据权限 5本岗位数据权限  6仅本人数据权限）',
-  menu_check_strictly       tinyint             default 1                               comment '菜单树选择项是否关联显示',
-  dept_check_strictly       tinyint             default 1                               comment '部门树选择项是否关联显示',
   type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1租户衍生 2企业衍生 3部门衍生 4岗位衍生 5用户衍生）',
   derive_id		            bigint	            default null	                        comment '衍生Id',
   sort                      int unsigned        not null default 0                      comment '显示顺序',

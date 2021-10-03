@@ -46,6 +46,13 @@ public class SysSystem extends BaseEntity {
     /** 公共模块（Y是 N否） */
     private String isCommon;
 
+    public SysSystem() {
+
+    }
+    public SysSystem(Long systemId) {
+        this.systemId = systemId;
+    }
+
     public Long getSystemId() {
         return systemId;
     }

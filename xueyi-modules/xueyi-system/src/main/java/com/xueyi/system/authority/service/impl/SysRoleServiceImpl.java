@@ -45,9 +45,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Autowired
     private SysOrganizeRoleMapper organizeRoleMapper;
 
-    @Autowired
-    private ISysRoleService roleService;
-
     /**
      * 查询所有角色
      *
@@ -102,20 +99,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     public SysRole selectRoleIdByDeriveId(SysRole role) {
         return roleMapper.selectRoleIdByDeriveId(role);
-    }
-
-    /**
-     * 根据角色Id获取菜单范围信息
-     *
-     * @param role 角色信息 | roleId 角色Id
-     * @return 系统-菜单对象信息集合
-     */
-    @Override
-    public List<SysRoleSystemMenu> selectMenuScopeById(SysRole role) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", role.getRoleId());
-        search.getSearch().put("menus", roleService.selectSystemMenuListOnlyChild());
-        return roleSystemMenuMapper.selectMenuScopeByIdExclude(search);//@param search 万用组件 | roleId 角色Id | menus 菜单组（List<SysMenu>） has menuId | systemId
     }
 
     /**
@@ -200,28 +183,6 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     public int updateRoleStatus(SysRole role) {
         return roleMapper.updateRoleStatus(role);
-    }
-
-    /**
-     * 修改菜单权限信息
-     *
-     * @param role 角色信息
-     * @return 结果
-     */
-    @Override
-    @Transactional
-    public int authMenuScope(SysRole role) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("roleId", role.getRoleId());
-        int rs;
-        // 1.删除角色和系统-菜单关联
-        rs = roleSystemMenuMapper.deleteRoleSystemMenuByRoleId(search);//@param search 查询组件 | roleId 角色Id
-        // 2.批量新增角色和系统-菜单关联
-        if (role.getSystemMenuIds().length > 0) {
-            search.getSearch().put("systemMenuIds", role.getSystemMenuIds());
-            rs = roleSystemMenuMapper.batchRoleSystemMenu(search);//@param search 万用组件 | roleId 角色Id | systemMenuIds 系统-菜单Ids(Long[])
-        }
-        return (rs + 1);
     }
 
     /**

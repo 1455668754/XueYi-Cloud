@@ -7,6 +7,7 @@ import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 子系统模块Service接口
@@ -20,7 +21,7 @@ public interface ISysSystemService {
      *
      * @return 子系统模块集合
      */
-    public List<SysSystem> homePageView();
+    public List<SysSystem> getSystemRoutes();
 
     /**
      * 当前用户Id查询模块&&菜单 | 非管理员

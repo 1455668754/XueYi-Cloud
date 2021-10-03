@@ -4,6 +4,7 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -208,4 +209,14 @@ public interface ISysAuthorityService {
      * @return 菜单集合
      */
     public Set<SysMenu> selectMenuSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
+
+    /**
+     * 装配模块集合
+     *
+     * @param roles         角色信息集合
+     * @param isAdminTenant 是否租管租户
+     * @param hasNormal     有无普通角色权限
+     * @return 模块集合
+     */
+    public Set<SysSystem> selectSystemSet(List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
 }

@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
     <div class="system-title">{{ homePageName }}</div>
-    <el-card class="system-card" shadow="hover" v-for="(item,index) in list">
+    <el-card class="system-card" shadow="hover" v-for="(item,index) in systemList"
+             v-if="item.visible === VISIBLE.TRUE && item.status === STATUS.NORMAL">
       <div class="card-main">
         <div class="card-image">
           <el-image
@@ -24,38 +25,40 @@
 </template>
 
 <script>
-import { viewListSystem } from '@api/login';
+import {getSystemRoutes} from "@api/menu"
+import {STATUS, VISIBLE} from "common/src/constant/constants"
+import {IS_NEW, SYSTEM_TYPE} from "@constant/authorityContants"
 
 export default {
   name: "Index",
   data() {
     return {
-      list: [],
-      homePageName: this.$store.state.settings.homePageName,
+      //常量区
+      STATUS: STATUS,
+      SYSTEM_TYPE: SYSTEM_TYPE,
+      VISIBLE: VISIBLE,
+      IS_NEW: IS_NEW,
+      systemList: [],
+      homePageName: this.$store.state.settings.homePageName
     }
   },
   created() {
-    this.getList();
+    this.getRoutes()
   },
   methods: {
-    /** 查询可展示子系统模块列表 */
-    getList() {
-      viewListSystem().then(response => {
-        this.list = response.rows;
-      });
+    getRoutes() {
+      getSystemRoutes().then(response => {
+        this.systemList = response.data
+      })
     },
     jumpClick(item) {
       //内部路由
-      if (item.type === '0') {
+      if (item.type === SYSTEM_TYPE.INSIDE) {
         this.$router.push(item.route)
       }
       //外部链接
-      else if (item.type === '1') {
-        if (item.isNew === 'N'){
-          window.location.href = item.route;  //在本页面打开外部链接
-        }else {
-          window.open(item.route, '_blank') // 在新窗口打开外链接
-        }
+      else if (item.type === SYSTEM_TYPE.EXTERNAL) {
+        item.isNew === IS_NEW.NO ? window.location.href = item.route : window.open(item.route, '_blank')  // 本页打开 : 新页打开
       }
     }
   }

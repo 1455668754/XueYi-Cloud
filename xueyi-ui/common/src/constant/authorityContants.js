@@ -12,12 +12,6 @@ module.exports = {
         NO: 'N'
     },
 
-    /** 菜单状态（Y显示 N隐藏） */
-    VISIBLE: {
-        TRUE: 'Y',
-        FALSE: 'N'
-    },
-
     /** 菜单类型（M目录 C菜单 F按钮） */
     MENU_TYPE: {
         DIR: 'M',
@@ -36,6 +30,17 @@ module.exports = {
         LAY_OUT: 'Layout',
         PARENT_VIEW: 'ParentView',
         INNER_LINK: 'InnerLink'
-    }
+    },
 
+    /** 跳转类型（0内部跳转 1外部跳转） */
+    SYSTEM_TYPE: {
+        INSIDE: '0',
+        EXTERNAL: '1'
+    },
+
+    /** 是否打开新页（Y是 N否） */
+    IS_NEW: {
+        YES: 'Y',
+        NO: 'N'
+    }
 }

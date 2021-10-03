@@ -51,23 +51,18 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     @Override
     public List<SysMenu> getRoute(SysMenu menu) {
-        List<SysMenu> menus;
         Set<SysMenu> menuSet = AuthorityUtils.getRouteCache(SecurityUtils.getEnterpriseId(), menu.getSystemId());
         Set<SysMenu> rangeSet;
         // 管理员显示所有菜单信息
         if (SecurityUtils.isAdminUser()) {
-            if (!SecurityUtils.isAdminTenant()) {
-                rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(),false);
-                menuSet.retainAll(rangeSet);
-            }
+            rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
         } else {
             SysRole role = new SysRole();
             role.getParams().put("userId", SecurityUtils.getUserId());
-            rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(),true);
-            menuSet.retainAll(rangeSet);
+            rangeSet = authorityService.selectMenuSet(authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
         }
-        menus= SortUtils.sortSetToList(menuSet);
-        return getChildPerms(menus, MenuConstants.MENU_TOP_NODE);
+        menuSet.retainAll(rangeSet);
+        return getChildPerms(SortUtils.sortSetToList(menuSet), MenuConstants.MENU_TOP_NODE);
     }
 
     /**

@@ -95,6 +95,18 @@ public class AuthorityUtils {
     }
 
     /**
+     * 获取模块缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     */
+    public static <T> Set<T> getSystemCache(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        Set<T> privateSet = redisService.getCacheObject(getSystemCacheKey(enterpriseId));
+        Set<T> commonSet = redisService.getCacheObject(getSystemCacheKey(AuthorityConstants.COMMON_ENTERPRISE));
+        return assemble(privateSet, commonSet);
+    }
+
+    /**
      * 新增模块缓存 cache
      *
      * @param enterpriseId 企业Id

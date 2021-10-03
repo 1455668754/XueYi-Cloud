@@ -23,6 +23,12 @@ module.exports = {
         FALSE: 'N'
     },
 
+    /** 显隐状态（Y显示 N隐藏） */
+    VISIBLE: {
+        TRUE: 'Y',
+        FALSE: 'N'
+    },
+
     /** 更新状态指令 */
     STATUS_UPDATE_OPERATION: '1'
 }

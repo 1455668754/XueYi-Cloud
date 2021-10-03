@@ -269,8 +269,8 @@ import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import IconSelect from "@basicsComponents/IconSelect"
 import store from "@/store"
-import {STATUS, IS_COMMON} from "@constant/constants"
-import {TYPE, CACHE, FRAME, MENU_TYPE, VISIBLE} from "@constant/authorityContants"
+import {STATUS, VISIBLE, IS_COMMON} from "@constant/constants"
+import {TYPE, CACHE, FRAME, MENU_TYPE } from "@constant/authorityContants"
 
 export default {
   name: "Menu",

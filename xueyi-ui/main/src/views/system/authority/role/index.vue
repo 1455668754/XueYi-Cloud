@@ -330,15 +330,13 @@ import {
   delRole,
   addRole,
   updateRole,
-  menuScope,
   dataScope,
   changeRoleStatus,
-  getMenuScope, getDataScope
+  getDataScope
 } from "@/api/system/role"
 import {treeSelect as roleDeptTreeSelect} from "@/api/system/post"
-import {treeSelectPermitEnterprise as roleSystemMenuTreeSelect} from "@/api/system/system"
 import {STATUS} from "@constant/constants"
-import {getEnterpriseMenuScope, getRoleMenuRange, setRoleMenuScope} from "common/src/api/common/authority"
+import {getEnterpriseMenuScope, getRoleMenuRange, setRoleMenuScope} from "@api/common/authority"
 
 export default {
   name: "Role",
