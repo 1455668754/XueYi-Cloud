@@ -64,6 +64,9 @@ public class SysAuthorityController extends BaseController {
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/tenantScopeSet")
     public AjaxResult setTenantMenuScope(@RequestBody SysRole role) {
+        if(EnterpriseUtils.isAdminTenant(role.getEnterpriseId())){
+            return AjaxResult.error("租管租户禁止进行菜单配置");
+        }
         String sourceName = EnterpriseUtils.getMainSourceName(role.getEnterpriseId());
         SysRole checkRole = roleService.selectRoleIdByDeriveIdToSourceName(new SysRole(AuthorityConstants.DERIVE_TENANT_TYPE, role.getEnterpriseId(), role.getEnterpriseId()), sourceName);
         role.setRoleId(checkRole.getRoleId());
