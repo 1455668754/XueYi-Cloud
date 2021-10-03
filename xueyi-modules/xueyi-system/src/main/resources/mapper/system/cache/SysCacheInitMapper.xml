@@ -122,15 +122,33 @@
         order by m.sort
     </select>
 
+    <select id="mainSelectRouteCacheListBySystem" parameterType="SysSystem" resultMap="CacheInitResult">
+        <include refid="routeCacheVo"/>
+        where m.system_id = #{systemId} and m.tenant_id = #{enterpriseId} and m.menu_type in ('M', 'C') and m.status = 0 and m.del_flag = 0
+        order by m.sort
+    </select>
+
     <select id="mainSelectSystemCacheList" parameterType="CacheInitVo" resultMap="CacheInitResult">
         <include refid="systemCacheVo"/>
         where s.status = 0 and s.del_flag = 0
         order by s.sort
     </select>
 
+    <select id="mainSelectSystemCacheListBySystem" parameterType="SysSystem" resultMap="CacheInitResult">
+        <include refid="systemCacheVo"/>
+        where s.tenant_id = #{enterpriseId} and s.status = 0 and s.del_flag = 0
+        order by s.sort
+    </select>
+
     <select id="mainSelectSystemMenuCacheList" parameterType="CacheInitVo" resultMap="CacheInitResult">
         <include refid="systemMenuCacheVo"/>
         where sm.status = 0 and sm.del_flag = 0
+        order by sm.s_m_sort
+    </select>
+
+    <select id="mainSelectSystemMenuCacheListBySystem" parameterType="SysSystem" resultMap="CacheInitResult">
+        <include refid="systemMenuCacheVo"/>
+        where sm.tenant_id = #{enterpriseId} and sm.status = 0 and sm.del_flag = 0
         order by sm.s_m_sort
     </select>
 

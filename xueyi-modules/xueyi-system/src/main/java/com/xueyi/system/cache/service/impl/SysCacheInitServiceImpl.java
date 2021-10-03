@@ -6,6 +6,7 @@ import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.cache.domain.CacheInitVo;
@@ -75,6 +76,19 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     }
 
     /**
+     * 根据模块信息查询模块-路由信息
+     *
+     * @param system 模块信息
+     */
+    @Override
+    public void refreshRouteCacheBySystem(SysSystem system){
+        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectRouteCacheListBySystem(system);
+        for (CacheInitVo cacheInitVo : cacheInitVos) {
+            AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getRouteSet());
+        }
+    }
+
+    /**
      * 加载模块缓存数据
      */
     @Override
@@ -86,11 +100,37 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     }
 
     /**
+     * 根据模块信息查询模块信息
+     *
+     * @param system 模块信息
+     */
+    @Override
+    public void refreshSystemCacheBySystem(SysSystem system){
+        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemCacheListBySystem(system);
+        for (CacheInitVo cacheInitVo : cacheInitVos) {
+            AuthorityUtils.refreshSystemCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemSet());
+        }
+    }
+
+    /**
      * 加载模块-菜单缓存数据
      */
     @Override
     public void loadingSystemMenuCache() {
         List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemMenuCacheList();
+        for (CacheInitVo cacheInitVo : cacheInitVos) {
+            AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemMenuSet());
+        }
+    }
+
+    /**
+     * 根据模块信息查询模块-菜单信息
+     *
+     * @param system 模块信息
+     */
+    @Override
+    public void refreshSystemMenuCacheBySystem(SysSystem system){
+        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemMenuCacheListBySystem(system);
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemMenuSet());
         }
@@ -130,7 +170,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     @DS("#isolate")
-    @DataScope(eAlias = "sor")
+    @DataScope(eAlias = "r")
     public void refreshRoleCacheByRoleId(SysRole role) {
         SysRole roleCache = cacheInitMapper.selectRoleCacheByRoleId(role);
         AuthorityUtils.refreshRoleCache(SecurityUtils.getEnterpriseId(), role.getRoleId(), roleCache);

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 系统模块Controller
+ * 模块信息 Controller
  *
  * @author xueyi
  */
@@ -27,43 +27,43 @@ public class SysSystemController extends BaseController {
     private ISysSystemService systemService;
 
     /**
-     * 查询系统模块列表
+     * 查询模块信息列表
      */
     @PreAuthorize(hasPermi = "system:system:list")
     @GetMapping("/list")
     public TableDataInfo list(SysSystem system) {
         startPage();
-        List<SysSystem> list = systemService.selectSystemList(system);
+        List<SysSystem> list = systemService.mainSelectSystemList(system);
         return getDataTable(list);
     }
 
     /**
-     * 获取系统模块详细信息
+     * 获取模块信息详细信息
      */
     @PreAuthorize(hasPermi = "system:system:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(SysSystem system) {
-        return AjaxResult.success(systemService.selectSystemById(system));
+        return AjaxResult.success(systemService.mainSelectSystemById(system));
     }
 
     /**
-     * 新增系统模块
+     * 新增模块信息
      */
     @PreAuthorize(hasPermi = "system:system:add")
     @Log(title = "模块管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysSystem system) {
-        return toAjax(systemService.insertSystem(system));
+        return toAjax(systemService.mainInsertSystem(system));
     }
 
     /**
-     * 修改系统模块
+     * 修改模块信息
      */
     @PreAuthorize(hasPermi = "system:system:edit")
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysSystem system) {
-        return toAjax(systemService.updateSystem(system));
+        return toAjax(systemService.mainUpdateSystem(system));
     }
 
     /**
@@ -73,27 +73,31 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysSystem system) {
-        return toAjax(systemService.updateSystemStatus(system));
+        return toAjax(systemService.mainUpdateSystemStatus(system));
     }
 
     /**
-     * 删除系统模块
+     * 删除模块信息
      */
     @PreAuthorize(hasPermi = "system:system:remove")
     @Log(title = "模块管理", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysSystem system) {
-        return toAjax(systemService.deleteSystemByIds(system));
+        return toAjax(systemService.mainDeleteSystemByIds(system));
     }
 
     /**
-     * 查询首页可展示系统模块列表
+     * 查询首页可展示模块信息列表
      */
     @GetMapping("/getSystemRoutes")
     public AjaxResult getSystemRoutes() {
         return AjaxResult.success(systemService.getSystemRoutes());
     }
 
+    
+    
+    
+    
 
     /**
      * 加载对应模块&菜单列表树 | searchValue === PERMIT_ALL 获取所有权限内模块&菜单 | 无衍生角色

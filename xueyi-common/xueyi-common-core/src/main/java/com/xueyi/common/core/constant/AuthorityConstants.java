@@ -19,6 +19,12 @@ public class AuthorityConstants {
     /** 租户类型 - 超管租户 */
     public static final String TENANT_TYPE_ADMIN = "Y";
 
+    /** 公共数据 - Y是 */
+    public static final String IS_COMMON_TRUE = "Y";
+
+    /** 公共数据 - N否 */
+    public static final String IS_COMMON_FALSE = "N";
+
     /** 公共企业 */
     public static final Long COMMON_ENTERPRISE = 0L;
 

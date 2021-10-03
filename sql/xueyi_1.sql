@@ -128,19 +128,19 @@ insert into xy_tenant_strategy_source(strategy_id, source_id, is_main)
 values (1, 1, 'Y');
 
 -- ----------------------------
--- 6、模块信息表|管理子系统模块
+-- 6、模块信息表|管理子系统
 -- ----------------------------
 drop table if exists xy_system;
 create table xy_system (
   system_id		            bigint	            not null                                comment '模块Id',
   name		                varchar(50)	        not null	                            comment '模块名称',
   image_url                 varchar(5000)	    default null 	        	            comment '图片地址',
+  route                     varchar(500)        not null	                            comment '跳转路由|链接',
   is_common                 char(1)             not null default 'N'	                comment '公共模块（Y是 N否）',
   is_change                 char(1)             not null default 'N'	                comment '系统模块（Y是 N否）',
   type		                char(1)	            not null default '1'	                comment '跳转类型（0内部跳转 1外部跳转）',
   is_new		            char(1)	            not null default 'Y'	                comment '跳转新页（Y是 N否）',
   visible		            char(1)	            not null default 'Y'	                comment '页面展示（Y是 N否）',
-  route                     varchar(500)        not null	                            comment '跳转路由|链接',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
   create_by                 bigint              default null                            comment '创建者',

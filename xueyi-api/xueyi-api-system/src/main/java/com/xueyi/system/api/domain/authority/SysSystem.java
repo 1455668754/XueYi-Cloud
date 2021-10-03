@@ -49,8 +49,14 @@ public class SysSystem extends BaseEntity {
     public SysSystem() {
 
     }
+
     public SysSystem(Long systemId) {
         this.systemId = systemId;
+    }
+
+    public SysSystem(Long systemId, Long enterpriseId) {
+        this.systemId = systemId;
+        setEnterpriseId(enterpriseId);
     }
 
     public Long getSystemId() {

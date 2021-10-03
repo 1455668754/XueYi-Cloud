@@ -1,13 +1,10 @@
 package com.xueyi.system.authority.service;
 
 import com.xueyi.system.api.domain.authority.SysSystem;
-import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.authority.domain.SystemMenuVo;
-import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 子系统模块Service接口
@@ -24,12 +21,12 @@ public interface ISysSystemService {
     public List<SysSystem> getSystemRoutes();
 
     /**
-     * 当前用户Id查询模块&&菜单 | 非管理员
+     * 查询子系统模块列表
      *
-     * @param menu 菜单信息 | null
-     * @return 模块&&菜单列表
+     * @param system 子系统模块
+     * @return 子系统模块集合
      */
-    public List<SysRoleSystemMenu> userHomePageView(SysMenu menu);
+    public List<SysSystem> mainSelectSystemList(SysSystem system);
 
     /**
      * 查询子系统模块
@@ -37,15 +34,7 @@ public interface ISysSystemService {
      * @param system 子系统模块 | systemId 子系统模块Id
      * @return 子系统模块
      */
-    public SysSystem selectSystemById(SysSystem system);
-
-    /**
-     * 查询子系统模块列表
-     *
-     * @param system 子系统模块
-     * @return 子系统模块集合
-     */
-    public List<SysSystem> selectSystemList(SysSystem system);
+    public SysSystem mainSelectSystemById(SysSystem system);
 
     /**
      * 新增子系统模块
@@ -53,7 +42,7 @@ public interface ISysSystemService {
      * @param system 子系统模块
      * @return 结果
      */
-    public int insertSystem(SysSystem system);
+    public int mainInsertSystem(SysSystem system);
 
     /**
      * 修改子系统模块
@@ -61,7 +50,7 @@ public interface ISysSystemService {
      * @param system 子系统模块
      * @return 结果
      */
-    public int updateSystem(SysSystem system);
+    public int mainUpdateSystem(SysSystem system);
 
     /**
      * 修改子系统模块状态
@@ -69,7 +58,7 @@ public interface ISysSystemService {
      * @param system 子系统模块
      * @return 结果
      */
-    public int updateSystemStatus(SysSystem system);
+    public int mainUpdateSystemStatus(SysSystem system);
 
     /**
      * 批量删除子系统模块
@@ -77,7 +66,25 @@ public interface ISysSystemService {
      * @param system 子系统模块 | params.Ids 需要删除的子系统模块Ids组
      * @return 结果
      */
-    public int deleteSystemByIds(SysSystem system);
+    public int mainDeleteSystemByIds(SysSystem system);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * 加载角色系统-菜单列表树

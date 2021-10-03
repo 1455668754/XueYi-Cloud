@@ -1,6 +1,7 @@
 package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
@@ -17,7 +18,7 @@ import com.xueyi.system.authority.mapper.SysSystemMapper;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysSystemService;
 import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
-import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
+import com.xueyi.system.cache.service.ISysCacheInitService;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import com.xueyi.system.utils.vo.TreeSelect;
 import io.seata.spring.annotation.GlobalTransactional;
@@ -29,7 +30,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 子系统模块Service业务层处理
+ * 模块信息Service业务层处理
  *
  * @author xueyi
  */
@@ -41,6 +42,9 @@ public class SysSystemServiceImpl implements ISysSystemService {
     private ISysAuthorityService authorityService;
 
     @Autowired
+    private ISysCacheInitService cacheInitService;
+
+    @Autowired
     private SysMenuMapper menuMapper;
 
     @Autowired
@@ -49,13 +53,10 @@ public class SysSystemServiceImpl implements ISysSystemService {
     @Autowired
     private ISysRoleSystemMenuService roleSystemMenuService;
 
-    @Autowired
-    private SysRoleSystemMenuMapper roleSystemMenuMapper;
-
     /**
      * 当前用户首页可展示的模块列表
      *
-     * @return 子系统模块集合
+     * @return 模块信息集合
      */
     @Override
     public List<SysSystem> getSystemRoutes() {
@@ -74,87 +75,130 @@ public class SysSystemServiceImpl implements ISysSystemService {
     }
 
     /**
-     * 根据用户Id查询模块&&菜单 | 非管理员
+     * 查询模块信息列表
      *
-     * @return 模块&&菜单列表
+     * @param system 模块信息
+     * @return 模块信息集合
      */
     @Override
-    @DS("#isolate")
-    @DataScope(eAlias = "rsm")
-    public List<SysRoleSystemMenu> userHomePageView(SysMenu menu) {
-        return roleSystemMenuMapper.selectSystemMenuListByUserId(menu);
+    public List<SysSystem> mainSelectSystemList(SysSystem system) {
+        return systemMapper.mainSelectSystemList(system);
     }
 
     /**
-     * 查询子系统模块
+     * 查询模块信息
      *
-     * @param system 子系统模块 | systemId 子系统模块Id
-     * @return 子系统模块
+     * @param system 模块信息 | systemId 模块Id
+     * @return 模块信息
      */
     @Override
-    public SysSystem selectSystemById(SysSystem system) {
-        return systemMapper.selectSystemById(system);
+    public SysSystem mainSelectSystemById(SysSystem system) {
+        return systemMapper.mainSelectSystemById(system);
     }
 
     /**
-     * 查询子系统模块列表
+     * 新增模块信息
      *
-     * @param system 子系统模块
-     * @return 子系统模块
-     */
-    @Override
-    public List<SysSystem> selectSystemList(SysSystem system) {
-        return systemMapper.selectSystemList(system);
-    }
-
-    /**
-     * 新增子系统模块
-     *
-     * @param system 子系统模块
+     * @param system 模块信息
      * @return 结果
      */
     @Override
-    public int insertSystem(SysSystem system) {
-        return systemMapper.insertSystem(system);
+    @DataScope(ueAlias = "empty")
+    public int mainInsertSystem(SysSystem system) {
+        return refreshCache(system, systemMapper.mainInsertSystem(system), true);
     }
 
     /**
-     * 修改子系统模块
+     * 修改模块信息
      *
-     * @param system 子系统模块
+     * @param system 模块信息
      * @return 结果
      */
     @Override
-    public int updateSystem(SysSystem system) {
-        return systemMapper.updateSystem(system);
+    @DataScope(ueAlias = "empty")
+    public int mainUpdateSystem(SysSystem system) {
+        return refreshCache(system, systemMapper.mainUpdateSystem(system), true);
     }
 
     /**
-     * 修改子系统模块状态
+     * 修改模块信息状态
      *
-     * @param system 子系统模块
+     * @param system 模块信息
      * @return 结果
      */
     @Override
-    public int updateSystemStatus(SysSystem system) {
-        return systemMapper.updateSystemStatus(system);
+    @DataScope(ueAlias = "empty")
+    public int mainUpdateSystemStatus(SysSystem system) {
+        return refreshCache(system, systemMapper.mainUpdateSystemStatus(system), true);
     }
 
     /**
-     * 批量删除子系统模块
+     * 批量删除模块信息
      *
-     * @param system 子系统模块 | params.Ids 需要删除的子系统模块Ids组
+     * @param system 模块信息 | params.Ids 需要删除的模块信息Ids组
      * @return 结果
      */
     @Override
-    public int deleteSystemByIds(SysSystem system) {
-        return systemMapper.deleteSystemByIds(system);
+    @DataScope(ueAlias = "empty")
+    public int mainDeleteSystemByIds(SysSystem system) {
+        Set<SysSystem> before = systemMapper.mainCheckSystemListByIds(system);
+        int rows = systemMapper.mainDeleteSystemByIds(system);
+        if (rows > 0) {
+            Set<SysSystem> after = systemMapper.mainCheckSystemListByIds(system);
+            before.removeAll(after);
+            if (before.size() > 0) {
+                for (SysSystem vo : before) {
+                    AuthorityUtils.deleteRouteCache(StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, vo.getIsCommon()) ? AuthorityConstants.COMMON_ENTERPRISE : SecurityUtils.getEnterpriseId(), vo.getSystemId());
+                }
+                refreshCache(system, rows, false);
+            }
+        }
+        return rows;
     }
+
+    /**
+     * 批量删除模块信息
+     *
+     * @param system 模块信息
+     * @param rows   结果
+     * @param type   True更新 | False删除
+     */
+    private int refreshCache(SysSystem system, int rows, boolean type) {
+        if (rows > 0) {
+            if (type) {
+                cacheInitService.refreshRouteCacheBySystem(new SysSystem(system.getSnowflakeId(), system.getEnterpriseId()));
+            }
+            if (SecurityUtils.isAdminTenant()) {
+                cacheInitService.refreshSystemCacheBySystem(new SysSystem(system.getSnowflakeId(), AuthorityConstants.COMMON_ENTERPRISE));
+                cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(system.getSnowflakeId(), AuthorityConstants.COMMON_ENTERPRISE));
+            }
+            cacheInitService.refreshSystemCacheBySystem(new SysSystem(system.getSnowflakeId(), system.getEnterpriseId()));
+            cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(system.getSnowflakeId(), system.getEnterpriseId()));
+        }
+        return rows;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * 加载角色系统-菜单列表树
      *
-     * @param system 子系统模块 | Id exclude的模块&菜单Id | status 模块&菜单状态 | searchValue 查询类型
+     * @param system 模块信息 | Id exclude的模块&菜单Id | status 模块&菜单状态 | searchValue 查询类型
      *               searchValue = PERMIT_ALL                        获取所有权限内模块&菜单 | 无衍生角色
      *               searchValue = PERMIT_ALL_ONLY_PUBLIC            获取所有权限内模块&菜单 | 无衍生角色 | 仅公共数据
      *               searchValue = PERMIT_ADMINISTRATOR              仅获取超管权限内模块&菜单 | 衍生角色仅获取超管衍生

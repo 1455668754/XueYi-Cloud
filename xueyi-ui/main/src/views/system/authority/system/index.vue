@@ -21,15 +21,6 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="跳转路由" prop="route">
-          <el-input
-            v-model="queryParams.route"
-            placeholder="请输入跳转路由"
-            clearable
-            size="small"
-            @keyup.enter.native="handleQuery"
-          />
-        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" placeholder="请选择状态" clearable size="small">
             <el-option
@@ -152,7 +143,8 @@
     </div>
 
     <!-- 添加或修改子系统模块对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-click-modal="false" v-dialogDrag v-dialogDragHeight>
+    <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-click-modal="false" v-dialogDrag
+               v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="系统名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入系统名称" maxlength="7" show-word-limit/>
@@ -168,33 +160,36 @@
                   v-for="dict in dict.type.sys_jump_type"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="跳转新页" v-if="form.type==='1'">
+            <el-form-item label="跳转新页" v-if="form.type === SYSTEM_TYPE.EXTERNAL">
               <el-radio-group v-model="form.isNew">
                 <el-radio
                   v-for="dict in dict.type.sys_yes_no"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="公共系统" v-if="enterpriseName === 'administrator' && form.systemId == undefined">
+        <el-form-item label="公共系统" v-if="IS_LESSOR">
           <el-radio-group v-model="form.isCommon">
             <el-radio
               v-for="dict in dict.type.sys_yes_no"
               :key="dict.value"
               :label="dict.value"
-            >{{dict.label}}</el-radio>
+            >{{ dict.label }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="form.type==='0'?'跳转路由':'跳转链接'" prop="route">
-          <el-input v-model="form.route" :placeholder="form.type==='0'?'请输入跳转路由':'请输入跳转链接'"/>
+        <el-form-item :label="form.type === SYSTEM_TYPE.INSIDE?'跳转路由':'跳转链接'" prop="route">
+          <el-input v-model="form.route" :placeholder="form.type === SYSTEM_TYPE.INSIDE?'请输入跳转路由':'请输入跳转链接'"/>
         </el-form-item>
         <el-row>
           <el-col :span="12">
@@ -204,7 +199,8 @@
                   v-for="dict in dict.type.sys_show_hide"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -230,19 +226,23 @@
 import {listSystem, getSystem, delSystem, addSystem, updateSystem, changeSystemStatus} from "@/api/system/system"
 import ImageBox from "@customComponents/ImageBox"
 import store from "@/store"
-import {STATUS} from "@constant/constants"
+import {IS_COMMON, STATUS, VISIBLE} from "@constant/constants"
+import {IS_NEW, SYSTEM_TYPE} from "@constant/authorityContants"
 
 export default {
   name: "System",
-  dicts: ['sys_jump_type','sys_show_hide','sys_yes_no'],
+  dicts: ['sys_jump_type', 'sys_show_hide', 'sys_yes_no'],
   components: {ImageBox},
   data() {
     return {
       //常量区
       STATUS: STATUS,
+      SYSTEM_TYPE: SYSTEM_TYPE,
+      VISIBLE: VISIBLE,
+      IS_NEW: IS_NEW,
+      IS_COMMON: IS_COMMON,
+      IS_LESSOR: store.getters.isLessor,
       enterpriseName: store.getters.enterpriseName,
-      dialogImageUrl: '',
-      dialogVisible: false,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -275,7 +275,6 @@ export default {
         pageSize: 10,
         name: null,
         type: null,
-        route: null,
         status: null
       },
       // 表单参数
@@ -325,11 +324,11 @@ export default {
         systemId: null,
         name: null,
         imageUrl: null,
-        isCommon: "N",
-        isNew: "Y",
-        type: "0",
+        isCommon: IS_COMMON.FALSE,
+        isNew: IS_NEW.NO,
+        type: SYSTEM_TYPE.INSIDE,
         route: null,
-        sort: null,
+        sort: 0,
         status: STATUS.NORMAL,
         remark: null
       }
@@ -391,7 +390,7 @@ export default {
               this.submitLoading = false
             })
           }
-        }else{
+        } else {
           this.submitLoading = false
         }
       })

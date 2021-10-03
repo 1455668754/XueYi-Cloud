@@ -4,6 +4,7 @@ import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysSystem;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 模块Mapper接口
@@ -13,24 +14,14 @@ import java.util.List;
 public interface SysSystemMapper {
 
     /**
-     * 当前用户首页可展示的模块信息列表 | 管理员
-     * 访问控制 s 租户查询
-     *
-     * @param system 模块信息 | null
-     * @return 模块信息集合
-     */
-    @DataScope(edAlias = "s")
-    public List<SysSystem> AdminHomePageView(SysSystem system);
-
-    /**
      * 查询模块信息列表
      * 访问控制 s 租户查询
      *
-     * @param system 模块信息 | params.roleSystemPerms 菜单Id组（List<SysRoleSystemMenu>）
+     * @param system 模块信息
      * @return 模块信息集合
      */
     @DataScope(edAlias = "s")
-    public List<SysSystem> selectSystemViewList(SysSystem system);
+    public List<SysSystem> mainSelectSystemList(SysSystem system);
 
     /**
      * 查询模块信息
@@ -40,17 +31,7 @@ public interface SysSystemMapper {
      * @return 模块信息
      */
     @DataScope(edAlias = "s")
-    public SysSystem selectSystemById(SysSystem system);
-
-    /**
-     * 查询模块信息列表
-     * 访问控制 s 租户查询
-     *
-     * @param system 模块信息
-     * @return 模块信息集合
-     */
-    @DataScope(edAlias = "s")
-    public List<SysSystem> selectSystemList(SysSystem system);
+    public SysSystem mainSelectSystemById(SysSystem system);
 
     /**
      * 新增模块
@@ -59,8 +40,7 @@ public interface SysSystemMapper {
      * @param system 模块信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
-    public int insertSystem(SysSystem system);
+    public int mainInsertSystem(SysSystem system);
 
     /**
      * 修改模块
@@ -69,8 +49,7 @@ public interface SysSystemMapper {
      * @param system 模块信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
-    public int updateSystem(SysSystem system);
+    public int mainUpdateSystem(SysSystem system);
 
     /**
      * 修改模块状态
@@ -79,8 +58,7 @@ public interface SysSystemMapper {
      * @param system 模块信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
-    public int updateSystemStatus(SysSystem system);
+    public int mainUpdateSystemStatus(SysSystem system);
 
     /**
      * 批量删除模块
@@ -89,8 +67,32 @@ public interface SysSystemMapper {
      * @param system 模块信息 | params.Ids 需要删除的模块Ids组
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
-    public int deleteSystemByIds(SysSystem system);
+    public int mainDeleteSystemByIds(SysSystem system);
+
+    /**
+     * 检查模块集合是中存在的值
+     * 访问控制 s 租户查询
+     *
+     * @param system 模块信息 | params.Ids 模块Ids组
+     * @return 结果
+     */
+    @DataScope(edAlias = "s")
+    public Set<SysSystem> mainCheckSystemListByIds(SysSystem system);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

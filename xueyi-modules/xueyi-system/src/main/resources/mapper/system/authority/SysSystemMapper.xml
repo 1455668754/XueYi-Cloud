@@ -5,71 +5,148 @@
 <mapper namespace="com.xueyi.system.authority.mapper.SysSystemMapper">
 
     <resultMap type="SysSystem" id="SysSystemResult">
-        <id     property="systemId"         column="system_id"   />
-        <result property="name"             column="name"        />
-        <result property="imageUrl"         column="image_url"   />
-        <result property="type"             column="type"        />
-        <result property="route"            column="route"       />
-        <result property="isCommon"         column="is_common"   />
-        <result property="isChange"         column="is_change"   />
-        <result property="isNew"            column="is_new"      />
-        <result property="sort"       		column="sort"        />
-        <result property="status"       	column="status"      />
-        <result property="createBy"   		column="create_by"   />
-        <result property="createName"   	column="create_name" />
-        <result property="createTime" 		column="create_time" />
-        <result property="updateBy"   		column="update_by"   />
-        <result property="updateName"   	column="update_name" />
-        <result property="updateTime" 		column="update_time" />
-        <result property="remark" 			column="remark" 	 />
+        <id     property="systemId"                 column="system_id"                />
+        <result property="name"                     column="name"                     />
+        <result property="imageUrl"                 column="image_url"                />
+        <result property="isCommon"                 column="is_common"                />
+        <result property="isChange"                 column="is_change"                />
+        <result property="type"                     column="type"                     />
+        <result property="isNew"                    column="is_new"                   />
+        <result property="visible"                  column="visible"                  />
+        <result property="route"                    column="route"                    />
+        <result property="sort"                     column="sort"                     />
+        <result property="status"                   column="status"                   />
+        <result property="createBy"                 column="create_by"                />
+        <result property="createName"               column="create_name"              />
+        <result property="createTime"               column="create_time"              />
+        <result property="updateBy"                 column="update_by"                />
+        <result property="updateName"               column="update_name"              />
+        <result property="updateTime"               column="update_time"              />
+        <result property="remark"                   column="remark"                   />
     </resultMap>
 
     <sql id="selectVo">
-        select s.system_id, s.name, s.image_url, s.type, s.is_new, s.route, s.is_common, s.is_change, s.sort, s.status, s.create_by, s.create_time, s.update_by, s.update_time, s.remark
+        select s.system_id, s.name, s.image_url, s.is_common, s.is_change, s.type, s.is_new, s.visible, s.route, s.sort, s.status, s.create_by, s.create_time, s.update_by, s.update_time, s.remark
         from xy_system s
     </sql>
+
+    <sql id="checkVo">
+        select s.system_id, s.name, s.is_common, s.is_change
+        from xy_system s
+    </sql>
+
+    <select id="mainSelectSystemList" parameterType="SysSystem" resultMap="SysSystemResult">
+        <include refid="selectVo"/>
+        where 1 = 1
+        <if test="name != null  and name != ''">                              and s.name like concat('%', #{name}, '%')             </if>
+        <if test="type != null  and type != ''">                              and s.type = #{type}                                  </if>
+        <if test="status != null  and status != ''">                          and s.status = #{status}                              </if>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+        order by s.sort
+    </select>
+
+    <select id="mainSelectSystemById" parameterType="SysSystem" resultMap="SysSystemResult">
+        <include refid="selectVo"/>
+        where s.system_id = #{systemId}
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+    <insert id="mainInsertSystem" parameterType="SysSystem">
+        insert into xy_system
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="snowflakeId != null">                                                system_id              ,</if>
+            <if test="name != null and name != ''">                                        name                   ,</if>
+            <if test="imageUrl != null">                                                   image_url              ,</if>
+            <if test="isCommon != null and isCommon != ''">                                is_common              ,</if>
+            <if test="type != null and type != ''">                                        type                   ,</if>
+            <if test="isNew != null and isNew != ''">                                      is_new                 ,</if>
+            <if test="visible != null and visible != ''">                                  visible                ,</if>
+            <if test="route != null and route != ''">                                      route                  ,</if>
+            <if test="sort != null and sort != ''">                                        sort                   ,</if>
+            <if test="status != null and status != ''">                                    status                 ,</if>
+            <if test="createBy != null">                                                   create_by              ,</if>
+            <if test="remark != null">                                                     remark                 ,</if>
+            <if test="enterpriseId != null">                                               tenant_id              ,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="snowflakeId != null">                                                #{snowflakeId}         ,</if>
+            <if test="name != null and name != ''">                                        #{name}                ,</if>
+            <if test="imageUrl != null">                                                   #{imageUrl}            ,</if>
+            <if test="isCommon != null and isCommon != ''">                                #{isCommon}            ,</if>
+            <if test="type != null and type != ''">                                        #{type}                ,</if>
+            <if test="isNew != null and isNew != ''">                                      #{isNew}               ,</if>
+            <if test="visible != null and visible != ''">                                  #{visible}             ,</if>
+            <if test="route != null and route != ''">                                      #{route}               ,</if>
+            <if test="sort != null and sort != ''">                                        #{sort}                ,</if>
+            <if test="status != null and status != ''">                                    #{status}              ,</if>
+            <if test="createBy != null">                                                   #{createBy}            ,</if>
+            <if test="remark != null">                                                     #{remark}              ,</if>
+            <if test="enterpriseId != null">                                               #{enterpriseId}        ,</if>
+        </trim>
+    </insert>
+
+    <update id="mainUpdateSystem" parameterType="SysSystem">
+        update xy_system
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">                                        name = #{name}                       ,</if>
+            <if test="imageUrl != null">                                                   image_url = #{imageUrl}              ,</if>
+            <if test="isCommon != null and isCommon != ''">                                is_common = #{isCommon}              ,</if>
+            <if test="type != null and type != ''">                                        type = #{type}                       ,</if>
+            <if test="isNew != null and isNew != ''">                                      is_new = #{isNew}                    ,</if>
+            <if test="visible != null and visible != ''">                                  visible = #{visible}                 ,</if>
+            <if test="route != null and route != ''">                                      route = #{route}                     ,</if>
+            <if test="sort != null and sort != ''">                                        sort = #{sort}                       ,</if>
+            <if test="status != null and status != ''">                                    status = #{status}                   ,</if>
+            <if test="remark != null">                                                     remark = #{remark}                   ,</if>
+        </trim>
+        where system_id = #{systemId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+
+    <update id="mainUpdateSystemStatus" parameterType="SysSystem">
+        update xy_system
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="status != null and status != ''">                status = #{status}             ,</if>
+        </trim>
+        where system_id = #{systemId}
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </update>
+
+    <delete id="mainDeleteSystemByIds" parameterType="SysSystem">
+        update xy_system set del_flag = 1
+        where is_change = 'N' and system_id in
+        <foreach item="systemId" collection="params.Ids" open="(" separator="," close=")">
+            #{systemId}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.updateScope}
+    </delete>
+
+    <select id="mainCheckSystemListByIds" parameterType="SysSystem" resultMap="SysSystemResult">
+        <include refid="checkVo"/>
+        where s.system_id in
+        <foreach item="systemId" collection="params.Ids" open="(" separator="," close=")">
+            #{systemId}
+        </foreach>
+        <!-- 数据范围过滤 -->
+        ${params.dataScope}
+    </select>
+
+
+
+
+
+
+
 
     <sql id="RouteVo">
         select distinct s.system_id, s.name, s.image_url, s.is_new, s.type, s.route, s.is_common, s.is_change, s.sort, s.status, s.remark
         from xy_system s
     </sql>
-
-    <select id="AdminHomePageView" parameterType="SysSystem" resultMap="SysSystemResult">
-        <include refid="RouteVo"/>
-        where s.status = '0' and s.is_change = 'N'
-        <!-- 数据范围过滤 -->
-        ${params.dataScope}
-        order by s.sort
-    </select>
-
-    <select id="selectSystemViewList" parameterType="SysSystem" resultMap="SysSystemResult">
-        <include refid="RouteVo"/>
-        where s.status = '0' and s.is_change = 'N'
-        <if test="null != params.roleSystemPerms and params.roleSystemPerms.size > 0">
-            and s.system_id in
-            <foreach collection="params.roleSystemPerms" index="index" item="item" open="(" separator="," close=")">
-                #{item.systemMenuId}
-            </foreach>
-        </if>
-        <if test="null == params.roleSystemPerms or params.roleSystemPerms.size == 0">
-            and 1 != 1
-        </if>
-        <!-- 数据范围过滤 -->
-        ${params.dataScope}
-        order by s.sort
-    </select>
-
-    <select id="selectSystemList" parameterType="SysSystem" resultMap="SysSystemResult">
-        <include refid="selectVo"/>
-        where s.is_change = 'N'
-        <if test="name != null  and name != ''"> and s.name like concat('%', #{name}, '%')</if>
-        <if test="type != null  and type != ''"> and s.type = #{type}</if>
-        <if test="route != null  and route != ''"> and s.route = #{route}</if>
-        <if test="status != null  and status != ''"> and s.status = #{status}</if>
-        <!-- 数据范围过滤 -->
-        ${params.dataScope}
-        order by s.sort
-    </select>
 
     <select id="buildSystemMenuTreeSelect" parameterType="SysSystem" resultMap="SysSystemResult">
         <include refid="selectVo"/>
@@ -105,78 +182,28 @@
         order by s.sort
     </select>
 
-    <select id="selectSystemById" parameterType="SysSystem" resultMap="SysSystemResult">
-        <include refid="selectVo"/>
-        where s.system_id = #{systemId}
+    <select id="AdminHomePageView" parameterType="SysSystem" resultMap="SysSystemResult">
+        <include refid="RouteVo"/>
+        where s.status = '0' and s.is_change = 'N'
         <!-- 数据范围过滤 -->
         ${params.dataScope}
+        order by s.sort
     </select>
 
-    <insert id="insertSystem" parameterType="SysSystem">
-        insert into xy_system
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="snowflakeId != null">                            system_id               ,</if>
-            <if test="name != null and name != ''">                    name                    ,</if>
-            <if test="imageUrl != null and imageUrl != ''">            image_url               ,</if>
-            <if test="type != null and type != ''">                    type                    ,</if>
-            <if test="isNew != null and isNew != ''">                  is_new                  ,</if>
-            <if test="route != null and route != ''">                  route                   ,</if>
-            <if test="sort != null">                                   sort                    ,</if>
-            <if test="status != null and status != ''">                status                  ,</if>
-            <if test="createBy != null">                               create_by               ,</if>
-            <if test="remark != null and remark != ''">                remark                  ,</if>
-            <if test="enterpriseId != null">                           tenant_id               ,</if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="snowflakeId != null">                            #{snowflakeId}          ,</if>
-            <if test="name != null and name != ''">        #{name}           ,</if>
-            <if test="imageUrl != null and imageUrl != ''">            #{imageUrl}             ,</if>
-            <if test="type != null and type != ''">                    #{type}                 ,</if>
-            <if test="isNew != null and isNew != ''">                  #{isNew}                ,</if>
-            <if test="route != null and route != ''">                  #{route}                ,</if>
-            <if test="sort != null">                                   #{sort}                 ,</if>
-            <if test="status != null and status != ''">                #{status}               ,</if>
-            <if test="createBy != null">                               #{createBy}             ,</if>
-            <if test="remark != null and remark != ''">                #{remark}               ,</if>
-            <if test="enterpriseId != null">                           #{enterpriseId}         ,</if>
-        </trim>
-    </insert>
-
-    <update id="updateSystem" parameterType="SysSystem">
-        update xy_system
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="name != null and name != ''">                    name = #{name}                 ,</if>
-            <if test="imageUrl != null and imageUrl != ''">            image_url = #{imageUrl}        ,</if>
-            <if test="type != null and type != ''">                    type = #{type}                 ,</if>
-            <if test="isNew != null and isNew != ''">                  is_new = #{isNew}              ,</if>
-            <if test="route != null and route != ''">                  route = #{route}               ,</if>
-            <if test="sort != null">                                   sort = #{sort}                 ,</if>
-            <if test="status != null and status != ''">                status = #{status}             ,</if>
-            <if test="updateBy != null">                               update_by = #{updateBy}        ,</if>
-            <if test="remark != null">                                 remark = #{remark}             ,</if>
-        </trim>
-        where system_id = #{systemId}
+    <select id="selectSystemViewList" parameterType="SysSystem" resultMap="SysSystemResult">
+        <include refid="RouteVo"/>
+        where s.status = '0' and s.is_change = 'N'
+        <if test="null != params.roleSystemPerms and params.roleSystemPerms.size > 0">
+            and s.system_id in
+            <foreach collection="params.roleSystemPerms" index="index" item="item" open="(" separator="," close=")">
+                #{item.systemMenuId}
+            </foreach>
+        </if>
+        <if test="null == params.roleSystemPerms or params.roleSystemPerms.size == 0">
+            and 1 != 1
+        </if>
         <!-- 数据范围过滤 -->
-        ${params.updateScope}
-    </update>
-
-    <update id="updateSystemStatus" parameterType="SysSystem">
-        update xy_system
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="status != null and status != ''">                status = #{status}             ,</if>
-        </trim>
-        where system_id = #{systemId}
-        <!-- 数据范围过滤 -->
-        ${params.updateScope}
-    </update>
-
-    <delete id="deleteSystemByIds" parameterType="SysSystem">
-        update xy_system set del_flag = 1
-        where system_id in
-        <foreach item="systemId" collection="params.Ids" open="(" separator="," close=")">
-            #{systemId}
-        </foreach>
-        <!-- 数据范围过滤 -->
-        ${params.updateScope}
-    </delete>
+        ${params.dataScope}
+        order by s.sort
+    </select>
 </mapper>
