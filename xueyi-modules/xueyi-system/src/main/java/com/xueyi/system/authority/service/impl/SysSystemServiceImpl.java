@@ -163,7 +163,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     }
 
     /**
-     * 批量删除模块信息
+     * 更新模块信息缓存
      *
      * @param system 模块信息
      * @param rows   结果
@@ -172,14 +172,14 @@ public class SysSystemServiceImpl implements ISysSystemService {
     private int refreshCache(SysSystem system, int rows, boolean type) {
         if (rows > 0) {
             if (type) {
-                cacheInitService.refreshRouteCacheBySystem(new SysSystem(system.getSnowflakeId(), system.getEnterpriseId()));
+                cacheInitService.refreshRouteCacheBySystem(new SysSystem(system.getSnowflakeId(), SecurityUtils.getEnterpriseId()));
             }
             if (SecurityUtils.isAdminTenant()) {
                 cacheInitService.refreshSystemCacheBySystem(new SysSystem(system.getSnowflakeId(), AuthorityConstants.COMMON_ENTERPRISE));
                 cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(system.getSnowflakeId(), AuthorityConstants.COMMON_ENTERPRISE));
             }
-            cacheInitService.refreshSystemCacheBySystem(new SysSystem(system.getSnowflakeId(), system.getEnterpriseId()));
-            cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(system.getSnowflakeId(), system.getEnterpriseId()));
+            cacheInitService.refreshSystemCacheBySystem(new SysSystem(system.getSnowflakeId(), SecurityUtils.getEnterpriseId()));
+            cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(system.getSnowflakeId(), SecurityUtils.getEnterpriseId()));
         }
         return rows;
     }

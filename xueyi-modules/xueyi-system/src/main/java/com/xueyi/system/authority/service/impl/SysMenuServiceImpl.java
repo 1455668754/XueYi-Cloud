@@ -12,11 +12,13 @@ import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysMenuService;
+import com.xueyi.system.cache.service.ISysCacheInitService;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import com.xueyi.system.utils.vo.MetaVo;
 import com.xueyi.system.utils.vo.RouterVo;
@@ -38,6 +40,9 @@ public class SysMenuServiceImpl implements ISysMenuService {
 
     @Autowired
     private SysMenuMapper menuMapper;
+
+    @Autowired
+    private ISysCacheInitService cacheInitService;
 
     @Autowired
     private SysRoleSystemMenuMapper roleSystemMenuMapper;
@@ -87,7 +92,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
         menuSet.addAll(map.get("halfIds"));
         menuSet.addAll(map.get("wholeIds"));
         menu.getParams().put("insideIds", menuSet);
-        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuMapper.mainSelectSystemMenuList(menu)), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE,false);
+        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuMapper.mainSelectSystemMenuList(menu)), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE, false);
         return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
@@ -114,7 +119,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
         if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             menu.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
         }
-        return menuMapper.mainInsertMenu(menu);
+        return refreshCache(menu, menuMapper.mainInsertMenu(menu));
     }
 
     /**
@@ -128,7 +133,12 @@ public class SysMenuServiceImpl implements ISysMenuService {
         if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             menu.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
         }
-        return menuMapper.mainUpdateMenu(menu);
+        SysMenu check = menuMapper.mainSelectMenuById(new SysMenu(menu.getMenuId()));
+        int rows = menuMapper.mainUpdateMenu(menu);
+        if (check.getSystemId().longValue() == menu.getSystemId().longValue()) {
+            refreshCache(check, rows);
+        }
+        return refreshCache(menu, rows);
     }
 
     /**
@@ -139,7 +149,12 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     @Override
     public int mainDeleteMenuById(SysMenu menu) {
-        return menuMapper.mainDeleteMenuById(menu);
+        SysMenu before = menuMapper.mainSelectMenuById(new SysMenu(menu.getMenuId()));
+        int rows = menuMapper.mainDeleteMenuById(menu);
+        if (rows > 0) {
+
+        }
+        return refreshCache(before, rows);
     }
 
     /**
@@ -176,6 +191,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
+    @DS("#isolate")
     public boolean mainCheckMenuExistRole(SysMenu menu) {
         SysSearch search = new SysSearch();
         search.getSearch().put("systemMenuId", menu.getMenuId());
@@ -375,5 +391,23 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     private boolean hasChild(List<SysMenu> list, SysMenu t) {
         return getChildList(list, t).size() > 0;
+    }
+
+    /**
+     * 更新菜单信息缓存
+     *
+     * @param menu 菜单信息
+     * @param rows 结果
+     */
+    private int refreshCache(SysMenu menu, int rows) {
+        if (rows > 0) {
+            cacheInitService.refreshRouteCacheBySystem(new SysSystem(menu.getSystemId(), SecurityUtils.getEnterpriseId()));
+            cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(menu.getSystemId(), SecurityUtils.getEnterpriseId()));
+            if (SecurityUtils.isAdminTenant()) {
+                cacheInitService.refreshRouteCacheBySystem(new SysSystem(menu.getSystemId(), AuthorityConstants.COMMON_ENTERPRISE));
+                cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(menu.getSystemId(), AuthorityConstants.COMMON_ENTERPRISE));
+            }
+        }
+        return rows;
     }
 }
