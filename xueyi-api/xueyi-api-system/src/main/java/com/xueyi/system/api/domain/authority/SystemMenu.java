@@ -155,6 +155,7 @@ public class SystemMenu extends BaseEntity {
                 .append("icon", getIcon())
                 .append("status", getStatus())
                 .append("isCommon", getIsCommon())
+                .append("systemId", getSystemId())
                 .append("children", getChildren())
                 .toString();
     }

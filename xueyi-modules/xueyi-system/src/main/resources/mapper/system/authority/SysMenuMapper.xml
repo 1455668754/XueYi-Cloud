@@ -42,14 +42,15 @@
 		<result property="type"             column="s_m_type"           />
 		<result property="status"           column="s_m_status"         />
 		<result property="sort"             column="s_m_sort"           />
+		<result property="systemId"         column="s_m_system_id"      />
 	</resultMap>
 
 	<sql id="systemMenuVo">
-		select distinct m.s_m_uid, m.s_m_name, m.s_m_f_uid, m.s_m_sort, m.s_m_type, m.s_m_icon, m.s_m_perms, m.s_m_component, m.s_m_is_common, m.s_m_status
-		from ( select distinct m.tenant_id, m.menu_id as s_m_uid, m.name as s_m_name, if(m.parent_id = 0, m.system_id, m.parent_id) as s_m_f_uid, m.icon as s_m_icon, ifnull(m.perms, '') as s_m_perms, m.component as s_m_component, m.is_common as s_m_is_common, m.sort as s_m_sort, 1 as s_m_type, m.status as s_m_status, m.del_flag as del_flag
+		select distinct m.s_m_uid, m.s_m_name, m.s_m_f_uid, m.s_m_sort, m.s_m_type, m.s_m_icon, m.s_m_perms, m.s_m_component, m.s_m_is_common, m.s_m_status, m.s_m_system_id
+		from ( select distinct m.tenant_id, m.system_id as s_m_system_id, m.menu_id as s_m_uid, m.name as s_m_name, if(m.parent_id = 0, m.system_id, m.parent_id) as s_m_f_uid, m.icon as s_m_icon, ifnull(m.perms, '') as s_m_perms, m.component as s_m_component, m.is_common as s_m_is_common, m.sort as s_m_sort, 1 as s_m_type, m.status as s_m_status, m.del_flag as del_flag
 			   from sys_menu m
 			   union
-			   select distinct s.tenant_id, s.system_id as s_m_uid, s.name as s_m_name, -1 as s_m_f_uid, '#' as s_m_icon, '' as s_m_perms, '' as s_m_component, s.is_common as s_m_is_common, s.sort as s_m_sort, 0 as s_m_type, s.status as s_m_status, s.del_flag as del_flag
+			   select distinct s.tenant_id, s.system_id as s_m_system_id, s.system_id as s_m_uid, s.name as s_m_name, -1 as s_m_f_uid, '#' as s_m_icon, '' as s_m_perms, '' as s_m_component, s.is_common as s_m_is_common, s.sort as s_m_sort, 0 as s_m_type, s.status as s_m_status, s.del_flag as del_flag
 			   from xy_system s ) m
 	</sql>
 

@@ -1,14 +1,7 @@
 package com.xueyi.gateway.service.impl;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.Resource;
-import javax.imageio.ImageIO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.FastByteArrayOutputStream;
 import com.google.code.kaptcha.Producer;
+import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.exception.CaptchaException;
 import com.xueyi.common.core.utils.IdUtils;
@@ -18,6 +11,15 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.gateway.config.properties.CaptchaProperties;
 import com.xueyi.gateway.service.ValidateCodeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.FastByteArrayOutputStream;
+
+import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 验证码实现处理
@@ -55,7 +57,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
 
         // 保存验证码信息
         String uuid = IdUtils.simpleUUID();
-        String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
 
         String capStr = null, code = null;
         BufferedImage image = null;
@@ -106,7 +108,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService
         {
             throw new CaptchaException("验证码已失效");
         }
-        String verifyKey = Constants.CAPTCHA_CODE_KEY + uuid;
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
         String captcha = redisService.getCacheObject(verifyKey);
         redisService.deleteObject(verifyKey);
 

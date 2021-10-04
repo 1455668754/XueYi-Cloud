@@ -4,10 +4,10 @@ import java.util.Collection;
 import java.util.List;
 import javax.annotation.PostConstruct;
 
+import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.text.Convert;
@@ -153,7 +153,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
     @Override
     public void clearConfigCache()
     {
-        Collection<String> keys = redisService.keys(Constants.SYS_CONFIG_KEY + "*");
+        Collection<String> keys = redisService.keys(CacheConstants.SYS_CONFIG_KEY + "*");
         redisService.deleteObject(keys);
     }
 
@@ -190,6 +190,6 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * @return 缓存键key
      */
     private String getCacheKey(String configKey) {
-        return Constants.SYS_CONFIG_KEY + configKey;
+        return CacheConstants.SYS_CONFIG_KEY + configKey;
     }
 }

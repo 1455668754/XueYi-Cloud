@@ -1,7 +1,7 @@
 package com.xueyi.common.redis.utils;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
@@ -22,7 +22,7 @@ public class EnterpriseUtils {
      * @return 缓存键key
      */
     public static String getLoginCacheKey(String enterpriseName) {
-        return Constants.LOGIN_ENTERPRISE_KEY + enterpriseName;
+        return CacheConstants.LOGIN_ENTERPRISE_KEY + enterpriseName;
     }
 
     /**
@@ -32,7 +32,7 @@ public class EnterpriseUtils {
      * @return 缓存键key
      */
     public static String getEnterpriseCacheKey(Long enterpriseId) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.ENTERPRISE_KEY;
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.ENTERPRISE_KEY;
     }
 
     /**
@@ -42,7 +42,7 @@ public class EnterpriseUtils {
      * @return 缓存键key
      */
     public static String getCacheFolderKey(Long enterpriseId) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":*";
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":*";
     }
 
     /**
@@ -52,7 +52,7 @@ public class EnterpriseUtils {
      * @return 缓存键key
      */
     public static String getStrategyCacheKey(Long enterpriseId) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.STRATEGY_KEY;
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.STRATEGY_KEY;
     }
 
     /**

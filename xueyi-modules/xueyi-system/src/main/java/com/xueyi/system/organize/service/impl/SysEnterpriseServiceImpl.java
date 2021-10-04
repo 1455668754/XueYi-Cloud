@@ -1,7 +1,7 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
@@ -12,7 +12,6 @@ import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.List;
 
@@ -151,9 +150,9 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public void clearEnterpriseCache() {
-        Collection<String> keys = redisService.keys(Constants.SYS_ENTERPRISE_KEY + "*");
+        Collection<String> keys = redisService.keys(CacheConstants.SYS_ENTERPRISE_KEY + "*");
         redisService.deleteObject(keys);
-        Collection<String> loginKeys = redisService.keys(Constants.LOGIN_ENTERPRISE_KEY + "*");
+        Collection<String> loginKeys = redisService.keys(CacheConstants.LOGIN_ENTERPRISE_KEY + "*");
         redisService.deleteObject(loginKeys);
     }
 

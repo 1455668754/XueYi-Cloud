@@ -1,7 +1,7 @@
 package com.xueyi.common.redis.utils;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
@@ -25,7 +25,7 @@ public class AuthorityUtils {
      * @return 缓存键key
      */
     public static String getRouteCacheKey(Long enterpriseId, Long systemId) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.ROUTE_KEY + ":" + systemId;
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.ROUTE_KEY + ":" + systemId;
     }
 
     /**
@@ -35,7 +35,7 @@ public class AuthorityUtils {
      * @return 缓存键key
      */
     public static String getSystemCacheKey(Long enterpriseId) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.SYSTEM_KEY;
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.SYSTEM_KEY;
     }
 
     /**
@@ -45,7 +45,7 @@ public class AuthorityUtils {
      * @return 缓存键key
      */
     public static String getSystemMenuCacheKey(Long enterpriseId) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.SYSTEM_MENU_KEY;
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.SYSTEM_MENU_KEY;
     }
 
     /**
@@ -56,7 +56,7 @@ public class AuthorityUtils {
      * @return 缓存键key
      */
     public static String getRoleCacheKey(Long enterpriseId, Long roleId) {
-        return Constants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + Constants.ROLE_KEY + ":" + roleId;
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.ROLE_KEY + ":" + roleId;
     }
 
     /**

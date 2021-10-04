@@ -1,5 +1,6 @@
 package com.xueyi.common.redis.utils;
 
+import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
@@ -24,7 +25,7 @@ public class DataSourceUtils {
      * @return 缓存键key
      */
     public static String getSourceCacheKey(Long strategyId) {
-        return Constants.DATA_SOURCE_KEY + strategyId;
+        return CacheConstants.DATA_SOURCE_KEY + strategyId;
     }
 
     /**
@@ -33,7 +34,7 @@ public class DataSourceUtils {
      * @return 缓存键key
      */
     public static String getCacheFolderKey() {
-        return Constants.DATA_SOURCE_KEY + "*";
+        return CacheConstants.DATA_SOURCE_KEY + "*";
     }
 
     /**

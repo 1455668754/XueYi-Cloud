@@ -67,50 +67,11 @@ public class Constants {
     /** 排序的方向 "desc" 或者 "asc" */
     public static final String IS_ASC = "isAsc";
 
-    /** 验证码 redis key */
-    public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
-
     /** 验证码有效期（分钟） */
     public static final long CAPTCHA_EXPIRATION = 2;
 
     /** 令牌有效期（分钟） */
     public final static long TOKEN_EXPIRE = 720;
-
-    /** 参数管理 cache key */
-    public static final String SYS_CONFIG_KEY = "sys_config:";
-
-    /** 字典管理 cache key */
-    public static final String SYS_DICT_KEY = "sys_dict:";
-
-    /** 登录验证-企业信息 cache key */
-    public static final String LOGIN_ENTERPRISE_KEY = "login_enterprise:";
-
-    /** 企业管理 cache key */
-    public static final String SYS_ENTERPRISE_KEY = "sys_enterprise:";
-
-    /** 数据源策略组管理 cache key */
-    public static final String DATA_SOURCE_KEY = "data_source:";
-
-    /** 企业信息 cache key */
-    public static final String ENTERPRISE_KEY = "enterprise";
-
-    /** 企业源策略 cache key */
-    public static final String STRATEGY_KEY = "strategy";
-
-    /** 模块-路由 cache key */
-    public static final String ROUTE_KEY = "route";
-
-    /** 模块 cache key */
-    public static final String SYSTEM_KEY = "system";
-
-    /** 模块-菜单 cache key */
-    public static final String SYSTEM_MENU_KEY = "system_menu";
-
-    /** 角色 cache key */
-    public static final String ROLE_KEY = "role";
-
-    /** 数据源管理 cache key */
-    public static final String SYS_SOURCE_KEY = "sys_source:";
 
     /** 资源映射路径 前缀 */
     public static final String RESOURCE_PREFIX = "/profile";

@@ -77,6 +77,7 @@ public class TreeSelect implements Serializable {
         this.icon = systemMenu.getIcon();
         this.component = systemMenu.getComponent();
         this.isCommon = systemMenu.getIsCommon();
+        this.systemId = systemMenu.getSystemId();
         this.children = systemMenu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
