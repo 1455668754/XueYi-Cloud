@@ -2,6 +2,7 @@ package com.xueyi.system.authority.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysSystem;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -64,10 +65,11 @@ public interface SysSystemMapper {
      * 批量删除模块
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param system 模块信息 | params.Ids 需要删除的模块Ids组
+     * @param system        模块信息 | params.Ids 需要删除的模块Ids组
+     * @param isAdminTenant 是否租管租户
      * @return 结果
      */
-    public int mainDeleteSystemByIds(SysSystem system);
+    public int mainDeleteSystemByIds(@Param("system") SysSystem system, @Param("isAdminTenant") boolean isAdminTenant);
 
     /**
      * 检查模块集合是中存在的值
@@ -78,6 +80,16 @@ public interface SysSystemMapper {
      */
     @DataScope(edAlias = "s")
     public Set<SysSystem> mainCheckSystemListByIds(SysSystem system);
+
+
+
+
+
+
+
+
+
+
 
 
 

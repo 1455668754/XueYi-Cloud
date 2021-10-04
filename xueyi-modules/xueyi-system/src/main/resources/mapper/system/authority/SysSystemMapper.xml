@@ -100,6 +100,7 @@
             <if test="sort != null and sort != ''">                                        sort = #{sort}                       ,</if>
             <if test="status != null and status != ''">                                    status = #{status}                   ,</if>
             <if test="remark != null">                                                     remark = #{remark}                   ,</if>
+            <if test="enterpriseId != null">                                               tenant_id = #{enterpriseId}          ,</if>
         </trim>
         where system_id = #{systemId}
         <!-- 数据范围过滤 -->
@@ -116,14 +117,15 @@
         ${params.updateScope}
     </update>
 
-    <delete id="mainDeleteSystemByIds" parameterType="SysSystem">
+    <delete id="mainDeleteSystemByIds">
         update xy_system set del_flag = 1
         where is_change = 'N' and system_id in
-        <foreach item="systemId" collection="params.Ids" open="(" separator="," close=")">
+        <foreach item="systemId" collection="system.params.Ids" open="(" separator="," close=")">
             #{systemId}
         </foreach>
+        <if test="!isAdminTenant">and is_common = 'N'</if>
         <!-- 数据范围过滤 -->
-        ${params.updateScope}
+        ${system.params.updateScope}
     </delete>
 
     <select id="mainCheckSystemListByIds" parameterType="SysSystem" resultMap="SysSystemResult">

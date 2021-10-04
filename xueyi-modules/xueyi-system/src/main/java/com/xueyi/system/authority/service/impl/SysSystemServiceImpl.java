@@ -8,16 +8,16 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.api.domain.authority.SysMenu;
+import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysSystemMapper;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysSystemService;
-import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.cache.service.ISysCacheInitService;
 import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import com.xueyi.system.utils.vo.TreeSelect;
@@ -103,8 +103,11 @@ public class SysSystemServiceImpl implements ISysSystemService {
      * @return 结果
      */
     @Override
-    @DataScope(ueAlias = "empty")
+    @DataScope(uedAlias = "empty")
     public int mainInsertSystem(SysSystem system) {
+        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && SecurityUtils.isAdminTenant()) {
+            system.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
+        }
         return refreshCache(system, systemMapper.mainInsertSystem(system), true);
     }
 
@@ -115,8 +118,11 @@ public class SysSystemServiceImpl implements ISysSystemService {
      * @return 结果
      */
     @Override
-    @DataScope(ueAlias = "empty")
+    @DataScope(uedAlias = "empty")
     public int mainUpdateSystem(SysSystem system) {
+        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && SecurityUtils.isAdminTenant()) {
+            system.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
+        }
         return refreshCache(system, systemMapper.mainUpdateSystem(system), true);
     }
 
@@ -127,7 +133,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
      * @return 结果
      */
     @Override
-    @DataScope(ueAlias = "empty")
+    @DataScope(uedAlias = "empty")
     public int mainUpdateSystemStatus(SysSystem system) {
         return refreshCache(system, systemMapper.mainUpdateSystemStatus(system), true);
     }
@@ -139,10 +145,10 @@ public class SysSystemServiceImpl implements ISysSystemService {
      * @return 结果
      */
     @Override
-    @DataScope(ueAlias = "empty")
+    @DataScope(uedAlias = "empty")
     public int mainDeleteSystemByIds(SysSystem system) {
         Set<SysSystem> before = systemMapper.mainCheckSystemListByIds(system);
-        int rows = systemMapper.mainDeleteSystemByIds(system);
+        int rows = systemMapper.mainDeleteSystemByIds(system, SecurityUtils.isAdminTenant());
         if (rows > 0) {
             Set<SysSystem> after = systemMapper.mainCheckSystemListByIds(system);
             before.removeAll(after);

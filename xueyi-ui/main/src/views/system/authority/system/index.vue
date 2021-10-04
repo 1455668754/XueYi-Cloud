@@ -142,7 +142,7 @@
       />
     </div>
 
-    <!-- 添加或修改子系统模块对话框 -->
+    <!-- 添加或修改模块对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" :close-on-click-modal="false" v-dialogDrag
                v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
@@ -304,7 +304,7 @@ export default {
     this.getList()
   },
   methods: {
-    /** 查询子系统模块列表 */
+    /** 查询模块列表 */
     getList() {
       this.loading = true
       listSystem(this.queryParams).then(response => {
@@ -356,7 +356,7 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = "添加子系统模块"
+      this.title = "添加模块"
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -365,7 +365,7 @@ export default {
       getSystem({systemId: systemId}).then(response => {
         this.form = response.data
         this.open = true
-        this.title = "修改子系统模块"
+        this.title = "修改模块"
       })
     },
     /** 提交按钮 */

@@ -1,6 +1,9 @@
 package com.xueyi.system.authority.controller;
 
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.MenuConstants;
+import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
@@ -53,6 +56,9 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysSystem system) {
+        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
+            return AjaxResult.error("新增模块'" + system.getName() + "'失败，仅租管账户可新增公共模块");
+        }
         return toAjax(systemService.mainInsertSystem(system));
     }
 
@@ -63,6 +69,9 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysSystem system) {
+        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
+            return AjaxResult.error("修改模块'" + system.getName() + "'失败，仅租管账户可修改公共模块");
+        }
         return toAjax(systemService.mainUpdateSystem(system));
     }
 
@@ -73,6 +82,10 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysSystem system) {
+        SysSystem check = systemService.mainSelectSystemById(new SysSystem(system.getSystemId()));
+        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, check.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
+            return AjaxResult.error("修改模块状态'" + check.getName() + "'失败，仅租管账户可修改公共模块状态");
+        }
         return toAjax(systemService.mainUpdateSystemStatus(system));
     }
 
