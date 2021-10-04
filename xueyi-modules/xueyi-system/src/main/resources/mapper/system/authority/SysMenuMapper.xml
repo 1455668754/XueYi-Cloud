@@ -45,6 +45,11 @@
 		<result property="systemId"         column="s_m_system_id"      />
 	</resultMap>
 
+	<sql id="permsVo">
+		select distinct m.perms
+		from sys_menu m
+	</sql>
+
 	<sql id="systemMenuVo">
 		select distinct m.s_m_uid, m.s_m_name, m.s_m_f_uid, m.s_m_sort, m.s_m_type, m.s_m_icon, m.s_m_perms, m.s_m_component, m.s_m_is_common, m.s_m_status, m.s_m_system_id
 		from ( select distinct m.tenant_id, m.system_id as s_m_system_id, m.menu_id as s_m_uid, m.name as s_m_name, if(m.parent_id = 0, m.system_id, m.parent_id) as s_m_f_uid, m.icon as s_m_icon, ifnull(m.perms, '') as s_m_perms, m.component as s_m_component, m.is_common as s_m_is_common, m.sort as s_m_sort, 1 as s_m_type, m.status as s_m_status, m.del_flag as del_flag
@@ -55,25 +60,8 @@
 	</sql>
 
 	<sql id="selectVo">
-		select m.menu_id, m.system_id, m.name, m.parent_id, m.sort, m.path, m.component, m.query, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, ifnull(perms, '') as perms, m.icon, m.create_time
+		select m.menu_id, m.system_id, m.name, m.parent_id, m.sort, m.path, m.is_common, m.component, m.query, m.is_frame, m.is_cache, m.menu_type, m.visible, m.status, ifnull(perms, '') as perms, m.icon, m.create_time
 		from sys_menu m
-	</sql>
-
-	<sql id="selectPermsVo">
-		select distinct m.perms
-		from sys_menu m
-	</sql>
-
-	<sql id="selectTreeVo">
-		select distinct m.menu_id, m.parent_id, m.name, m.path, m.component, m.query, m.visible, m.status,
-						ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.sort, m.create_time
-		from sys_menu m
-	</sql>
-
-	<sql id="selectOnlyChildVo">
-		select m.menu_id,m.system_id
-		from sys_menu m
-		left join sys_menu m2 on m2.parent_id = m.menu_id
 	</sql>
 
 	<sql id="checkVo">
@@ -90,7 +78,7 @@
 	<select id="mainSelectSystemMenuList" parameterType="SysMenu" resultMap="SystemMenuResult">
 		<include refid="systemMenuVo"/>
 		where 1 = 1
-		<if test="menuId != null">m.s_m_uid != #{menuId}</if>
+		<if test="menuId != null">and m.s_m_uid != #{menuId}</if>
 		<if test="params.insideIds.size() > 0">
 			and m.s_m_uid in
 			<foreach collection="params.insideIds" index="index" item="item" open="(" separator="," close=")">
@@ -99,16 +87,17 @@
 		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
+		order by m.s_m_sort
 	</select>
 
-	<select id="selectMenuById" parameterType="SysMenu" resultMap="SysMenuResult">
+	<select id="mainSelectMenuById" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="selectVo"/>
 		where m.menu_id = #{menuId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
 
-	<insert id="insertMenu" parameterType="SysMenu">
+	<insert id="mainInsertMenu" parameterType="SysMenu">
 		insert into sys_menu
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="snowflakeId != null">                               menu_id                         ,</if>
@@ -116,6 +105,7 @@
 			<if test="parentId != null and parentId != 0">                parent_id                       ,</if>
 			<if test="name != null and name != ''">               		  name                       	  ,</if>
 			<if test="path != null and path != ''">                       path                            ,</if>
+			<if test="isCommon != null and isCommon != ''">               is_common                       ,</if>
 			<if test="component != null and component != ''">             component                       ,</if>
 			<if test="query != null and query != ''">					  query							  ,</if>
 			<if test="isFrame != null and isFrame != ''">                 is_frame                        ,</if>
@@ -136,6 +126,7 @@
 			<if test="parentId != null and parentId != 0">                #{parentId}                     ,</if>
 			<if test="name != null and name != ''">               		  #{name}                     	  ,</if>
 			<if test="path != null and path != ''">                       #{path}                         ,</if>
+			<if test="isCommon != null and isCommon != ''">               #{isCommon}                     ,</if>
 			<if test="component != null and component != ''">             #{component}                    ,</if>
 			<if test="query != null and query != ''">					  #{query}						  ,</if>
 			<if test="isFrame != null and isFrame != ''">                 #{isFrame}                      ,</if>
@@ -152,13 +143,14 @@
 		</trim>
 	</insert>
 
-	<update id="updateMenu" parameterType="SysMenu">
+	<update id="mainUpdateMenu" parameterType="SysMenu">
 		update sys_menu
 		<trim prefix="SET" suffixOverrides=",">
 			<if test="systemId != null">                                  system_id = #{systemId}         ,</if>
 			<if test="name != null and name != ''">               		  name = #{name}         		  ,</if>
 			<if test="parentId != null">                                  parent_id = #{parentId}         ,</if>
 			<if test="path != null and path != ''">                       path = #{path}                  ,</if>
+			<if test="isCommon != null and isCommon != ''">               is_common = #{isCommon}         ,</if>
 			<if test="component != null">                                 component = #{component}        ,</if>
 			<if test="query != null">									  query = #{query}				  ,</if>
 			<if test="isFrame != null and isFrame != ''">                 is_frame = #{isFrame}           ,</if>
@@ -171,13 +163,14 @@
 			<if test="status != null and status != ''">                   status = #{status}              ,</if>
 			<if test="updateBy != null">                				  update_by = #{updateBy}         ,</if>
 			<if test="remark != null and remark != ''">                   remark = #{remark}              ,</if>
+			<if test="enterpriseId != null">							  tenant_id = #{enterpriseId}	  ,</if>
 		</trim>
 		where menu_id = #{menuId}
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</update>
 
-	<delete id="deleteMenuById" parameterType="SysMenu">
+	<delete id="mainDeleteMenuById" parameterType="SysMenu">
 		update sys_menu
 		set del_flag = 1
 		where menu_id = #{menuId}
@@ -185,7 +178,7 @@
 		${params.updateScope}
 	</delete>
 
-	<select id="checkMenuNameUnique" parameterType="SysMenu" resultMap="SysMenuResult">
+	<select id="mainCheckMenuNameUnique" parameterType="SysMenu" resultMap="SysMenuResult">
 		<include refid="checkVo"/>
 		where m.name=#{name} and m.parent_id = #{parentId}
 		<!-- 数据范围过滤 -->
@@ -193,13 +186,50 @@
 		limit 1
 	</select>
 
-	<select id="hasChildByMenuId" parameterType="SysMenu" resultType="Integer">
+	<select id="mainHasChildByMenuId" parameterType="SysMenu" resultType="Integer">
 		<include refid="countVo"/>
 		where m.parent_id = #{menuId}
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<sql id="selectPermsVo">
+		select distinct m.perms
+		from sys_menu m
+	</sql>
+
+	<sql id="selectTreeVo">
+		select distinct m.menu_id, m.parent_id, m.name, m.path, m.component, m.query, m.visible, m.status,
+						ifnull(m.perms,'') as perms, m.is_frame, m.is_cache, m.menu_type, m.icon, m.sort, m.create_time
+		from sys_menu m
+	</sql>
+
+	<sql id="selectOnlyChildVo">
+		select m.menu_id,m.system_id
+		from sys_menu m
+				 left join sys_menu m2 on m2.parent_id = m.menu_id
+	</sql>
 
 
 	<!--未登录用户的登录校验方法，不允许加访问控制-->

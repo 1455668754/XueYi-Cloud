@@ -43,7 +43,11 @@ xueyi-ui              // 前端框架 [80、81]
 │          ├── api                    // 全局公用请求
 │          ├── assets                 // 主题 字体等静态资源
 │          ├── components             // 全局公用组件
-│          └── utils                  // 全局公用方法
+│          ├── constant               // 全局公用常量
+│          ├── directive              // 全局公用指令
+│          ├── plugins                // 全局公用插件
+│          ├── utils                  // 全局公用方法
+│          └── views                  // 全局公用view
 │     └── package.json                // package.json
 │
 ├── main                              // 默认系统 [80]
@@ -54,7 +58,6 @@ xueyi-ui              // 前端框架 [80、81]
 │          └── index.html             // html模板
 │     ├── src                         // 源代码
 │          ├── api                    // 所有请求
-│          ├── directive              // 全局指令
 │          ├── layout                 // 布局
 │          ├── router                 // 路由
 │          ├── store                  // store管理
@@ -83,7 +86,6 @@ xueyi-ui              // 前端框架 [80、81]
 │          └── index.html             // html模板
 │     ├── src                         // 源代码
 │          ├── api                    // 所有请求
-│          ├── directive              // 全局指令
 │          ├── layout                 // 布局
 │          ├── router                 // 路由
 │          ├── store                  // store管理

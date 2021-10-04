@@ -1,11 +1,11 @@
 package com.xueyi.system.authority.mapper;
 
-import java.util.List;
-import java.util.Set;
-
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SystemMenu;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 菜单表 数据层
@@ -40,7 +40,6 @@ public interface SysMenuMapper {
      * @param menu 菜单信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int mainInsertMenu(SysMenu menu);
 
     /**
@@ -50,7 +49,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(uedAlias = "empty")
     public int mainUpdateMenu(SysMenu menu);
 
     /**
@@ -60,7 +59,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息 | menuId 菜单Id
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
+    @DataScope(uedAlias = "empty")
     public int mainDeleteMenuById(SysMenu menu);
 
     /**
@@ -70,7 +69,7 @@ public interface SysMenuMapper {
      * @param menu 菜单信息 | menuName 菜单名称 | parentId 父菜单Id
      * @return 结果
      */
-    @DataScope(eAlias = "m")
+    @DataScope(edAlias = "m")
     public SysMenu mainCheckMenuNameUnique(SysMenu menu);
 
     /**

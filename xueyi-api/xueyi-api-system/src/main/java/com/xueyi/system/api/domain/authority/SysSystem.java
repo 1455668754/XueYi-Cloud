@@ -141,7 +141,7 @@ public class SysSystem extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return systemId != 0L ? systemId.hashCode() : 0;
+        return systemId != null ? systemId.hashCode() : 0;
     }
 
     @Override

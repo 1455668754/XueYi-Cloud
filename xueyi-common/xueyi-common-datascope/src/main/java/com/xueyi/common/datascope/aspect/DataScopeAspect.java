@@ -86,28 +86,30 @@ public class DataScopeAspect {
         String userAlias = controllerDataScope.userAlias();
 
         /* 租户的别名 | 控制 enterpriseId */
-        /* 租户的别名 | 控制 enterpriseId （包含 enterpriseId = 0 的数据） */
+        /* 租户的别名 | 控制 enterpriseId (包含 enterpriseId = 0 的数据) */
         /* 租户更新控制的别名 | 控制 enterpriseId (empty 无前缀更新 | other 有前缀更新) */
+        /* 租户更新控制的别名 | 控制 enterpriseId (包含 enterpriseId = 0 的数据) (empty 无前缀更新 | other 有前缀更新) */
         String eAlias = controllerDataScope.eAlias();
         String edAlias = controllerDataScope.edAlias();
         String ueAlias = controllerDataScope.ueAlias();
+        String uedAlias = controllerDataScope.uedAlias();
 
         /* 系统的别名 | 控制 systemId */
-        /* 系统的别名 | 控制 systemId （包含 enterpriseId = 0 的数据） */
+        /* 系统的别名 | 控制 systemId (包含 enterpriseId = 0 的数据) */
         /* 系统更新控制的别名 | 控制 systemId (empty 无前缀更新 | other 有前缀更新) */
         String SYAlias = controllerDataScope.SYAlias();
         String SYdAlias = controllerDataScope.SYdAlias();
         String uSYAlias = controllerDataScope.uSYAlias();
 
         /* 站点的别名 | 控制 siteId */
-        /* 站点的别名 | 控制 siteId （包含 siteId = 0 的数据） */
+        /* 站点的别名 | 控制 siteId (包含 siteId = 0 的数据) */
         /* 站点更新控制的别名 | 控制 siteId (empty 无前缀更新 | other 有前缀更新) */
         String SIAlias = controllerDataScope.SIAlias();
         String SIdAlias = controllerDataScope.SIdAlias();
         String uSIAlias = controllerDataScope.uSIAlias();
 
         /* 库的别名 | 控制 libraryId */
-        /* 库的别名 | 控制 libraryId （包含 libraryId = 0 的数据） */
+        /* 库的别名 | 控制 libraryId (包含 libraryId = 0 的数据) */
         /* 库更新控制的别名 | 控制 libraryId (empty 无前缀更新 | other 有前缀更新) */
         String LIAlias = controllerDataScope.LIAlias();
         String LIdAlias = controllerDataScope.LIdAlias();
@@ -200,6 +202,12 @@ public class DataScopeAspect {
                 upSqlString.append(StringUtils.format(" AND tenant_id = {} AND del_flag = 0 ", enterprise.getEnterpriseId()));
             } else {
                 upSqlString.append(StringUtils.format(" AND {}.tenant_id = {} AND {}.del_flag = 0 ", ueAlias, enterprise.getEnterpriseId(), ueAlias));
+            }
+        } else if (StringUtils.isNotBlank(uedAlias)) {
+            if (uedAlias.equals("empty")) {
+                upSqlString.append(StringUtils.format(" AND ( tenant_id = {} or tenant_id = 0 ) AND del_flag = 0 ", enterprise.getEnterpriseId()));
+            } else {
+                upSqlString.append(StringUtils.format(" AND ( {}.tenant_id = {} or {}.tenant_id = 0 ) AND {}.del_flag = 0 ", uedAlias, enterprise.getEnterpriseId(), uedAlias, uedAlias));
             }
         } else {
             //当无复杂查询控制时，阻断查询进行，保证数据安全

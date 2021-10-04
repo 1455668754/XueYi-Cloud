@@ -1,14 +1,15 @@
 package com.xueyi.system.utils.vo;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.organize.domain.deptPostVo;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Treeselect树结构实体类
@@ -29,6 +30,9 @@ public class TreeSelect implements Serializable {
 
     /** 节点类型 */
     private String type;
+
+    /** 显示顺序 */
+    private Integer sort;
 
     /** 权限字符串 | 模块&&菜单专属 */
     private String perms;
@@ -72,6 +76,7 @@ public class TreeSelect implements Serializable {
         this.id = systemMenu.getUid();
         this.label = systemMenu.getName();
         this.type = systemMenu.getType();
+        this.sort = systemMenu.getSort();
         this.status = systemMenu.getStatus();
         this.perms = systemMenu.getPerms();
         this.icon = systemMenu.getIcon();
@@ -124,6 +129,14 @@ public class TreeSelect implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     public String getPerms() {

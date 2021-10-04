@@ -18,14 +18,15 @@ public class TreeBuildUtils {
     /**
      * 构建树结构
      *
-     * @param list         组装列表
-     * @param IdName       Id字段名称
-     * @param FIdName      父Id字段名称
-     * @param childrenName children字段名称
-     * @param topNode      顶级节点
+     * @param list          组装列表
+     * @param IdName        Id字段名称
+     * @param FIdName       父Id字段名称
+     * @param childrenName  children字段名称
+     * @param topNode       顶级节点
+     * @param killScattered 是否移除无法追溯到顶级节点
      * @return 树结构列表
      */
-    public static <T> List<T> buildSystemMenuTree(List<T> list, String IdName, String FIdName, String childrenName, Long topNode) {
+    public static <T> List<T> buildSystemMenuTree(List<T> list, String IdName, String FIdName, String childrenName, Long topNode, boolean killScattered) {
         List<T> returnList = new ArrayList<T>();
         List<Long> tempList = new ArrayList<Long>();
         try {
@@ -50,7 +51,9 @@ public class TreeBuildUtils {
         if (returnList.isEmpty()) {
             returnList = list;
         }
-        deleteNoTopNode(returnList, FIdName, topNode);
+        if (killScattered) {
+            deleteNoTopNode(returnList, FIdName, topNode);
+        }
         return returnList;
     }
 

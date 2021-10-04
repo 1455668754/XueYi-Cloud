@@ -46,7 +46,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     public List<TreeSelect> selectLessorMenuScope(Long enterpriseId) {
-        return buildSystemMenuTree(AuthorityUtils.getSystemMenuCache(enterpriseId));
+        return buildSystemMenuTree(AuthorityUtils.getCommonSystemMenuCache(),true);
     }
 
     /**
@@ -316,10 +316,10 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
         allHalfSet = AuthorityUtils.getSystemMenuCache(enterpriseId);
         allWholeSet = AuthorityUtils.getSystemMenuCache(enterpriseId);
         normalHalfSet = new HashSet<>();
-        forwardHalfSet = new HashSet<>();
+        forwardHalfSet = AuthorityUtils.getPrivateSystemMenuCache(enterpriseId);
         reverseHalfSet = new HashSet<>();
         normalWholeSet = new HashSet<>();
-        forwardWholeSet = new HashSet<>();
+        forwardWholeSet = AuthorityUtils.getPrivateSystemMenuCache(enterpriseId);
         reverseWholeSet = new HashSet<>();
         for (SysRole role : roles) {
             switch (role.getType()) {
@@ -398,7 +398,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @return 模块-菜单树
      */
     private List<TreeSelect> selectSystemMenuTree(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
-        return buildSystemMenuTree(mergeSet(enterpriseId, roles, isAdminTenant, hasNormal));
+        return buildSystemMenuTree(mergeSet(enterpriseId, roles, isAdminTenant, hasNormal),true);
     }
 
     /**
@@ -422,10 +422,11 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * 模块-菜单树装配
      *
      * @param systemMenuSet 模块-菜单集合
+     * @param killScattered 是否移除无法追溯到顶级节点
      * @return 模块-菜单树
      */
-    public List<TreeSelect> buildSystemMenuTree(Set<SystemMenu> systemMenuSet) {
-        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(systemMenuSet), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE);
+    public List<TreeSelect> buildSystemMenuTree(Set<SystemMenu> systemMenuSet, boolean killScattered) {
+        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(systemMenuSet), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE,killScattered);
         return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 }

@@ -128,7 +128,7 @@ public class SystemMenu extends BaseEntity {
 
     @Override
     public int hashCode() {
-        return Uid != 0L ? Uid.hashCode() : 0;
+        return Uid != null ? Uid.hashCode() : 0;
     }
 
     @Override

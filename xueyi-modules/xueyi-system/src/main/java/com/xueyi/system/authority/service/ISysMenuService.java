@@ -1,10 +1,10 @@
 package com.xueyi.system.authority.service;
 
-import java.util.List;
-
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.utils.vo.RouterVo;
 import com.xueyi.system.utils.vo.TreeSelect;
+
+import java.util.List;
 
 /**
  * 菜单 业务层
@@ -20,14 +20,6 @@ public interface ISysMenuService {
      * @return 菜单列表
      */
     public List<SysMenu> getRoutes(SysMenu menu);
-
-    /**
-     * 构建前端路由所需要的菜单
-     *
-     * @param menus 菜单列表
-     * @return 路由列表
-     */
-    public List<RouterVo> buildMenus(List<SysMenu> menus);
 
     /**
      * 查询模块-菜单信息列表
@@ -92,4 +84,12 @@ public interface ISysMenuService {
      * @return 结果 true 存在 false 不存在
      */
     public boolean mainCheckMenuExistRole(SysMenu menu);
+
+    /**
+     * 构建前端路由所需要的菜单
+     *
+     * @param menus 菜单列表
+     * @return 路由列表
+     */
+    public List<RouterVo> buildMenus(List<SysMenu> menus);
 }

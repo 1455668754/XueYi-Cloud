@@ -492,7 +492,7 @@ export default {
           increase = 1
         }
         for (let j = 0; j < this.form.values.length; j++) {
-          if (this.form.values[i].sourceId === null || this.form.values[i].sourceId === '') {
+          if (this.form.values[i].sourceId == null || this.form.values[i].sourceId === '') {
             if (this.form.values[i].isMain === IS_MAIN.TRUE) {
               this.form.hasMain = false
             }

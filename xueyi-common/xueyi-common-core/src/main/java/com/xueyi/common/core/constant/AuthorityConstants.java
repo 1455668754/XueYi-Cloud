@@ -25,7 +25,7 @@ public class AuthorityConstants {
     /** 公共数据 - N否 */
     public static final String IS_COMMON_FALSE = "N";
 
-    /** 公共企业 */
+    /** 公共企业Id */
     public static final Long COMMON_ENTERPRISE = 0L;
 
     /** 角色类型 - 常规 */

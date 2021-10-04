@@ -51,6 +51,7 @@ com.xueyi
 │       ├── xueyi-common-datascope                    // 权限范围
 │       ├── xueyi-common-datasource                   // 多数据源
 │       ├── xueyi-common-message                      // 消息队列
+│       ├── xueyi-common-socket                       // 消息推送
 │       ├── xueyi-common-log                          // 日志记录
 │       ├── xueyi-common-redis                        // 缓存服务
 │       ├── xueyi-common-security                     // 安全模块

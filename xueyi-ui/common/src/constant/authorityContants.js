@@ -42,5 +42,11 @@ module.exports = {
     IS_NEW: {
         YES: 'Y',
         NO: 'N'
-    }
+    },
+
+    /** 默认菜单父Id */
+    DEFAULT_PARENT_MENU_ID: '0',
+
+    /** 默认系统Id */
+    DEFAULT_SYSTEM_ID: '0'
 }

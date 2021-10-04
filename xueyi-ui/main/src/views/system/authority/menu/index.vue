@@ -13,24 +13,35 @@
           >新增
           </el-button>
         </el-col>
-        <right-toolbar :showSearch.sync="showSearch" :sortVisible="false" @queryTable="getList"/>
+        <el-col :span="1.5">
+          <el-button
+            type="info"
+            plain
+            icon="el-icon-sort"
+            size="mini"
+            @click="toggleExpandAll"
+          >展开/折叠</el-button>
+        </el-col>
+        <right-toolbar :searchVisible="false" :sortVisible="false" @queryTable="getList"/>
       </el-row>
 
       <el-table
+        v-if="refreshTable"
         v-loading="loading"
         :data="menuList"
         row-key="id"
+        :default-expand-all="isExpandAll"
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-        :indent="40"
-      >
-        <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true" min-width="120"/>
-        <el-table-column prop="icon" label="图标" align="center" min-width="120">
+        :indent="40">
+        <el-table-column prop="label" label="模块|菜单名称" :show-overflow-tooltip="true" min-width="300"/>
+        <el-table-column prop="sort" label="排序" :show-overflow-tooltip="true" min-width="80"/>
+        <el-table-column prop="icon" label="图标" align="center" min-width="180">
           <template slot-scope="scope">
             <svg-icon :icon-class="scope.row.icon" v-if="scope.row.icon != null"/>
           </template>
         </el-table-column>
-        <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true" min-width="120"/>
-        <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" min-width="120"/>
+        <el-table-column prop="perms" label="权限标识" :show-overflow-tooltip="true" min-width="140"/>
+        <el-table-column prop="component" label="组件路径" :show-overflow-tooltip="true" min-width="220"/>
         <el-table-column prop="status" label="状态" min-width="80">
           <template slot-scope="scope">
             <el-switch
@@ -39,11 +50,10 @@
               :inactive-value="STATUS.DISABLE"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              disabled>
-            </el-switch>
+              disabled/>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="160">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -78,7 +88,7 @@
     </div>
 
     <!-- 添加或修改菜单对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body v-dialogDrag v-dialogDragHeight>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="24">
@@ -86,6 +96,7 @@
               <treeselect
                 v-model="form.parentId"
                 :options="menuOptions"
+                :clearable="false"
                 :normalizer="normalizer"
                 :show-count="true"
                 @select="treeSelectSelect"
@@ -109,7 +120,8 @@
                   v-for="dict in dict.type.sys_yes_no"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -170,7 +182,7 @@
               <el-input v-model="form.path" placeholder="请输入路由地址"/>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.menuType === MENU_TYPE.BUTTON">
+          <el-col :span="12" v-if="form.menuType === MENU_TYPE.MENU">
             <el-form-item prop="component">
               <span slot="label">
                 <el-tooltip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" placement="top">
@@ -194,7 +206,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item v-if="form.menuType === MENU_TYPE.MENU">
-              <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255" />
+              <el-input v-model="form.query" placeholder="请输入路由参数" maxlength="255"/>
               <span slot="label">
                 <el-tooltip content='访问路由的默认传递参数，如：`{"id": 1, "name": "xy"}`' placement="top">
                 <i class="el-icon-question"></i>
@@ -226,11 +238,8 @@
                 显示状态
               </span>
               <el-radio-group v-model="form.visible">
-                <el-radio
-                  v-for="dict in dict.type.sys_show_hide"
-                  :key="dict.value"
-                  :label="dict.value"
-                >{{dict.label}}</el-radio>
+                <el-radio :label="VISIBLE.TRUE">显示</el-radio>
+                <el-radio :label="VISIBLE.FALSE">隐藏</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -247,7 +256,8 @@
                   v-for="dict in dict.type.sys_normal_disable"
                   :key="dict.value"
                   :label="dict.value"
-                >{{dict.label}}</el-radio>
+                >{{ dict.label }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -263,36 +273,35 @@
 
 <script>
 import {getMenu, delMenu, addMenu, updateMenu, listSystemMenu} from "@/api/system/menu"
-import {treeSelectPermitPersonal as systemMenuTreeSelect} from "@/api/system/system"
 import Treeselect from "@riophae/vue-treeselect"
 import "@riophae/vue-treeselect/dist/vue-treeselect.css"
 import IconSelect from "@basicsComponents/IconSelect"
 import store from "@/store"
 import {STATUS, VISIBLE, IS_COMMON} from "@constant/constants"
-import {TYPE, CACHE, FRAME, MENU_TYPE } from "@constant/authorityContants"
+import {TYPE, CACHE, FRAME, MENU_TYPE, DEFAULT_SYSTEM_ID, DEFAULT_PARENT_MENU_ID} from "@constant/authorityContants"
 
 export default {
   name: "Menu",
-  dicts: ['sys_show_hide', 'sys_normal_disable', 'sys_yes_no'],
+  dicts: ['sys_normal_disable', 'sys_yes_no'],
   components: {Treeselect, IconSelect},
   data() {
     return {
       //常量区
       STATUS: STATUS,
-      IS_COMMON:IS_COMMON,
-      TYPE:TYPE,
+      IS_COMMON: IS_COMMON,
+      TYPE: TYPE,
       VISIBLE: VISIBLE,
       CACHE: CACHE,
       FRAME: FRAME,
       MENU_TYPE: MENU_TYPE,
+      DEFAULT_SYSTEM_ID: DEFAULT_SYSTEM_ID,
+      DEFAULT_PARENT_MENU_ID: DEFAULT_PARENT_MENU_ID,
       IS_LESSOR: store.getters.isLessor,
       enterpriseName: store.getters.enterpriseName,
       // 遮罩层
       loading: true,
       // 提交状态
       submitLoading: false,
-      // 显示搜索条件
-      showSearch: true,
       // 菜单表格树数据
       menuList: [],
       // 菜单树选项
@@ -301,8 +310,10 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      //本参数用于判断当前父级是模块Id还是菜单Id
-      checkSystem: false,
+      // 是否展开，默认全部折叠
+      isExpandAll: false,
+      // 重新渲染表格状态
+      refreshTable: true,
       // 表单参数
       form: {},
       // 表单校验
@@ -346,21 +357,11 @@ export default {
       }
     },
     treeSelectSelect(node, instanceId) {
-      if (node.type === TYPE.SYSTEM) {
-        this.form.systemId = node.systemId
-        this.checkSystem = true
-      } else if (node.type === TYPE.MENU) {
-        this.form.systemId = node.systemId
-        this.checkSystem = false
-      }
+      this.form.systemId = node.systemId
     },
     /** 查询菜单下拉树结构 */
     getTreeSelect(row) {
-      let id = '0'
-      if (row != null && row.type === TYPE.MENU && row.id) {
-        id = row.id
-      }
-      systemMenuTreeSelect({Id: id}).then(response => {
+      listSystemMenu({menuId: row != null ? row.id : null}).then(response => {
         this.menuOptions = response.data
       })
     },
@@ -373,8 +374,8 @@ export default {
     reset() {
       this.form = {
         menuId: undefined,
-        systemId: 0,
-        parentId: 0,
+        systemId: DEFAULT_SYSTEM_ID,
+        parentId: DEFAULT_PARENT_MENU_ID,
         name: undefined,
         icon: undefined,
         menuType: MENU_TYPE.DIR,
@@ -392,17 +393,18 @@ export default {
     handleAdd(row) {
       this.reset()
       this.getTreeSelect()
-      if (row != null && row.type === TYPE.SYSTEM) {
-        this.form.parentId = row.id
-        this.form.systemId = row.id
-        this.checkSystem = true
-      } else if (row != null && row.type === TYPE.MENU && row.id) {
-        this.form.parentId = row.id
-        this.form.systemId = row.systemId
-        this.checkSystem = false
-      }
+      this.form.parentId = row.id != null ? row.id : DEFAULT_SYSTEM_ID
+      this.form.systemId = row.systemId != null ? row.systemId : DEFAULT_SYSTEM_ID
       this.open = true
       this.title = "添加菜单"
+    },
+    /** 展开/折叠操作 */
+    toggleExpandAll() {
+      this.refreshTable = false;
+      this.isExpandAll = !this.isExpandAll;
+      this.$nextTick(() => {
+        this.refreshTable = true;
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -410,6 +412,7 @@ export default {
       this.getTreeSelect(row)
       getMenu({menuId: row.id}).then(response => {
         this.form = response.data
+        this.form.parentId = this.form.parentId === DEFAULT_PARENT_MENU_ID ? this.form.systemId : this.form.parentId
         this.open = true
         this.title = "修改菜单"
       })
@@ -419,9 +422,8 @@ export default {
       this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.checkSystem) {
-            this.form.parentId = 0
-            this.checkSystem = false
+          if (this.form.parentId === this.form.systemId) {
+            this.form.parentId = DEFAULT_SYSTEM_ID
           }
           if (this.form.menuId != null) {
             updateMenu(this.form).then(response => {
@@ -440,7 +442,7 @@ export default {
               this.submitLoading = false
             })
           }
-        }else{
+        } else {
           this.submitLoading = false
         }
       })

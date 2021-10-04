@@ -140,6 +140,26 @@ public class AuthorityUtils {
     }
 
     /**
+     * 获取公共模块-菜单缓存 cache
+     */
+    public static <T> Set<T> getCommonSystemMenuCache() {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        Set<T> commonSet = redisService.getCacheObject(getSystemMenuCacheKey(AuthorityConstants.COMMON_ENTERPRISE));
+        return assemble(null, commonSet);
+    }
+
+    /**
+     * 获取私有模块-菜单缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     */
+    public static <T> Set<T> getPrivateSystemMenuCache(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        Set<T> privateSet = redisService.getCacheObject(getSystemMenuCacheKey(enterpriseId));
+        return assemble(privateSet, null);
+    }
+
+    /**
      * 新增模块-菜单缓存 cache
      *
      * @param enterpriseId  企业Id
