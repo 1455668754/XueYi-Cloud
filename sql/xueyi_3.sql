@@ -141,13 +141,13 @@ create table sys_organize_role (
   derive_dept_id            bigint              default null                            comment '部门衍生id',
   derive_post_id            bigint              default null                            comment '岗位衍生id',
   derive_user_id            bigint              default null                            comment '用户衍生id',
-  derive_tenant_id          bigint              default null                            comment '租户衍生id',
-  derive_administrator_id   bigint              default null                            comment '超管衍生id',
+  derive_enterprise_id      bigint              default null                            comment '租户衍生id',
+  derive_tenant_id          bigint              default null                            comment '超管衍生id',
   role_id                   bigint              not null                                comment '角色Id',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
   tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
   primary key(id)
-  ,unique (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_tenant_id, derive_administrator_id, role_id)
+  ,unique (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_enterprise_id, derive_tenant_id, role_id)
 ) engine=innodb auto_increment=1 comment = '组织和角色关联表';
 
 -- ----------------------------

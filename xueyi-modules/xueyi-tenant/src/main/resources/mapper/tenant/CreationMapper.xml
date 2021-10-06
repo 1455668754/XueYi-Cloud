@@ -88,7 +88,7 @@
     </insert>
 
     <insert id="createOrganizeRoleByTenantId" parameterType="Tenant">
-        insert into sys_organize_role ( derive_tenant_id, derive_administrator_id, role_id, tenant_id ) values
+        insert into sys_organize_role ( derive_enterprise_id, derive_tenant_id, role_id, tenant_id ) values
                                       ( null, #{tenantId}, #{params.role.roleId}, #{tenantId} ),
                                       ( #{tenantId}, null, #{params.deriveRole.roleId}, #{tenantId} );
     </insert>

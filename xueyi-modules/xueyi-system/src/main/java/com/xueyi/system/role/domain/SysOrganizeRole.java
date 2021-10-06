@@ -2,7 +2,6 @@ package com.xueyi.system.role.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.web.domain.BaseEntity;
 
 /**
@@ -32,11 +31,11 @@ public class SysOrganizeRole extends BaseEntity {
     /** 用户衍生id */
     private Long deriveUserId;
 
-    /** 租户衍生id */
+    /** 企业衍生id */
     private Long deriveEnterpriseId;
 
     /** 超管衍生id */
-    private Long deriveAdministratorId;
+    private Long deriveTenantId;
 
     /** 角色Id */
     private Long roleId;
@@ -97,12 +96,12 @@ public class SysOrganizeRole extends BaseEntity {
         this.deriveEnterpriseId = deriveEnterpriseId;
     }
 
-    public void setDeriveAdministratorId(Long deriveAdministratorId) {
-        this.deriveAdministratorId = deriveAdministratorId;
+    public void setDeriveTenantId(Long deriveTenantId) {
+        this.deriveTenantId = deriveTenantId;
     }
 
-    public Long getDeriveAdministratorId() {
-        return deriveAdministratorId;
+    public Long getDeriveTenantId() {
+        return deriveTenantId;
     }
 
     public void setRoleId(Long roleId) {
@@ -123,7 +122,7 @@ public class SysOrganizeRole extends BaseEntity {
                 .append("derivePostId", getDerivePostId())
                 .append("deriveUserId", getDeriveUserId())
                 .append("deriveEnterpriseId", getDeriveEnterpriseId())
-                .append("deriveAdministratorId", getDeriveAdministratorId())
+                .append("deriveAdministratorId", getDeriveTenantId())
                 .append("roleId", getRoleId())
                 .toString();
     }

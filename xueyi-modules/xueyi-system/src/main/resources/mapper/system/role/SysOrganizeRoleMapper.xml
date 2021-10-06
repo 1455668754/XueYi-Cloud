@@ -11,13 +11,13 @@
         <result property="deriveDeptId"             column="derive_dept_id"           />
         <result property="derivePostId"             column="derive_post_id"           />
         <result property="deriveUserId"             column="derive_user_id"           />
-        <result property="deriveEnterpriseId"       column="derive_tenant_id"         />
-        <result property="deriveAdministratorId"    column="derive_administrator_id"  />
+        <result property="deriveEnterpriseId"       column="derive_enterprise_id"     />
+        <result property="deriveAdministratorId"    column="derive_tenant_id"         />
         <result property="roleId"                   column="role_id"                  />
     </resultMap>
 
     <sql id="selectVo">
-        select e.dept_id, e.post_id, e.user_id, e.derive_dept_id, e.derive_post_id, e.derive_user_id, e.derive_tenant_id, e.derive_administrator_id, e.role_id
+        select e.dept_id, e.post_id, e.user_id, e.derive_dept_id, e.derive_post_id, e.derive_user_id, e.derive_enterprise_id, e.derive_tenant_id, e.role_id
         from sys_organize_role e
     </sql>
 
@@ -50,7 +50,7 @@
             <if test="deriveDeptId != null">                                               derive_dept_id                 ,</if>
             <if test="derivePostId != null">                                               derive_post_id                 ,</if>
             <if test="deriveUserId != null">                                               derive_user_id                 ,</if>
-            <if test="deriveEnterpriseId != null">                                         derive_tenant_id               ,</if>
+            <if test="deriveEnterpriseId != null">                                         derive_enterprise_id           ,</if>
             <if test="roleId != null">                                                     role_id                        ,</if>
             <if test="enterpriseId != null">                                               tenant_id                      ,</if>
         </trim>
@@ -68,7 +68,7 @@
     </insert>
 
     <insert id="batchOrganizeRole" parameterType="SysOrganizeRole">
-        insert into sys_organize_role (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_tenant_id, role_id, tenant_id) values
+        insert into sys_organize_role (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_enterprise_id, role_id, tenant_id) values
         <choose>
             <when test="params.roleIds != null">
                 <foreach item="roleId" collection="params.roleIds" separator=",">
@@ -113,7 +113,7 @@
 
     <delete id="deleteOrganizeRoleByRoleId" parameterType="SysRole">
         delete from sys_organize_role
-        where role_id = #{roleId} and derive_administrator_id is null
+        where role_id = #{roleId} and derive_tenant_id is null
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>
@@ -137,8 +137,8 @@
         <if test="derivePostId != null">       or derive_post_id = #{postId} </if>
         <if test="userId != null">             or user_id = #{userId} </if>
         <if test="deriveUserId != null">       or derive_user_id = #{userId} </if>
-        <if test="deriveEnterpriseId != null"> or derive_tenant_id = #{deriveEnterpriseId} </if>
-        and derive_administrator_id is null
+        <if test="deriveEnterpriseId != null"> or derive_enterprise_id = #{deriveEnterpriseId} </if>
+        and derive_tenant_id is null
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>
@@ -152,8 +152,8 @@
         <if test="derivePostId != null">        or derive_post_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
         <if test="userId != null">              or user_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
         <if test="deriveUserId != null">        or derive_user_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
-        <if test="deriveEnterpriseId != null">  or derive_tenant_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
-        and derive_administrator_id is null
+        <if test="deriveEnterpriseId != null">  or derive_enterprise_id in <foreach item="Id" collection="params.Ids" open="(" separator="," close=")"> #{Id} </foreach> </if>
+        and derive_tenant_id is null
         <!-- 数据范围过滤 -->
         ${params.updateScope}
     </delete>

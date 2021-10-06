@@ -28,21 +28,26 @@
         from sys_organize_role sor
     </sql>
 
+    <sql id="roleVo">
+        select distinct sor.role_id
+        from sys_role sor
+    </sql>
+
     <select id="selectRoleListByTenantId" parameterType="SysRole" resultType="Long">
         <include refid="organizeVo"/>
-        where sor.derive_administrator_id = #{enterpriseId} and sor.tenant_id = #{enterpriseId} and sor.del_flag = 0
+        where sor.derive_tenant_id = #{enterpriseId} and sor.tenant_id = #{enterpriseId} and sor.del_flag = 0
     </select>
 
     <select id="selectRoleListByEnterpriseId" parameterType="SysRole" resultType="Long">
         <include refid="organizeVo"/>
-        where ( sor.derive_tenant_id = #{enterpriseId} or sor.derive_administrator_id = #{enterpriseId} )
+        where ( sor.derive_enterprise_id = #{enterpriseId} or sor.derive_tenant_id = #{enterpriseId} )
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
 
     <select id="selectRoleListByDeptId" parameterType="SysRole" resultType="Long">
         <include refid="organizeVo"/>
-        left join sys_dept d on d.dept_id = sor.dept_id or d.dept_id = sor.derive_dept_id or d.tenant_id = sor.derive_tenant_id or d.tenant_id = sor.derive_administrator_id
+        left join sys_dept d on d.dept_id = sor.dept_id or d.dept_id = sor.derive_dept_id or d.tenant_id = sor.derive_enterprise_id or d.tenant_id = sor.derive_tenant_id
         where d.dept_id = #{params.deptId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
@@ -50,7 +55,7 @@
 
     <select id="selectRoleListByPostId" parameterType="SysRole" resultType="Long">
         <include refid="organizeVo"/>
-        left join sys_post p on p.post_id = sor.post_id or p.post_id = sor.derive_post_id or p.dept_id = sor.dept_id or p.dept_id = sor.derive_dept_id or p.tenant_id = sor.derive_tenant_id or p.tenant_id = sor.derive_administrator_id
+        left join sys_post p on p.post_id = sor.post_id or p.post_id = sor.derive_post_id or p.dept_id = sor.dept_id or p.dept_id = sor.derive_dept_id or p.tenant_id = sor.derive_enterprise_id or p.tenant_id = sor.derive_tenant_id
         where p.post_id = #{params.postId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
@@ -58,19 +63,18 @@
 
     <select id="selectRoleListByUserId" parameterType="SysRole" resultType="Long">
         <include refid="organizeVo"/>
-        left join sys_user u on u.user_id = sor.user_id or u.user_id = sor.derive_user_id or u.post_id = sor.post_id or u.post_id = sor.derive_post_id or u.dept_id = sor.dept_id or u.dept_id = sor.derive_dept_id or u.tenant_id = sor.derive_tenant_id or u.tenant_id = sor.derive_administrator_id
+        left join sys_user u on u.user_id = sor.user_id or u.user_id = sor.derive_user_id or u.post_id = sor.post_id or u.post_id = sor.derive_post_id or u.dept_id = sor.dept_id or u.dept_id = sor.derive_dept_id or u.tenant_id = sor.derive_enterprise_id or u.tenant_id = sor.derive_tenant_id
         where u.user_id = #{params.userId}
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
 
     <select id="selectRoleListByRoleId" parameterType="SysRole" resultType="Long">
-        <include refid="organizeVo"/>
-        where ( sor.role_id =#{roleId} or sor.derive_tenant_id = #{enterpriseId} or sor.derive_administrator_id = #{enterpriseId} )
+        <include refid="roleVo"/>
+        where ( sor.role_id =#{roleId} or ( ( sor.type = 1 or sor.type = 2 ) and sor.derive_id = #{enterpriseId} ) )
         <!-- 数据范围过滤 -->
         ${params.dataScope}
     </select>
-
 
     <insert id="insertWholeIdsMenuScope" parameterType="SysRole">
         insert into sys_role_system_menu (role_id, system_menu_id, data_scope, checked, tenant_id)

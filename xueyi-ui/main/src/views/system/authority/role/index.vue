@@ -623,7 +623,7 @@ export default {
       })
     },
     /** 提交按钮 */
-    submitForm: function () {
+    submitForm() {
       this.submitLoading = true
       this.$refs["form"].validate(valid => {
         if (valid) {
