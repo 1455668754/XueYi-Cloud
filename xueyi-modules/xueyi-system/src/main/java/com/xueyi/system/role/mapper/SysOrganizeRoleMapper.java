@@ -1,9 +1,10 @@
 package com.xueyi.system.role.mapper;
 
-import java.util.List;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.role.domain.SysOrganizeRole;
+
+import java.util.List;
 
 /**
  * 组织和角色关联 数据层
@@ -59,20 +60,18 @@ public interface SysOrganizeRoleMapper {
      * 访问控制 empty 租户更新（无前缀）
      *
      * @param role 角色信息 | roleId 角色Id
-     * @return 结果
      */
     @DataScope( ueAlias = "empty" )
-    public int deleteOrganizeRoleByRoleId(SysRole role);
+    public void deleteOrganizeRoleByRoleId(SysRole role);
 
     /**
      * 批量删除组织和角色关联
      * 访问控制 empty 租户更新（无前缀）
      *
      * @param role 角色信息 | params.Ids 需要删除的角色Ids组
-     * @return 结果
      */
     @DataScope( ueAlias = "empty" )
-    public int deleteOrganizeRoleByRoleIds(SysRole role);
+    public void deleteOrganizeRoleByRoleIds(SysRole role);
 
     /**
      * 删除组织和角色关联

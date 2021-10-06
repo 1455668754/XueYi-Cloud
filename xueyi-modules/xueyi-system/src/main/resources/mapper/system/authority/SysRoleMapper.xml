@@ -43,6 +43,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select distinct r.role_id, r.role_code, r.name, r.role_key, r.data_scope
 		from sys_role r
 	</sql>
+	<sql id="scopeVo">
+		select distinct r.role_id, r.data_scope
+		from sys_role r
+	</sql>
 
 	<!--未登录用户的登录校验方法，不允许加访问控制-->
 	<select id="checkLoginRolePermission" parameterType="SysRole" resultMap="SysRoleResult">
@@ -102,13 +106,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</select>
-
-	<select id="selectRoleIdByDeriveId" parameterType="SysRole" resultMap="SysRoleResult">
-		select distinct r.role_id, r.data_scope
-		from sys_role r
-		where r.type = #{type} and <choose><when test="deriveId != null">r.derive_id = #{deriveId}</when><otherwise>r.derive_id is null</otherwise></choose>  and r.tenant_id = #{enterpriseId} and r.del_flag = 0
-	</select>
-
 
 	<insert id="insertRole" parameterType="SysRole">
 		insert into sys_role
@@ -179,10 +176,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</update>
 
-	<delete id="deleteRoleById" parameterType="SysRole">
+	<delete id="deleteRoleByDeriveId" parameterType="SysRole">
 		update sys_role
 		set del_flag = 1
-		where role_id = #{roleId}
+		where type = #{type} and derive_id = #{deriveId}
+		<!-- 数据范围过滤 -->
+		${params.updateScope}
+	</delete>
+
+	<delete id="deleteRoleByDeriveIds" parameterType="SysRole">
+		update sys_role
+		set del_flag = 1
+		where type = #{type} and derive_id in
+		<foreach item="deriveId" collection="params.Ids" open="(" separator="," close=")">
+			#{deriveId}
+		</foreach>
 		<!-- 数据范围过滤 -->
 		${params.updateScope}
 	</delete>
@@ -198,23 +206,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</delete>
 
-	<delete id="deleteRoleByTypeAndDeriveId" parameterType="SysRole">
-		update sys_role
-		set del_flag = 1
-		where type = #{type} and derive_id = #{deriveId}
-		<!-- 数据范围过滤 -->
-		${params.updateScope}
-	</delete>
-
-	<delete id="deleteRoleByTypeAndDeriveIds" parameterType="SysRole">
-		update sys_role
-		set del_flag = 1
-		where type = #{type} and derive_id in
-		<foreach item="deriveId" collection="params.Ids" open="(" separator="," close=")">
-			#{deriveId}
+	<delete id="checkRoleListByIds" parameterType="SysRole">
+		<include refid="selectVo"/>
+		where role_id in
+		<foreach item="roleId" collection="params.Ids" open="(" separator="," close=")">
+			#{roleId}
 		</foreach>
 		<!-- 数据范围过滤 -->
-		${params.updateScope}
+		${params.dataScope}
 	</delete>
 
 	<select id="checkRoleCodeUnique" parameterType="SysRole" resultMap="SysRoleResult">
@@ -239,5 +238,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		limit 1
+	</select>
+
+	<select id="selectRoleIdByDeriveId" parameterType="SysRole" resultMap="SysRoleResult">
+		<include refid="scopeVo"/>
+		where r.type = #{type} and <choose><when test="deriveId != null">r.derive_id = #{deriveId}</when><otherwise>r.derive_id is null</otherwise></choose>  and r.tenant_id = #{enterpriseId} and r.del_flag = 0
 	</select>
 </mapper>

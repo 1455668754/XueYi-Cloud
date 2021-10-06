@@ -168,3 +168,12 @@ export function getRoleMenuRange(query) {
         params: query
     })
 }
+
+// 获取部门-岗位选择| deptPostIds 全选 | 角色级
+export function getRoleDataRange(query) {
+    return request({
+        url: '/system/authority/roleDataRange',
+        method: 'get',
+        params: query
+    })
+}

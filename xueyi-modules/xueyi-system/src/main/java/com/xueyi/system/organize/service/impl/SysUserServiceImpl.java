@@ -1,11 +1,21 @@
 package com.xueyi.system.organize.service.impl;
 
-import java.util.List;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.RoleConstants;
+import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.exception.ServiceException;
+import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.organize.SysPost;
+import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysRoleService;
+import com.xueyi.system.dict.service.ISysConfigService;
+import com.xueyi.system.organize.mapper.SysPostMapper;
+import com.xueyi.system.organize.mapper.SysUserMapper;
+import com.xueyi.system.organize.service.ISysUserService;
 import com.xueyi.system.role.domain.SysOrganizeRole;
 import com.xueyi.system.role.mapper.SysOrganizeRoleMapper;
 import org.slf4j.Logger;
@@ -13,18 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.exception.ServiceException;
-import com.xueyi.common.core.utils.SecurityUtils;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.system.api.domain.authority.SysRole;
-import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.api.domain.organize.SysPost;
-import com.xueyi.system.organize.mapper.SysPostMapper;
-import com.xueyi.system.organize.mapper.SysUserMapper;
-import com.xueyi.system.dict.service.ISysConfigService;
-import com.xueyi.system.organize.service.ISysUserService;
+
+import java.util.List;
 
 /**
  * 用户 业务层处理
@@ -253,7 +253,7 @@ public class SysUserServiceImpl implements ISysUserService {
         SysRole role = new SysRole();
         role.setType(RoleConstants.USER_DERIVE_TYPE);
         role.setDeriveId(user.getUserId());
-        roleMapper.deleteRoleByTypeAndDeriveId(role);
+        roleMapper.deleteRoleByDeriveId(role);
         // 2.删除用户-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setUserId(user.getUserId());
@@ -275,7 +275,7 @@ public class SysUserServiceImpl implements ISysUserService {
         SysRole role = new SysRole();
         role.setType(RoleConstants.USER_DERIVE_TYPE);
         role.getParams().put("Ids",user.getParams().get("Ids"));
-        roleMapper.deleteRoleByTypeAndDeriveIds(role);
+        roleMapper.deleteRoleByDeriveIds(role);
         // 2.批量删除用户-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setUserId(RoleConstants.DELETE_PARAM);

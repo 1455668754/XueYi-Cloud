@@ -1,13 +1,12 @@
 package com.xueyi.system.api.domain.authority;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import com.xueyi.common.core.annotation.Excel;
+import com.xueyi.common.core.web.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.xueyi.common.core.annotation.Excel;
-import com.xueyi.common.core.annotation.Excel.ColumnType;
-import com.xueyi.common.core.web.domain.BaseEntity;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -51,9 +50,6 @@ public class SysRole extends BaseEntity {
     /** 用户是否存在此角色标识 默认不存在 */
     private boolean flag = false;
 
-    /** 系统-菜单组（菜单权限） */
-    private Long[] systemMenuIds;
-
     /** 模块-菜单组（全选菜单权限） */
     private Set<SystemMenu> halfIds;
 
@@ -61,7 +57,7 @@ public class SysRole extends BaseEntity {
     private Set<SystemMenu> wholeIds;
 
     /** 部门-岗位组（数据权限） */
-    private Long[] deptPostIds;
+    private Set<Long> deptPostIds;
 
     public SysRole() {
 
@@ -169,19 +165,11 @@ public class SysRole extends BaseEntity {
         this.wholeIds = wholeIds;
     }
 
-    public Long[] getSystemMenuIds() {
-        return systemMenuIds;
-    }
-
-    public void setSystemMenuIds(Long[] systemMenuIds) {
-        this.systemMenuIds = systemMenuIds;
-    }
-
-    public Long[] getDeptPostIds() {
+    public Set<Long> getDeptPostIds() {
         return deptPostIds;
     }
 
-    public void setDeptPostIds(Long[] deptPostIds) {
+    public void setDeptPostIds(Set<Long> deptPostIds) {
         this.deptPostIds = deptPostIds;
     }
 
@@ -202,6 +190,7 @@ public class SysRole extends BaseEntity {
                 .append("updateName", getUpdateName())
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
+                .append("deptPostIds", getDeptPostIds())
                 .append("halfIds", getHalfIds())
                 .append("wholeIds", getWholeIds())
                 .toString();

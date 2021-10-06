@@ -243,4 +243,14 @@ public class SysAuthorityController extends BaseController {
     public AjaxResult getRoleMenuRange(SysRole role) {
         return AjaxResult.success(authorityService.selectRoleMenuRange(role));
     }
+
+    /**
+     * 根据角色Id获取部门-岗位选择 | 角色级
+     *
+     * @return map集合 | deptPostIds 部门-岗位
+     */
+    @GetMapping(value = "/roleDataRange")
+    public AjaxResult getRoleDataRange(SysRole role) {
+        return AjaxResult.success(authorityService.selectRoleDataRange(role));
+    }
 }

@@ -1,16 +1,14 @@
 package com.xueyi.system.organize.service.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.RoleConstants;
+import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.exception.ServiceException;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
+import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysRoleService;
@@ -18,18 +16,20 @@ import com.xueyi.system.organize.domain.deptPostVo;
 import com.xueyi.system.organize.mapper.SysDeptMapper;
 import com.xueyi.system.organize.mapper.SysPostMapper;
 import com.xueyi.system.organize.mapper.SysUserMapper;
+import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.role.domain.SysOrganizeRole;
 import com.xueyi.system.role.mapper.SysOrganizeRoleMapper;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.apache.commons.collections4.list.TreeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.exception.ServiceException;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.domain.organize.SysPost;
-import com.xueyi.system.organize.service.ISysPostService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 岗位信息 业务层处理
@@ -204,7 +204,7 @@ public class SysPostServiceImpl implements ISysPostService {
         SysRole role = new SysRole();
         role.setType(RoleConstants.POST_DERIVE_TYPE);
         role.setDeriveId(post.getPostId());
-        roleMapper.deleteRoleByTypeAndDeriveId(role);
+        roleMapper.deleteRoleByDeriveId(role);
         // 2.删除岗位-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setPostId(post.getPostId());
@@ -226,7 +226,7 @@ public class SysPostServiceImpl implements ISysPostService {
         SysRole role = new SysRole();
         role.setType(RoleConstants.POST_DERIVE_TYPE);
         role.getParams().put("Ids",post.getParams().get("Ids"));
-        roleMapper.deleteRoleByTypeAndDeriveIds(role);
+        roleMapper.deleteRoleByDeriveIds(role);
         // 2.批量删除岗位-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setPostId(RoleConstants.DELETE_PARAM);

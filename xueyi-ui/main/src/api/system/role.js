@@ -36,15 +36,6 @@ export function updateRole(data) {
   })
 }
 
-// 角色数据权限获取
-export function getDataScope(query) {
-  return request({
-    url: '/system/role/dataScope',
-    method: 'get',
-    params: query
-  })
-}
-
 // 修改保存角色数据权限
 export function dataScope(data) {
   return request({

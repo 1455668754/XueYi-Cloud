@@ -224,7 +224,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
         SysRole role = new SysRole();
         role.setType(RoleConstants.DEPT_DERIVE_TYPE);
         role.setDeriveId(dept.getDeptId());
-        roleMapper.deleteRoleByTypeAndDeriveId(role);
+        roleMapper.deleteRoleByDeriveId(role);
         // 2.删除部门-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setDeptId(dept.getDeptId());

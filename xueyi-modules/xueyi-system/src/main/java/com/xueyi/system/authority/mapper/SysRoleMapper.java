@@ -1,10 +1,10 @@
 package com.xueyi.system.authority.mapper;
 
-import java.util.List;
-import java.util.Set;
-
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 角色表 数据层
@@ -71,24 +71,16 @@ public interface SysRoleMapper {
     public SysRole selectRoleById(SysRole role);
 
     /**
-     * 通过类型和衍生Id查询角色Id与数据范围
-     *
-     * @param role 角色信息 | type 角色类型 | derive_id 衍生Id | enterpriseId 企业Id
-     * @return 角色Id
-     */
-    public SysRole selectRoleIdByDeriveId(SysRole role);
-    /**
      * 新增角色信息
-     * 访问控制 empty 租户更新（无前缀）
      *
      * @param role 角色信息
      * @return 结果
      */
+    @DataScope(ueAlias = "empty")
     public int insertRole(SysRole role);
 
     /**
      * 修改角色信息
-     * 访问控制 empty 租户更新（无前缀）
      *
      * @param role 角色信息
      * @return 结果
@@ -115,14 +107,24 @@ public interface SysRoleMapper {
     public int updateRoleDataScope(SysRole role);
 
     /**
-     * 通过角色Id删除角色
+     * 依据角色类型 && 衍生Id 删除角色信息
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param role 角色信息 | roleId 角色Id
+     * @param role 角色信息 | type 角色类型 | deriveId 衍生Id
      * @return 结果
      */
     @DataScope(ueAlias = "empty")
-    public int deleteRoleById(SysRole role);
+    public int deleteRoleByDeriveId(SysRole role);
+
+    /**
+     * 依据角色类型 && 衍生Ids 批量删除角色信息
+     * 访问控制 empty 租户更新（无前缀）
+     *
+     * @param role 角色信息 | type 角色类型 | params.Ids 需要删除的衍生Ids组
+     * @return 结果
+     */
+    @DataScope(ueAlias = "empty")
+    public int deleteRoleByDeriveIds(SysRole role);
 
     /**
      * 批量删除角色信息
@@ -135,24 +137,13 @@ public interface SysRoleMapper {
     public int deleteRoleByIds(SysRole role);
 
     /**
-     * 依据角色类型 && 衍生Id 删除角色信息
-     * 访问控制 empty 租户更新（无前缀）
+     * 查询角色Id存在于数组中的角色信息
      *
-     * @param role 角色信息 | type 角色类型 | deriveId 衍生Id
+     * @param role 角色信息 | params.Ids 需要删除的角色Ids组
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
-    public int deleteRoleByTypeAndDeriveId(SysRole role);
-
-    /**
-     * 依据角色类型 && 衍生Ids 批量删除角色信息
-     * 访问控制 empty 租户更新（无前缀）
-     *
-     * @param role 角色信息 | type 角色类型 | params.Ids 需要删除的衍生Ids组
-     * @return 结果
-     */
-    @DataScope(ueAlias = "empty")
-    public int deleteRoleByTypeAndDeriveIds(SysRole role);
+    @DataScope(eAlias = "r")
+    public Set<SysRole> checkRoleListByIds(SysRole role);
 
     /**
      * 校验角色编码是否唯一
@@ -183,4 +174,12 @@ public interface SysRoleMapper {
      */
     @DataScope(eAlias = "r")
     public SysRole checkRoleKeyUnique(SysRole role);
+
+    /**
+     * 通过类型和衍生Id查询角色Id与数据范围
+     *
+     * @param role 角色信息 | type 角色类型 | derive_id 衍生Id | enterpriseId 企业Id
+     * @return 角色Id
+     */
+    public SysRole selectRoleIdByDeriveId(SysRole role);
 }

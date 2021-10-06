@@ -1,9 +1,7 @@
 package com.xueyi.system.authority.mapper;
 
-import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
 
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -82,8 +80,33 @@ public interface SysAuthorityMapper {
      *
      * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
      */
-    public void deleteMenuScope(SysRole role);
+    public void deleteSystemMenuByRoleId(SysRole role);
 
+    /**
+     * 根据角色Ids组批量删除角色与模块-菜单关联
+     *
+     * @param role 角色信息 | enterpriseId 租户Id | params.Ids 需要删除的角色Ids组
+     */
+    public void deleteSystemMenuByRoleIds(SysRole role);
 
+    /**
+     * 根据角色Id增加角色与部门-岗位关联
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id | deptPostIds 部门-岗位组
+     */
+    public void insertDeptPostScope(SysRole role);
 
+    /**
+     * 根据角色Id删除角色与部门-岗位关联
+     *
+     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
+     */
+    public void deleteDeptPostByRoleId(SysRole role);
+
+    /**
+     * 根据角色Ids组批量删除角色与部门-岗位关联
+     *
+     * @param role 角色信息 | enterpriseId 租户Id | params.Ids 需要删除的角色Ids组
+     */
+    public void deleteDeptPostByRoleIds(SysRole role);
 }

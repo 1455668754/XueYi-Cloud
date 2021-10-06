@@ -292,14 +292,14 @@
         <el-form-item label="权限范围">
           <el-select v-model="form.dataScope" @change="dataScopeSelectChange">
             <el-option
-              v-for="item in dataScopeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
+              v-for="dict in dict.type.sys_data_scope"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="数据权限" v-show="form.dataScope == 2">
+        <el-form-item label="数据权限" v-show="form.dataScope === DATA_SCOPE.CUSTOM">
           <el-checkbox v-model="deptExpand" @change="handleCheckedTreeExpand($event, 'deptPost')">展开/折叠</el-checkbox>
           <el-checkbox v-model="deptNodeAll" @change="handleCheckedTreeNodeAll($event, 'deptPost')">全选/全不选</el-checkbox>
           <el-tree
@@ -332,19 +332,20 @@ import {
   updateRole,
   dataScope,
   changeRoleStatus,
-  getDataScope
 } from "@/api/system/role"
 import {treeSelect as roleDeptTreeSelect} from "@/api/system/post"
 import {STATUS} from "@constant/constants"
-import {getEnterpriseMenuScope, getRoleMenuRange, setRoleMenuScope} from "@api/common/authority"
+import {DATA_SCOPE} from "@constant/authorityContants"
+import {getEnterpriseMenuScope, getRoleMenuRange, setRoleMenuScope, getRoleDataRange} from "@api/common/authority"
 
 export default {
   name: "Role",
-  dicts: ['sys_normal_disable'],
+  dicts: ['sys_normal_disable', 'sys_data_scope'],
   data() {
     return {
       //常量区
       STATUS: STATUS,
+      DATA_SCOPE: DATA_SCOPE,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -376,33 +377,6 @@ export default {
       deptNodeAll: false,
       // 日期范围
       dateRange: [],
-      // 数据范围选项
-      dataScopeOptions: [
-        {
-          value: "1",
-          label: "全部数据权限"
-        },
-        {
-          value: "2",
-          label: "自定数据权限"
-        },
-        {
-          value: "3",
-          label: "本部门数据权限"
-        },
-        {
-          value: "4",
-          label: "本部门及以下数据权限"
-        },
-        {
-          value: "5",
-          label: "本岗位数据权限"
-        },
-        {
-          value: "6",
-          label: "仅本人数据权限"
-        }
-      ],
       // 模块&菜单列表
       systemMenuOptions: [],
       // 部门-岗位列表
@@ -464,11 +438,6 @@ export default {
         this.deptPostOptions = response.data
       })
     },
-    // 所有部门-岗位节点数据
-    getDeptPostAllCheckedKeys() {
-      // 目前被选中的部门节点
-      return this.$refs.deptPost.getCheckedKeys()
-    },
     /** 根据角色Id查询模块&菜单树结构 */
     getMenuScope(roleId) {
       return getRoleMenuRange({roleId: roleId}).then(response => {
@@ -477,7 +446,7 @@ export default {
     },
     /** 根据角色Id查询部门-岗位树结构 */
     getDataScope(roleId) {
-      return getDataScope({roleId: roleId}).then(response => {
+      return getRoleDataRange({roleId: roleId}).then(response => {
         return response
       })
     },
@@ -521,7 +490,7 @@ export default {
         roleCode: undefined,
         name: undefined,
         roleKey: undefined,
-        dataScope: '1',
+        dataScope: DATA_SCOPE.ALL,
         sort: 0,
         status: STATUS.NORMAL,
         deptPostIds: [],
@@ -588,7 +557,7 @@ export default {
     },
     /** 选择角色权限范围触发 */
     dataScopeSelectChange(value) {
-      if (value !== '2') {
+      if (value !== DATA_SCOPE.CUSTOM) {
         this.$refs.deptPost.setCheckedKeys([])
       }
     },
@@ -614,11 +583,9 @@ export default {
       getRole({roleId: row.roleId}).then(response => {
         this.form = response.data
         this.openDataScope = true
-        this.$nextTick(() => {
           dataScope.then(res => {
-            this.$refs.deptPost.setCheckedKeys(Array.from(res.data, x => x.deptPostId))
+            this.$refs.deptPost.setCheckedKeys(Array.from(res.data.deptPostIds, x => x))
           })
-        })
         this.title = "分配数据权限"
       })
     },
@@ -672,7 +639,7 @@ export default {
     submitDataScope: function () {
       this.submitLoading = true
       if (this.form.roleId !== undefined) {
-        this.form.deptPostIds = this.getDeptPostAllCheckedKeys()
+        this.form.deptPostIds = this.$refs.deptPost.getCheckedKeys()
         dataScope(this.form).then(response => {
           this.$modal.msgSuccess("修改成功")
           this.openDataScope = false

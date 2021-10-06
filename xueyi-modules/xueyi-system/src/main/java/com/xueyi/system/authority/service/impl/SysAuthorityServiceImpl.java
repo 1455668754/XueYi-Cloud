@@ -46,7 +46,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     public List<TreeSelect> selectLessorMenuScope(Long enterpriseId) {
-        return buildSystemMenuTree(AuthorityUtils.getCommonSystemMenuCache(),true);
+        return buildSystemMenuTree(AuthorityUtils.getCommonSystemMenuCache(), true);
     }
 
     /**
@@ -256,8 +256,20 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @param role 角色信息 | roleId 角色Id | enterpriseId 企业Id
      * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
      */
+    @Override
     public Map<String, Set<SystemMenu>> selectRoleMenuRange(SysRole role) {
         return assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByRoleId(role), SecurityUtils.isAdminTenant(), true);
+    }
+
+    /**
+     * 根据角色Id获取部门-岗位选择 | 角色级
+     *
+     * @param role 角色信息 | roleId 角色Id
+     * @return 角色信息
+     */
+    @Override
+    public SysRole selectRoleDataRange(SysRole role) {
+        return AuthorityUtils.getRoleCache(SecurityUtils.getEnterpriseId(), role.getRoleId());
     }
 
     /**
@@ -291,7 +303,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id | dataScope 数据范围 | params.wholeIds 全选 | params.halfIds 半选
      */
     private void refreshMenuScope(SysRole role) {
-        authorityMapper.deleteMenuScope(role);
+        authorityMapper.deleteSystemMenuByRoleId(role);
         if (role.getParams().containsKey("wholeIds")) {
             authorityMapper.insertWholeIdsMenuScope(role);
         }
@@ -398,7 +410,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @return 模块-菜单树
      */
     private List<TreeSelect> selectSystemMenuTree(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal) {
-        return buildSystemMenuTree(mergeSet(enterpriseId, roles, isAdminTenant, hasNormal),true);
+        return buildSystemMenuTree(mergeSet(enterpriseId, roles, isAdminTenant, hasNormal), true);
     }
 
     /**
@@ -426,7 +438,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @return 模块-菜单树
      */
     public List<TreeSelect> buildSystemMenuTree(Set<SystemMenu> systemMenuSet, boolean killScattered) {
-        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(systemMenuSet), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE,killScattered);
+        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(systemMenuSet), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE, killScattered);
         return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 }

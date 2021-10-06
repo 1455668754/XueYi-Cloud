@@ -1,13 +1,10 @@
 package com.xueyi.system.authority.service;
 
-import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.utils.vo.TreeSelect;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.Map;
@@ -173,6 +170,14 @@ public interface ISysAuthorityService {
      * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
      */
     public Map<String, Set<SystemMenu>> selectRoleMenuRange(SysRole role);
+
+    /**
+     * 根据角色Id获取部门-岗位选择 | 角色级
+     *
+     * @param role 角色信息 | roleId 角色Id
+     * @return 角色信息
+     */
+    public SysRole selectRoleDataRange(SysRole role);
 
     /**
      * 根据角色信息更新模块-菜单集合

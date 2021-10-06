@@ -72,7 +72,7 @@ public interface SysSystemMapper {
     public int mainDeleteSystemByIds(@Param("system") SysSystem system, @Param("isAdminTenant") boolean isAdminTenant);
 
     /**
-     * 检查模块集合是中存在的值
+     * 查询角色Id存在于数组中的角色信息
      * 访问控制 s 租户查询
      *
      * @param system 模块信息 | params.Ids 模块Ids组

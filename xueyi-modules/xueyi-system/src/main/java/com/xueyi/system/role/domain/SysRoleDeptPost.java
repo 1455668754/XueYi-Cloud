@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author xueyi
  */
 public class SysRoleDeptPost extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /** 角色Id */
