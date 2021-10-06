@@ -5,7 +5,6 @@ import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.DataSourceUtils;
-import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
@@ -105,11 +104,11 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     /**
      * 根据菜单信息查询菜单信息
      *
-     * @param menu 菜单信息
+     * @param enterpriseId 企业Id
      */
     @Override
-    public void refreshMenuCacheByMenu(SysMenu menu){
-        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectMenuCacheListByMenu(menu);
+    public void refreshMenuCacheByEnterpriseId(Long enterpriseId){
+        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectMenuCacheListByEnterpriseId(enterpriseId);
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getMenuSet());
         }

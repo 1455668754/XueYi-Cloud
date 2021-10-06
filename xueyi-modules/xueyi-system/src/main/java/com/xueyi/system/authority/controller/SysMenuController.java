@@ -10,7 +10,9 @@ import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.system.api.domain.authority.SysMenu;
+import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.authority.service.ISysMenuService;
+import com.xueyi.system.cache.service.ISysCacheInitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,9 @@ public class SysMenuController extends BaseController {
 
     @Autowired
     private ISysMenuService menuService;
+
+    @Autowired
+    private ISysCacheInitService cacheInitService;
 
     /**
      * 查询模块-菜单信息列表
@@ -61,7 +66,7 @@ public class SysMenuController extends BaseController {
         } else if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
             return AjaxResult.error("新增菜单'" + menu.getName() + "'失败，仅租管账户可新增公共菜单");
         }
-        return toAjax(menuService.mainInsertMenu(menu));
+        return toAjax(refreshCache(menu, menuService.mainInsertMenu(menu)));
     }
 
     /**
@@ -80,7 +85,12 @@ public class SysMenuController extends BaseController {
         } else if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
             return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，仅租管账户可修改公共菜单");
         }
-        return toAjax(menuService.mainUpdateMenu(menu));
+        SysMenu check = menuService.mainSelectMenuById(new SysMenu(menu.getMenuId()));
+        int rows =menuService.mainUpdateMenu(menu);
+        if (check.getSystemId().longValue() == menu.getSystemId().longValue()) {
+            refreshCache(check, rows);
+        }
+        return toAjax(refreshCache(menu, rows));
     }
 
     /**
@@ -96,7 +106,8 @@ public class SysMenuController extends BaseController {
         if (menuService.mainCheckMenuExistRole(menu)) {
             return AjaxResult.error("菜单已分配,不允许删除");
         }
-        return toAjax(menuService.mainDeleteMenuById(menu));
+        SysMenu before = menuService.mainSelectMenuById(new SysMenu(menu.getMenuId()));
+        return toAjax(refreshCache(before,menuService.mainDeleteMenuById(menu)));
     }
 
     /**
@@ -108,5 +119,25 @@ public class SysMenuController extends BaseController {
     public AjaxResult getRouters(SysMenu menu) {
         List<SysMenu> menus = menuService.getRoutes(menu);
         return AjaxResult.success(menuService.buildMenus(menus));
+    }
+
+    /**
+     * 更新菜单信息缓存
+     *
+     * @param menu 菜单信息
+     * @param rows 结果
+     */
+    private int refreshCache(SysMenu menu, int rows) {
+        if (rows > 0) {
+            cacheInitService.refreshRouteCacheBySystem(new SysSystem(menu.getSystemId(), SecurityUtils.getEnterpriseId()));
+            cacheInitService.refreshMenuCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
+            cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(menu.getSystemId(), SecurityUtils.getEnterpriseId()));
+            if (SecurityUtils.isAdminTenant()) {
+                cacheInitService.refreshRouteCacheBySystem(new SysSystem(menu.getSystemId(), AuthorityConstants.COMMON_ENTERPRISE));
+                cacheInitService.refreshMenuCacheByEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
+                cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(menu.getSystemId(), AuthorityConstants.COMMON_ENTERPRISE));
+            }
+        }
+        return rows;
     }
 }

@@ -1,6 +1,5 @@
 package com.xueyi.system.cache.mapper;
 
-import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.cache.domain.CacheInitVo;
@@ -39,10 +38,10 @@ public interface SysCacheInitMapper {
     /**
      * 根据菜单信息查询菜单信息
      *
-     * @param menu 菜单信息
+     * @param enterpriseId 企业Id
      * @return 通用缓存封装对象集合
      */
-    public List<CacheInitVo> mainSelectMenuCacheListByMenu(SysMenu menu);
+    public List<CacheInitVo> mainSelectMenuCacheListByEnterpriseId(Long enterpriseId);
     /**
      * 查询所有模块信息 | 用于缓存加载
      *

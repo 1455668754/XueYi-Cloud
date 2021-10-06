@@ -1,6 +1,5 @@
 package com.xueyi.system.cache.service;
 
-import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 
@@ -31,9 +30,9 @@ public interface ISysCacheInitService {
     /**
      * 根据菜单信息查询菜单信息
      *
-     * @param menu 菜单信息
+     * @param enterpriseId 企业Id
      */
-    public void refreshMenuCacheByMenu(SysMenu menu);
+    public void refreshMenuCacheByEnterpriseId(Long enterpriseId);
 
     /**
      * 加载模块缓存数据

@@ -151,7 +151,7 @@
         order by m.sort
     </select>
 
-    <select id="mainSelectMenuCacheListByMenu" parameterType="SysMenu" resultMap="CacheInitResult">
+    <select id="mainSelectMenuCacheListByEnterpriseId" parameterType="Long" resultMap="CacheInitResult">
         <include refid="menuCacheVo"/>
         where m.tenant_id = #{enterpriseId} and m.status = 0 and m.del_flag = 0
         order by m.sort
