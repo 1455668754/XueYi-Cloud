@@ -3,6 +3,7 @@ package com.xueyi.common.datascope.aspect;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,24 +26,6 @@ import com.xueyi.system.api.model.LoginUser;
 @Aspect
 @Component
 public class DataScopeAspect {
-
-    /** 全部数据权限 */
-    public static final String DATA_SCOPE_ALL = "1";
-
-    /** 自定义数据权限 */
-    public static final String DATA_SCOPE_CUSTOM = "2";
-
-    /** 本部门数据权限 */
-    public static final String DATA_SCOPE_DEPT = "3";
-
-    /** 本部门及以下数据权限 */
-    public static final String DATA_SCOPE_DEPT_AND_CHILD = "4";
-
-    /** 本岗位数据权限 */
-    public static final String DATA_SCOPE_POST = "5";
-
-    /** 仅本人数据权限 */
-    public static final String DATA_SCOPE_SELF = "6";
 
     /** 数据权限过滤关键字 */
     public static final String DATA_SCOPE = "dataScope";
@@ -126,12 +109,12 @@ public class DataScopeAspect {
                 for (SysRole role : user.getRoles()) {
                     String dataScope = role.getDataScope();
                     // 1.全部数据权限
-                    if (DATA_SCOPE_ALL.equals(dataScope)) {
+                    if (AuthorityConstants.DATA_SCOPE_ALL.equals(dataScope)) {
                         sqlString = new StringBuilder();
                         break;
                     }
                     // 2.自定数据权限
-                    else if (DATA_SCOPE_CUSTOM.equals(dataScope) && (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias))) {
+                    else if (AuthorityConstants.DATA_SCOPE_CUSTOM.equals(dataScope) && (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias))) {
                         if (StringUtils.isNotBlank(deptAlias) && StringUtils.isNotBlank(postAlias)) {
                             sqlString.append(StringUtils.format(
                                     " OR ( {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ) ", deptAlias,
@@ -147,21 +130,21 @@ public class DataScopeAspect {
                         }
                     }
                     // 3.本部门数据权限
-                    else if (DATA_SCOPE_DEPT.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                    else if (AuthorityConstants.DATA_SCOPE_DEPT.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
                         sqlString.append(StringUtils.format(" OR {}.dept_id = {} ", deptAlias, user.getDeptId()));
                     }
                     // 4.本部门及以下数据权限
-                    else if (DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                    else if (AuthorityConstants.DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
                         sqlString.append(StringUtils.format(
                                 " OR {}.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = {} or find_in_set( {} , ancestors ) ) ",
                                 deptAlias, user.getDeptId(), user.getDeptId()));
                     }
                     // 5.本岗位数据权限
-                    else if (DATA_SCOPE_POST.equals(dataScope) && StringUtils.isNotBlank(postAlias)) {
+                    else if (AuthorityConstants.DATA_SCOPE_POST.equals(dataScope) && StringUtils.isNotBlank(postAlias)) {
                         sqlString.append(StringUtils.format(" OR {}.post_id = {} ", postAlias, user.getPostId()));
                     }
                     // 6.仅本人数据权限
-                    else if (DATA_SCOPE_SELF.equals(dataScope)) {
+                    else if (AuthorityConstants.DATA_SCOPE_SELF.equals(dataScope)) {
                         if (StringUtils.isNotBlank(userAlias)) {
                             sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
                         }

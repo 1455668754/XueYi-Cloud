@@ -44,6 +44,16 @@ module.exports = {
         NO: 'N'
     },
 
+    /** 数据范围（1全部数据权限 2自定义数据权限 3本部门数据权限 4本部门及以下数据权限 5本岗位数据权限 6仅本人数据权限） */
+    DATA_SCOPE: {
+        ALL: '1',
+        CUSTOM: '2',
+        DEPT: '3',
+        DEPT_AND_CHILD: '4',
+        POST: '5',
+        SELF: '6'
+    },
+
     /** 默认菜单父Id */
     DEFAULT_PARENT_MENU_ID: '0',
 

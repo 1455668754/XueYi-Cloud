@@ -45,4 +45,22 @@ public class AuthorityConstants {
 
     /** 角色类型 - 用户衍生 */
     public static final String DERIVE_USER_TYPE = "5";
+
+    /** 数据范围 - 全部数据权限 */
+    public static final String DATA_SCOPE_ALL = "1";
+
+    /** 数据范围 - 自定义数据权限 */
+    public static final String DATA_SCOPE_CUSTOM = "2";
+
+    /** 数据范围 - 本部门数据权限 */
+    public static final String DATA_SCOPE_DEPT = "3";
+
+    /** 数据范围 - 本部门及以下数据权限 */
+    public static final String DATA_SCOPE_DEPT_AND_CHILD = "4";
+
+    /** 数据范围 - 本岗位数据权限 */
+    public static final String DATA_SCOPE_POST = "5";
+
+    /** 数据范围 - 仅本人数据权限 */
+    public static final String DATA_SCOPE_SELF = "6";
 }
