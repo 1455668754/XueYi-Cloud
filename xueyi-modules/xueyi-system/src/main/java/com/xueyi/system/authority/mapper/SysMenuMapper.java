@@ -106,34 +106,4 @@ public interface SysMenuMapper {
      * @return 权限列表
      */
     public List<String> checkLoginMenuPermission(SysMenu menu);
-
-    /**
-     * 获取菜单范围信息 - 取出尾级模块|菜单
-     * 访问控制 m 租户查询
-     *
-     * @param menu 菜单信息 | null
-     * @return 菜单列表
-     */
-    @DataScope(edAlias = "m")
-    public List<SysMenu> selectSystemMenuListOnlyChild(SysMenu menu);
-
-    /**
-     * 查询系统全部菜单列表 | 遵循菜单查询控制
-     * 访问控制 m 租户查询
-     *
-     * @param menu 菜单信息 | status 菜单状态 | menu_id 排除的菜单Id | params.onlyList in list | params.excludeList not in list
-     * @return 菜单列表
-     */
-    @DataScope(edAlias = "m")
-    public List<SysMenu> buildSystemMenuTreeSelect(SysMenu menu);
-
-    /**
-     * 查询系统全部菜单列表 | 遵循菜单查询控制 | 仅公共数据
-     * 访问控制 m 租户查询
-     *
-     * @param menu 菜单信息 | status 菜单状态 | menu_id 排除的菜单Id | params.onlyList in list | params.excludeList not in list
-     * @return 菜单列表
-     */
-    @DataScope(edAlias = "m")
-    public List<SysMenu> buildSystemMenuTreeSelectOnlyPublic(SysMenu menu);
 }

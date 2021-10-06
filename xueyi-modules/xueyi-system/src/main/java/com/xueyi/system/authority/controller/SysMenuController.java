@@ -8,12 +8,9 @@ import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.system.api.domain.authority.SysMenu;
-import com.xueyi.system.api.domain.role.SysRoleSystemMenu;
 import com.xueyi.system.authority.service.ISysMenuService;
-import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +28,6 @@ public class SysMenuController extends BaseController {
 
     @Autowired
     private ISysMenuService menuService;
-
-    @Autowired
-    private ISysRoleSystemMenuService roleSystemMenuService;
 
     /**
      * 查询模块-菜单信息列表
@@ -114,45 +108,5 @@ public class SysMenuController extends BaseController {
     public AjaxResult getRouters(SysMenu menu) {
         List<SysMenu> menus = menuService.getRoutes(menu);
         return AjaxResult.success(menuService.buildMenus(menus));
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * 获取指定企业账号的租管衍生角色菜单范围信息 | 租管系统使用方法
-     */
-    @GetMapping("/getMenuScope/administrator")
-    public AjaxResult getMenuScope(SysRoleSystemMenu systemMenu) {
-        systemMenu.setSourceName(EnterpriseUtils.getMainSourceName(systemMenu.getEnterpriseId()));
-        return AjaxResult.success(roleSystemMenuService.getEnterpriseMenuScopeById(systemMenu));
-    }
-
-    /**
-     * 修改保存指定企业账号的租管衍生角色菜单权限 | 租管系统使用方法
-     */
-    @PreAuthorize(hasPermi = "tenant:tenant:edit")
-    @Log(title = "租户管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/authMenuScope/administrator")
-    public AjaxResult authMenuScope(@RequestBody SysRoleSystemMenu systemMenu) {
-        systemMenu.setSourceName(EnterpriseUtils.getMainSourceName(systemMenu.getEnterpriseId()));
-        return toAjax(roleSystemMenuService.authMenuScopeById(systemMenu));
     }
 }

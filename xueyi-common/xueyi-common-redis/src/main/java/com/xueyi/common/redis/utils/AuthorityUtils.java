@@ -29,6 +29,16 @@ public class AuthorityUtils {
     }
 
     /**
+     * 获取菜单 key
+     *
+     * @param enterpriseId 企业Id
+     * @return 缓存键key
+     */
+    public static String getMenuCacheKey(Long enterpriseId) {
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.MENU_KEY;
+    }
+
+    /**
      * 获取模块 key
      *
      * @param enterpriseId 企业Id
@@ -92,6 +102,39 @@ public class AuthorityUtils {
     public static void deleteRouteCache(Long enterpriseId, Long systemId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getRouteCacheKey(enterpriseId, systemId));
+    }
+
+    /**
+     * 获取菜单缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     */
+    public static <T> Set<T> getMenuCache(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        Set<T> privateSet = redisService.getCacheObject(getMenuCacheKey(enterpriseId));
+        Set<T> commonSet = redisService.getCacheObject(getMenuCacheKey(AuthorityConstants.COMMON_ENTERPRISE));
+        return assemble(privateSet, commonSet);
+    }
+
+    /**
+     * 新增菜单缓存 cache
+     *
+     * @param enterpriseId 企业Id
+     * @param menuSet      菜单集合
+     */
+    public static <T> void refreshMenuCache(Long enterpriseId, Set<T> menuSet) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        redisService.setCacheObject(getMenuCacheKey(enterpriseId), menuSet);
+    }
+
+    /**
+     * 删除指定菜单 cache
+     *
+     * @param enterpriseId 企业Id
+     */
+    public static void deleteMenuCache(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        redisService.deleteObject(getMenuCacheKey(enterpriseId));
     }
 
     /**

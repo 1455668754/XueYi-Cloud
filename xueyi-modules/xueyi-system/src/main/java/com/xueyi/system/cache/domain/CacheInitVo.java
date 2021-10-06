@@ -16,8 +16,8 @@ import java.util.Set;
  */
 public class CacheInitVo extends BaseEntity {
 
-    /** 菜单集合 */
-    private Set<SysMenu> routeSet;
+    /** 路由集合 */
+    private Set<SysMenu> menuSet;
 
     /** 模块集合 */
     private Set<SysSystem> systemSet;
@@ -25,12 +25,12 @@ public class CacheInitVo extends BaseEntity {
     /** 模块-菜单集合 */
     private Set<SystemMenu> systemMenuSet;
 
-    public Set<SysMenu> getRouteSet() {
-        return routeSet;
+    public Set<SysMenu> getMenuSet() {
+        return menuSet;
     }
 
-    public void setRouteSet(Set<SysMenu> routeSet) {
-        this.routeSet = routeSet;
+    public void setMenuSet(Set<SysMenu> menuSet) {
+        this.menuSet = menuSet;
     }
 
     public Set<SysSystem> getSystemSet() {
@@ -53,7 +53,7 @@ public class CacheInitVo extends BaseEntity {
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("enterpriseId", getEnterpriseId())
-                .append("routeSet", getRouteSet())
+                .append("routeSet", getMenuSet())
                 .append("systemSet", getSystemSet())
                 .append("systemMenuSet", getSystemMenuSet())
                 .toString();

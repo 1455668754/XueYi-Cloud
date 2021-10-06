@@ -1,11 +1,8 @@
 package com.xueyi.system.cache.service;
 
-import com.xueyi.common.redis.utils.AuthorityUtils;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
-import com.xueyi.system.cache.domain.CacheInitVo;
-
-import java.util.List;
 
 /**
  * 缓存加载 业务层
@@ -25,6 +22,18 @@ public interface ISysCacheInitService {
      * @param system 模块信息
      */
     public void refreshRouteCacheBySystem(SysSystem system);
+
+    /**
+     * 加载菜单缓存数据
+     */
+    public void loadingMenuCache();
+
+    /**
+     * 根据菜单信息查询菜单信息
+     *
+     * @param menu 菜单信息
+     */
+    public void refreshMenuCacheByMenu(SysMenu menu);
 
     /**
      * 加载模块缓存数据

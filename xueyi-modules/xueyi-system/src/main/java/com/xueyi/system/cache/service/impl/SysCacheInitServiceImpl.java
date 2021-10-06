@@ -5,6 +5,7 @@ import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
@@ -54,6 +55,8 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         dataSourceService.loadingSourceCache();
         /* 初始化模块-路由缓存 */
         loadingRouteCache();
+        /* 初始化菜单缓存 */
+        loadingMenuCache();
         /* 初始化模块缓存 */
         loadingSystemCache();
         /* 初始化模块-菜单缓存 */
@@ -71,7 +74,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     public void loadingRouteCache() {
         List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectRouteCacheList();
         for (CacheInitVo cacheInitVo : cacheInitVos) {
-            AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getRouteSet());
+            AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getMenuSet());
         }
     }
 
@@ -84,7 +87,31 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     public void refreshRouteCacheBySystem(SysSystem system){
         List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectRouteCacheListBySystem(system);
         for (CacheInitVo cacheInitVo : cacheInitVos) {
-            AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getRouteSet());
+            AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getMenuSet());
+        }
+    }
+
+    /**
+     * 加载菜单缓存数据
+     */
+    @Override
+    public void loadingMenuCache() {
+        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectMenuCacheList();
+        for (CacheInitVo cacheInitVo : cacheInitVos) {
+            AuthorityUtils.refreshMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getMenuSet());
+        }
+    }
+
+    /**
+     * 根据菜单信息查询菜单信息
+     *
+     * @param menu 菜单信息
+     */
+    @Override
+    public void refreshMenuCacheByMenu(SysMenu menu){
+        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectMenuCacheListByMenu(menu);
+        for (CacheInitVo cacheInitVo : cacheInitVos) {
+            AuthorityUtils.refreshMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getMenuSet());
         }
     }
 

@@ -7,7 +7,7 @@
     <resultMap type="CacheInitVo" id="CacheInitResult">
         <result property="enterpriseId"     column="tenant_id"      />
         <result property="systemId"         column="system_id"      />
-        <collection  property="routeSet"        javaType="java.util.Set" resultMap="routeResult"        />
+        <collection  property="menuSet"         javaType="java.util.Set" resultMap="routeResult"        />
         <collection  property="systemSet"       javaType="java.util.Set" resultMap="systemResult"       />
         <collection  property="systemMenuSet"   javaType="java.util.Set" resultMap="systemMenuResult"   />
     </resultMap>
@@ -90,6 +90,12 @@
         from sys_menu m
     </sql>
 
+    <sql id="menuCacheVo">
+        select distinct m.tenant_id, m.menu_id as menu_menu_id, m.system_id as menu_system_id, m.name as menu_name, m.parent_id as menu_parent_id, m.path as menu_path, m.component as menu_component, m.query as menu_query, m.is_common as menu_is_common,
+                        m.is_change as menu_is_change, m.is_frame as menu_is_frame, m.is_cache as menu_is_cache, m.menu_type as menu_menu_type, m.visible as menu_visible, m.status as menu_status, ifnull(m.perms, '') as menu_perms, m.icon as menu_icon, m.sort as menu_sort
+        from sys_menu m
+    </sql>
+
     <sql id="systemCacheVo">
         select distinct s.tenant_id, s.system_id as system_system_id, s.name as system_name, s.image_url as system_image_url, s.type as system_type, s.route as system_route, s.is_common as system_is_common,
                         s.is_change as system_is_change, s.is_new as system_is_new, s.visible as system_visible, s.status as system_status, s.remark as system_remark, s.sort as system_sort
@@ -136,6 +142,18 @@
     <select id="mainSelectRouteCacheListBySystem" parameterType="SysSystem" resultMap="CacheInitResult">
         <include refid="routeCacheVo"/>
         where m.system_id = #{systemId} and m.tenant_id = #{enterpriseId} and m.menu_type in ('M', 'C') and m.status = 0 and m.del_flag = 0
+        order by m.sort
+    </select>
+
+    <select id="mainSelectMenuCacheList" parameterType="CacheInitVo" resultMap="CacheInitResult">
+        <include refid="menuCacheVo"/>
+        where m.status = 0 and m.del_flag = 0
+        order by m.sort
+    </select>
+
+    <select id="mainSelectMenuCacheListByMenu" parameterType="SysMenu" resultMap="CacheInitResult">
+        <include refid="menuCacheVo"/>
+        where m.tenant_id = #{enterpriseId} and m.status = 0 and m.del_flag = 0
         order by m.sort
     </select>
 

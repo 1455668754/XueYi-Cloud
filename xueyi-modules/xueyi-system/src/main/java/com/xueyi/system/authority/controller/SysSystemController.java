@@ -1,7 +1,6 @@
 package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.MenuConstants;
 import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
@@ -105,64 +104,5 @@ public class SysSystemController extends BaseController {
     @GetMapping("/getSystemRoutes")
     public AjaxResult getSystemRoutes() {
         return AjaxResult.success(systemService.getSystemRoutes());
-    }
-
-    
-    
-    
-    
-
-    /**
-     * 加载对应模块&菜单列表树 | searchValue === PERMIT_ALL 获取所有权限内模块&菜单 | 无衍生角色
-     */
-    @GetMapping(value = "/systemMenuTreePermitAll")
-    public AjaxResult getListPermitAll(SysSystem system) {
-        system.setSearchValue(MenuConstants.PERMIT_ALL);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
-    }
-
-    /**
-     * 加载对应模块&菜单列表树 - 仅公共数据 - 租管使用 | searchValue === PERMIT_ALL_ONLY_PUBLIC 获取所有权限内模块&菜单 | 无衍生角色 | 仅公共数据
-     */
-    @GetMapping(value = "/systemMenuTreePermitAllOnlyPublic")
-    public AjaxResult getListPermitAllOnlyPublic(SysSystem system) {
-        system.setSearchValue(MenuConstants.PERMIT_ALL_ONLY_PUBLIC);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
-    }
-
-    /**
-     * 加载对应模块&菜单列表树 | searchValue === PERMIT_ADMINISTRATOR 仅获取超管权限内模块&菜单 | 衍生角色仅获取超管衍生
-     */
-    @GetMapping(value = "/systemMenuTreePermitAdministrator")
-    public AjaxResult getListPermitAdministrator(SysSystem system) {
-        system.setSearchValue(MenuConstants.PERMIT_ADMINISTRATOR);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
-    }
-
-    /**
-     * 加载对应模块&菜单列表树 | searchValue === PERMIT_ENTERPRISE 仅获取租户权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
-     */
-    @GetMapping(value = "/systemMenuTreePermitEnterprise")
-    public AjaxResult getListPermitEnterprise(SysSystem system) {
-        system.setSearchValue(MenuConstants.PERMIT_ENTERPRISE);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
-    }
-
-    /**
-     * 加载对应模块&菜单列表树 | searchValue === PERMIT_PERSONAL_SCREEN_DERIVE 仅获取个人权限内模块&菜单 | 衍生角色仅获取超管衍生&租户衍生
-     */
-    @GetMapping(value = "/systemMenuTreePermitPersonalScreenDerice")
-    public AjaxResult getListPermitPersonalScreenDerice(SysSystem system) {
-        system.setSearchValue(MenuConstants.PERMIT_PERSONAL_SCREEN_DERIVE);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
-    }
-
-    /**
-     * 加载对应角色模块&菜单列表树 | searchValue === PERMIT_PERSONAL 仅获取个人权限内模块&菜单 | 衍生角色获取自身组织衍生&超管衍生&租户衍生
-     */
-    @GetMapping(value = "/systemMenuTreePermitPersonal")
-    public AjaxResult getListPermitPersonal(SysSystem system) {
-        system.setSearchValue(MenuConstants.PERMIT_PERSONAL);
-        return AjaxResult.success(systemService.buildSystemMenuTreeSelect(system));
     }
 }
