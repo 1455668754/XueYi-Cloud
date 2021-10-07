@@ -63,13 +63,13 @@ com.xueyi
 │       ├── xueyi-tenant                              // 租管模块 [9700]
 │       └── xueyi-system                              // 系统模块 [9600]
 │               ├── authority                         // 权限模块
+│               ├── cache                             // 缓存加载
 │               ├── dict                              // 参数字典
 │               ├── material                          // 素材模块
 │               ├── monitor                           // 监控模块
 │               ├── notice                            // 公告模块
 │               ├── organize                          // 组织模块
-│               ├── role                              // 权限关系
-│               └── source                            // 源策略
+│               └── role                              // 权限关系
 ├── xueyi-visual          // 图形化管理模块
 │       └── xueyi-visual-monitor                      // 监控中心 [9100]
 └── pom.xml                // 公共依赖

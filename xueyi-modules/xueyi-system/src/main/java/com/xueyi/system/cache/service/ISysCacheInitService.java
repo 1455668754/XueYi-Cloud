@@ -11,6 +11,18 @@ import com.xueyi.system.api.domain.authority.SysSystem;
 public interface ISysCacheInitService {
 
     /**
+     * 加载数据源策略组缓存数据 | 主源所有数据源策略组
+     */
+    public void loadingSourceCache();
+
+    /**
+     * 加载数据源策略组缓存数据 | 主源单个指定数据源策略组
+     *
+     * @param strategyId 源策略组Id
+     */
+    public void refreshSourceCacheByStrategyId(Long strategyId);
+
+    /**
      * 加载模块-路由缓存数据 | 主源所有企业
      */
     public void loadingRouteCache();

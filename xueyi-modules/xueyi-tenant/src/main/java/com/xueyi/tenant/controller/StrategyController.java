@@ -1,30 +1,24 @@
 package com.xueyi.tenant.controller;
 
-import java.util.List;
-
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
-import com.xueyi.common.redis.utils.DataSourceUtils;
-import com.xueyi.system.api.feign.RemoteSourceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.xueyi.common.log.annotation.Log;
-import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.tenant.api.domain.strategy.Strategy;
-import com.xueyi.tenant.service.IStrategyService;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
+import com.xueyi.common.log.annotation.Log;
+import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.system.api.feign.RemoteSourceService;
+import com.xueyi.tenant.api.domain.strategy.Strategy;
+import com.xueyi.tenant.service.IStrategyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 数据源策略 业务处理
@@ -116,7 +110,7 @@ public class StrategyController extends BaseController {
     @DeleteMapping
     public AjaxResult remove(@RequestBody Strategy strategy) {
         int rows = tenantStrategyService.mainDeleteStrategyByIds(strategy);
-        DataSourceUtils.deleteCaches(ParamsUtils.IdsObjectToLongList(strategy.getParams().get("Ids")));
+        DataSourceUtils.deleteSourceCaches(ParamsUtils.IdsObjectToLongList(strategy.getParams().get("Ids")));
         return toAjax(rows);
     }
 }

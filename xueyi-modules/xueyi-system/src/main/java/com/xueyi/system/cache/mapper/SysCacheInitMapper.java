@@ -2,6 +2,7 @@ package com.xueyi.system.cache.mapper;
 
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
+import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.cache.domain.CacheInitVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,6 +15,20 @@ import java.util.Set;
  * @author xueyi
  */
 public interface SysCacheInitMapper {
+    /**
+     * 查询所有数据源策略组信息 | 主源所有数据源策略组
+     *
+     * @return 数据源组集合
+     */
+    public List<Source> mainSelectSourceCacheListBySource();
+
+    /**
+     * 根据源策略Id查询数据源策略组信息 | 主源单个指定数据源策略组
+     *
+     * @param strategyId 源策略组Id
+     * @return 数据源组
+     */
+    public Source mainSelectSourceCacheByStrategyId(Long strategyId);
 
     /**
      * 查询所有模块-路由信息 | 主源所有企业

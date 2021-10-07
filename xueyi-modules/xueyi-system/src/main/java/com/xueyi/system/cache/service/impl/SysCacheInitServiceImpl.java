@@ -1,6 +1,8 @@
 package com.xueyi.system.cache.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.DataSourceUtils;
@@ -12,7 +14,6 @@ import com.xueyi.system.cache.domain.CacheInitVo;
 import com.xueyi.system.cache.mapper.SysCacheInitMapper;
 import com.xueyi.system.cache.service.ISysCacheInitService;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
-import com.xueyi.system.source.service.IDataSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,6 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     private ISysEnterpriseService enterpriseService;
 
     @Autowired
-    private IDataSourceService dataSourceService;
-
-    @Autowired
     private SysCacheInitMapper cacheInitMapper;
 
     @Autowired
@@ -47,11 +45,10 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     @PostConstruct
     public void init() {
         List<SysEnterprise> enterprisesList = enterpriseService.mainSelectEnterpriseCacheList();
-        List<Source> sources = DataSourceUtils.getSourceList();
         /* 初始化企业信息缓存 */
         enterpriseService.loadingEnterpriseCache(enterprisesList);
         /* 初始化数据源策略组缓存 */
-        dataSourceService.loadingSourceCache();
+        loadingSourceCache();
         /* 初始化模块-路由缓存 */
         loadingRouteCache();
         /* 初始化菜单缓存 */
@@ -61,9 +58,44 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         /* 初始化模块-菜单缓存 */
         loadingSystemMenuCache();
         /* 初始化模块-菜单缓存 */
+        List<Source> sources = DataSourceUtils.getSourceList();
         for (Source source : sources) {
             cacheInitService.loadingRoleCache(source.getMaster());
         }
+    }
+
+    /**
+     * 加载数据源策略组缓存数据 | 主源所有数据源策略组
+     */
+    @Override
+    public void loadingSourceCache() {
+        List<Source> sourceList = cacheInitMapper.mainSelectSourceCacheListBySource();
+        for (Source source : sourceList) {
+            for(Source value: source.getValues()){
+                if(StringUtils.equals(TenantConstants.IS_MAIN_TRUE,value.getIsMain())){
+                    source.setMaster(value.getMaster());
+                    source.setSlave(value.getSlave());
+                }
+            }
+            DataSourceUtils.refreshSourceCache(source.getStrategyId(),source);
+        }
+    }
+
+    /**
+     * 加载数据源策略组缓存数据 | 主源单个指定数据源策略组
+     *
+     * @param strategyId 源策略组Id
+     */
+    @Override
+    public void refreshSourceCacheByStrategyId(Long strategyId) {
+        Source source = cacheInitMapper.mainSelectSourceCacheByStrategyId(strategyId);
+        for(Source value: source.getValues()){
+            if(StringUtils.equals(TenantConstants.IS_MAIN_TRUE,value.getIsMain())){
+                source.setMaster(value.getMaster());
+                source.setSlave(value.getSlave());
+            }
+        }
+        DataSourceUtils.refreshSourceCache(source.getStrategyId(),source);
     }
 
     /**

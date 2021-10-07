@@ -42,14 +42,26 @@ public class DataSourceUtils {
      *
      * @return SourceList 源策略集合
      */
-    public static<T> List<T> getSourceList() {
+    public static <T> List<T> getSourceList() {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         Collection<String> keys = redisService.keys(getCacheFolderKey());
         List<T> list = new ArrayList<>();
-        for (String key: keys) {
+        for (String key : keys) {
             list.add(redisService.getCacheObject(key));
         }
         return list;
+    }
+
+    /**
+     * 根据企业Id获取源策略
+     *
+     * @param enterpriseId 企业Id
+     * @return 源策略
+     */
+    public static <T> T getSourceByEnterpriseId(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        Long strategyId = redisService.getCacheObject(EnterpriseUtils.getStrategyCacheKey(enterpriseId));
+        return redisService.getCacheObject(DataSourceUtils.getSourceCacheKey(strategyId));
     }
 
     /**
@@ -58,7 +70,7 @@ public class DataSourceUtils {
      * @param strategyId 策略Id
      * @param source     策略组
      */
-    public static <T> void refreshCache(Long strategyId, T source) {
+    public static <T> void refreshSourceCache(Long strategyId, T source) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.setCacheObject(getSourceCacheKey(strategyId), source);
     }
@@ -68,7 +80,7 @@ public class DataSourceUtils {
      *
      * @param strategyId 策略Id
      */
-    public static void deleteCache(Long strategyId) {
+    public static void deleteSourceCache(Long strategyId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getSourceCacheKey(strategyId));
     }
@@ -78,7 +90,7 @@ public class DataSourceUtils {
      *
      * @param strategyIds 策略Ids
      */
-    public static <T> void deleteCaches(List<Long> strategyIds) {
+    public static <T> void deleteSourceCaches(List<Long> strategyIds) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         for (Long Id : strategyIds) {
             T source = redisService.getCacheObject(getSourceCacheKey(Id));
@@ -87,20 +99,12 @@ public class DataSourceUtils {
                     Field fileId = source.getClass().getSuperclass().getDeclaredField("isChange");
                     fileId.setAccessible(true);
                     if (StringUtils.equals(Constants.SYSTEM_DEFAULT_FALSE, (CharSequence) fileId.get(source))) {
-                        deleteCache(Id);
+                        deleteSourceCache(Id);
                     }
                 } catch (NoSuchFieldException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
         }
-    }
-
-    /**
-     * 删除所有源策略 cache目录
-     */
-    public static void deleteCacheFolder() {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
-        redisService.deleteObject(getCacheFolderKey());
     }
 }

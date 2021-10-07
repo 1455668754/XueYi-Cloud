@@ -1,48 +1,41 @@
 package com.xueyi.system.organize.controller;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import javax.servlet.http.HttpServletResponse;
-
-import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
-import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.domain.authority.SysRole;
-import com.xueyi.system.api.domain.organize.SysEnterprise;
-import com.xueyi.system.api.domain.organize.SysPost;
-import com.xueyi.system.api.domain.authority.SysMenu;
-import com.xueyi.system.authority.service.ISysLoginService;
-import com.xueyi.system.organize.service.ISysEnterpriseService;
-import com.xueyi.system.organize.service.ISysPostService;
-import com.xueyi.system.organize.service.ISysUserService;
-import com.xueyi.system.api.domain.source.Source;
-import com.xueyi.system.source.service.IDataSourceService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
-import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.service.TokenService;
+import com.xueyi.system.api.domain.authority.SysMenu;
+import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
+import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.api.domain.organize.SysUser;
+import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.api.model.LoginUser;
+import com.xueyi.system.authority.service.ISysLoginService;
+import com.xueyi.system.organize.service.ISysEnterpriseService;
+import com.xueyi.system.organize.service.ISysPostService;
+import com.xueyi.system.organize.service.ISysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * 用户信息
@@ -66,9 +59,6 @@ public class SysUserController extends BaseController {
     private TokenService tokenService;
 
     @Autowired
-    private IDataSourceService dataSourceService;
-
-    @Autowired
     private ISysEnterpriseService enterpriseService;
 
     /**
@@ -82,7 +72,7 @@ public class SysUserController extends BaseController {
             return R.fail("账号或密码错误，请检查");
         }
         //查询租户的主从库信息
-        Source source = dataSourceService.getSourceByEnterpriseId(sysEnterprise.getEnterpriseId());
+        Source source = DataSourceUtils.getSourceByEnterpriseId(sysEnterprise.getEnterpriseId());
         //开始进入对应的主数据库
         SysUser checkUser = new SysUser();
         checkUser.setSourceName(source.getMaster());
