@@ -209,6 +209,7 @@ public interface ISysAuthorityService {
     /**
      * 装配菜单集合
      *
+     * @param enterpriseId  企业Id
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
      * @param hasNormal     有无普通角色权限（true -> 初始权限集合由全部更替为普通角色和）

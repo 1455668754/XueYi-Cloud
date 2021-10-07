@@ -15,7 +15,6 @@ import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.organize.SysPost;
@@ -90,12 +89,9 @@ public class SysUserController extends BaseController {
         // 角色集合
         List<SysRole> roleList = roleService.getRoleListByUserId(sysUser.getUserId(), enterprise.getEnterpriseId(), source.getMaster());
         Set<Long> roles = roleList.stream().map(SysRole::getRoleId).collect(Collectors.toSet());
-        Set<String> roleKeys = loginService.getRoleKeyPermission(source.getMaster(), roles, sysUser.getUserType(),enterprise.getEnterpriseId());
+        Set<String> roleKeys = loginService.getRolePermission(roles, sysUser.getUserType(), enterprise.getEnterpriseId());
         // 权限集合
-        SysMenu checkMenu = new SysMenu();
-        checkMenu.setEnterpriseId(enterprise.getEnterpriseId());
-        checkMenu.getParams().put("userId", sysUser.getUserId());
-        Set<String> permissions = loginService.getMenuPermission(source.getMaster(), checkMenu, sysUser.getUserType());
+        Set<String> permissions = loginService.getMenuPermission(roles, sysUser.getUserType(), enterprise.getEnterpriseId());
         LoginUser sysUserVo = new LoginUser();
         sysUserVo.setMainSource(source.getMaster());
         sysUserVo.setSysUser(sysUser);
@@ -117,17 +113,9 @@ public class SysUserController extends BaseController {
     public AjaxResult getInfo() {
         LoginUser loginUser = tokenService.getLoginUser();
         // 角色集合
-        SysRole checkRole = new SysRole();
-        checkRole.setEnterpriseId(loginUser.getEnterpriseId());
-        checkRole.getParams().put("deptId", loginUser.getSysUser().getDeptId());
-        checkRole.getParams().put("postId", loginUser.getSysUser().getPostId());
-        checkRole.getParams().put("userId", loginUser.getSysUser().getUserId());
-        Set<String> roles = loginService.getRoleKeyPermission(loginUser.getMainSource(), loginUser.getRoles(), loginUser.getSysUser().getUserType(),loginUser.getEnterpriseId());
+        Set<String> roles = loginService.getRolePermission(loginUser.getRoles(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
         // 权限集合
-        SysMenu checkMenu = new SysMenu();
-        checkMenu.setEnterpriseId(loginUser.getEnterpriseId());
-        checkMenu.getParams().put("userId", loginUser.getSysUser().getUserId());
-        Set<String> permissions = loginService.getMenuPermission(loginUser.getMainSource(), checkMenu, loginUser.getSysUser().getUserType());
+        Set<String> permissions = loginService.getMenuPermission(loginUser.getRoles(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
         AjaxResult ajax = AjaxResult.success();
         SysUser user = new SysUser();
         user.setUserId(loginUser.getSysUser().getUserId());
@@ -250,9 +238,9 @@ public class SysUserController extends BaseController {
     public AjaxResult remove(@RequestBody SysUser user) {
         List<Long> Ids = ParamsUtils.IdsObjectToLongList(user.getParams().get("Ids"));
         for (int i = Ids.size() - 1; i >= 0; i--) {
-            if(Objects.equals(SecurityUtils.getUserId(), Ids.get(i))){
+            if (Objects.equals(SecurityUtils.getUserId(), Ids.get(i))) {
                 Ids.remove(i);
-                if(Ids.size()<=0){
+                if (Ids.size() <= 0) {
                     return AjaxResult.error("删除失败，不能删除自己！");
                 } else {
                     userService.deleteUserByIds(user);

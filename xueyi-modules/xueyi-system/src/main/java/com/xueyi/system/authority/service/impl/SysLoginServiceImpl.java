@@ -8,16 +8,14 @@ import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.authority.mapper.SysMenuMapper;
+import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.mapper.SysUserMapper;
-import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -36,13 +34,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
     private SysUserMapper userMapper;
 
     @Autowired
-    private SysMenuMapper menuMapper;
-
-    @Autowired
-    private SysRoleSystemMenuMapper roleSystemMenuMapper;
-
-    @Autowired
-    private ISysLoginService loginService;
+    private ISysAuthorityService authorityService;
 
     /**
      * 通过租户Id&用户账号查询用户（登录校验）
@@ -60,14 +52,13 @@ public class SysLoginServiceImpl implements ISysLoginService {
     /**
      * 获取角色数据权限（登录校验）
      *
-     * @param sourceName   数据源名称
      * @param roleList     角色信息集合 | roleId 角色Id
      * @param userType     用户标识
      * @param enterpriseId 企业Id
      * @return 角色权限信息
      */
     @Override
-    public Set<String> getRoleKeyPermission(String sourceName, Set<Long> roleList, String userType, Long enterpriseId) {
+    public Set<String> getRolePermission(Set<Long> roleList, String userType, Long enterpriseId) {
         Set<String> roles = new HashSet<>();
         // 租管租户拥有所有权限
         if(EnterpriseUtils.isAdminTenant(enterpriseId)){
@@ -86,42 +77,23 @@ public class SysLoginServiceImpl implements ISysLoginService {
     /**
      * 获取菜单数据权限（登录校验）
      *
-     * @param menu       菜单信息 | params.userId 用户Id | enterpriseId 租户Id
-     * @param userType   用户标识
-     * @param sourceName 数据源名称
+     * @param roleList     角色信息集合 | roleId 角色Id
+     * @param userType     用户标识
+     * @param enterpriseId 企业Id
      * @return 菜单权限信息
      */
     @Override
-    @DS("#sourceName")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Set<String> getMenuPermission(String sourceName, SysMenu menu, String userType) {
+    public Set<String> getMenuPermission(Set<Long> roleList, String userType, Long enterpriseId) {
         Set<String> perms = new HashSet<>();
         // 管理员拥有所有权限
         if (SysUser.isAdmin(userType)) {
             perms.add("*:*:*");
         } else {
-            menu.getParams().put("roleSystemPerms", roleSystemMenuMapper.selectSystemMenuListByUserId(menu));
-            perms.addAll(loginService.checkLoginMenuPerms(menu));
+            Set<SysMenu> menuSet = authorityService.selectMenuSet(enterpriseId, AuthorityUtils.getRoleListCache(enterpriseId, roleList),EnterpriseUtils.isAdminTenant(enterpriseId), true,true);
+            Set<SysMenu> ownerMenuSet = AuthorityUtils.getMenuCache(enterpriseId);
+            ownerMenuSet.retainAll(menuSet);
+            perms.addAll(ownerMenuSet.stream().filter(menu -> StringUtils.isNotEmpty(menu.getPerms()) && StringUtils.equals(Constants.STATUS_NORMAL,menu.getStatus())).map(SysMenu::getPerms).collect(Collectors.toSet()));
         }
         return perms;
-    }
-
-    /**
-     * 根据用户Id查询权限（登录校验）
-     *
-     * @param menu 菜单信息 | params.userId 用户Id | enterpriseId 租户Id
-     * @return 权限列表
-     */
-    @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Set<String> checkLoginMenuPerms(SysMenu menu) {
-        List<String> perms = menuMapper.checkLoginMenuPermission(menu);
-        Set<String> permsSet = new HashSet<>();
-        for (String perm : perms) {
-            if (StringUtils.isNotEmpty(perm)) {
-                permsSet.addAll(Arrays.asList(perm.trim().split(",")));
-            }
-        }
-        return permsSet;
     }
 }
