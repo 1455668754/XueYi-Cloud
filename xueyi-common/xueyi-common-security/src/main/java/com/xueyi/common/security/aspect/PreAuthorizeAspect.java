@@ -1,7 +1,10 @@
 package com.xueyi.common.security.aspect;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
+import com.xueyi.common.core.exception.PreAuthorizeException;
+import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.service.TokenService;
+import com.xueyi.system.api.model.LoginUser;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -11,11 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.PatternMatchUtils;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.exception.PreAuthorizeException;
-import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.model.LoginUser;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
 
 /**
  * 自定义权限实现
@@ -159,11 +160,11 @@ public class PreAuthorizeAspect
     public boolean hasRole(String role)
     {
         LoginUser userInfo = tokenService.getLoginUser();
-        if (StringUtils.isNull(userInfo) || CollectionUtils.isEmpty(userInfo.getRoles()))
+        if (StringUtils.isNull(userInfo) || CollectionUtils.isEmpty(userInfo.getRoleKeys()))
         {
             return false;
         }
-        for (String roleKey : userInfo.getRoles())
+        for (String roleKey : userInfo.getRoleKeys())
         {
             if (roleKey.equals(role))
             {
@@ -193,7 +194,7 @@ public class PreAuthorizeAspect
     public boolean hasAnyRoles(String[] roles)
     {
         LoginUser userInfo = tokenService.getLoginUser();
-        if (StringUtils.isNull(userInfo) || CollectionUtils.isEmpty(userInfo.getRoles()))
+        if (StringUtils.isNull(userInfo) || CollectionUtils.isEmpty(userInfo.getRoleKeys()))
         {
             return false;
         }

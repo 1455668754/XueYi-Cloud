@@ -23,6 +23,7 @@ import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.authority.service.ISysLoginService;
+import com.xueyi.system.authority.service.ISysRoleService;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 用户信息
@@ -56,6 +58,9 @@ public class SysUserController extends BaseController {
     private ISysPostService postService;
 
     @Autowired
+    private ISysRoleService roleService;
+
+    @Autowired
     private TokenService tokenService;
 
     @Autowired
@@ -67,38 +72,36 @@ public class SysUserController extends BaseController {
     @InnerAuth
     @GetMapping("/info/{enterpriseName}/{userName}")
     public R<LoginUser> info(@PathVariable("enterpriseName") String enterpriseName, @PathVariable("userName") String userName) {
-        SysEnterprise sysEnterprise = enterpriseService.mainGetEnterpriseProfileByEnterpriseName(enterpriseName);
-        if (StringUtils.isNull(sysEnterprise)) {
+        SysEnterprise enterprise = enterpriseService.mainGetEnterpriseProfileByEnterpriseName(enterpriseName);
+        if (StringUtils.isNull(enterprise)) {
             return R.fail("账号或密码错误，请检查");
         }
         //查询租户的主从库信息
-        Source source = DataSourceUtils.getSourceByEnterpriseId(sysEnterprise.getEnterpriseId());
+        Source source = DataSourceUtils.getSourceByEnterpriseId(enterprise.getEnterpriseId());
         //开始进入对应的主数据库
         SysUser checkUser = new SysUser();
         checkUser.setSourceName(source.getMaster());
-        checkUser.setEnterpriseId(sysEnterprise.getEnterpriseId());
+        checkUser.setEnterpriseId(enterprise.getEnterpriseId());
         checkUser.setUserName(userName);
         SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(checkUser);
         if (StringUtils.isNull(sysUser)) {
             return R.fail("账号或密码错误，请检查");
         }
         // 角色集合
-        SysRole checkRole = new SysRole();
-        checkRole.setEnterpriseId(sysEnterprise.getEnterpriseId());
-        checkRole.getParams().put("deptId", sysUser.getDeptId());
-        checkRole.getParams().put("postId", sysUser.getPostId());
-        checkRole.getParams().put("userId", sysUser.getUserId());
-        Set<String> roles = loginService.getRolePermission(source.getMaster(), checkRole, sysUser.getUserType());
+        List<SysRole> roleList = roleService.getRoleListByUserId(sysUser.getUserId(), enterprise.getEnterpriseId(), source.getMaster());
+        Set<Long> roles = roleList.stream().map(SysRole::getRoleId).collect(Collectors.toSet());
+        Set<String> roleKeys = loginService.getRolePermission(source.getMaster(), roles, sysUser.getUserType(),enterprise.getEnterpriseId());
         // 权限集合
         SysMenu checkMenu = new SysMenu();
-        checkMenu.setEnterpriseId(sysEnterprise.getEnterpriseId());
+        checkMenu.setEnterpriseId(enterprise.getEnterpriseId());
         checkMenu.getParams().put("userId", sysUser.getUserId());
         Set<String> permissions = loginService.getMenuPermission(source.getMaster(), checkMenu, sysUser.getUserType());
         LoginUser sysUserVo = new LoginUser();
         sysUserVo.setMainSource(source.getMaster());
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setUserType(sysUser.getUserType());
-        sysUserVo.setSysEnterprise(sysEnterprise);
+        sysUserVo.setSysEnterprise(enterprise);
+        sysUserVo.setRoleKeys(roleKeys);
         sysUserVo.setRoles(roles);
         sysUserVo.setPermissions(permissions);
         sysUserVo.setSource(source);
@@ -119,7 +122,7 @@ public class SysUserController extends BaseController {
         checkRole.getParams().put("deptId", loginUser.getSysUser().getDeptId());
         checkRole.getParams().put("postId", loginUser.getSysUser().getPostId());
         checkRole.getParams().put("userId", loginUser.getSysUser().getUserId());
-        Set<String> roles = loginService.getRolePermission(loginUser.getMainSource(), checkRole, loginUser.getSysUser().getUserType());
+        Set<String> roles = loginService.getRolePermission(loginUser.getMainSource(), loginUser.getRoles(), loginUser.getSysUser().getUserType(),loginUser.getEnterpriseId());
         // 权限集合
         SysMenu checkMenu = new SysMenu();
         checkMenu.setEnterpriseId(loginUser.getEnterpriseId());

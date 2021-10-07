@@ -81,4 +81,10 @@ public class Constants {
 
     /** 系统默认值 否 */
     public static final String SYSTEM_DEFAULT_FALSE = "N";
+
+    /** 正常状态 */
+    public static final String STATUS_NORMAL = "0";
+
+    /** 封禁状态 */
+    public static final String STATUS_DISABLE = "1";
 }

@@ -1,12 +1,14 @@
 package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.redis.utils.AuthorityUtils;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
+import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
-import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.mapper.SysUserMapper;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
@@ -19,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 登录验证Service业务层处理
@@ -31,9 +34,6 @@ public class SysLoginServiceImpl implements ISysLoginService {
 
     @Autowired
     private SysUserMapper userMapper;
-
-    @Autowired
-    private SysRoleMapper roleMapper;
 
     @Autowired
     private SysMenuMapper menuMapper;
@@ -60,49 +60,35 @@ public class SysLoginServiceImpl implements ISysLoginService {
     /**
      * 获取角色数据权限（登录校验）
      *
-     * @param role 角色信息 | params.deptId 部门Id | params.postId 岗位Id | params.userId 用户Id | enterpriseId 租户Id
-     * @param userType     用户标识
      * @param sourceName   数据源名称
+     * @param roleList     角色信息集合 | roleId 角色Id
+     * @param userType     用户标识
+     * @param enterpriseId 企业Id
      * @return 角色权限信息
      */
     @Override
-    @DS("#sourceName")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Set<String> getRolePermission(String sourceName, SysRole role, String userType) {
-        Set<String> roles = new HashSet<String>();
+    public Set<String> getRolePermission(String sourceName, Set<Long> roleList, String userType, Long enterpriseId) {
+        Set<String> roles = new HashSet<>();
+        // 租管租户拥有所有权限
+        if(EnterpriseUtils.isAdminTenant(enterpriseId)){
+            roles.add("administrator");
+        }
         // 管理员拥有所有权限
         if (SysUser.isAdmin(userType)) {
             roles.add("admin");
         } else {
-            roles.addAll(checkLoginRolePerms(role));
+            List<SysRole> roleListCache = AuthorityUtils.getRoleListCache(enterpriseId, roleList);
+            roles.addAll(roleListCache.stream().filter(role -> StringUtils.isNotEmpty(role.getRoleKey()) && StringUtils.equals(Constants.STATUS_NORMAL,role.getStatus())).map(SysRole::getRoleKey).collect(Collectors.toSet()));
         }
         return roles;
     }
 
     /**
-     * 根据用户Id查询角色（登录校验）
-     *
-     * @param role 角色信息 | params.deptId 部门Id | params.postId 岗位Id | params.userId 用户Id | enterpriseId 租户Id
-     * @return 权限列表
-     */
-    @Override
-    public Set<String> checkLoginRolePerms(SysRole role) {
-        List<SysRole> perms = roleMapper.checkLoginRolePermission(role);
-        Set<String> permsSet = new HashSet<>();
-        for (SysRole perm : perms) {
-            if (StringUtils.isNotNull(perm)) {
-                permsSet.addAll(Arrays.asList(perm.getRoleKey().trim().split(",")));
-            }
-        }
-        return permsSet;
-    }
-
-    /**
      * 获取菜单数据权限（登录校验）
      *
-     * @param menu 菜单信息 | params.userId 用户Id | enterpriseId 租户Id
-     * @param userType     用户标识
-     * @param sourceName   数据源名称
+     * @param menu       菜单信息 | params.userId 用户Id | enterpriseId 租户Id
+     * @param userType   用户标识
+     * @param sourceName 数据源名称
      * @return 菜单权限信息
      */
     @Override

@@ -1,11 +1,11 @@
 package com.xueyi.system.api.model;
 
-import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.domain.source.Source;
+
+import java.io.Serializable;
+import java.util.Set;
 
 /**
  * 用户信息
@@ -49,8 +49,11 @@ public class LoginUser implements Serializable {
     /** 权限列表 */
     private Set<String> permissions;
 
+    /** 角色权限列表 */
+    private Set<String> roleKeys;
+
     /** 角色列表 */
-    private Set<String> roles;
+    private Set<Long> roles;
 
     /** 主数据源 */
     private String mainSource;
@@ -152,11 +155,19 @@ public class LoginUser implements Serializable {
         this.permissions = permissions;
     }
 
-    public Set<String> getRoles() {
+    public Set<String> getRoleKeys() {
+        return roleKeys;
+    }
+
+    public void setRoleKeys(Set<String> roleKeys) {
+        this.roleKeys = roleKeys;
+    }
+
+    public Set<Long> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(Set<Long> roles) {
         this.roles = roles;
     }
 

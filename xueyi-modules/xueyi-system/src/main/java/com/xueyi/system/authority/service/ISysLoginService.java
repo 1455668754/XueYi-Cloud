@@ -1,8 +1,7 @@
 package com.xueyi.system.authority.service;
 
-import com.xueyi.system.api.domain.authority.SysRole;
-import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.domain.authority.SysMenu;
+import com.xueyi.system.api.domain.organize.SysUser;
 
 import java.util.Set;
 
@@ -24,20 +23,13 @@ public interface ISysLoginService {
     /**
      * 获取角色数据权限（登录校验）
      *
-     * @param role       角色信息 | params.deptId 部门Id | params.postId 岗位Id | params.userId 用户Id | enterpriseId 租户Id
-     * @param userType   用户标识
-     * @param sourceName 数据源名称
+     * @param sourceName   数据源名称
+     * @param roleList     角色信息集合 | roleId 角色Id
+     * @param userType     用户标识
+     * @param enterpriseId 企业Id
      * @return 角色权限信息
      */
-    public Set<String> getRolePermission(String sourceName, SysRole role, String userType);
-
-    /**
-     * 根据用户Id查询角色（登录校验）
-     *
-     * @param role 角色信息 | params.deptId 部门Id | params.postId 岗位Id | params.userId 用户Id | enterpriseId 租户Id
-     * @return 权限列表
-     */
-    public Set<String> checkLoginRolePerms(SysRole role);
+    public Set<String> getRolePermission(String sourceName, Set<Long> roleList, String userType, Long enterpriseId);
 
     /**
      * 获取菜单数据权限（登录校验）

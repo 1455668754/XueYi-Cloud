@@ -48,10 +48,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		from sys_role r
 	</sql>
 
-	<!--未登录用户的登录校验方法，不允许加访问控制-->
-	<select id="checkLoginRolePermission" parameterType="SysRole" resultMap="SysRoleResult">
-		<include refid="permVo"/>
-		WHERE sor.dept_id = #{params.deptId} or sor.post_id = #{params.postId} or sor.user_id = #{params.userId} and r.del_flag = 0 and r.tenant_id = #{enterpriseId}
+	<sql id="organizeVo">
+		select distinct r.role_id
+		from sys_organize_role r
+	</sql>
+
+	<select id="getRoleListByUserId" resultMap="SysRoleResult">
+		<include refid="organizeVo"/>
+		left join sys_user u on u.user_id = r.user_id or u.user_id = r.derive_user_id
+									or u.post_id = r.post_id or u.post_id = r.derive_post_id
+									or u.dept_id = r.dept_id or u.dept_id = r.derive_dept_id
+									or u.tenant_id = r.derive_enterprise_id or u.tenant_id = r.derive_tenant_id
+		WHERE u.user_id = #{userId} and u.tenant_id = #{enterpriseId} and r.del_flag = 0 and r.tenant_id = #{enterpriseId}
 	</select>
 
 	<select id="selectDeriveRoleByEnterpriseId" parameterType="SysRole" resultType="long">

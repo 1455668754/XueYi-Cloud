@@ -37,6 +37,20 @@ public class SysRoleServiceImpl implements ISysRoleService {
     private SysOrganizeRoleMapper organizeRoleMapper;
 
     /**
+     * 根据角色Id查询角色信息集合
+     *
+     * @param userId       用户Id
+     * @param enterpriseId 企业Id
+     * @param sourceName   指定数据源名称
+     * @return 角色信息集合信息
+     */
+    @Override
+    @DS("#sourceName")
+    public List<SysRole> getRoleListByUserId(Long userId, Long enterpriseId, String sourceName){
+        return roleMapper.getRoleListByUserId(userId,enterpriseId);
+    }
+
+    /**
      * 查询所有角色
      *
      * @return 角色列表

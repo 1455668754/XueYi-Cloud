@@ -2,6 +2,7 @@ package com.xueyi.system.authority.mapper;
 
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -14,13 +15,13 @@ import java.util.Set;
 public interface SysRoleMapper {
 
     /**
-     * 根据用户Id查询角色权限信息（登录校验）
-     * 登陆前验证，无需切片控制(service/impl层在com.xueyi.authority.service)
+     * 根据角色Id查询角色信息集合
      *
-     * @param role 角色信息 | params.deptId 部门Id | params.postId 岗位Id | params.userId 用户Id | enterpriseId 租户Id
-     * @return 权限列表
+     * @param userId       用户Id
+     * @param enterpriseId 企业Id
+     * @return 角色信息集合信息
      */
-    public List<SysRole> checkLoginRolePermission(SysRole role);
+    public List<SysRole> getRoleListByUserId(@Param("userId") Long userId,@Param("enterpriseId")  Long enterpriseId);
 
     /**
      * 根据衍生来源Id&角色类型查询指定衍生角色
