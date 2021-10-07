@@ -11,62 +11,62 @@ import com.xueyi.system.api.domain.authority.SysSystem;
 public interface ISysCacheInitService {
 
     /**
-     * 加载模块-路由缓存数据
+     * 加载模块-路由缓存数据 | 主源所有企业
      */
     public void loadingRouteCache();
 
     /**
-     * 根据模块信息查询模块-路由信息
+     * 加载模块-路由缓存数据 | 单个企业的单个指定模块
      *
-     * @param system 模块信息
+     * @param system 模块信息 | systemId 模块Id | enterpriseId 企业Id
      */
-    public void refreshRouteCacheBySystem(SysSystem system);
+    public void refreshRouteCacheBySystemId(SysSystem system);
 
     /**
-     * 加载菜单缓存数据
+     * 加载菜单缓存数据 | 主源所有企业
      */
     public void loadingMenuCache();
 
     /**
-     * 根据菜单信息查询菜单信息
+     * 加载菜单缓存数据 | 单个指定企业
      *
      * @param enterpriseId 企业Id
      */
     public void refreshMenuCacheByEnterpriseId(Long enterpriseId);
 
     /**
-     * 加载模块缓存数据
+     * 加载模块缓存数据 | 主源所有企业
      */
     public void loadingSystemCache();
 
     /**
-     * 根据模块信息查询模块信息
+     * 加载模块缓存数据 | 单个指定企业
      *
-     * @param system 模块信息
+     * @param enterpriseId 企业Id
      */
-    public void refreshSystemCacheBySystem(SysSystem system);
+    public void refreshSystemCacheByEnterpriseId(Long enterpriseId);
 
     /**
-     * 加载模块-菜单缓存数据
+     * 加载模块-菜单缓存数据 | 主源所有企业
      */
     public void loadingSystemMenuCache();
 
     /**
-     * 根据模块信息查询模块-菜单信息
+     * 加载模块-菜单缓存数据 | 单个指定企业
      *
-     * @param system 模块信息
+     * @param enterpriseId 企业Id
      */
-    public void refreshSystemMenuCacheBySystem(SysSystem system);
+    public void refreshSystemMenuCacheByEnterpriseId(Long enterpriseId);
 
     /**
-     * 加载角色缓存数据
+     * 加载角色缓存数据 | 指定源所有企业
      *
      * @param sourceName 数据源名称
      */
     public void loadingRoleCache(String sourceName);
 
     /**
-     * 根据角色信息更新角色缓存
+     * 加载角色缓存数据 | 单个企业的单个指定角色
      *
      * @param role       角色信息 | roleId 角色Id | enterpriseId 租户Id
      * @param sourceName 指定源
@@ -74,9 +74,9 @@ public interface ISysCacheInitService {
     public void refreshRoleCacheByRoleIdToSourceName(SysRole role, String sourceName);
 
     /**
-     * 根据角色信息更新角色缓存
+     * 加载角色缓存数据 | 单个企业的单个指定角色
      *
      * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
      */
-    public void refreshRoleCacheByRoleId(SysRole role);
+    public void refreshRoleCacheByRoleIdToIsolate(SysRole role);
 }

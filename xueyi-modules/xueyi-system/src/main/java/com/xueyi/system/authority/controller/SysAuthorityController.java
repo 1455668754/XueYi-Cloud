@@ -107,7 +107,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
-        cacheInitService.refreshRoleCacheByRoleId(role);
+        cacheInitService.refreshRoleCacheByRoleIdToIsolate(role);
         return toAjax(1);
     }
 
@@ -139,7 +139,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
-        cacheInitService.refreshRoleCacheByRoleId(role);
+        cacheInitService.refreshRoleCacheByRoleIdToIsolate(role);
         return toAjax(1);
     }
 
@@ -171,7 +171,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
-        cacheInitService.refreshRoleCacheByRoleId(role);
+        cacheInitService.refreshRoleCacheByRoleIdToIsolate(role);
         return toAjax(1);
     }
 
@@ -203,7 +203,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
-        cacheInitService.refreshRoleCacheByRoleId(role);
+        cacheInitService.refreshRoleCacheByRoleIdToIsolate(role);
         return toAjax(1);
     }
 
@@ -230,7 +230,7 @@ public class SysAuthorityController extends BaseController {
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
-        cacheInitService.refreshRoleCacheByRoleId(role);
+        cacheInitService.refreshRoleCacheByRoleIdToIsolate(role);
         return toAjax(1);
     }
 

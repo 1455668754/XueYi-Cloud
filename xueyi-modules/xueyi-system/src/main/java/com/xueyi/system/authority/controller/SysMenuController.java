@@ -129,13 +129,13 @@ public class SysMenuController extends BaseController {
      */
     private int refreshCache(SysMenu menu, int rows) {
         if (rows > 0) {
-            cacheInitService.refreshRouteCacheBySystem(new SysSystem(menu.getSystemId(), SecurityUtils.getEnterpriseId()));
+            cacheInitService.refreshRouteCacheBySystemId(new SysSystem(menu.getSystemId(), SecurityUtils.getEnterpriseId()));
             cacheInitService.refreshMenuCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
-            cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(menu.getSystemId(), SecurityUtils.getEnterpriseId()));
+            cacheInitService.refreshSystemMenuCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
             if (SecurityUtils.isAdminTenant()) {
-                cacheInitService.refreshRouteCacheBySystem(new SysSystem(menu.getSystemId(), AuthorityConstants.COMMON_ENTERPRISE));
+                cacheInitService.refreshRouteCacheBySystemId(new SysSystem(menu.getSystemId(), AuthorityConstants.COMMON_ENTERPRISE));
                 cacheInitService.refreshMenuCacheByEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
-                cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(menu.getSystemId(), AuthorityConstants.COMMON_ENTERPRISE));
+                cacheInitService.refreshSystemMenuCacheByEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
             }
         }
         return rows;

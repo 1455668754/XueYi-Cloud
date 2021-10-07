@@ -159,7 +159,7 @@ public class SysRoleController extends BaseController {
      */
     private int refreshRoleCache(int rows,SysRole role){
         if(rows>0){
-            cacheInitService.refreshRoleCacheByRoleId(role);
+            cacheInitService.refreshRoleCacheByRoleIdToIsolate(role);
         }
         return rows;
     }

@@ -164,14 +164,14 @@ public class SysSystemServiceImpl implements ISysSystemService {
     private int refreshCache(SysSystem system, int rows, boolean type) {
         if (rows > 0) {
             if (type) {
-                cacheInitService.refreshRouteCacheBySystem(new SysSystem(system.getSnowflakeId(), SecurityUtils.getEnterpriseId()));
+                cacheInitService.refreshRouteCacheBySystemId(new SysSystem(system.getSnowflakeId(), SecurityUtils.getEnterpriseId()));
             }
             if (SecurityUtils.isAdminTenant()) {
-                cacheInitService.refreshSystemCacheBySystem(new SysSystem(system.getSnowflakeId(), AuthorityConstants.COMMON_ENTERPRISE));
-                cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(system.getSnowflakeId(), AuthorityConstants.COMMON_ENTERPRISE));
+                cacheInitService.refreshSystemCacheByEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
+                cacheInitService.refreshSystemMenuCacheByEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
             }
-            cacheInitService.refreshSystemCacheBySystem(new SysSystem(system.getSnowflakeId(), SecurityUtils.getEnterpriseId()));
-            cacheInitService.refreshSystemMenuCacheBySystem(new SysSystem(system.getSnowflakeId(), SecurityUtils.getEnterpriseId()));
+            cacheInitService.refreshSystemCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
+            cacheInitService.refreshSystemMenuCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
         }
         return rows;
     }
