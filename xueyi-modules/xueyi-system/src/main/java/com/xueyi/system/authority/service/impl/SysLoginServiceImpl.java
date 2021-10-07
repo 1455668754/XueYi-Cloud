@@ -67,7 +67,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @return 角色权限信息
      */
     @Override
-    public Set<String> getRolePermission(String sourceName, Set<Long> roleList, String userType, Long enterpriseId) {
+    public Set<String> getRoleKeyPermission(String sourceName, Set<Long> roleList, String userType, Long enterpriseId) {
         Set<String> roles = new HashSet<>();
         // 租管租户拥有所有权限
         if(EnterpriseUtils.isAdminTenant(enterpriseId)){
@@ -95,7 +95,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
     @DS("#sourceName")
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Set<String> getMenuPermission(String sourceName, SysMenu menu, String userType) {
-        Set<String> perms = new HashSet<String>();
+        Set<String> perms = new HashSet<>();
         // 管理员拥有所有权限
         if (SysUser.isAdmin(userType)) {
             perms.add("*:*:*");

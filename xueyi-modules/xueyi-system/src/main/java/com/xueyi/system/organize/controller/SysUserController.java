@@ -90,7 +90,7 @@ public class SysUserController extends BaseController {
         // 角色集合
         List<SysRole> roleList = roleService.getRoleListByUserId(sysUser.getUserId(), enterprise.getEnterpriseId(), source.getMaster());
         Set<Long> roles = roleList.stream().map(SysRole::getRoleId).collect(Collectors.toSet());
-        Set<String> roleKeys = loginService.getRolePermission(source.getMaster(), roles, sysUser.getUserType(),enterprise.getEnterpriseId());
+        Set<String> roleKeys = loginService.getRoleKeyPermission(source.getMaster(), roles, sysUser.getUserType(),enterprise.getEnterpriseId());
         // 权限集合
         SysMenu checkMenu = new SysMenu();
         checkMenu.setEnterpriseId(enterprise.getEnterpriseId());
@@ -122,7 +122,7 @@ public class SysUserController extends BaseController {
         checkRole.getParams().put("deptId", loginUser.getSysUser().getDeptId());
         checkRole.getParams().put("postId", loginUser.getSysUser().getPostId());
         checkRole.getParams().put("userId", loginUser.getSysUser().getUserId());
-        Set<String> roles = loginService.getRolePermission(loginUser.getMainSource(), loginUser.getRoles(), loginUser.getSysUser().getUserType(),loginUser.getEnterpriseId());
+        Set<String> roles = loginService.getRoleKeyPermission(loginUser.getMainSource(), loginUser.getRoles(), loginUser.getSysUser().getUserType(),loginUser.getEnterpriseId());
         // 权限集合
         SysMenu checkMenu = new SysMenu();
         checkMenu.setEnterpriseId(loginUser.getEnterpriseId());

@@ -200,21 +200,22 @@ public interface ISysAuthorityService {
      * @param enterpriseId  企业Id
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
-     * @param hasNormal     有无普通角色权限
+     * @param hasNormal     有无普通角色权限（true -> 初始权限集合由全部更替为普通角色和）
+     * @param hasStatus     有无状态 （true -> status must normal）
      * @return map集合 | halfIds 半选模块-菜单 | wholeIds 全选模块-菜单
      */
-    public Map<String, Set<SystemMenu>> assembleSystemMenuSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
+    public Map<String, Set<SystemMenu>> assembleSystemMenuSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal, boolean hasStatus);
 
     /**
      * 装配菜单集合
      *
-     * @param enterpriseId  企业Id
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
-     * @param hasNormal     有无普通角色权限
+     * @param hasNormal     有无普通角色权限（true -> 初始权限集合由全部更替为普通角色和）
+     * @param hasStatus     有无状态 （true -> status must normal）
      * @return 菜单集合
      */
-    public Set<SysMenu> selectMenuSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
+    public Set<SysMenu> selectMenuSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal, boolean hasStatus);
 
     /**
      * 装配模块集合
@@ -222,8 +223,9 @@ public interface ISysAuthorityService {
      * @param enterpriseId  企业Id
      * @param roles         角色信息集合
      * @param isAdminTenant 是否租管租户
-     * @param hasNormal     有无普通角色权限
+     * @param hasNormal     有无普通角色权限（true -> 初始权限集合由全部更替为普通角色和）
+     * @param hasStatus     有无状态 （true -> status must normal）
      * @return 模块集合
      */
-    public Set<SysSystem> selectSystemSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal);
+    public Set<SysSystem> selectSystemSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal, boolean hasStatus);
 }

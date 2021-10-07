@@ -9,12 +9,10 @@ import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
-import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.mapper.SysSystemMapper;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysSystemService;
 import com.xueyi.system.cache.service.ISysCacheInitService;
-import com.xueyi.system.role.service.ISysRoleSystemMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,13 +35,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     private ISysCacheInitService cacheInitService;
 
     @Autowired
-    private SysMenuMapper menuMapper;
-
-    @Autowired
     private SysSystemMapper systemMapper;
-
-    @Autowired
-    private ISysRoleSystemMenuService roleSystemMenuService;
 
     /**
      * 当前用户首页可展示的模块列表
@@ -56,11 +48,11 @@ public class SysSystemServiceImpl implements ISysSystemService {
         Set<SysSystem> rangeSet;
         // 管理员显示所有模块信息
         if (SecurityUtils.isAdminUser()) {
-            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(),authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false);
+            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false, true);
         } else {
             SysRole role = new SysRole();
             role.getParams().put("userId", SecurityUtils.getUserId());
-            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true);
+            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true, true);
         }
         systemSet.retainAll(rangeSet);
         return SortUtils.sortSetToList(systemSet);

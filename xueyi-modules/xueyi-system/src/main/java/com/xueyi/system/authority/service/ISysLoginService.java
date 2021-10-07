@@ -29,7 +29,7 @@ public interface ISysLoginService {
      * @param enterpriseId 企业Id
      * @return 角色权限信息
      */
-    public Set<String> getRolePermission(String sourceName, Set<Long> roleList, String userType, Long enterpriseId);
+    public Set<String> getRoleKeyPermission(String sourceName, Set<Long> roleList, String userType, Long enterpriseId);
 
     /**
      * 获取菜单数据权限（登录校验）
