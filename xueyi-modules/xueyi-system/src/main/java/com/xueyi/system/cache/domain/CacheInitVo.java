@@ -4,6 +4,7 @@ import com.xueyi.common.core.web.domain.BaseEntity;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.authority.SystemMenu;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -24,6 +25,9 @@ public class CacheInitVo extends BaseEntity {
 
     /** 模块-菜单集合 */
     private Set<SystemMenu> systemMenuSet;
+
+    /** 企业集合 */
+    private Set<SysEnterprise> enterpriseSet;
 
     public Set<SysMenu> getMenuSet() {
         return menuSet;
@@ -49,6 +53,14 @@ public class CacheInitVo extends BaseEntity {
         this.systemMenuSet = systemMenuSet;
     }
 
+    public Set<SysEnterprise> getEnterpriseSet() {
+        return enterpriseSet;
+    }
+
+    public void setEnterpriseSet(Set<SysEnterprise> enterpriseSet) {
+        this.enterpriseSet = enterpriseSet;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -56,6 +68,7 @@ public class CacheInitVo extends BaseEntity {
                 .append("routeSet", getMenuSet())
                 .append("systemSet", getSystemSet())
                 .append("systemMenuSet", getSystemMenuSet())
+                .append("enterpriseSet", getEnterpriseSet())
                 .toString();
     }
 }

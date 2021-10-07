@@ -88,7 +88,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     public int insertRole(SysRole role) {
-        if (!StringUtils.equals(role.getType(), AuthorityConstants.NORMAL_TYPE)) {
+        if (role.getType()!=null && !StringUtils.equals(role.getType(), AuthorityConstants.NORMAL_TYPE)) {
             SysOrganizeRole organizeRole = new SysOrganizeRole();
             switch (role.getType()){
                 case AuthorityConstants.DERIVE_TENANT_TYPE:

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 缓存加载 业务层处理
@@ -74,6 +75,10 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getMenuSet());
         }
+        List<CacheInitVo> enterpriseNullList = cacheInitMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), cacheInitVos.stream().map(CacheInitVo::getSystemId).collect(Collectors.toSet()));
+        for (CacheInitVo enterpriseNull : enterpriseNullList) {
+            AuthorityUtils.deleteRouteCache(enterpriseNull.getEnterpriseId(), enterpriseNull.getSystemId());
+        }
     }
 
     /**
@@ -99,6 +104,10 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectMenuCacheListBySource();
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getMenuSet());
+        }
+        List<CacheInitVo> enterpriseNullList = cacheInitMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
+        for (CacheInitVo enterpriseNull : enterpriseNullList) {
+            AuthorityUtils.deleteMenuCache(enterpriseNull.getEnterpriseId());
         }
     }
 
@@ -126,6 +135,10 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshSystemCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemSet());
         }
+        List<CacheInitVo> enterpriseNullList = cacheInitMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
+        for (CacheInitVo enterpriseNull : enterpriseNullList) {
+            AuthorityUtils.deleteSystemCache(enterpriseNull.getEnterpriseId());
+        }
     }
 
     /**
@@ -149,9 +162,12 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     @Override
     public void loadingSystemMenuCache() {
         List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemMenuCacheListBySource();
-        System.out.println(cacheInitVos.size());
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemMenuSet());
+        }
+        List<CacheInitVo> enterpriseNullList = cacheInitMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
+        for (CacheInitVo enterpriseNull : enterpriseNullList) {
+            AuthorityUtils.deleteSystemMenuCache(enterpriseNull.getEnterpriseId());
         }
     }
 
@@ -181,6 +197,10 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         List<SysRole> roles = cacheInitMapper.selectRoleCacheListBySource();
         for (SysRole role : roles) {
             AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), role);
+        }
+        List<SysRole> roleNullList = cacheInitMapper.selectRoleCacheListByExcludeIds(roles.stream().map(SysRole::getEnterpriseId).collect(Collectors.toSet()), roles.stream().map(SysRole::getRoleId).collect(Collectors.toSet()));
+        for (SysRole roleNull : roleNullList) {
+            AuthorityUtils.deleteRoleCache(roleNull.getEnterpriseId(), roleNull.getRoleId());
         }
     }
 

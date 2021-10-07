@@ -5,10 +5,7 @@ import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 权限缓存管理工具类
@@ -70,6 +67,16 @@ public class AuthorityUtils {
     }
 
     /**
+     * 获取模块-路由目录 key
+     *
+     * @param enterpriseId 企业Id
+     * @return 缓存键key
+     */
+    public static String getRouteCacheFolderKey(Long enterpriseId) {
+        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.ROUTE_KEY + ":*";
+    }
+
+    /**
      * 获取模块-路由缓存 cache
      *
      * @param enterpriseId 企业Id
@@ -102,6 +109,17 @@ public class AuthorityUtils {
     public static void deleteRouteCache(Long enterpriseId, Long systemId) {
         RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getRouteCacheKey(enterpriseId, systemId));
+    }
+
+    /**
+     * 删除指定企业模块-路由目录 cache
+     *
+     * @param enterpriseId 企业Id
+     */
+    public static void deleteRouteCacheFolder(Long enterpriseId) {
+        RedisService redisService = SpringUtils.getBean(RedisService.class);
+        Collection<String> keys = redisService.keys(getRouteCacheFolderKey(enterpriseId));
+        redisService.deleteObject(keys);
     }
 
     /**
