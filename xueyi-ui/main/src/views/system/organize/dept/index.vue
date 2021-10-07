@@ -211,7 +211,6 @@
                   :disabled="item.status === STATUS.DISABLE">
                 </el-option>
               </el-select>
-              {{roleOptions}}
             </el-form-item>
           </el-col>
         </el-row>

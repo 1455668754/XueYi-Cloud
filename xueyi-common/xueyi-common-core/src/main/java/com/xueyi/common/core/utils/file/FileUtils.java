@@ -1,17 +1,13 @@
 package com.xueyi.common.core.utils.file;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import com.xueyi.common.core.utils.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.ArrayUtils;
-import com.xueyi.common.core.utils.StringUtils;
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 文件处理工具类
@@ -244,6 +240,7 @@ public class FileUtils
                 .append(percentEncodedFileName);
 
         response.setHeader("Content-disposition", contentDispositionValue.toString());
+        response.setHeader("download-filename", percentEncodedFileName);
     }
 
     /**

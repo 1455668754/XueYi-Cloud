@@ -13,11 +13,10 @@ import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.feign.RemoteFileService;
 import com.xueyi.system.api.domain.material.SysFile;
-import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
-import com.xueyi.system.api.domain.source.Source;
+import com.xueyi.system.api.feign.RemoteFileService;
+import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * 租户信息操作处理
