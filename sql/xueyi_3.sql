@@ -13,13 +13,14 @@ create table sys_dept (
   email                     varchar(50)         default ''                              comment '邮箱',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
+  is_change                 char(1)             not null default 'N'	                comment '系统部门（Y是 N否）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (dept_id)
 ) engine=innodb comment = '部门表';
 
@@ -27,21 +28,21 @@ create table sys_dept (
 -- 2、岗位信息表
 -- ----------------------------
 drop table if exists sys_post;
-create table sys_post
-(
+create table sys_post (
   post_id                   bigint              not null                                comment '岗位Id',
   dept_id		            bigint	            not null                                comment '部门Id',
   post_code                 varchar(64)         default null                            comment '岗位编码',
   post_name                 varchar(50)         not null                                comment '岗位名称',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
+  is_change                 char(1)             not null default 'N'	                comment '系统岗位（Y是 N否）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (post_id)
 ) engine=innodb comment = '岗位信息表';
 
@@ -56,7 +57,7 @@ create table sys_user (
   user_code                 varchar(64)         default null                            comment '用户编码',
   user_name                 varchar(30)         not null                                comment '用户账号',
   nick_name                 varchar(30)         not null                                comment '用户昵称',
-  user_type                 varchar(2)          default '01'                            comment '用户类型（00超级管理员 01系统用户）',
+  user_type                 varchar(2)          default '01'                            comment '用户类型（00超管用户 01普通用户）',
   phone                     varchar(11)         default ''                              comment '手机号码',
   email                     varchar(50)         default ''                              comment '用户邮箱',
   sex                       char(1)             default '2'                             comment '用户性别（0男 1女 2保密）',
@@ -67,13 +68,14 @@ create table sys_user (
   login_date                datetime                                                    comment '最后登录时间',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
+  is_change                 char(1)             not null default 'N'	                comment '系统用户（Y是 N否）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (user_id)
 ) engine=innodb comment = '用户信息表';
 
@@ -86,20 +88,19 @@ create table sys_role (
   role_code                 varchar(64)         default null                            comment '角色编码',
   name                      varchar(30)         not null                                comment '角色名称',
   role_key                  varchar(100)        default null                            comment '角色权限字符串',
-  data_scope                char(1)             default '1'                             comment '数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限 5：本岗位数据权限  6：仅本人数据权限）',
-  menu_check_strictly       tinyint             default 1                               comment '菜单树选择项是否关联显示',
-  dept_check_strictly       tinyint             default 1                               comment '部门树选择项是否关联显示',
-  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1超管衍生 2租户衍生 3部门衍生 4岗位衍生 5用户衍生）',
+  data_scope                char(1)             default '1'                             comment '数据范围（1全部数据权限 2自定数据权限 3本部门数据权限 4本部门及以下数据权限 5本岗位数据权限  6仅本人数据权限）',
+  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1租户衍生 2企业衍生 3部门衍生 4岗位衍生 5用户衍生）',
   derive_id		            bigint	            default null	                        comment '衍生Id',
   sort                      int unsigned        not null default 0                      comment '显示顺序',
   status                    char(1)             not null default '0'                    comment '状态（0正常 1停用）',
+  is_change                 char(1)             not null default 'N'	                comment '系统角色（Y是 N否）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (role_id)
 ) engine=innodb comment = '角色信息表';
 
@@ -110,9 +111,10 @@ drop table if exists sys_role_system_menu;
 create table sys_role_system_menu (
   role_id                   bigint              not null                                comment '角色Id',
   system_menu_id            bigint              not null                                comment '系统-菜单Id',
-  type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1衍生 2租户）',
+  data_scope		        char(1)	            not null default '1'	                comment '数据范围（1全部数据权限 2自定数据权限 3本部门数据权限 4本部门及以下数据权限 5本岗位数据权限  6仅本人数据权限）',
+  checked		            char(1)	            not null default '0'	                comment '选中类型（0全选 1半选）',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key(role_id, system_menu_id)
 ) engine=innodb comment = '角色和系统-菜单关联表';
 
@@ -125,7 +127,7 @@ create table sys_role_dept_post (
   dept_post_id              bigint              not null                                comment '部门-岗位Id',
   type		                char(1)	            not null default '0'	                comment '角色类型（0常规 1衍生）',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key(role_id, dept_post_id)
 ) engine=innodb comment = '角色和部门-岗位关联表';
 
@@ -141,11 +143,11 @@ create table sys_organize_role (
   derive_dept_id            bigint              default null                            comment '部门衍生id',
   derive_post_id            bigint              default null                            comment '岗位衍生id',
   derive_user_id            bigint              default null                            comment '用户衍生id',
-  derive_enterprise_id      bigint              default null                            comment '租户衍生id',
-  derive_tenant_id          bigint              default null                            comment '超管衍生id',
+  derive_enterprise_id      bigint              default null                            comment '企业衍生id',
+  derive_tenant_id          bigint              default null                            comment '租户衍生id',
   role_id                   bigint              not null                                comment '角色Id',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key(id)
   ,unique (dept_id, post_id, user_id, derive_dept_id, derive_post_id, derive_user_id, derive_enterprise_id, derive_tenant_id, role_id)
 ) engine=innodb auto_increment=1 comment = '组织和角色关联表';
@@ -171,7 +173,7 @@ create table xy_material (
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (material_id)
 ) engine=innodb comment = '素材信息表';
 
@@ -192,7 +194,7 @@ create table xy_material_folder (
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   del_flag		            tinyint             not null default 0                      comment '删除标志（0正常 1删除）',
-  tenant_id		            bigint	            not null                                comment '租户Id（0默认系统 otherId特定租户专属）',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (folder_id)
 ) engine=innodb comment = '素材分类表';
 
@@ -218,7 +220,7 @@ create table sys_oper_log (
   oper_time                 datetime            default current_timestamp               comment '操作时间',
   del_time                  datetime            on update current_timestamp             comment '删除时间',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (oper_id)
 ) engine=innodb auto_increment=100 comment = '操作日志记录';
 
@@ -237,7 +239,7 @@ create table sys_logininfor (
   access_time               datetime            default current_timestamp               comment '访问时间',
   del_time                  datetime            on update current_timestamp             comment '删除时间',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (info_id)
 ) engine=innodb auto_increment=100 comment = '系统访问记录';
 
@@ -250,13 +252,32 @@ create table sys_notice (
   notice_title              varchar(50)         not null                                comment '公告标题',
   notice_type               char(1)             not null                                comment '公告类型（1通知 2公告）',
   notice_content            longblob            default null                            comment '公告内容',
-  status                    char(1)             default '0'                             comment '公告状态（0正常 1关闭）',
+  status                    char(1)             default '0'                             comment '公告状态（0未发送 1已发送）',
   create_by                 bigint              default null                            comment '创建者',
   create_time               datetime            default current_timestamp               comment '创建时间',
   update_by                 bigint              default null                            comment '更新者',
   update_time               datetime            on update current_timestamp             comment '更新时间',
   remark                    varchar(1000)       default null                            comment '备注',
   del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
-  tenant_id		            bigint	            not null                                comment '租户Id(0默认系统 otherId特定租户专属)',
+  tenant_id		            bigint	            not null                                comment '租户Id',
   primary key (notice_id)
 ) engine=innodb comment = '通知公告表';
+
+-- ----------------------------
+-- 13、通知公告记录表
+-- ----------------------------
+drop table if exists sys_notice_log;
+create table sys_notice_log (
+  notice_id                 bigint              not null                                comment '公告Id',
+  user_id                   bigint              not null                                comment '用户Id',
+  receive_status            char(1)             not null                                comment '发送状态（0成功 1失败）',
+  status                    char(1)             default '0'                             comment '阅读状态（0未读 1已读）',
+  create_by                 bigint              default null                            comment '创建者',
+  create_time               datetime            default current_timestamp               comment '创建时间',
+  update_by                 bigint              default null                            comment '更新者',
+  update_time               datetime            on update current_timestamp             comment '更新时间',
+  remark                    varchar(1000)       default null                            comment '备注',
+  del_flag		            tinyint             not null default 0                      comment '删除标志(0正常 1删除)',
+  tenant_id		            bigint	            not null                                comment '租户Id',
+  primary key (notice_id,user_id)
+) engine=innodb comment = '通知公告记录表';
