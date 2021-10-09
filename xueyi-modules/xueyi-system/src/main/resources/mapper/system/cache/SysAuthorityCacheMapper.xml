@@ -94,11 +94,6 @@
         from xy_system es
     </sql>
 
-    <sql id="enterpriseRoleCacheVo">
-        select distinct r.tenant_id, r.role_id
-        from sys_role r
-    </sql>
-
     <select id="mainSelectRouteCacheListBySource" resultMap="CacheInitResult">
         <include refid="routeCacheVo"/>
         where m.menu_type in ('M', 'C') and m.status = 0 and m.del_flag = 0
