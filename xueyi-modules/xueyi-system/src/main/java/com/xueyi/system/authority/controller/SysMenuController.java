@@ -82,10 +82,11 @@ public class SysMenuController extends BaseController {
             return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，地址必须以http(s)://开头");
         } else if (menu.getMenuId().equals(menu.getParentId())) {
             return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，上级菜单不能选择自己");
-        } else if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
-            return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，仅租管账户可修改公共菜单");
         }
         SysMenu check = menuService.mainSelectMenuById(new SysMenu(menu.getMenuId()));
+        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, check.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
+            return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，仅租管账户可修改公共菜单");
+        }
         int rows =menuService.mainUpdateMenu(menu);
         if (check.getSystemId().longValue() == menu.getSystemId().longValue()) {
             refreshCache(check, rows);

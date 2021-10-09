@@ -120,6 +120,7 @@
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
               v-hasPermi="['system:system:edit']"
+              v-if="scope.row.isCommon === IS_COMMON.FALSE || IS_LESSOR"
             >修改
             </el-button>
             <el-button
@@ -128,6 +129,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:system:remove']"
+              v-if="scope.row.isCommon === IS_COMMON.FALSE || IS_LESSOR"
             >删除
             </el-button>
           </template>
