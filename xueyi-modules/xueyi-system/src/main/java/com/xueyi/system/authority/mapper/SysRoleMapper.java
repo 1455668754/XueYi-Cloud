@@ -77,7 +77,6 @@ public interface SysRoleMapper {
      * @param role 角色信息
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
     public int insertRole(SysRole role);
 
     /**

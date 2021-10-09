@@ -1,7 +1,7 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.RoleConstants;
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
@@ -98,9 +98,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
         int row = deptMapper.insertDept(dept);
         if(row>0){
             SysRole role = new SysRole();
-            role.setType(RoleConstants.DEPT_DERIVE_TYPE);
+            role.setType(AuthorityConstants.DERIVE_DEPT_TYPE);
             role.setDeriveId(dept.getSnowflakeId());
-            role.setName("部门衍生"+dept.getSnowflakeId());
+            role.setName("部门衍生:"+dept.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;
@@ -222,7 +222,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     public int deleteDeptById(SysDept dept) {
         // 1.删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(RoleConstants.DEPT_DERIVE_TYPE);
+        role.setType(AuthorityConstants.DERIVE_DEPT_TYPE);
         role.setDeriveId(dept.getDeptId());
         roleMapper.deleteRoleByDeriveId(role);
         // 2.删除部门-角色关联信息

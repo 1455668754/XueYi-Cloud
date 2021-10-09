@@ -1,6 +1,7 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.RoleConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.ServiceException;
@@ -66,7 +67,7 @@ public class SysPostServiceImpl implements ISysPostService {
      */
     @Override
     public List<SysPost> selectPostList(SysPost post) {
-        return postMapper.selectPostList(post);//@param post 岗位信息
+        return postMapper.selectPostList(post);
     }
 
     /**
@@ -105,7 +106,7 @@ public class SysPostServiceImpl implements ISysPostService {
         int row = postMapper.insertPost(post);
         if(row>0){
             SysRole role = new SysRole();
-            role.setType(RoleConstants.POST_DERIVE_TYPE);
+            role.setType(AuthorityConstants.DERIVE_POST_TYPE);
             role.setDeriveId(post.getSnowflakeId());
             role.setName("岗位衍生"+post.getSnowflakeId());
             roleService.insertRole(role);
@@ -202,7 +203,7 @@ public class SysPostServiceImpl implements ISysPostService {
     public int deletePostById(SysPost post) {
         // 1.删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(RoleConstants.POST_DERIVE_TYPE);
+        role.setType(AuthorityConstants.DERIVE_POST_TYPE);
         role.setDeriveId(post.getPostId());
         roleMapper.deleteRoleByDeriveId(role);
         // 2.删除岗位-角色关联信息
@@ -224,7 +225,7 @@ public class SysPostServiceImpl implements ISysPostService {
     public int deletePostByIds(SysPost post) {
         // 1.批量删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(RoleConstants.POST_DERIVE_TYPE);
+        role.setType(AuthorityConstants.DERIVE_POST_TYPE);
         role.getParams().put("Ids",post.getParams().get("Ids"));
         roleMapper.deleteRoleByDeriveIds(role);
         // 2.批量删除岗位-角色关联信息

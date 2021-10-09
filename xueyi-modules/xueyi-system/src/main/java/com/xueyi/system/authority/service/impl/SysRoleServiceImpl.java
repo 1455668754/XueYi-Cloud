@@ -101,9 +101,11 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
+    @DataScope(ueAlias = "empty")
     public int insertRole(SysRole role) {
         if (role.getType()!=null && !StringUtils.equals(role.getType(), AuthorityConstants.NORMAL_TYPE)) {
             SysOrganizeRole organizeRole = new SysOrganizeRole();
+            organizeRole.setRoleId(role.getSnowflakeId());
             switch (role.getType()){
                 case AuthorityConstants.DERIVE_TENANT_TYPE:
                     organizeRole.setDeriveTenantId(role.getDeriveId());

@@ -2,7 +2,7 @@ package com.xueyi.tenant.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.RoleConstants;
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.api.domain.organize.SysPost;
@@ -76,14 +76,14 @@ public class CreationServiceImpl implements ICreationService {
         Long deriveTenantId = IdUtil.getSnowflake(0, 0).nextId();
         // 1.建立新租户初始租管衍生角色信息
         SysRole deriveAdministrator = tenant.getParams().containsKey("role") ? (SysRole) tenant.getParams().get("role") : new SysRole(deriveAdministratorId);
-        deriveAdministrator.setType(RoleConstants.ADMINISTRATOR_DERIVE_TYPE);
+        deriveAdministrator.setType(AuthorityConstants.DERIVE_TENANT_TYPE);
         deriveAdministrator.setName("超管衍生" + deriveAdministratorId);
         if (!tenant.getParams().containsKey("role")) {
             tenant.getParams().put("role", deriveAdministrator);
         }
         // 2.建立新租户初始租户衍生角色信息
         SysRole deriveTenant = new SysRole(deriveTenantId);
-        deriveTenant.setType(RoleConstants.ENTERPRISE_DERIVE_TYPE);
+        deriveTenant.setType(AuthorityConstants.DERIVE_ENTERPRISE_TYPE);
         deriveTenant.setName("租户衍生" + deriveTenantId);
         tenant.getParams().put("deriveRole", deriveTenant);
         r = creationMapper.createRoleByTenantId(tenant);

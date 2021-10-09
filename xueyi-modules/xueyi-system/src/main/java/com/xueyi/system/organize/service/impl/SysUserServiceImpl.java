@@ -1,6 +1,7 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.RoleConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.ServiceException;
@@ -145,7 +146,7 @@ public class SysUserServiceImpl implements ISysUserService {
         int row = userMapper.insertUser(user);
         if(row>0){
             SysRole role = new SysRole();
-            role.setType(RoleConstants.USER_DERIVE_TYPE);
+            role.setType(AuthorityConstants.DERIVE_USER_TYPE);
             role.setDeriveId(user.getSnowflakeId());
             role.setName("用户衍生"+user.getSnowflakeId());
             roleService.insertRole(role);
@@ -251,7 +252,7 @@ public class SysUserServiceImpl implements ISysUserService {
     public int deleteUserById(SysUser user) {
         // 1.删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(RoleConstants.USER_DERIVE_TYPE);
+        role.setType(AuthorityConstants.DERIVE_USER_TYPE);
         role.setDeriveId(user.getUserId());
         roleMapper.deleteRoleByDeriveId(role);
         // 2.删除用户-角色关联信息
@@ -273,7 +274,7 @@ public class SysUserServiceImpl implements ISysUserService {
     public int deleteUserByIds(SysUser user) {
         // 1.批量删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(RoleConstants.USER_DERIVE_TYPE);
+        role.setType(AuthorityConstants.DERIVE_USER_TYPE);
         role.getParams().put("Ids",user.getParams().get("Ids"));
         roleMapper.deleteRoleByDeriveIds(role);
         // 2.批量删除用户-角色关联信息
