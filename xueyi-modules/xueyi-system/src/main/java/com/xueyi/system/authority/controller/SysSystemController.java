@@ -68,7 +68,8 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysSystem system) {
-        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
+        SysSystem check = systemService.mainSelectSystemById(new SysSystem(system.getSystemId()));
+        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, check.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
             return AjaxResult.error("修改模块'" + system.getName() + "'失败，仅租管账户可修改公共模块");
         }
         return toAjax(systemService.mainUpdateSystem(system));
