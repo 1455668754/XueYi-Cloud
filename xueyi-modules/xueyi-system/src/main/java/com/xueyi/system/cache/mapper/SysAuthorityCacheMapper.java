@@ -1,8 +1,6 @@
 package com.xueyi.system.cache.mapper;
 
-import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
-import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.cache.domain.CacheInitVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -10,25 +8,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 缓存数据 数据层
+ * 权限缓存数据 数据层
  *
  * @author xueyi
  */
-public interface SysCacheInitMapper {
-    /**
-     * 查询所有数据源策略组信息 | 主源所有数据源策略组
-     *
-     * @return 数据源组集合
-     */
-    public List<Source> mainSelectSourceCacheListBySource();
-
-    /**
-     * 根据源策略Id查询数据源策略组信息 | 主源单个指定数据源策略组
-     *
-     * @param strategyId 源策略组Id
-     * @return 数据源组
-     */
-    public Source mainSelectSourceCacheByStrategyId(Long strategyId);
+public interface SysAuthorityCacheMapper {
 
     /**
      * 查询所有模块-路由信息 | 主源所有企业
@@ -98,28 +82,4 @@ public interface SysCacheInitMapper {
      * @return 通用缓存封装对象集合
      */
     public List<CacheInitVo> mainSelectEnterpriseCacheListByExcludeIds(@Param("enterpriseIds") Set<Long> enterpriseIds, @Param("systemIds") Set<Long> systemIds);
-
-    /**
-     * 查询所有角色信息 | 指定源所有企业
-     *
-     * @return 通用缓存封装对象集合
-     */
-    public List<SysRole> selectRoleCacheListBySource();
-
-    /**
-     * 根据角色信息查找角色信息 | 单个企业的单个指定角色
-     *
-     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
-     */
-    public SysRole selectRoleCacheByRoleId(SysRole role);
-
-    /**
-     * 根据排除列表查询列表外角色信息 | 指定源
-     *
-     * @param enterpriseIds 排除集合 企业Ids
-     * @param roleIds       排除集合 角色Ids
-     * @return 通用缓存封装对象集合
-     */
-    public List<SysRole> selectRoleCacheListByExcludeIds(@Param("enterpriseIds") Set<Long> enterpriseIds, @Param("roleIds") Set<Long> roleIds);
-
 }

@@ -115,20 +115,17 @@ public class SysDeptServiceImpl implements ISysDeptService {
     @Override
     @Transactional
     public int updateDept(SysDept dept) {
-        SysDept checkDept = new SysDept(dept.getParentId());
-        SysDept newParentDept = deptMapper.selectDeptById(checkDept);
-        checkDept.setDeptId(dept.getDeptId());
-        SysDept oldDept = deptMapper.selectDeptById(checkDept);
+        SysDept newParentDept = deptMapper.selectDeptById(new SysDept(dept.getParentId()));
+        SysDept oldDept = deptMapper.selectDeptById(new SysDept(dept.getDeptId()));
         if (StringUtils.isNotNull(newParentDept) && StringUtils.isNotNull(oldDept)) {
             String newAncestors = newParentDept.getAncestors() + "," + newParentDept.getDeptId();
             String oldAncestors = oldDept.getAncestors();
             dept.setAncestors(newAncestors);
             updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
         }
-        checkDept.setDeptId(dept.getParentId());
         // 欲启用部门时判断上级部门是否启用，未启用则设置本部门为禁用状态
         if (UserConstants.DEPT_NORMAL.equals(dept.getStatus())) {
-            if (UserConstants.DEPT_DISABLE.equals(checkDeptStatus(checkDept))) {
+            if (UserConstants.DEPT_DISABLE.equals(checkDeptStatus(new SysDept(dept.getParentId())))) {
                 dept.setStatus(UserConstants.DEPT_DISABLE);
                 try {
                     throw new ServiceException(String.format("%1$s上级部门已停用,无法启用该部门", dept.getDeptName()));

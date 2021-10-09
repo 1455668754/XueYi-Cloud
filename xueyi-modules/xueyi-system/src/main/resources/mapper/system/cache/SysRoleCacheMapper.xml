@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xueyi.system.cache.mapper.SysRoleCacheMapper">
+
+    <!--  角色  -->
+    <resultMap type="SysRole" id="RoleResult">
+        <id     property="roleId"             	column="role_id"               />
+        <result property="roleCode"           	column="role_code"             />
+        <result property="name"           		column="name"             	   />
+        <result property="roleKey"            	column="role_key"              />
+        <result property="dataScope"          	column="data_scope"            />
+        <result property="type"   				column="type"   	 		   />
+        <result property="deriveId"   			column="derive_id"   	 	   />
+        <result property="sort"   				column="sort"   	 		   />
+        <result property="status"     			column="status"      		   />
+        <result property="enterpriseId"     	column="tenant_id"             />
+        <collection  property="wholeIds"        notNullColumn="s_m_whole_uid"       javaType="java.util.Set" resultMap="wholeIdsResult"       />
+        <collection  property="halfIds"         notNullColumn="s_m_half_uid"        javaType="java.util.Set" resultMap="halfIdsResult"        />
+        <collection  property="deptPostIds"     notNullColumn="s_m_dept_post_id"    javaType="java.util.Set" resultMap="deptPostIdsResult"    />
+    </resultMap>
+
+    <resultMap type="SystemMenu" id="wholeIdsResult">
+    <id     property="Uid"              column="s_m_whole_uid"             />
+    </resultMap>
+
+    <resultMap type="SystemMenu" id="halfIdsResult">
+    <id     property="Uid"              column="s_m_half_uid"              />
+    </resultMap>
+
+    <resultMap type="Long" id="deptPostIdsResult">
+    <id                                 column="s_m_dept_post_id"          />
+    </resultMap>
+
+    <sql id="roleCacheVo">
+        select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+               r.s_m_half_uid, r.s_m_whole_uid, r.s_m_dept_post_id
+        from (
+                 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+                        null as s_m_half_uid, srsmw.system_menu_id as s_m_whole_uid, null as s_m_dept_post_id
+                 from sys_role r
+                          left join sys_role_system_menu srsmw on r.role_id = srsmw.role_id and srsmw.checked = '0'
+                 union
+                 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+                        srsmh.system_menu_id as s_m_half_uid, null as s_m_whole_uid, null as s_m_dept_post_id
+                 from sys_role r
+                          left join sys_role_system_menu srsmh on r.role_id = srsmh.role_id and srsmh.checked = '1'
+                 union
+                 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+                        null as s_m_half_uid, null as s_m_whole_uid, srdp.dept_post_id as s_m_dept_post_id
+                 from sys_role r
+                          left join sys_role_dept_post srdp on r.role_id = srdp.role_id
+             ) r
+                 left join sys_role sr on sr.role_id = r.role_id
+    </sql>
+
+    <select id="selectRoleCacheListBySource" resultMap="RoleResult">
+        <include refid="roleCacheVo"/>
+        where r.del_flag = 0
+        order by r.sort
+    </select>
+
+    <select id="selectRoleCacheByRoleId" parameterType="SysRole" resultMap="RoleResult">
+        <include refid="roleCacheVo"/>
+        where r.role_id = #{roleId} and r.tenant_id = #{enterpriseId} and r.del_flag = 0
+    </select>
+
+    <select id="selectRoleCacheListByExcludeIds" resultMap="RoleResult">
+        <include refid="enterpriseRoleCacheVo"/>
+        where r.del_flag = 0
+        <if test="enterpriseIds !=null and enterpriseIds.size()>0">
+            and r.tenant_id not in
+            <foreach item="Id" collection="enterpriseIds" open="(" separator="," close=")">
+                #{Id}
+            </foreach>
+        </if>
+        <if test="roleIds != null and roleIds.size()>0">
+            and r.role_id not in
+            <foreach item="Id" collection="roleIds" open="(" separator="," close=")">
+                #{Id}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>

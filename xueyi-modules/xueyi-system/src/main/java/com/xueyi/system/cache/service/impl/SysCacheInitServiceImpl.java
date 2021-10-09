@@ -11,7 +11,9 @@ import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.cache.domain.CacheInitVo;
-import com.xueyi.system.cache.mapper.SysCacheInitMapper;
+import com.xueyi.system.cache.mapper.SysAuthorityCacheMapper;
+import com.xueyi.system.cache.mapper.SysRoleCacheMapper;
+import com.xueyi.system.cache.mapper.SysSourceCacheMapper;
 import com.xueyi.system.cache.service.ISysCacheInitService;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,13 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     private ISysEnterpriseService enterpriseService;
 
     @Autowired
-    private SysCacheInitMapper cacheInitMapper;
+    private SysAuthorityCacheMapper authorityCacheMapper;
+
+    @Autowired
+    private SysRoleCacheMapper roleCacheMapper;
+
+    @Autowired
+    private SysSourceCacheMapper sourceCacheMapper;
 
     @Autowired
     private ISysCacheInitService cacheInitService;
@@ -69,7 +77,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void loadingSourceCache() {
-        List<Source> sourceList = cacheInitMapper.mainSelectSourceCacheListBySource();
+        List<Source> sourceList = sourceCacheMapper.mainSelectSourceCacheListBySource();
         for (Source source : sourceList) {
             for(Source value: source.getValues()){
                 if(StringUtils.equals(TenantConstants.IS_MAIN_TRUE,value.getIsMain())){
@@ -88,7 +96,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void refreshSourceCacheByStrategyId(Long strategyId) {
-        Source source = cacheInitMapper.mainSelectSourceCacheByStrategyId(strategyId);
+        Source source = sourceCacheMapper.mainSelectSourceCacheByStrategyId(strategyId);
         for(Source value: source.getValues()){
             if(StringUtils.equals(TenantConstants.IS_MAIN_TRUE,value.getIsMain())){
                 source.setMaster(value.getMaster());
@@ -103,11 +111,11 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void loadingRouteCache() {
-        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectRouteCacheListBySource();
+        List<CacheInitVo> cacheInitVos = authorityCacheMapper.mainSelectRouteCacheListBySource();
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getMenuSet());
         }
-        List<CacheInitVo> enterpriseNullList = cacheInitMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), cacheInitVos.stream().map(CacheInitVo::getSystemId).collect(Collectors.toSet()));
+        List<CacheInitVo> enterpriseNullList = authorityCacheMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), cacheInitVos.stream().map(CacheInitVo::getSystemId).collect(Collectors.toSet()));
         for (CacheInitVo enterpriseNull : enterpriseNullList) {
             AuthorityUtils.deleteRouteCache(enterpriseNull.getEnterpriseId(), enterpriseNull.getSystemId());
         }
@@ -120,7 +128,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void refreshRouteCacheBySystemId(SysSystem system) {
-        CacheInitVo cacheInitVo = cacheInitMapper.mainSelectRouteCacheListBySystemId(system);
+        CacheInitVo cacheInitVo = authorityCacheMapper.mainSelectRouteCacheListBySystemId(system);
         if (cacheInitVo != null) {
             AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getMenuSet());
         } else {
@@ -133,11 +141,11 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void loadingMenuCache() {
-        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectMenuCacheListBySource();
+        List<CacheInitVo> cacheInitVos = authorityCacheMapper.mainSelectMenuCacheListBySource();
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getMenuSet());
         }
-        List<CacheInitVo> enterpriseNullList = cacheInitMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
+        List<CacheInitVo> enterpriseNullList = authorityCacheMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
         for (CacheInitVo enterpriseNull : enterpriseNullList) {
             AuthorityUtils.deleteMenuCache(enterpriseNull.getEnterpriseId());
         }
@@ -150,7 +158,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void refreshMenuCacheByEnterpriseId(Long enterpriseId) {
-        CacheInitVo cacheInitVo = cacheInitMapper.mainSelectMenuCacheListByEnterpriseId(enterpriseId);
+        CacheInitVo cacheInitVo = authorityCacheMapper.mainSelectMenuCacheListByEnterpriseId(enterpriseId);
         if (cacheInitVo != null) {
             AuthorityUtils.refreshMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getMenuSet());
         } else {
@@ -163,11 +171,11 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void loadingSystemCache() {
-        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemCacheListBySource();
+        List<CacheInitVo> cacheInitVos = authorityCacheMapper.mainSelectSystemCacheListBySource();
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshSystemCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemSet());
         }
-        List<CacheInitVo> enterpriseNullList = cacheInitMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
+        List<CacheInitVo> enterpriseNullList = authorityCacheMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
         for (CacheInitVo enterpriseNull : enterpriseNullList) {
             AuthorityUtils.deleteSystemCache(enterpriseNull.getEnterpriseId());
         }
@@ -180,7 +188,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void refreshSystemCacheByEnterpriseId(Long enterpriseId) {
-        CacheInitVo cacheInitVo = cacheInitMapper.mainSelectSystemCacheListByEnterpriseId(enterpriseId);
+        CacheInitVo cacheInitVo = authorityCacheMapper.mainSelectSystemCacheListByEnterpriseId(enterpriseId);
         if (cacheInitVo != null) {
             AuthorityUtils.refreshSystemCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemSet());
         } else {
@@ -193,11 +201,11 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void loadingSystemMenuCache() {
-        List<CacheInitVo> cacheInitVos = cacheInitMapper.mainSelectSystemMenuCacheListBySource();
+        List<CacheInitVo> cacheInitVos = authorityCacheMapper.mainSelectSystemMenuCacheListBySource();
         for (CacheInitVo cacheInitVo : cacheInitVos) {
             AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemMenuSet());
         }
-        List<CacheInitVo> enterpriseNullList = cacheInitMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
+        List<CacheInitVo> enterpriseNullList = authorityCacheMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), null);
         for (CacheInitVo enterpriseNull : enterpriseNullList) {
             AuthorityUtils.deleteSystemMenuCache(enterpriseNull.getEnterpriseId());
         }
@@ -210,7 +218,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @Override
     public void refreshSystemMenuCacheByEnterpriseId(Long enterpriseId) {
-        CacheInitVo cacheInitVo = cacheInitMapper.mainSelectSystemMenuCacheListByEnterpriseId(enterpriseId);
+        CacheInitVo cacheInitVo = authorityCacheMapper.mainSelectSystemMenuCacheListByEnterpriseId(enterpriseId);
         if (cacheInitVo != null) {
             AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemMenuSet());
         } else {
@@ -226,11 +234,11 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     @Override
     @DS("#sourceName")
     public void loadingRoleCache(String sourceName) {
-        List<SysRole> roles = cacheInitMapper.selectRoleCacheListBySource();
+        List<SysRole> roles = roleCacheMapper.selectRoleCacheListBySource();
         for (SysRole role : roles) {
             AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), role);
         }
-        List<SysRole> roleNullList = cacheInitMapper.selectRoleCacheListByExcludeIds(roles.stream().map(SysRole::getEnterpriseId).collect(Collectors.toSet()), roles.stream().map(SysRole::getRoleId).collect(Collectors.toSet()));
+        List<SysRole> roleNullList = roleCacheMapper.selectRoleCacheListByExcludeIds(roles.stream().map(SysRole::getEnterpriseId).collect(Collectors.toSet()), roles.stream().map(SysRole::getRoleId).collect(Collectors.toSet()));
         for (SysRole roleNull : roleNullList) {
             AuthorityUtils.deleteRoleCache(roleNull.getEnterpriseId(), roleNull.getRoleId());
         }
@@ -266,7 +274,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
      */
     private void refreshRoleCacheByRoleId(SysRole role) {
-        SysRole roleCache = cacheInitMapper.selectRoleCacheByRoleId(role);
+        SysRole roleCache = roleCacheMapper.selectRoleCacheByRoleId(role);
         if (roleCache != null) {
             AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), roleCache);
         } else {

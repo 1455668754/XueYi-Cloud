@@ -2,24 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.xueyi.system.cache.mapper.SysCacheInitMapper">
-
-    <!--  数据源策略组  -->
-    <resultMap type="Source" id="SourceResult">
-        <id     property="strategyId"       column="source_strategy_id"  />
-        <result property="isChange"         column="source_is_change"    />
-        <collection  property="values"   javaType="java.util.List"  resultMap="valuesResult"/>
-    </resultMap>
-
-    <resultMap type="Source" id="valuesResult">
-        <result property="master"           column="source_master_name"  />
-        <result property="isMain"           column="source_is_main"      />
-        <collection  property="slave"   javaType="java.util.List"   resultMap="subSlaveMap" />
-    </resultMap>
-
-    <resultMap id="subSlaveMap" type="string">
-        <result column="source_slave_name"                               />
-    </resultMap>
+<mapper namespace="com.xueyi.system.cache.mapper.SysAuthorityCacheMapper">
 
     <!--  路由、菜单、模块、模块-菜单 缓存封装对象  -->
     <resultMap type="CacheInitVo" id="CacheInitResult">
@@ -74,42 +57,6 @@
         <result property="sort"             column="s_m_sort"           />
     </resultMap>
 
-    <!--  角色  -->
-    <resultMap type="SysRole" id="RoleResult">
-        <id     property="roleId"             	column="role_id"               />
-        <result property="roleCode"           	column="role_code"             />
-        <result property="name"           		column="name"             	   />
-        <result property="roleKey"            	column="role_key"              />
-        <result property="dataScope"          	column="data_scope"            />
-        <result property="type"   				column="type"   	 		   />
-        <result property="deriveId"   			column="derive_id"   	 	   />
-        <result property="sort"   				column="sort"   	 		   />
-        <result property="status"     			column="status"      		   />
-        <result property="enterpriseId"     	column="tenant_id"             />
-        <collection  property="wholeIds"        notNullColumn="s_m_whole_uid"       javaType="java.util.Set" resultMap="wholeIdsResult"       />
-        <collection  property="halfIds"         notNullColumn="s_m_half_uid"        javaType="java.util.Set" resultMap="halfIdsResult"        />
-        <collection  property="deptPostIds"     notNullColumn="s_m_dept_post_id"    javaType="java.util.Set" resultMap="deptPostIdsResult"    />
-    </resultMap>
-
-    <resultMap type="SystemMenu" id="wholeIdsResult">
-        <id     property="Uid"              column="s_m_whole_uid"             />
-    </resultMap>
-
-    <resultMap type="SystemMenu" id="halfIdsResult">
-        <id     property="Uid"              column="s_m_half_uid"              />
-    </resultMap>
-
-    <resultMap type="Long" id="deptPostIdsResult">
-        <id                                 column="s_m_dept_post_id"          />
-    </resultMap>
-
-    <sql id="sourceCacheVo">
-        select ts.strategy_id as source_strategy_id, ts.is_change as source_is_change, tss.is_main as source_is_main, tst.write_slave as source_master_name, tst.read_slave as source_slave_name
-        from xy_tenant_strategy ts
-        left join xy_tenant_strategy_source tss on tss.strategy_id = ts.strategy_id
-        left join xy_tenant_separation tst on tst.write_id = tss.source_id
-    </sql>
-
     <sql id="routeCacheVo">
         select distinct m.tenant_id, m.system_id, m.menu_id as menu_menu_id, m.system_id as menu_system_id, m.name as menu_name, m.parent_id as menu_parent_id, m.path as menu_path, m.component as menu_component, m.query as menu_query, m.is_common as menu_is_common,
                         m.is_change as menu_is_change, m.is_frame as menu_is_frame, m.is_cache as menu_is_cache, m.menu_type as menu_menu_type, m.visible as menu_visible, m.status as menu_status, ifnull(m.perms, '') as menu_perms, m.icon as menu_icon, m.sort as menu_sort
@@ -137,28 +84,6 @@
              from xy_system s ) sm
     </sql>
 
-    <sql id="roleCacheVo">
-        select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
-               r.s_m_half_uid, r.s_m_whole_uid, r.s_m_dept_post_id
-        from (
-                 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
-                        null as s_m_half_uid, srsmw.system_menu_id as s_m_whole_uid, null as s_m_dept_post_id
-                 from sys_role r
-                 left join sys_role_system_menu srsmw on r.role_id = srsmw.role_id and srsmw.checked = '0'
-                 union
-                 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
-                        srsmh.system_menu_id as s_m_half_uid, null as s_m_whole_uid, null as s_m_dept_post_id
-                 from sys_role r
-                 left join sys_role_system_menu srsmh on r.role_id = srsmh.role_id and srsmh.checked = '1'
-                 union
-                 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
-                        null as s_m_half_uid, null as s_m_whole_uid, srdp.dept_post_id as s_m_dept_post_id
-                 from sys_role r
-                 left join sys_role_dept_post srdp on r.role_id = srdp.role_id
-             ) r
-        left join sys_role sr on sr.role_id = r.role_id
-    </sql>
-
     <sql id="enterpriseCacheVo">
         select distinct es.tenant_id
         from xy_tenant es
@@ -173,16 +98,6 @@
         select distinct r.tenant_id, r.role_id
         from sys_role r
     </sql>
-
-    <select id="mainSelectSourceCacheListBySource" resultMap="SourceResult">
-        <include refid="sourceCacheVo"/>
-        where ts.del_flag = 0 and ts.status = '0'
-    </select>
-
-    <select id="mainSelectSourceCacheByStrategyId" parameterType="Long" resultMap="SourceResult">
-        <include refid="sourceCacheVo"/>
-        where ts.strategy_id = #{strategyId} and ts.del_flag = 0 and ts.status = '0'
-    </select>
 
     <select id="mainSelectRouteCacheListBySource" resultMap="CacheInitResult">
         <include refid="routeCacheVo"/>
@@ -256,31 +171,5 @@
         </if>
     </select>
 
-    <select id="selectRoleCacheListBySource" resultMap="RoleResult">
-        <include refid="roleCacheVo"/>
-        where r.del_flag = 0
-        order by r.sort
-    </select>
 
-    <select id="selectRoleCacheByRoleId" parameterType="SysRole" resultMap="RoleResult">
-        <include refid="roleCacheVo"/>
-        where r.role_id = #{roleId} and r.tenant_id = #{enterpriseId} and r.del_flag = 0
-    </select>
-
-    <select id="selectRoleCacheListByExcludeIds" resultMap="RoleResult">
-        <include refid="enterpriseRoleCacheVo"/>
-        where r.del_flag = 0
-        <if test="enterpriseIds !=null and enterpriseIds.size()>0">
-            and r.tenant_id not in
-            <foreach item="Id" collection="enterpriseIds" open="(" separator="," close=")">
-                #{Id}
-            </foreach>
-        </if>
-        <if test="roleIds != null and roleIds.size()>0">
-            and r.role_id not in
-            <foreach item="Id" collection="roleIds" open="(" separator="," close=")">
-                #{Id}
-            </foreach>
-        </if>
-    </select>
 </mapper>
