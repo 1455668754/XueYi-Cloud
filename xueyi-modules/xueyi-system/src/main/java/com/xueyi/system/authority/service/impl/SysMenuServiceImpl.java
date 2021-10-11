@@ -214,6 +214,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
                 children.setComponent(menu.getComponent());
                 children.setName(StringUtils.capitalize(menu.getPath()));
                 children.setMeta(new MetaVo(menu.getName(), menu.getIcon(), StringUtils.equals(MenuConstants.NO_CACHE, menu.getIsCache()), menu.getPath()));
+                children.setQuery(menu.getQuery());
                 childrenList.add(children);
                 router.setChildren(childrenList);
             } else if (menu.getParentId().intValue() == MenuConstants.MENU_TOP_NODE.intValue() && isInnerLink(menu)) {
