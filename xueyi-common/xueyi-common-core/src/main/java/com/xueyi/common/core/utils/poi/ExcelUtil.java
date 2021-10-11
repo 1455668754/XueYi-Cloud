@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
  * @author ruoyi
  */
 public class ExcelUtil<T> {
-
     private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
 
     /**
@@ -199,19 +198,13 @@ public class ExcelUtil<T> {
                 }
             }
             // 有数据时才处理 得到类的所有field.
-            Field[] allFields = clazz.getDeclaredFields();
-            // 定义一个map用于存放列的序号和field.
-            Map<Integer, Field> fieldsMap = new HashMap<Integer, Field>();
-            for (int col = 0; col < allFields.length; col++) {
-                Field field = allFields[col];
-                Excel attr = field.getAnnotation(Excel.class);
-                if (attr != null && (attr.type() == Type.ALL || attr.type() == type)) {
-                    // 设置类的私有字段属性可访问.
-                    field.setAccessible(true);
-                    Integer column = cellMap.get(attr.name());
-                    if (column != null) {
-                        fieldsMap.put(column, field);
-                    }
+            List<Object[]> fields = this.getFields();
+            Map<Integer, Object[]> fieldsMap = new HashMap<Integer, Object[]>();
+            for (Object[] objects : fields) {
+                Excel attr = (Excel) objects[1];
+                Integer column = cellMap.get(attr.name());
+                if (column != null) {
+                    fieldsMap.put(column, objects);
                 }
             }
             for (int i = titleNum + 1; i <= rows; i++) {
@@ -222,13 +215,14 @@ public class ExcelUtil<T> {
                     continue;
                 }
                 T entity = null;
-                for (Map.Entry<Integer, Field> entry : fieldsMap.entrySet()) {
+                for (Map.Entry<Integer, Object[]> entry : fieldsMap.entrySet()) {
                     Object val = this.getCellValue(row, entry.getKey());
 
                     // 如果不存在实例则新建.
                     entity = (entity == null ? clazz.newInstance() : entity);
                     // 从map中得到对应列的field.
-                    Field field = fieldsMap.get(entry.getKey());
+                    Field field = (Field) entry.getValue()[0];
+                    Excel attr = (Excel) entry.getValue()[1];
                     // 取得类型,并根据对象类型设置值.
                     Class<?> fieldType = field.getType();
                     if (String.class == fieldType) {
@@ -263,7 +257,6 @@ public class ExcelUtil<T> {
                         val = Convert.toBool(val, false);
                     }
                     if (StringUtils.isNotNull(fieldType)) {
-                        Excel attr = field.getAnnotation(Excel.class);
                         String propertyName = field.getName();
                         if (StringUtils.isNotEmpty(attr.targetAttr())) {
                             propertyName = field.getName() + "." + attr.targetAttr();
@@ -399,8 +392,6 @@ public class ExcelUtil<T> {
             for (Object[] os : fields) {
                 Field field = (Field) os[0];
                 Excel excel = (Excel) os[1];
-                // 设置实体类私有属性可访问
-                field.setAccessible(true);
                 this.addCell(excel, row, vo, field, column++);
             }
         }
@@ -818,27 +809,42 @@ public class ExcelUtil<T> {
      * 得到所有定义字段
      */
     private void createExcelField() {
-        this.fields = new ArrayList<Object[]>();
+        this.fields = getFields();
+        this.fields = this.fields.stream().sorted(Comparator.comparing(objects -> ((Excel) objects[1]).sort())).collect(Collectors.toList());
+        this.maxHeight = getRowHeight();
+    }
+
+    /**
+     * 获取字段注解信息
+     */
+    public List<Object[]> getFields() {
+        List<Object[]> fields = new ArrayList<Object[]>();
         List<Field> tempFields = new ArrayList<>();
         tempFields.addAll(Arrays.asList(clazz.getSuperclass().getDeclaredFields()));
         tempFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
         for (Field field : tempFields) {
             // 单注解
             if (field.isAnnotationPresent(Excel.class)) {
-                putToField(field, field.getAnnotation(Excel.class));
+                Excel attr = field.getAnnotation(Excel.class);
+                if (attr != null && (attr.type() == Type.ALL || attr.type() == type)) {
+                    field.setAccessible(true);
+                    fields.add(new Object[]{field, attr});
+                }
             }
 
             // 多注解
             if (field.isAnnotationPresent(Excels.class)) {
                 Excels attrs = field.getAnnotation(Excels.class);
                 Excel[] excels = attrs.value();
-                for (Excel excel : excels) {
-                    putToField(field, excel);
+                for (Excel attr : excels) {
+                    if (attr != null && (attr.type() == Type.ALL || attr.type() == type)) {
+                        field.setAccessible(true);
+                        fields.add(new Object[]{field, attr});
+                    }
                 }
             }
         }
-        this.fields = this.fields.stream().sorted(Comparator.comparing(objects -> ((Excel) objects[1]).sort())).collect(Collectors.toList());
-        this.maxHeight = getRowHeight();
+        return fields;
     }
 
     /**
@@ -851,15 +857,6 @@ public class ExcelUtil<T> {
             maxHeight = maxHeight > excel.height() ? maxHeight : excel.height();
         }
         return (short) (maxHeight * 20);
-    }
-
-    /**
-     * 放到字段集合中
-     */
-    private void putToField(Field field, Excel attr) {
-        if (attr != null && (attr.type() == Type.ALL || attr.type() == type)) {
-            this.fields.add(new Object[]{field, attr});
-        }
     }
 
     /**
