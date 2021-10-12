@@ -12,7 +12,6 @@ import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.authority.mapper.SysSystemMapper;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysSystemService;
-import com.xueyi.system.cache.service.ISysCacheInitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +29,6 @@ public class SysSystemServiceImpl implements ISysSystemService {
 
     @Autowired
     private ISysAuthorityService authorityService;
-
-    @Autowired
-    private ISysCacheInitService cacheInitService;
 
     @Autowired
     private SysSystemMapper systemMapper;
@@ -92,7 +88,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
         if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             system.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
         }
-        return refreshCache(system, systemMapper.mainInsertSystem(system), true);
+        return systemMapper.mainInsertSystem(system);
     }
 
     /**
@@ -107,7 +103,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
         if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             system.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
         }
-        return refreshCache(system, systemMapper.mainUpdateSystem(system), true);
+        return systemMapper.mainUpdateSystem(system);
     }
 
     /**
@@ -119,7 +115,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     @Override
     @DataScope(uedAlias = "empty")
     public int mainUpdateSystemStatus(SysSystem system) {
-        return refreshCache(system, systemMapper.mainUpdateSystemStatus(system), true);
+        return systemMapper.mainUpdateSystemStatus(system);
     }
 
     /**
@@ -131,40 +127,17 @@ public class SysSystemServiceImpl implements ISysSystemService {
     @Override
     @DataScope(uedAlias = "empty")
     public int mainDeleteSystemByIds(SysSystem system) {
-        Set<SysSystem> before = systemMapper.mainCheckSystemListByIds(system);
-        int rows = systemMapper.mainDeleteSystemByIds(system, SecurityUtils.isAdminTenant());
-        if (rows > 0) {
-            Set<SysSystem> after = systemMapper.mainCheckSystemListByIds(system);
-            before.removeAll(after);
-            if (before.size() > 0) {
-                for (SysSystem vo : before) {
-                    AuthorityUtils.deleteRouteCache(StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, vo.getIsCommon()) ? AuthorityConstants.COMMON_ENTERPRISE : SecurityUtils.getEnterpriseId(), vo.getSystemId());
-                }
-                refreshCache(system, rows, false);
-            }
-        }
-        return rows;
+        return systemMapper.mainDeleteSystemByIds(system, SecurityUtils.isAdminTenant());
     }
 
     /**
-     * 更新模块信息缓存
+     * 查询角色Id存在于数组中的角色信息
+     * 访问控制 s 租户查询
      *
-     * @param system 模块信息
-     * @param rows   结果
-     * @param type   True更新 | False删除
+     * @param system 模块信息 | params.Ids 模块Ids组
+     * @return 结果
      */
-    private int refreshCache(SysSystem system, int rows, boolean type) {
-        if (rows > 0) {
-            if (type) {
-                cacheInitService.refreshRouteCacheBySystemId(new SysSystem(system.getSnowflakeId(), SecurityUtils.getEnterpriseId()));
-            }
-            if (SecurityUtils.isAdminTenant()) {
-                cacheInitService.refreshSystemCacheByEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
-                cacheInitService.refreshSystemMenuCacheByEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
-            }
-            cacheInitService.refreshSystemCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
-            cacheInitService.refreshSystemMenuCacheByEnterpriseId(SecurityUtils.getEnterpriseId());
-        }
-        return rows;
+    public Set<SysSystem> mainCheckSystemListByIds(SysSystem system){
+        return systemMapper.mainCheckSystemListByIds(system);
     }
 }

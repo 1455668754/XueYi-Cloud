@@ -3,6 +3,7 @@ package com.xueyi.system.authority.service;
 import com.xueyi.system.api.domain.authority.SysSystem;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 子系统模块Service接口
@@ -65,4 +66,13 @@ public interface ISysSystemService {
      * @return 结果
      */
     public int mainDeleteSystemByIds(SysSystem system);
+
+    /**
+     * 查询角色Id存在于数组中的角色信息
+     * 访问控制 s 租户查询
+     *
+     * @param system 模块信息 | params.Ids 模块Ids组
+     * @return 结果
+     */
+    public Set<SysSystem> mainCheckSystemListByIds(SysSystem system);
 }
