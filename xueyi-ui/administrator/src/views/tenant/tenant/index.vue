@@ -519,7 +519,7 @@ export default {
           this.$refs.systemMenu.setCheckedKeys(Array.from(res.data.wholeIds, x => x.uid))
         })
         this.openMenuScope = true
-        this.title = "屏蔽菜单权限"
+        this.title = "设置菜单权限"
       })
     },
     /** 查询模块&菜单树结构 */
