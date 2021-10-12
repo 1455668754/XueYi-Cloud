@@ -35,6 +35,14 @@ public class SysAuthorityController extends BaseController {
     private ISysRoleService roleService;
 
     /**
+     * 获取当前租户模块-菜单范围 | 租户级
+     */
+    @GetMapping(value = "/lessorScope")
+    public AjaxResult getLessorMenuScope() {
+        return AjaxResult.success(authorityService.selectLessorMenuScope(SecurityUtils.getEnterpriseId()));
+    }
+
+    /**
      * 根据租户Id获取模块-菜单范围 | 租户级
      */
     @GetMapping(value = "/lessorScope/{enterpriseId}")

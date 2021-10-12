@@ -128,10 +128,10 @@
 <script>
 import {getGenTable, updateGenTable} from "@/api/tool/gen"
 import {optionselect as getDictOptionselect} from "@/api/system/dict/type"
-import {treeSelectPermitAll as systemMenuTreeSelect} from "@/api/common/temporary"
 import basicInfoForm from "./basicInfoForm"
 import genInfoForm from "./genInfoForm"
 import Sortable from 'sortablejs'
+import {getNowLessorMenuScope} from "@api/common/authority"
 
 export default {
   name: "GenEdit",
@@ -171,7 +171,7 @@ export default {
         this.dictOptions = response.data
       })
       /** 查询模块-菜单下拉列表 */
-      systemMenuTreeSelect({searchValue: '1'}).then(response => {
+      getNowLessorMenuScope().then(response => {
         this.menus = response.data
       })
     }
