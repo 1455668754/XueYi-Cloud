@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.api.domain.organize.SysDept;
-import com.xueyi.system.authority.domain.SystemMenuVo;
 import com.xueyi.system.organize.domain.deptPostVo;
 
 import java.io.Serializable;
@@ -84,19 +83,6 @@ public class TreeSelect implements Serializable {
         this.isCommon = systemMenu.getIsCommon();
         this.systemId = systemMenu.getSystemId();
         this.children = systemMenu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
-    }
-
-    public TreeSelect(SystemMenuVo systemMenuVo) {
-        this.id = systemMenuVo.getUid();
-        this.label = systemMenuVo.getName();
-        this.status = systemMenuVo.getStatus();
-        this.type = systemMenuVo.getType();
-        this.perms = systemMenuVo.getPerms();
-        this.icon = systemMenuVo.getIcon();
-        this.component = systemMenuVo.getComponent();
-        this.systemId = systemMenuVo.getSystemId();
-        this.isCommon = systemMenuVo.getIsCommon();
-        this.children = systemMenuVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
     public Long getId() {
