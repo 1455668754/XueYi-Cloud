@@ -3,21 +3,12 @@ package com.xueyi.system.organize.mapper;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 
-import java.util.List;
-
 /**
  * 企业表|企业信息表 数据层
  *
  * @author xueyi
  */
 public interface SysEnterpriseMapper {
-
-    /**
-     * 查询所有企业信息 | 用于缓存加载
-     *
-     * @return 企业对象集合
-     */
-    public List<SysEnterprise> mainSelectEnterpriseCacheList();
 
     /**
      * 根据企业Id查询企业信息

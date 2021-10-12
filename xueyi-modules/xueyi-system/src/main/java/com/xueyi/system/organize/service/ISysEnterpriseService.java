@@ -1,9 +1,6 @@
 package com.xueyi.system.organize.service;
 
 import com.xueyi.system.api.domain.organize.SysEnterprise;
-import com.xueyi.system.api.domain.source.Source;
-
-import java.util.List;
 
 /**
  * 企业 业务层
@@ -11,13 +8,6 @@ import java.util.List;
  * @author xueyi
  */
 public interface ISysEnterpriseService {
-
-    /**
-     * 查询所有企业信息 | 用于缓存加载
-     *
-     * @return 企业对象集合
-     */
-    public List<SysEnterprise> mainSelectEnterpriseCacheList();
 
     /**
      * 根据企业账号查询账号信息
@@ -73,19 +63,4 @@ public interface ISysEnterpriseService {
      * @return 结果
      */
     public String mainCheckEnterpriseNameUnique(SysEnterprise enterprise);
-
-    /**
-     * 加载企业缓存数据
-     */
-    public void loadingEnterpriseCache(List<SysEnterprise> enterprisesList);
-
-    /**
-     * 清空企业缓存数据
-     */
-    public void clearEnterpriseCache();
-
-    /**
-     * 重置企业缓存数据
-     */
-    public void resetEnterpriseCache();
 }

@@ -1,19 +1,15 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.utils.SecurityUtils;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
-import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
 import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * 企业信息 业务层处理
@@ -28,20 +24,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     private SysEnterpriseMapper enterpriseMapper;
 
     @Autowired
-    private TokenService tokenService;
-
-    @Autowired
     private RedisService redisService;
-
-    /**
-     * 查询所有企业信息 | 用于缓存加载
-     *
-     * @return 企业对象集合
-     */
-    @Override
-    public List<SysEnterprise> mainSelectEnterpriseCacheList() {
-        return enterpriseMapper.mainSelectEnterpriseCacheList();
-    }
 
     /**
      * 根据企业账号查询账号信息
@@ -134,39 +117,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     }
 
     /**
-     * 加载企业缓存数据
-     */
-    @Override
-    public void loadingEnterpriseCache(List<SysEnterprise> enterprisesList) {
-        for (SysEnterprise enterprise : enterprisesList) {
-            EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(), enterprise);
-            EnterpriseUtils.refreshStrategyCache(enterprise.getEnterpriseId(), enterprise.getStrategyId());
-            EnterpriseUtils.refreshLoginCache(enterprise.getEnterpriseName(), enterprise.getEnterpriseId());
-        }
-    }
-
-    /**
-     * 清空企业缓存数据
-     */
-    @Override
-    public void clearEnterpriseCache() {
-        Collection<String> keys = redisService.keys(CacheConstants.SYS_ENTERPRISE_KEY + "*");
-        redisService.deleteObject(keys);
-        Collection<String> loginKeys = redisService.keys(CacheConstants.LOGIN_ENTERPRISE_KEY + "*");
-        redisService.deleteObject(loginKeys);
-    }
-
-    /**
-     * 重置企业缓存数据
-     */
-    @Override
-    public void resetEnterpriseCache() {
-        List<SysEnterprise> enterprisesList = enterpriseMapper.mainSelectEnterpriseCacheList();
-        clearEnterpriseCache();
-        loadingEnterpriseCache(enterprisesList);
-    }
-
-    /**
      * 更新当前企业的cache
      */
     private void refreshCache() {
@@ -190,6 +140,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      * @return 参数键值
      */
     private SysEnterprise getEnterpriseProfile() {
-        return redisService.getCacheObject(EnterpriseUtils.getEnterpriseCacheKey(tokenService.getLoginUser().getEnterpriseId()));
+        return redisService.getCacheObject(EnterpriseUtils.getEnterpriseCacheKey(SecurityUtils.getEnterpriseId()));
     }
 }
