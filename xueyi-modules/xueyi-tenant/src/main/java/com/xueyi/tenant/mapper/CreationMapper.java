@@ -1,6 +1,5 @@
 package com.xueyi.tenant.mapper;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.tenant.domain.Tenant;
 
 
@@ -39,7 +38,7 @@ public interface CreationMapper {
     public int createUserByTenantId(Tenant tenant);
 
     /**
-     * 创建新租户衍生角色
+     * 创建新企业衍生角色
      * 访问控制 empty 租户更新（无前缀）
      *
      * @param tenant 租户管理

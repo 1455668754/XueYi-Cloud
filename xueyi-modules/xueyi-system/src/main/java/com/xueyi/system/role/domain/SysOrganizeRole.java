@@ -34,7 +34,7 @@ public class SysOrganizeRole extends BaseEntity {
     /** 企业衍生id */
     private Long deriveEnterpriseId;
 
-    /** 超管衍生id */
+    /** 租户衍生id */
     private Long deriveTenantId;
 
     /** 角色Id */
