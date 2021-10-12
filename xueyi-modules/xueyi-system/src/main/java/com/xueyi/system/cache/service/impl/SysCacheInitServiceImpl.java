@@ -6,16 +6,17 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.cache.domain.CacheInitVo;
 import com.xueyi.system.cache.mapper.SysAuthorityCacheMapper;
+import com.xueyi.system.cache.mapper.SysEnterpriseCacheMapper;
 import com.xueyi.system.cache.mapper.SysRoleCacheMapper;
 import com.xueyi.system.cache.mapper.SysSourceCacheMapper;
 import com.xueyi.system.cache.service.ISysCacheInitService;
-import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +34,16 @@ import java.util.stream.Collectors;
 public class SysCacheInitServiceImpl implements ISysCacheInitService {
 
     @Autowired
-    private ISysEnterpriseService enterpriseService;
+    private SysEnterpriseCacheMapper enterpriseCacheMapper;
+
+    @Autowired
+    private SysSourceCacheMapper sourceCacheMapper;
 
     @Autowired
     private SysAuthorityCacheMapper authorityCacheMapper;
 
     @Autowired
     private SysRoleCacheMapper roleCacheMapper;
-
-    @Autowired
-    private SysSourceCacheMapper sourceCacheMapper;
 
     @Autowired
     private ISysCacheInitService cacheInitService;
@@ -52,9 +53,8 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
      */
     @PostConstruct
     public void init() {
-        List<SysEnterprise> enterprisesList = enterpriseService.mainSelectEnterpriseCacheList();
         /* 初始化企业信息缓存 */
-        enterpriseService.loadingEnterpriseCache(enterprisesList);
+        loadingEnterpriseCache();
         /* 初始化数据源策略组缓存 */
         loadingSourceCache();
         /* 初始化模块-路由缓存 */
@@ -69,6 +69,19 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         List<Source> sources = DataSourceUtils.getSourceList();
         for (Source source : sources) {
             cacheInitService.loadingRoleCache(source.getMaster());
+        }
+    }
+
+    /**
+     * 加载企业缓存数据 | 主源所有企业
+     */
+    @Override
+    public void loadingEnterpriseCache() {
+        List<SysEnterprise> enterprisesList = enterpriseCacheMapper.mainSelectEnterpriseCacheListBySource();
+        for (SysEnterprise enterprise : enterprisesList) {
+            EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(), enterprise);
+            EnterpriseUtils.refreshStrategyCache(enterprise.getEnterpriseId(), enterprise.getStrategyId());
+            EnterpriseUtils.refreshLoginCache(enterprise.getEnterpriseName(), enterprise.getEnterpriseId());
         }
     }
 

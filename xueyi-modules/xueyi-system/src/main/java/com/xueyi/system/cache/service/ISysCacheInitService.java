@@ -11,6 +11,11 @@ import com.xueyi.system.api.domain.authority.SysSystem;
 public interface ISysCacheInitService {
 
     /**
+     * 加载企业缓存数据 | 主源所有企业
+     */
+    public void loadingEnterpriseCache();
+
+    /**
      * 加载数据源策略组缓存数据 | 主源所有数据源策略组
      */
     public void loadingSourceCache();
