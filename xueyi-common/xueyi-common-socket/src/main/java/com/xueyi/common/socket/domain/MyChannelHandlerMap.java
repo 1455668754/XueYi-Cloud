@@ -1,9 +1,9 @@
 package com.xueyi.common.socket.domain;
 
-import java.util.Date;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.xueyi.common.socket.pojo.Session;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +34,15 @@ public class MyChannelHandlerMap {
      */
     public boolean existConnectionById(Session session) {
         return biDirectionHashMap.containsKey(DigestUtil.md5Hex(session.channel().id().toString()));
+    }
+
+    /**
+     * 通过session查询用户
+     *
+     * @param session  通信信息
+     */
+    public static String getConsumer(Session session) {
+        return biDirectionHashMap.getKeyByValue(DigestUtil.md5Hex(session.channel().id().toString()));
     }
 
     /**
