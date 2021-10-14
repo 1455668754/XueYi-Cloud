@@ -1,13 +1,13 @@
 package com.xueyi.common.core.web.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.xueyi.common.core.annotation.Excel;
 
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Entity基类
@@ -54,6 +54,21 @@ public class BaseEntity implements Serializable {
     /** 创建者 */
     private String createName;
 
+    /** 创建者部门Id */
+    private Long createDeptBy;
+
+    /** 创建者部门 */
+    private String createDeptName;
+
+    /** 创建者岗位Id */
+    private Long createPostBy;
+
+    /** 创建者岗位 */
+    private String createPostName;
+
+    /** 创建者IP */
+    private String createIP;
+
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
@@ -63,6 +78,21 @@ public class BaseEntity implements Serializable {
 
     /** 更新者 */
     private String updateName;
+
+    /** 更新者部门Id */
+    private Long updateDeptBy;
+
+    /** 更新者部门 */
+    private String updateDeptName;
+
+    /** 更新者岗位Id */
+    private Long updatePostBy;
+
+    /** 更新者岗位 */
+    private String updatePostName;
+
+    /** 更新者IP */
+    private String updateIP;
 
     /** 更新时间 */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -176,6 +206,46 @@ public class BaseEntity implements Serializable {
         this.createName = createName;
     }
 
+    public Long getCreateDeptBy() {
+        return createDeptBy;
+    }
+
+    public void setCreateDeptBy(Long createDeptBy) {
+        this.createDeptBy = createDeptBy;
+    }
+
+    public String getCreateDeptName() {
+        return createDeptName;
+    }
+
+    public void setCreateDeptName(String createDeptName) {
+        this.createDeptName = createDeptName;
+    }
+
+    public Long getCreatePostBy() {
+        return createPostBy;
+    }
+
+    public void setCreatePostBy(Long createPostBy) {
+        this.createPostBy = createPostBy;
+    }
+
+    public String getCreatePostName() {
+        return createPostName;
+    }
+
+    public void setCreatePostName(String createPostName) {
+        this.createPostName = createPostName;
+    }
+
+    public String getCreateIP() {
+        return createIP;
+    }
+
+    public void setCreateIP(String createIP) {
+        this.createIP = createIP;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -198,6 +268,46 @@ public class BaseEntity implements Serializable {
 
     public void setUpdateName(String updateName) {
         this.updateName = updateName;
+    }
+
+    public Long getUpdateDeptBy() {
+        return updateDeptBy;
+    }
+
+    public void setUpdateDeptBy(Long updateDeptBy) {
+        this.updateDeptBy = updateDeptBy;
+    }
+
+    public String getUpdateDeptName() {
+        return updateDeptName;
+    }
+
+    public void setUpdateDeptName(String updateDeptName) {
+        this.updateDeptName = updateDeptName;
+    }
+
+    public Long getUpdatePostBy() {
+        return updatePostBy;
+    }
+
+    public void setUpdatePostBy(Long updatePostBy) {
+        this.updatePostBy = updatePostBy;
+    }
+
+    public String getUpdatePostName() {
+        return updatePostName;
+    }
+
+    public void setUpdatePostName(String updatePostName) {
+        this.updatePostName = updatePostName;
+    }
+
+    public String getUpdateIP() {
+        return updateIP;
+    }
+
+    public void setUpdateIP(String updateIP) {
+        this.updateIP = updateIP;
     }
 
     public Date getUpdateTime() {

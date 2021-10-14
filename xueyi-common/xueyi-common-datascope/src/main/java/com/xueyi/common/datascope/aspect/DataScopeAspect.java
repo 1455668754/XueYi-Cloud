@@ -27,10 +27,10 @@ import com.xueyi.system.api.model.LoginUser;
 @Component
 public class DataScopeAspect {
 
-    /** 数据权限过滤关键字 */
+    /** 数据权限过滤关键字 | 查询 */
     public static final String DATA_SCOPE = "dataScope";
 
-    /** 数据权限过滤关键字|更新 */
+    /** 数据权限过滤关键字 | 更新 */
     public static final String UPDATE_SCOPE = "updateScope";
 
     @Autowired
@@ -46,10 +46,8 @@ public class DataScopeAspect {
         // 获取当前的用户
         LoginUser loginUser = tokenService.getLoginUser();
         if (StringUtils.isNotNull(loginUser)) {
-            SysUser currentUser = loginUser.getSysUser();
-            SysEnterprise currentEnterprise = loginUser.getSysEnterprise();
-            if (StringUtils.isNotNull(currentUser)) {
-                dataScopeFilter(joinPoint, currentEnterprise, currentUser, controllerDataScope);
+            if (StringUtils.isNotNull(loginUser.getSysUser())) {
+                dataScopeFilter(joinPoint, loginUser, controllerDataScope);
             }
         }
     }
@@ -58,11 +56,12 @@ public class DataScopeAspect {
      * 数据范围过滤
      *
      * @param joinPoint           切点
-     * @param enterprise          租户
-     * @param user                用户
+     * @param loginUser           用户信息
      * @param controllerDataScope 切片数据
      */
-    public static void dataScopeFilter(JoinPoint joinPoint, SysEnterprise enterprise, SysUser user, DataScope controllerDataScope) {
+    public static void dataScopeFilter(JoinPoint joinPoint, LoginUser loginUser, DataScope controllerDataScope) {
+        SysEnterprise enterprise = loginUser.getSysEnterprise();
+        SysUser user = loginUser.getSysUser();
 
         String deptAlias = controllerDataScope.deptAlias();
         String postAlias = controllerDataScope.postAlias();
@@ -250,15 +249,17 @@ public class DataScopeAspect {
                 }
                 if (StringUtils.isNotBlank(upSqlString.toString())) {
                     //雪花ID生成
-                    //终端ID
-                    int workerId = RandomUtil.randomInt(1, 31);
-                    //数据中心ID
-                    int datacenterId = 1;
-                    Snowflake snowflake = IdUtil.getSnowflake(workerId, datacenterId);
+                    Snowflake snowflake = IdUtil.getSnowflake(RandomUtil.randomInt(1, 31), 1);
                     Long id = snowflake.nextId();
                     baseEntity.setSnowflakeId(id);
                     baseEntity.setCreateBy(user.getUserId());
+                    baseEntity.setCreateDeptBy(user.getDeptId());
+                    baseEntity.setCreatePostBy(user.getPostId());
+                    baseEntity.setCreateIP(loginUser.getIpaddr());
                     baseEntity.setUpdateBy(user.getUserId());
+                    baseEntity.setUpdateDeptBy(user.getDeptId());
+                    baseEntity.setUpdatePostBy(user.getPostId());
+                    baseEntity.setUpdateIP(loginUser.getIpaddr());
                     if (enterprise.getEnterpriseId() != -1) {
                         baseEntity.getParams().put(UPDATE_SCOPE, " AND (" + upSqlString.substring(4) + ")");
                     }
