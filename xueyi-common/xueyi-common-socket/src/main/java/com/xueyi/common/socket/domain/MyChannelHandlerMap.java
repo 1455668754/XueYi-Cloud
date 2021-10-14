@@ -37,6 +37,24 @@ public class MyChannelHandlerMap {
     }
 
     /**
+     * 通过consumer检查用户是否存在
+     *
+     * @param consumer  用户
+     */
+    public static boolean existConsumer(String consumer) {
+        return biDirectionHashMap.existKey(consumer);
+    }
+
+    /**
+     * 通过session检查通信信息是否存在
+     *
+     * @param session  通信信息
+     */
+    public static boolean existSession(Session session) {
+        return biDirectionHashMap.existValue(DigestUtil.md5Hex(session.channel().id().toString()));
+    }
+
+    /**
      * 通过session查询用户
      *
      * @param session  通信信息

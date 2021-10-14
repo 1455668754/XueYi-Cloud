@@ -141,4 +141,24 @@ public class BiDirectionHashMap<K, V, S> {
     public S getSessionByValue(V v) {
         return v2s.getOrDefault(v, null);
     }
+
+    /**
+     * 检查键是否存在
+     *
+     * @param k 键
+     * @return 结果（true | false）
+     */
+    public boolean existKey(K k){
+        return k2v2s.containsKey(k);
+    }
+
+    /**
+     * 检查值是否存在
+     *
+     * @param v 值
+     * @return 结果（true | false）
+     */
+    public boolean existValue(V v){
+        return v2k.containsKey(v);
+    }
 }
