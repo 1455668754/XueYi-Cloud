@@ -12,6 +12,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
@@ -23,7 +24,6 @@ import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.authority.service.ISysRoleService;
-import com.xueyi.system.organize.service.ISysEnterpriseService;
 import com.xueyi.system.organize.service.ISysPostService;
 import com.xueyi.system.organize.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,16 +62,13 @@ public class SysUserController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
-    private ISysEnterpriseService enterpriseService;
-
     /**
      * 获取当前用户信息
      */
     @InnerAuth
     @GetMapping("/info/{enterpriseName}/{userName}")
     public R<LoginUser> info(@PathVariable("enterpriseName") String enterpriseName, @PathVariable("userName") String userName) {
-        SysEnterprise enterprise = enterpriseService.mainGetEnterpriseProfileByEnterpriseName(enterpriseName);
+        SysEnterprise enterprise = EnterpriseUtils.getEnterpriseByEnterpriseName(enterpriseName);
         if (StringUtils.isNull(enterprise)) {
             return R.fail("账号或密码错误，请检查");
         }

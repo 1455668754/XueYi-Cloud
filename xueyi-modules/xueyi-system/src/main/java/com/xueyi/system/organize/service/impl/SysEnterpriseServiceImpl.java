@@ -27,18 +27,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     private RedisService redisService;
 
     /**
-     * 根据企业账号查询账号信息
-     *
-     * @param enterpriseName 企业账号
-     * @return 数据源组集合
-     */
-    @Override
-    public SysEnterprise mainGetEnterpriseProfileByEnterpriseName(String enterpriseName) {
-        Long enterpriseId = redisService.getCacheObject(EnterpriseUtils.getLoginCacheKey(enterpriseName));
-        return redisService.getCacheObject(EnterpriseUtils.getEnterpriseCacheKey(enterpriseId));
-    }
-
-    /**
      * 根据企业Id查询企业信息
      *
      * @param enterpriseId 企业Id

@@ -10,14 +10,6 @@ import com.xueyi.system.api.domain.organize.SysEnterprise;
 public interface ISysEnterpriseService {
 
     /**
-     * 根据企业账号查询账号信息
-     *
-     * @param enterpriseName 企业账号
-     * @return 数据源组集合
-     */
-    public SysEnterprise mainGetEnterpriseProfileByEnterpriseName(String enterpriseName);
-
-    /**
      * 根据企业Id查询企业信息
      *
      * @param enterpriseId 企业Id
