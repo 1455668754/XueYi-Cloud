@@ -1,6 +1,5 @@
 package com.xueyi.common.redis.utils;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.utils.SpringUtils;
@@ -15,16 +14,8 @@ import java.util.*;
  */
 public class AuthorityUtils {
 
-    private static RedisService redisService = null;
-
-    /**
-     * 初始化 redisService
-     */
-    static {
-        if(BeanUtil.isEmpty(redisService)){
-            redisService = SpringUtils.getBean(RedisService.class);
-        }
-    }
+    /** 初始化 redisService */
+    private final static RedisService redisService = SpringUtils.getBean(RedisService.class);
 
     /**
      * 获取模块-路由 key

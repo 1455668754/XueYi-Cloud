@@ -1,6 +1,5 @@
 package com.xueyi.common.redis.utils;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.utils.SpringUtils;
@@ -16,16 +15,8 @@ import java.lang.reflect.Field;
  */
 public class EnterpriseUtils {
 
-    private static RedisService redisService = null;
-
-    /**
-     * 初始化 redisService
-     */
-    static {
-        if(BeanUtil.isEmpty(redisService)){
-            redisService = SpringUtils.getBean(RedisService.class);
-        }
-    }
+    /** 初始化 redisService */
+    private final static RedisService redisService = SpringUtils.getBean(RedisService.class);
 
     /**
      * 获取企业Id key
@@ -71,7 +62,7 @@ public class EnterpriseUtils {
      * 获取企业策略主源 key
      *
      * @param enterpriseId 企业Id
-     * @return SourceName 策略主数据源
+     * @return 策略主数据源
      */
     public static <T> String getMainSourceName(Long enterpriseId) {
         T source = redisService.getCacheObject(DataSourceUtils.getSourceCacheKey(redisService.getCacheObject(getStrategyCacheKey(enterpriseId))));
@@ -85,6 +76,27 @@ public class EnterpriseUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 通过企业Id获取企业信息 key
+     *
+     * @param enterpriseId 企业Id
+     * @return 企业信息
+     */
+    public static <T> T getEnterpriseByEnterpriseId(Long enterpriseId) {
+        return redisService.getCacheObject(getEnterpriseCacheKey(enterpriseId));
+    }
+
+    /**
+     * 通过企业账号获取企业信息 key
+     *
+     * @param enterpriseName 企业账号
+     * @return 企业信息
+     */
+    public static <T> T getEnterpriseByEnterpriseName(String enterpriseName) {
+        Long enterpriseId = redisService.getCacheObject(getLoginCacheKey(enterpriseName));
+        return redisService.getCacheObject(getEnterpriseCacheKey(enterpriseId));
     }
 
     /**
