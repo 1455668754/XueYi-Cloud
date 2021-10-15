@@ -15,6 +15,7 @@ import com.xueyi.system.authority.service.ISysSystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,17 +42,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     @Override
     public List<SysSystem> getSystemRoutes() {
         Set<SysSystem> systemSet = AuthorityUtils.getSystemCache(SecurityUtils.getEnterpriseId());
-        Set<SysSystem> rangeSet;
-        // 管理员显示所有模块信息
-        if (SecurityUtils.isAdminUser()) {
-            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false, true);
-        } else {
-            SysRole role = new SysRole();
-            role.getParams().put("userId", SecurityUtils.getUserId());
-            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true, true);
-        }
-        systemSet.retainAll(rangeSet);
-        return SortUtils.sortSetToList(systemSet);
+        return SystemSetExcludeRole(systemSet);
     }
 
     /**
@@ -62,7 +53,8 @@ public class SysSystemServiceImpl implements ISysSystemService {
      */
     @Override
     public List<SysSystem> mainSelectSystemList(SysSystem system) {
-        return systemMapper.mainSelectSystemList(system);
+        Set<SysSystem> systemSet = new HashSet<>(systemMapper.mainSelectSystemList(system));
+        return SystemSetExcludeRole(systemSet);
     }
 
     /**
@@ -137,7 +129,29 @@ public class SysSystemServiceImpl implements ISysSystemService {
      * @param system 模块信息 | params.Ids 模块Ids组
      * @return 结果
      */
+    @Override
     public Set<SysSystem> mainCheckSystemListByIds(SysSystem system){
         return systemMapper.mainCheckSystemListByIds(system);
+    }
+
+    /**
+     * 对模块集合进行权限授权运算
+     * 访问控制 s 租户查询
+     *
+     * @param systemSet 模块信息集合
+     * @return 模块信息集合
+     */
+    private List<SysSystem> SystemSetExcludeRole(Set<SysSystem> systemSet){
+        Set<SysSystem> rangeSet;
+        // 管理员显示所有模块信息
+        if (SecurityUtils.isAdminUser()) {
+            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false, true);
+        } else {
+            SysRole role = new SysRole();
+            role.getParams().put("userId", SecurityUtils.getUserId());
+            rangeSet = authorityService.selectSystemSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true, true);
+        }
+        systemSet.retainAll(rangeSet);
+        return SortUtils.sortSetToList(systemSet);
     }
 }
