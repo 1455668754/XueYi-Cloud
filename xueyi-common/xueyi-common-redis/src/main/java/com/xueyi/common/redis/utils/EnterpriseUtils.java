@@ -1,5 +1,6 @@
 package com.xueyi.common.redis.utils;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.utils.SpringUtils;
@@ -14,6 +15,17 @@ import java.lang.reflect.Field;
  * @author xueyi
  */
 public class EnterpriseUtils {
+
+    private static RedisService redisService = null;
+
+    /**
+     * 初始化 redisService
+     */
+    static {
+        if(BeanUtil.isEmpty(redisService)){
+            redisService = SpringUtils.getBean(RedisService.class);
+        }
+    }
 
     /**
      * 获取企业Id key
@@ -62,7 +74,6 @@ public class EnterpriseUtils {
      * @return SourceName 策略主数据源
      */
     public static <T> String getMainSourceName(Long enterpriseId) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         T source = redisService.getCacheObject(DataSourceUtils.getSourceCacheKey(redisService.getCacheObject(getStrategyCacheKey(enterpriseId))));
         if (source != null) {
             try {
@@ -83,7 +94,6 @@ public class EnterpriseUtils {
      * @return 结果
      */
     public static <T> boolean isAdminTenant(Long enterpriseId) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         T enterprise = redisService.getCacheObject(getEnterpriseCacheKey(enterpriseId));
         if (enterprise != null) {
             try {
@@ -104,7 +114,6 @@ public class EnterpriseUtils {
      * @param enterprise   企业信息
      */
     public static <T> void refreshEnterpriseCache(Long enterpriseId, T enterprise) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.setCacheObject(getEnterpriseCacheKey(enterpriseId), enterprise);
     }
 
@@ -114,7 +123,6 @@ public class EnterpriseUtils {
      * @param enterpriseId 企业Id
      */
     public static void deleteEnterpriseCache(Long enterpriseId) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getEnterpriseCacheKey(enterpriseId));
     }
 
@@ -125,7 +133,6 @@ public class EnterpriseUtils {
      * @param enterpriseId   企业Id
      */
     public static void refreshLoginCache(String enterpriseName, Long enterpriseId) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.setCacheObject(getLoginCacheKey(enterpriseName), enterpriseId);
     }
 
@@ -135,7 +142,6 @@ public class EnterpriseUtils {
      * @param enterpriseName 企业账号
      */
     public static void deleteLoginCache(String enterpriseName) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getLoginCacheKey(enterpriseName));
     }
 
@@ -146,7 +152,6 @@ public class EnterpriseUtils {
      * @param strategyId   策略Id
      */
     public static void refreshStrategyCache(Long enterpriseId, Long strategyId) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.setCacheObject(getStrategyCacheKey(enterpriseId), strategyId);
     }
 
@@ -156,7 +161,6 @@ public class EnterpriseUtils {
      * @param enterpriseId 企业Id
      */
     public static void deleteStrategyCache(Long enterpriseId) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getStrategyCacheKey(enterpriseId));
     }
 
@@ -167,7 +171,6 @@ public class EnterpriseUtils {
      * @param enterpriseName 企业账号
      */
     public static void deleteCacheFolder(Long enterpriseId, String enterpriseName) {
-        RedisService redisService = SpringUtils.getBean(RedisService.class);
         redisService.deleteObject(getCacheFolderKey(enterpriseId));
         redisService.deleteObject(getLoginCacheKey(enterpriseName));
     }
