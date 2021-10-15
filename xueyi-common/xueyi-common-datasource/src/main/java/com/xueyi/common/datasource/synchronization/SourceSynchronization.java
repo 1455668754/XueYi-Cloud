@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 
 /**
- * 源同步
+ * 源同步 MQ监听
  *
  * @author Ethereal
  */
@@ -29,20 +29,20 @@ public class SourceSynchronization extends BaseListener {
 
     private static final Logger logger = LoggerFactory.getLogger(SourceSynchronization.class);
 
-    @Value("${spring.rabbitmq.datasource.synchro.queue.name}")
-    private String dataSourceSynchroQueueName;
+    @Value("${spring.rabbitmq.queue-name}")
+    private String sourceSynchroQueueName;
 
-    @Value("${spring.rabbitmq.datasource.synchro.exchange.name}")
-    private String dataSourceSynchroExchangeName;
+    @Value("${spring.rabbitmq.source-synchro.exchange-name}")
+    private String sourceSynchroExchangeName;
 
     @Bean
     public DirectExchange dataSourceDirectExchange() {
-        return new DirectExchange(dataSourceSynchroExchangeName);
+        return new DirectExchange(sourceSynchroExchangeName);
     }
 
     @Bean
     public Queue dataSourceQueue() {
-        return new Queue(dataSourceSynchroQueueName);
+        return new Queue(sourceSynchroQueueName);
     }
 
     /**
@@ -73,7 +73,7 @@ public class SourceSynchronization extends BaseListener {
         logger.info("失败处理：{}", message.toString());
     }
 
-    @RabbitListener(queues = {"${spring.rabbitmq.datasource.synchro.queue.name}"})
+    @RabbitListener(queues = {"${spring.rabbitmq.queue-name}"})
     @Override
     protected void receiveMessage(org.springframework.amqp.core.Message message, Channel channel) throws IOException {
         super.receiveMessage(message, channel);
