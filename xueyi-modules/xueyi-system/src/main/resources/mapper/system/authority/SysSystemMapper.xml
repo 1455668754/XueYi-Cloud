@@ -37,7 +37,7 @@
 
     <select id="mainSelectSystemList" parameterType="SysSystem" resultMap="SysSystemResult">
         <include refid="selectVo"/>
-        where 1 = 1
+        where s.is_change = 'N'
         <if test="name != null  and name != ''">                              and s.name like concat('%', #{name}, '%')             </if>
         <if test="type != null  and type != ''">                              and s.type = #{type}                                  </if>
         <if test="status != null  and status != ''">                          and s.status = #{status}                              </if>

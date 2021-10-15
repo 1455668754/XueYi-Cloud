@@ -53,18 +53,6 @@
         </el-col>
         <el-col :span="1.5">
           <el-button
-            type="success"
-            plain
-            icon="el-icon-edit"
-            size="mini"
-            :disabled="single"
-            @click="handleUpdate"
-            v-hasPermi="['system:system:edit']"
-          >修改
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button
             type="danger"
             plain
             icon="el-icon-delete"
@@ -98,19 +86,18 @@
             <dict-tag :options="dict.type.sys_jump_type" :value="scope.row.type"/>
           </template>
         </el-table-column>
-        <el-table-column label="路由|外链" align="center" prop="route" v-if="columns[3].visible"
-                         :show-overflow-tooltip="true" min-width="120"/>
-        <el-table-column label="状态" align="center" prop="status" v-if="columns[4].visible"
+        <el-table-column label="状态" align="center" prop="status" v-if="columns[3].visible"
                          :show-overflow-tooltip="true" min-width="120">
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.status"
               :active-value="STATUS.NORMAL"
               :inactive-value="STATUS.DISABLE"
-              @change="handleStatusChange(scope.row)"/>
+              @change="handleStatusChange(scope.row)"
+            :disabled="scope.row.isCommon === IS_COMMON.TRUE && !IS_LESSOR"/>
           </template>
         </el-table-column>
-        <el-table-column label="系统简介" align="center" prop="remark" v-if="columns[5].visible"
+        <el-table-column label="系统简介" align="center" prop="remark" v-if="columns[4].visible"
                          :show-overflow-tooltip="true" min-width="180"/>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="120">
           <template slot-scope="scope">
@@ -267,9 +254,8 @@ export default {
         {key: 0, label: `系统名称`, visible: true},
         {key: 1, label: `系统图片`, visible: true},
         {key: 2, label: `跳转类型`, visible: true},
-        {key: 3, label: `跳转路由`, visible: true},
-        {key: 4, label: `状态`, visible: true},
-        {key: 5, label: `系统简介`, visible: true}
+        {key: 3, label: `状态`, visible: true},
+        {key: 4, label: `系统简介`, visible: true}
       ],
       // 查询参数
       queryParams: {
