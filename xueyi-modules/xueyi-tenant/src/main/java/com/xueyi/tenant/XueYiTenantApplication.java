@@ -1,11 +1,10 @@
 package com.xueyi.tenant;
 
-import com.xueyi.common.datasource.synchronization.SourceSynchronization;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.xueyi.common.security.annotation.EnableCustomConfig;
 import com.xueyi.common.security.annotation.EnableRyFeignClients;
 import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * 租户模块
@@ -15,7 +14,7 @@ import com.xueyi.common.swagger.annotation.EnableCustomSwagger2;
 @EnableCustomConfig
 @EnableCustomSwagger2
 @EnableRyFeignClients
-@SpringBootApplication(exclude = {SourceSynchronization.class})
+@SpringBootApplication
 public class XueYiTenantApplication {
     public static void main(String[] args) {
         SpringApplication.run(XueYiTenantApplication.class, args);

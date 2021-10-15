@@ -1,19 +1,18 @@
 package com.xueyi.tenant.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.TenantConstants;
-import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
+import com.xueyi.tenant.api.domain.source.Source;
+import com.xueyi.tenant.mapper.SourceMapper;
+import com.xueyi.tenant.service.ISourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xueyi.tenant.mapper.SourceMapper;
-import com.xueyi.tenant.api.domain.source.Source;
-import com.xueyi.tenant.service.ISourceService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 数据源 业务层处理
@@ -62,7 +61,6 @@ public class SourceServiceImpl implements ISourceService {
         source.setSlave((source.getType().equals(TenantConstants.SOURCE_READ) ? "slave" : "master") + source.getSnowflakeId().toString());
         // 将数据新增的的数据源添加到数据源库
         source.setSyncType(TenantConstants.SYNC_TYPE_ADD);
-        DSUtils.addDs(source);
         DSUtils.syncDS(source);
         if (source.getType().equals(TenantConstants.SOURCE_READ_WRITE)) {
             Source value = new Source(source.getSnowflakeId());
@@ -97,13 +95,7 @@ public class SourceServiceImpl implements ISourceService {
     public int mainUpdateSourceStatus(Source source) {
         int rows = sourceMapper.mainUpdateSourceStatus(source);
         if (rows > 0) {
-            if (TenantConstants.SYNC_TYPE_ADD == source.getSyncType()) {
-                DSUtils.addDs(source);
-                DSUtils.syncDS(source);
-            } else if (TenantConstants.SYNC_TYPE_DELETE == source.getSyncType()) {
-                DSUtils.delDs(source.getSlave());
-                DSUtils.syncDS(source);
-            }
+            DSUtils.syncDS(source);
         }
         return rows;
     }
@@ -129,7 +121,6 @@ public class SourceServiceImpl implements ISourceService {
     @Transactional
     public int mainDeleteSourceById(Source source) {
         source.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
-        DSUtils.delDs(source.getSlave());
         DSUtils.syncDS(source);
         sourceMapper.mainDeleteSeparationByValueId(source);
         return sourceMapper.mainDeleteSourceById(source);
