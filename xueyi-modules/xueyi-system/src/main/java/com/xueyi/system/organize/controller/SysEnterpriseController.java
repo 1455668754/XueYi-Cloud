@@ -10,6 +10,7 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.PreAuthorize;
 import com.xueyi.common.security.service.TokenService;
@@ -52,7 +53,7 @@ public class SysEnterpriseController extends BaseController {
      */
     @InnerAuth
     @GetMapping("/byId/{enterpriseId}")
-    public R<SysEnterprise> getInfo(@PathVariable("enterpriseId") Long enterpriseId){
+    public R<SysEnterprise> getInfo(@PathVariable("enterpriseId") Long enterpriseId) {
         return R.ok(enterpriseService.mainSelectEnterpriseByEnterpriseId(enterpriseId));
     }
 
@@ -61,7 +62,7 @@ public class SysEnterpriseController extends BaseController {
      */
     @GetMapping("/profile")
     public AjaxResult profile() {
-        return AjaxResult.success(enterpriseService.mainSelectEnterpriseById());
+        return AjaxResult.success(enterpriseService.getEnterpriseProfile());
     }
 
     /**
@@ -80,7 +81,8 @@ public class SysEnterpriseController extends BaseController {
             String url = fileResult.getData().getUrl();
             SysEnterprise enterprise = new SysEnterprise();
             enterprise.setLogo(url);
-            if (enterpriseService.mainUpdateEnterpriseLogo(enterprise) > 0) {
+            int rows = refreshCache(enterpriseService.mainUpdateEnterpriseLogo(enterprise));
+            if (rows > 0) {
                 String oldLogoUrl = loginUser.getSysEnterprise().getLogo();
                 if (StringUtils.isNotEmpty(oldLogoUrl)) {
                     remoteFileService.delete(oldLogoUrl);
@@ -103,7 +105,7 @@ public class SysEnterpriseController extends BaseController {
     @Log(title = "企业资料修改", businessType = BusinessType.UPDATE)
     @PutMapping("/updateEnterprise")
     public AjaxResult updateEnterprise(@Validated @RequestBody SysEnterprise enterprise) {
-        return toAjax(enterpriseService.mainUpdateEnterpriseMinor(enterprise));
+        return toAjax(refreshCache(enterpriseService.mainUpdateEnterpriseMinor(enterprise)));
     }
 
     /**
@@ -116,7 +118,7 @@ public class SysEnterpriseController extends BaseController {
         if (StringUtils.equals(UserConstants.NOT_UNIQUE, enterpriseService.mainCheckEnterpriseNameUnique(enterprise))) {
             return AjaxResult.error("修改失败，该企业账号名不可用，请换一个账号名！");
         }
-        int i = enterpriseService.mainUpdateEnterpriseName(enterprise);
+        int i = refreshLoginCache(enterpriseService.mainUpdateEnterpriseName(enterprise));
         Collection<String> keys = redisService.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
         LoginUser mine = tokenService.getLoginUser();
         //强退当前企业账户所有在线账号
@@ -127,5 +129,27 @@ public class SysEnterpriseController extends BaseController {
             }
         }
         return toAjax(i);
+    }
+
+
+    /**
+     * 更新当前企业的cache
+     */
+    private int refreshCache(int rows) {
+        SysEnterprise enterprise = enterpriseService.mainSelectEnterpriseById();
+        EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(), enterprise);
+        return rows;
+    }
+
+    /**
+     * 更新当前企业登录验证的cache
+     */
+    private int refreshLoginCache(int rows) {
+        SysEnterprise oldEnterprise = enterpriseService.getEnterpriseProfile();
+        SysEnterprise newEnterprise = enterpriseService.mainSelectEnterpriseById();
+        EnterpriseUtils.deleteLoginCache(oldEnterprise.getEnterpriseName());
+        EnterpriseUtils.refreshEnterpriseCache(newEnterprise.getEnterpriseId(), newEnterprise);
+        EnterpriseUtils.refreshLoginCache(newEnterprise.getEnterpriseName(), newEnterprise.getEnterpriseId());
+        return rows;
     }
 }

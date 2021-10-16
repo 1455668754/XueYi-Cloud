@@ -3,7 +3,6 @@ package com.xueyi.system.organize.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.SecurityUtils;
-import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.organize.mapper.SysEnterpriseMapper;
@@ -23,9 +22,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @Autowired
     private SysEnterpriseMapper enterpriseMapper;
 
-    @Autowired
-    private RedisService redisService;
-
     /**
      * 根据企业Id查询企业信息
      *
@@ -38,13 +34,23 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     }
 
     /**
-     * 查询企业信息
+     * 查询当前企业信息
      *
      * @return 企业对象
      */
     @Override
     public SysEnterprise mainSelectEnterpriseById() {
-        return getEnterpriseProfile();
+        return enterpriseMapper.mainSelectEnterpriseById(new SysEnterprise());
+    }
+
+    /**
+     * 查询当前账户的企业信息
+     *
+     * @return 企业对象
+     */
+    @Override
+    public SysEnterprise getEnterpriseProfile() {
+        return EnterpriseUtils.getEnterpriseByEnterpriseId(SecurityUtils.getEnterpriseId());
     }
 
     /**
@@ -55,11 +61,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public int mainUpdateEnterpriseLogo(SysEnterprise enterprise) {
-        int rows = enterpriseMapper.mainUpdateEnterpriseLogo(enterprise);
-        if (rows > 0) {
-            refreshCache();
-        }
-        return rows;
+        return enterpriseMapper.mainUpdateEnterpriseLogo(enterprise);
     }
 
     /**
@@ -70,11 +72,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public int mainUpdateEnterpriseMinor(SysEnterprise enterprise) {
-        int rows = enterpriseMapper.mainUpdateEnterpriseMinor(enterprise);
-        if (rows > 0) {
-            refreshCache();
-        }
-        return rows;
+        return enterpriseMapper.mainUpdateEnterpriseMinor(enterprise);
     }
 
     /**
@@ -85,12 +83,7 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public int mainUpdateEnterpriseName(SysEnterprise enterprise) {
-        int rows = enterpriseMapper.mainUpdateEnterpriseName(enterprise);
-        if (rows > 0) {
-            refreshCache();
-            refreshLoginCache();
-        }
-        return rows;
+        return enterpriseMapper.mainUpdateEnterpriseName(enterprise);
     }
 
     /**
@@ -102,32 +95,5 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
     @Override
     public String mainCheckEnterpriseNameUnique(SysEnterprise enterprise) {
         return enterpriseMapper.mainCheckEnterpriseNameUnique(enterprise) == null ? UserConstants.UNIQUE : UserConstants.NOT_UNIQUE;
-    }
-
-    /**
-     * 更新当前企业的cache
-     */
-    private void refreshCache() {
-        SysEnterprise enterprise = enterpriseMapper.mainSelectEnterpriseById(new SysEnterprise());
-        EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(), enterprise);
-    }
-
-    /**
-     * 更新当前企业登录验证的cache
-     */
-    private void refreshLoginCache() {
-        SysEnterprise oldEnterprise = getEnterpriseProfile();
-        SysEnterprise newEnterprise = enterpriseMapper.mainSelectEnterpriseById(new SysEnterprise());
-        EnterpriseUtils.deleteLoginCache(oldEnterprise.getEnterpriseName());
-        EnterpriseUtils.refreshLoginCache(newEnterprise.getEnterpriseName(), newEnterprise.getEnterpriseId());
-    }
-
-    /**
-     * 查询当前账户的企业信息
-     *
-     * @return 参数键值
-     */
-    private SysEnterprise getEnterpriseProfile() {
-        return redisService.getCacheObject(EnterpriseUtils.getEnterpriseCacheKey(SecurityUtils.getEnterpriseId()));
     }
 }

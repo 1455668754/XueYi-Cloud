@@ -25,6 +25,13 @@ public interface ISysEnterpriseService {
     public SysEnterprise mainSelectEnterpriseById();
 
     /**
+     * 查询当前账户的企业信息
+     *
+     * @return 企业对象
+     */
+    public SysEnterprise getEnterpriseProfile();
+
+    /**
      * 更新Logo
      *
      * @param enterprise 企业对象 | logo logoUrl
