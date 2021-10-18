@@ -116,7 +116,7 @@
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['system:system:remove']"
-              v-if="scope.row.isCommon === IS_COMMON.FALSE || IS_LESSOR"
+              v-if="scope.row.isCommon === IS_COMMON.FALSE || IS_LESSOR && scope.row.isChange === SYSTEM_DEFAULT.FALSE"
             >删除
             </el-button>
           </template>
@@ -215,7 +215,7 @@
 import {listSystem, getSystem, delSystem, addSystem, updateSystem, changeSystemStatus} from "@/api/system/system"
 import ImageBox from "@customComponents/ImageBox"
 import store from "@/store"
-import {IS_COMMON, STATUS, VISIBLE} from "@constant/constants"
+import {IS_COMMON, STATUS, VISIBLE, SYSTEM_DEFAULT} from "@constant/constants"
 import {IS_NEW, SYSTEM_TYPE} from "@constant/authorityContants"
 
 export default {
@@ -230,6 +230,7 @@ export default {
       VISIBLE: VISIBLE,
       IS_NEW: IS_NEW,
       IS_COMMON: IS_COMMON,
+      SYSTEM_DEFAULT: SYSTEM_DEFAULT,
       IS_LESSOR: store.getters.isLessor,
       enterpriseName: store.getters.enterpriseName,
       // 遮罩层

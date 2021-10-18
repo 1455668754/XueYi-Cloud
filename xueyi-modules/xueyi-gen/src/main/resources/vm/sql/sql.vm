@@ -1,12 +1,12 @@
-insert into sys_menu (menu_id, system_id, tenant_id, parent_id, menu_name, path, component, query, is_frame, is_cache, menu_type, visible, perms, icon, sort, create_by, remark)
+insert into sys_menu (menu_id, system_id, tenant_id, parent_id, name, path, component, query, is_common, is_change, is_frame, is_cache, menu_type, visible, perms, icon, sort, create_by, remark)
 values
               -- 菜单 SQL
-              (${menuId0}, ${parentSystemId}, 0,#if(${parentMenuId}!=${parentSystemId}) ${parentMenuId}#else 0#end, '${functionName}', '${businessName}',   '${moduleName}/${businessName}/index',      '', 1, 1, 'C', '0',  '${permissionPrefix}:list',      '#',   1, 0, '${functionName}菜单'),
+              (${menuId0}, ${parentSystemId}, 0,#if(${parentMenuId}!=${parentSystemId}) ${parentMenuId}#else 0#end, '${functionName}', '${businessName}',   '${moduleName}/${businessName}/index',      '', 'Y', 'N', 'N', 'N', 'C', 'Y',  '${permissionPrefix}:list',      '#',   1, 0, '${functionName}菜单'),
                                    -- 按钮 SQL
-                                   (${menuId1}, ${parentSystemId}, 0, ${menuId0}, '${functionName}查询', '', '', '', 1, 1, 'F', '0', '${permissionPrefix}:query',           '#', 1, 0, ''),
-                                   (${menuId2}, ${parentSystemId}, 0, ${menuId0}, '${functionName}新增', '', '', '', 1, 1, 'F', '0', '${permissionPrefix}:add',             '#', 2, 0, ''),
-                                   (${menuId3}, ${parentSystemId}, 0, ${menuId0}, '${functionName}修改', '', '', '', 1, 1, 'F', '0', '${permissionPrefix}:edit',            '#', 3, 0, ''),
-                                   (${menuId4}, ${parentSystemId}, 0, ${menuId0}, '${functionName}删除', '', '', '', 1, 1, 'F', '0', '${permissionPrefix}:remove',          '#', 4, 0, ''),
-                                   (${menuId5}, ${parentSystemId}, 0, ${menuId0}, '${functionName}导出', '', '', '', 1, 1, 'F', '0', '${permissionPrefix}:export',          '#', 5, 0, '');
+                                   (${menuId1}, ${parentSystemId}, 0, ${menuId0}, '${functionName}查询', '', '', '', 'Y', 'N', 'N', 'N', 'F', 'N', '${permissionPrefix}:query',           '#', 1, 0, ''),
+                                   (${menuId2}, ${parentSystemId}, 0, ${menuId0}, '${functionName}新增', '', '', '', 'Y', 'N', 'N', 'N', 'F', 'N', '${permissionPrefix}:add',             '#', 2, 0, ''),
+                                   (${menuId3}, ${parentSystemId}, 0, ${menuId0}, '${functionName}修改', '', '', '', 'Y', 'N', 'N', 'N', 'F', 'N', '${permissionPrefix}:edit',            '#', 3, 0, ''),
+                                   (${menuId4}, ${parentSystemId}, 0, ${menuId0}, '${functionName}删除', '', '', '', 'Y', 'N', 'N', 'N', 'F', 'N', '${permissionPrefix}:remove',          '#', 4, 0, ''),
+                                   (${menuId5}, ${parentSystemId}, 0, ${menuId0}, '${functionName}导出', '', '', '', 'Y', 'N', 'N', 'N', 'F', 'N', '${permissionPrefix}:export',          '#', 5, 0, '');
 
                                    -- tenant_id = 0 代表所有租户都可看到 | 若需要限制则手动修改为指定租户Id即可
