@@ -214,7 +214,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		${params.updateScope}
 	</delete>
 
-	<delete id="checkRoleListByIds" parameterType="SysRole">
+	<select id="checkRoleListByIds" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="selectVo"/>
 		where role_id in
 		<foreach item="roleId" collection="params.Ids" open="(" separator="," close=")">
@@ -222,7 +222,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</foreach>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
-	</delete>
+	</select>
 
 	<select id="checkRoleCodeUnique" parameterType="SysRole" resultMap="SysRoleResult">
 		<include refid="checkVo"/>
