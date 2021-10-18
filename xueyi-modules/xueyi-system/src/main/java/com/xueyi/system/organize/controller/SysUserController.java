@@ -14,7 +14,7 @@ import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.InnerAuth;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
@@ -85,17 +85,17 @@ public class SysUserController extends BaseController {
         }
         // 角色集合
         List<SysRole> roleList = roleService.getRoleListByUserId(sysUser.getUserId(), enterprise.getEnterpriseId(), source.getMaster());
-        Set<Long> roles = roleList.stream().map(SysRole::getRoleId).collect(Collectors.toSet());
-        Set<String> roleKeys = loginService.getRolePermission(roles, sysUser.getUserType(), enterprise.getEnterpriseId());
+        Set<Long> roleIds = roleList.stream().map(SysRole::getRoleId).collect(Collectors.toSet());
+        Set<String> roles = loginService.getRolePermission(roleIds, sysUser.getUserType(), enterprise.getEnterpriseId());
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(roles, sysUser.getUserType(), enterprise.getEnterpriseId());
+        Set<String> permissions = loginService.getMenuPermission(roleIds, sysUser.getUserType(), enterprise.getEnterpriseId());
         LoginUser sysUserVo = new LoginUser();
         sysUserVo.setMainSource(source.getMaster());
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setUserType(sysUser.getUserType());
         sysUserVo.setSysEnterprise(enterprise);
-        sysUserVo.setRoleKeys(roleKeys);
         sysUserVo.setRoles(roles);
+        sysUserVo.setRoleIds(roleIds);
         sysUserVo.setPermissions(permissions);
         sysUserVo.setSource(source);
         return R.ok(sysUserVo);
@@ -110,9 +110,9 @@ public class SysUserController extends BaseController {
     public AjaxResult getInfo() {
         LoginUser loginUser = tokenService.getLoginUser();
         // 角色集合
-        Set<String> roles = loginService.getRolePermission(loginUser.getRoles(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
+        Set<String> roles = loginService.getRolePermission(loginUser.getRoleIds(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
         // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(loginUser.getRoles(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
+        Set<String> permissions = loginService.getMenuPermission(loginUser.getRoleIds(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
         AjaxResult ajax = AjaxResult.success();
         SysUser user = new SysUser();
         user.setUserId(loginUser.getSysUser().getUserId());
@@ -125,7 +125,7 @@ public class SysUserController extends BaseController {
     /**
      * 获取用户列表
      */
-    @PreAuthorize(hasPermi = "system:user:list")
+    @RequiresPermissions("system:user:list")
     @GetMapping("/list")
     public TableDataInfo list(SysUser user) {
         startPage();
@@ -136,7 +136,7 @@ public class SysUserController extends BaseController {
     /**
      * 根据用户Id获取详细信息
      */
-    @PreAuthorize(hasPermi = "system:user:query")
+    @RequiresPermissions("system:user:query")
     @GetMapping(value = {"/", "/{userId}"})
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
         SysUser user = new SysUser(userId);
@@ -146,7 +146,7 @@ public class SysUserController extends BaseController {
     /**
      * 新增用户
      */
-    @PreAuthorize(hasPermi = "system:user:add")
+    @RequiresPermissions("system:user:add")
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user) {
@@ -168,7 +168,7 @@ public class SysUserController extends BaseController {
     /**
      * 修改用户
      */
-    @PreAuthorize(hasPermi = "system:user:edit")
+    @RequiresPermissions("system:user:edit")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysUser user) {
@@ -190,7 +190,7 @@ public class SysUserController extends BaseController {
     /**
      * 修改部门-角色关系
      */
-    @PreAuthorize(hasPermi = "system:role:set")
+    @RequiresPermissions("system:role:set")
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeUserRole")
     public AjaxResult editUserRole(@Validated @RequestBody SysUser user) {
@@ -201,7 +201,7 @@ public class SysUserController extends BaseController {
     /**
      * 重置密码
      */
-    @PreAuthorize(hasPermi = "system:user:edit")
+    @RequiresPermissions("system:user:edit")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/resetPwd")
     public AjaxResult resetPwd(@RequestBody SysUser user) {
@@ -213,7 +213,7 @@ public class SysUserController extends BaseController {
     /**
      * 状态修改
      */
-    @PreAuthorize(hasPermi = "system:user:edit")
+    @RequiresPermissions("system:user:edit")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysUser user) {
@@ -229,7 +229,7 @@ public class SysUserController extends BaseController {
     /**
      * 删除用户
      */
-    @PreAuthorize(hasPermi = "system:user:remove")
+    @RequiresPermissions("system:user:remove")
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysUser user) {
@@ -252,7 +252,7 @@ public class SysUserController extends BaseController {
      * 导出用户
      */
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
-    @PreAuthorize(hasPermi = "system:user:export")
+    @RequiresPermissions("system:user:export")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysUser user) throws IOException {
         List<SysUser> list = userService.selectUserList(user);
@@ -264,7 +264,7 @@ public class SysUserController extends BaseController {
      * 导入用户
      */
     @Log(title = "用户管理", businessType = BusinessType.IMPORT)
-    @PreAuthorize(hasPermi = "system:user:import")
+    @RequiresPermissions("system:user:import")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);

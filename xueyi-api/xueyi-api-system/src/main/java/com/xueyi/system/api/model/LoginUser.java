@@ -50,10 +50,10 @@ public class LoginUser implements Serializable {
     private Set<String> permissions;
 
     /** 角色权限列表 */
-    private Set<String> roleKeys;
+    private Set<String> roles;
 
     /** 角色列表 */
-    private Set<Long> roles;
+    private Set<Long> roleIds;
 
     /** 主数据源 */
     private String mainSource;
@@ -155,20 +155,20 @@ public class LoginUser implements Serializable {
         this.permissions = permissions;
     }
 
-    public Set<String> getRoleKeys() {
-        return roleKeys;
-    }
-
-    public void setRoleKeys(Set<String> roleKeys) {
-        this.roleKeys = roleKeys;
-    }
-
-    public Set<Long> getRoles() {
+    public Set<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Long> roles) {
+    public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    public Set<Long> getRoleIds() {
+        return roleIds;
+    }
+
+    public void setRoleIds(Set<Long> roleIds) {
+        this.roleIds = roleIds;
     }
 
     public String getMainSource() {

@@ -9,7 +9,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.AuthorityUtils;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.authority.service.ISysSystemService;
 import com.xueyi.system.cache.service.ISysCacheInitService;
@@ -37,7 +37,7 @@ public class SysSystemController extends BaseController {
     /**
      * 查询模块信息列表
      */
-    @PreAuthorize(hasPermi = "system:system:list")
+    @RequiresPermissions("system:system:list")
     @GetMapping("/list")
     public TableDataInfo list(SysSystem system) {
         startPage();
@@ -48,7 +48,7 @@ public class SysSystemController extends BaseController {
     /**
      * 获取模块信息详细信息
      */
-    @PreAuthorize(hasPermi = "system:system:query")
+    @RequiresPermissions("system:system:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(SysSystem system) {
         return AjaxResult.success(systemService.mainSelectSystemById(system));
@@ -57,7 +57,7 @@ public class SysSystemController extends BaseController {
     /**
      * 新增模块信息
      */
-    @PreAuthorize(hasPermi = "system:system:add")
+    @RequiresPermissions("system:system:add")
     @Log(title = "模块管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysSystem system) {
@@ -70,7 +70,7 @@ public class SysSystemController extends BaseController {
     /**
      * 修改模块信息
      */
-    @PreAuthorize(hasPermi = "system:system:edit")
+    @RequiresPermissions("system:system:edit")
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysSystem system) {
@@ -84,7 +84,7 @@ public class SysSystemController extends BaseController {
     /**
      * 状态修改
      */
-    @PreAuthorize(hasPermi = "system:system:edit")
+    @RequiresPermissions("system:system:edit")
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysSystem system) {
@@ -98,7 +98,7 @@ public class SysSystemController extends BaseController {
     /**
      * 删除模块信息
      */
-    @PreAuthorize(hasPermi = "system:system:remove")
+    @RequiresPermissions("system:system:remove")
     @Log(title = "模块管理", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysSystem system) {

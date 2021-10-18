@@ -7,7 +7,7 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysRoleService;
@@ -71,7 +71,7 @@ public class SysAuthorityController extends BaseController {
     /**
      * 根据租户Id更新模块-菜单范围 | 租户级
      */
-    @PreAuthorize(hasPermi = "tenant:tenant:role")
+    @RequiresPermissions("tenant:tenant:role")
     @Log(title = "租户菜单配置", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/tenantScopeSet")
     public AjaxResult setTenantMenuScope(@RequestBody SysRole role) {

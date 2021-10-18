@@ -12,7 +12,7 @@ import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.InnerAuth;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.material.SysFile;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
@@ -68,7 +68,7 @@ public class SysEnterpriseController extends BaseController {
     /**
      * logo上传
      */
-    @PreAuthorize(hasPermi = "system:enterpriseAdmin:edit")
+    @RequiresPermissions("system:enterpriseAdmin:edit")
     @Log(title = "企业Logo修改", businessType = BusinessType.UPDATE)
     @PostMapping("/changeLogo")
     public AjaxResult avatar(@RequestParam("logo") MultipartFile file) throws IOException {
@@ -101,7 +101,7 @@ public class SysEnterpriseController extends BaseController {
     /**
      * 普通信息修改
      */
-    @PreAuthorize(hasPermi = "system:enterprise:edit")
+    @RequiresPermissions("system:enterprise:edit")
     @Log(title = "企业资料修改", businessType = BusinessType.UPDATE)
     @PutMapping("/updateEnterprise")
     public AjaxResult updateEnterprise(@Validated @RequestBody SysEnterprise enterprise) {
@@ -111,7 +111,7 @@ public class SysEnterpriseController extends BaseController {
     /**
      * 超管信息修改
      */
-    @PreAuthorize(hasPermi = "system:enterpriseAdmin:edit")
+    @RequiresPermissions("system:enterpriseAdmin:edit")
     @Log(title = "企业账号修改", businessType = BusinessType.UPDATE)
     @PutMapping("/changeEnterpriseName")
     public AjaxResult changeEnterpriseName(@Validated @RequestBody SysEnterprise enterprise) {

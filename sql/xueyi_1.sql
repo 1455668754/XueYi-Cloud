@@ -158,7 +158,7 @@ create table xy_system (
 # ----------------------------
 insert into xy_system (system_id, name, is_common, is_change, visible, route, remark, tenant_id)
 values (0, '默认系统' ,    'Y', 'Y', 'N', '', '默认系统', 0),
-       (2, '租户管理系统' , 'N', 'Y', 'Y', 'http://localhost:81' , '雪忆租户管理系统', -1);
+       (2, '租户管理系统' , 'N', 'N', 'Y', 'http://localhost:81' , '雪忆租户管理系统', -1);
 
 insert into xy_system (system_id, name, image_url, route, remark, tenant_id)
 values (1 , '商城' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , 'http://localhost:82' , '轻松打造在线商城', 0),

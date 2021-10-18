@@ -4,7 +4,7 @@ import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.domain.material.SysMaterialFolder;
 import com.xueyi.system.material.service.ISysMaterialFolderService;
 import com.xueyi.system.material.service.ISysMaterialService;
@@ -64,7 +64,7 @@ public class SysMaterialFolderController extends BaseController {
     /**
      * 新增素材分类
      */
-    @PreAuthorize(hasPermi = "system:material:add")
+    @RequiresPermissions("system:material:add")
     @Log(title = "素材分类", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysMaterialFolder folder) {
@@ -83,7 +83,7 @@ public class SysMaterialFolderController extends BaseController {
     /**
      * 修改素材分类
      */
-    @PreAuthorize(hasPermi = "system:material:edit")
+    @RequiresPermissions("system:material:edit")
     @Log(title = "素材分类", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysMaterialFolder materialFolder) {
@@ -93,7 +93,7 @@ public class SysMaterialFolderController extends BaseController {
     /**
      * 删除素材分类
      */
-    @PreAuthorize(hasPermi = "system:material:remove")
+    @RequiresPermissions("system:material:remove")
     @Log(title = "素材分类", businessType = BusinessType.DELETE)
     @DeleteMapping("/{folderId}")
     public AjaxResult remove(@PathVariable Long folderId) {

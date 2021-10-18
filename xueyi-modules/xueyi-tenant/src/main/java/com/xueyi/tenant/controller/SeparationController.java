@@ -1,18 +1,14 @@
 package com.xueyi.tenant.controller;
 
-import com.xueyi.tenant.api.domain.source.Source;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.xueyi.common.log.annotation.Log;
-import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.tenant.service.ISeparationService;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.log.annotation.Log;
+import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.tenant.api.domain.source.Source;
+import com.xueyi.tenant.service.ISeparationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 数据源 业务处理
@@ -45,7 +41,7 @@ public class SeparationController extends BaseController {
     /**
      * 获取数据源及其分离策略详细信息
      */
-    @PreAuthorize(hasPermi = "tenant:separation:edit")
+    @RequiresPermissions("tenant:separation:edit")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(Source source) {
         return AjaxResult.success(separationService.mainSelectSeparationById(source));
@@ -54,7 +50,7 @@ public class SeparationController extends BaseController {
     /**
      * 修改数据源
      */
-    @PreAuthorize(hasPermi = "tenant:separation:edit")
+    @RequiresPermissions("tenant:separation:edit")
     @Log(title = "数据源读写分离", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Source source) {

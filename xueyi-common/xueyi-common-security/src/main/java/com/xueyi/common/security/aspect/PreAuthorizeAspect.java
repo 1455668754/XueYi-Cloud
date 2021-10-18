@@ -1,223 +1,87 @@
 package com.xueyi.common.security.aspect;
 
-import com.xueyi.common.core.exception.PreAuthorizeException;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.model.LoginUser;
+import com.xueyi.common.security.annotation.RequiresLogin;
+import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.common.security.annotation.RequiresRoles;
+import com.xueyi.common.security.auth.AuthUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.PatternMatchUtils;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
 
 /**
- * 自定义权限实现
- * 
- * @author ruoyi
+ * 基于 Spring Aop 的注解鉴权
+ *
+ * @author kong
  */
 @Aspect
 @Component
-public class PreAuthorizeAspect
-{
-    @Autowired
-    private TokenService tokenService;
-
-    /** 所有权限标识 */
-    private static final String ALL_PERMISSION = "*:*:*";
-
-    /** 数组为0时 */
-    private static final Integer ARRAY_EMPTY = 0;
-
-    @Around("@annotation(com.xueyi.common.security.annotation.PreAuthorize)")
-    public Object around(ProceedingJoinPoint point) throws Throwable
-    {
-        Signature signature = point.getSignature();
-        MethodSignature methodSignature = (MethodSignature) signature;
-        Method method = methodSignature.getMethod();
-        PreAuthorize annotation = method.getAnnotation(PreAuthorize.class);
-        if (annotation == null)
-        {
-            return point.proceed();
-        }
-
-        if (StringUtils.isNotEmpty(annotation.hasPermi()))
-        {
-            if (hasPermi(annotation.hasPermi()))
-            {
-                return point.proceed();
-            }
-            throw new PreAuthorizeException();
-        }
-        else if (StringUtils.isNotEmpty(annotation.lacksPermi()))
-        {
-            if (lacksPermi(annotation.lacksPermi()))
-            {
-                return point.proceed();
-            }
-            throw new PreAuthorizeException();
-        }
-        else if (ARRAY_EMPTY < annotation.hasAnyPermi().length)
-        {
-            if (hasAnyPermi(annotation.hasAnyPermi()))
-            {
-                return point.proceed();
-            }
-            throw new PreAuthorizeException();
-        }
-        else if (StringUtils.isNotEmpty(annotation.hasRole()))
-        {
-            if (hasRole(annotation.hasRole()))
-            {
-                return point.proceed();
-            }
-            throw new PreAuthorizeException();
-        }
-        else if (StringUtils.isNotEmpty(annotation.lacksRole()))
-        {
-            if (lacksRole(annotation.lacksRole()))
-            {
-                return point.proceed();
-            }
-            throw new PreAuthorizeException();
-        }
-        else if (ARRAY_EMPTY < annotation.hasAnyRoles().length)
-        {
-            if (hasAnyRoles(annotation.hasAnyRoles()))
-            {
-                return point.proceed();
-            }
-            throw new PreAuthorizeException();
-        }
-
-        return point.proceed();
-    }
-
+public class PreAuthorizeAspect {
     /**
-     * 验证用户是否具备某权限
-     * 
-     * @param permission 权限字符串
-     * @return 用户是否具备某权限
+     * 构建
      */
-    public boolean hasPermi(String permission)
-    {
-        LoginUser userInfo = tokenService.getLoginUser();
-        if (StringUtils.isNull(userInfo) || CollectionUtils.isEmpty(userInfo.getPermissions()))
-        {
-            return false;
-        }
-        return hasPermissions(userInfo.getPermissions(), permission);
+    public PreAuthorizeAspect() {
     }
 
     /**
-     * 验证用户是否不具备某权限，与 hasPermi逻辑相反
+     * 定义AOP签名 (切入所有使用鉴权注解的方法)
+     */
+    public static final String POINTCUT_SIGN = " @annotation(com.xueyi.common.security.annotation.RequiresLogin) || "
+            + "@annotation(com.xueyi.common.security.annotation.RequiresPermissions) || "
+            + "@annotation(com.xueyi.common.security.annotation.RequiresRoles)";
+
+    /**
+     * 声明AOP签名
+     */
+    @Pointcut(POINTCUT_SIGN)
+    public void pointcut() {
+    }
+
+    /**
+     * 环绕切入
      *
-     * @param permission 权限字符串
-     * @return 用户是否不具备某权限
+     * @param joinPoint 切面对象
+     * @return 底层方法执行后的返回值
+     * @throws Throwable 底层方法抛出的异常
      */
-    public boolean lacksPermi(String permission)
-    {
-        return hasPermi(permission) != true;
+    @Around("pointcut()")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        // 注解鉴权
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        checkMethodAnnotation(signature.getMethod());
+        try {
+            // 执行原有逻辑
+            Object obj = joinPoint.proceed();
+            return obj;
+        } catch (Throwable e) {
+            throw e;
+        }
     }
 
     /**
-     * 验证用户是否具有以下任意一个权限
-     *
-     * @param permissions 权限列表
-     * @return 用户是否具有以下任意一个权限
+     * 对一个Method对象进行注解检查
      */
-    public boolean hasAnyPermi(String[] permissions)
-    {
-        LoginUser userInfo = tokenService.getLoginUser();
-        if (StringUtils.isNull(userInfo) || CollectionUtils.isEmpty(userInfo.getPermissions()))
-        {
-            return false;
+    public void checkMethodAnnotation(Method method) {
+        // 校验 @RequiresLogin 注解
+        RequiresLogin requiresLogin = method.getAnnotation(RequiresLogin.class);
+        if (requiresLogin != null) {
+            AuthUtil.checkLogin();
         }
-        Collection<String> authorities = userInfo.getPermissions();
-        for (String permission : permissions)
-        {
-            if (permission != null && hasPermissions(authorities, permission))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    /**
-     * 判断用户是否拥有某个角色
-     * 
-     * @param role 角色字符串
-     * @return 用户是否具备某角色
-     */
-    public boolean hasRole(String role)
-    {
-        LoginUser userInfo = tokenService.getLoginUser();
-        if (StringUtils.isNull(userInfo) || CollectionUtils.isEmpty(userInfo.getRoleKeys()))
-        {
-            return false;
+        // 校验 @RequiresRoles 注解
+        RequiresRoles requiresRoles = method.getAnnotation(RequiresRoles.class);
+        if (requiresRoles != null) {
+            AuthUtil.checkRole(requiresRoles);
         }
-        for (String roleKey : userInfo.getRoleKeys())
-        {
-            if (roleKey.equals(role))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    /**
-     * 验证用户是否不具备某角色，与 isRole逻辑相反。
-     *
-     * @param role 角色名称
-     * @return 用户是否不具备某角色
-     */
-    public boolean lacksRole(String role)
-    {
-        return hasRole(role) != true;
-    }
-
-    /**
-     * 验证用户是否具有以下任意一个角色
-     *
-     * @param roles 角色列表
-     * @return 用户是否具有以下任意一个角色
-     */
-    public boolean hasAnyRoles(String[] roles)
-    {
-        LoginUser userInfo = tokenService.getLoginUser();
-        if (StringUtils.isNull(userInfo) || CollectionUtils.isEmpty(userInfo.getRoleKeys()))
-        {
-            return false;
+        // 校验 @RequiresPermissions 注解
+        RequiresPermissions requiresPermissions = method.getAnnotation(RequiresPermissions.class);
+        if (requiresPermissions != null) {
+            AuthUtil.checkPermi(requiresPermissions);
         }
-        for (String role : roles)
-        {
-            if (hasRole(role))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断是否包含权限
-     * 
-     * @param authorities 权限列表
-     * @param permission 权限字符串
-     * @return 用户是否具备某权限
-     */
-    private boolean hasPermissions(Collection<String> authorities, String permission)
-    {
-        return authorities.stream().filter(StringUtils::hasText)
-                .anyMatch(x -> ALL_PERMISSION.contains(x) || PatternMatchUtils.simpleMatch(x, permission));
     }
 }

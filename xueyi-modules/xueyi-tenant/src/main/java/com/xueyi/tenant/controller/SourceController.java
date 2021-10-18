@@ -1,22 +1,20 @@
 package com.xueyi.tenant.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.TenantConstants;
-import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.tenant.api.domain.source.Source;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import com.xueyi.common.log.annotation.Log;
-import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.tenant.service.ISourceService;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
+import com.xueyi.common.log.annotation.Log;
+import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.tenant.api.domain.source.Source;
+import com.xueyi.tenant.service.ISourceService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 数据源 业务处理
@@ -33,7 +31,7 @@ public class SourceController extends BaseController {
     /**
      * 查询数据源列表
      */
-    @PreAuthorize(hasPermi = "tenant:source:list")
+    @RequiresPermissions("tenant:source:list")
     @GetMapping("/list")
     public TableDataInfo list(Source source) {
         startPage();
@@ -44,7 +42,7 @@ public class SourceController extends BaseController {
     /**
      * 获取数据源详细信息
      */
-    @PreAuthorize(hasPermi = "tenant:source:query")
+    @RequiresPermissions("tenant:source:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(Source source) {
         return AjaxResult.success(sourceService.mainSelectSourceBySourceId(source));
@@ -53,7 +51,7 @@ public class SourceController extends BaseController {
     /**
      * 新增数据源
      */
-    @PreAuthorize(hasPermi = "tenant:source:add")
+    @RequiresPermissions("tenant:source:add")
     @Log(title = "数据源", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Source source) {
@@ -63,7 +61,7 @@ public class SourceController extends BaseController {
     /**
      * 修改数据源
      */
-    @PreAuthorize(hasPermi = "tenant:source:edit")
+    @RequiresPermissions("tenant:source:edit")
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Source source) {
@@ -73,7 +71,7 @@ public class SourceController extends BaseController {
     /**
      * 修改数据源状态
      */
-    @PreAuthorize(hasPermi = "tenant:source:edit")
+    @RequiresPermissions("tenant:source:edit")
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping("/status")
     public AjaxResult editStatus(@RequestBody Source source) {
@@ -113,7 +111,7 @@ public class SourceController extends BaseController {
     /**
      * 修改数据源排序
      */
-    @PreAuthorize(hasPermi = "tenant:source:edit")
+    @RequiresPermissions("tenant:source:edit")
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
     public AjaxResult updateSort(@RequestBody Source source) {
@@ -123,7 +121,7 @@ public class SourceController extends BaseController {
     /**
      * 删除数据源 | 单个删除
      */
-    @PreAuthorize(hasPermi = "tenant:source:remove")
+    @RequiresPermissions("tenant:source:remove")
     @Log(title = "数据源", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody Source source) {

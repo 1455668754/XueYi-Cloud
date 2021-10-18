@@ -1,21 +1,21 @@
 package com.xueyi.system.monitor.controller;
 
-import java.io.IOException;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestBody;
-import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
+import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.InnerAuth;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.domain.monitor.SysLoginInfo;
 import com.xueyi.system.monitor.service.ISysLoginInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 系统访问记录
@@ -29,7 +29,7 @@ public class SysLoginInfoController extends BaseController {
     @Autowired
     private ISysLoginInfoService loginInfoService;
 
-    @PreAuthorize(hasPermi = "system:loginInfo:list")
+    @RequiresPermissions("system:loginInfo:list")
     @GetMapping("/list")
     public TableDataInfo list(SysLoginInfo loginInfo) {
         startPage();
@@ -38,7 +38,7 @@ public class SysLoginInfoController extends BaseController {
     }
 
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
-    @PreAuthorize(hasPermi = "system:loginInfo:export")
+    @RequiresPermissions("system:loginInfo:export")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysLoginInfo loginInfo) throws IOException {
         List<SysLoginInfo> list = loginInfoService.selectLoginInfoList(loginInfo);
@@ -46,14 +46,14 @@ public class SysLoginInfoController extends BaseController {
         util.exportExcel(response, list, "登录日志");
     }
 
-    @PreAuthorize(hasPermi = "system:loginInfo:remove")
+    @RequiresPermissions("system:loginInfo:remove")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysLoginInfo loginInfo) {
         return toAjax(loginInfoService.deleteLoginInfoByIds(loginInfo));
     }
 
-    @PreAuthorize(hasPermi = "system:loginInfo:remove")
+    @RequiresPermissions("system:loginInfo:remove")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/clean")
     public AjaxResult clean() {

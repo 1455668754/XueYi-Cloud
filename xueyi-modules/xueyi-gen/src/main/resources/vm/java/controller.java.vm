@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
 import com.xueyi.common.core.web.controller.BaseController;
@@ -39,7 +39,7 @@ public class ${ClassName}Controller extends BaseController {
     /**
      * 查询${functionName}列表
      */
-    @PreAuthorize(hasPermi = "${permissionPrefix}:list")
+    @RequiresPermissions("${permissionPrefix}:list")
     @GetMapping("/list")
 #if($table.crud || $table.sub)
     public TableDataInfo list(${ClassName} ${classNameNoPrefix})
@@ -71,7 +71,7 @@ public class ${ClassName}Controller extends BaseController {
     /**
      * 导出${functionName}列表
      */
-    @PreAuthorize(hasPermi = "${permissionPrefix}:export")
+    @RequiresPermissions("${permissionPrefix}:export")
     @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, ${ClassName} ${classNameNoPrefix}) throws IOException
@@ -84,7 +84,7 @@ public class ${ClassName}Controller extends BaseController {
     /**
      * 获取${functionName}详细信息
      */
-    @PreAuthorize(hasPermi = "${permissionPrefix}:query")
+    @RequiresPermissions("${permissionPrefix}:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(${ClassName} ${classNameNoPrefix})
     {
@@ -94,7 +94,7 @@ public class ${ClassName}Controller extends BaseController {
     /**
      * 新增${functionName}
      */
-    @PreAuthorize(hasPermi = "${permissionPrefix}:add")
+    @RequiresPermissions("${permissionPrefix}:add")
     @Log(title = "${functionName}", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody ${ClassName} ${classNameNoPrefix})
@@ -105,7 +105,7 @@ public class ${ClassName}Controller extends BaseController {
     /**
      * 修改${functionName}
      */
-    @PreAuthorize(hasPermi = "${permissionPrefix}:edit")
+    @RequiresPermissions("${permissionPrefix}:edit")
     @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody ${ClassName} ${classNameNoPrefix})
@@ -119,7 +119,7 @@ public class ${ClassName}Controller extends BaseController {
     /**
      * 修改${functionName}排序
      */
-    @PreAuthorize(hasPermi = "${permissionPrefix}:edit")
+    @RequiresPermissions("${permissionPrefix}:edit")
     @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
     public AjaxResult updateSort(@RequestBody ${ClassName} ${classNameNoPrefix})
@@ -133,7 +133,7 @@ public class ${ClassName}Controller extends BaseController {
     /**
      * 删除${functionName}
      */
-    @PreAuthorize(hasPermi = "${permissionPrefix}:remove")
+    @RequiresPermissions("${permissionPrefix}:remove")
     @Log(title = "${functionName}", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody ${ClassName} ${classNameNoPrefix})

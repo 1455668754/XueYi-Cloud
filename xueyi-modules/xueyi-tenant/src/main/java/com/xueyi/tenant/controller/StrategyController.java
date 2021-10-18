@@ -11,7 +11,7 @@ import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.DataSourceUtils;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.feign.RemoteSourceService;
 import com.xueyi.tenant.api.domain.strategy.Strategy;
 import com.xueyi.tenant.service.IStrategyService;
@@ -38,7 +38,7 @@ public class StrategyController extends BaseController {
     /**
      * 查询数据源策略列表
      */
-    @PreAuthorize(hasPermi = "tenant:strategy:list")
+    @RequiresPermissions("tenant:strategy:list")
     @GetMapping("/list")
     public TableDataInfo list(Strategy strategy) {
         startPage();
@@ -57,7 +57,7 @@ public class StrategyController extends BaseController {
     /**
      * 获取数据源策略详细信息
      */
-    @PreAuthorize(hasPermi = "tenant:strategy:query")
+    @RequiresPermissions("tenant:strategy:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(Strategy strategy) {
         return AjaxResult.success(tenantStrategyService.mainSelectStrategyById(strategy));
@@ -66,7 +66,7 @@ public class StrategyController extends BaseController {
     /**
      * 新增数据源策略
      */
-    @PreAuthorize(hasPermi = "tenant:strategy:add")
+    @RequiresPermissions("tenant:strategy:add")
     @Log(title = "数据源策略", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Strategy strategy) {
@@ -80,7 +80,7 @@ public class StrategyController extends BaseController {
     /**
      * 修改数据源策略
      */
-    @PreAuthorize(hasPermi = "tenant:strategy:edit")
+    @RequiresPermissions("tenant:strategy:edit")
     @Log(title = "数据源策略", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Strategy strategy) {
@@ -95,7 +95,7 @@ public class StrategyController extends BaseController {
     /**
      * 修改数据源策略排序
      */
-    @PreAuthorize(hasPermi = "tenant:strategy:edit")
+    @RequiresPermissions("tenant:strategy:edit")
     @Log(title = "数据源策略", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/sort")
     public AjaxResult updateSort(@RequestBody Strategy strategy) {
@@ -105,7 +105,7 @@ public class StrategyController extends BaseController {
     /**
      * 删除数据源策略
      */
-    @PreAuthorize(hasPermi = "tenant:strategy:remove")
+    @RequiresPermissions("tenant:strategy:remove")
     @Log(title = "数据源策略", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody Strategy strategy) {

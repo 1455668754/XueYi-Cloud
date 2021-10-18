@@ -1,31 +1,25 @@
 package com.xueyi.system.organize.controller;
 
-import java.io.IOException;
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.system.api.domain.organize.SysDept;
-import com.xueyi.system.organize.service.ISysDeptService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.system.api.domain.organize.SysDept;
 import com.xueyi.system.api.domain.organize.SysPost;
+import com.xueyi.system.organize.service.ISysDeptService;
 import com.xueyi.system.organize.service.ISysPostService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 岗位信息操作处理
@@ -45,7 +39,7 @@ public class SysPostController extends BaseController {
     /**
      * 获取岗位列表
      */
-    @PreAuthorize(hasPermi = "system:post:list")
+    @RequiresPermissions("system:post:list")
     @GetMapping("/list")
     public TableDataInfo list(SysPost post) {
         startPage();
@@ -56,7 +50,7 @@ public class SysPostController extends BaseController {
     /**
      * 根据岗位Id获取详细信息
      */
-    @PreAuthorize(hasPermi = "system:post:query")
+    @RequiresPermissions("system:post:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(SysPost post) {
         return AjaxResult.success(postService.selectPostById(post));
@@ -65,7 +59,7 @@ public class SysPostController extends BaseController {
     /**
      * 新增岗位
      */
-    @PreAuthorize(hasPermi = "system:post:add")
+    @RequiresPermissions("system:post:add")
     @Log(title = "岗位管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysPost post) {
@@ -80,7 +74,7 @@ public class SysPostController extends BaseController {
     /**
      * 修改岗位
      */
-    @PreAuthorize(hasPermi = "system:post:edit")
+    @RequiresPermissions("system:post:edit")
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysPost post) {
@@ -95,7 +89,7 @@ public class SysPostController extends BaseController {
     /**
      * 修改岗位-角色关系
      */
-    @PreAuthorize(hasPermi = "system:role:set")
+    @RequiresPermissions("system:role:set")
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changePostRole")
     public AjaxResult editPostRole(@Validated @RequestBody SysPost post) {
@@ -105,7 +99,7 @@ public class SysPostController extends BaseController {
     /**
      * 状态修改
      */
-    @PreAuthorize(hasPermi = "system:post:edit")
+    @RequiresPermissions("system:post:edit")
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysPost post) {
@@ -120,7 +114,7 @@ public class SysPostController extends BaseController {
     /**
      * 删除岗位
      */
-    @PreAuthorize(hasPermi = "system:post:remove")
+    @RequiresPermissions("system:post:remove")
     @Log(title = "岗位管理", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysPost post) {
@@ -134,7 +128,7 @@ public class SysPostController extends BaseController {
      * 导出岗位
      */
     @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
-    @PreAuthorize(hasPermi = "system:post:export")
+    @RequiresPermissions("system:post:export")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysPost post) throws IOException {
         List<SysPost> list = postService.selectPostList(post);

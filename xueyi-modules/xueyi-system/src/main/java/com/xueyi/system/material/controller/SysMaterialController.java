@@ -6,11 +6,11 @@ import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.PreAuthorize;
-import com.xueyi.system.api.feign.RemoteFileService;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.domain.material.SysFile;
 import com.xueyi.system.api.domain.material.SysMaterial;
 import com.xueyi.system.api.domain.material.SysMaterialFolder;
+import com.xueyi.system.api.feign.RemoteFileService;
 import com.xueyi.system.material.service.ISysMaterialFolderService;
 import com.xueyi.system.material.service.ISysMaterialService;
 import net.coobird.thumbnailator.Thumbnails;
@@ -97,7 +97,7 @@ public class SysMaterialController extends BaseController {
     /**
      * 素材上传
      */
-    @PreAuthorize(hasPermi = "system:material:add")
+    @RequiresPermissions("system:material:add")
     @Log(title = "素材上传", businessType = BusinessType.UPDATE)
     @PostMapping("/upload")
     public AjaxResult material(@RequestParam(value = "folderId", required = false) Long
@@ -149,7 +149,7 @@ public class SysMaterialController extends BaseController {
     /**
      * 修改素材信息
      */
-    @PreAuthorize(hasPermi = "system:material:edit")
+    @RequiresPermissions("system:material:edit")
     @Log(title = "素材信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SysMaterial material) {
@@ -159,7 +159,7 @@ public class SysMaterialController extends BaseController {
     /**
      * 删除素材信息
      */
-    @PreAuthorize(hasPermi = "system:material:remove")
+    @RequiresPermissions("system:material:remove")
     @Log(title = "素材信息", businessType = BusinessType.DELETE)
     @DeleteMapping("/{materialId}")
     public AjaxResult remove(@PathVariable Long materialId) {

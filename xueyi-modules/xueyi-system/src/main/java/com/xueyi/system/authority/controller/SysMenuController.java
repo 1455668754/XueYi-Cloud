@@ -8,7 +8,7 @@ import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.PreAuthorize;
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.authority.service.ISysMenuService;
@@ -37,7 +37,7 @@ public class SysMenuController extends BaseController {
     /**
      * 查询模块-菜单信息列表
      */
-    @PreAuthorize(hasPermi = "system:menu:list")
+    @RequiresPermissions("system:menu:list")
     @GetMapping("/list")
     public AjaxResult list(SysMenu menu) {
         return AjaxResult.success(menuService.mainSelectSystemMenuList(menu));
@@ -46,7 +46,7 @@ public class SysMenuController extends BaseController {
     /**
      * 根据菜单Id获取详细信息
      */
-    @PreAuthorize(hasPermi = "system:menu:query")
+    @RequiresPermissions("system:menu:query")
     @GetMapping(value = "/byId")
     public AjaxResult getInfo(SysMenu menu) {
         return AjaxResult.success(menuService.mainSelectMenuById(menu));
@@ -55,7 +55,7 @@ public class SysMenuController extends BaseController {
     /**
      * 新增菜单
      */
-    @PreAuthorize(hasPermi = "system:menu:add")
+    @RequiresPermissions("system:menu:add")
     @Log(title = "菜单管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysMenu menu) {
@@ -72,7 +72,7 @@ public class SysMenuController extends BaseController {
     /**
      * 修改菜单
      */
-    @PreAuthorize(hasPermi = "system:menu:edit")
+    @RequiresPermissions("system:menu:edit")
     @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysMenu menu) {
@@ -97,7 +97,7 @@ public class SysMenuController extends BaseController {
     /**
      * 删除菜单
      */
-    @PreAuthorize(hasPermi = "system:menu:remove")
+    @RequiresPermissions("system:menu:remove")
     @Log(title = "菜单管理", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody SysMenu menu) {
