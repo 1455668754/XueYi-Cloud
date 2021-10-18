@@ -7,16 +7,27 @@ git clone https://gitee.com/xueyitiantang/xueyi-cloud.git
 # 进入项目目录
 cd xueyi-ui
 
-# 安装依赖 | 执行此步则无需执行下一步(上下两条任选一条进行执行)
+# 依赖安装
+# 方式1
 yarn install && npm-run-all install:*
+# 方式2
 yarn install; npm run install-all
+# 方式3
+npm install
+cd main && npm install
+cd administrator && npm install
 
-# 只安装各模块依赖 | 可以运行npm 脚本 install-all
+# 只安装各模块依赖
 npm-run-all install:*
 
-# 启动服务 | 可以运行npm 脚本 的start-all(上下两条任选一条进行执行)
+# 启动服务
+# 方式1
 npm-run-all --parallel start:*
+# 方式2
 npm run start-all
+# 方式3
+cd main && vue-cli-service serve
+cd administrator && vue-cli-service serve
 ```
 
 浏览器访问 http://localhost:80
