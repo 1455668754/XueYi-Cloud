@@ -24,6 +24,6 @@ public interface RemoteSourceService {
      * @param source     请求来源
      * @return 结果
      */
-    @GetMapping(value = "/dataSource/refreshSource/{strategyId}")
-    public R<Boolean> refreshSource(@PathVariable("strategyId") Long strategyId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+    @GetMapping(value = "/sourceCache/refreshSourceCache/{strategyId}")
+    public R<Boolean> refreshSourceCache(@PathVariable("strategyId") Long strategyId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 }

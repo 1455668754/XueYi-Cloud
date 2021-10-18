@@ -11,24 +11,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 参数配置 信息操作处理
+ * 企业缓存
  *
- * @author ruoyi
+ * @author xueyi
  */
 @RestController
-@RequestMapping("/dataSource")
-public class DataSourceController extends BaseController {
+@RequestMapping("/enterpriseCache")
+public class EnterpriseCacheController extends BaseController {
 
     @Autowired
     private ISysCacheInitService cacheInitService;
 
     /**
-     * 根据策略Id刷新策略缓存
+     * 根据企业Id刷新企业全部缓存
      */
     @InnerAuth
-    @GetMapping("/refreshSource/{strategyId}")
-    public R<Boolean> refreshSource(@PathVariable("strategyId") Long strategyId) {
-        cacheInitService.refreshSourceCacheByStrategyId(strategyId);
+    @GetMapping("/refreshEnterpriseAllCache/{enterpriseId}")
+    public R<Boolean> refreshEnterpriseAllCache(@PathVariable("enterpriseId") Long enterpriseId) {
+        cacheInitService.loadingEnterpriseAllCacheByEnterpriseId(enterpriseId);
         return R.ok(true);
     }
 }

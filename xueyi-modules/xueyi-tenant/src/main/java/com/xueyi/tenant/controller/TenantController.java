@@ -1,19 +1,26 @@
 package com.xueyi.tenant.controller;
 
+import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
+import com.xueyi.common.core.exception.ServiceException;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.domain.organize.SysDept;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.feign.RemoteConfigService;
+import com.xueyi.system.api.feign.RemoteEnterpriseService;
 import com.xueyi.tenant.api.model.TenantRegister;
 import com.xueyi.tenant.domain.Tenant;
 import com.xueyi.tenant.service.ITenantService;
@@ -23,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 租户信息 业务处理
@@ -38,6 +46,9 @@ public class TenantController extends BaseController {
 
     @Autowired
     private RemoteConfigService remoteConfigService;
+
+    @Autowired
+    private RemoteEnterpriseService remoteEnterpriseService;
 
     /**
      * 查询租户信息列表
@@ -78,15 +89,10 @@ public class TenantController extends BaseController {
     @Log(title = "租户信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Tenant tenant) {
-        Tenant check = new Tenant(tenant.getTenantName());
-        if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(check))) {
+        if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(new Tenant(tenant.getTenantName())))) {
             return AjaxResult.error("新增失败，该租户账号已存在，请修改后重试！");
         }
-        int rows = tenantService.mainInsertTenant(tenant);
-        if (rows > 0) {
-            tenantService.refreshTenantCache(tenant.getTenantId());
-        }
-        return toAjax(rows);
+        return toAjax(addTenantCache(tenantService.mainInsertTenant(tenant), tenant));
     }
 
     /**
@@ -125,7 +131,7 @@ public class TenantController extends BaseController {
         user.setProfile(register.getProfile());
         user.setPassword(register.getPassword());
         tenant.getParams().put("user", user);
-        return R.ok(tenantService.mainRegisterTenant(tenant));
+        return R.ok(addTenantCache(tenantService.mainRegisterTenant(tenant), tenant) > 0);
     }
 
     /**
@@ -135,10 +141,14 @@ public class TenantController extends BaseController {
     @Log(title = "租户信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Tenant tenant) {
-        if (tenant.getIsChange().equals("Y")) {
+        if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(tenant))) {
+            return AjaxResult.error("修改失败，该租户账号已存在，请修改后重试！");
+        }
+        Tenant check = tenantService.mainCheckTenantByTenantId(new Tenant(tenant.getTenantId()));
+        if (StringUtils.equals(Constants.SYSTEM_DEFAULT_TRUE, check.getIsChange())) {
             return AjaxResult.error("禁止操作系统租户");
         }
-        return toAjax(tenantService.mainUpdateTenant(tenant));
+        return toAjax(refreshTenantCache(tenantService.mainUpdateTenant(tenant), check));
     }
 
     /**
@@ -158,6 +168,59 @@ public class TenantController extends BaseController {
     @Log(title = "租户信息", businessType = BusinessType.DELETE)
     @DeleteMapping
     public AjaxResult remove(@RequestBody Tenant tenant) {
-        return toAjax(tenantService.mainDeleteTenantByIds(tenant));
+        Set<Tenant> before = tenantService.mainCheckTenantListByIds(tenant);
+        int rows = tenantService.mainDeleteTenantByIds(tenant);
+        if (rows > 0) {
+            Set<Tenant> after = tenantService.mainCheckTenantListByIds(tenant);
+            before.removeAll(after);
+            for (Tenant vo : before) {
+                EnterpriseUtils.deleteEnterpriseAllCache(vo.getTenantId(), vo.getTenantName());
+            }
+        }
+        return toAjax(rows);
+    }
+
+    /**
+     * 新增租户 cache
+     *
+     * @param rows   结果
+     * @param tenant 租户信息
+     * @return 结果
+     */
+    private int addTenantCache(int rows, Tenant tenant) {
+        if (rows > 0 && !StringUtils.equals(TenantConstants.DISABLE, tenant.getStatus())) {
+            remoteEnterpriseService.refreshEnterpriseAllCache(tenant.getTenantId(), SecurityConstants.INNER);
+        }
+        return rows;
+    }
+
+    /**
+     * 修改租户 cache
+     *
+     * @param rows      结果
+     * @param oldTenant 原始租户信息
+     * @return 结果
+     */
+    private int refreshTenantCache(int rows, Tenant oldTenant) {
+        if (rows > 0) {
+            R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(oldTenant.getTenantId(), SecurityConstants.INNER);
+            if (R.FAIL == enterprise.getCode()) {
+                throw new ServiceException(enterprise.getMsg());
+            }
+            if (!StringUtils.equals(enterprise.getData().getStatus(), oldTenant.getStatus())) {
+                if (StringUtils.equals(TenantConstants.NORMAL, enterprise.getData().getStatus())) {
+                    remoteEnterpriseService.refreshEnterpriseAllCache(oldTenant.getTenantId(), SecurityConstants.INNER);
+                } else {
+                    EnterpriseUtils.deleteEnterpriseAllCache(oldTenant.getTenantId(), oldTenant.getTenantName());
+                }
+            } else {
+                if (!StringUtils.equals(enterprise.getData().getEnterpriseName(), oldTenant.getTenantName())) {
+                    EnterpriseUtils.deleteLoginCache(oldTenant.getTenantName());
+                    EnterpriseUtils.refreshLoginCache(enterprise.getData().getEnterpriseName(), enterprise.getData().getEnterpriseId());
+                }
+                EnterpriseUtils.refreshEnterpriseCache(enterprise.getData().getEnterpriseId(), enterprise.getData());
+            }
+        }
+        return rows;
     }
 }

@@ -66,6 +66,12 @@
         order by r.sort
     </select>
 
+    <select id="selectRoleCacheListByEnterpriseId" resultMap="RoleResult">
+        <include refid="roleCacheVo"/>
+        where r.tenant_id = #{enterpriseId} and r.del_flag = 0
+        order by r.sort
+    </select>
+
     <select id="selectRoleCacheByRoleId" parameterType="SysRole" resultMap="RoleResult">
         <include refid="roleCacheVo"/>
         where r.role_id = #{roleId} and r.tenant_id = #{enterpriseId} and r.del_flag = 0

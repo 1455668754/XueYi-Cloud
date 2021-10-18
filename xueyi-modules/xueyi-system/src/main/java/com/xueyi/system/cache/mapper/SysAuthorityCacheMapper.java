@@ -22,6 +22,14 @@ public interface SysAuthorityCacheMapper {
     public List<CacheInitVo> mainSelectRouteCacheListBySource();
 
     /**
+     * 查询指定企业模块-路由信息 | 指定企业
+     *
+     * @param enterpriseId 企业Id
+     * @return 通用缓存封装对象集合
+     */
+    public List<CacheInitVo> mainSelectRouteCacheListByEnterpriseId(Long enterpriseId);
+
+    /**
      * 根据模块信息查询模块-路由信息 | 单个企业的单个指定模块
      *
      * @param system 模块信息 | systemId 模块Id | enterpriseId 企业Id

@@ -22,8 +22,19 @@ public interface RemoteEnterpriseService {
      * 根据租户Id查询企业信息
      *
      * @param enterpriseId 企业Id
+     * @param source       请求来源
      * @return 结果
      */
     @GetMapping("/enterprise/byId/{enterpriseId}")
     public R<SysEnterprise> getEnterpriseByEnterpriseId(@PathVariable("enterpriseId") Long enterpriseId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+
+    /**
+     * 根据企业Id刷新企业全部缓存
+     *
+     * @param enterpriseId 企业Id
+     * @param source       请求来源
+     * @return 结果
+     */
+    @GetMapping(value = "/enterpriseCache/refreshEnterpriseAllCache/{enterpriseId}")
+    public R<Boolean> refreshEnterpriseAllCache(@PathVariable("enterpriseId") Long enterpriseId, @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 }

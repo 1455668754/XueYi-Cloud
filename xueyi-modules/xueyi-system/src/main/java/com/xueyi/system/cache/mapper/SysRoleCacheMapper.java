@@ -21,6 +21,14 @@ public interface SysRoleCacheMapper {
     public List<SysRole> selectRoleCacheListBySource();
 
     /**
+     * 查询指定企业的所有角色信息 | 指定源指定企业
+     *
+     * @param enterpriseId 租户Id
+     * @return 通用缓存封装对象集合
+     */
+    public List<SysRole> selectRoleCacheListByEnterpriseId(Long enterpriseId);
+
+    /**
      * 根据角色信息查找角色信息 | 单个企业的单个指定角色
      *
      * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id

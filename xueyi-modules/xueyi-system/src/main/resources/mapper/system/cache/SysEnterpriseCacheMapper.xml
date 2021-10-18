@@ -32,4 +32,9 @@
         where e.del_flag = 0 and e.status = '0'
     </select>
 
+    <select id="mainSelectEnterpriseCacheByEnterpriseId" resultMap="EnterpriseResult">
+        <include refid="enterpriseCacheVo"/>
+        where e.tenant_id = #{enterpriseId} and e.del_flag = 0 and e.status = '0'
+    </select>
+
 </mapper>

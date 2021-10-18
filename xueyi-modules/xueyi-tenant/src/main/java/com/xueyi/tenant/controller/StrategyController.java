@@ -72,7 +72,7 @@ public class StrategyController extends BaseController {
     public AjaxResult add(@RequestBody Strategy strategy) {
         int rows = tenantStrategyService.mainInsertStrategy(strategy);
         if (rows > 0 && StringUtils.equals(TenantConstants.NORMAL, strategy.getStatus())) {
-            remoteSourceService.refreshSource(strategy.getStrategyId(), SecurityConstants.INNER);
+            remoteSourceService.refreshSourceCache(strategy.getStrategyId(), SecurityConstants.INNER);
         }
         return toAjax(rows);
     }
@@ -88,7 +88,7 @@ public class StrategyController extends BaseController {
             return AjaxResult.error("禁止操作默认策略");
         }
         int rows = tenantStrategyService.mainUpdateStrategy(strategy);
-        remoteSourceService.refreshSource(strategy.getStrategyId(), SecurityConstants.INNER);
+        remoteSourceService.refreshSourceCache(strategy.getStrategyId(), SecurityConstants.INNER);
         return toAjax(rows);
     }
 

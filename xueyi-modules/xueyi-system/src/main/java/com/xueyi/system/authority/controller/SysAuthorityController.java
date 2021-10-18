@@ -6,6 +6,7 @@ import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.system.api.domain.authority.SysRole;
@@ -57,7 +58,7 @@ public class SysAuthorityController extends BaseController {
      */
     @GetMapping(value = "/lessorRange/{enterpriseId}")
     public AjaxResult getLessorMenuRange(@PathVariable Long enterpriseId) {
-        return AjaxResult.success(authorityService.selectLessorMenuRange(enterpriseId, EnterpriseUtils.getMainSourceName(enterpriseId)));
+        return AjaxResult.success(authorityService.selectLessorMenuRange(enterpriseId, DataSourceUtils.getMainSourceNameByEnterpriseId(enterpriseId)));
     }
 
     /**
@@ -78,7 +79,7 @@ public class SysAuthorityController extends BaseController {
         if (EnterpriseUtils.isAdminTenant(role.getEnterpriseId())) {
             return AjaxResult.error("租管租户禁止进行菜单配置");
         }
-        String sourceName = EnterpriseUtils.getMainSourceName(role.getEnterpriseId());
+        String sourceName = DataSourceUtils.getMainSourceNameByEnterpriseId(role.getEnterpriseId());
         SysRole checkRole = roleService.selectRoleIdByDeriveIdToSourceName(new SysRole(AuthorityConstants.DERIVE_TENANT_TYPE, role.getEnterpriseId(), role.getEnterpriseId()), sourceName);
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());

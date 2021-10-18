@@ -22,7 +22,7 @@ public class RemoteSourceFallbackFactory implements FallbackFactory<RemoteSource
         log.error("数据源策略加载服务调用失败:{}", throwable.getMessage());
         return new RemoteSourceService() {
             @Override
-            public R<Boolean> refreshSource(Long strategyId, String source) {
+            public R<Boolean> refreshSourceCache(Long strategyId, String source) {
                 return R.fail("更新数据源策略失败:" + throwable.getMessage());
             }
         };

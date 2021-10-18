@@ -41,6 +41,28 @@ public class DataSourceUtils {
     }
 
     /**
+     * 获取企业策略主源 key
+     *
+     * @param enterpriseId 企业Id
+     * @return 策略主数据源
+     */
+    public static <T> String getMainSourceNameByEnterpriseId(Long enterpriseId) {
+        T source = redisService.getCacheObject(getSourceCacheKey(redisService.getCacheObject(EnterpriseUtils.getStrategyCacheKey(enterpriseId))));
+        return getMainSource(source);
+    }
+
+    /**
+     * 根据策略Id获取策略主源 key
+     *
+     * @param strategyId 策略Id
+     * @return 策略主数据源
+     */
+    public static <T> String getMainSourceNameByStrategyId(Long strategyId) {
+        T source = redisService.getCacheObject(DataSourceUtils.getSourceCacheKey(strategyId));
+        return getMainSource(source);
+    }
+
+    /**
      * 获取源策略组
      *
      * @return SourceList 源策略集合
@@ -104,5 +126,18 @@ public class DataSourceUtils {
                 }
             }
         }
+    }
+
+    private static <T> String getMainSource(T source){
+        if (source != null) {
+            try {
+                Field fileId = source.getClass().getDeclaredField("master");
+                fileId.setAccessible(true);
+                return (String) fileId.get(source);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

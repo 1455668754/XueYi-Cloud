@@ -7,6 +7,7 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 
 /**
  * 企业缓存管理工具类
@@ -56,26 +57,6 @@ public class EnterpriseUtils {
      */
     public static String getStrategyCacheKey(Long enterpriseId) {
         return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.STRATEGY_KEY;
-    }
-
-    /**
-     * 获取企业策略主源 key
-     *
-     * @param enterpriseId 企业Id
-     * @return 策略主数据源
-     */
-    public static <T> String getMainSourceName(Long enterpriseId) {
-        T source = redisService.getCacheObject(DataSourceUtils.getSourceCacheKey(redisService.getCacheObject(getStrategyCacheKey(enterpriseId))));
-        if (source != null) {
-            try {
-                Field fileId = source.getClass().getDeclaredField("master");
-                fileId.setAccessible(true);
-                return (String) fileId.get(source);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
     }
 
     /**
@@ -182,8 +163,11 @@ public class EnterpriseUtils {
      * @param enterpriseId   企业Id
      * @param enterpriseName 企业账号
      */
-    public static void deleteCacheFolder(Long enterpriseId, String enterpriseName) {
-        redisService.deleteObject(getCacheFolderKey(enterpriseId));
+    public static void deleteEnterpriseAllCache(Long enterpriseId, String enterpriseName) {
         redisService.deleteObject(getLoginCacheKey(enterpriseName));
+        Collection<String> keys = redisService.keys(getCacheFolderKey(enterpriseId));
+        for (String key : keys) {
+            redisService.deleteObject(key);
+        }
     }
 }

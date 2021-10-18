@@ -17,4 +17,12 @@ public interface SysEnterpriseCacheMapper {
      * @return 企业对象集合
      */
     public List<SysEnterprise> mainSelectEnterpriseCacheListBySource();
+
+    /**
+     * 加载指定企业缓存数据 | 指定企业
+     *
+     * @param enterpriseId 企业Id
+     * @return 企业对象
+     */
+    public SysEnterprise mainSelectEnterpriseCacheByEnterpriseId(Long enterpriseId);
 }

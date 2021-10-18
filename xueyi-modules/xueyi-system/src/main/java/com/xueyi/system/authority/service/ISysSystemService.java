@@ -69,7 +69,6 @@ public interface ISysSystemService {
 
     /**
      * 查询角色Id存在于数组中的角色信息
-     * 访问控制 s 租户查询
      *
      * @param system 模块信息 | params.Ids 模块Ids组
      * @return 结果

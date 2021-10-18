@@ -11,9 +11,23 @@ import com.xueyi.system.api.domain.authority.SysSystem;
 public interface ISysCacheInitService {
 
     /**
+     * 加载指定企业全部缓存数据 | 指定企业
+     *
+     * @param enterpriseId 企业Id
+     */
+    public void loadingEnterpriseAllCacheByEnterpriseId(Long enterpriseId);
+
+    /**
      * 加载企业缓存数据 | 主源所有企业
      */
     public void loadingEnterpriseCache();
+
+    /**
+     * 加载指定企业缓存数据 | 指定企业
+     *
+     * @param enterpriseId 企业Id
+     */
+    public void refreshEnterpriseCacheByEnterpriseId(Long enterpriseId);
 
     /**
      * 加载数据源策略组缓存数据 | 主源所有数据源策略组
@@ -31,6 +45,13 @@ public interface ISysCacheInitService {
      * 加载模块-路由缓存数据 | 主源所有企业
      */
     public void loadingRouteCache();
+
+    /**
+     * 查询指定企业模块-路由信息 | 指定企业
+     *
+     * @param enterpriseId 企业Id
+     */
+    public void refreshRouteCacheByEnterpriseId(Long enterpriseId);
 
     /**
      * 加载模块-路由缓存数据 | 单个企业的单个指定模块
@@ -81,6 +102,14 @@ public interface ISysCacheInitService {
      * @param sourceName 数据源名称
      */
     public void loadingRoleCache(String sourceName);
+
+    /**
+     * 加载指定企业的所有角色缓存数据 | 指定企业
+     *
+     * @param enterpriseId 租户Id
+     * @param sourceName 指定源
+     */
+    public void refreshRoleCacheByEnterpriseIdToSourceName(Long enterpriseId, String sourceName);
 
     /**
      * 加载角色缓存数据 | 单个企业的单个指定角色

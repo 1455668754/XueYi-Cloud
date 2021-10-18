@@ -121,15 +121,33 @@
         </foreach>
     </update>
 
-    <delete id="mainDeleteTenantById" parameterType="Tenant">
+    <delete id="mainDeleteTenantByIds" parameterType="Tenant">
         update xy_tenant
         set del_flag = 1
-        where tenant_id = #{tenantId} and is_change = 'N' and del_flag = 0
+        where is_change = 'N' and del_flag = 0 and tenant_id in
+        <foreach collection="params.Ids" item="Id" separator="," open="(" close=")">
+            #{Id}
+        </foreach>
     </delete>
+
+    <select id="mainCheckTenantListByIds" parameterType="Tenant" resultMap="TenantResult">
+        <include refid="checkVo"/>
+        where e.del_flag = 0 and e.tenant_id in
+        <foreach collection="params.Ids" item="Id" separator="," open="(" close=")">
+            #{Id}
+        </foreach>
+    </select>
+
 
     <select id="mainCheckTenantNameUnique" parameterType="Tenant" resultMap="TenantResult">
         <include refid="checkVo"/>
         where e.tenant_name = #{tenantName}
+        and e.del_flag = 0
+    </select>
+
+    <select id="mainCheckTenantByTenantId" parameterType="Tenant" resultMap="TenantResult">
+        <include refid="checkVo"/>
+        where e.tenant_id = #{tenantId}
         and e.del_flag = 0
     </select>
 </mapper>

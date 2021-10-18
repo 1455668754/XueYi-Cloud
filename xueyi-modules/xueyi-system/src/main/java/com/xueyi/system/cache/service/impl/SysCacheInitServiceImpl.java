@@ -54,18 +54,18 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     @PostConstruct
     public void init() {
         /* 初始化企业信息缓存 */
-        loadingEnterpriseCache();
+        cacheInitService.loadingEnterpriseCache();
         /* 初始化数据源策略组缓存 */
-        loadingSourceCache();
+        cacheInitService.loadingSourceCache();
         /* 初始化模块-路由缓存 */
-        loadingRouteCache();
+        cacheInitService.loadingRouteCache();
         /* 初始化菜单缓存 */
-        loadingMenuCache();
+        cacheInitService.loadingMenuCache();
         /* 初始化模块缓存 */
-        loadingSystemCache();
+        cacheInitService.loadingSystemCache();
         /* 初始化模块-菜单缓存 */
-        loadingSystemMenuCache();
-        /* 初始化模块-菜单缓存 */
+        cacheInitService.loadingSystemMenuCache();
+        /* 初始化模块-角色缓存 */
         List<Source> sources = DataSourceUtils.getSourceList();
         for (Source source : sources) {
             cacheInitService.loadingRoleCache(source.getMaster());
@@ -73,12 +73,48 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     }
 
     /**
+     * 加载指定企业全部缓存数据 | 指定企业
+     *
+     * @param enterpriseId 企业Id
+     */
+    @Override
+    public void loadingEnterpriseAllCacheByEnterpriseId(Long enterpriseId) {
+        /* 初始化企业信息缓存 */
+        cacheInitService.refreshEnterpriseCacheByEnterpriseId(enterpriseId);
+        /* 初始化模块-路由缓存 */
+        cacheInitService.refreshRouteCacheByEnterpriseId(enterpriseId);
+        /* 初始化菜单缓存 */
+        cacheInitService.refreshMenuCacheByEnterpriseId(enterpriseId);
+        /* 初始化模块缓存 */
+        cacheInitService.refreshSystemCacheByEnterpriseId(enterpriseId);
+        /* 初始化模块-菜单缓存 */
+        cacheInitService.refreshSystemMenuCacheByEnterpriseId(enterpriseId);
+        /* 初始化模块-角色缓存 */
+        cacheInitService.refreshRoleCacheByEnterpriseIdToSourceName(enterpriseId, DataSourceUtils.getMainSourceNameByEnterpriseId(enterpriseId));
+    }
+
+    /**
      * 加载企业缓存数据 | 主源所有企业
      */
     @Override
     public void loadingEnterpriseCache() {
-        List<SysEnterprise> enterprisesList = enterpriseCacheMapper.mainSelectEnterpriseCacheListBySource();
-        for (SysEnterprise enterprise : enterprisesList) {
+        List<SysEnterprise> enterpriseList = enterpriseCacheMapper.mainSelectEnterpriseCacheListBySource();
+        for (SysEnterprise enterprise : enterpriseList) {
+            EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(), enterprise);
+            EnterpriseUtils.refreshStrategyCache(enterprise.getEnterpriseId(), enterprise.getStrategyId());
+            EnterpriseUtils.refreshLoginCache(enterprise.getEnterpriseName(), enterprise.getEnterpriseId());
+        }
+    }
+
+    /**
+     * 加载指定企业缓存数据 | 指定企业
+     *
+     * @param enterpriseId 企业Id
+     */
+    @Override
+    public void refreshEnterpriseCacheByEnterpriseId(Long enterpriseId) {
+        SysEnterprise enterprise = enterpriseCacheMapper.mainSelectEnterpriseCacheByEnterpriseId(enterpriseId);
+        if (enterprise != null) {
             EnterpriseUtils.refreshEnterpriseCache(enterprise.getEnterpriseId(), enterprise);
             EnterpriseUtils.refreshStrategyCache(enterprise.getEnterpriseId(), enterprise.getStrategyId());
             EnterpriseUtils.refreshLoginCache(enterprise.getEnterpriseName(), enterprise.getEnterpriseId());
@@ -92,13 +128,13 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     public void loadingSourceCache() {
         List<Source> sourceList = sourceCacheMapper.mainSelectSourceCacheListBySource();
         for (Source source : sourceList) {
-            for(Source value: source.getValues()){
-                if(StringUtils.equals(TenantConstants.IS_MAIN_TRUE,value.getIsMain())){
+            for (Source value : source.getValues()) {
+                if (StringUtils.equals(TenantConstants.IS_MAIN_TRUE, value.getIsMain())) {
                     source.setMaster(value.getMaster());
                     source.setSlave(value.getSlave());
                 }
             }
-            DataSourceUtils.refreshSourceCache(source.getStrategyId(),source);
+            DataSourceUtils.refreshSourceCache(source.getStrategyId(), source);
         }
     }
 
@@ -110,13 +146,13 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     @Override
     public void refreshSourceCacheByStrategyId(Long strategyId) {
         Source source = sourceCacheMapper.mainSelectSourceCacheByStrategyId(strategyId);
-        for(Source value: source.getValues()){
-            if(StringUtils.equals(TenantConstants.IS_MAIN_TRUE,value.getIsMain())){
+        for (Source value : source.getValues()) {
+            if (StringUtils.equals(TenantConstants.IS_MAIN_TRUE, value.getIsMain())) {
                 source.setMaster(value.getMaster());
                 source.setSlave(value.getSlave());
             }
         }
-        DataSourceUtils.refreshSourceCache(source.getStrategyId(),source);
+        DataSourceUtils.refreshSourceCache(source.getStrategyId(), source);
     }
 
     /**
@@ -131,6 +167,19 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         List<CacheInitVo> enterpriseNullList = authorityCacheMapper.mainSelectEnterpriseCacheListByExcludeIds(cacheInitVos.stream().map(CacheInitVo::getEnterpriseId).collect(Collectors.toSet()), cacheInitVos.stream().map(CacheInitVo::getSystemId).collect(Collectors.toSet()));
         for (CacheInitVo enterpriseNull : enterpriseNullList) {
             AuthorityUtils.deleteRouteCache(enterpriseNull.getEnterpriseId(), enterpriseNull.getSystemId());
+        }
+    }
+
+    /**
+     * 查询指定企业模块-路由信息 | 指定企业
+     *
+     * @param enterpriseId 企业Id
+     */
+    @Override
+    public void refreshRouteCacheByEnterpriseId(Long enterpriseId) {
+        List<CacheInitVo> cacheInitVos = authorityCacheMapper.mainSelectRouteCacheListByEnterpriseId(enterpriseId);
+        for (CacheInitVo cacheInitVo : cacheInitVos) {
+            AuthorityUtils.refreshRouteCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemId(), cacheInitVo.getMenuSet());
         }
     }
 
@@ -254,6 +303,21 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         List<SysRole> roleNullList = roleCacheMapper.selectRoleCacheListByExcludeIds(roles.stream().map(SysRole::getEnterpriseId).collect(Collectors.toSet()), roles.stream().map(SysRole::getRoleId).collect(Collectors.toSet()));
         for (SysRole roleNull : roleNullList) {
             AuthorityUtils.deleteRoleCache(roleNull.getEnterpriseId(), roleNull.getRoleId());
+        }
+    }
+
+    /**
+     * 加载指定企业的所有角色缓存数据 | 指定企业
+     *
+     * @param enterpriseId 租户Id
+     * @param sourceName   指定源
+     */
+    @Override
+    @DS("#sourceName")
+    public void refreshRoleCacheByEnterpriseIdToSourceName(Long enterpriseId, String sourceName) {
+        List<SysRole> roles = roleCacheMapper.selectRoleCacheListByEnterpriseId(enterpriseId);
+        for (SysRole role : roles) {
+            AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), role);
         }
     }
 

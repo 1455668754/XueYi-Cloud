@@ -100,6 +100,12 @@
         order by m.sort
     </select>
 
+    <select id="mainSelectRouteCacheListByEnterpriseId" parameterType="SysSystem" resultMap="CacheInitResult">
+        <include refid="routeCacheVo"/>
+        where m.tenant_id = #{enterpriseId} and m.menu_type in ('M', 'C') and m.status = 0 and m.del_flag = 0
+        order by m.sort
+    </select>
+
     <select id="mainSelectRouteCacheListBySystemId" parameterType="SysSystem" resultMap="CacheInitResult">
         <include refid="routeCacheVo"/>
         where m.system_id = #{systemId} and m.tenant_id = #{enterpriseId} and m.menu_type in ('M', 'C') and m.status = 0 and m.del_flag = 0

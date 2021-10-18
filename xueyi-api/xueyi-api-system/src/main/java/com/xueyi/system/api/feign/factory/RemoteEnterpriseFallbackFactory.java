@@ -26,6 +26,11 @@ public class RemoteEnterpriseFallbackFactory implements FallbackFactory<RemoteEn
             public R<SysEnterprise> getEnterpriseByEnterpriseId(Long enterpriseId, String source) {
                 return R.fail("获取企业信息失败:" + throwable.getMessage());
             }
+
+            @Override
+            public R<Boolean> refreshEnterpriseAllCache(Long enterpriseId, String source) {
+                return R.fail("更新企业缓存失败:" + throwable.getMessage());
+            }
         };
     }
 }

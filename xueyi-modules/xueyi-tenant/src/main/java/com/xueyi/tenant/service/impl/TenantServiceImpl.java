@@ -1,30 +1,21 @@
 package com.xueyi.tenant.service.impl;
 
-import java.util.List;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.core.domain.R;
-import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
-import com.xueyi.common.redis.utils.EnterpriseUtils;
-import com.xueyi.system.api.domain.organize.SysEnterprise;
-import com.xueyi.system.api.feign.RemoteEnterpriseService;
-import com.xueyi.tenant.api.domain.source.Source;
-import com.xueyi.tenant.api.domain.strategy.Strategy;
-import com.xueyi.tenant.mapper.StrategyMapper;
+import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.common.redis.utils.DataSourceUtils;
+import com.xueyi.tenant.domain.Tenant;
+import com.xueyi.tenant.mapper.TenantMapper;
 import com.xueyi.tenant.service.ICreationService;
+import com.xueyi.tenant.service.ITenantService;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xueyi.common.datascope.annotation.DataScope;
 import org.springframework.transaction.annotation.Transactional;
-import com.xueyi.tenant.mapper.TenantMapper;
-import com.xueyi.tenant.domain.Tenant;
-import com.xueyi.tenant.service.ITenantService;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 租户信息 业务层处理
@@ -42,13 +33,7 @@ public class TenantServiceImpl implements ITenantService {
     private ITenantService tenantService;
 
     @Autowired
-    private StrategyMapper strategyMapper;
-
-    @Autowired
     private ICreationService creationService;
-
-    @Autowired
-    private RemoteEnterpriseService remoteEnterpriseService;
 
     /**
      * 查询租户信息列表
@@ -85,18 +70,15 @@ public class TenantServiceImpl implements ITenantService {
     public int mainInsertTenant(Tenant tenant) {
         /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
         tenant.setTenantId(tenant.getSnowflakeId());
-        Strategy search = new Strategy(tenant.getStrategyId());
-        Strategy strategy = strategyMapper.mainSelectStrategyById(search);
-        for (Source source : strategy.getValues()) {
-            if (source.getIsMain().equals("Y")) {
-                tenant.setSourceName(source.getSlave());
-                //新建租户时同步新建信息
-                //1.新建租户的部门|岗位|超管用户信息
-                creationService.organizeCreation(tenant);
-                //1.新建租户的衍生角色&&模块|菜单屏蔽信息
-                creationService.deriveRoleCreation(tenant);
-                return tenantMapper.mainInsertTenant(tenant);
-            }
+        String mainSourceName = DataSourceUtils.getMainSourceNameByStrategyId(tenant.getStrategyId());
+        if (StringUtils.isNotEmpty(mainSourceName)) {
+            tenant.setSourceName(mainSourceName);
+            //新建租户时同步新建信息
+            //1.新建租户的部门|岗位|超管用户信息
+            creationService.organizeCreation(tenant);
+            //1.新建租户的衍生角色&&模块|菜单屏蔽信息
+            creationService.deriveRoleCreation(tenant);
+            return tenantMapper.mainInsertTenant(tenant);
         }
         return 0;
     }
@@ -108,12 +90,8 @@ public class TenantServiceImpl implements ITenantService {
      * @return 结果
      */
     @Override
-    public Boolean mainRegisterTenant(Tenant tenant) {
-        int rows = tenantService.mainInsertTenant(tenant);
-        if (rows > 0) {
-            refreshTenantCache(tenant.getTenantId());
-        }
-        return rows > 0;
+    public int mainRegisterTenant(Tenant tenant) {
+        return tenantService.mainInsertTenant(tenant);
     }
 
     /**
@@ -124,12 +102,7 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public int mainUpdateTenant(Tenant tenant) {
-        int rows = tenantMapper.mainUpdateTenant(tenant);
-        if (rows > 0) {
-            deleteCache(tenant.getTenantId());
-            refreshTenantCache(tenant.getTenantId());
-        }
-        return rows;
+        return tenantMapper.mainUpdateTenant(tenant);
     }
 
     /**
@@ -144,25 +117,6 @@ public class TenantServiceImpl implements ITenantService {
     }
 
     /**
-     * 删除租户信息信息
-     *
-     * @param tenant 租户信息
-     * @return 结果
-     */
-    @Override
-    public int mainDeleteTenantById(Tenant tenant) {
-        R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenant.getTenantId(), SecurityConstants.INNER);
-        if (R.FAIL == enterprise.getCode()) {
-            throw new ServiceException(enterprise.getMsg());
-        }
-        int rows = tenantMapper.mainDeleteTenantById(tenant);
-        if (rows > 0) {
-            EnterpriseUtils.deleteCacheFolder(tenant.getTenantId(), enterprise.getData().getEnterpriseName());
-        }
-        return rows;
-    }
-
-    /**
      * 批量删除租户信息
      *
      * @param tenant 租户信息
@@ -170,12 +124,17 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public int mainDeleteTenantByIds(Tenant tenant) {
-        List<Long> Ids = ParamsUtils.IdsObjectToLongList(tenant.getParams().get("Ids"));
-        int rows = 0;
-        for (Long Id : Ids) {
-            rows += mainDeleteTenantById(new Tenant(Id));
-        }
-        return rows;
+        return tenantMapper.mainDeleteTenantByIds(tenant);
+    }
+
+    /**
+     * 查询租户Id存在于数组中的租户信息
+     *
+     * @param tenant 租户信息 | params.Ids 租户Ids组
+     * @return 租户信息集合
+     */
+    public Set<Tenant> mainCheckTenantListByIds(Tenant tenant) {
+        return tenantMapper.mainCheckTenantListByIds(tenant);
     }
 
     /**
@@ -194,35 +153,13 @@ public class TenantServiceImpl implements ITenantService {
     }
 
     /**
-     * 新增指定租户Id cache
+     * 根据租户Id查询租户信息
      *
-     * @param tenantId 租户Id
+     * @param tenant 租户信息 | tenantId 租户Id
+     * @return 租户信息
      */
     @Override
-    public void refreshTenantCache(Long tenantId) {
-        R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenantId, SecurityConstants.INNER);
-        if (R.FAIL == enterprise.getCode()) {
-            throw new ServiceException(enterprise.getMsg());
-        }
-        if (StringUtils.equals(enterprise.getData().getStatus(), TenantConstants.NORMAL)) {
-            EnterpriseUtils.refreshEnterpriseCache(tenantId, enterprise.getData());
-            EnterpriseUtils.refreshStrategyCache(tenantId, enterprise.getData().getStrategyId());
-            EnterpriseUtils.refreshLoginCache(enterprise.getData().getEnterpriseName(), enterprise.getData().getEnterpriseId());
-        }
-    }
-
-    /**
-     * 删除指定租户Id cache
-     *
-     * @param tenantId 租户Id
-     */
-    private void deleteCache(Long tenantId) {
-        R<SysEnterprise> enterprise = remoteEnterpriseService.getEnterpriseByEnterpriseId(tenantId, SecurityConstants.INNER);
-        if (R.FAIL == enterprise.getCode()) {
-            throw new ServiceException(enterprise.getMsg());
-        }
-        EnterpriseUtils.deleteLoginCache(enterprise.getData().getEnterpriseName());
-        EnterpriseUtils.deleteEnterpriseCache(tenantId);
-        EnterpriseUtils.deleteStrategyCache(tenantId);
+    public Tenant mainCheckTenantByTenantId(Tenant tenant) {
+        return tenantMapper.mainCheckTenantByTenantId(tenant);
     }
 }

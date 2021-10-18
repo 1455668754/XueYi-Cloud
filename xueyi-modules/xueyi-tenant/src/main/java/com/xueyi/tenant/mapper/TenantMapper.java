@@ -1,9 +1,10 @@
 package com.xueyi.tenant.mapper;
 
-import java.util.List;
-
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.tenant.domain.Tenant;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * 租户信息 数据层
@@ -18,7 +19,6 @@ public interface TenantMapper {
      * @param tenant 租户信息
      * @return 租户信息集合
      */
-    @DataScope(eAlias = "e")
     public List<Tenant> mainSelectTenantList(Tenant tenant);
 
     /**
@@ -28,7 +28,6 @@ public interface TenantMapper {
      * @param tenant 租户信息
      * @return 租户信息
      */
-    @DataScope(eAlias = "e")
     public Tenant mainSelectTenantById(Tenant tenant);
 
     /**
@@ -64,18 +63,32 @@ public interface TenantMapper {
      * 删除租户信息
      * 访问控制 empty 租户更新（无前缀）
      *
-     * @param tenant 租户信息
+     * @param tenant 租户信息 | params.Ids 租户Ids组
      * @return 结果
      */
-    @DataScope(ueAlias = "empty")
-    public int mainDeleteTenantById(Tenant tenant);
+    public int mainDeleteTenantByIds(Tenant tenant);
+
+    /**
+     * 查询租户Id存在于数组中的租户信息
+     *
+     * @param tenant 租户信息 | params.Ids 租户Ids组
+     * @return 租户信息集合
+     */
+    public Set<Tenant> mainCheckTenantListByIds(Tenant tenant);
 
     /**
      * 校验租户账号是否唯一
-     * 访问控制 empty 租户更新（无前缀）
      *
      * @param tenant 租户信息 | tenantName 租户Id
-     * @return 结果
+     * @return 租户信息
      */
     public Tenant mainCheckTenantNameUnique(Tenant tenant);
+
+    /**
+     * 根据租户Id查询租户信息
+     *
+     * @param tenant 租户信息 | tenantId 租户Id
+     * @return 租户信息
+     */
+    public Tenant mainCheckTenantByTenantId(Tenant tenant);
 }
