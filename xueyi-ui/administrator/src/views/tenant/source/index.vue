@@ -471,7 +471,7 @@ export default {
           if (this.form.sourceId != null) {
             updateSource(this.form).then(response => {
               this.$modal.msgSuccess('修改成功')
-              this.op = false
+              this.open = false
               this.getList()
             }).catch(() => {
               this.submitLoading = false

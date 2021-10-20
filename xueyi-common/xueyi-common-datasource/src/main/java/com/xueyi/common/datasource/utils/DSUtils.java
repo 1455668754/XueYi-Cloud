@@ -13,6 +13,8 @@ import com.xueyi.common.message.service.ProducerService;
 import com.xueyi.tenant.api.domain.source.Source;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 /**
  * 源管理工具类
@@ -69,9 +71,32 @@ public class DSUtils {
      *
      * @param source 数据源对象
      */
-    public static void syncDS(Source source) {
+    public static void syncDs(Source source) {
         ProducerService producerService = SpringUtils.getBean(ProducerService.class);
         Message message = new Message(IdUtils.randomUUID(), source);
         producerService.sendMsg(message, MessageConstant.EXCHANGE_SOURCE, MessageConstant.ROUTING_KEY_SOURCE);
+    }
+
+    /**
+     * 测试数据源是否可连接
+     *
+     * @param source 数据源对象
+     */
+    public static void testDs(Source source) {
+        try {
+            Class.forName(source.getDriverClassName());
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            throw new ServiceException("数据源驱动加载失败");
+        }
+        try {
+            Connection dbConn= DriverManager.getConnection(source.getUrlPrepend()+source.getUrlAppend(),source.getUsername(),source.getPassword());
+            dbConn.close();
+        }catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            throw new ServiceException("数据库连接失败");
+        }
     }
 }

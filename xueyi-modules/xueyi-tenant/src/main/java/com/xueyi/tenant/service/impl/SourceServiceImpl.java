@@ -61,7 +61,7 @@ public class SourceServiceImpl implements ISourceService {
         source.setSlave((source.getType().equals(TenantConstants.SOURCE_READ) ? "slave" : "master") + source.getSnowflakeId().toString());
         // 将数据新增的的数据源添加到数据源库
         source.setSyncType(TenantConstants.SYNC_TYPE_ADD);
-        DSUtils.syncDS(source);
+        DSUtils.syncDs(source);
         if (source.getType().equals(TenantConstants.SOURCE_READ_WRITE)) {
             Source value = new Source(source.getSnowflakeId());
             value.setSlave(source.getSlave());
@@ -95,7 +95,7 @@ public class SourceServiceImpl implements ISourceService {
     public int mainUpdateSourceStatus(Source source) {
         int rows = sourceMapper.mainUpdateSourceStatus(source);
         if (rows > 0) {
-            DSUtils.syncDS(source);
+            DSUtils.syncDs(source);
         }
         return rows;
     }
@@ -121,7 +121,7 @@ public class SourceServiceImpl implements ISourceService {
     @Transactional
     public int mainDeleteSourceById(Source source) {
         source.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
-        DSUtils.syncDS(source);
+        DSUtils.syncDs(source);
         sourceMapper.mainDeleteSeparationByValueId(source);
         return sourceMapper.mainDeleteSourceById(source);
     }

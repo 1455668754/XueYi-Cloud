@@ -6,6 +6,7 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.TableDataInfo;
+import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.RequiresPermissions;
@@ -55,6 +56,7 @@ public class SourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Source source) {
+        DSUtils.testDs(source);
         return toAjax(sourceService.mainInsertSource(source));
     }
 
@@ -65,6 +67,7 @@ public class SourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Source source) {
+        DSUtils.testDs(source);
         return toAjax(sourceService.mainUpdateSource(source));
     }
 
@@ -77,7 +80,7 @@ public class SourceController extends BaseController {
     public AjaxResult editStatus(@RequestBody Source source) {
         Source check = new Source(source.getSourceId());
         Source oldSource = sourceService.mainSelectSourceBySourceId(check);
-
+        DSUtils.testDs(oldSource);
         if(StringUtils.equals(TenantConstants.NORMAL, source.getStatus())){
             if(StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_WRITE) && sourceService.mainCheckSeparationSourceByWriteId(check)){
                 return AjaxResult.error("该数据源未配置读数据源,请先进行读写配置再启用！");
@@ -89,7 +92,6 @@ public class SourceController extends BaseController {
                 return AjaxResult.error("该数据源已被应用于数据源策略,请先从对应策略中取消关联后再禁用！");
             }
         }
-
         if (StringUtils.equals(source.getStatus(), oldSource.getStatus())) {
             source.setSyncType(TenantConstants.SYNC_TYPE_UNCHANGED);
             return AjaxResult.error("无状态调整！");
