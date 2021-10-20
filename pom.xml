@@ -6,14 +6,14 @@
 
     <groupId>com.xueyi</groupId>
     <artifactId>xueyi</artifactId>
-    <version>3.0.2</version>
+    <version>4.1.3</version>
 
     <name>xueyi</name>
     <url>https://xueyitt.cn</url>
     <description>雪忆管理系统</description>
 
     <properties>
-        <xueyi.version>3.0.2</xueyi.version>
+        <xueyi.version>4.1.3</xueyi.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
