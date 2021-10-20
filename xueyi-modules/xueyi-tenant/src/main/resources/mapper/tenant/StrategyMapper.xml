@@ -121,7 +121,14 @@
             #{strategyId}
         </foreach>
     </delete>
-    
+
+    <delete id="mainDeleteSourceByStrategyId" parameterType="Strategy">
+        delete tsc
+        from xy_tenant_strategy_source tsc
+        left join xy_tenant_strategy ts on ts.strategy_id = tsc.strategy_id
+        where ts.is_change = 'N' and tsc.strategy_id = #{strategyId}
+    </delete>
+
     <delete id="mainDeleteSourceByStrategyIds" parameterType="Strategy">
         delete tsc
         from xy_tenant_strategy_source tsc
