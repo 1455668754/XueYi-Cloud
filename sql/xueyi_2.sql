@@ -187,7 +187,7 @@ create table sys_role_system_menu (
 -- ----------------------------
 -- 初始化-角色和系统-菜单关联表数据
 -- ----------------------------
-INSERT INTO `xy-cloud1`.sys_role_system_menu (role_id, system_menu_id, data_scope, checked, del_flag, tenant_id)
+INSERT INTO sys_role_system_menu (role_id, system_menu_id, data_scope, checked, del_flag, tenant_id)
 VALUES (3, 0, '1', '0', 0, 1),
        (3, 10100, '1', '0', 0, 1),
        (3, 10110, '1', '0', 0, 1),
