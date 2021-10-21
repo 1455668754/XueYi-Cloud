@@ -28,8 +28,8 @@ create table xy_tenant (
 -- 初始化-租户信息表数据
 -- ----------------------------
 insert into xy_tenant (tenant_id, is_lessor, is_change, strategy_id,  tenant_name, tenant_system_name, tenant_nick, tenant_logo)
-values (-1, 'Y', 'Y', 1, 'administrator', '租户管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg'),
-       ( 1, 'N', 'N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'http://127.0.0.1:9300/statics/2021/06/08/99d4a2dc-4fdf-435a-aeeb-116ee129d55c.jpeg');
+values (-1, 'Y', 'Y', 1, 'administrator', '租户管理系统', 'xueYi1', 'https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg'),
+       ( 1, 'N', 'N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg');
 
 -- ----------------------------
 -- 2、策略信息表
@@ -156,18 +156,18 @@ create table xy_system (
 # ----------------------------
 # 初始化-模块信息表数据
 # ----------------------------
-insert into xy_system (system_id, name, is_common, is_change, visible, route, remark, tenant_id)
-values (0, '默认系统' ,    'Y', 'Y', 'N', '', '默认系统', 0),
-       (2, '租户管理系统' , 'N', 'Y', 'Y', 'http://localhost:81' , '雪忆租户管理系统', -1);
+insert into xy_system (system_id, name, is_common, is_change, visible, image_url, route, remark, tenant_id)
+values (0, '默认系统' ,    'Y', 'Y', 'N', '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}', '', '默认系统', 0),
+       (2, '租户管理系统' , 'N', 'Y', 'Y', '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}', 'http://localhost:81' , '雪忆租户管理系统', -1);
 
 insert into xy_system (system_id, name, image_url, route, remark, tenant_id)
-values (1 , '商城' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , 'http://localhost:82' , '轻松打造在线商城', 0),
-       (3 , '系统3' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
-       (4 , '系统4' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
-       (5 , '系统5' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
-       (6 , '系统6' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
-       (7 , '系统7' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1),
-       (8 , '系统8' , '[{"materialId": "1384755423424516096", "materialUrl": "http://127.0.0.1:9300/statics/2021/04/21/5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "materialNick": "5ec82664-b6cd-48b6-92e5-478d16b61428.jpg", "hiddenVisible": false, "materialOriginalUrl": "http://127.0.0.1:9300/statics/2021/04/21/d90c13a0-11b5-4314-ad20-f05c6ff18497.jpg"}]' , '1' , '雪忆多租户系统', 1);
+values (1 , '商城' , '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}' , '1' , '轻松打造在线商城', 0),
+       (3 , '系统3' , '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}' , '1' , '雪忆多租户系统', 1),
+       (4 , '系统4' , '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}' , '1' , '雪忆多租户系统', 1),
+       (5 , '系统5' , '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}' , '1' , '雪忆多租户系统', 1),
+       (6 , '系统6' , '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}' , '1' , '雪忆多租户系统', 1),
+       (7 , '系统7' , '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}' , '1' , '雪忆多租户系统', 1),
+       (8 , '系统8' , '{"materialId":"1","materialNick":"1.jpg","materialUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg","materialOriginalUrl":"https://demo.file.xueyitt.cn/statics/2021/10/21/81431d2d-9026-491b-bbf1-ad2e4bd06729.jpg","hiddenVisible":false}' , '1' , '雪忆多租户系统', 1);
 
 -- ----------------------------
 -- 7、菜单权限表

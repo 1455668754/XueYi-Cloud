@@ -108,10 +108,10 @@ create table sys_user (
 -- ----------------------------
 -- 初始化-用户信息表数据
 -- ----------------------------
-insert into sys_user (user_id, tenant_id, dept_id, post_id, user_code, user_name, nick_name,user_type, password, remark)
-values (-2, -1, -4, -3, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
-       (2, 1, 100, 2, '001', 'admin', 'admin', '00', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员'),
-       (3, 1, 100, 2, '002', 'xy', 'xy', '01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '管理员');
+insert into sys_user (user_id, tenant_id, dept_id, post_id, user_code, user_name, nick_name,user_type, avatar, password, remark)
+values (-2, -1, -4, -3, '001', 'admin', 'admin', '00', 'https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员'),
+       (2, 1, 100, 2, '001', 'admin', 'admin', '00', 'https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员'),
+       (3, 1, 100, 2, '002', 'xy', 'xy', '01', 'https://demo.file.xueyitt.cn/statics/2021/10/21/9cfd4c3f-ef1b-43da-8ea3-583b9b4cb6d3.jpg', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '管理员');
 
 -- ----------------------------
 -- 4、角色信息表
