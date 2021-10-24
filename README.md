@@ -22,7 +22,7 @@
 - 超管账户（可增减租户）           
 - administrator / admin / admin123
 
-演示地址：https://xueyitt.cn         
+演示地址：https://demo.xueyitt.cn         
 文档地址：https://doc.xueyitt.cn     
 
 ## 雪忆微服务交流群
