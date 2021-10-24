@@ -7,17 +7,14 @@ package com.xueyi.common.core.constant;
  */
 public class SecurityConstants {
 
-    /** 令牌自定义标识 */
-    public static final String TOKEN_AUTHENTICATION = "Authorization";
-
-    /** 令牌前缀 */
-    public static final String TOKEN_PREFIX = "Bearer ";
-
     /** 企业Id字段 */
     public static final String DETAILS_ENTERPRISE_ID = "enterpriseId";
 
-    /** 企业名称字段 */
+    /** 企业账号字段 */
     public static final String DETAILS_ENTERPRISE_NAME = "enterpriseName";
+
+    /** 企业类型字段 */
+    public static final String DETAILS_IS_LESSOR = "isLessor";
 
     /** 用户Id字段 */
     public static final String DETAILS_USER_ID = "userId";
@@ -28,9 +25,6 @@ public class SecurityConstants {
     /** 用户类型字段 */
     public static final String DETAILS_TYPE = "userType";
 
-    /** 用户类型字段 */
-    public static final String DETAILS_IS_LESSOR = "isLessor";
-
     /** 授权信息字段 */
     public static final String AUTHORIZATION_HEADER = "authorization";
 
@@ -39,4 +33,10 @@ public class SecurityConstants {
 
     /** 内部请求 */
     public static final String INNER = "inner";
+
+    /** 用户标识 */
+    public static final String USER_KEY = "user_key";
+
+    /** 登录用户 */
+    public static final String LOGIN_USER = "login_user";
 }

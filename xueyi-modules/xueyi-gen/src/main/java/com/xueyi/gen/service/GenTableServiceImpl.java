@@ -27,7 +27,7 @@ import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.GenConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.text.CharsetKit;
-import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.gen.domain.GenTable;
 import com.xueyi.gen.domain.GenTableColumn;

@@ -2,7 +2,7 @@ package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.Constants;
-import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;

@@ -1,31 +1,24 @@
 package com.xueyi.system.organize.controller;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.common.core.utils.SecurityUtils;
-import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.service.TokenService;
-import com.xueyi.system.api.feign.RemoteFileService;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.material.SysFile;
 import com.xueyi.system.api.domain.organize.SysUser;
+import com.xueyi.system.api.feign.RemoteFileService;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.organize.service.ISysUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 /**
  * 个人信息 业务处理
@@ -50,7 +43,7 @@ public class SysProfileController extends BaseController {
      */
     @GetMapping
     public AjaxResult profile() {
-        LoginUser loginUser = tokenService.getLoginUser();
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         return AjaxResult.success(loginUser.getSysUser());
     }
 
@@ -67,7 +60,7 @@ public class SysProfileController extends BaseController {
                 && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
-        LoginUser loginUser = tokenService.getLoginUser();
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         SysUser sysUser = loginUser.getSysUser();
         user.setUserId(sysUser.getUserId());
         user.setPassword(null);
@@ -104,7 +97,7 @@ public class SysProfileController extends BaseController {
         upUser.setPassword(SecurityUtils.encryptPassword(newPassword));
         if (userService.resetUserPwd(upUser) > 0) {
             // 更新缓存用户密码
-            LoginUser loginUser = tokenService.getLoginUser();
+            LoginUser loginUser = SecurityUtils.getLoginUser();
             loginUser.getSysUser().setPassword(SecurityUtils.encryptPassword(newPassword));
             tokenService.setLoginUser(loginUser);
             return AjaxResult.success();
@@ -119,7 +112,7 @@ public class SysProfileController extends BaseController {
     @PostMapping("/avatar")
     public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
-            LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
+            LoginUser loginUser = SecurityUtils.getLoginUser();
             R<SysFile> fileResult = remoteFileService.upload(file);
             if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
                 return AjaxResult.error("文件服务异常，请联系管理员");

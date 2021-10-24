@@ -70,9 +70,6 @@ public class Constants {
     /** 验证码有效期（分钟） */
     public static final long CAPTCHA_EXPIRATION = 2;
 
-    /** 令牌有效期（分钟） */
-    public final static long TOKEN_EXPIRE = 720;
-
     /** 资源映射路径 前缀 */
     public static final String RESOURCE_PREFIX = "/profile";
 

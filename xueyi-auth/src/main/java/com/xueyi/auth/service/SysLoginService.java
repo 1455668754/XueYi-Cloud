@@ -12,7 +12,7 @@ import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.enums.UserStatus;
 import com.xueyi.common.core.exception.ServiceException;
-import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.ip.IpUtils;

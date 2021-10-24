@@ -1,19 +1,21 @@
 package com.xueyi.auth.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 import com.xueyi.auth.form.LoginBody;
 import com.xueyi.auth.form.RegisterBody;
 import com.xueyi.auth.service.SysLoginService;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.security.auth.AuthUtil;
 import com.xueyi.common.security.service.TokenService;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.model.LoginUser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * token 控制
@@ -38,10 +40,13 @@ public class TokenController {
 
     @DeleteMapping("logout")
     public R<?> logout(HttpServletRequest request) {
-        LoginUser loginUser = tokenService.getLoginUser(request);
-        if (StringUtils.isNotNull(loginUser)) {
+        String token = SecurityUtils.getToken(request);
+
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        System.out.println(loginUser);
+        if (StringUtils.isNotEmpty(token)){
             // 删除用户缓存记录
-            tokenService.delLoginUser(loginUser.getToken());
+            AuthUtil.logoutByToken(token);
             // 记录用户退出日志
             sysLoginService.logout(loginUser.getMainSource(), loginUser.getEnterpriseId(),loginUser.getEnterpriseName(),loginUser.getUserId(),loginUser.getUserName());
         }

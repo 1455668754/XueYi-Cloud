@@ -15,7 +15,13 @@
     </description>
 
     <dependencies>
-    
+
+        <!-- Spring Web -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
         <!-- XueYi Api System -->
         <dependency>
             <groupId>com.xueyi</groupId>

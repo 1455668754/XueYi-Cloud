@@ -1,8 +1,12 @@
-package com.xueyi.common.core.utils;
+package com.xueyi.common.security.utils;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.text.Convert;
+import com.xueyi.common.core.constant.TokenConstants;
+import com.xueyi.common.core.context.SecurityContextHolder;
+import com.xueyi.common.core.utils.ServletUtils;
+import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.system.api.model.LoginUser;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,45 +22,56 @@ public class SecurityUtils {
      * 获取企业Id
      */
     public static Long getEnterpriseId() {
-        return Convert.toLong(ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_ENTERPRISE_ID));
+        return SecurityContextHolder.getEnterpriseId();
     }
 
     /**
      * 获取企业名称
      */
     public static String getEnterpriseName() {
-        return ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_ENTERPRISE_NAME);
-    }
-
-    /**
-     * 获取用户Id
-     */
-    public static Long getUserId() {
-        return Convert.toLong(ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USER_ID));
-    }
-
-    /**
-     * 获取用户
-     */
-    public static String getUserName() {
-        String userName = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USERNAME);
-        return ServletUtils.urlDecode(userName);
-    }
-
-    /**
-     * 获取用户权限标识
-     */
-    public static String getUserType() {
-        String userType = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_TYPE);
-        return ServletUtils.urlDecode(userType);
+        return SecurityContextHolder.getEnterpriseName();
     }
 
     /**
      * 获取租户权限标识
      */
     public static String getIsLessor() {
-        String lessorType = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_IS_LESSOR);
-        return ServletUtils.urlDecode(lessorType);
+        return SecurityContextHolder.getIsLessor();
+    }
+
+    /**
+     * 获取用户Id
+     */
+    public static Long getUserId() {
+        return SecurityContextHolder.getUserId();
+    }
+
+    /**
+     * 获取用户
+     */
+    public static String getUserName() {
+        return SecurityContextHolder.getUserName();
+    }
+
+    /**
+     * 获取用户权限标识
+     */
+    public static String getUserType() {
+        return SecurityContextHolder.getUserType();
+    }
+
+    /**
+     * 获取用户key
+     */
+    public static String getUserKey() {
+        return SecurityContextHolder.getUserKey();
+    }
+
+    /**
+     * 获取登录用户信息
+     */
+    public static LoginUser getLoginUser() {
+        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUser.class);
     }
 
     /**
@@ -71,7 +86,7 @@ public class SecurityUtils {
      */
     public static String getToken(HttpServletRequest request) {
         // 从header获取token标识
-        String token = request.getHeader(SecurityConstants.TOKEN_AUTHENTICATION);
+        String token = request.getHeader(TokenConstants.AUTHENTICATION);
         return replaceTokenPrefix(token);
     }
 
@@ -80,8 +95,8 @@ public class SecurityUtils {
      */
     public static String replaceTokenPrefix(String token) {
         // 如果前端设置了令牌前缀，则裁剪掉前缀
-        if (StringUtils.isNotEmpty(token) && token.startsWith(SecurityConstants.TOKEN_PREFIX)) {
-            token = token.replaceFirst(SecurityConstants.TOKEN_PREFIX, "");
+        if (StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX)) {
+            token = token.replaceFirst(TokenConstants.PREFIX, "");
         }
         return token;
     }

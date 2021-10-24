@@ -2,7 +2,7 @@ package com.xueyi.system.organize.controller;
 
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.common.core.utils.SecurityUtils;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;

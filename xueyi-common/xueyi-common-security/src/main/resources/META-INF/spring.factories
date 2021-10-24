@@ -1,4 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.xueyi.common.security.config.WebMvcConfig,\
   com.xueyi.common.security.service.TokenService,\
   com.xueyi.common.security.aspect.PreAuthorizeAspect,\
   com.xueyi.common.security.aspect.InnerAuthAspect,\

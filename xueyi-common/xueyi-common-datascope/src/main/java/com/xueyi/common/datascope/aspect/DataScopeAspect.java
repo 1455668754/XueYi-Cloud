@@ -4,19 +4,18 @@ import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.system.api.domain.organize.SysEnterprise;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.domain.BaseEntity;
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.common.security.service.TokenService;
 import com.xueyi.system.api.domain.authority.SysRole;
+import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.organize.SysUser;
 import com.xueyi.system.api.model.LoginUser;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
 
 /**
  * 数据过滤处理
@@ -33,9 +32,6 @@ public class DataScopeAspect {
     /** 数据权限过滤关键字 | 更新 */
     public static final String UPDATE_SCOPE = "updateScope";
 
-    @Autowired
-    private TokenService tokenService;
-
     @Before("@annotation(controllerDataScope)")
     public void doBefore(JoinPoint point, DataScope controllerDataScope) throws Throwable {
         clearDataScope(point);
@@ -44,7 +40,7 @@ public class DataScopeAspect {
 
     protected void handleDataScope(final JoinPoint joinPoint, DataScope controllerDataScope) {
         // 获取当前的用户
-        LoginUser loginUser = tokenService.getLoginUser();
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         if (StringUtils.isNotNull(loginUser)) {
             if (StringUtils.isNotNull(loginUser.getSysUser())) {
                 dataScopeFilter(joinPoint, loginUser, controllerDataScope);
