@@ -44,7 +44,6 @@ public class SysLoginServiceImpl implements ISysLoginService {
      */
     @Override
     @DS("#user.sourceName")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public SysUser checkLoginByEnterpriseIdANDUserName(SysUser user) {
         return userMapper.checkLoginByEnterpriseIdANDUserName(user);
     }
