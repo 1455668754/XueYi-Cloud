@@ -84,7 +84,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 #set($treeStep=0)
     <sql id="treeVo">
-        select#foreach($column in $columns)#set($conceal = true)#foreach($item in $XMLExcisionEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#if($conceal)#if($column.columnName == 'parent_id' || $column.columnName == 'name')#set($treeStep = $treeStep + 1)#end#if($treeStep == 0)e.$column.columnName#set($treeStep = 1)#else, e.$column.columnName#end#end#end#if($treeStep == 2) pe.name as parent_name#end
+        select#foreach($column in $columns)#set($conceal = true)#foreach($item in $XMLExcisionEntity)#if($column.javaField != $pkColumn.javaField && $column.javaField == $item)#set($conceal = false)#break#end#end#if($conceal)#if($column.columnName == 'parent_id' || $column.columnName == 'name')#set($treeStep = $treeStep + 1)#end#if($treeStep == 0) e.$column.columnName#set($treeStep = 1)#else, e.$column.columnName#end#end#end#if($treeStep == 2) pe.name as parent_name#end
 
         from ${tableName} e
         left join ${tableName} pe on pe.$pkColumn.columnName = e.$pkColumn.columnName
