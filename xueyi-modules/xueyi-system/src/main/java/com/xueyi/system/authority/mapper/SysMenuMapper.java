@@ -49,7 +49,6 @@ public interface SysMenuMapper {
      * @param menu 菜单信息
      * @return 结果
      */
-    @DataScope(uedAlias = "empty")
     public int mainUpdateMenu(SysMenu menu);
 
     /**

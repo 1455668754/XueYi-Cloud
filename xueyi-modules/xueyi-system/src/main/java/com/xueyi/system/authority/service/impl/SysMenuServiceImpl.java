@@ -124,6 +124,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
+    @DataScope(uedAlias = "empty")
     public int mainUpdateMenu(SysMenu menu) {
         if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             menu.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
