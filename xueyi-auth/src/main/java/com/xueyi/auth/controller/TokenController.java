@@ -4,7 +4,9 @@ import com.xueyi.auth.form.LoginBody;
 import com.xueyi.auth.form.RegisterBody;
 import com.xueyi.auth.service.SysLoginService;
 import com.xueyi.common.core.domain.R;
+import com.xueyi.common.core.utils.JwtUtils;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.common.security.auth.AuthUtil;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.common.security.utils.SecurityUtils;
@@ -41,14 +43,11 @@ public class TokenController {
     @DeleteMapping("logout")
     public R<?> logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
-
-        LoginUser loginUser = SecurityUtils.getLoginUser();
-        System.out.println(loginUser);
         if (StringUtils.isNotEmpty(token)){
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
             // 记录用户退出日志
-            sysLoginService.logout(loginUser.getMainSource(), loginUser.getEnterpriseId(),loginUser.getEnterpriseName(),loginUser.getUserId(),loginUser.getUserName());
+            sysLoginService.logout(DataSourceUtils.getMainSourceNameByEnterpriseId(Long.valueOf(JwtUtils.getEnterpriseId(token))), Long.valueOf(JwtUtils.getEnterpriseId(token)),JwtUtils.getEnterpriseName(token),Long.valueOf(JwtUtils.getUserId(token)),JwtUtils.getUserName(token));
         }
         return R.ok();
     }
