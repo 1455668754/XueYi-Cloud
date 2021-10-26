@@ -44,11 +44,11 @@ public class TokenController {
     @DeleteMapping("logout")
     public R<?> logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
-        if (StringUtils.isNotEmpty(token)){
+        if (StringUtils.isNotEmpty(token)) {
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
             // 记录用户退出日志
-            sysLoginService.logout(DataSourceUtils.getMainSourceNameByEnterpriseId(Long.valueOf(JwtUtils.getEnterpriseId(token))), Long.valueOf(JwtUtils.getEnterpriseId(token)),JwtUtils.getEnterpriseName(token),Long.valueOf(JwtUtils.getUserId(token)),JwtUtils.getUserName(token));
+            sysLoginService.logout(DataSourceUtils.getMainSourceNameByEnterpriseId(Long.valueOf(JwtUtils.getEnterpriseId(token))), Long.valueOf(JwtUtils.getEnterpriseId(token)), JwtUtils.getEnterpriseName(token), Long.valueOf(JwtUtils.getUserId(token)), JwtUtils.getUserName(token));
         }
         return R.ok();
     }
@@ -65,8 +65,7 @@ public class TokenController {
     }
 
     @PostMapping("register")
-    public R<?> register(@RequestBody RegisterBody registerBody)
-    {
+    public R<?> register(@RequestBody RegisterBody registerBody) {
         // 用户注册
         sysLoginService.register(registerBody);
         return R.ok();
