@@ -266,7 +266,7 @@
                 show-checkbox
                 ref="systemMenu"
                 node-key="id"
-                empty-text="加载中，请稍后"
+                empty-text="加载中，请稍候"
                 :props="defaultProps"
               />
             </el-form-item>
@@ -309,7 +309,7 @@
             default-expand-all
             ref="deptPost"
             node-key="id"
-            empty-text="加载中，请稍后"
+            empty-text="加载中，请稍候"
             :props="defaultProps"
           />
         </el-form-item>
