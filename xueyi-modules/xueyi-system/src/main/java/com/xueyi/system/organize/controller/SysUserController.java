@@ -1,5 +1,6 @@
 package com.xueyi.system.organize.controller;
 
+import cn.hutool.json.JSONObject;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.security.utils.SecurityUtils;
@@ -113,13 +114,11 @@ public class SysUserController extends BaseController {
         Set<String> roles = loginService.getRolePermission(loginUser.getRoleIds(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
         // 权限集合
         Set<String> permissions = loginService.getMenuPermission(loginUser.getRoleIds(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
-        AjaxResult ajax = AjaxResult.success();
-        SysUser user = new SysUser();
-        user.setUserId(loginUser.getSysUser().getUserId());
-        ajax.put("user", userService.selectUserById(user));
-        ajax.put("roles", roles);
-        ajax.put("permissions", permissions);
-        return ajax;
+        JSONObject json = new JSONObject();
+        json.put("user", userService.selectUserById(new SysUser(loginUser.getSysUser().getUserId())));
+        json.put("roles", roles);
+        json.put("permissions", permissions);
+        return AjaxResult.success(json);
     }
 
     /**
