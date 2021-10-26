@@ -1,6 +1,7 @@
 package com.xueyi.common.log.aspect;
 
 import com.alibaba.fastjson.JSON;
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
@@ -84,18 +85,18 @@ public class LogAspect {
                 if (StringUtils.isNotNull(userId)) {
                     operLog.setUserId(userId);
                 } else {
-                    operLog.setUserId(0L);
+                    operLog.setUserId(AuthorityConstants.COMMON_USER);
                 }
 
                 if (StringUtils.isNotNull(enterpriseId)) {
                     operLog.setEnterpriseId(enterpriseId);
                 } else {
-                    operLog.setEnterpriseId(0L);
+                    operLog.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
                 }
             } else {
                 operLog.setSourceName(TenantConstants.REGISTER_TENANT_STRATEGY_SOURCE);
-                operLog.setUserId(0L);
-                operLog.setEnterpriseId(0L);
+                operLog.setUserId(AuthorityConstants.COMMON_USER);
+                operLog.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
             }
             if (e != null) {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
@@ -139,8 +140,7 @@ public class LogAspect {
             setRequestValue(joinPoint, operLog);
         }
         // 是否需要保存response，参数和值
-        if (log.isSaveResponseData() && StringUtils.isNotNull(jsonResult))
-        {
+        if (log.isSaveResponseData() && StringUtils.isNotNull(jsonResult)) {
             operLog.setJsonResult(StringUtils.substring(JSON.toJSONString(jsonResult), 0, 2000));
         }
     }

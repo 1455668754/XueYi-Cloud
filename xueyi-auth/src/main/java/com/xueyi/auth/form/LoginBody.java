@@ -6,6 +6,7 @@ package com.xueyi.auth.form;
  * @author xueyi
  */
 public class LoginBody {
+
     /** 企业账户 */
     private String enterpriseName;
 

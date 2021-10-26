@@ -3,7 +3,7 @@ package com.xueyi.common.core.constant;
 /**
  * 菜单常量信息
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class MenuConstants {
 

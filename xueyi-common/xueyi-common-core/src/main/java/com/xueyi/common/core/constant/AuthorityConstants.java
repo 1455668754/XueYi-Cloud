@@ -28,6 +28,9 @@ public class AuthorityConstants {
     /** 公共企业Id */
     public static final Long COMMON_ENTERPRISE = 0L;
 
+    /** 公共企业Id */
+    public static final Long COMMON_USER = 0L;
+
     /** 角色类型 - 常规 */
     public static final String NORMAL_TYPE = "0";
 
