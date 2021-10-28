@@ -1,9 +1,13 @@
 package com.xueyi.common.core.web.controller;
 
 import java.beans.PropertyEditorSupport;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import com.xueyi.common.core.config.XueYiConfig;
+import com.xueyi.common.core.exception.DemoModeException;
+import com.xueyi.common.core.utils.ServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;
@@ -18,6 +22,10 @@ import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.PageDomain;
 import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.core.web.page.TableSupport;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * web层通用数据处理
@@ -27,6 +35,23 @@ import com.xueyi.common.core.web.page.TableSupport;
 public class BaseController {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @ModelAttribute
+    public void init(HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {
+        if (!XueYiConfig.isDemoEnabled()) {
+            return;
+        }
+        String url = ServletUtils.getRequest().getRequestURI();
+        // 需要放开的url
+        if (StringUtils.isNotEmpty(url) && (url.contains("/demo") || url.contains("/tool/gen"))) {
+            return;
+        }
+        // 增删改 请求
+        if ("DELETE".equals(httpServletRequest.getMethod()) || "POST".equals(httpServletRequest.getMethod())
+                || "PUT".equals(httpServletRequest.getMethod())) {
+            throw new DemoModeException();
+        }
+    }
 
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
