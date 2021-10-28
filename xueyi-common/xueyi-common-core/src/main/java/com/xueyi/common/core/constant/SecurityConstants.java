@@ -8,22 +8,22 @@ package com.xueyi.common.core.constant;
 public class SecurityConstants {
 
     /** 企业Id字段 */
-    public static final String DETAILS_ENTERPRISE_ID = "enterpriseId";
+    public static final String DETAILS_ENTERPRISE_ID = "enterprise_id";
 
     /** 企业账号字段 */
-    public static final String DETAILS_ENTERPRISE_NAME = "enterpriseName";
+    public static final String DETAILS_ENTERPRISE_NAME = "enterprise_name";
 
     /** 企业类型字段 */
-    public static final String DETAILS_IS_LESSOR = "isLessor";
+    public static final String DETAILS_IS_LESSOR = "is_lessor";
 
     /** 用户Id字段 */
-    public static final String DETAILS_USER_ID = "userId";
+    public static final String DETAILS_USER_ID = "user_id";
 
     /** 用户账号字段 */
-    public static final String DETAILS_USERNAME = "userName";
+    public static final String DETAILS_USERNAME = "user_name";
 
     /** 用户类型字段 */
-    public static final String DETAILS_TYPE = "userType";
+    public static final String DETAILS_TYPE = "user_type";
 
     /** 授权信息字段 */
     public static final String AUTHORIZATION_HEADER = "authorization";
