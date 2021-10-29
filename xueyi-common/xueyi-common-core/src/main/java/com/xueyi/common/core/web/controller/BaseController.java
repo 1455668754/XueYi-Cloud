@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
-import com.xueyi.common.core.config.XueYiConfig;
+import com.xueyi.common.core.config.DemoProperties;
 import com.xueyi.common.core.exception.DemoModeException;
 import com.xueyi.common.core.utils.ServletUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import com.github.pagehelper.PageHelper;
@@ -30,15 +31,19 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * web层通用数据处理
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class BaseController {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /* ---演示模式控制 生产环境可移除 且可同步移除DemoProperties文件 start--- */
+    @Autowired
+    private DemoProperties demoProperties;
+
     @ModelAttribute
     public void init(HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {
-        if (!XueYiConfig.isDemoEnabled()) {
+        if (!demoProperties.isEnabled()) {
             return;
         }
         String url = ServletUtils.getRequest().getRequestURI();
@@ -52,6 +57,7 @@ public class BaseController {
             throw new DemoModeException();
         }
     }
+    /* ---演示模式控制 生产环境可移除 end--- */
 
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
