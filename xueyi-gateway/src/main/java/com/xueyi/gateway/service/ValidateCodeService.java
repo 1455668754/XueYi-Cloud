@@ -1,16 +1,17 @@
 package com.xueyi.gateway.service;
 
 import java.io.IOException;
+
 import com.xueyi.common.core.exception.CaptchaException;
 import com.xueyi.common.core.web.domain.AjaxResult;
 
 /**
  * 验证码处理
- * 
+ *
  * @author ruoyi
  */
-public interface ValidateCodeService
-{
+public interface ValidateCodeService {
+
     /**
      * 生成验证码
      */

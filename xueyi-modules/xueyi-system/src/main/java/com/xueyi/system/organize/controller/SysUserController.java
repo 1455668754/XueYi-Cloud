@@ -114,11 +114,11 @@ public class SysUserController extends BaseController {
         Set<String> roles = loginService.getRolePermission(loginUser.getRoleIds(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
         // 权限集合
         Set<String> permissions = loginService.getMenuPermission(loginUser.getRoleIds(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
-        JSONObject json = new JSONObject();
-        json.put("user", userService.selectUserById(new SysUser(loginUser.getSysUser().getUserId())));
-        json.put("roles", roles);
-        json.put("permissions", permissions);
-        return AjaxResult.success(json);
+        JSONObject ajaxJson = new JSONObject();
+        ajaxJson.put("user", userService.selectUserById(new SysUser(loginUser.getSysUser().getUserId())));
+        ajaxJson.put("roles", roles);
+        ajaxJson.put("permissions", permissions);
+        return AjaxResult.success(ajaxJson);
     }
 
     /**
