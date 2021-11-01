@@ -197,12 +197,18 @@
     </div>
 
     <!-- 添加或修改租户信息对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body v-dialogDrag v-dialogDragHeight>
+    <el-dialog :title="title" :visible.sync="open" width="700px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="租户账号" prop="tenantName">
               <el-input v-model="form.tenantName" placeholder="请输入租户账号"/>
+              <span slot="label">
+                <el-tooltip content="新租户的企业账号" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                租户账号
+              </span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -214,6 +220,12 @@
                   :label="item.name"
                   :value="item.strategyId"/>
               </el-select>
+              <span slot="label">
+                <el-tooltip content="新租户的使用的数据源策略，决定租户的数据存储库" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                策略名称
+              </span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -221,11 +233,23 @@
           <el-col :span="12">
             <el-form-item label="租户名称" prop="tenantNick">
               <el-input v-model="form.tenantNick" placeholder="请输入租户名称"/>
+              <span slot="label">
+                <el-tooltip content="新租户的企业名称" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                租户名称
+              </span>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="系统名称" prop="tenantSystemName">
               <el-input v-model="form.tenantSystemName" placeholder="请输入系统名称"/>
+              <span slot="label">
+                <el-tooltip content="新租户的系统名称" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                系统名称
+              </span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -246,6 +270,12 @@
             <el-form-item label="可修改次数" prop="tenantNameFrequency">
               <el-input-number v-model="form.tenantNameFrequency" controls-position="right" :min="0" :precision="0"
                                :max="100" size="small"/>
+              <span slot="label">
+                <el-tooltip content="新租户的企业账号可修改次数" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                可修改次数
+              </span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -256,6 +286,69 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <div v-if="form.tenantId === null">
+        <el-divider content-position="center">主组织信息</el-divider>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="部门名称" prop="remark">
+              <el-input v-model="deptForm.deptName" placeholder="请输入部门名称" maxlength="20"/>
+              <span slot="label">
+                <el-tooltip content="新租户的初始部门名称，该部门为顶级部门且与超级管理员绑定，不可删除" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                部门名称
+              </span>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="岗位名称" prop="remark">
+              <el-input v-model="postForm.postName" placeholder="请输入岗位名称" maxlength="20"/>
+              <span slot="label">
+                <el-tooltip content="新租户的初始岗位名称，该岗位归属于顶级部门且与超级管理员绑定，不可删除" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                岗位名称
+              </span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-divider content-position="center">管理员信息</el-divider>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="管理员账号" prop="remark">
+              <el-input v-model="userForm.userName" placeholder="请输入管理员账号" maxlength="20"/>
+              <span slot="label">
+                <el-tooltip content="新租户的初始超级管理员账号，默认为‘admin’" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                管理员账号
+              </span>
+            </el-form-item>
+          </el-col>
+            <el-col :span="12">
+            <el-form-item label="管理员昵称" prop="remark">
+              <el-input v-model="userForm.nickName" placeholder="请输入管理员昵称" maxlength="20"/>
+              <span slot="label">
+                <el-tooltip content="新租户的初始超级管理员昵称" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                管理员昵称
+              </span>
+            </el-form-item>
+          </el-col>
+            <el-col :span="24">
+            <el-form-item label="管理员密码" prop="remark">
+              <el-input v-model="userForm.password" placeholder="请输入管理员密码" maxlength="20" show-password/>
+              <span slot="label">
+                <el-tooltip content="新租户的初始超级管理员密码，默认为‘admin123’" placement="top">
+                <i class="el-icon-question"></i>
+                </el-tooltip>
+                管理员密码
+              </span>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
@@ -373,6 +466,9 @@ export default {
       },
       // 表单参数
       form: {},
+      deptForm: {},
+      postForm: {},
+      userForm: {},
       systemMenuForm: {},
       defaultProps: {
         children: "children",
@@ -434,6 +530,17 @@ export default {
         values: [],
         isChange: SYSTEM_DEFAULT.FALSE,
         hasMain: false
+      }
+      this.deptForm = {
+        deptName: '雪忆科技'
+      }
+      this.postForm = {
+        postName: '董事长'
+      }
+      this.userForm = {
+        userName: 'admin',
+        nickName: '超级管理员',
+        password: 'admin123'
       }
       this.systemMenuForm = {
         enterpriseId: null,
@@ -585,6 +692,9 @@ export default {
               })
             }
           } else {
+            this.form.params.dept = this.deptForm
+            this.form.params.post = this.postForm
+            this.form.params.user = this.userForm
             addTenant(this.form).then(response => {
               this.$modal.msgSuccess('新增成功')
               this.open = false
