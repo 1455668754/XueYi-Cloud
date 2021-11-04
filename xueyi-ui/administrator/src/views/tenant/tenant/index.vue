@@ -692,9 +692,12 @@ export default {
               })
             }
           } else {
-            this.form.params.dept = this.deptForm
-            this.form.params.post = this.postForm
-            this.form.params.user = this.userForm
+            let params = {
+              dept: this.deptForm,
+              post: this.postForm,
+              user: this.userForm,
+            }
+            this.form.params=params,
             addTenant(this.form).then(response => {
               this.$modal.msgSuccess('新增成功')
               this.open = false
