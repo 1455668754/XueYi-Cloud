@@ -1,40 +1,80 @@
-## 平台简介
+<div align="center"><h3 align="center">XueYi-Cloud 多租户Saas快速开发平台</h3></div>
+<p align="center">     
+    <p align="center">
+        <a>
+            <img src="https://img.shields.io/badge/XueYi%20Cloud-v4.1.3-brightgreen" alt="xueYi-cloud">
+        </a>
+        <a>
+            <img src="https://img.shields.io/badge/Spring%20Cloud-2020-blue" alt="spring-cloud">
+        </a>
+        <a>
+            <img src="https://img.shields.io/badge/element--ui-2.15-brightgreen" alt="element-ui">
+        </a>
+    </p>
+</p>
 
-主要做了如下几块：
-* 多租户Saas：物理隔离&&逻辑隔离 | 共享多租户&&隔离多租户  
-* 动态源策略：租户-策略-数据源 | 动态源增减与租户策略配置  
-* 素材管理模块：素材集中管理 | 文件&&图片统一管理，配置  
-* 定向菜单屏蔽：租管可屏蔽指定租户指定模块或菜单  
-* RBAC优化：角色-模块-菜单 | 优化角色控制逻辑  
-* 架构管理优化：部门-岗位-用户 | 更完善的组织架构操作与管理逻辑  
-* 微聚合前端：前端素材&&组件公用 | 降低系统重复冗余  
-* 分布式Id：Snowflake全局唯一标识 | 保证全局唯一性&&信息安全  
+## 简介
+基于SpringBoot | Mybatis | RabbitMQ | Vue | Element UI的多租户SaaS开发框架，已支持消息队列、数据权限、动态源、多租户、数据物理&逻辑双隔离等，为企业级多租户Saas及集团化应用提供快速开发解决方案。
 
-基于本系统还有许多内容是希望加入进来的，但限于时间问题，后续慢慢更新进来，如遇bug，请提Issues。
+## 特性
+- **多租户Saas**： 物理隔离&&逻辑隔离 --- 共享多租户&&隔离多租户
+- **动态多源策略**：租户-策略-数据源 --- 动态源增减与租户策略配置
+- **素材管理模块**：素材集中管理 --- 文件&&图片统一管理，配置
+- **权限控制优化**：角色-模块-菜单 --- 优化角色控制逻辑
+- **租户菜单层级**：租管可动态指定租户可用模块或菜单
+- **组织管理优化**：部门-岗位-用户 --- 更完善的组织架构操作与管理逻辑
+- **微聚合多前端**：前端素材&&组件公用 --- 降低系统重复冗余
+- **分布式主键**：  Snowflake全局唯一标识 --- 保证全局唯一性&&信息安全
 
-走过路过，点个star :kissing_heart:
+star 别忘点上 :kissing_heart:
 
-## 在线体验
-- 普通账户
-- xueYi / admin / admin123 
+## 交流
+- 请移步右上角  **一键三连** :kissing_heart:
+- QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://jq.qq.com/?_wv=1027&k=zw11JJhj)
+- 若发现bug，群内滴或Issues，提供复现路径。
 
+## 计划
+从v1.0.1版本更新至今的v4.1.3版本，大部分构思内容已经实现且趋近于稳定。    
+非常感谢开源过程中结识的各位小伙伴一起发现并解决问题。    
+对于下一阶段计划如下：
+- **计划1：前端美化**
 
-- 超管账户（可增减租户）           
-- administrator / admin / admin123
+    > 新增一版基于 vue3 | Ant Vue | vite2 | TypeScript 的前端UI  
+      放张图
+  <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview2.png">
+- **计划2：文档/视频完善**
 
-演示地址：https://demo.xueyitt.cn         
-文档地址：https://doc.xueyitt.cn     
+    > 制作部分内容视频，完善开发支持
+- **计划3：mall版本开源支持**
 
-## 雪忆微服务交流群
+    > mall版本开源（应部分小伙伴需求）
 
-QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://jq.qq.com/?_wv=1027&k=zw11JJhj) 点击按钮入群。
+估计全部整完2021就过完了
 
-* 采用前后端分离的模式，微服务版本前端。       
-* 后端采用Spring Boot、Spring Cloud & Alibaba。           
-* 注册中心、配置中心选型Nacos，权限认证使用Redis。         
-* 流量控制框架选型Sentinel，分布式事务选型Seata。            
+## 预览
+- **普通账户**
+    > 企业账号：xueYi   
+    员工账号：admin   
+    密码：admin123
 
-## 系统结构
+- **租管账户**
+  > 企业账号：administrator   
+  员工账号：admin   
+  密码：admin123
+
+- **演示**
+    >https://demo.xueyitt.cn         
+- **文档**
+    >https://doc.xueyitt.cn     
+- **视频**
+    >https://space.bilibili.com/479745149
+
+## 结构
+
+* 采用前后端分离的模式，微服务版本前端。
+* 后端采用Spring Boot、Spring Cloud & Alibaba。
+* 注册中心、配置中心选型Nacos，权限认证使用Redis。
+* 流量控制框架选型Sentinel，分布式事务选型Seata。
 
 ~~~
 com.xueyi     
@@ -75,12 +115,12 @@ com.xueyi
 └── pom.xml                // 公共依赖
 ~~~
 
-## 架构图
+## 架构
 
-<img src="https://oscimg.oschina.net/oscnet/up-82e9722ecb846786405a904bafcf19f73f3.png"/>
+<img src="https://images.gitee.com/uploads/images/2021/1108/172436_9deff9ff_7382127.png"/>
 
 
-## 演示图
+## 演示
 
 <table>
     <tr>
@@ -108,3 +148,24 @@ com.xueyi
         <td><img src="https://images.gitee.com/uploads/images/2021/0501/140619_628675c2_7382127.png"/></td>
     </tr>
 </table>
+
+## 开源
+**源于开源，回归开源**
+* 感谢若依开源的[RuoYi-Cloud](https://gitee.com/y_project/RuoYi-Cloud)
+* 感谢小锅盖开源的[dynamic](https://gitee.com/baomidou/dynamic-datasource-spring-boot-starter)
+
+## 商用
+- **不限制商用，遵守开源协议即可**
+- **商业用途要求如下：**
+    > 1.点赞三连   
+      2.提供公司名及Logo（允许作者后续在站内进行展示）（QQ群内私发我即可）   
+      3.发现bug或者可优化内容时进行issues或PR    
+      4.社区生态共建（拉拉星星 :sleeping: ）    
+      5.禁恶意针对本项目
+
+## 征集
+1. 征集一个项目Logo（ 没有艺术细胞的菜鸡一枚 :astonished: ） 
+2. 征集一份系统流程图（登录至使用 数据来源 缓存 or 库 的数据流）
+3. 征集bug（越多越好）
+4. 征集使用中遇到的疑难杂症及其解决方案，提交至issues，给后来小伙伴踩坑
+5. 推一推，点点star
