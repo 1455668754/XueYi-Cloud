@@ -1,4 +1,4 @@
-import Vue from '·../../vue'
+import Vue from '~../../vue'
 import { mergeRecursive } from "../ruoyi";
 import DictMeta from './DictMeta'
 import DictData from './DictData'

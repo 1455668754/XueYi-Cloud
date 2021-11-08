@@ -127,7 +127,7 @@
 
 <script>
 import {getGenTable, updateGenTable} from "@/api/tool/gen"
-import {optionselect as getDictOptionselect} from "@/api/system/dict/type"
+import {optionSelect as getDictOptionSelect} from "@/api/system/dict/type"
 import basicInfoForm from "./basicInfoForm"
 import genInfoForm from "./genInfoForm"
 import Sortable from 'sortablejs'
@@ -167,7 +167,7 @@ export default {
         this.tables = res.data.tables
       })
       /** 查询字典下拉列表 */
-      getDictOptionselect().then(response => {
+      getDictOptionSelect().then(response => {
         this.dictOptions = response.data
       })
       /** 查询模块-菜单下拉列表 */
