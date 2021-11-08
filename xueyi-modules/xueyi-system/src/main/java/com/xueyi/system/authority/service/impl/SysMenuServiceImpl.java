@@ -64,7 +64,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
             rangeSet = authorityService.selectMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true, true);
         }
         menuSet.retainAll(rangeSet);
-        return getChildPerms(SortUtils.sortSetToList(menuSet), MenuConstants.MENU_TOP_NODE);
+        return TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuSet),"menuId", "parentId", "children", MenuConstants.MENU_TOP_NODE, true);
     }
 
     /**
@@ -322,61 +322,5 @@ public class SysMenuServiceImpl implements ISysMenuService {
      */
     public boolean isParentView(SysMenu menu) {
         return menu.getParentId().intValue() != 0 && MenuConstants.TYPE_DIR.equals(menu.getMenuType());
-    }
-
-    /**
-     * 根据父节点的Id获取所有子节点
-     *
-     * @param list     分类表
-     * @param parentId 传入的父节点Id
-     * @return String
-     */
-    public List<SysMenu> getChildPerms(List<SysMenu> list, Long parentId) {
-        List<SysMenu> returnList = new ArrayList<>();
-        for (SysMenu t : list) {
-            // 一、根据传入的某个父节点Id,遍历该父节点的所有子节点
-            if (t.getParentId().longValue() == parentId.longValue()) {
-                recursionFn(list, t);
-                returnList.add(t);
-            }
-        }
-        return returnList;
-    }
-
-    /**
-     * 递归列表
-     *
-     * @param list 分类表
-     * @param t    菜单信息
-     */
-    private void recursionFn(List<SysMenu> list, SysMenu t) {
-        // 得到子节点列表
-        List<SysMenu> childList = getChildList(list, t);
-        t.setChildren(childList);
-        for (SysMenu tChild : childList) {
-            if (hasChild(list, tChild)) {
-                recursionFn(list, tChild);
-            }
-        }
-    }
-
-    /**
-     * 得到子节点列表
-     */
-    private List<SysMenu> getChildList(List<SysMenu> list, SysMenu t) {
-        List<SysMenu> tList = new ArrayList<>();
-        for (SysMenu n : list) {
-            if (n.getParentId().longValue() == t.getMenuId().longValue()) {
-                tList.add(n);
-            }
-        }
-        return tList;
-    }
-
-    /**
-     * 判断是否有子节点
-     */
-    private boolean hasChild(List<SysMenu> list, SysMenu t) {
-        return getChildList(list, t).size() > 0;
     }
 }

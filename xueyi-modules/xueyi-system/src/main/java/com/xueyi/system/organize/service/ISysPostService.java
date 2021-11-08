@@ -115,12 +115,4 @@ public interface ISysPostService {
      * @return 下拉树结构列表
      */
     public List<TreeSelect> buildDeptPostTreeSelect();
-
-    /**
-     * 构建前端所需要树结构
-     *
-     * @param deptPostList 部门-岗位数组装列表
-     * @return 树结构列表
-     */
-    public List<deptPostVo> buildDeptPostTree(List<deptPostVo> deptPostList);
 }

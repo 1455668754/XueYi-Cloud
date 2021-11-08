@@ -23,7 +23,7 @@ public class TreeBuildUtils {
      * @param FIdName       父Id字段名称
      * @param childrenName  children字段名称
      * @param topNode       顶级节点
-     * @param killScattered 是否移除无法追溯到顶级节点
+     * @param killScattered 是否移除无法追溯到顶级节点 (true 是 | false 否)
      * @return 树结构列表
      */
     public static <T> List<T> buildSystemMenuTree(List<T> list, String IdName, String FIdName, String childrenName, Long topNode, boolean killScattered) {

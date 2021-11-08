@@ -6,6 +6,7 @@ import com.xueyi.common.core.constant.RoleConstants;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
@@ -26,8 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -104,11 +103,11 @@ public class SysPostServiceImpl implements ISysPostService {
             }
         }
         int row = postMapper.insertPost(post);
-        if(row>0){
+        if (row > 0) {
             SysRole role = new SysRole();
             role.setType(AuthorityConstants.DERIVE_POST_TYPE);
             role.setDeriveId(post.getSnowflakeId());
-            role.setName("岗位衍生:"+post.getSnowflakeId());
+            role.setName("岗位衍生:" + post.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;
@@ -137,7 +136,7 @@ public class SysPostServiceImpl implements ISysPostService {
             }
             SysPost check = new SysPost(post.getPostId());
             SysPost oldPost = postMapper.selectPostById(check);
-            if(StringUtils.isNotNull(info) && !Objects.equals(oldPost.getDeptId(), post.getDeptId())){
+            if (StringUtils.isNotNull(info) && !Objects.equals(oldPost.getDeptId(), post.getDeptId())) {
                 SysUser user = new SysUser();
                 user.setPostId(post.getPostId());
                 user.setDeptId(post.getDeptId());
@@ -162,8 +161,8 @@ public class SysPostServiceImpl implements ISysPostService {
         organizeRole.setPostId(post.getPostId());
         organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
         // 2.是否需要执行新增
-        if(post.getRoleIds().length > 0){
-            organizeRole.getParams().put("roleIds",post.getRoleIds());
+        if (post.getRoleIds().length > 0) {
+            organizeRole.getParams().put("roleIds", post.getRoleIds());
             organizeRoleMapper.batchOrganizeRole(organizeRole);
         }
         return 1;
@@ -226,13 +225,13 @@ public class SysPostServiceImpl implements ISysPostService {
         // 1.批量删除衍生role信息
         SysRole role = new SysRole();
         role.setType(AuthorityConstants.DERIVE_POST_TYPE);
-        role.getParams().put("Ids",post.getParams().get("Ids"));
+        role.getParams().put("Ids", post.getParams().get("Ids"));
         roleMapper.deleteRoleByDeriveIds(role);
         // 2.批量删除岗位-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
         organizeRole.setPostId(RoleConstants.DELETE_PARAM);
         organizeRole.setDerivePostId(RoleConstants.DELETE_PARAM);
-        organizeRole.getParams().put("Ids",post.getParams().get("Ids"));
+        organizeRole.getParams().put("Ids", post.getParams().get("Ids"));
         organizeRoleMapper.deleteOrganizeRoleByOrganizeIds(organizeRole);
         return postMapper.deletePostByIds(post);
     }
@@ -323,70 +322,7 @@ public class SysPostServiceImpl implements ISysPostService {
             deptPost = new deptPostVo(post.getPostId(), post.getDeptId(), "岗位|" + post.getPostName(), post.getStatus(), "1");
             deptPostList.add(deptPost);
         }
-        List<deptPostVo> trees = buildDeptPostTree(deptPostList);
+        List<deptPostVo> trees = TreeBuildUtils.buildSystemMenuTree(deptPostList, "Uid", "FUid", "children", null, false);
         return trees.stream().map(TreeSelect::new).collect(Collectors.toList());
-    }
-
-    /**
-     * 构建前端所需要树结构
-     *
-     * @param deptPostList 部门-岗位数组装列表
-     * @return 树结构列表
-     */
-    @Override
-    public List<deptPostVo> buildDeptPostTree(List<deptPostVo> deptPostList) {
-        List<deptPostVo> returnList = new ArrayList<deptPostVo>();
-        List<Long> tempList = new ArrayList<Long>();
-        for (deptPostVo deptPostVo : deptPostList) {
-            tempList.add(deptPostVo.getUid());
-        }
-        for (Iterator<deptPostVo> iterator = deptPostList.iterator(); iterator.hasNext(); ) {
-            deptPostVo deptPostVo = (deptPostVo) iterator.next();
-            // 如果是顶级节点, 遍历该父节点的所有子节点
-            if (!tempList.contains(deptPostVo.getFUid())) {
-                recursionFn(deptPostList, deptPostVo);
-                returnList.add(deptPostVo);
-            }
-        }
-        if (returnList.isEmpty()) {
-            returnList = deptPostList;
-        }
-        return returnList;
-    }
-
-    /**
-     * 递归列表
-     */
-    private void recursionFn(List<deptPostVo> list, deptPostVo t) {
-        // 得到子节点列表
-        List<deptPostVo> childList = getChildList(list, t);
-        t.setChildren(childList);
-        for (deptPostVo tChild : childList) {
-            if (hasChild(list, tChild)) {
-                recursionFn(list, tChild);
-            }
-        }
-    }
-
-    /**
-     * 得到子节点列表
-     */
-    private List<deptPostVo> getChildList(List<deptPostVo> list, deptPostVo t) {
-        List<deptPostVo> tList = new ArrayList<deptPostVo>();
-        Iterator<deptPostVo> it = list.iterator();
-        while (it.hasNext()) {
-            deptPostVo n = (deptPostVo) it.next();
-            if (StringUtils.isNotNull(n.getFUid()) && n.getFUid().longValue() == t.getUid().longValue()) {
-                tList.add(n);
-            }
-        }
-        return tList;
-    }
-
-    /**
-     * 判断是否有子节点
-     */
-    private boolean hasChild(List<deptPostVo> list, deptPostVo t) {
-        return getChildList(list, t).size() > 0;
     }
 }

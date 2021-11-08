@@ -133,14 +133,6 @@ public interface ISysDeptService {
     public String checkDeptStatus(SysDept dept);
 
     /**
-     * 构建前端所需要树结构
-     *
-     * @param depts 部门列表
-     * @return 树结构列表
-     */
-    public List<SysDept> buildDeptTree(List<SysDept> depts);
-
-    /**
      * 构建前端所需要下拉树结构
      *
      * @param depts 部门列表
