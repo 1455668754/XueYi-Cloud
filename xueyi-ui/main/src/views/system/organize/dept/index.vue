@@ -309,7 +309,7 @@ export default {
     getList() {
       this.loading = true
       listDept(this.queryParams).then(response => {
-        this.deptList = this.handleTree(response.data, "deptId")
+        this.deptList = response.data
         this.loading = false
       })
     },
@@ -369,7 +369,7 @@ export default {
       this.open = true
       this.title = "添加部门"
       listDept().then(response => {
-        this.deptOptions = this.handleTree(response.data, "deptId")
+        this.deptOptions = response.data
       })
     },
     /** 修改按钮操作 */
@@ -386,7 +386,7 @@ export default {
           const data = {deptId: '0', deptName: '顶级部门', parentId: '-1', children: []}
           this.deptOptions.push(data)
         } else {
-          this.deptOptions = this.handleTree(response.data, "deptId")
+          this.deptOptions = response.data
         }
       })
     },

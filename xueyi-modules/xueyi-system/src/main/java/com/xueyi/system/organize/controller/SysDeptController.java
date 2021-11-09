@@ -2,6 +2,7 @@ package com.xueyi.system.organize.controller;
 
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
@@ -35,7 +36,7 @@ public class SysDeptController extends BaseController {
     @RequiresPermissions("system:dept:list")
     @GetMapping("/list")
     public AjaxResult list(SysDept dept) {
-        return AjaxResult.success(deptService.selectDeptList(dept));
+        return AjaxResult.success(TreeBuildUtils.buildSystemMenuTree(deptService.selectDeptList(dept),"deptId", "parentId", "children", null, false));
     }
 
     /**
@@ -53,7 +54,7 @@ public class SysDeptController extends BaseController {
                 it.remove();
             }
         }
-        return AjaxResult.success(depts);
+        return AjaxResult.success(TreeBuildUtils.buildSystemMenuTree(depts,"deptId", "parentId", "children", null, false));
     }
 
     /**
