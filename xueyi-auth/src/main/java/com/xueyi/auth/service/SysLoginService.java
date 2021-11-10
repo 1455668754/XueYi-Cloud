@@ -47,8 +47,8 @@ public class SysLoginService {
             throw new ServiceException("企业账号/员工账号/密码必须填写");
         }
         // 企业账号不在指定范围内 错误
-        if (enterpriseName.length() < UserConstants.ENTERPRISENAME_MIN_LENGTH
-                || enterpriseName.length() > UserConstants.ENTERPRISENAME_MAX_LENGTH) {
+        if (enterpriseName.length() < UserConstants.ENTERPRISE_NAME_MIN_LENGTH
+                || enterpriseName.length() > UserConstants.ENTERPRISE_NAME_MAX_LENGTH) {
             recordLoginInfo(TenantConstants.REGISTER_TENANT_STRATEGY_SOURCE, AuthorityConstants.COMMON_ENTERPRISE, enterpriseName, AuthorityConstants.COMMON_USER, userName, Constants.LOGIN_FAIL, "企业账号不在指定范围");
             throw new ServiceException("企业账号不在指定范围");
         }
@@ -105,9 +105,9 @@ public class SysLoginService {
         if (StringUtils.isBlank(registerBody.getEnterpriseName())) {
             throw new ServiceException("企业账号必须填写");
         }
-        if (registerBody.getEnterpriseName().length() < UserConstants.ENTERPRISENAME_MIN_LENGTH
-                || registerBody.getEnterpriseName().length() > UserConstants.ENTERPRISENAME_MAX_LENGTH) {
-            throw new ServiceException("企业账号长度必须在" + UserConstants.ENTERPRISENAME_MIN_LENGTH + "到" + UserConstants.ENTERPRISENAME_MAX_LENGTH + "个字符之间");
+        if (registerBody.getEnterpriseName().length() < UserConstants.ENTERPRISE_NAME_MIN_LENGTH
+                || registerBody.getEnterpriseName().length() > UserConstants.ENTERPRISE_NAME_MAX_LENGTH) {
+            throw new ServiceException("企业账号长度必须在" + UserConstants.ENTERPRISE_NAME_MIN_LENGTH + "到" + UserConstants.ENTERPRISE_NAME_MAX_LENGTH + "个字符之间");
         }
 
         // 用户名或密码为空 错误
