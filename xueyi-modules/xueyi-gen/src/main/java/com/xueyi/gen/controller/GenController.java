@@ -42,7 +42,7 @@ public class GenController extends BaseController {
      */
     @RequiresPermissions("tool:gen:list")
     @GetMapping("/list")
-    public TableDataInfo genList(GenTable genTable) {
+    public AjaxResult genList(GenTable genTable) {
         startPage();
         List<GenTable> list = genTableService.selectGenTableList(genTable);
         return getDataTable(list);
@@ -69,7 +69,7 @@ public class GenController extends BaseController {
      */
     @RequiresPermissions("tool:gen:list")
     @GetMapping("/db/list")
-    public TableDataInfo dataList(GenTable genTable) {
+    public AjaxResult dataList(GenTable genTable) {
         startPage();
         List<GenTable> list = genTableService.selectDbTableList(genTable);
         return getDataTable(list);
@@ -79,12 +79,12 @@ public class GenController extends BaseController {
      * 查询数据表字段列表
      */
     @GetMapping(value = "/column/{talbleId}")
-    public TableDataInfo columnList(Long tableId) {
+    public AjaxResult columnList(Long tableId) {
         TableDataInfo dataInfo = new TableDataInfo();
         List<GenTableColumn> list = genTableColumnService.selectGenTableColumnListByTableId(tableId);
-        dataInfo.setRows(list);
+        dataInfo.setItems(list);
         dataInfo.setTotal(list.size());
-        return dataInfo;
+        return AjaxResult.success(dataInfo);
     }
 
     /**

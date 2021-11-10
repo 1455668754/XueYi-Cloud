@@ -293,15 +293,15 @@ export default {
     /** 查询字典类型列表 */
     getTypeList() {
       listType().then(response => {
-        this.typeOptions = response.rows
+        this.typeOptions = response.data.items
       })
     },
     /** 查询字典数据列表 */
     getList() {
       this.loading = true
       listData(this.queryParams).then(response => {
-        this.dataList = response.rows
-        this.total = response.total
+        this.dataList = response.data.items
+        this.total = response.data.total
         this.loading = false
       })
     },

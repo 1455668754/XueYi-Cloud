@@ -602,8 +602,8 @@ export default {
 #end
 #end
       list${BusinessName}(this.queryParams).then(response => {
-        this.${businessName}List = response.rows;
-        this.total = response.total;
+        this.${businessName}List = response.data.items;
+        this.total = response.data.total;
         this.loading = false;
       });
     },

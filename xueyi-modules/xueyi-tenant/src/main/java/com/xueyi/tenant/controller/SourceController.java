@@ -5,7 +5,6 @@ import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
@@ -34,7 +33,7 @@ public class SourceController extends BaseController {
      */
     @RequiresPermissions("tenant:source:list")
     @GetMapping("/list")
-    public TableDataInfo list(Source source) {
+    public AjaxResult list(Source source) {
         startPage();
         List<Source> list = sourceService.mainSelectSourceList(source);
         return getDataTable(list);

@@ -3,7 +3,6 @@ package com.xueyi.system.monitor.controller;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.InnerAuth;
@@ -30,7 +29,7 @@ public class SysOperlogController extends BaseController {
 
     @RequiresPermissions("system:operlog:list")
     @GetMapping("/list")
-    public TableDataInfo list(SysOperLog operLog) {
+    public AjaxResult list(SysOperLog operLog) {
         startPage();
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
         return getDataTable(list);

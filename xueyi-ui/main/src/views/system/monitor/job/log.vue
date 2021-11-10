@@ -247,8 +247,8 @@ export default {
     getList() {
       this.loading = true
       listJobLog(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-          this.jobLogList = response.rows
-          this.total = response.total
+          this.jobLogList = response.data.items
+          this.total = response.data.total
           this.loading = false
         }
       )

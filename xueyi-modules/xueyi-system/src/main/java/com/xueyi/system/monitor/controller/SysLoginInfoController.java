@@ -3,7 +3,6 @@ package com.xueyi.system.monitor.controller;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.InnerAuth;
@@ -31,7 +30,7 @@ public class SysLoginInfoController extends BaseController {
 
     @RequiresPermissions("system:loginInfo:list")
     @GetMapping("/list")
-    public TableDataInfo list(SysLoginInfo loginInfo) {
+    public AjaxResult list(SysLoginInfo loginInfo) {
         startPage();
         List<SysLoginInfo> list = loginInfoService.selectLoginInfoList(loginInfo);
         return getDataTable(list);

@@ -1,15 +1,14 @@
 package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.constant.UserConstants;
-import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.service.ISysRoleService;
 import com.xueyi.system.cache.service.ISysCacheInitService;
@@ -42,7 +41,7 @@ public class SysRoleController extends BaseController {
      */
     @RequiresPermissions("system:role:list")
     @GetMapping("/list")
-    public TableDataInfo list(SysRole role) {
+    public AjaxResult list(SysRole role) {
         startPage();
         List<SysRole> list = roleService.selectRoleList(role);
         return getDataTable(list);

@@ -306,8 +306,8 @@ export default {
     getList() {
       this.loading = true
       listStrategy(this.queryParams).then(response => {
-        this.strategyList = response.rows
-        this.total = response.total
+        this.strategyList = response.data.items
+        this.total = response.data.total
         this.loading = false
       })
     },

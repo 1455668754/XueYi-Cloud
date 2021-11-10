@@ -337,8 +337,8 @@ export default {
     getList() {
       this.loading = true
       listSource(this.queryParams).then(response => {
-        this.sourceList = response.rows
-        this.total = response.total
+        this.sourceList = response.data.items
+        this.total = response.data.total
         this.loading = false
       })
     },

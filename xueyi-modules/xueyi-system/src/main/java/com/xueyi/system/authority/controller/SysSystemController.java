@@ -2,15 +2,14 @@ package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.Constants;
-import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.authority.service.ISysSystemService;
 import com.xueyi.system.cache.service.ISysCacheInitService;
@@ -40,7 +39,7 @@ public class SysSystemController extends BaseController {
      */
     @RequiresPermissions("system:system:list")
     @GetMapping("/list")
-    public TableDataInfo list(SysSystem system) {
+    public AjaxResult list(SysSystem system) {
         startPage();
         List<SysSystem> list = systemService.mainSelectSystemList(system);
         return getDataTable(list);

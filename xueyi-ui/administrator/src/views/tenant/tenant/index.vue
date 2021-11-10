@@ -496,8 +496,8 @@ export default {
     getList() {
       this.loading = true
       listTenant(this.queryParams).then(response => {
-        this.tenantList = response.rows
-        this.total = response.total
+        this.tenantList = response.data.items
+        this.total = response.data.total
         this.loading = false
       })
     },

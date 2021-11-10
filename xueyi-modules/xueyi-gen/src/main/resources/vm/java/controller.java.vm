@@ -19,10 +19,6 @@ import ${packageName}.service.I${ClassName}Service;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
-#if($table.crud || $table.sub)
-import com.xueyi.common.core.web.page.TableDataInfo;
-#elseif($table.tree)
-#end
 
 /**
  * ${functionName} 业务处理
@@ -42,7 +38,7 @@ public class ${ClassName}Controller extends BaseController {
     @RequiresPermissions("${permissionPrefix}:list")
     @GetMapping("/list")
 #if($table.crud || $table.sub)
-    public TableDataInfo list(${ClassName} ${classNameNoPrefix})
+    public AjaxResult list(${ClassName} ${classNameNoPrefix})
     {
         startPage();
         List<${ClassName}> list = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}List(${classNameNoPrefix});

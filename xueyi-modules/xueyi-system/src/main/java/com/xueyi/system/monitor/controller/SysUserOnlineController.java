@@ -4,7 +4,6 @@ import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.service.RedisService;
@@ -41,7 +40,7 @@ public class SysUserOnlineController extends BaseController {
 
     @RequiresPermissions("monitor:online:list")
     @GetMapping("/list")
-    public TableDataInfo list(String ipaddr, String userName) {
+    public AjaxResult list(String ipaddr, String userName) {
         Collection<String> keys = redisService.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         LoginUser mine = tokenService.getLoginUser();

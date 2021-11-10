@@ -3,13 +3,11 @@ package com.xueyi.system.organize.controller;
 import cn.hutool.json.JSONObject;
 import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.DataSourceUtils;
@@ -17,6 +15,7 @@ import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.common.security.service.TokenService;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.organize.SysPost;
@@ -126,7 +125,7 @@ public class SysUserController extends BaseController {
      */
     @RequiresPermissions("system:user:list")
     @GetMapping("/list")
-    public TableDataInfo list(SysUser user) {
+    public AjaxResult list(SysUser user) {
         startPage();
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);

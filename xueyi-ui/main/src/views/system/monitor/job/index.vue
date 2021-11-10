@@ -380,8 +380,8 @@ export default {
     getList() {
       this.loading = true
       listJob(this.queryParams).then(response => {
-        this.jobList = response.rows
-        this.total = response.total
+        this.jobList = response.data.items
+        this.total = response.data.total
         this.loading = false
       })
     },

@@ -3,7 +3,6 @@ package com.xueyi.job.controller;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.RequiresPermissions;
@@ -33,7 +32,7 @@ public class SysJobLogController extends BaseController {
      */
     @RequiresPermissions("monitor:job:list")
     @GetMapping("/list")
-    public TableDataInfo list(SysJobLog sysJobLog) {
+    public AjaxResult list(SysJobLog sysJobLog) {
         startPage();
         List<SysJobLog> list = jobLogService.selectJobLogList(sysJobLog);
         return getDataTable(list);

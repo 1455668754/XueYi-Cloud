@@ -1,32 +1,30 @@
 package com.xueyi.common.core.web.controller;
 
-import java.beans.PropertyEditorSupport;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-
-import com.xueyi.common.core.config.DemoProperties;
-import com.xueyi.common.core.exception.DemoModeException;
-import com.xueyi.common.core.utils.ServletUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xueyi.common.core.constant.HttpStatus;
+import com.xueyi.common.core.config.DemoProperties;
+import com.xueyi.common.core.exception.DemoModeException;
 import com.xueyi.common.core.utils.DateUtils;
+import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.sql.SqlUtil;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.core.web.page.PageDomain;
 import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.core.web.page.TableSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.beans.PropertyEditorSupport;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 
 /**
  * web层通用数据处理
@@ -91,13 +89,11 @@ public class BaseController {
      * 响应请求分页数据
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected TableDataInfo getDataTable(List<?> list) {
+    protected AjaxResult getDataTable(List<?> list) {
         TableDataInfo rspData = new TableDataInfo();
-        rspData.setCode(HttpStatus.SUCCESS);
-        rspData.setRows(list);
-        rspData.setMsg("查询成功");
+        rspData.setItems(list);
         rspData.setTotal(new PageInfo(list).getTotal());
-        return rspData;
+        return AjaxResult.success(rspData);
     }
 
     /**
