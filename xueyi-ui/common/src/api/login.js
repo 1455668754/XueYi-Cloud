@@ -16,6 +16,9 @@ export function register(data) {
 export function login(enterpriseName, userName, password, code, uuid) {
   return request({
     url: '/auth/login',
+    headers: {
+      isToken: false
+    },
     method: 'post',
     data: { enterpriseName, userName, password, code, uuid }
   })
@@ -57,6 +60,9 @@ export function logout() {
 export function getCodeImg() {
   return request({
     url: '/code',
+    headers: {
+      isToken: false
+    },
     method: 'get',
     timeout: 20000
   })
