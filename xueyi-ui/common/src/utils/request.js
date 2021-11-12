@@ -3,8 +3,8 @@ import {Notification, MessageBox, Message, Loading} from '~../../element-ui'
 import store from '~../../../src/store'
 import {getToken} from './auth'
 import errorCode from './errorCode'
-import {tansParams} from "./ruoyi"
-import {saveAs, blobValidate} from '~../../file-saver'
+import {tansParams, blobValidate} from "./ruoyi"
+import {saveAs} from '~../../file-saver'
 
 let downloadLoadingInstance;
 
