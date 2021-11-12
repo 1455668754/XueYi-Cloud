@@ -1,6 +1,14 @@
 import request from '../../utils/request'
 
 // 模块-菜单范围获取 | 租管级
+export function getNowLessorMenuScope() {
+    return request({
+        url: '/system/authority/lessorScope',
+        method: 'get'
+    })
+}
+
+// 模块-菜单范围获取 | 租管级
 export function getLessorMenuScope(tenantId) {
     return request({
         url: '/system/authority/lessorScope/' + tenantId,
