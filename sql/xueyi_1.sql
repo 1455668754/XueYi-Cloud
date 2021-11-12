@@ -28,8 +28,8 @@ create table xy_tenant (
 -- 初始化-租户信息表数据
 -- ----------------------------
 insert into xy_tenant (tenant_id, is_lessor, is_change, strategy_id,  tenant_name, tenant_system_name, tenant_nick, tenant_logo)
-values (-1, 'Y', 'Y', 1, 'administrator', '租户管理系统', 'xueYi1', 'https://images.gitee.com/uploads/images/2021/1101/141601_d68e92a4_7382127.jpeg'),
-       ( 1, 'N', 'N', 1, 'xueYi', '雪忆管理系统', 'xueYi1', 'https://images.gitee.com/uploads/images/2021/1101/141601_d68e92a4_7382127.jpeg');
+values (-1, 'Y', 'Y', 1, 'administrator', '租管租户', 'xueYi1', 'https://images.gitee.com/uploads/images/2021/1101/141601_d68e92a4_7382127.jpeg'),
+       ( 1, 'N', 'N', 1, 'xueYi', '雪忆科技', 'xueYi1', 'https://images.gitee.com/uploads/images/2021/1101/141601_d68e92a4_7382127.jpeg');
 
 -- ----------------------------
 -- 2、策略信息表
