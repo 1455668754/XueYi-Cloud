@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.ServiceNameConstants;
+import com.xueyi.common.core.constant.ServiceConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.domain.monitor.SysLoginInfo;
 import com.xueyi.system.api.domain.monitor.SysOperLog;
@@ -16,7 +16,7 @@ import com.xueyi.system.api.feign.factory.RemoteLogFallbackFactory;
  *
  * @author xueyi
  */
-@FeignClient(contextId = "remoteLogService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteLogFallbackFactory.class)
+@FeignClient(contextId = "remoteLogService", value = ServiceConstants.SYSTEM_SERVICE, fallbackFactory = RemoteLogFallbackFactory.class)
 public interface RemoteLogService {
 
     /**

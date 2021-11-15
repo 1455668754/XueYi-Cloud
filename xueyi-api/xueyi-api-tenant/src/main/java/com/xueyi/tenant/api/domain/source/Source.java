@@ -58,7 +58,7 @@ public class Source extends BaseEntity {
     private List<Source> values;
 
     /** 源同步策略（0不变 1刷新 2启动 3删除） */
-    private int syncType;
+    private String syncType;
 
     public Source() {
     }
@@ -179,11 +179,11 @@ public class Source extends BaseEntity {
         this.values = values;
     }
 
-    public int getSyncType() {
+    public String getSyncType() {
         return syncType;
     }
 
-    public void setSyncType(int syncType) {
+    public void setSyncType(String syncType) {
         this.syncType = syncType;
     }
 

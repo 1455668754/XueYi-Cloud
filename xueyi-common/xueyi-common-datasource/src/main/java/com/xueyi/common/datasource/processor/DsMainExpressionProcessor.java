@@ -22,6 +22,6 @@ public class DsMainExpressionProcessor extends DsProcessor {
 
     @Override
     public String doDetermineDatasource(MethodInvocation invocation, String key) {
-        return TenantConstants.MAIN_SOURCE;
+        return TenantConstants.Source.MAIN.getCode();
     }
 }

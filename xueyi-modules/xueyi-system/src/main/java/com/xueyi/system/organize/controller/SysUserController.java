@@ -1,8 +1,8 @@
 package com.xueyi.system.organize.controller;
 
 import cn.hutool.json.JSONObject;
-import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
@@ -148,15 +148,15 @@ public class SysUserController extends BaseController {
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysUser user) {
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserCodeUnique(user))) {
+        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkUserCodeUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，用户编码已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user))) {
+        } else if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkUserNameUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，用户账号已存在");
         } else if (StringUtils.isNotEmpty(user.getPhone())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
+                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkPhoneUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
         } else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
+                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkEmailUnique(user))) {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
@@ -171,15 +171,15 @@ public class SysUserController extends BaseController {
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysUser user) {
         userService.checkUserAllowed(user);
-        if (UserConstants.NOT_UNIQUE.equals(userService.checkUserCodeUnique(user))) {
+        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkUserCodeUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户编码已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(user))) {
+        } else if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkUserNameUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户账号已存在");
         } else if (StringUtils.isNotEmpty(user.getPhone())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
+                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkPhoneUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
         } else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
+                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkEmailUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         return toAjax(userService.updateUser(user));
@@ -217,8 +217,8 @@ public class SysUserController extends BaseController {
     public AjaxResult changeStatus(@RequestBody SysUser user) {
         userService.checkUserAllowed(user);
         SysPost post = new SysPost(user.getPostId());
-        if (StringUtils.equals(UserConstants.USER_NORMAL, user.getStatus())
-                && UserConstants.POST_DISABLE.equals(postService.checkPostStatus(post))) {
+        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), user.getStatus())
+                && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), postService.checkPostStatus(post))) {
             return AjaxResult.error("启用失败，该用户的归属岗位已被禁用！");
         }
         return toAjax(userService.updateUserStatus(user));

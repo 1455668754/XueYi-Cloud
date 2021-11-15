@@ -1,6 +1,5 @@
 package com.xueyi.system.api.domain.organize;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -50,7 +49,7 @@ public class SysDept extends BaseEntity {
     private String parentName;
 
     /** 子部门 */
-    private List<SysDept> children = new ArrayList<SysDept>();
+    private List<SysDept> children;
 
     /** 角色对象 */
     private List<SysRole> roles;

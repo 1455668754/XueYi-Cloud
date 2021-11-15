@@ -1,7 +1,7 @@
 package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
@@ -94,6 +94,6 @@ public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
      */
     @Override
     public String mainCheckEnterpriseNameUnique(SysEnterprise enterprise) {
-        return enterpriseMapper.mainCheckEnterpriseNameUnique(enterprise) == null ? UserConstants.UNIQUE : UserConstants.NOT_UNIQUE;
+        return enterpriseMapper.mainCheckEnterpriseNameUnique(enterprise) == null ? BaseConstants.Check.UNIQUE.getCode() : BaseConstants.Check.NOT_UNIQUE.getCode();
     }
 }

@@ -77,7 +77,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     @Override
     @DataScope(uedAlias = "empty")
     public int mainInsertSystem(SysSystem system) {
-        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && SecurityUtils.isAdminTenant()) {
+        if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), system.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             system.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
         }
         return systemMapper.mainInsertSystem(system);
@@ -92,7 +92,7 @@ public class SysSystemServiceImpl implements ISysSystemService {
     @Override
     @DataScope(uedAlias = "empty")
     public int mainUpdateSystem(SysSystem system) {
-        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && SecurityUtils.isAdminTenant()) {
+        if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), system.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             system.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
         }
         return systemMapper.mainUpdateSystem(system);

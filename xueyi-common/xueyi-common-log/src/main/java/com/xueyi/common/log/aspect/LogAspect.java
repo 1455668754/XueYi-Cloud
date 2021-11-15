@@ -94,7 +94,7 @@ public class LogAspect {
                     operLog.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
                 }
             } else {
-                operLog.setSourceName(TenantConstants.REGISTER_TENANT_STRATEGY_SOURCE);
+                operLog.setSourceName(TenantConstants.Source.SLAVE.getCode());
                 operLog.setUserId(AuthorityConstants.COMMON_USER);
                 operLog.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
             }

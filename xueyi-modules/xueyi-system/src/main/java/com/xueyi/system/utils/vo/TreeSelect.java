@@ -18,37 +18,59 @@ import java.util.stream.Collectors;
 public class TreeSelect implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    /** 节点Id */
+    /**
+     * 节点Id
+     */
     private Long id;
 
-    /** 节点名称 */
+    /**
+     * 节点名称
+     */
     private String label;
 
-    /** 节点状态 */
+    /**
+     * 节点状态
+     */
     private String status;
 
-    /** 节点类型 */
+    /**
+     * 节点类型
+     */
     private String type;
 
-    /** 显示顺序 */
+    /**
+     * 显示顺序
+     */
     private Integer sort;
 
-    /** 权限字符串 | 模块&&菜单专属 */
+    /**
+     * 权限字符串 | 模块&&菜单专属
+     */
     private String perms;
 
-    /** 菜单图标 | 模块&&菜单专属 */
+    /**
+     * 菜单图标 | 模块&&菜单专属
+     */
     private String icon;
 
-    /** 组件路径 | 模块&&菜单专属 */
+    /**
+     * 组件路径 | 模块&&菜单专属
+     */
     private String component;
 
-    /** 系统Id | 模块&&菜单专属 */
+    /**
+     * 系统Id | 模块&&菜单专属
+     */
     private Long systemId;
 
-    /** 公共模块-菜单（Y是 N否） | 模块&&菜单专属 */
+    /**
+     * 公共模块-菜单（Y是 N否） | 模块&&菜单专属
+     */
     private String isCommon;
 
-    /** 子节点 */
+    /**
+     * 子节点
+     */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TreeSelect> children;
 
@@ -60,15 +82,15 @@ public class TreeSelect implements Serializable {
         this.id = dept.getDeptId();
         this.label = dept.getDeptName();
         this.status = dept.getStatus();
-        this.children = dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+        this.children = dept.getChildren() != null ? dept.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList()) : null;
     }
 
     public TreeSelect(deptPostVo deptPostVo) {
         this.id = deptPostVo.getUid();
         this.label = deptPostVo.getName();
-        this.status = (deptPostVo.getStatus().equals("1") || (StringUtils.isEmpty(deptPostVo.getChildren())) && deptPostVo.getType().equals("0"))?"1":"0";
+        this.status = (deptPostVo.getStatus().equals("1") || (StringUtils.isEmpty(deptPostVo.getChildren())) && deptPostVo.getType().equals("0")) ? "1" : "0";
         this.type = deptPostVo.getType();
-        this.children = deptPostVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+        this.children = deptPostVo.getChildren() != null ? deptPostVo.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList()) : null;
     }
 
     public TreeSelect(SystemMenu systemMenu) {
@@ -82,7 +104,7 @@ public class TreeSelect implements Serializable {
         this.component = systemMenu.getComponent();
         this.isCommon = systemMenu.getIsCommon();
         this.systemId = systemMenu.getSystemId();
-        this.children = systemMenu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
+        this.children = systemMenu.getChildren() != null ? systemMenu.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList()) : null;
     }
 
     public Long getId() {

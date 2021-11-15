@@ -1,6 +1,6 @@
 package com.xueyi.tenant.controller;
 
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
@@ -80,25 +80,25 @@ public class SourceController extends BaseController {
         Source check = new Source(source.getSourceId());
         Source oldSource = sourceService.mainSelectSourceBySourceId(check);
         DSUtils.testDs(oldSource);
-        if(StringUtils.equals(TenantConstants.NORMAL, source.getStatus())){
-            if(StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_WRITE) && sourceService.mainCheckSeparationSourceByWriteId(check)){
+        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), source.getStatus())) {
+            if (StringUtils.equals(TenantConstants.SourceType.WRITE.getCode(), oldSource.getType()) && sourceService.mainCheckSeparationSourceByWriteId(check)) {
                 return AjaxResult.error("该数据源未配置读数据源,请先进行读写配置再启用！");
             }
-        }else if(StringUtils.equals(TenantConstants.DISABLE, source.getStatus())){
-            if(StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_READ) && sourceService.mainCheckSeparationSourceByReadId(check)){
+        } else if (StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), source.getStatus())) {
+            if (StringUtils.equals(TenantConstants.SourceType.READ.getCode(), oldSource.getType()) && sourceService.mainCheckSeparationSourceByReadId(check)) {
                 return AjaxResult.error("该数据源已被应用于读写配置,请先从对应读写配置中取消关联后再禁用！");
-            }else if((StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_READ_WRITE) || StringUtils.equals(oldSource.getType(), TenantConstants.SOURCE_WRITE)) && sourceService.mainCheckStrategySourceBySourceId(check)){
+            } else if ((StringUtils.equals(TenantConstants.SourceType.READ_WRITE.getCode(), oldSource.getType()) || StringUtils.equals(TenantConstants.SourceType.WRITE.getCode(), oldSource.getType())) && sourceService.mainCheckStrategySourceBySourceId(check)) {
                 return AjaxResult.error("该数据源已被应用于数据源策略,请先从对应策略中取消关联后再禁用！");
             }
         }
         if (StringUtils.equals(source.getStatus(), oldSource.getStatus())) {
-            source.setSyncType(TenantConstants.SYNC_TYPE_UNCHANGED);
+            source.setSyncType(TenantConstants.SyncType.UNCHANGED.getCode());
             return AjaxResult.error("无状态调整！");
         } else {
-            if (StringUtils.equals(source.getStatus(), TenantConstants.DISABLE)) {
-                source.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
-            } else if (StringUtils.equals(source.getStatus(), TenantConstants.NORMAL)) {
-                source.setSyncType(TenantConstants.SYNC_TYPE_ADD);
+            if (StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), source.getStatus())) {
+                source.setSyncType(TenantConstants.SyncType.DELETE.getCode());
+            } else if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), source.getStatus())) {
+                source.setSyncType(TenantConstants.SyncType.ADD.getCode());
                 source.setDriverClassName(oldSource.getDriverClassName());
                 source.setUrl(oldSource.getUrlPrepend().concat(oldSource.getUrlAppend()));
                 source.setUsername(oldSource.getUsername());
@@ -127,9 +127,9 @@ public class SourceController extends BaseController {
     @DeleteMapping
     public AjaxResult remove(@RequestBody Source source) {
         Source check = sourceService.mainSelectSourceBySourceId(source);
-        if (StringUtils.equals(check.getStatus(), TenantConstants.NORMAL)) {
+        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), check.getStatus())) {
             return AjaxResult.error("请先停用数据源后再删除！");
-        } else if (StringUtils.equals(check.getIsChange(), Constants.SYSTEM_DEFAULT_TRUE)) {
+        } else if (StringUtils.equals(BaseConstants.Default.YES.getCode(), check.getIsChange())) {
             return AjaxResult.error("系统默认数据源无法被删除！");
         }
         return toAjax(sourceService.mainDeleteSourceById(check));

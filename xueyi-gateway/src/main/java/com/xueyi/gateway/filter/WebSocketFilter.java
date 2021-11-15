@@ -1,6 +1,6 @@
 package com.xueyi.gateway.filter;
 
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.HttpConstants;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -26,9 +26,9 @@ public class WebSocketFilter implements GlobalFilter, Ordered {
         String scheme = requestUrl.getScheme();
         if (!"ws".equals(scheme) && !"wss".equals(scheme)) {
             return chain.filter(exchange);
-        } else if (requestUrl.getPath().startsWith(Constants.DEFAULT_FILTER_PATH)) {
+        } else if (requestUrl.getPath().startsWith(HttpConstants.DEFAULT_FILTER_PATH)) {
             String wsScheme = convertWsToHttp(scheme);
-            URI wsRequestUrl = UriComponentsBuilder.fromUri(requestUrl).scheme(wsScheme).port(requestUrl.getPort()+Constants.WS_PORT).build().toUri();
+            URI wsRequestUrl = UriComponentsBuilder.fromUri(requestUrl).scheme(wsScheme).port(requestUrl.getPort()+HttpConstants.WS_PORT).build().toUri();
             exchange.getAttributes().put(GATEWAY_REQUEST_URL_ATTR, wsRequestUrl);
         }
         return chain.filter(exchange);

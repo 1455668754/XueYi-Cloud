@@ -3,13 +3,8 @@ package com.xueyi.tenant.service.impl;
 import java.util.List;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.TenantConstants;
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.OrganizeConstants;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
-import com.xueyi.common.redis.utils.DataSourceUtils;
-import com.xueyi.system.api.feign.RemoteSourceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -75,7 +70,7 @@ public class StrategyServiceImpl implements IStrategyService {
     public int mainInsertStrategy(Strategy strategy) {
         int rows = strategyMapper.mainInsertStrategy(strategy);
         if (strategy.getValues() != null && strategy.getValues().size() > 0) {
-            /**获取生成雪花Id，并赋值给主键，加入至子表对应外键中*/
+            /* 获取生成雪花Id，并赋值给主键，加入至子表对应外键中 */
             strategy.setStrategyId(strategy.getSnowflakeId());
             strategyMapper.mainBatchSource(strategy);
         }
@@ -91,7 +86,7 @@ public class StrategyServiceImpl implements IStrategyService {
     @Override
     @Transactional
     public int mainUpdateStrategy(Strategy strategy) {
-        if (!StringUtils.equals(UserConstants.STATUS_UPDATE_OPERATION, strategy.getUpdateType())) {
+        if (!StringUtils.equals(OrganizeConstants.STATUS_UPDATE_OPERATION, strategy.getUpdateType())) {
             strategyMapper.mainDeleteSourceByStrategyId(strategy);
             if (strategy.getValues() != null && strategy.getValues().size() > 0) {
                 strategyMapper.mainBatchSource(strategy);

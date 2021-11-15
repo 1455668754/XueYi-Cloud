@@ -2,7 +2,7 @@ package com.xueyi.system.api.feign;
 
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.ServiceNameConstants;
+import com.xueyi.common.core.constant.ServiceConstants;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ import com.xueyi.system.api.feign.factory.RemoteEnterpriseFallbackFactory;
  *
  * @author xueyi
  */
-@FeignClient(contextId = "remoteEnterpriseService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteEnterpriseFallbackFactory.class)
+@FeignClient(contextId = "remoteEnterpriseService", value = ServiceConstants.SYSTEM_SERVICE, fallbackFactory = RemoteEnterpriseFallbackFactory.class)
 public interface RemoteEnterpriseService {
 
     /**

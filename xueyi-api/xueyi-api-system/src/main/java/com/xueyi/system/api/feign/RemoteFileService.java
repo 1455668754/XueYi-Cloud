@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
-import com.xueyi.common.core.constant.ServiceNameConstants;
+import com.xueyi.common.core.constant.ServiceConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.domain.material.SysFile;
 import com.xueyi.system.api.feign.factory.RemoteFileFallbackFactory;
@@ -17,7 +17,7 @@ import com.xueyi.system.api.feign.factory.RemoteFileFallbackFactory;
  * @author xueyi
  * @originalAuthor ruoyi
  */
-@FeignClient(contextId = "remoteFileService", value = ServiceNameConstants.FILE_SERVICE, fallbackFactory = RemoteFileFallbackFactory.class)
+@FeignClient(contextId = "remoteFileService", value = ServiceConstants.FILE_SERVICE, fallbackFactory = RemoteFileFallbackFactory.class)
 public interface RemoteFileService {
 
     /**

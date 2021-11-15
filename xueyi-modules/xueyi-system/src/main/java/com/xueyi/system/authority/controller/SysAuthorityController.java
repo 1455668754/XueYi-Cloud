@@ -80,7 +80,7 @@ public class SysAuthorityController extends BaseController {
             return AjaxResult.error("租管租户禁止进行菜单配置");
         }
         String sourceName = DataSourceUtils.getMainSourceNameByEnterpriseId(role.getEnterpriseId());
-        SysRole checkRole = roleService.selectRoleIdByDeriveIdToSourceName(new SysRole(AuthorityConstants.DERIVE_TENANT_TYPE, role.getEnterpriseId(), role.getEnterpriseId()), sourceName);
+        SysRole checkRole = roleService.selectRoleIdByDeriveIdToSourceName(new SysRole(AuthorityConstants.RoleType.DERIVE_TENANT.getCode(), role.getEnterpriseId(), role.getEnterpriseId()), sourceName);
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScopeToSourceName(role, sourceName);
@@ -112,7 +112,7 @@ public class SysAuthorityController extends BaseController {
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/enterpriseScopeSet")
     public AjaxResult setEnterpriseMenuScope(@RequestBody SysRole role) {
-        SysRole checkRole = roleService.selectRoleIdByDeriveId(new SysRole(AuthorityConstants.DERIVE_ENTERPRISE_TYPE, SecurityUtils.getEnterpriseId(), SecurityUtils.getEnterpriseId()));
+        SysRole checkRole = roleService.selectRoleIdByDeriveId(new SysRole(AuthorityConstants.RoleType.DERIVE_ENTERPRISE.getCode(), SecurityUtils.getEnterpriseId(), SecurityUtils.getEnterpriseId()));
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
@@ -144,7 +144,7 @@ public class SysAuthorityController extends BaseController {
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/deptScopeSet")
     public AjaxResult setDeptMenuScope(@RequestBody SysRole role) {
-        SysRole checkRole = roleService.selectRoleIdByDeriveId(new SysRole(AuthorityConstants.DERIVE_DEPT_TYPE, (Long) role.getParams().get("deptId"), SecurityUtils.getEnterpriseId()));
+        SysRole checkRole = roleService.selectRoleIdByDeriveId(new SysRole(AuthorityConstants.RoleType.DERIVE_DEPT.getCode(), (Long) role.getParams().get("deptId"), SecurityUtils.getEnterpriseId()));
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
@@ -176,7 +176,7 @@ public class SysAuthorityController extends BaseController {
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/postScopeSet")
     public AjaxResult setPostMenuScope(@RequestBody SysRole role) {
-        SysRole checkRole = roleService.selectRoleIdByDeriveId(new SysRole(AuthorityConstants.DERIVE_POST_TYPE, (Long) role.getParams().get("postId"), SecurityUtils.getEnterpriseId()));
+        SysRole checkRole = roleService.selectRoleIdByDeriveId(new SysRole(AuthorityConstants.RoleType.DERIVE_POST.getCode(), (Long) role.getParams().get("postId"), SecurityUtils.getEnterpriseId()));
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
@@ -208,7 +208,7 @@ public class SysAuthorityController extends BaseController {
     @Log(title = "权限管理", businessType = BusinessType.UPDATE)
     @PutMapping(value = "/userScopeSet")
     public AjaxResult setUserMenuScope(@RequestBody SysRole role) {
-        SysRole checkRole = roleService.selectRoleIdByDeriveId(new SysRole(AuthorityConstants.DERIVE_USER_TYPE, (Long) role.getParams().get("userId"), SecurityUtils.getEnterpriseId()));
+        SysRole checkRole = roleService.selectRoleIdByDeriveId(new SysRole(AuthorityConstants.RoleType.DERIVE_USER.getCode(), (Long) role.getParams().get("userId"), SecurityUtils.getEnterpriseId()));
         role.setRoleId(checkRole.getRoleId());
         role.setDataScope(checkRole.getDataScope());
         authorityService.updateMenuScope(role);
@@ -233,7 +233,7 @@ public class SysAuthorityController extends BaseController {
     @PutMapping(value = "/roleScopeSet")
     public AjaxResult setRoleMenuScope(@RequestBody SysRole role) {
         SysRole checkRole = roleService.selectRoleById(new SysRole(role.getRoleId()));
-        if (!StringUtils.equals(AuthorityConstants.NORMAL_TYPE, checkRole.getType())) {
+        if (!StringUtils.equals(AuthorityConstants.RoleType.NORMAL.getCode(), checkRole.getType())) {
             return AjaxResult.error("衍生角色禁止修改");
         }
         role.setRoleId(checkRole.getRoleId());

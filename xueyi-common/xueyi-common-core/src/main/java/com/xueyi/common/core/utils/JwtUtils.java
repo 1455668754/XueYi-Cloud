@@ -45,7 +45,7 @@ public class JwtUtils {
      */
     public static String getEnterpriseId(String token) {
         Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.DETAILS_ENTERPRISE_ID);
+        return getValue(claims, SecurityConstants.Details.ENTERPRISE_ID.getCode());
     }
 
     /**
@@ -55,7 +55,7 @@ public class JwtUtils {
      * @return 企业Id
      */
     public static String getEnterpriseId(Claims claims) {
-        return getValue(claims, SecurityConstants.DETAILS_ENTERPRISE_ID);
+        return getValue(claims, SecurityConstants.Details.ENTERPRISE_ID.getCode());
     }
 
     /**
@@ -66,7 +66,7 @@ public class JwtUtils {
      */
     public static String getEnterpriseName(String token) {
         Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.DETAILS_ENTERPRISE_NAME);
+        return getValue(claims, SecurityConstants.Details.ENTERPRISE_NAME.getCode());
     }
 
     /**
@@ -76,7 +76,7 @@ public class JwtUtils {
      * @return 企业类型
      */
     public static String getIsLessor(Claims claims) {
-        return getValue(claims, SecurityConstants.DETAILS_IS_LESSOR);
+        return getValue(claims, SecurityConstants.Details.IS_LESSOR.getCode());
     }
 
     /**
@@ -87,7 +87,7 @@ public class JwtUtils {
      */
     public static String getIsLessor(String token) {
         Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.DETAILS_IS_LESSOR);
+        return getValue(claims, SecurityConstants.Details.IS_LESSOR.getCode());
     }
 
     /**
@@ -97,7 +97,7 @@ public class JwtUtils {
      * @return 企业账号
      */
     public static String getEnterpriseName(Claims claims) {
-        return getValue(claims, SecurityConstants.DETAILS_ENTERPRISE_NAME);
+        return getValue(claims, SecurityConstants.Details.ENTERPRISE_NAME.getCode());
     }
 
     /**
@@ -108,7 +108,7 @@ public class JwtUtils {
      */
     public static String getUserId(String token) {
         Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.DETAILS_USER_ID);
+        return getValue(claims, SecurityConstants.Details.USER_ID.getCode());
     }
 
     /**
@@ -118,7 +118,7 @@ public class JwtUtils {
      * @return 用户Id
      */
     public static String getUserId(Claims claims) {
-        return getValue(claims, SecurityConstants.DETAILS_USER_ID);
+        return getValue(claims, SecurityConstants.Details.USER_ID.getCode());
     }
 
     /**
@@ -129,7 +129,7 @@ public class JwtUtils {
      */
     public static String getUserName(String token) {
         Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.DETAILS_USERNAME);
+        return getValue(claims, SecurityConstants.Details.USER_NAME.getCode());
     }
 
     /**
@@ -139,7 +139,7 @@ public class JwtUtils {
      * @return 用户账号
      */
     public static String getUserName(Claims claims) {
-        return getValue(claims, SecurityConstants.DETAILS_USERNAME);
+        return getValue(claims, SecurityConstants.Details.USER_NAME.getCode());
     }
 
     /**
@@ -149,7 +149,7 @@ public class JwtUtils {
      * @return 用户类型
      */
     public static String getUserType(Claims claims) {
-        return getValue(claims, SecurityConstants.DETAILS_TYPE);
+        return getValue(claims, SecurityConstants.Details.USER_TYPE.getCode());
     }
 
     /**
@@ -160,7 +160,7 @@ public class JwtUtils {
      */
     public static String getUserType(String token) {
         Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.DETAILS_TYPE);
+        return getValue(claims, SecurityConstants.Details.USER_TYPE.getCode());
     }
 
     /**
@@ -171,7 +171,7 @@ public class JwtUtils {
      */
     public static String getUserKey(String token) {
         Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.USER_KEY);
+        return getValue(claims, SecurityConstants.Details.USER_KEY.getCode());
     }
 
     /**
@@ -181,7 +181,7 @@ public class JwtUtils {
      * @return 用户Id
      */
     public static String getUserKey(Claims claims) {
-        return getValue(claims, SecurityConstants.USER_KEY);
+        return getValue(claims, SecurityConstants.Details.USER_KEY.getCode());
     }
 
     /**

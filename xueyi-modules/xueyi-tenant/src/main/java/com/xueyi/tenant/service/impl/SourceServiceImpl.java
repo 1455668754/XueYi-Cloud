@@ -2,6 +2,7 @@ package com.xueyi.tenant.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.tenant.api.domain.source.Source;
@@ -58,11 +59,11 @@ public class SourceServiceImpl implements ISourceService {
     @Transactional
     @DataScope(ueAlias = "empty")
     public int mainInsertSource(Source source) {
-        source.setSlave((source.getType().equals(TenantConstants.SOURCE_READ) ? "slave" : "master") + source.getSnowflakeId().toString());
+        source.setSlave((StringUtils.equals(TenantConstants.SourceType.READ.getCode(), source.getType()) ? TenantConstants.Source.SLAVE.getCode() : TenantConstants.Source.MAIN.getCode()) + source.getSnowflakeId().toString());
         // 将数据新增的的数据源添加到数据源库
-        source.setSyncType(TenantConstants.SYNC_TYPE_ADD);
+        source.setSyncType(TenantConstants.SyncType.ADD.getCode());
         DSUtils.syncDs(source);
-        if (source.getType().equals(TenantConstants.SOURCE_READ_WRITE)) {
+        if (source.getType().equals(TenantConstants.SourceType.READ_WRITE.getCode())) {
             Source value = new Source(source.getSnowflakeId());
             value.setSlave(source.getSlave());
             List<Source> values = new ArrayList<>();
@@ -120,7 +121,7 @@ public class SourceServiceImpl implements ISourceService {
     @Override
     @Transactional
     public int mainDeleteSourceById(Source source) {
-        source.setSyncType(TenantConstants.SYNC_TYPE_DELETE);
+        source.setSyncType(TenantConstants.SyncType.DELETE.getCode());
         DSUtils.syncDs(source);
         sourceMapper.mainDeleteSeparationByValueId(source);
         return sourceMapper.mainDeleteSourceById(source);

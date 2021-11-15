@@ -1,8 +1,7 @@
 package com.xueyi.tenant.controller;
 
-import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
 import com.xueyi.common.core.web.controller.BaseController;
@@ -70,7 +69,7 @@ public class StrategyController extends BaseController {
     @PostMapping
     public AjaxResult add(@RequestBody Strategy strategy) {
         int rows = tenantStrategyService.mainInsertStrategy(strategy);
-        if (rows > 0 && StringUtils.equals(TenantConstants.NORMAL, strategy.getStatus())) {
+        if (rows > 0 && StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), strategy.getStatus())) {
             remoteSourceService.refreshSourceCache(strategy.getStrategyId(), SecurityConstants.INNER);
         }
         return toAjax(rows);
@@ -83,7 +82,7 @@ public class StrategyController extends BaseController {
     @Log(title = "数据源策略", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Strategy strategy) {
-        if (StringUtils.equals(strategy.getIsChange(), Constants.SYSTEM_DEFAULT_TRUE)) {
+        if (StringUtils.equals(BaseConstants.Default.YES.getCode(), strategy.getIsChange())) {
             return AjaxResult.error("禁止操作默认策略");
         }
         int rows = tenantStrategyService.mainUpdateStrategy(strategy);

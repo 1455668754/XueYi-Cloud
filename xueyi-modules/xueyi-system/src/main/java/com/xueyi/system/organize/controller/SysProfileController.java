@@ -1,7 +1,7 @@
 package com.xueyi.system.organize.controller;
 
-import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
@@ -54,10 +54,10 @@ public class SysProfileController extends BaseController {
     @PutMapping
     public AjaxResult updateProfile(@RequestBody SysUser user) {
         if (StringUtils.isNotEmpty(user.getPhone())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkPhoneUnique(user))) {
+                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkPhoneUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
         } else if (StringUtils.isNotEmpty(user.getEmail())
-                && UserConstants.NOT_UNIQUE.equals(userService.checkEmailUnique(user))) {
+                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkEmailUnique(user))) {
             return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
         }
         LoginUser loginUser = SecurityUtils.getLoginUser();

@@ -104,12 +104,12 @@ public class DataScopeAspect {
                 for (SysRole role : user.getRoles()) {
                     String dataScope = role.getDataScope();
                     // 1.全部数据权限
-                    if (AuthorityConstants.DATA_SCOPE_ALL.equals(dataScope)) {
+                    if (StringUtils.equals(AuthorityConstants.DataScope.ALL.getCode(), dataScope)) {
                         sqlString = new StringBuilder();
                         break;
                     }
                     // 2.自定数据权限
-                    else if (AuthorityConstants.DATA_SCOPE_CUSTOM.equals(dataScope) && (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias))) {
+                    else if (StringUtils.equals(AuthorityConstants.DataScope.CUSTOM.getCode(), dataScope) && (StringUtils.isNotBlank(deptAlias) || StringUtils.isNotBlank(postAlias))) {
                         if (StringUtils.isNotBlank(deptAlias) && StringUtils.isNotBlank(postAlias)) {
                             sqlString.append(StringUtils.format(
                                     " OR ( {}.dept_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) OR {}.post_id IN ( SELECT dept_post_id FROM sys_role_dept_post WHERE role_id = {} ) ) ", deptAlias,
@@ -125,21 +125,21 @@ public class DataScopeAspect {
                         }
                     }
                     // 3.本部门数据权限
-                    else if (AuthorityConstants.DATA_SCOPE_DEPT.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                    else if (StringUtils.equals(AuthorityConstants.DataScope.DEPT.getCode(), dataScope) && StringUtils.isNotBlank(deptAlias)) {
                         sqlString.append(StringUtils.format(" OR {}.dept_id = {} ", deptAlias, user.getDeptId()));
                     }
                     // 4.本部门及以下数据权限
-                    else if (AuthorityConstants.DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope) && StringUtils.isNotBlank(deptAlias)) {
+                    else if (StringUtils.equals(AuthorityConstants.DataScope.DEPT_AND_CHILD.getCode(), dataScope) && StringUtils.isNotBlank(deptAlias)) {
                         sqlString.append(StringUtils.format(
                                 " OR {}.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = {} or find_in_set( {} , ancestors ) ) ",
                                 deptAlias, user.getDeptId(), user.getDeptId()));
                     }
                     // 5.本岗位数据权限
-                    else if (AuthorityConstants.DATA_SCOPE_POST.equals(dataScope) && StringUtils.isNotBlank(postAlias)) {
+                    else if (StringUtils.equals(AuthorityConstants.DataScope.POST.getCode(), dataScope) && StringUtils.isNotBlank(postAlias)) {
                         sqlString.append(StringUtils.format(" OR {}.post_id = {} ", postAlias, user.getPostId()));
                     }
                     // 6.仅本人数据权限
-                    else if (AuthorityConstants.DATA_SCOPE_SELF.equals(dataScope)) {
+                    else if (StringUtils.equals(AuthorityConstants.DataScope.SELF.getCode(), dataScope)) {
                         if (StringUtils.isNotBlank(userAlias)) {
                             sqlString.append(StringUtils.format(" OR {}.user_id = {} ", userAlias, user.getUserId()));
                         }
@@ -200,7 +200,7 @@ public class DataScopeAspect {
             if (StringUtils.isNotBlank(SYAlias)) {
                 sqlString.append(StringUtils.format(" AND {}.system_id = {} ", SYAlias, baseEntity.getSystemId()));
             } else if (StringUtils.isNotBlank(SYdAlias)) {
-                sqlString.append(StringUtils.format(" AND ( {}.system_id = {} or {}.tenant_id = 0 ) ", SYdAlias, baseEntity.getSystemId(), SYdAlias));
+                sqlString.append(StringUtils.format(" AND ( {}.system_id = {} or {}.system_id = 0 ) ", SYdAlias, baseEntity.getSystemId(), SYdAlias));
             } else if (StringUtils.isNotBlank(uSYAlias)) {
                 if (uSYAlias.equals("empty")) {
                     upSqlString.append(StringUtils.format(" AND system_id = {} ", baseEntity.getSystemId()));

@@ -1,9 +1,9 @@
 package com.xueyi.gateway.filter;
 
 import com.xueyi.common.core.constant.CacheConstants;
-import com.xueyi.common.core.constant.HttpStatus;
 import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.constant.TokenConstants;
+import com.xueyi.common.core.constant.HttpConstants;
 import com.xueyi.common.core.utils.JwtUtils;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
@@ -71,13 +71,13 @@ public class AuthFilter implements GlobalFilter, Ordered {
             return unauthorizedResponse(exchange, "令牌验证失败");
         }
         // 设置用户信息到请求
-        addHeader(mutate, SecurityConstants.DETAILS_ENTERPRISE_ID, enterpriseId);
-        addHeader(mutate, SecurityConstants.DETAILS_ENTERPRISE_NAME, enterpriseName);
-        addHeader(mutate, SecurityConstants.DETAILS_IS_LESSOR, isLessor);
-        addHeader(mutate, SecurityConstants.DETAILS_USER_ID, userId);
-        addHeader(mutate, SecurityConstants.DETAILS_USERNAME, userName);
-        addHeader(mutate, SecurityConstants.DETAILS_TYPE, userType);
-        addHeader(mutate, SecurityConstants.USER_KEY, userKey);
+        addHeader(mutate, SecurityConstants.Details.ENTERPRISE_ID.getCode(), enterpriseId);
+        addHeader(mutate, SecurityConstants.Details.ENTERPRISE_NAME.getCode(), enterpriseName);
+        addHeader(mutate, SecurityConstants.Details.IS_LESSOR.getCode(), isLessor);
+        addHeader(mutate, SecurityConstants.Details.USER_ID.getCode(), userId);
+        addHeader(mutate, SecurityConstants.Details.USER_NAME.getCode(), userName);
+        addHeader(mutate, SecurityConstants.Details.USER_TYPE.getCode(), userType);
+        addHeader(mutate, SecurityConstants.Details.USER_KEY.getCode(), userKey);
         // 内部请求来源参数清除
         removeHeader(mutate, SecurityConstants.FROM_SOURCE);
         return chain.filter(exchange.mutate().request(mutate.build()).build());
@@ -99,7 +99,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
     private Mono<Void> unauthorizedResponse(ServerWebExchange exchange, String msg) {
         log.error("[鉴权异常处理]请求路径:{}", exchange.getRequest().getPath());
 
-        return ServletUtils.webFluxResponseWriter(exchange.getResponse(), msg, HttpStatus.UNAUTHORIZED);
+        return ServletUtils.webFluxResponseWriter(exchange.getResponse(), msg, HttpConstants.Status.UNAUTHORIZED.getCode());
     }
 
     /**

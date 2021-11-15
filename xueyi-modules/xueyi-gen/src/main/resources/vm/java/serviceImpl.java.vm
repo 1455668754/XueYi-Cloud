@@ -6,7 +6,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import org.springframework.stereotype.Service;
 #if($table.sub)
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.OrganizeConstants;
 import com.xueyi.common.datascope.annotation.DataScope;
 import org.springframework.transaction.annotation.Transactional;
 #end
@@ -130,7 +130,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     public int update${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix})
     {
 #if($table.sub)
-        if (!StringUtils.equals(UserConstants.STATUS_UPDATE_OPERATION, ${classNameNoPrefix}.getUpdateType())){
+        if (!StringUtils.equals(OrganizeConstants.STATUS_UPDATE_OPERATION, ${classNameNoPrefix}.getUpdateType())){
             ${classNameNoPrefix}Mapper.delete${subClassNameNoPrefix}By${AttrName}(${classNameNoPrefix});
             if (${classNameNoPrefix}.getSubList() != null && ${classNameNoPrefix}.getSubList().size() > 0){
                 ${classNameNoPrefix}Mapper.batch${subClassNameNoPrefix}(${classNameNoPrefix});

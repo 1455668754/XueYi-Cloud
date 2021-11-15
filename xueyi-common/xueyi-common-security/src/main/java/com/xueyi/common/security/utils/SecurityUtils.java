@@ -71,7 +71,7 @@ public class SecurityUtils {
      * 获取登录用户信息
      */
     public static LoginUser getLoginUser() {
-        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUser.class);
+        return SecurityContextHolder.get(SecurityConstants.Details.LOGIN_USER.getCode(), LoginUser.class);
     }
 
     /**
@@ -107,7 +107,7 @@ public class SecurityUtils {
      * @return 结果
      */
     public static boolean isAdminUser() {
-        return StringUtils.equals(AuthorityConstants.USER_TYPE_ADMIN, getUserType());
+        return StringUtils.equals(AuthorityConstants.UserType.ADMIN.getCode(), getUserType());
     }
 
     /**
@@ -116,7 +116,7 @@ public class SecurityUtils {
      * @return 结果
      */
     public static boolean isAdminTenant() {
-        return StringUtils.equals(AuthorityConstants.TENANT_TYPE_ADMIN, getIsLessor());
+        return StringUtils.equals(AuthorityConstants.TenantType.ADMIN.getCode(), getIsLessor());
     }
 
     /**

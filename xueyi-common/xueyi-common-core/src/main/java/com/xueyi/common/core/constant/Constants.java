@@ -7,36 +7,6 @@ package com.xueyi.common.core.constant;
  */
 public class Constants {
 
-    /** UTF-8 字符集 */
-    public static final String UTF8 = "UTF-8";
-
-    /** GBK 字符集 */
-    public static final String GBK = "GBK";
-
-    /** RMI 远程方法调用 */
-    public static final String LOOKUP_RMI = "rmi://";
-
-    /** LDAP 远程方法调用 */
-    public static final String LOOKUP_LDAP = "ldap://";
-
-    /** http请求 */
-    public static final String HTTP = "http://";
-
-    /** https请求 */
-    public static final String HTTPS = "https://";
-
-    /** ws请求 */
-    public static final String WS = "ws://";
-
-    /** wss请求 */
-    public static final String WSS = "wss://";
-
-    /** ws请求匹配头 */
-    public static final String DEFAULT_FILTER_PATH = "/ws/";
-
-    /** ws请求端口偏移 */
-    public static final int WS_PORT = 10;
-
     /** 成功标记 */
     public static final Integer SUCCESS = 200;
 
@@ -76,16 +46,4 @@ public class Constants {
     /** 定时任务违规的字符 */
     public static final String[] JOB_ERROR_STR = {"java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework.jndi"};
-
-    /** 系统默认值 是 */
-    public static final String SYSTEM_DEFAULT_TRUE = "Y";
-
-    /** 系统默认值 否 */
-    public static final String SYSTEM_DEFAULT_FALSE = "N";
-
-    /** 正常状态 */
-    public static final String STATUS_NORMAL = "0";
-
-    /** 封禁状态 */
-    public static final String STATUS_DISABLE = "1";
 }

@@ -26,15 +26,15 @@ public class FeignRequestInterceptor implements RequestInterceptor
         {
             Map<String, String> headers = ServletUtils.getHeaders(httpServletRequest);
             // 传递用户信息请求头，防止丢失
-            String userId = headers.get(SecurityConstants.DETAILS_USER_ID);
+            String userId = headers.get(SecurityConstants.Details.USER_ID.getCode());
             if (StringUtils.isNotEmpty(userId))
             {
-                requestTemplate.header(SecurityConstants.DETAILS_USER_ID, userId);
+                requestTemplate.header(SecurityConstants.Details.USER_ID.getCode(), userId);
             }
-            String userName = headers.get(SecurityConstants.DETAILS_USERNAME);
+            String userName = headers.get(SecurityConstants.Details.USER_NAME.getCode());
             if (StringUtils.isNotEmpty(userName))
             {
-                requestTemplate.header(SecurityConstants.DETAILS_USERNAME, userName);
+                requestTemplate.header(SecurityConstants.Details.USER_NAME.getCode(), userName);
             }
             String authentication = headers.get(SecurityConstants.AUTHORIZATION_HEADER);
             if (StringUtils.isNotEmpty(authentication))

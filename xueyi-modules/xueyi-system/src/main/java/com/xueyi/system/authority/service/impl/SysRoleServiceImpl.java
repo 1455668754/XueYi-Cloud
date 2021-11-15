@@ -2,7 +2,7 @@ package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -46,8 +47,8 @@ public class SysRoleServiceImpl implements ISysRoleService {
      */
     @Override
     @DS("#sourceName")
-    public List<SysRole> getRoleListByUserId(Long userId, Long enterpriseId, String sourceName){
-        return roleMapper.getRoleListByUserId(userId,enterpriseId);
+    public List<SysRole> getRoleListByUserId(Long userId, Long enterpriseId, String sourceName) {
+        return roleMapper.getRoleListByUserId(userId, enterpriseId);
     }
 
     /**
@@ -103,23 +104,23 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Override
     @DataScope(ueAlias = "empty")
     public int insertRole(SysRole role) {
-        if (role.getType()!=null && !StringUtils.equals(role.getType(), AuthorityConstants.NORMAL_TYPE)) {
+        if (role.getType() != null && !StringUtils.equals(role.getType(), AuthorityConstants.RoleType.NORMAL.getCode())) {
             SysOrganizeRole organizeRole = new SysOrganizeRole();
             organizeRole.setRoleId(role.getSnowflakeId());
-            switch (role.getType()){
-                case AuthorityConstants.DERIVE_TENANT_TYPE:
+            switch (Objects.requireNonNull(AuthorityConstants.RoleType.getValue(role.getType()))) {
+                case DERIVE_TENANT:
                     organizeRole.setDeriveTenantId(role.getDeriveId());
                     break;
-                case AuthorityConstants.DERIVE_ENTERPRISE_TYPE:
+                case DERIVE_ENTERPRISE:
                     organizeRole.setDeriveEnterpriseId(role.getDeriveId());
                     break;
-                case AuthorityConstants.DERIVE_DEPT_TYPE:
+                case DERIVE_DEPT:
                     organizeRole.setDeriveDeptId(role.getDeriveId());
                     break;
-                case AuthorityConstants.DERIVE_POST_TYPE:
+                case DERIVE_POST:
                     organizeRole.setDerivePostId(role.getDeriveId());
                     break;
-                case AuthorityConstants.DERIVE_USER_TYPE:
+                case DERIVE_USER:
                     organizeRole.setDeriveUserId(role.getDeriveId());
             }
             organizeRoleMapper.insertOrganizeRole(organizeRole);
@@ -160,7 +161,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     public int authDataScope(SysRole role) {
         int rows = roleMapper.updateRoleDataScope(role);
         authorityMapper.deleteDeptPostByRoleId(role);
-        if(role.getDeptPostIds().size()>0 && StringUtils.equals(AuthorityConstants.DATA_SCOPE_CUSTOM,role.getDataScope())){
+        if (role.getDeptPostIds().size() > 0 && StringUtils.equals(AuthorityConstants.DataScope.CUSTOM.getCode(), role.getDataScope())) {
             authorityMapper.insertDeptPostScope(role);
         }
         return (rows);
@@ -176,7 +177,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
     @Transactional
     public int deleteRoleByIds(SysRole role) {
         int rows = roleMapper.deleteRoleByIds(role);
-        if(rows>0){
+        if (rows > 0) {
             // 1.批量删除角色和系统-菜单关联
             authorityMapper.deleteSystemMenuByRoleIds(role);
             // 2.批量删除角色和部门-岗位关联
@@ -194,7 +195,7 @@ public class SysRoleServiceImpl implements ISysRoleService {
      * @return 结果
      */
     @Override
-    public Set<SysRole> checkRoleListByIds(SysRole role){
+    public Set<SysRole> checkRoleListByIds(SysRole role) {
         return roleMapper.checkRoleListByIds(role);
     }
 
@@ -211,9 +212,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
         }
         SysRole info = roleMapper.checkRoleCodeUnique(role);
         if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != role.getRoleId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -229,9 +230,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
         }
         SysRole info = roleMapper.checkRoleNameUnique(role);
         if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != role.getRoleId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -247,9 +248,9 @@ public class SysRoleServiceImpl implements ISysRoleService {
         }
         SysRole info = roleMapper.checkRoleKeyUnique(role);
         if (StringUtils.isNotNull(info) && info.getRoleId().longValue() != role.getRoleId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**

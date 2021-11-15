@@ -1,7 +1,7 @@
 package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
@@ -13,8 +13,6 @@ import com.xueyi.system.authority.service.ISysLoginService;
 import com.xueyi.system.organize.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -68,7 +66,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
             roles.add("admin");
         } else {
             List<SysRole> roleListCache = AuthorityUtils.getRoleListCache(enterpriseId, roleList);
-            roles.addAll(roleListCache.stream().filter(role -> StringUtils.isNotEmpty(role.getRoleKey()) && StringUtils.equals(Constants.STATUS_NORMAL,role.getStatus())).map(SysRole::getRoleKey).collect(Collectors.toSet()));
+            roles.addAll(roleListCache.stream().filter(role -> StringUtils.isNotEmpty(role.getRoleKey()) && StringUtils.equals(BaseConstants.Status.NORMAL.getCode(),role.getStatus())).map(SysRole::getRoleKey).collect(Collectors.toSet()));
         }
         return roles;
     }
@@ -91,7 +89,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
             Set<SysMenu> menuSet = authorityService.selectMenuSet(enterpriseId, AuthorityUtils.getRoleListCache(enterpriseId, roleList),EnterpriseUtils.isAdminTenant(enterpriseId), true,true);
             Set<SysMenu> ownerMenuSet = AuthorityUtils.getMenuCache(enterpriseId);
             ownerMenuSet.retainAll(menuSet);
-            perms.addAll(ownerMenuSet.stream().filter(menu -> StringUtils.isNotEmpty(menu.getPerms()) && StringUtils.equals(Constants.STATUS_NORMAL,menu.getStatus())).map(SysMenu::getPerms).collect(Collectors.toSet()));
+            perms.addAll(ownerMenuSet.stream().filter(menu -> StringUtils.isNotEmpty(menu.getPerms()) && StringUtils.equals(BaseConstants.Status.NORMAL.getCode(),menu.getStatus())).map(SysMenu::getPerms).collect(Collectors.toSet()));
         }
         return perms;
     }

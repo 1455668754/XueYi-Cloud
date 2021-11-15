@@ -26,20 +26,20 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
             return true;
         }
 
-        SecurityContextHolder.setEnterpriseId(ServletUtils.getHeader(request, SecurityConstants.DETAILS_ENTERPRISE_ID));
-        SecurityContextHolder.setEnterpriseName(ServletUtils.getHeader(request, SecurityConstants.DETAILS_ENTERPRISE_NAME));
-        SecurityContextHolder.setIsLessor(ServletUtils.getHeader(request, SecurityConstants.DETAILS_IS_LESSOR));
-        SecurityContextHolder.setUserId(ServletUtils.getHeader(request, SecurityConstants.DETAILS_USER_ID));
-        SecurityContextHolder.setUserName(ServletUtils.getHeader(request, SecurityConstants.DETAILS_USERNAME));
-        SecurityContextHolder.setUserType(ServletUtils.getHeader(request, SecurityConstants.DETAILS_TYPE));
-        SecurityContextHolder.setUserKey(ServletUtils.getHeader(request, SecurityConstants.USER_KEY));
+        SecurityContextHolder.setEnterpriseId(ServletUtils.getHeader(request, SecurityConstants.Details.ENTERPRISE_ID.getCode()));
+        SecurityContextHolder.setEnterpriseName(ServletUtils.getHeader(request, SecurityConstants.Details.ENTERPRISE_NAME.getCode()));
+        SecurityContextHolder.setIsLessor(ServletUtils.getHeader(request, SecurityConstants.Details.IS_LESSOR.getCode()));
+        SecurityContextHolder.setUserId(ServletUtils.getHeader(request, SecurityConstants.Details.USER_ID.getCode()));
+        SecurityContextHolder.setUserName(ServletUtils.getHeader(request, SecurityConstants.Details.USER_NAME.getCode()));
+        SecurityContextHolder.setUserType(ServletUtils.getHeader(request, SecurityConstants.Details.USER_TYPE.getCode()));
+        SecurityContextHolder.setUserKey(ServletUtils.getHeader(request, SecurityConstants.Details.USER_KEY.getCode()));
 
         String token = SecurityUtils.getToken();
         if (StringUtils.isNotEmpty(token)) {
             LoginUser loginUser = AuthUtil.getLoginUser(token);
             if (StringUtils.isNotNull(loginUser)) {
                 AuthUtil.verifyLoginUserExpire(loginUser);
-                SecurityContextHolder.set(SecurityConstants.LOGIN_USER, loginUser);
+                SecurityContextHolder.set(SecurityConstants.Details.LOGIN_USER.getCode(), loginUser);
             }
         }
         return true;

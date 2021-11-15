@@ -2,10 +2,11 @@ package com.xueyi.system.dict.service.impl;
 
 import java.util.List;
 import javax.annotation.PostConstruct;
+
+import com.xueyi.common.core.constant.BaseConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.domain.dict.SysDictData;
@@ -210,8 +211,8 @@ public class SysDictTypeServiceImpl implements ISysDictTypeService
         SysDictType dictType = dictTypeMapper.checkDictTypeUnique(dict.getDictType());
         if (StringUtils.isNotNull(dictType) && dictType.getDictId().longValue() != dictId.longValue())
         {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 }

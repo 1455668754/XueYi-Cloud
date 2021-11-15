@@ -3,7 +3,7 @@ package com.xueyi.system.api.feign;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import com.xueyi.common.core.constant.ServiceNameConstants;
+import com.xueyi.common.core.constant.ServiceConstants;
 import org.springframework.web.bind.annotation.RequestHeader;
 import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.domain.R;
@@ -15,7 +15,7 @@ import com.xueyi.system.api.model.LoginUser;
  *
  * @author xueyi
  */
-@FeignClient(contextId = "remoteUserService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteUserFallbackFactory.class)
+@FeignClient(contextId = "remoteUserService", value = ServiceConstants.SYSTEM_SERVICE, fallbackFactory = RemoteUserFallbackFactory.class)
 public interface RemoteUserService {
 
     /**

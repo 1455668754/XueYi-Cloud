@@ -1,7 +1,7 @@
 package com.xueyi.common.core.constant;
 
 /**
- * 消息队列常量信息
+ * 消息队列通用常量
  *
  * @author Ethereal
  */

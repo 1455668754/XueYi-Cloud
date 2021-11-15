@@ -30,10 +30,10 @@ public class InnerAuthAspect implements Ordered
             throw new InnerAuthException("没有内部访问权限，不允许访问");
         }
 
-        String enterpriseId = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_ENTERPRISE_ID);
-        String enterpriseName = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_ENTERPRISE_NAME);
-        String userId = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USER_ID);
-        String userName = ServletUtils.getRequest().getHeader(SecurityConstants.DETAILS_USERNAME);
+        String enterpriseId = ServletUtils.getRequest().getHeader(SecurityConstants.Details.ENTERPRISE_ID.getCode());
+        String enterpriseName = ServletUtils.getRequest().getHeader(SecurityConstants.Details.ENTERPRISE_NAME.getCode());
+        String userId = ServletUtils.getRequest().getHeader(SecurityConstants.Details.USER_ID.getCode());
+        String userName = ServletUtils.getRequest().getHeader(SecurityConstants.Details.USER_NAME.getCode());
         // 用户信息验证
         if (innerAuth.isUser() && (StringUtils.isEmpty(enterpriseId) || StringUtils.isEmpty(enterpriseName)) && (StringUtils.isEmpty(userId) || StringUtils.isEmpty(userName)))
         {

@@ -15,22 +15,21 @@ import com.xueyi.common.core.exception.job.TaskException;
 import com.xueyi.common.core.exception.job.TaskException.Code;
 import com.xueyi.job.domain.SysJob;
 
+import java.util.Objects;
+
 /**
  * 定时任务工具类
- * 
- * @author ruoyi
  *
+ * @author xueyi
  */
-public class ScheduleUtils
-{
+public class ScheduleUtils {
     /**
      * 得到quartz任务类
      *
      * @param sysJob 执行计划
      * @return 具体执行任务类
      */
-    private static Class<? extends Job> getQuartzJobClass(SysJob sysJob)
-    {
+    private static Class<? extends Job> getQuartzJobClass(SysJob sysJob) {
         boolean isConcurrent = "0".equals(sysJob.getConcurrent());
         return isConcurrent ? QuartzJobExecution.class : QuartzDisallowConcurrentExecution.class;
     }
@@ -38,24 +37,21 @@ public class ScheduleUtils
     /**
      * 构建任务触发对象
      */
-    public static TriggerKey getTriggerKey(Long jobId, String jobGroup)
-    {
+    public static TriggerKey getTriggerKey(Long jobId, String jobGroup) {
         return TriggerKey.triggerKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup);
     }
 
     /**
      * 构建任务键对象
      */
-    public static JobKey getJobKey(Long jobId, String jobGroup)
-    {
+    public static JobKey getJobKey(Long jobId, String jobGroup) {
         return JobKey.jobKey(ScheduleConstants.TASK_CLASS_NAME + jobId, jobGroup);
     }
 
     /**
      * 创建定时任务
      */
-    public static void createScheduleJob(Scheduler scheduler, SysJob job) throws SchedulerException, TaskException
-    {
+    public static void createScheduleJob(Scheduler scheduler, SysJob job) throws SchedulerException, TaskException {
         Class<? extends Job> jobClass = getQuartzJobClass(job);
         // 构建job信息
         Long jobId = job.getJobId();
@@ -74,8 +70,7 @@ public class ScheduleUtils
         jobDetail.getJobDataMap().put(ScheduleConstants.TASK_PROPERTIES, job);
 
         // 判断是否存在
-        if (scheduler.checkExists(getJobKey(jobId, jobGroup)))
-        {
+        if (scheduler.checkExists(getJobKey(jobId, jobGroup))) {
             // 防止创建时存在数据问题 先移除，然后在执行创建操作
             scheduler.deleteJob(getJobKey(jobId, jobGroup));
         }
@@ -83,8 +78,7 @@ public class ScheduleUtils
         scheduler.scheduleJob(jobDetail, trigger);
 
         // 暂停任务
-        if (job.getStatus().equals(ScheduleConstants.Status.PAUSE.getValue()))
-        {
+        if (job.getStatus().equals(ScheduleConstants.Status.PAUSE.getCode())) {
             scheduler.pauseJob(ScheduleUtils.getJobKey(jobId, jobGroup));
         }
     }
@@ -93,17 +87,15 @@ public class ScheduleUtils
      * 设置定时任务策略
      */
     public static CronScheduleBuilder handleCronScheduleMisfirePolicy(SysJob job, CronScheduleBuilder cb)
-            throws TaskException
-    {
-        switch (job.getMisfirePolicy())
-        {
-            case ScheduleConstants.MISFIRE_DEFAULT:
+            throws TaskException {
+        switch (Objects.requireNonNull(ScheduleConstants.Misfire.getValue(job.getMisfirePolicy()))) {
+            case DEFAULT:
                 return cb;
-            case ScheduleConstants.MISFIRE_IGNORE_MISFIRES:
+            case IGNORE_MISFIRES:
                 return cb.withMisfireHandlingInstructionIgnoreMisfires();
-            case ScheduleConstants.MISFIRE_FIRE_AND_PROCEED:
+            case FIRE_AND_PROCEED:
                 return cb.withMisfireHandlingInstructionFireAndProceed();
-            case ScheduleConstants.MISFIRE_DO_NOTHING:
+            case DO_NOTHING:
                 return cb.withMisfireHandlingInstructionDoNothing();
             default:
                 throw new TaskException("The task misfire policy '" + job.getMisfirePolicy()

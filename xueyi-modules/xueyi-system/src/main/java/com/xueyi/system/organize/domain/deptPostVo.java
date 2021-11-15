@@ -1,7 +1,6 @@
 package com.xueyi.system.organize.domain;
 
 import com.xueyi.common.core.web.domain.BaseEntity;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class deptPostVo extends BaseEntity
     private String type;
 
     /** 子部门/岗位 */
-    private List<deptPostVo> children = new ArrayList<deptPostVo>();
+    private List<deptPostVo> children;
 
     public deptPostVo() {
 

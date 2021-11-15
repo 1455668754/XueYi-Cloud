@@ -92,7 +92,7 @@ public class EnterpriseUtils {
             try {
                 Field fileId = enterprise.getClass().getDeclaredField("isLessor");
                 fileId.setAccessible(true);
-                return StringUtils.equals(AuthorityConstants.TENANT_TYPE_ADMIN, (String) fileId.get(enterprise));
+                return StringUtils.equals(AuthorityConstants.TenantType.ADMIN.getCode(), (String) fileId.get(enterprise));
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 e.printStackTrace();
             }

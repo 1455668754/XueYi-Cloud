@@ -296,7 +296,7 @@ public class SysUser extends BaseEntity {
     }
 
     public static boolean isAdmin(String userType) {
-        return StringUtils.equals(AuthorityConstants.USER_TYPE_ADMIN, userType);
+        return StringUtils.equals(AuthorityConstants.UserType.ADMIN.getCode(), userType);
     }
 
     @Override

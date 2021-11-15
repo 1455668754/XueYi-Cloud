@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.Channel;
 import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datasource.utils.DSUtils;
 import com.xueyi.common.core.constant.MessageConstant;
 import com.xueyi.common.message.domain.Message;
@@ -57,12 +58,12 @@ public class SourceSynchronization extends BaseListener {
     protected void execute(Message message) {
         if (message.getData() != null) {
             Source source = JSONObject.toJavaObject(JSON.parseObject(message.getData().toString()), Source.class);
-            if (source.getSyncType() == TenantConstants.SYNC_TYPE_REFRESH) {
+            if (StringUtils.equals(TenantConstants.SyncType.REFRESH.getCode(), source.getSyncType())) {
                 DSUtils.delDs(source.getSlave());
                 DSUtils.addDs(source);
-            } else if (source.getSyncType() == TenantConstants.SYNC_TYPE_ADD) {
+            } else if (StringUtils.equals(TenantConstants.SyncType.ADD.getCode(), source.getSyncType())) {
                 DSUtils.addDs(source);
-            } else if (source.getSyncType() == TenantConstants.SYNC_TYPE_DELETE) {
+            } else if (StringUtils.equals(TenantConstants.SyncType.DELETE.getCode(), source.getSyncType())) {
                 DSUtils.delDs(source.getSlave());
             }
         }

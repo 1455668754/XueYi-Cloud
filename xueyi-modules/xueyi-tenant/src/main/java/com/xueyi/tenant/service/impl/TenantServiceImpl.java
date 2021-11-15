@@ -1,7 +1,7 @@
 package com.xueyi.tenant.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.DataSourceUtils;
@@ -147,9 +147,9 @@ public class TenantServiceImpl implements ITenantService {
     public String mainCheckTenantNameUnique(Tenant tenant) {
         Tenant info = tenantMapper.mainCheckTenantNameUnique(tenant);
         if (StringUtils.isNotNull(info)) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**

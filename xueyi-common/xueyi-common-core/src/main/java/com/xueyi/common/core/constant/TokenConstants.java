@@ -1,7 +1,7 @@
 package com.xueyi.common.core.constant;
 
 /**
- * Token的Key常量
+ * Token的Key通用常量
  *
  * @author xueyi
  */

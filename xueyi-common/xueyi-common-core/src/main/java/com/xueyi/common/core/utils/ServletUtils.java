@@ -1,7 +1,7 @@
 package com.xueyi.common.core.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.HttpConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.text.Convert;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -190,7 +190,7 @@ public class ServletUtils {
      */
     public static String urlEncode(String str) {
         try {
-            return URLEncoder.encode(str, Constants.UTF8);
+            return URLEncoder.encode(str, HttpConstants.Character.UTF8.getCode());
         } catch (UnsupportedEncodingException e) {
             return StringUtils.EMPTY;
         }
@@ -204,7 +204,7 @@ public class ServletUtils {
      */
     public static String urlDecode(String str) {
         try {
-            return URLDecoder.decode(str, Constants.UTF8);
+            return URLDecoder.decode(str, HttpConstants.Character.UTF8.getCode());
         } catch (UnsupportedEncodingException e) {
             return StringUtils.EMPTY;
         }

@@ -10,6 +10,7 @@ import java.util.List;
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class RouterVo {
+
     /** 路由名字 */
     private String name;
 

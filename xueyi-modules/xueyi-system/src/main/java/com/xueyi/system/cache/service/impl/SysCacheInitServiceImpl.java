@@ -129,7 +129,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         List<Source> sourceList = sourceCacheMapper.mainSelectSourceCacheListBySource();
         for (Source source : sourceList) {
             for (Source value : source.getValues()) {
-                if (StringUtils.equals(TenantConstants.IS_MAIN_TRUE, value.getIsMain())) {
+                if (StringUtils.equals(TenantConstants.IsMain.YES.getCode(), value.getIsMain())) {
                     source.setMaster(value.getMaster());
                     source.setSlave(value.getSlave());
                 }
@@ -147,7 +147,7 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     public void refreshSourceCacheByStrategyId(Long strategyId) {
         Source source = sourceCacheMapper.mainSelectSourceCacheByStrategyId(strategyId);
         for (Source value : source.getValues()) {
-            if (StringUtils.equals(TenantConstants.IS_MAIN_TRUE, value.getIsMain())) {
+            if (StringUtils.equals(TenantConstants.IsMain.YES.getCode(), value.getIsMain())) {
                 source.setMaster(value.getMaster());
                 source.setSlave(value.getSlave());
             }

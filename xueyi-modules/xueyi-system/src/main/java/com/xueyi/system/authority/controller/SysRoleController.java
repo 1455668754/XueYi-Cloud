@@ -1,6 +1,7 @@
 package com.xueyi.system.authority.controller;
 
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.BaseConstants;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
@@ -63,14 +64,14 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysRole role) {
-        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleCodeUnique(role))) {
+        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), roleService.checkRoleCodeUnique(role))) {
             return AjaxResult.error("新增角色'" + role.getName() + "'失败，角色编码已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role))) {
+        } else if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), roleService.checkRoleNameUnique(role))) {
             return AjaxResult.error("新增角色'" + role.getName() + "'失败，角色名称已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role))) {
+        } else if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), roleService.checkRoleKeyUnique(role))) {
             return AjaxResult.error("修改角色'" + role.getName() + "'失败，角色权限已存在");
         }
-        return toAjax(refreshRoleCache(roleService.insertRole(role),role));
+        return toAjax(refreshRoleCache(roleService.insertRole(role), role));
     }
 
     /**
@@ -80,14 +81,14 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysRole role) {
-        if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleCodeUnique(role))) {
+        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), roleService.checkRoleCodeUnique(role))) {
             return AjaxResult.error("修改角色'" + role.getName() + "'失败，角色编码已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleNameUnique(role))) {
+        } else if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), roleService.checkRoleNameUnique(role))) {
             return AjaxResult.error("修改角色'" + role.getName() + "'失败，角色名称已存在");
-        } else if (UserConstants.NOT_UNIQUE.equals(roleService.checkRoleKeyUnique(role))) {
+        } else if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), roleService.checkRoleKeyUnique(role))) {
             return AjaxResult.error("修改角色'" + role.getName() + "'失败，角色权限已存在");
         }
-        return toAjax(refreshRoleCache(roleService.updateRole(role),role));
+        return toAjax(refreshRoleCache(roleService.updateRole(role), role));
     }
 
     /**
@@ -97,7 +98,7 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysRole role) {
-        return toAjax(refreshRoleCache(roleService.updateRoleStatus(role),role));
+        return toAjax(refreshRoleCache(roleService.updateRoleStatus(role), role));
     }
 
     /**
@@ -107,7 +108,7 @@ public class SysRoleController extends BaseController {
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/dataScope/save")
     public AjaxResult dataScope(@RequestBody SysRole role) {
-        return toAjax(refreshRoleCache(roleService.authDataScope(role),role));
+        return toAjax(refreshRoleCache(roleService.authDataScope(role), role));
     }
 
     /**
@@ -119,11 +120,11 @@ public class SysRoleController extends BaseController {
     public AjaxResult remove(@RequestBody SysRole role) {
         Set<SysRole> before = roleService.checkRoleListByIds(role);
         int rows = roleService.deleteRoleByIds(role);
-        if(rows>0){
+        if (rows > 0) {
             Set<SysRole> after = roleService.checkRoleListByIds(role);
             before.removeAll(after);
-            for (SysRole delRole: before) {
-                AuthorityUtils.deleteRoleCache(SecurityUtils.getEnterpriseId(),delRole.getRoleId());
+            for (SysRole delRole : before) {
+                AuthorityUtils.deleteRoleCache(SecurityUtils.getEnterpriseId(), delRole.getRoleId());
             }
         }
         return toAjax(rows);
@@ -156,8 +157,8 @@ public class SysRoleController extends BaseController {
      * @param role 角色信息 | roleId 角色Id | enterpriseId 企业Id
      * @return 结果
      */
-    private int refreshRoleCache(int rows,SysRole role){
-        if(rows>0){
+    private int refreshRoleCache(int rows, SysRole role) {
+        if (rows > 0) {
             cacheInitService.refreshRoleCacheByRoleIdToIsolate(role);
         }
         return rows;

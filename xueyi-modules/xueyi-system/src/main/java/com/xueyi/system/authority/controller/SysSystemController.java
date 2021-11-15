@@ -1,7 +1,7 @@
 package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
@@ -61,7 +61,7 @@ public class SysSystemController extends BaseController {
     @Log(title = "模块管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SysSystem system) {
-        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, system.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
+        if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), system.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
             return AjaxResult.error("新增模块'" + system.getName() + "'失败，没有操作权限");
         }
         return toAjax(refreshCache(system, systemService.mainInsertSystem(system), true));
@@ -75,7 +75,7 @@ public class SysSystemController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody SysSystem system) {
         SysSystem check = systemService.mainSelectSystemById(new SysSystem(system.getSystemId()));
-        if ((StringUtils.equals(Constants.SYSTEM_DEFAULT_TRUE, check.getIsChange()) || StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, check.getIsCommon())) && !SecurityUtils.isAdminTenant()) {
+        if ((StringUtils.equals(BaseConstants.Default.YES.getCode(), check.getIsChange()) || StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), check.getIsCommon())) && !SecurityUtils.isAdminTenant()) {
             return AjaxResult.error("修改模块'" + system.getName() + "'失败，没有操作权限");
         }
         return toAjax(refreshCache(system, systemService.mainUpdateSystem(system), true));
@@ -89,7 +89,7 @@ public class SysSystemController extends BaseController {
     @PutMapping("/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysSystem system) {
         SysSystem check = systemService.mainSelectSystemById(new SysSystem(system.getSystemId()));
-        if ((StringUtils.equals(Constants.SYSTEM_DEFAULT_TRUE, check.getIsChange()) || StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, check.getIsCommon())) && !SecurityUtils.isAdminTenant()) {
+        if ((StringUtils.equals(BaseConstants.Default.YES.getCode(), check.getIsChange()) || StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), check.getIsCommon())) && !SecurityUtils.isAdminTenant()) {
             return AjaxResult.error("修改模块状态'" + check.getName() + "'失败，没有操作权限");
         }
         return toAjax(refreshCache(system, systemService.mainUpdateSystemStatus(system), true));
@@ -108,7 +108,7 @@ public class SysSystemController extends BaseController {
             Set<SysSystem> after = systemService.mainCheckSystemListByIds(system);
             before.removeAll(after);
             for (SysSystem vo : before) {
-                AuthorityUtils.deleteRouteCache(StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, vo.getIsCommon()) ? AuthorityConstants.COMMON_ENTERPRISE : SecurityUtils.getEnterpriseId(), vo.getSystemId());
+                AuthorityUtils.deleteRouteCache(StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), vo.getIsCommon()) ? AuthorityConstants.COMMON_ENTERPRISE : SecurityUtils.getEnterpriseId(), vo.getSystemId());
             }
             refreshCache(system, rows, false);
         }

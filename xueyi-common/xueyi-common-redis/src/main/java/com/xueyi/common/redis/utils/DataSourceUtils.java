@@ -1,7 +1,7 @@
 package com.xueyi.common.redis.utils;
 
 import com.xueyi.common.core.constant.CacheConstants;
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.service.RedisService;
@@ -118,7 +118,7 @@ public class DataSourceUtils {
                 try {
                     Field fileId = source.getClass().getSuperclass().getDeclaredField("isChange");
                     fileId.setAccessible(true);
-                    if (StringUtils.equals(Constants.SYSTEM_DEFAULT_FALSE, (CharSequence) fileId.get(source))) {
+                    if (StringUtils.equals(BaseConstants.Default.NO.getCode(), (CharSequence) fileId.get(source))) {
                         deleteSourceCache(Id);
                     }
                 } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -128,7 +128,7 @@ public class DataSourceUtils {
         }
     }
 
-    private static <T> String getMainSource(T source){
+    private static <T> String getMainSource(T source) {
         if (source != null) {
             try {
                 Field fileId = source.getClass().getDeclaredField("master");

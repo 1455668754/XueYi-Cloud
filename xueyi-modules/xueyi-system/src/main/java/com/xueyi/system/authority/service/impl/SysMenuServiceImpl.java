@@ -2,8 +2,7 @@ package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.Constants;
-import com.xueyi.common.core.constant.MenuConstants;
+import com.xueyi.common.core.constant.HttpConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
@@ -64,7 +63,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
             rangeSet = authorityService.selectMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true, true);
         }
         menuSet.retainAll(rangeSet);
-        return TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuSet),"menuId", "parentId", "children", MenuConstants.MENU_TOP_NODE, true);
+        return TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuSet), "menuId", "parentId", "children", AuthorityConstants.MENU_TOP_NODE, true);
     }
 
     /**
@@ -87,7 +86,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
         menuSet.addAll(map.get("halfIds"));
         menuSet.addAll(map.get("wholeIds"));
         menu.getParams().put("insideIds", menuSet);
-        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuMapper.mainSelectSystemMenuList(menu)), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE, false);
+        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuMapper.mainSelectSystemMenuList(menu)), "Uid", "FUid", "children", AuthorityConstants.SYSTEM_TOP_NODE, false);
         return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
@@ -111,7 +110,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
     @Override
     @DataScope(uedAlias = "empty")
     public int mainInsertMenu(SysMenu menu) {
-        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
+        if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             menu.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
         }
         return menuMapper.mainInsertMenu(menu);
@@ -126,7 +125,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
     @Override
     @DataScope(uedAlias = "empty")
     public int mainUpdateMenu(SysMenu menu) {
-        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
+        if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
             menu.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
         }
         return menuMapper.mainUpdateMenu(menu);
@@ -196,14 +195,14 @@ public class SysMenuServiceImpl implements ISysMenuService {
         List<RouterVo> routers = new LinkedList<RouterVo>();
         for (SysMenu menu : menus) {
             RouterVo router = new RouterVo();
-            router.setHidden(MenuConstants.VISIBLE_FALSE.equals(menu.getVisible()));
+            router.setHidden(StringUtils.equals(AuthorityConstants.Visible.NO.getCode(), menu.getVisible()));
             router.setName(getRouteName(menu));
             router.setPath(getRouterPath(menu));
             router.setComponent(getComponent(menu));
             router.setQuery(menu.getQuery());
-            router.setMeta(new MetaVo(menu.getName(), menu.getIcon(), StringUtils.equals(MenuConstants.NO_CACHE, menu.getIsCache()), menu.getPath()));
+            router.setMeta(new MetaVo(menu.getName(), menu.getIcon(), StringUtils.equals(AuthorityConstants.Cache.NO.getCode(), menu.getIsCache()), menu.getPath()));
             List<SysMenu> cMenus = menu.getChildren();
-            if (!cMenus.isEmpty() && cMenus.size() > 0 && MenuConstants.TYPE_DIR.equals(menu.getMenuType())) {
+            if (cMenus != null && !cMenus.isEmpty() && cMenus.size() > 0 && StringUtils.equals(AuthorityConstants.MenuType.DIR.getCode(), menu.getMenuType())) {
                 router.setAlwaysShow(true);
                 router.setRedirect("noRedirect");
                 router.setChildren(buildMenus(cMenus));
@@ -214,18 +213,18 @@ public class SysMenuServiceImpl implements ISysMenuService {
                 children.setPath(menu.getPath());
                 children.setComponent(menu.getComponent());
                 children.setName(StringUtils.capitalize(menu.getPath()));
-                children.setMeta(new MetaVo(menu.getName(), menu.getIcon(), StringUtils.equals(MenuConstants.NO_CACHE, menu.getIsCache()), menu.getPath()));
+                children.setMeta(new MetaVo(menu.getName(), menu.getIcon(), StringUtils.equals(AuthorityConstants.Cache.NO.getCode(), menu.getIsCache()), menu.getPath()));
                 children.setQuery(menu.getQuery());
                 childrenList.add(children);
                 router.setChildren(childrenList);
-            } else if (menu.getParentId().intValue() == MenuConstants.MENU_TOP_NODE.intValue() && isInnerLink(menu)) {
+            } else if (menu.getParentId().intValue() == AuthorityConstants.MENU_TOP_NODE.intValue() && isInnerLink(menu)) {
                 router.setMeta(new MetaVo(menu.getName(), menu.getIcon()));
                 router.setPath("/inner");
                 List<RouterVo> childrenList = new ArrayList<RouterVo>();
                 RouterVo children = new RouterVo();
-                String routerPath = StringUtils.replaceEach(menu.getPath(), new String[]{Constants.HTTP, Constants.HTTPS}, new String[]{"", ""});
+                String routerPath = StringUtils.replaceEach(menu.getPath(), new String[]{HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode()}, new String[]{"", ""});
                 children.setPath(routerPath);
-                children.setComponent(MenuConstants.INNER_LINK);
+                children.setComponent(AuthorityConstants.ComponentType.INNER_LINK.getCode());
                 children.setName(StringUtils.capitalize(routerPath));
                 children.setMeta(new MetaVo(menu.getName(), menu.getIcon(), menu.getPath()));
                 childrenList.add(children);
@@ -260,12 +259,12 @@ public class SysMenuServiceImpl implements ISysMenuService {
     public String getRouterPath(SysMenu menu) {
         String routerPath = menu.getPath();
         // 内链打开外网方式
-        if (menu.getParentId().intValue() != MenuConstants.MENU_TOP_NODE.intValue() && isInnerLink(menu)) {
-            routerPath = StringUtils.replaceEach(routerPath, new String[]{Constants.HTTP, Constants.HTTPS}, new String[]{"", ""});
+        if (menu.getParentId().intValue() != AuthorityConstants.MENU_TOP_NODE.intValue() && isInnerLink(menu)) {
+            routerPath = StringUtils.replaceEach(routerPath, new String[]{HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode()}, new String[]{"", ""});
         }
         // 非外链并且是一级目录（类型为目录）
-        if (MenuConstants.MENU_TOP_NODE == menu.getParentId().intValue() && MenuConstants.TYPE_DIR.equals(menu.getMenuType())
-                && MenuConstants.NO_FRAME.equals(menu.getIsFrame())) {
+        if (AuthorityConstants.MENU_TOP_NODE == menu.getParentId().intValue() && StringUtils.equals(AuthorityConstants.MenuType.DIR.getCode(), menu.getMenuType())
+                && StringUtils.equals(AuthorityConstants.Frame.NO.getCode(), menu.getIsFrame())) {
             routerPath = "/" + menu.getPath();
         }
         // 非外链并且是一级目录（类型为菜单）
@@ -282,13 +281,13 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 组件信息
      */
     public String getComponent(SysMenu menu) {
-        String component = MenuConstants.LAYOUT;
+        String component = AuthorityConstants.ComponentType.LAYOUT.getCode();
         if (StringUtils.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu)) {
             component = menu.getComponent();
-        } else if (StringUtils.isEmpty(menu.getComponent()) && menu.getParentId().intValue() != MenuConstants.MENU_TOP_NODE.intValue() && isInnerLink(menu)) {
-            component = MenuConstants.INNER_LINK;
+        } else if (StringUtils.isEmpty(menu.getComponent()) && menu.getParentId().intValue() != AuthorityConstants.MENU_TOP_NODE.intValue() && isInnerLink(menu)) {
+            component = AuthorityConstants.ComponentType.INNER_LINK.getCode();
         } else if (StringUtils.isEmpty(menu.getComponent()) && isParentView(menu)) {
-            component = MenuConstants.PARENT_VIEW;
+            component = AuthorityConstants.ComponentType.PARENT_VIEW.getCode();
         }
         return component;
     }
@@ -300,8 +299,8 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     public boolean isMenuFrame(SysMenu menu) {
-        return menu.getParentId().intValue() == 0 && MenuConstants.TYPE_MENU.equals(menu.getMenuType())
-                && menu.getIsFrame().equals(MenuConstants.NO_FRAME);
+        return menu.getParentId().intValue() == 0 && StringUtils.equals(AuthorityConstants.MenuType.MENU.getCode(), menu.getMenuType())
+                && StringUtils.equals(AuthorityConstants.Frame.NO.getCode(), menu.getIsFrame());
     }
 
     /**
@@ -311,7 +310,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     public boolean isInnerLink(SysMenu menu) {
-        return menu.getIsFrame().equals(MenuConstants.NO_FRAME) && StringUtils.ishttp(menu.getPath());
+        return StringUtils.equals(AuthorityConstants.Frame.NO.getCode(), menu.getIsFrame()) && StringUtils.ishttp(menu.getPath());
     }
 
     /**
@@ -321,6 +320,6 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     public boolean isParentView(SysMenu menu) {
-        return menu.getParentId().intValue() != 0 && MenuConstants.TYPE_DIR.equals(menu.getMenuType());
+        return menu.getParentId().intValue() != 0 && StringUtils.equals(AuthorityConstants.MenuType.DIR.getCode(), menu.getMenuType());
     }
 }

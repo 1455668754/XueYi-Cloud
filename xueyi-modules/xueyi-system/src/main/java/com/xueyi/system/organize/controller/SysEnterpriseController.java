@@ -1,8 +1,8 @@
 package com.xueyi.system.organize.controller;
 
 import com.xueyi.common.core.constant.CacheConstants;
-import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
@@ -115,7 +115,7 @@ public class SysEnterpriseController extends BaseController {
     @Log(title = "企业账号修改", businessType = BusinessType.UPDATE)
     @PutMapping("/changeEnterpriseName")
     public AjaxResult changeEnterpriseName(@Validated @RequestBody SysEnterprise enterprise) {
-        if (StringUtils.equals(UserConstants.NOT_UNIQUE, enterpriseService.mainCheckEnterpriseNameUnique(enterprise))) {
+        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), enterpriseService.mainCheckEnterpriseNameUnique(enterprise))) {
             return AjaxResult.error("修改失败，该企业账号名不可用，请换一个账号名！");
         }
         int i = refreshLoginCache(enterpriseService.mainUpdateEnterpriseName(enterprise));

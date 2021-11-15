@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import com.xueyi.common.core.constant.HttpConstants;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.velocity.Template;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.GenConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.text.CharsetKit;
@@ -190,7 +190,7 @@ public class GenTableServiceImpl implements IGenTableService {
         for (String template : templates) {
             // 渲染模板
             StringWriter sw = new StringWriter();
-            Template tpl = Velocity.getTemplate(template, Constants.UTF8);
+            Template tpl = Velocity.getTemplate(template, HttpConstants.Character.UTF8.getCode());
             tpl.merge(context, sw);
             dataMap.put(template, sw.toString());
         }
@@ -236,7 +236,7 @@ public class GenTableServiceImpl implements IGenTableService {
             if (!StringUtils.containsAny(template, "sql.vm", "api.js.vm", "index.vue.vm", "index-tree.vue.vm")) {
                 // 渲染模板
                 StringWriter sw = new StringWriter();
-                Template tpl = Velocity.getTemplate(template, Constants.UTF8);
+                Template tpl = Velocity.getTemplate(template, HttpConstants.Character.UTF8.getCode());
                 tpl.merge(context, sw);
                 try {
                     String path = getGenPath(table, template);
@@ -316,12 +316,12 @@ public class GenTableServiceImpl implements IGenTableService {
         for (String template : templates) {
             // 渲染模板
             StringWriter sw = new StringWriter();
-            Template tpl = Velocity.getTemplate(template, Constants.UTF8);
+            Template tpl = Velocity.getTemplate(template, HttpConstants.Character.UTF8.getCode());
             tpl.merge(context, sw);
             try {
                 // 添加到zip
                 zip.putNextEntry(new ZipEntry(VelocityUtils.getFileName(template, table)));
-                IOUtils.write(sw.toString(), zip, Constants.UTF8);
+                IOUtils.write(sw.toString(), zip, HttpConstants.Character.UTF8.getCode());
                 IOUtils.closeQuietly(sw);
                 zip.flush();
                 zip.closeEntry();

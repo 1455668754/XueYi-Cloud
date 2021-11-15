@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.xueyi.common.core.constant.HttpConstants;
 import org.springframework.util.AntPathMatcher;
-import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.text.StrFormatter;
 
 /**
@@ -259,7 +259,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 结果
      */
     public static boolean ishttp(String link) {
-        return StringUtils.startsWithAny(link, Constants.HTTP, Constants.HTTPS);
+        return StringUtils.startsWithAny(link, HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode());
     }
 
     /**

@@ -2,8 +2,7 @@ package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.RoleConstants;
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
@@ -133,22 +132,21 @@ public class SysUserServiceImpl implements ISysUserService {
     @DataScope(ueAlias = "empty")
     public int insertUser(SysUser user) {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
-        SysPost post = new SysPost(user.getPostId());
-        SysPost info = postMapper.selectPostById(post);
+        SysPost info = postMapper.selectPostById(new SysPost(user.getPostId()));
         user.setDeptId(info.getDeptId());
-        if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
-            user.setStatus(UserConstants.USER_DISABLE);
+        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), user.getStatus()) && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), info.getStatus())) {
+            user.setStatus(BaseConstants.Status.DISABLE.getCode());
             try {
                 throw new ServiceException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
             } catch (Exception ignored) {
             }
         }
         int row = userMapper.insertUser(user);
-        if(row>0){
+        if (row > 0) {
             SysRole role = new SysRole();
-            role.setType(AuthorityConstants.DERIVE_USER_TYPE);
+            role.setType(AuthorityConstants.RoleType.DERIVE_USER.getCode());
             role.setDeriveId(user.getSnowflakeId());
-            role.setName("用户衍生:"+user.getSnowflakeId());
+            role.setName("用户衍生:" + user.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;
@@ -163,11 +161,10 @@ public class SysUserServiceImpl implements ISysUserService {
     @Override
     public int updateUser(SysUser user) {
         // 欲启用用户时判断归属岗位是否启用，未启用则设置本用户为禁用状态
-        SysPost post = new SysPost(user.getPostId());
-        SysPost info = postMapper.selectPostById(post);
+        SysPost info = postMapper.selectPostById(new SysPost(user.getPostId()));
         user.setDeptId(info.getDeptId());
-        if (UserConstants.USER_NORMAL.equals(user.getStatus()) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
-            user.setStatus(UserConstants.USER_DISABLE);
+        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), user.getStatus()) && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), info.getStatus())) {
+            user.setStatus(BaseConstants.Status.DISABLE.getCode());
             try {
                 throw new ServiceException(String.format("%1$s归属岗位已停用,无法启用该用户", user.getNickName()));
             } catch (Exception ignored) {
@@ -190,8 +187,8 @@ public class SysUserServiceImpl implements ISysUserService {
         organizeRole.setUserId(user.getUserId());
         organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
         // 2.是否需要执行新增
-        if(user.getRoleIds().length > 0){
-            organizeRole.getParams().put("roleIds",user.getRoleIds());
+        if (user.getRoleIds().length > 0) {
+            organizeRole.getParams().put("roleIds", user.getRoleIds());
             organizeRoleMapper.batchOrganizeRole(organizeRole);
         }
         return 1;
@@ -252,7 +249,7 @@ public class SysUserServiceImpl implements ISysUserService {
     public int deleteUserById(SysUser user) {
         // 1.删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(AuthorityConstants.DERIVE_USER_TYPE);
+        role.setType(AuthorityConstants.RoleType.DERIVE_USER.getCode());
         role.setDeriveId(user.getUserId());
         roleMapper.deleteRoleByDeriveId(role);
         // 2.删除用户-角色关联信息
@@ -274,14 +271,14 @@ public class SysUserServiceImpl implements ISysUserService {
     public int deleteUserByIds(SysUser user) {
         // 1.批量删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(AuthorityConstants.DERIVE_USER_TYPE);
-        role.getParams().put("Ids",user.getParams().get("Ids"));
+        role.setType(AuthorityConstants.RoleType.DERIVE_USER.getCode());
+        role.getParams().put("Ids", user.getParams().get("Ids"));
         roleMapper.deleteRoleByDeriveIds(role);
         // 2.批量删除用户-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
-        organizeRole.setUserId(RoleConstants.DELETE_PARAM);
-        organizeRole.setDeriveUserId(RoleConstants.DELETE_PARAM);
-        organizeRole.getParams().put("Ids",user.getParams().get("Ids"));
+        organizeRole.setUserId(AuthorityConstants.DELETE_PARAM);
+        organizeRole.setDeriveUserId(AuthorityConstants.DELETE_PARAM);
+        organizeRole.getParams().put("Ids", user.getParams().get("Ids"));
         organizeRoleMapper.deleteOrganizeRoleByOrganizeIds(organizeRole);
         return userMapper.deleteUserByIds(user);
     }
@@ -352,9 +349,9 @@ public class SysUserServiceImpl implements ISysUserService {
         }
         SysUser info = userMapper.checkUserCodeUnique(user);
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != user.getUserId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -370,9 +367,9 @@ public class SysUserServiceImpl implements ISysUserService {
         }
         SysUser info = userMapper.checkUserNameUnique(user);
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != user.getUserId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -388,9 +385,9 @@ public class SysUserServiceImpl implements ISysUserService {
         }
         SysUser info = userMapper.checkPhoneUnique(user);
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != user.getUserId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -406,9 +403,9 @@ public class SysUserServiceImpl implements ISysUserService {
         }
         SysUser info = userMapper.checkEmailUnique(user);
         if (StringUtils.isNotNull(info) && info.getUserId().longValue() != user.getUserId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**

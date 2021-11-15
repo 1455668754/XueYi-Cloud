@@ -2,8 +2,7 @@ package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.RoleConstants;
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
@@ -91,11 +90,11 @@ public class SysPostServiceImpl implements ISysPostService {
     @DataScope(ueAlias = "empty")
     public int insertPost(SysPost post) {
         // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
-        if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
+        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), post.getStatus())) {
             SysDept dept = new SysDept(post.getDeptId());
             SysDept info = deptMapper.selectDeptById(dept);
-            if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
-                post.setStatus(UserConstants.POST_DISABLE);
+            if (StringUtils.isNotNull(info) && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), info.getStatus())) {
+                post.setStatus(BaseConstants.Status.DISABLE.getCode());
                 try {
                     throw new ServiceException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
                 } catch (Exception ignored) {
@@ -105,7 +104,7 @@ public class SysPostServiceImpl implements ISysPostService {
         int row = postMapper.insertPost(post);
         if (row > 0) {
             SysRole role = new SysRole();
-            role.setType(AuthorityConstants.DERIVE_POST_TYPE);
+            role.setType(AuthorityConstants.RoleType.DERIVE_POST.getCode());
             role.setDeriveId(post.getSnowflakeId());
             role.setName("岗位衍生:" + post.getSnowflakeId());
             roleService.insertRole(role);
@@ -123,11 +122,11 @@ public class SysPostServiceImpl implements ISysPostService {
     @Transactional
     public int updatePost(SysPost post) {
         // 欲启用岗位时判断归属部门是否启用，未启用则设置本岗位为禁用状态
-        if (UserConstants.POST_NORMAL.equals(post.getStatus())) {
+        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), post.getStatus())) {
             SysDept dept = new SysDept(post.getDeptId());
             SysDept info = deptMapper.selectDeptById(dept);
-            if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
-                post.setStatus(UserConstants.POST_DISABLE);
+            if (StringUtils.isNotNull(info) && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), info.getStatus())) {
+                post.setStatus(BaseConstants.Status.DISABLE.getCode());
                 try {
                     throw new ServiceException(String.format("%1$s归属部门已停用,无法启用该岗位", post.getPostName()));
                 } catch (Exception ignored) {
@@ -185,7 +184,7 @@ public class SysPostServiceImpl implements ISysPostService {
         // 变更岗位状态
         rows = postMapper.updatePostStatus(post);
         // 欲停用时停用本岗位所有用户的状态
-        if (rows > 0 && UserConstants.POST_DISABLE.equals(post.getStatus())) {
+        if (rows > 0 && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), post.getStatus())) {
             rows = rows + userMapper.updateUserStatusByPostId(user);
         }
         return rows;
@@ -202,7 +201,7 @@ public class SysPostServiceImpl implements ISysPostService {
     public int deletePostById(SysPost post) {
         // 1.删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(AuthorityConstants.DERIVE_POST_TYPE);
+        role.setType(AuthorityConstants.RoleType.DERIVE_POST.getCode());
         role.setDeriveId(post.getPostId());
         roleMapper.deleteRoleByDeriveId(role);
         // 2.删除岗位-角色关联信息
@@ -224,13 +223,13 @@ public class SysPostServiceImpl implements ISysPostService {
     public int deletePostByIds(SysPost post) {
         // 1.批量删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(AuthorityConstants.DERIVE_POST_TYPE);
+        role.setType(AuthorityConstants.RoleType.DERIVE_POST.getCode());
         role.getParams().put("Ids", post.getParams().get("Ids"));
         roleMapper.deleteRoleByDeriveIds(role);
         // 2.批量删除岗位-角色关联信息
         SysOrganizeRole organizeRole = new SysOrganizeRole();
-        organizeRole.setPostId(RoleConstants.DELETE_PARAM);
-        organizeRole.setDerivePostId(RoleConstants.DELETE_PARAM);
+        organizeRole.setPostId(AuthorityConstants.DELETE_PARAM);
+        organizeRole.setDerivePostId(AuthorityConstants.DELETE_PARAM);
         organizeRole.getParams().put("Ids", post.getParams().get("Ids"));
         organizeRoleMapper.deleteOrganizeRoleByOrganizeIds(organizeRole);
         return postMapper.deletePostByIds(post);
@@ -263,9 +262,9 @@ public class SysPostServiceImpl implements ISysPostService {
         }
         SysPost info = postMapper.checkPostCodeUnique(post);
         if (StringUtils.isNotNull(info) && info.getPostId().longValue() != post.getPostId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -281,9 +280,9 @@ public class SysPostServiceImpl implements ISysPostService {
         }
         SysPost info = postMapper.checkPostNameUnique(post);
         if (StringUtils.isNotNull(info) && info.getPostId().longValue() != post.getPostId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -296,11 +295,11 @@ public class SysPostServiceImpl implements ISysPostService {
     public String checkPostStatus(SysPost post) {
         if (StringUtils.isNotNull(post.getPostId())) {
             SysPost info = postMapper.selectPostById(post);
-            if (StringUtils.isNotNull(info) && UserConstants.POST_DISABLE.equals(info.getStatus())) {
-                return UserConstants.POST_DISABLE;
+            if (StringUtils.isNotNull(info) && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), info.getStatus())) {
+                return BaseConstants.Status.DISABLE.getCode();
             }
         }
-        return UserConstants.POST_NORMAL;
+        return BaseConstants.Status.NORMAL.getCode();
     }
 
     /**

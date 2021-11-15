@@ -110,7 +110,7 @@ public class SysEnterprise extends BaseEntity {
     }
 
     public static boolean isAdmin(String isLessor) {
-        return StringUtils.equals(AuthorityConstants.TENANT_TYPE_ADMIN, isLessor);
+        return StringUtils.equals(AuthorityConstants.TenantType.ADMIN.getCode(), isLessor);
     }
 
     @Override

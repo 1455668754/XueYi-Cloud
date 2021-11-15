@@ -1,7 +1,7 @@
 package com.xueyi.system.api.feign;
 
 import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.ServiceNameConstants;
+import com.xueyi.common.core.constant.ServiceConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.system.api.feign.factory.RemoteSourceFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
  *
  * @author xueyi
  */
-@FeignClient(contextId = "remoteSourceService", value = ServiceNameConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSourceFallbackFactory.class)
+@FeignClient(contextId = "remoteSourceService", value = ServiceConstants.SYSTEM_SERVICE, fallbackFactory = RemoteSourceFallbackFactory.class)
 public interface RemoteSourceService {
 
     /**

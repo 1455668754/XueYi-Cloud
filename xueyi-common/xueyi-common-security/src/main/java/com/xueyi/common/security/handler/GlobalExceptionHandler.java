@@ -1,6 +1,6 @@
 package com.xueyi.common.security.handler;
 
-import com.xueyi.common.core.constant.HttpStatus;
+import com.xueyi.common.core.constant.HttpConstants;
 import com.xueyi.common.core.exception.DemoModeException;
 import com.xueyi.common.core.exception.InnerAuthException;
 import com.xueyi.common.core.exception.ServiceException;
@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
     public AjaxResult handleNotPermissionException(NotPermissionException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',权限码校验失败'{}'", requestURI, e.getMessage());
-        return AjaxResult.error(HttpStatus.FORBIDDEN, "没有访问权限，请联系管理员授权");
+        return AjaxResult.error(HttpConstants.Status.FORBIDDEN.getCode(), "没有访问权限，请联系管理员授权");
     }
 
     /**
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     public AjaxResult handleNotRoleException(NotRoleException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',角色权限校验失败'{}'", requestURI, e.getMessage());
-        return AjaxResult.error(HttpStatus.FORBIDDEN, "没有访问权限，请联系管理员授权");
+        return AjaxResult.error(HttpConstants.Status.FORBIDDEN.getCode(), "没有访问权限，请联系管理员授权");
     }
 
     /**

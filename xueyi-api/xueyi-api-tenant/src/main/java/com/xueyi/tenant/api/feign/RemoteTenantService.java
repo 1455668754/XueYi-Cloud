@@ -3,7 +3,7 @@ package com.xueyi.tenant.api.feign;
 import com.xueyi.tenant.api.feign.factory.RemoteTenantFallbackFactory;
 import com.xueyi.tenant.api.model.TenantRegister;
 import org.springframework.cloud.openfeign.FeignClient;
-import com.xueyi.common.core.constant.ServiceNameConstants;
+import com.xueyi.common.core.constant.ServiceConstants;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,7 +15,7 @@ import com.xueyi.common.core.domain.R;
  *
  * @author xueyi
  */
-@FeignClient(contextId = "remoteTenantService", value = ServiceNameConstants.TENANT_SERVICE, fallbackFactory = RemoteTenantFallbackFactory.class)
+@FeignClient(contextId = "remoteTenantService", value = ServiceConstants.TENANT_SERVICE, fallbackFactory = RemoteTenantFallbackFactory.class)
 public interface RemoteTenantService {
 
     /**

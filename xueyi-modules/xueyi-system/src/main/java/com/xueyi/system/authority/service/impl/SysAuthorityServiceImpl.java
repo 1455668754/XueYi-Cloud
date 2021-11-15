@@ -2,8 +2,7 @@ package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.Constants;
-import com.xueyi.common.core.constant.MenuConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
@@ -337,22 +336,22 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
         forwardWholeSet = AuthorityUtils.getPrivateSystemMenuCache(enterpriseId);
         reverseWholeSet = new HashSet<>();
         for (SysRole role : roles) {
-            if (!hasStatus || StringUtils.equals(Constants.STATUS_NORMAL, role.getStatus())) {
-                switch (role.getType()) {
-                    case AuthorityConstants.NORMAL_TYPE:
+            if (!hasStatus || StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), role.getStatus())) {
+                switch (Objects.requireNonNull(AuthorityConstants.RoleType.getValue(role.getType()))) {
+                    case NORMAL:
                         normalHalfSet.addAll(role.getHalfIds());
                         normalWholeSet.addAll(role.getWholeIds());
                         break;
-                    case AuthorityConstants.DERIVE_TENANT_TYPE:
+                    case DERIVE_TENANT:
                         if (!isAdminTenant) {
                             forwardHalfSet.addAll(role.getHalfIds());
                             forwardWholeSet.addAll(role.getWholeIds());
                         }
                         break;
-                    case AuthorityConstants.DERIVE_ENTERPRISE_TYPE:
-                    case AuthorityConstants.DERIVE_DEPT_TYPE:
-                    case AuthorityConstants.DERIVE_POST_TYPE:
-                    case AuthorityConstants.DERIVE_USER_TYPE:
+                    case DERIVE_ENTERPRISE:
+                    case DERIVE_DEPT:
+                    case DERIVE_POST:
+                    case DERIVE_USER:
                         reverseHalfSet.addAll(role.getHalfIds());
                         reverseWholeSet.addAll(role.getWholeIds());
                 }
@@ -448,7 +447,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @return 模块-菜单树
      */
     private List<TreeSelect> buildSystemMenuTree(Set<SystemMenu> systemMenuSet, boolean killScattered) {
-        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(systemMenuSet), "Uid", "FUid", "children", MenuConstants.SYSTEM_TOP_NODE, killScattered);
+        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(systemMenuSet), "Uid", "FUid", "children", AuthorityConstants.SYSTEM_TOP_NODE, killScattered);
         return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 }

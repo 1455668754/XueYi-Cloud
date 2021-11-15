@@ -5,10 +5,10 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 
 import com.xueyi.common.core.constant.CacheConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.text.Convert;
 import com.xueyi.common.core.utils.StringUtils;
@@ -124,7 +124,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
     public void deleteConfigByIds(Long[] configIds) {
         for (Long configId : configIds) {
             SysConfig config = selectConfigById(configId);
-            if (StringUtils.equals(UserConstants.YES, config.getConfigType())) {
+            if (StringUtils.equals(BaseConstants.Default.YES.getCode(), config.getConfigType())) {
                 throw new ServiceException(String.format("内置参数【%1$s】不能删除 ", config.getConfigKey()));
             }
             SysSearch search = new SysSearch();
@@ -138,11 +138,9 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * 加载参数缓存数据
      */
     @Override
-    public void loadingConfigCache()
-    {
+    public void loadingConfigCache() {
         List<SysConfig> configsList = configMapper.selectConfigList(new SysConfig());
-        for (SysConfig config : configsList)
-        {
+        for (SysConfig config : configsList) {
             redisService.setCacheObject(getCacheKey(config.getConfigKey()), config.getConfigValue());
         }
     }
@@ -151,8 +149,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * 清空参数缓存数据
      */
     @Override
-    public void clearConfigCache()
-    {
+    public void clearConfigCache() {
         Collection<String> keys = redisService.keys(CacheConstants.SYS_CONFIG_KEY + "*");
         redisService.deleteObject(keys);
     }
@@ -161,8 +158,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * 重置参数缓存数据
      */
     @Override
-    public void resetConfigCache()
-    {
+    public void resetConfigCache() {
         clearConfigCache();
         loadingConfigCache();
     }
@@ -178,9 +174,9 @@ public class SysConfigServiceImpl implements ISysConfigService {
         Long configId = StringUtils.isNull(config.getConfigId()) ? -1L : config.getConfigId();
         SysConfig info = configMapper.checkConfigKeyUnique(config.getConfigKey());
         if (StringUtils.isNotNull(info) && info.getConfigId().longValue() != configId.longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**

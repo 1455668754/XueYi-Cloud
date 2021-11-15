@@ -1,13 +1,14 @@
 package com.xueyi.common.core.web.domain;
 
 import java.util.HashMap;
-import com.xueyi.common.core.constant.HttpStatus;
+
+import com.xueyi.common.core.constant.HttpConstants;
 import com.xueyi.common.core.utils.StringUtils;
 
 /**
  * 操作消息提醒
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 public class AjaxResult extends HashMap<String, Object> {
 
@@ -103,7 +104,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 成功消息
      */
     public static AjaxResult success(String msg, Object data) {
-        return new AjaxResult(HttpStatus.SUCCESS, msg, data);
+        return new AjaxResult(HttpConstants.Status.SUCCESS.getCode(), msg, data);
     }
 
     /**
@@ -133,7 +134,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 警告消息
      */
     public static AjaxResult error(String msg, Object data) {
-        return new AjaxResult(HttpStatus.ERROR, msg, data);
+        return new AjaxResult(HttpConstants.Status.ERROR.getCode(), msg, data);
     }
 
     /**

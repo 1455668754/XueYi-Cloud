@@ -1,11 +1,11 @@
 package com.xueyi.common.core.constant;
 
 /**
- * 服务名称
+ * 服务名称通用常量
  * 
  * @author xueyi
  */
-public class ServiceNameConstants {
+public class ServiceConstants {
 
     /** 认证服务的serviceId */
     public static final String AUTH_SERVICE = "xueyi-auth";

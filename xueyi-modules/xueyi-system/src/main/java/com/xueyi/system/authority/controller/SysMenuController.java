@@ -1,7 +1,7 @@
 package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.MenuConstants;
+import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
@@ -61,9 +61,9 @@ public class SysMenuController extends BaseController {
     public AjaxResult add(@Validated @RequestBody SysMenu menu) {
         if (!menuService.mainCheckMenuNameUnique(menu)) {
             return AjaxResult.error("新增菜单'" + menu.getName() + "'失败，菜单名称已存在");
-        } else if (MenuConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())) {
+        } else if (StringUtils.equals(AuthorityConstants.Frame.YES.getCode(), menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())) {
             return AjaxResult.error("新增菜单'" + menu.getName() + "'失败，地址必须以http(s)://开头");
-        } else if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, menu.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
+        } else if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), menu.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
             return AjaxResult.error("新增菜单'" + menu.getName() + "'失败，仅租管账户可新增公共菜单");
         }
         return toAjax(refreshCache(menu, menuService.mainInsertMenu(menu)));
@@ -78,16 +78,16 @@ public class SysMenuController extends BaseController {
     public AjaxResult edit(@Validated @RequestBody SysMenu menu) {
         if (!menuService.mainCheckMenuNameUnique(menu)) {
             return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，菜单名称已存在");
-        } else if (MenuConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())) {
+        } else if (StringUtils.equals(AuthorityConstants.Frame.YES.getCode(), menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())) {
             return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，地址必须以http(s)://开头");
         } else if (menu.getMenuId().equals(menu.getParentId())) {
             return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，上级菜单不能选择自己");
         }
         SysMenu check = menuService.mainSelectMenuById(new SysMenu(menu.getMenuId()));
-        if (StringUtils.equals(AuthorityConstants.IS_COMMON_TRUE, check.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
+        if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), check.getIsCommon()) && !SecurityUtils.isAdminTenant()) {
             return AjaxResult.error("修改菜单'" + menu.getName() + "'失败，仅租管账户可修改公共菜单");
         }
-        int rows =menuService.mainUpdateMenu(menu);
+        int rows = menuService.mainUpdateMenu(menu);
         if (check.getSystemId().longValue() == menu.getSystemId().longValue()) {
             refreshCache(check, rows);
         }
@@ -108,7 +108,7 @@ public class SysMenuController extends BaseController {
             return AjaxResult.error("菜单已分配,不允许删除");
         }
         SysMenu before = menuService.mainSelectMenuById(new SysMenu(menu.getMenuId()));
-        return toAjax(refreshCache(before,menuService.mainDeleteMenuById(menu)));
+        return toAjax(refreshCache(before, menuService.mainDeleteMenuById(menu)));
     }
 
     /**

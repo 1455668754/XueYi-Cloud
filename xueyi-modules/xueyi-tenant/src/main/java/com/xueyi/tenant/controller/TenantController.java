@@ -1,10 +1,9 @@
 package com.xueyi.tenant.controller;
 
-import com.xueyi.common.core.constant.Constants;
 import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.TenantConstants;
-import com.xueyi.common.core.constant.UserConstants;
 import com.xueyi.common.core.domain.R;
+import com.xueyi.common.core.constant.BaseConstants;
+import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
@@ -88,7 +87,7 @@ public class TenantController extends BaseController {
     @Log(title = "租户信息", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Tenant tenant) {
-        if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(new Tenant(tenant.getTenantName())))) {
+        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), tenantService.mainCheckTenantNameUnique(new Tenant(tenant.getTenantName())))) {
             return AjaxResult.error("新增失败，该租户账号已存在，请修改后重试！");
         }
         return toAjax(addTenantCache(tenantService.mainInsertTenant(tenant), tenant));
@@ -105,7 +104,7 @@ public class TenantController extends BaseController {
             return R.fail("当前系统没有开启注册功能！");
         }
         Tenant tenant = new Tenant(register.getEnterpriseName());
-        if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(tenant))) {
+        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), tenantService.mainCheckTenantNameUnique(tenant))) {
             return R.fail("注册租户'" + register.getEnterpriseSystemName() + "'失败，注册账号已存在");
         }
         //租户信息
@@ -140,11 +139,11 @@ public class TenantController extends BaseController {
     @Log(title = "租户信息", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Tenant tenant) {
-        if (UserConstants.NOT_UNIQUE.equals(tenantService.mainCheckTenantNameUnique(tenant))) {
+        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), tenantService.mainCheckTenantNameUnique(tenant))) {
             return AjaxResult.error("修改失败，该租户账号已存在，请修改后重试！");
         }
         Tenant check = tenantService.mainCheckTenantByTenantId(new Tenant(tenant.getTenantId()));
-        if (StringUtils.equals(Constants.SYSTEM_DEFAULT_TRUE, check.getIsChange())) {
+        if (StringUtils.equals(BaseConstants.Default.YES.getCode(), check.getIsChange())) {
             return AjaxResult.error("禁止操作系统租户");
         }
         return toAjax(refreshTenantCache(tenantService.mainUpdateTenant(tenant), check));
@@ -187,7 +186,7 @@ public class TenantController extends BaseController {
      * @return 结果
      */
     private int addTenantCache(int rows, Tenant tenant) {
-        if (rows > 0 && !StringUtils.equals(TenantConstants.DISABLE, tenant.getStatus())) {
+        if (rows > 0 && !StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), tenant.getStatus())) {
             remoteEnterpriseService.refreshEnterpriseAllCache(tenant.getTenantId(), SecurityConstants.INNER);
         }
         return rows;
@@ -207,7 +206,7 @@ public class TenantController extends BaseController {
                 throw new ServiceException(enterprise.getMsg());
             }
             if (!StringUtils.equals(enterprise.getData().getStatus(), oldTenant.getStatus())) {
-                if (StringUtils.equals(TenantConstants.NORMAL, enterprise.getData().getStatus())) {
+                if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), enterprise.getData().getStatus())) {
                     remoteEnterpriseService.refreshEnterpriseAllCache(oldTenant.getTenantId(), SecurityConstants.INNER);
                 } else {
                     EnterpriseUtils.deleteEnterpriseAllCache(oldTenant.getTenantId(), oldTenant.getTenantName());

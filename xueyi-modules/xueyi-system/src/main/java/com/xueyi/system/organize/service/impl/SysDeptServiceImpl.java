@@ -2,7 +2,7 @@ package com.xueyi.system.organize.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.UserConstants;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
@@ -90,16 +90,16 @@ public class SysDeptServiceImpl implements ISysDeptService {
         // 查询父节点是否正常状态,不正常则不允许新增子节点
         SysDept parentDept = new SysDept(dept.getParentId());
         SysDept info = deptMapper.selectDeptById(parentDept);
-        if (!UserConstants.DEPT_NORMAL.equals(info.getStatus())) {
+        if (!StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), info.getStatus())) {
             throw new ServiceException("部门停用，不允许新增");
         }
         dept.setAncestors(info.getAncestors() + "," + dept.getParentId());
         int row = deptMapper.insertDept(dept);
-        if(row>0){
+        if (row > 0) {
             SysRole role = new SysRole();
-            role.setType(AuthorityConstants.DERIVE_DEPT_TYPE);
+            role.setType(AuthorityConstants.RoleType.DERIVE_DEPT.getCode());
             role.setDeriveId(dept.getSnowflakeId());
-            role.setName("部门衍生:"+dept.getSnowflakeId());
+            role.setName("部门衍生:" + dept.getSnowflakeId());
             roleService.insertRole(role);
         }
         return row;
@@ -123,9 +123,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
             updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
         }
         // 欲启用部门时判断上级部门是否启用，未启用则设置本部门为禁用状态
-        if (UserConstants.DEPT_NORMAL.equals(dept.getStatus())) {
-            if (UserConstants.DEPT_DISABLE.equals(checkDeptStatus(new SysDept(dept.getParentId())))) {
-                dept.setStatus(UserConstants.DEPT_DISABLE);
+        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), dept.getStatus())) {
+            if (StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), checkDeptStatus(new SysDept(dept.getParentId())))) {
+                dept.setStatus(BaseConstants.Status.DISABLE.getCode());
                 try {
                     throw new ServiceException(String.format("%1$s上级部门已停用,无法启用该部门", dept.getDeptName()));
                 } catch (Exception ignored) {
@@ -151,8 +151,8 @@ public class SysDeptServiceImpl implements ISysDeptService {
         organizeRole.setDeptId(dept.getDeptId());
         organizeRoleMapper.deleteOrganizeRoleByOrganizeId(organizeRole);
         // 2.是否需要执行新增
-        if(dept.getRoleIds().length > 0){
-            organizeRole.getParams().put("roleIds",dept.getRoleIds());
+        if (dept.getRoleIds().length > 0) {
+            organizeRole.getParams().put("roleIds", dept.getRoleIds());
             organizeRoleMapper.batchOrganizeRole(organizeRole);
         }
         return 1;
@@ -178,7 +178,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
         user.setDeptId(dept.getDeptId());
         user.setStatus(dept.getStatus());
         // 欲停用时停用本部门所有岗位/用户的状态
-        if (rows > 0 && UserConstants.DEPT_DISABLE.equals(dept.getStatus())) {
+        if (rows > 0 && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), dept.getStatus())) {
             rows = rows + postMapper.updatePostStatusByDeptId(post);
             rows = rows + userMapper.updateUserStatusByDeptId(user);
         }
@@ -218,7 +218,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
     public int deleteDeptById(SysDept dept) {
         // 1.删除衍生role信息
         SysRole role = new SysRole();
-        role.setType(AuthorityConstants.DERIVE_DEPT_TYPE);
+        role.setType(AuthorityConstants.RoleType.DERIVE_DEPT.getCode());
         role.setDeriveId(dept.getDeptId());
         roleMapper.deleteRoleByDeriveId(role);
         // 2.删除部门-角色关联信息
@@ -282,9 +282,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
         }
         SysDept info = deptMapper.checkDeptCodeUnique(dept);
         if (StringUtils.isNotNull(info) && info.getDeptId().longValue() != dept.getDeptId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -300,9 +300,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
         }
         SysDept info = deptMapper.checkDeptNameUnique(dept);
         if (StringUtils.isNotNull(info) && info.getDeptId().longValue() != dept.getDeptId().longValue()) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -315,9 +315,9 @@ public class SysDeptServiceImpl implements ISysDeptService {
     public String checkIsChild(SysDept dept) {
         SysDept info = deptMapper.checkIsChild(dept);
         if (StringUtils.isNotNull(info)) {
-            return UserConstants.NOT_UNIQUE;
+            return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
-        return UserConstants.UNIQUE;
+        return BaseConstants.Check.UNIQUE.getCode();
     }
 
     /**
@@ -341,11 +341,11 @@ public class SysDeptServiceImpl implements ISysDeptService {
     public String checkDeptStatus(SysDept dept) {
         if (StringUtils.isNotNull(dept.getDeptId()) && dept.getDeptId() != 0L) {
             SysDept info = deptMapper.selectDeptById(dept);
-            if (StringUtils.isNotNull(info) && UserConstants.DEPT_DISABLE.equals(info.getStatus())) {
-                return UserConstants.DEPT_DISABLE;
+            if (StringUtils.isNotNull(info) && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), info.getStatus())) {
+                return BaseConstants.Status.DISABLE.getCode();
             }
         }
-        return UserConstants.DEPT_NORMAL;
+        return BaseConstants.Status.NORMAL.getCode();
     }
 
     /**
@@ -356,7 +356,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts) {
-        List<SysDept> deptTrees = TreeBuildUtils.buildSystemMenuTree(depts,"deptId", "parentId", "children", null, false);
+        List<SysDept> deptTrees = TreeBuildUtils.buildSystemMenuTree(depts, "deptId", "parentId", "children", null, false);
         return deptTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 }
