@@ -1,7 +1,6 @@
 package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.controller.BaseController;
@@ -112,7 +111,7 @@ public class SysMenuController extends BaseController {
     }
 
     /**
-     * 获取路由信息
+     * 获取路由信息 - vue2
      *
      * @return 路由信息
      */

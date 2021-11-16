@@ -1,12 +1,13 @@
-package com.xueyi.system.utils.vo;
+package com.xueyi.system.utils.route;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.List;
 
 /**
  * 路由配置信息
  *
- * @author ruoyi
+ * @author xueyi
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class RouterVo {
@@ -28,7 +29,7 @@ public class RouterVo {
 
     /** 路由参数：如 {"id": 1, "name": "xy"} */
     private String query;
-    
+
     /** 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面 */
     private Boolean alwaysShow;
 
@@ -38,53 +39,43 @@ public class RouterVo {
     /** 子路由 */
     private List<RouterVo> children;
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getPath()
-    {
+    public String getPath() {
         return path;
     }
 
-    public void setPath(String path)
-    {
+    public void setPath(String path) {
         this.path = path;
     }
 
-    public boolean getHidden()
-    {
+    public boolean isHidden() {
         return hidden;
     }
 
-    public void setHidden(boolean hidden)
-    {
+    public void setHidden(boolean hidden) {
         this.hidden = hidden;
     }
 
-    public String getRedirect()
-    {
+    public String getRedirect() {
         return redirect;
     }
 
-    public void setRedirect(String redirect)
-    {
+    public void setRedirect(String redirect) {
         this.redirect = redirect;
     }
 
-    public String getComponent()
-    {
+    public String getComponent() {
         return component;
     }
 
-    public void setComponent(String component)
-    {
+    public void setComponent(String component) {
         this.component = component;
     }
 
@@ -96,33 +87,27 @@ public class RouterVo {
         this.query = query;
     }
 
-    public Boolean getAlwaysShow()
-    {
+    public Boolean getAlwaysShow() {
         return alwaysShow;
     }
 
-    public void setAlwaysShow(Boolean alwaysShow)
-    {
+    public void setAlwaysShow(Boolean alwaysShow) {
         this.alwaysShow = alwaysShow;
     }
 
-    public MetaVo getMeta()
-    {
+    public MetaVo getMeta() {
         return meta;
     }
 
-    public void setMeta(MetaVo meta)
-    {
+    public void setMeta(MetaVo meta) {
         this.meta = meta;
     }
 
-    public List<RouterVo> getChildren()
-    {
+    public List<RouterVo> getChildren() {
         return children;
     }
 
-    public void setChildren(List<RouterVo> children)
-    {
+    public void setChildren(List<RouterVo> children) {
         this.children = children;
     }
 }

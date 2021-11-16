@@ -1,7 +1,7 @@
 package com.xueyi.system.authority.service;
 
 import com.xueyi.system.api.domain.authority.SysMenu;
-import com.xueyi.system.utils.vo.RouterVo;
+import com.xueyi.system.utils.route.RouterVo;
 import com.xueyi.system.utils.vo.TreeSelect;
 
 import java.util.List;
