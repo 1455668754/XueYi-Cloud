@@ -283,7 +283,7 @@ public class ExcelUtil<T> {
      * @return 结果
      * @throws IOException
      */
-    public void exportExcel(HttpServletResponse response, List<T> list, String sheetName) throws IOException {
+    public void exportExcel(HttpServletResponse response, List<T> list, String sheetName) {
         exportExcel(response, list, sheetName, StringUtils.EMPTY);
     }
 
@@ -297,11 +297,11 @@ public class ExcelUtil<T> {
      * @return 结果
      * @throws IOException
      */
-    public void exportExcel(HttpServletResponse response, List<T> list, String sheetName, String title) throws IOException {
+    public void exportExcel(HttpServletResponse response, List<T> list, String sheetName, String title) {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         this.init(list, sheetName, title, Type.EXPORT);
-        exportExcel(response.getOutputStream());
+        exportExcel(response);
     }
 
     /**
@@ -316,7 +316,7 @@ public class ExcelUtil<T> {
      * @param sheetName 工作表的名称
      * @return 结果
      */
-    public void importTemplateExcel(HttpServletResponse response, String sheetName) throws IOException {
+    public void importTemplateExcel(HttpServletResponse response, String sheetName) {
         importTemplateExcel(response, sheetName, StringUtils.EMPTY);
     }
 
@@ -327,11 +327,11 @@ public class ExcelUtil<T> {
      * @param title     标题
      * @return 结果
      */
-    public void importTemplateExcel(HttpServletResponse response, String sheetName, String title) throws IOException {
+    public void importTemplateExcel(HttpServletResponse response, String sheetName, String title) {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         response.setCharacterEncoding("utf-8");
         this.init(null, sheetName, title, Type.IMPORT);
-        exportExcel(response.getOutputStream());
+        exportExcel(response);
     }
 
     /**
@@ -339,15 +339,14 @@ public class ExcelUtil<T> {
      *
      * @return 结果
      */
-    public void exportExcel(OutputStream out) {
+    public void exportExcel(HttpServletResponse response) {
         try {
             writeSheet();
-            wb.write(out);
+            wb.write(response.getOutputStream());
         } catch (Exception e) {
             log.error("导出Excel异常{}", e.getMessage());
         } finally {
             IOUtils.closeQuietly(wb);
-            IOUtils.closeQuietly(out);
         }
     }
 

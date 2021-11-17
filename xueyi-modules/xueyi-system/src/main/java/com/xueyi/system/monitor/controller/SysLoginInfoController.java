@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -39,7 +38,7 @@ public class SysLoginInfoController extends BaseController {
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
     @RequiresPermissions("system:loginInfo:export")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysLoginInfo loginInfo) throws IOException {
+    public void export(HttpServletResponse response, SysLoginInfo loginInfo) {
         List<SysLoginInfo> list = loginInfoService.selectLoginInfoList(loginInfo);
         ExcelUtil<SysLoginInfo> util = new ExcelUtil<SysLoginInfo>(SysLoginInfo.class);
         util.exportExcel(response, list, "登录日志");
