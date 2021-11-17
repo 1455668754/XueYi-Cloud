@@ -1,14 +1,13 @@
 package com.xueyi.gateway.filter;
 
 import java.nio.charset.StandardCharsets;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.core.io.buffer.*;
 import org.springframework.http.MediaType;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferUtils;
-import org.springframework.core.io.buffer.NettyDataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -28,31 +27,27 @@ import reactor.core.publisher.Mono;
  * @author ruoyi
  */
 @Component
-public class XssFilter implements GlobalFilter, Ordered
-{
+public class XssFilter implements GlobalFilter, Ordered {
+
     // 跨站脚本的 xss 配置，nacos自行添加
     @Autowired
     private XssProperties xss;
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain)
-    {
+    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         // GET DELETE 不过滤
         HttpMethod method = request.getMethod();
-        if (method == null || method.matches("GET") || method.matches("DELETE"))
-        {
+        if (method == null || method.matches("GET") || method.matches("DELETE")) {
             return chain.filter(exchange);
         }
         // 非json类型，不过滤
-        if (!isJsonRequest(exchange))
-        {
+        if (!isJsonRequest(exchange)) {
             return chain.filter(exchange);
         }
         // excludeUrls 不过滤
         String url = request.getURI().getPath();
-        if (StringUtils.matches(url, xss.getExcludeUrls()))
-        {
+        if (StringUtils.matches(url, xss.getExcludeUrls())) {
             return chain.filter(exchange);
         }
         ServerHttpRequestDecorator httpRequestDecorator = requestDecorator(exchange);
@@ -60,18 +55,17 @@ public class XssFilter implements GlobalFilter, Ordered
 
     }
 
-    private ServerHttpRequestDecorator requestDecorator(ServerWebExchange exchange)
-    {
-        ServerHttpRequestDecorator serverHttpRequestDecorator = new ServerHttpRequestDecorator(exchange.getRequest())
-        {
+    private ServerHttpRequestDecorator requestDecorator(ServerWebExchange exchange) {
+        ServerHttpRequestDecorator serverHttpRequestDecorator = new ServerHttpRequestDecorator(exchange.getRequest()) {
             @Override
-            public Flux<DataBuffer> getBody()
-            {
+            public Flux<DataBuffer> getBody() {
                 Flux<DataBuffer> body = super.getBody();
-                return body.map(dataBuffer -> {
-                    byte[] content = new byte[dataBuffer.readableByteCount()];
-                    dataBuffer.read(content);
-                    DataBufferUtils.release(dataBuffer);
+                return body.buffer().map(dataBuffers -> {
+                    DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
+                    DataBuffer join = dataBufferFactory.join(dataBuffers);
+                    byte[] content = new byte[join.readableByteCount()];
+                    join.read(content);
+                    DataBufferUtils.release(join);
                     String bodyStr = new String(content, StandardCharsets.UTF_8);
                     // 防xss攻击过滤
                     bodyStr = EscapeUtil.clean(bodyStr);
@@ -85,8 +79,7 @@ public class XssFilter implements GlobalFilter, Ordered
             }
 
             @Override
-            public HttpHeaders getHeaders()
-            {
+            public HttpHeaders getHeaders() {
                 HttpHeaders httpHeaders = new HttpHeaders();
                 httpHeaders.putAll(super.getHeaders());
                 // 由于修改了请求体的body，导致content-length长度不确定，因此需要删除原先的content-length
@@ -102,17 +95,15 @@ public class XssFilter implements GlobalFilter, Ordered
     /**
      * 是否是Json请求
      *
-     * @param exchange  请求
+     * @param exchange 请求
      */
-    public boolean isJsonRequest(ServerWebExchange exchange)
-    {
+    public boolean isJsonRequest(ServerWebExchange exchange) {
         String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.CONTENT_TYPE);
         return StringUtils.startsWithIgnoreCase(header, MediaType.APPLICATION_JSON_VALUE);
     }
 
     @Override
-    public int getOrder()
-    {
+    public int getOrder() {
         return -100;
     }
 }
