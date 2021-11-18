@@ -11,66 +11,45 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Treeselect树结构实体类
+ * TreeSelect树结构实体类
  *
  * @author xueyi
  */
 public class TreeSelect implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 节点Id
-     */
+    /** 节点Id */
     private Long id;
 
-    /**
-     * 节点名称
-     */
+    /** 节点名称 */
     private String label;
 
-    /**
-     * 节点状态
-     */
+    /** 节点状态 */
     private String status;
 
-    /**
-     * 节点类型
-     */
+    /** 节点类型 */
     private String type;
 
-    /**
-     * 显示顺序
-     */
+    /** 显示顺序 */
     private Integer sort;
 
-    /**
-     * 权限字符串 | 模块&&菜单专属
-     */
+    /** 权限字符串 | 模块&&菜单专属 */
     private String perms;
 
-    /**
-     * 菜单图标 | 模块&&菜单专属
-     */
+    /** 菜单图标 | 模块&&菜单专属 */
     private String icon;
 
-    /**
-     * 组件路径 | 模块&&菜单专属
-     */
+    /** 组件路径 | 模块&&菜单专属 */
     private String component;
 
-    /**
-     * 系统Id | 模块&&菜单专属
-     */
+    /** 系统Id | 模块&&菜单专属 */
     private Long systemId;
 
-    /**
-     * 公共模块-菜单（Y是 N否） | 模块&&菜单专属
-     */
+    /** 公共模块-菜单（Y是 N否） | 模块&&菜单专属 */
     private String isCommon;
 
-    /**
-     * 子节点
-     */
+    /** 子节点 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<TreeSelect> children;
 

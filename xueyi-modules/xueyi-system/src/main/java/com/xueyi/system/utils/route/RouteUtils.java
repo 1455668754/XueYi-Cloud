@@ -17,7 +17,7 @@ import java.util.List;
 public class RouteUtils {
 
     /**
-     * 构建前端路由所需要的菜单 - vue2
+     * 构建前端路由所需要的菜单
      *
      * @param menus 菜单列表
      * @return 路由列表

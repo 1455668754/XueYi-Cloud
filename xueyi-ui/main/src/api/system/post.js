@@ -9,7 +9,7 @@ export function listPost(query) {
   })
 }
 
-// 查询部门下拉树结构
+// 查询部门|岗位下拉树结构
 export function treeSelect() {
   return request({
     url: '/system/post/treeSelect',
