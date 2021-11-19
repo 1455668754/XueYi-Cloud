@@ -16,6 +16,8 @@ services:
       - "9849:9849"
     depends_on:
       - xueyi-mysql
+    links:
+      - xueyi-mysql
   xueyi-mysql:
     container_name: xueyi-mysql
     image: mysql:8.0.26
@@ -92,8 +94,10 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - xueyi-nacos
       - xueyi-redis
     links:
+      - xueyi-nacos
       - xueyi-redis
   xueyi-auth:
     container_name: xueyi-auth
@@ -103,8 +107,10 @@ services:
     ports:
       - "9200:9200"
     depends_on:
+      - xueyi-nacos
       - xueyi-redis
     links:
+      - xueyi-nacos
       - xueyi-redis
   xueyi-modules-tenant:
     container_name: xueyi-modules-tenant
@@ -114,10 +120,12 @@ services:
     ports:
       - "9700:9700"
     depends_on:
+      - xueyi-nacos
       - xueyi-redis
       - xueyi-mysql
       - xueyi-rabbit
     links:
+      - xueyi-nacos
       - xueyi-redis
       - xueyi-mysql
       - xueyi-rabbit
@@ -129,10 +137,12 @@ services:
     ports:
       - "9600:9600"
     depends_on:
+      - xueyi-nacos
       - xueyi-redis
       - xueyi-mysql
       - xueyi-rabbit
     links:
+      - xueyi-nacos
       - xueyi-redis
       - xueyi-mysql
       - xueyi-rabbit
@@ -144,8 +154,12 @@ services:
     ports:
       - "9400:9400"
     depends_on:
+      - xueyi-nacos
+      - xueyi-redis
       - xueyi-mysql
     links:
+      - xueyi-nacos
+      - xueyi-redis
       - xueyi-mysql
   xueyi-modules-job:
     container_name: xueyi-modules-job
@@ -155,8 +169,12 @@ services:
     ports:
       - "9500:9500"
     depends_on:
+      - xueyi-nacos
+      - xueyi-redis
       - xueyi-mysql
     links:
+      - xueyi-nacos
+      - xueyi-redis
       - xueyi-mysql
   xueyi-modules-file:
     container_name: xueyi-modules-file
