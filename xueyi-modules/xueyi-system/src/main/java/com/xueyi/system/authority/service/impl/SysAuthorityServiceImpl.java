@@ -6,7 +6,7 @@ import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
-import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
+import com.xueyi.common.core.utils.multiTenancy.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
@@ -447,7 +447,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * @return 模块-菜单树
      */
     private List<TreeSelect> buildSystemMenuTree(Set<SystemMenu> systemMenuSet, boolean killScattered) {
-        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(systemMenuSet), "Uid", "FUid", "children", AuthorityConstants.SYSTEM_TOP_NODE, killScattered);
+        List<SystemMenu> systemMenus = TreeUtils.buildTree(SortUtils.sortSetToList(systemMenuSet), "Uid", "FUid", "children", AuthorityConstants.SYSTEM_TOP_NODE, killScattered);
         return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 }

@@ -13,7 +13,7 @@ import java.util.Objects;
  *
  * @author xueyi
  */
-public class TreeBuildUtils {
+public class TreeUtils {
 
     /**
      * 构建树结构
@@ -26,7 +26,7 @@ public class TreeBuildUtils {
      * @param killScattered 是否移除无法追溯到顶级节点 (true 是 | false 否)
      * @return 树结构列表
      */
-    public static <T> List<T> buildSystemMenuTree(List<T> list, String IdName, String FIdName, String childrenName, Long topNode, boolean killScattered) {
+    public static <T> List<T> buildTree(List<T> list, String IdName, String FIdName, String childrenName, Long topNode, boolean killScattered) {
         List<T> returnList = new ArrayList<T>();
         List<Long> tempList = new ArrayList<Long>();
         try {

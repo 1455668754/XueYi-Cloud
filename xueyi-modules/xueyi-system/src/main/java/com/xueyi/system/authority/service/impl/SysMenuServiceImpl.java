@@ -5,7 +5,7 @@ import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
-import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
+import com.xueyi.common.core.utils.multiTenancy.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
@@ -62,7 +62,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
             rangeSet = authorityService.selectMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true, true);
         }
         menuSet.retainAll(rangeSet);
-        return TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuSet), "menuId", "parentId", "children", AuthorityConstants.MENU_TOP_NODE, true);
+        return TreeUtils.buildTree(SortUtils.sortSetToList(menuSet), "menuId", "parentId", "children", AuthorityConstants.MENU_TOP_NODE, true);
     }
 
     /**
@@ -85,7 +85,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
         menuSet.addAll(map.get("halfIds"));
         menuSet.addAll(map.get("wholeIds"));
         menu.getParams().put("insideIds", menuSet);
-        List<SystemMenu> systemMenus = TreeBuildUtils.buildSystemMenuTree(SortUtils.sortSetToList(menuMapper.mainSelectSystemMenuList(menu)), "Uid", "FUid", "children", AuthorityConstants.SYSTEM_TOP_NODE, false);
+        List<SystemMenu> systemMenus = TreeUtils.buildTree(SortUtils.sortSetToList(menuMapper.mainSelectSystemMenuList(menu)), "Uid", "FUid", "children", AuthorityConstants.SYSTEM_TOP_NODE, false);
         return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 

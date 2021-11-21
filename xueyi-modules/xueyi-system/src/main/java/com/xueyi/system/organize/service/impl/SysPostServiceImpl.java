@@ -5,7 +5,7 @@ import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
+import com.xueyi.common.core.utils.multiTenancy.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
@@ -321,7 +321,7 @@ public class SysPostServiceImpl implements ISysPostService {
             deptPost = new deptPostVo(post.getPostId(), post.getDeptId(), "岗位|" + post.getPostName(), post.getStatus(), "1");
             deptPostList.add(deptPost);
         }
-        List<deptPostVo> trees = TreeBuildUtils.buildSystemMenuTree(deptPostList, "Uid", "FUid", "children", null, false);
+        List<deptPostVo> trees = TreeUtils.buildTree(deptPostList, "Uid", "FUid", "children", null, false);
         return trees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 }

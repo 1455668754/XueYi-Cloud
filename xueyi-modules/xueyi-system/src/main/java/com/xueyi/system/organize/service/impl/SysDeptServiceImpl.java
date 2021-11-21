@@ -5,7 +5,7 @@ import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.multiTenancy.TreeBuildUtils;
+import com.xueyi.common.core.utils.multiTenancy.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysDept;
@@ -356,7 +356,7 @@ public class SysDeptServiceImpl implements ISysDeptService {
      */
     @Override
     public List<TreeSelect> buildDeptTreeSelect(List<SysDept> depts) {
-        List<SysDept> deptTrees = TreeBuildUtils.buildSystemMenuTree(depts, "deptId", "parentId", "children", null, false);
+        List<SysDept> deptTrees = TreeUtils.buildTree(depts, "deptId", "parentId", "children", null, false);
         return deptTrees.stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 }
