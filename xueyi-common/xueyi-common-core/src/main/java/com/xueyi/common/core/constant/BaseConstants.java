@@ -7,6 +7,31 @@ package com.xueyi.common.core.constant;
  */
 public class BaseConstants {
 
+    /** 顶级节点Id */
+    public static final Long TOP_NODE = 0L;
+
+    /** 字段映射名 */
+    public enum Entity {
+
+        ID("Id", "Id"), PARENT_ID("parentId", "父级Id"), SORT("sort", "显示顺序"), CHILDREN("children","子部门集合");
+
+        private final String code;
+        private final String info;
+
+        Entity(String code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+    }
+
     /** 状态 */
     public enum Status {
 
