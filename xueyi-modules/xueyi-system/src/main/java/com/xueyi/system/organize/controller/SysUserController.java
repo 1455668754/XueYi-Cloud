@@ -186,10 +186,10 @@ public class SysUserController extends BaseController {
     }
 
     /**
-     * 修改部门-角色关系
+     * 修改用户-角色关系
      */
     @RequiresPermissions("system:role:set")
-    @Log(title = "部门管理", businessType = BusinessType.UPDATE)
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
     @PutMapping("/changeUserRole")
     public AjaxResult editUserRole(@Validated @RequestBody SysUser user) {
         userService.checkUserAllowed(user);
