@@ -3,13 +3,13 @@ package com.xueyi.system.authority.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.BaseConstants;
-import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
 import com.xueyi.common.core.utils.multiTenancy.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
@@ -60,7 +60,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @Override
     @DS("#sourceName")
     public Map<String, Set<SystemMenu>> selectLessorMenuRange(Long enterpriseId, String sourceName) {
-        return assembleSystemMenuSet(enterpriseId, authorityService.selectRoleListByTenantId(enterpriseId), EnterpriseUtils.isAdminTenant(enterpriseId), false, true);
+        return assembleSystemMenuSet(enterpriseId, selectRoleListByTenantId(enterpriseId), EnterpriseUtils.isAdminTenant(enterpriseId), false, true);
     }
 
     /**

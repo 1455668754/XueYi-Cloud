@@ -1,7 +1,6 @@
 package com.xueyi.system.authority.controller;
 
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.web.controller.BaseController;
 import com.xueyi.common.core.web.domain.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
@@ -9,6 +8,7 @@ import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysRoleService;
