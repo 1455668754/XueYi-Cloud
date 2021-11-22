@@ -251,7 +251,7 @@
       </el-col>
     </el-row>
 
-    <!-- 添加或修改参数配置对话框 -->
+    <!-- 添加或修改用户配置对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body v-dialogDrag v-dialogDragHeight>
       <el-form ref="form" :model="form" :rules="rules" label-width="85px">
         <el-row>
@@ -779,7 +779,6 @@ export default {
     /** 下载模板操作 */
     importTemplate() {
       this.download('system/user/importTemplate', {
-        ...this.queryParams
       }, `user_${new Date().getTime()}.xlsx`)
     },
     // 文件上传中处理

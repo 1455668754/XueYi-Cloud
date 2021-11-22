@@ -56,7 +56,7 @@ export default {
         return store.dispatch('tagsView/delOthersViews', obj || router.currentRoute);
     },
     // 添加tab页签
-    addPage(title, url) {
+    openPage(title, url) {
         var obj = { path: url, meta: { title: title } }
         store.dispatch('tagsView/addView', obj);
         return router.push(url);

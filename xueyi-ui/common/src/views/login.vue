@@ -71,7 +71,6 @@ export default {
   data() {
     return {
       codeUrl: "",
-      cookiePassword: "",
       loginForm: {
         enterpriseName: "",
         userName: "",
