@@ -86,6 +86,15 @@
           >导出
           </el-button>
         </el-col>
+        <el-col :span="1.5">
+          <el-button
+            type="warning"
+            plain
+            icon="el-icon-close"
+            size="mini"
+            @click="handleClose"
+          >关闭</el-button>
+        </el-col>
         <right-toolbar :showSearch.sync="showSearch" :sortVisible="false" @queryTable="getList"/>
       </el-row>
 
@@ -329,6 +338,11 @@ export default {
     handleQuery() {
       this.queryParams.pageNum = 1
       this.getList()
+    },
+    /** 返回按钮操作 */
+    handleClose() {
+      const obj = { path: "/system/system/dict" };
+      this.$tab.closeOpenPage(obj);
     },
     /** 重置按钮操作 */
     resetQuery() {

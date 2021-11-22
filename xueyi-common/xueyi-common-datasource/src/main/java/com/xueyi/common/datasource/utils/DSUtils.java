@@ -70,8 +70,8 @@ public class DSUtils {
     /**
      * 获取当前线程数据源名称
      */
-    public static void getNowDsName() {
-        System.out.println(DynamicDataSourceContextHolder.peek());
+    public static String getNowDsName() {
+        return DynamicDataSourceContextHolder.peek();
     }
 
     /**
