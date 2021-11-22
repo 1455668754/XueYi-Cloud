@@ -3,6 +3,7 @@ package com.xueyi.common.datasource.utils;
 import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
+import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
 import com.xueyi.common.core.constant.MessageConstant;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.IdUtils;
@@ -64,6 +65,13 @@ public class DSUtils {
     public static void getDs() {
         DynamicRoutingDataSource ds = (DynamicRoutingDataSource) SpringUtils.getBean(DataSource.class);
         ds.getDataSources().keySet().forEach(System.out::println);
+    }
+
+    /**
+     * 获取当前线程数据源名称
+     */
+    public static void getNowDsName() {
+        System.out.println(DynamicDataSourceContextHolder.peek());
     }
 
     /**
