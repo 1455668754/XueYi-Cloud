@@ -1,5 +1,5 @@
-import store from '~../../../store'
-import router from '~../../../router';
+import store from '~../../../src/store'
+import router from '~../../../src/router';
 
 export default {
     // 刷新当前tab页签
