@@ -20,14 +20,8 @@ module.exports = {
   /** 是否显示动态标题 */
   dynamicTitle: false,
 
-  /** 库编号 */
-  libraryId: 0,
-
-  /** 站点编号 */
-  siteId: 0,
-
   /** 系统编号 */
-  systemId: 0,
+  systemId: '0',
 
   /** 初始页名称|图标 */
   homePageName: '产品中心',

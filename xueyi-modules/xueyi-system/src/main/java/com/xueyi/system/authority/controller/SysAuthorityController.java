@@ -12,7 +12,6 @@ import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysRoleService;
-import com.xueyi.system.cache.service.ISysCacheInitService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +27,6 @@ public class SysAuthorityController extends BaseController {
 
     @Autowired
     private ISysAuthorityService authorityService;
-
-    @Autowired
-    private ISysCacheInitService cacheInitService;
 
     @Autowired
     private ISysRoleService roleService;

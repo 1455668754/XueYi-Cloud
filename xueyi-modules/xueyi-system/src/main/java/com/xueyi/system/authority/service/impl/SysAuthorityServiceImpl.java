@@ -447,9 +447,6 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @Override
     @DS("#sourceName")
     public List<SysRole> getRoleAuthorityBySourceName(Long enterpriseId, Set<Long> roleIds,String sourceName) {
-        System.out.println(enterpriseId);
-        System.out.println(roleIds);
-        System.out.println(sourceName);
         if (ObjectUtil.isNull(roleIds) || roleIds.size() == 0)
             return new ArrayList<SysRole>();
         return roleMapper.getRoleAuthority(enterpriseId, roleIds);

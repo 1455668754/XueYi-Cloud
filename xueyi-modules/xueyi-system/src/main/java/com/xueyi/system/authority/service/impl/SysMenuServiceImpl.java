@@ -2,12 +2,12 @@ package com.xueyi.system.authority.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.multiTenancy.SortUtils;
 import com.xueyi.common.core.utils.multiTenancy.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SystemMenu;
@@ -16,13 +16,16 @@ import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysMenuService;
 import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
-import com.xueyi.system.utils.route.RouterVo;
 import com.xueyi.system.utils.route.RouteUtils;
+import com.xueyi.system.utils.route.RouterVo;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

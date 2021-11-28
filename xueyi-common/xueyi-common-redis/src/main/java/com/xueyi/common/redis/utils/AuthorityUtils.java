@@ -5,7 +5,9 @@ import com.xueyi.common.core.constant.CacheConstants;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.redis.service.RedisService;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 权限缓存管理工具类
