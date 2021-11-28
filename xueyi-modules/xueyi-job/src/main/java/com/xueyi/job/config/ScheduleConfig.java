@@ -1,13 +1,14 @@
 package com.xueyi.job.config;
 
-import java.util.Properties;
-import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
+import javax.sql.DataSource;
+import java.util.Properties;
+
 /**
- * 定时任务配置
+ * 定时任务配置（单机部署建议删除此类和qrtz数据库表，默认走内存会最高效）
  * 
  * @author ruoyi
  */
