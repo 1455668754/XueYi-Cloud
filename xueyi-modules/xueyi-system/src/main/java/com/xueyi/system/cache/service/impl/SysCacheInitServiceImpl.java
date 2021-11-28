@@ -3,18 +3,15 @@ package com.xueyi.system.cache.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.TenantConstants;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.redis.utils.AuthorityUtils;
 import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
-import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.organize.SysEnterprise;
 import com.xueyi.system.api.domain.source.Source;
 import com.xueyi.system.cache.domain.CacheInitVo;
 import com.xueyi.system.cache.mapper.SysAuthorityCacheMapper;
 import com.xueyi.system.cache.mapper.SysEnterpriseCacheMapper;
-import com.xueyi.system.cache.mapper.SysRoleCacheMapper;
 import com.xueyi.system.cache.mapper.SysSourceCacheMapper;
 import com.xueyi.system.cache.service.ISysCacheInitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +40,6 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
     private SysAuthorityCacheMapper authorityCacheMapper;
 
     @Autowired
-    private SysRoleCacheMapper roleCacheMapper;
-
-    @Autowired
     private ISysCacheInitService cacheInitService;
 
     /**
@@ -65,11 +59,6 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         cacheInitService.loadingSystemCache();
         /* 初始化模块-菜单缓存 */
         cacheInitService.loadingSystemMenuCache();
-        /* 初始化模块-角色缓存 */
-        List<Source> sources = DataSourceUtils.getSourceList();
-        for (Source source : sources) {
-            cacheInitService.loadingRoleCache(source.getMaster());
-        }
     }
 
     /**
@@ -89,8 +78,6 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
         cacheInitService.refreshSystemCacheByEnterpriseId(enterpriseId);
         /* 初始化模块-菜单缓存 */
         cacheInitService.refreshSystemMenuCacheByEnterpriseId(enterpriseId);
-        /* 初始化模块-角色缓存 */
-        cacheInitService.refreshRoleCacheByEnterpriseIdToSourceName(enterpriseId, DataSourceUtils.getMainSourceNameByEnterpriseId(enterpriseId));
     }
 
     /**
@@ -285,77 +272,6 @@ public class SysCacheInitServiceImpl implements ISysCacheInitService {
             AuthorityUtils.refreshSystemMenuCache(cacheInitVo.getEnterpriseId(), cacheInitVo.getSystemMenuSet());
         } else {
             AuthorityUtils.deleteSystemMenuCache(enterpriseId);
-        }
-    }
-
-    /**
-     * 加载角色缓存数据 | 指定源所有企业
-     *
-     * @param sourceName 数据源名称
-     */
-    @Override
-    @DS("#sourceName")
-    public void loadingRoleCache(String sourceName) {
-        List<SysRole> roles = roleCacheMapper.selectRoleCacheListBySource();
-        for (SysRole role : roles) {
-            AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), role);
-        }
-        List<SysRole> roleNullList = roleCacheMapper.selectRoleCacheListByExcludeIds(roles.stream().map(SysRole::getEnterpriseId).collect(Collectors.toSet()), roles.stream().map(SysRole::getRoleId).collect(Collectors.toSet()));
-        for (SysRole roleNull : roleNullList) {
-            AuthorityUtils.deleteRoleCache(roleNull.getEnterpriseId(), roleNull.getRoleId());
-        }
-    }
-
-    /**
-     * 加载指定企业的所有角色缓存数据 | 指定企业
-     *
-     * @param enterpriseId 租户Id
-     * @param sourceName   指定源
-     */
-    @Override
-    @DS("#sourceName")
-    public void refreshRoleCacheByEnterpriseIdToSourceName(Long enterpriseId, String sourceName) {
-        List<SysRole> roles = roleCacheMapper.selectRoleCacheListByEnterpriseId(enterpriseId);
-        for (SysRole role : roles) {
-            AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), role);
-        }
-    }
-
-    /**
-     * 加载角色缓存数据 | 单个企业的单个指定角色
-     *
-     * @param role       角色信息 | roleId 角色Id | enterpriseId 租户Id
-     * @param sourceName 指定源
-     */
-    @Override
-    @DS("#sourceName")
-    public void refreshRoleCacheByRoleIdToSourceName(SysRole role, String sourceName) {
-        refreshRoleCacheByRoleId(role);
-    }
-
-    /**
-     * 加载角色缓存数据 | 单个企业的单个指定角色
-     *
-     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
-     */
-    @Override
-    @DS("#isolate")
-    @DataScope(eAlias = "r")
-    public void refreshRoleCacheByRoleIdToIsolate(SysRole role) {
-        refreshRoleCacheByRoleId(role);
-    }
-
-    /**
-     * 加载角色缓存数据 | 单个企业的单个指定角色
-     *
-     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
-     */
-    private void refreshRoleCacheByRoleId(SysRole role) {
-        SysRole roleCache = roleCacheMapper.selectRoleCacheByRoleId(role);
-        if (roleCache != null) {
-            AuthorityUtils.refreshRoleCache(role.getEnterpriseId(), role.getRoleId(), roleCache);
-        } else {
-            AuthorityUtils.deleteRoleCache(role.getEnterpriseId(), role.getRoleId());
         }
     }
 }

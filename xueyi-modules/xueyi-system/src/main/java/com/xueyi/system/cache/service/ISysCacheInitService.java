@@ -95,34 +95,4 @@ public interface ISysCacheInitService {
      * @param enterpriseId 企业Id
      */
     public void refreshSystemMenuCacheByEnterpriseId(Long enterpriseId);
-
-    /**
-     * 加载角色缓存数据 | 指定源所有企业
-     *
-     * @param sourceName 数据源名称
-     */
-    public void loadingRoleCache(String sourceName);
-
-    /**
-     * 加载指定企业的所有角色缓存数据 | 指定企业
-     *
-     * @param enterpriseId 租户Id
-     * @param sourceName 指定源
-     */
-    public void refreshRoleCacheByEnterpriseIdToSourceName(Long enterpriseId, String sourceName);
-
-    /**
-     * 加载角色缓存数据 | 单个企业的单个指定角色
-     *
-     * @param role       角色信息 | roleId 角色Id | enterpriseId 租户Id
-     * @param sourceName 指定源
-     */
-    public void refreshRoleCacheByRoleIdToSourceName(SysRole role, String sourceName);
-
-    /**
-     * 加载角色缓存数据 | 单个企业的单个指定角色
-     *
-     * @param role 角色信息 | roleId 角色Id | enterpriseId 租户Id
-     */
-    public void refreshRoleCacheByRoleIdToIsolate(SysRole role);
 }

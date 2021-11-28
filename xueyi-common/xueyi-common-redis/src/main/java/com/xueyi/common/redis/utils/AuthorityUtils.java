@@ -59,17 +59,6 @@ public class AuthorityUtils {
     }
 
     /**
-     * 获取角色 key
-     *
-     * @param enterpriseId 企业Id
-     * @param roleId       角色Id
-     * @return 缓存键key
-     */
-    public static String getRoleCacheKey(Long enterpriseId, Long roleId) {
-        return CacheConstants.SYS_ENTERPRISE_KEY + enterpriseId + ":" + CacheConstants.ROLE_KEY + ":" + roleId;
-    }
-
-    /**
      * 获取模块-路由目录 key
      *
      * @param enterpriseId 企业Id
@@ -227,27 +216,6 @@ public class AuthorityUtils {
      */
     public static void deleteSystemMenuCache(Long enterpriseId) {
         redisService.deleteObject(getSystemMenuCacheKey(enterpriseId));
-    }
-
-    /**
-     * 新增角色缓存 cache
-     *
-     * @param enterpriseId 企业Id
-     * @param roleId       角色Id
-     * @param role         角色信息
-     */
-    public static <T> void refreshRoleCache(Long enterpriseId, Long roleId, T role) {
-        redisService.setCacheObject(getRoleCacheKey(enterpriseId, roleId), role);
-    }
-
-    /**
-     * 删除指定角色 cache
-     *
-     * @param enterpriseId 企业Id
-     * @param roleId       角色Id
-     */
-    public static void deleteRoleCache(Long enterpriseId, Long roleId) {
-        redisService.deleteObject(getRoleCacheKey(enterpriseId, roleId));
     }
 
     /**
