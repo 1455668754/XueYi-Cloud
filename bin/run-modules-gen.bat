@@ -1,6 +1,6 @@
 @echo off
 echo.
-echo [信息] 使用Jar命令运行Modules-Gen工程。
+echo [锟斤拷息] 使锟斤拷Jar锟斤拷锟斤拷锟斤拷锟斤拷Modules-Gen锟斤拷锟教★拷
 echo.
 
 cd %~dp0
@@ -8,7 +8,7 @@ cd ../xueyi-modules/xueyi-gen/target
 
 set JAVA_OPTS=-Xms512m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=512m
 
-java -Dfile.encoding=utf-8 -jar %JAVA_OPTS% xueyi-modules-gen.jar
+java -Dfile.encoding=utf-8 %JAVA_OPTS% -jar xueyi-modules-gen.jar
 
 cd bin
 pause
