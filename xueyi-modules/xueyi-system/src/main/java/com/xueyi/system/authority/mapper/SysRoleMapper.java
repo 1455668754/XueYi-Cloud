@@ -15,13 +15,31 @@ import java.util.Set;
 public interface SysRoleMapper {
 
     /**
+     * 根据角色Id查询角色权限
+     *
+     * @param roleId       角色Id
+     * @param enterpriseId 企业Id
+     * @return 角色信息集合信息
+     */
+    public SysRole getRoleAuthorityByRoleId(@Param("enterpriseId") Long enterpriseId, @Param("roleId") Long roleId);
+
+    /**
+     * 查询角色权限集合
+     *
+     * @param roleIds      角色Ids
+     * @param enterpriseId 企业Id
+     * @return 角色信息集合信息
+     */
+    public List<SysRole> getRoleAuthority(@Param("enterpriseId") Long enterpriseId, @Param("roleIds") Set<Long> roleIds);
+
+    /**
      * 根据角色Id查询角色信息集合
      *
      * @param userId       用户Id
      * @param enterpriseId 企业Id
      * @return 角色信息集合信息
      */
-    public List<SysRole> getRoleListByUserId(@Param("userId") Long userId,@Param("enterpriseId")  Long enterpriseId);
+    public List<SysRole> getRoleListByUserId(@Param("userId") Long userId, @Param("enterpriseId") Long enterpriseId);
 
     /**
      * 根据衍生来源Id&角色类型查询指定衍生角色

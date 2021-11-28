@@ -4,6 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.redis.utils.AuthorityUtils;
+import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.system.api.domain.authority.SysMenu;
 import com.xueyi.system.api.domain.authority.SysRole;
@@ -65,7 +66,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
         if (SysUser.isAdmin(userType)) {
             roles.add("admin");
         } else {
-            List<SysRole> roleListCache = AuthorityUtils.getRoleListCache(enterpriseId, roleList);
+            List<SysRole> roleListCache = authorityService.getRoleAuthorityBySourceName(enterpriseId, roleList, DataSourceUtils.getMainSourceNameByEnterpriseId(enterpriseId));
             roles.addAll(roleListCache.stream().filter(role -> StringUtils.isNotEmpty(role.getRoleKey()) && StringUtils.equals(BaseConstants.Status.NORMAL.getCode(),role.getStatus())).map(SysRole::getRoleKey).collect(Collectors.toSet()));
         }
         return roles;
@@ -86,7 +87,7 @@ public class SysLoginServiceImpl implements ISysLoginService {
         if (SysUser.isAdmin(userType)) {
             perms.add("*:*:*");
         } else {
-            Set<SysMenu> menuSet = authorityService.selectMenuSet(enterpriseId, AuthorityUtils.getRoleListCache(enterpriseId, roleList),EnterpriseUtils.isAdminTenant(enterpriseId), true,true);
+            Set<SysMenu> menuSet = authorityService.selectMenuSet(enterpriseId, authorityService.getRoleAuthorityBySourceName(enterpriseId, roleList, DataSourceUtils.getMainSourceNameByEnterpriseId(enterpriseId)),EnterpriseUtils.isAdminTenant(enterpriseId), true,true);
             Set<SysMenu> ownerMenuSet = AuthorityUtils.getMenuCache(enterpriseId);
             ownerMenuSet.retainAll(menuSet);
             perms.addAll(ownerMenuSet.stream().filter(menu -> StringUtils.isNotEmpty(menu.getPerms()) && StringUtils.equals(BaseConstants.Status.NORMAL.getCode(),menu.getStatus())).map(SysMenu::getPerms).collect(Collectors.toSet()));

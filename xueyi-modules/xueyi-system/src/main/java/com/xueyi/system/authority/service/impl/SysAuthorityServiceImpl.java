@@ -1,5 +1,6 @@
 package com.xueyi.system.authority.service.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.BaseConstants;
@@ -15,6 +16,7 @@ import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.authority.SysSystem;
 import com.xueyi.system.api.domain.authority.SystemMenu;
 import com.xueyi.system.authority.mapper.SysAuthorityMapper;
+import com.xueyi.system.authority.mapper.SysRoleMapper;
 import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.utils.vo.TreeSelect;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
 
     @Autowired
     private ISysAuthorityService authorityService;
+
+    @Autowired
+    private SysRoleMapper roleMapper;
 
     /**
      * 根据企业Id获取模块-菜单集合 | 租管级
@@ -72,7 +77,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @Override
     public List<SysRole> selectRoleListByTenantId(Long enterpriseId) {
         Set<Long> roleIds = authorityMapper.selectRoleListByTenantId(enterpriseId);
-        return AuthorityUtils.getRoleListCache(enterpriseId, roleIds);
+        return getRoleAuthority(enterpriseId, roleIds);
     }
 
     /**
@@ -108,7 +113,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @DataScope(eAlias = "sor")
     public List<SysRole> selectRoleListByEnterpriseId(SysRole role) {
         Set<Long> roleIds = authorityMapper.selectRoleListByEnterpriseId(role);
-        return AuthorityUtils.getRoleListCache(SecurityUtils.getEnterpriseId(), roleIds);
+        return getRoleAuthority(SecurityUtils.getEnterpriseId(), roleIds);
     }
 
     /**
@@ -143,7 +148,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @DataScope(eAlias = "sor")
     public List<SysRole> selectRoleListByDeptId(SysRole role) {
         Set<Long> roleIds = authorityMapper.selectRoleListByDeptId(role);
-        return AuthorityUtils.getRoleListCache(SecurityUtils.getEnterpriseId(), roleIds);
+        return getRoleAuthority(SecurityUtils.getEnterpriseId(), roleIds);
     }
 
     /**
@@ -178,7 +183,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @DataScope(eAlias = "sor")
     public List<SysRole> selectRoleListByPostId(SysRole role) {
         Set<Long> roleIds = authorityMapper.selectRoleListByPostId(role);
-        return AuthorityUtils.getRoleListCache(SecurityUtils.getEnterpriseId(), roleIds);
+        return getRoleAuthority(SecurityUtils.getEnterpriseId(), roleIds);
     }
 
     /**
@@ -213,7 +218,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @DataScope(eAlias = "sor")
     public List<SysRole> selectRoleListByUserId(SysRole role) {
         Set<Long> roleIds = authorityMapper.selectRoleListByUserId(role);
-        return AuthorityUtils.getRoleListCache(SecurityUtils.getEnterpriseId(), roleIds);
+        return getRoleAuthority(SecurityUtils.getEnterpriseId(), roleIds);
     }
 
     /**
@@ -248,7 +253,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     @DataScope(eAlias = "sor")
     public List<SysRole> selectRoleListByRoleId(SysRole role) {
         Set<Long> roleIds = authorityMapper.selectRoleListByRoleId(role);
-        return AuthorityUtils.getRoleListCache(SecurityUtils.getEnterpriseId(), roleIds);
+        return getRoleAuthority(SecurityUtils.getEnterpriseId(), roleIds);
     }
 
     /**
@@ -270,7 +275,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     public SysRole selectRoleDataRange(SysRole role) {
-        return AuthorityUtils.getRoleCache(SecurityUtils.getEnterpriseId(), role.getRoleId());
+        return getRoleAuthorityByRoleId(SecurityUtils.getEnterpriseId(), role.getRoleId());
     }
 
     /**
@@ -404,6 +409,50 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
     public Set<SysSystem> selectSystemSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal, boolean hasStatus) {
         Set<SystemMenu> systemSet = mergeSet(enterpriseId, roles, isAdminTenant, hasNormal, hasStatus);
         return systemSet.stream().map(item -> new SysSystem(item.getUid())).collect(Collectors.toSet());
+    }
+
+    /**
+     * 根据角色Id查询角色权限
+     *
+     * @param enterpriseId 企业Id
+     * @param roleId      角色Id
+     * @return 角色集合
+     */
+    @Override
+    public SysRole getRoleAuthorityByRoleId(Long enterpriseId, Long roleId) {
+        return roleMapper.getRoleAuthorityByRoleId(enterpriseId, roleId);
+    }
+
+    /**
+     * 查询角色权限集合
+     *
+     * @param enterpriseId 企业Id
+     * @param roleIds      角色Ids
+     * @return 角色集合
+     */
+    @Override
+    public List<SysRole> getRoleAuthority(Long enterpriseId, Set<Long> roleIds) {
+        if (ObjectUtil.isNull(roleIds) || roleIds.size() == 0)
+            return new ArrayList<SysRole>();
+        return roleMapper.getRoleAuthority(enterpriseId, roleIds);
+    }
+
+    /**
+     * 查询指定源角色权限集合
+     *
+     * @param enterpriseId 企业Id
+     * @param roleIds      角色Ids
+     * @return 角色集合
+     */
+    @Override
+    @DS("#sourceName")
+    public List<SysRole> getRoleAuthorityBySourceName(Long enterpriseId, Set<Long> roleIds,String sourceName) {
+        System.out.println(enterpriseId);
+        System.out.println(roleIds);
+        System.out.println(sourceName);
+        if (ObjectUtil.isNull(roleIds) || roleIds.size() == 0)
+            return new ArrayList<SysRole>();
+        return roleMapper.getRoleAuthority(enterpriseId, roleIds);
     }
 
     /**

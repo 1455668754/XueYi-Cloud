@@ -229,4 +229,31 @@ public interface ISysAuthorityService {
      * @return 模块集合
      */
     public Set<SysSystem> selectSystemSet(Long enterpriseId, List<SysRole> roles, boolean isAdminTenant, boolean hasNormal, boolean hasStatus);
+
+    /**
+     * 根据角色Id查询角色权限
+     *
+     * @param enterpriseId 企业Id
+     * @param roleId       角色Id
+     * @return 角色集合
+     */
+    public SysRole getRoleAuthorityByRoleId(Long enterpriseId, Long roleId);
+
+    /**
+     * 查询角色权限集合
+     *
+     * @param enterpriseId 企业Id
+     * @param roleIds      角色Ids
+     * @return 角色集合
+     */
+    public List<SysRole> getRoleAuthority(Long enterpriseId, Set<Long> roleIds);
+
+    /**
+     * 查询指定源角色权限集合
+     *
+     * @param enterpriseId 企业Id
+     * @param roleIds      角色Ids
+     * @return 角色集合
+     */
+    public List<SysRole> getRoleAuthorityBySourceName(Long enterpriseId, Set<Long> roleIds, String sourceName);
 }

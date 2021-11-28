@@ -23,6 +23,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="remark" 				column="remark" 	 		   />
 	</resultMap>
 
+
+	<!--  角色权限获取  -->
+	<resultMap type="SysRole" id="RoleResult">
+		<id     property="roleId"             	column="role_id"               />
+		<result property="roleCode"           	column="role_code"             />
+		<result property="name"           		column="name"             	   />
+		<result property="roleKey"            	column="role_key"              />
+		<result property="dataScope"          	column="data_scope"            />
+		<result property="type"   				column="type"   	 		   />
+		<result property="deriveId"   			column="derive_id"   	 	   />
+		<result property="sort"   				column="sort"   	 		   />
+		<result property="status"     			column="status"      		   />
+		<result property="enterpriseId"     	column="tenant_id"             />
+		<collection  property="wholeIds"        notNullColumn="s_m_whole_uid"       javaType="java.util.Set" resultMap="wholeIdsResult"       />
+		<collection  property="halfIds"         notNullColumn="s_m_half_uid"        javaType="java.util.Set" resultMap="halfIdsResult"        />
+		<collection  property="deptPostIds"     notNullColumn="s_m_dept_post_id"    javaType="java.util.Set" resultMap="deptPostIdsResult"    />
+	</resultMap>
+
+	<resultMap type="SystemMenu" id="wholeIdsResult">
+		<id     property="Uid"              column="s_m_whole_uid"             />
+	</resultMap>
+
+	<resultMap type="SystemMenu" id="halfIdsResult">
+		<id     property="Uid"              column="s_m_half_uid"              />
+	</resultMap>
+
+	<resultMap type="Long" id="deptPostIdsResult">
+		<id                                 column="s_m_dept_post_id"          />
+	</resultMap>
+
 	<sql id="permVo">
 		select distinct r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.status
 		from sys_role r
@@ -52,6 +82,41 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select distinct r.role_id
 		from sys_organize_role r
 	</sql>
+
+	<sql id="roleAuthorityVo">
+		select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+			   r.s_m_half_uid, r.s_m_whole_uid, r.s_m_dept_post_id
+		from (
+				 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+						null as s_m_half_uid, srsmw.system_menu_id as s_m_whole_uid, null as s_m_dept_post_id
+				 from sys_role r
+						  left join sys_role_system_menu srsmw on r.role_id = srsmw.role_id and srsmw.checked = '0'
+				 union
+				 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+						srsmh.system_menu_id as s_m_half_uid, null as s_m_whole_uid, null as s_m_dept_post_id
+				 from sys_role r
+						  left join sys_role_system_menu srsmh on r.role_id = srsmh.role_id and srsmh.checked = '1'
+				 union
+				 select r.role_id, r.role_code, r.name, r.role_key, r.data_scope, r.type, r.derive_id, r.sort, r.status, r.del_flag, r.tenant_id,
+						null as s_m_half_uid, null as s_m_whole_uid, srdp.dept_post_id as s_m_dept_post_id
+				 from sys_role r
+						  left join sys_role_dept_post srdp on r.role_id = srdp.role_id
+			 ) r
+				 left join sys_role sr on sr.role_id = r.role_id
+	</sql>
+
+	<select id="getRoleAuthorityByRoleId" resultMap="RoleResult">
+		<include refid="roleAuthorityVo"/>
+		WHERE r.tenant_id = #{enterpriseId} and r.del_flag = 0 and r.role_id = #{roleId}
+	</select>
+
+	<select id="getRoleAuthority" resultMap="RoleResult">
+		<include refid="roleAuthorityVo"/>
+		WHERE r.tenant_id = #{enterpriseId} and r.del_flag = 0 and r.role_id in
+		<foreach item="roleId" collection="roleIds" open="(" separator="," close=")">
+			#{roleId}
+		</foreach>
+	</select>
 
 	<select id="getRoleListByUserId" resultMap="SysRoleResult">
 		<include refid="organizeVo"/>
