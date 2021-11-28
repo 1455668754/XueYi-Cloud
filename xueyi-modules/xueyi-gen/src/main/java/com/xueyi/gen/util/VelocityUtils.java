@@ -1,16 +1,17 @@
 package com.xueyi.gen.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import cn.hutool.core.util.IdUtil;
-import org.apache.velocity.VelocityContext;
 import com.alibaba.fastjson.JSONObject;
 import com.xueyi.common.core.constant.GenConstants;
 import com.xueyi.common.core.utils.DateUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.gen.domain.GenTable;
 import com.xueyi.gen.domain.GenTableColumn;
+import org.apache.velocity.VelocityContext;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * 模板工具类
@@ -258,7 +259,8 @@ public class VelocityUtils {
         for (GenTableColumn column : columns)
         {
             if (!column.isSuperColumn() && StringUtils.isNotEmpty(column.getDictType()) && StringUtils.equalsAny(
-                    column.getHtmlType(), new String[] { GenConstants.HTML_SELECT, GenConstants.HTML_RADIO }))
+                    column.getHtmlType(),
+                    new String[] { GenConstants.HTML_SELECT, GenConstants.HTML_RADIO, GenConstants.HTML_CHECKBOX }))
             {
                 dicts.add("'" + column.getDictType() + "'");
             }
