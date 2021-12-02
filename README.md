@@ -16,6 +16,10 @@
 ## 简介
 基于SpringBoot | Mybatis | RabbitMQ | Vue | Element UI的多租户SaaS开发框架，已支持消息队列、数据权限、动态源、多租户、数据物理&逻辑双隔离等，为企业级多租户Saas及集团化应用提供快速开发解决方案。
 
+##  Mybatis + vue3版本
+
+**[XueYi-MultiSaas](https://gitee.com/xueyitiantang/XueYi-MultiSaas)  即将发布，提前关注**
+
 ## 特性
 - **多租户Saas**： 物理隔离&&逻辑隔离 --- 共享多租户&&隔离多租户
 - **动态多源策略**：租户-策略-数据源 --- 动态源增减与租户策略配置
