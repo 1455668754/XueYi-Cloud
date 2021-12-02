@@ -33,7 +33,6 @@
 <script>
 
 export default {
-  name: "BasicInfoForm",
   props: {
     info: {
       type: Object,
