@@ -256,9 +256,7 @@ public class DataScopeAspect {
                     baseEntity.setUpdateDeptBy(user.getDeptId());
                     baseEntity.setUpdatePostBy(user.getPostId());
                     baseEntity.setUpdateIP(loginUser.getIpaddr());
-                    if (enterprise.getEnterpriseId() != -1) {
-                        baseEntity.getParams().put(UPDATE_SCOPE, " AND (" + upSqlString.substring(4) + ")");
-                    }
+                    baseEntity.getParams().put(UPDATE_SCOPE, " AND (" + upSqlString.substring(4) + ")");
                 }
             }
         }
