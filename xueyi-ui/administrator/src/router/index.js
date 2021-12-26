@@ -38,23 +38,23 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path(.*)',
-        component: (resolve) => require(['@/views/redirect'], resolve)
+        component: () => import('@/views/redirect')
       }
     ]
   },
   {
     path: '/login',
-    component: (resolve) => require(['@views/login'], resolve),
+    component: () => import('@views/login'),
     hidden: true
   },
   {
     path: '/404',
-    component: (resolve) => require(['@views/error/404'], resolve),
+    component: () => import('@views/error/404'),
     hidden: true
   },
   {
     path: '/401',
-    component: (resolve) => require(['@views/error/401'], resolve),
+    component: () => import('@views/error/401'),
     hidden: true
   },
   {
@@ -64,7 +64,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: (resolve) => require(['@/views/index'], resolve),
+        component: () => import('@/views/index'),
         name: 'Index',
         meta: { title: homePageName, icon: homePageIcon, affix: true }
       }
@@ -77,7 +77,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index/:dictId(\\d+)',
-        component: (resolve) => require(['@/views/system/system/dict/data'], resolve),
+        component: () => import('@/views/system/system/dict/data'),
         name: 'Data',
         meta: { title: '字典数据', activeMenu: '/system/dict'}
       }
@@ -90,7 +90,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: (resolve) => require(['@/views/tool/gen/editTable'], resolve),
+        component: () => import('@/views/tool/gen/editTable'),
         name: 'GenEdit',
         meta: { title: '修改生成配置', activeMenu: '/tool/gen'}
       }
