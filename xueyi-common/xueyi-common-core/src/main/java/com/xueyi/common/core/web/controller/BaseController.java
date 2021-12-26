@@ -1,17 +1,14 @@
 package com.xueyi.common.core.web.controller;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xueyi.common.core.config.DemoProperties;
 import com.xueyi.common.core.exception.DemoModeException;
 import com.xueyi.common.core.utils.DateUtils;
+import com.xueyi.common.core.utils.PageUtils;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.sql.SqlUtil;
 import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.web.page.PageDomain;
 import com.xueyi.common.core.web.page.TableDataInfo;
-import com.xueyi.common.core.web.page.TableSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,14 +72,7 @@ public class BaseController {
      * 设置请求分页数据
      */
     protected void startPage() {
-        PageDomain pageDomain = TableSupport.buildPageRequest();
-        Integer pageNum = pageDomain.getPageNum();
-        Integer pageSize = pageDomain.getPageSize();
-        if (StringUtils.isNotNull(pageNum) && StringUtils.isNotNull(pageSize)) {
-            String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
-            Boolean reasonable = pageDomain.getReasonable();
-            PageHelper.startPage(pageNum, pageSize, orderBy).setReasonable(reasonable);
-        }
+        PageUtils.startPage();
     }
 
     /**
