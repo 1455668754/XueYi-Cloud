@@ -1,13 +1,13 @@
 package com.xueyi.job.util;
 
+import com.xueyi.common.core.utils.SpringUtils;
+import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.job.domain.SysJob;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.xueyi.common.core.utils.SpringUtils;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.job.domain.SysJob;
 
 /**
  * 任务执行工具
@@ -106,7 +106,7 @@ public class JobInvokeUtil {
                 classs.add(new Object[]{StringUtils.substring(str, 1, str.length() - 1), String.class});
             }
             // boolean布尔类型，等于true或者false
-            else if (StringUtils.equals(str, "true") || StringUtils.equalsIgnoreCase(str, "false")) {
+            else if ("true".equalsIgnoreCase(str) || "false".equalsIgnoreCase(str)) {
                 classs.add(new Object[]{Boolean.valueOf(str), Boolean.class});
             }
             // long长整形，以L结尾
