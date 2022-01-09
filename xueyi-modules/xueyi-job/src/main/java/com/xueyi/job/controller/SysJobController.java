@@ -75,9 +75,9 @@ public class SysJobController extends BaseController {
         if (!CronUtils.isValid(job.getCronExpression())) {
             return error("新增任务'" + job.getJobName() + "'失败，Cron表达式不正确");
         } else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), HttpConstants.Type.LOOKUP_RMI.getCode())) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'rmi://'调用");
+            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'rmi:'调用");
         } else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), HttpConstants.Type.LOOKUP_LDAP.getCode())) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap://'调用");
+            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap:'调用");
         } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode()})) {
             return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)//'调用");
         } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), Constants.JOB_ERROR_STR)) {
@@ -96,9 +96,9 @@ public class SysJobController extends BaseController {
         if (!CronUtils.isValid(job.getCronExpression())) {
             return error("修改任务'" + job.getJobName() + "'失败，Cron表达式不正确");
         } else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), HttpConstants.Type.LOOKUP_RMI.getCode())) {
-            return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'rmi://'调用");
+            return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'rmi:'调用");
         } else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), HttpConstants.Type.LOOKUP_LDAP.getCode())) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap://'调用");
+            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap:'调用");
         } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode()})) {
             return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)//'调用");
         } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), Constants.JOB_ERROR_STR)) {
