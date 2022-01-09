@@ -40,6 +40,7 @@ public class HttpConstants {
 
         LOOKUP_RMI("rmi:", "RMI 远程方法调用"),
         LOOKUP_LDAP("ldap:", "LDAP 远程方法调用"),
+        LOOKUP_LDAPS("ldaps:", "LDAPS 远程方法调用"),
         HTTP("http://", "http请求"),
         HTTPS("https://", "https请求"),
         WS("ws://", "ws请求"),
