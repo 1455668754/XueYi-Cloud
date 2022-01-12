@@ -8,6 +8,8 @@ import com.xueyi.system.api.model.LoginUser;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
 
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
+
 /**
  * 租户库源策略
  *
@@ -16,11 +18,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DsIsolateExpressionProcessor extends DsProcessor {
 
-    private static final String ISOLATE_PREFIX = "#isolate";
-
     @Override
     public boolean matches(String key) {
-        return key.startsWith(ISOLATE_PREFIX);
+        return key.startsWith(ISOLATE);
     }
 
     @Override

@@ -18,7 +18,7 @@
 
 ##  Mybatis + vue3版本
 
-**[XueYi-MultiSaas](https://gitee.com/xueyitiantang/XueYi-MultiSaas)  即将发布，提前关注**
+**[XueYi-MultiSaas](https://gitee.com/xueyitiantang/XueYi-MultiSaas)**
 
 ## 特性
 - **多租户Saas**： 物理隔离&&逻辑隔离 --- 共享多租户&&隔离多租户
@@ -36,24 +36,6 @@ star 别忘点上 :kissing_heart:
 - 请移步右上角  **一键三连** :kissing_heart:
 - QQ群：[![加入QQ群](https://img.shields.io/badge/779343138-blue.svg)](https://jq.qq.com/?_wv=1027&k=zw11JJhj)
 - 若发现bug，群内滴或Issues，提供复现路径。
-
-## 计划
-从v1.0.1版本更新至今的v4.1.3版本，大部分构思内容已经实现且趋近于稳定。    
-非常感谢开源过程中结识的各位小伙伴一起发现并解决问题。    
-对于下一阶段计划如下：
-- **计划1：前端美化**
-
-    > 新增一版基于 vue3 | Ant Vue | vite2 | TypeScript 的前端UI  
-      放张图
-  <img alt="VbenAdmin Logo" width="100%" src="https://anncwb.github.io/anncwb/images/preview2.png">
-- **计划2：文档/视频完善**
-
-    > 制作部分内容视频，完善开发支持
-- **计划3：mall版本开源支持**
-
-    > mall版本开源（应部分小伙伴需求）
-
-估计全部整完2021就过完了
 
 ## 预览
 - **普通账户**
@@ -166,10 +148,3 @@ com.xueyi
       3.发现bug或者可优化内容时进行issues或PR    
       4.社区生态共建（拉拉星星 :sleeping: ）    
       5.禁恶意针对本项目
-
-## 征集
-1. 征集一个项目Logo（ 没有艺术细胞的菜鸡一枚 :astonished: ） 
-2. 征集一份系统流程图（登录至使用 数据来源 缓存 or 库 的数据流）
-3. 征集bug（越多越好）
-4. 征集使用中遇到的疑难杂症及其解决方案，提交至issues，给后来小伙伴踩坑
-5. 推一推，点点star

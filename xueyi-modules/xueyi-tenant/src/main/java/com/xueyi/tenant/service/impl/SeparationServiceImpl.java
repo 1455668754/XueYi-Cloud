@@ -1,14 +1,16 @@
 package com.xueyi.tenant.service.impl;
 
-import java.util.List;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.tenant.api.domain.source.Source;
 import com.xueyi.tenant.mapper.SourceMapper;
+import com.xueyi.tenant.service.ISeparationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.xueyi.tenant.service.ISeparationService;
+
+import java.util.List;
+
+import static com.xueyi.common.core.constant.TenantConstants.MASTER;
 
 /**
  * 数据源 业务层处理
@@ -16,7 +18,7 @@ import com.xueyi.tenant.service.ISeparationService;
  * @author xueyi
  */
 @Service
-@DS("#main")
+@DS(MASTER)
 public class SeparationServiceImpl implements ISeparationService {
 
     @Autowired

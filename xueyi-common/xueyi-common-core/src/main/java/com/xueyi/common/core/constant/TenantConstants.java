@@ -10,6 +10,12 @@ public class TenantConstants {
     /** 注册租户默认策略Id */
     public static final Long REGISTER_TENANT_STRATEGY_ID = 1L;
 
+    /** 策略库 */
+    public static final String ISOLATE = "#isolate";
+
+    /** 主库 */
+    public static final String MASTER = "#main";
+
     /** 数据源 */
     public enum Source {
 

@@ -15,13 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.xueyi.common.core.constant.TenantConstants.MASTER;
+
 /**
  * 数据源 业务层处理
  *
  * @author xueyi
  */
 @Service
-@DS("#main")
+@DS(MASTER)
 public class SourceServiceImpl implements ISourceService {
 
     @Autowired

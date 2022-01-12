@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
+import static com.xueyi.common.core.constant.TenantConstants.MASTER;
 
 /**
  * 菜单 业务层处理
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
  * @author xueyi
  */
 @Service
-@DS("#main")
+@DS(MASTER)
 public class SysMenuServiceImpl implements ISysMenuService {
 
     @Autowired
@@ -178,7 +180,7 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 结果
      */
     @Override
-    @DS("#isolate")
+    @DS(ISOLATE)
     public boolean mainCheckMenuExistRole(SysMenu menu) {
         SysSearch search = new SysSearch();
         search.getSearch().put("systemMenuId", menu.getMenuId());

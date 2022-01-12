@@ -19,13 +19,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
+
 /**
  * 角色 业务层处理
  *
  * @author xueyi
  */
 @Service
-@DS("#isolate")
+@DS(ISOLATE)
 public class SysRoleServiceImpl implements ISysRoleService {
 
     @Autowired

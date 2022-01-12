@@ -1,13 +1,15 @@
 package com.xueyi.system.notice.service.impl;
 
-import java.util.List;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.xueyi.system.notice.domain.SysNotice;
 import com.xueyi.system.notice.mapper.SysNoticeMapper;
 import com.xueyi.system.notice.service.ISysNoticeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
 
 /**
  * 公告 服务层实现
@@ -15,7 +17,7 @@ import com.xueyi.system.notice.service.ISysNoticeService;
  * @author ruoyi
  */
 @Service
-@DS("#isolate")
+@DS(ISOLATE)
 public class SysNoticeServiceImpl implements ISysNoticeService {
 
     @Autowired

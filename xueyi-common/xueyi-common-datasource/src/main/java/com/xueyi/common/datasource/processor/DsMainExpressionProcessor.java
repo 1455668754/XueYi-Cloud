@@ -5,6 +5,8 @@ import com.xueyi.common.core.constant.TenantConstants;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
 
+import static com.xueyi.common.core.constant.TenantConstants.MASTER;
+
 /**
  * 主库源策略
  *
@@ -13,11 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class DsMainExpressionProcessor extends DsProcessor {
 
-    private static final String ISOLATE_PREFIX = "#main";
-
     @Override
     public boolean matches(String key) {
-        return key.startsWith(ISOLATE_PREFIX);
+        return key.startsWith(MASTER);
     }
 
     @Override

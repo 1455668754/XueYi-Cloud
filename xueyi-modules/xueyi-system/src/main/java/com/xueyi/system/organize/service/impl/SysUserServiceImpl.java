@@ -4,9 +4,9 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.AuthorityConstants;
 import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
-import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.system.api.domain.authority.SysRole;
 import com.xueyi.system.api.domain.organize.SysPost;
 import com.xueyi.system.api.domain.organize.SysUser;
@@ -26,13 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
+
 /**
  * 用户 业务层处理
  *
  * @author xueyi
  */
 @Service
-@DS("#isolate")
+@DS(ISOLATE)
 public class SysUserServiceImpl implements ISysUserService {
 
     private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);

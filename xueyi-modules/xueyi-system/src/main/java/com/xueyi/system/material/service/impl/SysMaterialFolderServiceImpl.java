@@ -2,13 +2,15 @@ package com.xueyi.system.material.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.system.api.domain.material.SysMaterialFolder;
+import com.xueyi.system.api.utilTool.SysSearch;
 import com.xueyi.system.material.mapper.SysMaterialFolderMapper;
 import com.xueyi.system.material.service.ISysMaterialFolderService;
-import com.xueyi.system.api.utilTool.SysSearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
 
 /**
  * 素材文件夹信息 业务层处理
@@ -16,7 +18,7 @@ import java.util.List;
  * @author xueyi
  */
 @Service
-@DS("#isolate")
+@DS(ISOLATE)
 public class SysMaterialFolderServiceImpl implements ISysMaterialFolderService {
 
     @Autowired

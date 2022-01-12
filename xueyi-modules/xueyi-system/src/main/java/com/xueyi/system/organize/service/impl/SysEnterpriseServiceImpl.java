@@ -10,13 +10,15 @@ import com.xueyi.system.organize.service.ISysEnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static com.xueyi.common.core.constant.TenantConstants.MASTER;
+
 /**
  * 企业信息 业务层处理
  *
  * @author xueyi
  */
 @Service
-@DS("#main")
+@DS(MASTER)
 public class SysEnterpriseServiceImpl implements ISysEnterpriseService {
 
     @Autowired

@@ -19,13 +19,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.xueyi.common.core.constant.TenantConstants.MASTER;
+
 /**
  * 模块信息Service业务层处理
  *
  * @author xueyi
  */
 @Service
-@DS("#main")
+@DS(MASTER)
 public class SysSystemServiceImpl implements ISysSystemService {
 
     @Autowired

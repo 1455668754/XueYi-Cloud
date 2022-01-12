@@ -17,13 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 
+import static com.xueyi.common.core.constant.TenantConstants.MASTER;
+
 /**
  * 租户信息 业务层处理
  *
  * @author xueyi
  */
 @Service
-@DS("#main")
+@DS(MASTER)
 public class TenantServiceImpl implements ITenantService {
 
     @Autowired

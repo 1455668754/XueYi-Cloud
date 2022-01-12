@@ -26,13 +26,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
+
 /**
  * 权限管理 业务层处理
  *
  * @author xueyi
  */
 @Service
-@DS("#isolate")
+@DS(ISOLATE)
 public class SysAuthorityServiceImpl implements ISysAuthorityService {
 
     @Autowired
@@ -415,7 +417,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      * 根据角色Id查询角色权限
      *
      * @param enterpriseId 企业Id
-     * @param roleId      角色Id
+     * @param roleId       角色Id
      * @return 角色集合
      */
     @Override
@@ -446,7 +448,7 @@ public class SysAuthorityServiceImpl implements ISysAuthorityService {
      */
     @Override
     @DS("#sourceName")
-    public List<SysRole> getRoleAuthorityBySourceName(Long enterpriseId, Set<Long> roleIds,String sourceName) {
+    public List<SysRole> getRoleAuthorityBySourceName(Long enterpriseId, Set<Long> roleIds, String sourceName) {
         if (ObjectUtil.isNull(roleIds) || roleIds.size() == 0)
             return new ArrayList<SysRole>();
         return roleMapper.getRoleAuthority(enterpriseId, roleIds);

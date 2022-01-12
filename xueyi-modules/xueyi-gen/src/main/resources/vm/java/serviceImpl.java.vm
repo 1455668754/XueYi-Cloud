@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ${packageName}.mapper.${ClassName}Mapper;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
 #set($AOP=[])
 #foreach ($column in $columns)
 #foreach ($item in $excisionAOP.entrySet())
@@ -28,7 +29,7 @@ import ${packageName}.service.I${ClassName}Service;
  * @author ${author}
  */
 @Service
-@DS("#isolate")
+@DS(ISOLATE)
 public class ${ClassName}ServiceImpl implements I${ClassName}Service {
 
     @Autowired

@@ -1,17 +1,19 @@
 package com.xueyi.tenant.service.impl;
 
-import java.util.List;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.OrganizeConstants;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.tenant.api.domain.strategy.Strategy;
+import com.xueyi.tenant.mapper.StrategyMapper;
+import com.xueyi.tenant.service.IStrategyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.xueyi.common.datascope.annotation.DataScope;
 import org.springframework.transaction.annotation.Transactional;
-import com.xueyi.tenant.mapper.StrategyMapper;
-import com.xueyi.tenant.api.domain.strategy.Strategy;
-import com.xueyi.tenant.service.IStrategyService;
+
+import java.util.List;
+
+import static com.xueyi.common.core.constant.TenantConstants.MASTER;
 
 /**
  * 数据源策略 业务层处理
@@ -19,7 +21,7 @@ import com.xueyi.tenant.service.IStrategyService;
  * @author xueyi
  */
 @Service
-@DS("#main")
+@DS(MASTER)
 public class StrategyServiceImpl implements IStrategyService {
 
     @Autowired

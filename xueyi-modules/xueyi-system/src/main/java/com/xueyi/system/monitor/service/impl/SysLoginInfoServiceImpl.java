@@ -1,13 +1,15 @@
 package com.xueyi.system.monitor.service.impl;
 
-import java.util.List;
-
 import com.baomidou.dynamic.datasource.annotation.DS;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import com.xueyi.system.api.domain.monitor.SysLoginInfo;
 import com.xueyi.system.monitor.mapper.SysLoginInfoMapper;
 import com.xueyi.system.monitor.service.ISysLoginInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
 
 /**
  * 系统访问日志情况信息 服务层处理
@@ -15,7 +17,7 @@ import com.xueyi.system.monitor.service.ISysLoginInfoService;
  * @author xueyi
  */
 @Service
-@DS("#isolate")
+@DS(ISOLATE)
 public class SysLoginInfoServiceImpl implements ISysLoginInfoService {
 
     @Autowired
