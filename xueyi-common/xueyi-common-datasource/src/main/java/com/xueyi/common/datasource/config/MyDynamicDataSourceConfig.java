@@ -4,8 +4,10 @@ import com.baomidou.dynamic.datasource.processor.DsHeaderProcessor;
 import com.baomidou.dynamic.datasource.processor.DsProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSessionProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSpelExpressionProcessor;
+import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration;
 import com.xueyi.common.datasource.processor.DsIsolateExpressionProcessor;
 import com.xueyi.common.datasource.processor.DsMainExpressionProcessor;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,6 +19,7 @@ import javax.annotation.PostConstruct;
  * @author xueyi
  */
 @Configuration
+@AutoConfigureBefore(DynamicDataSourceAutoConfiguration.class)
 public class MyDynamicDataSourceConfig {
 
     @Bean
