@@ -102,7 +102,7 @@ public class ScheduleUtils {
      * @return 结果
      */
     public static boolean whiteList(String invokeTarget) {
-        String packageName = StringUtils.substringBefore(invokeTarget, ")");
+        String packageName = StringUtils.substringBefore(invokeTarget, "(");
         int count = StringUtils.countMatches(packageName, ".");
         return count < 1 || StringUtils.containsAnyIgnoreCase(invokeTarget, ScheduleConstants.JOB_WHITELIST_STR);
     }
