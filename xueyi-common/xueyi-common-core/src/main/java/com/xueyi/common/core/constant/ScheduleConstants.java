@@ -19,7 +19,7 @@ public class ScheduleConstants {
 
     /** 定时任务违规的字符 */
     public static final String[] JOB_ERROR_STR = {"java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
-            "org.springframework", "org.apache"};
+            "org.springframework", "org.apache", "com.xueyi.common.core.utils.file"};
 
     /** 任务状态 */
     public enum Status {
