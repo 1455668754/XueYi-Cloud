@@ -18,16 +18,6 @@ public class JwtUtils {
     public static String secret = TokenConstants.SECRET;
 
     /**
-     * 从数据声明生成令牌
-     *
-     * @param claims 数据声明
-     * @return 令牌
-     */
-    public static String createToken(Map<String, Object> claims) {
-        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
-    }
-
-    /**
      * 从令牌中获取数据声明
      *
      * @param token 令牌
@@ -35,6 +25,16 @@ public class JwtUtils {
      */
     public static Claims parseToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+    }
+
+    /**
+     * 从数据声明生成令牌
+     *
+     * @param claims 数据声明
+     * @return 令牌
+     */
+    public static String createToken(Map<String, Object> claims) {
+        return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
     /**
@@ -70,13 +70,13 @@ public class JwtUtils {
     }
 
     /**
-     * 根据身份信息获取企业类型
+     * 根据身份信息获取企业账号
      *
      * @param claims 身份信息
-     * @return 企业类型
+     * @return 企业账号
      */
-    public static String getIsLessor(Claims claims) {
-        return getValue(claims, SecurityConstants.Details.IS_LESSOR.getCode());
+    public static String getEnterpriseName(Claims claims) {
+        return getValue(claims, SecurityConstants.Details.ENTERPRISE_NAME.getCode());
     }
 
     /**
@@ -91,13 +91,13 @@ public class JwtUtils {
     }
 
     /**
-     * 根据身份信息获取企业账号
+     * 根据身份信息获取企业类型
      *
      * @param claims 身份信息
-     * @return 企业账号
+     * @return 企业类型
      */
-    public static String getEnterpriseName(Claims claims) {
-        return getValue(claims, SecurityConstants.Details.ENTERPRISE_NAME.getCode());
+    public static String getIsLessor(Claims claims) {
+        return getValue(claims, SecurityConstants.Details.IS_LESSOR.getCode());
     }
 
     /**
@@ -143,6 +143,17 @@ public class JwtUtils {
     }
 
     /**
+     * 根据令牌获取用户类型
+     *
+     * @param token 令牌
+     * @return 用户类型
+     */
+    public static String getUserType(String token) {
+        Claims claims = parseToken(token);
+        return getValue(claims, SecurityConstants.Details.USER_TYPE.getCode());
+    }
+
+    /**
      * 根据身份信息获取用户类型
      *
      * @param claims 身份信息
@@ -153,14 +164,24 @@ public class JwtUtils {
     }
 
     /**
-     * 根据令牌获取用户类型
+     * 根据令牌获取租户策略源
      *
      * @param token 令牌
-     * @return 用户类型
+     * @return 租户策略源
      */
-    public static String getUserType(String token) {
+    public static String getSourceName(String token) {
         Claims claims = parseToken(token);
-        return getValue(claims, SecurityConstants.Details.USER_TYPE.getCode());
+        return getValue(claims, SecurityConstants.Details.SOURCE_NAME.getCode());
+    }
+
+    /**
+     * 根据令牌获取租户策略源
+     *
+     * @param claims 身份信息
+     * @return 租户策略源
+     */
+    public static String getSourceName(Claims claims) {
+        return getValue(claims, SecurityConstants.Details.SOURCE_NAME.getCode());
     }
 
     /**

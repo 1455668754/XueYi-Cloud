@@ -7,9 +7,6 @@ package com.xueyi.common.core.constant;
  */
 public class SecurityConstants {
 
-    /** 授权信息字段 */
-    public static final String AUTHORIZATION_HEADER = "authorization";
-
     /** 请求来源 */
     public static final String FROM_SOURCE = "from-source";
 
@@ -19,12 +16,14 @@ public class SecurityConstants {
     /** 授权字段 */
     public enum Details {
 
+        AUTHORIZATION_HEADER("authorization", "授权信息"),
         ENTERPRISE_ID("enterprise_id", "企业Id"),
         ENTERPRISE_NAME("enterprise_name", "企业账号"),
         IS_LESSOR("is_lessor", "企业类型"),
         USER_ID("user_id", "用户Id"),
         USER_NAME("user_name", "用户账号"),
         USER_TYPE("user_type", "用户类型"),
+        SOURCE_NAME("source_name", "租户策略源"),
         USER_KEY("user_key", "用户标识"),
         LOGIN_USER("login_user", "登录用户");
 

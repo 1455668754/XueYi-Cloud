@@ -90,7 +90,6 @@ public class SysUserController extends BaseController {
         // 权限集合
         Set<String> permissions = loginService.getMenuPermission(roleIds, sysUser.getUserType(), enterprise.getEnterpriseId());
         LoginUser sysUserVo = new LoginUser();
-        sysUserVo.setMainSource(source.getMaster());
         sysUserVo.setSysUser(sysUser);
         sysUserVo.setUserType(sysUser.getUserType());
         sysUserVo.setSysEnterprise(enterprise);

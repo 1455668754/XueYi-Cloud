@@ -56,7 +56,7 @@ public class LoginUser implements Serializable {
     private Set<Long> roleIds;
 
     /** 主数据源 */
-    private String mainSource;
+    private String sourceName;
 
     /** 源策略组 */
     private Source source;
@@ -171,12 +171,12 @@ public class LoginUser implements Serializable {
         this.roleIds = roleIds;
     }
 
-    public String getMainSource() {
-        return mainSource;
+    public String getSourceName() {
+        return sourceName;
     }
 
-    public void setMainSource(String mainSource) {
-        this.mainSource = mainSource;
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
     }
 
     public Source getSource() {

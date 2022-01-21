@@ -78,18 +78,18 @@ public class SysLoginService {
         SysEnterprise enterprise = userInfo.getSysEnterprise();
         SysUser user = userInfo.getSysUser();
         if (BaseConstants.DelFlag.DELETED.getCode().equals(user.getDelFlag())) {
-            recordLoginInfo(userInfo.getMainSource(), enterprise.getEnterpriseId(), enterpriseName, user.getUserId(), userName, Constants.LOGIN_FAIL, "对不起，您的账号已被删除");
+            recordLoginInfo(userInfo.getSourceName(), enterprise.getEnterpriseId(), enterpriseName, user.getUserId(), userName, Constants.LOGIN_FAIL, "对不起，您的账号已被删除");
             throw new ServiceException("对不起，您的账号：" + userName + " 已被删除");
         }
         if (BaseConstants.Status.DISABLE.getCode().equals(user.getStatus())) {
-            recordLoginInfo(userInfo.getMainSource(), enterprise.getEnterpriseId(), enterpriseName, user.getUserId(), userName, Constants.LOGIN_FAIL, "用户已停用，请联系管理员");
+            recordLoginInfo(userInfo.getSourceName(), enterprise.getEnterpriseId(), enterpriseName, user.getUserId(), userName, Constants.LOGIN_FAIL, "用户已停用，请联系管理员");
             throw new ServiceException("对不起，您的账号：" + userName + " 已停用");
         }
         if (!SecurityUtils.matchesPassword(password, user.getPassword())) {
-            recordLoginInfo(userInfo.getMainSource(), enterprise.getEnterpriseId(), enterpriseName, user.getUserId(), userName, Constants.LOGIN_FAIL, "用户密码错误");
+            recordLoginInfo(userInfo.getSourceName(), enterprise.getEnterpriseId(), enterpriseName, user.getUserId(), userName, Constants.LOGIN_FAIL, "用户密码错误");
             throw new ServiceException("用户不存在/密码错误");
         }
-        recordLoginInfo(userInfo.getMainSource(), enterprise.getEnterpriseId(), enterpriseName, user.getUserId(), userName, Constants.LOGIN_SUCCESS, "登录成功");
+        recordLoginInfo(userInfo.getSourceName(), enterprise.getEnterpriseId(), enterpriseName, user.getUserId(), userName, Constants.LOGIN_SUCCESS, "登录成功");
         return userInfo;
     }
 

@@ -6,7 +6,6 @@ import com.xueyi.auth.service.SysLoginService;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.utils.JwtUtils;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.redis.utils.DataSourceUtils;
 import com.xueyi.common.security.auth.AuthUtil;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.common.security.utils.SecurityUtils;
@@ -48,13 +47,7 @@ public class TokenController {
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
             // 记录用户退出日志
-            String enterpriseIdStr = JwtUtils.getEnterpriseId(token);
-            String userIdStr =  JwtUtils.getUserId(token);
-            if (StringUtils.isNotEmpty(enterpriseIdStr) && StringUtils.isNotEmpty(userIdStr)){
-                long enterpriseId = Long.valueOf(enterpriseIdStr);
-                long userId = Long.valueOf(userIdStr);
-                sysLoginService.logout(DataSourceUtils.getMainSourceNameByEnterpriseId(enterpriseId), enterpriseId, JwtUtils.getEnterpriseName(token), userId, JwtUtils.getUserName(token));
-            }
+            sysLoginService.logout(JwtUtils.getSourceName(token), Long.parseLong(JwtUtils.getEnterpriseId(token)), JwtUtils.getEnterpriseName(token), Long.parseLong(JwtUtils.getUserId(token)), JwtUtils.getUserName(token));
         }
         return R.ok();
     }

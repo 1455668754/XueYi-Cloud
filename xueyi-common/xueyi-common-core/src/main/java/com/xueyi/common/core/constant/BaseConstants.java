@@ -10,6 +10,9 @@ public class BaseConstants {
     /** 顶级节点Id */
     public static final Long TOP_NODE = 0L;
 
+    /** 顶级节点Id */
+    public static final Long NONE_ID = -1L;
+
     /** 字段映射名 */
     public enum Entity {
 

@@ -1,6 +1,7 @@
 package com.xueyi.common.core.context;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.constant.SecurityConstants;
 import com.xueyi.common.core.text.Convert;
 import com.xueyi.common.core.utils.StringUtils;
@@ -17,6 +18,118 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SecurityContextHolder {
 
     private static final TransmittableThreadLocal<Map<String, Object>> THREAD_LOCAL = new TransmittableThreadLocal<>();
+
+    /**
+     * 获取企业Id
+     */
+    public static Long getEnterpriseId() {
+        return Convert.toLong(get(SecurityConstants.Details.ENTERPRISE_ID.getCode()), BaseConstants.NONE_ID);
+    }
+
+    /**
+     * 设置企业Id
+     */
+    public static void setEnterpriseId(String enterpriseId) {
+        set(SecurityConstants.Details.ENTERPRISE_ID.getCode(), enterpriseId);
+    }
+
+    /**
+     * 获取企业名称
+     */
+    public static String getEnterpriseName() {
+        return get(SecurityConstants.Details.ENTERPRISE_NAME.getCode());
+    }
+
+    /**
+     * 设置企业名称
+     */
+    public static void setEnterpriseName(String enterpriseName) {
+        set(SecurityConstants.Details.ENTERPRISE_NAME.getCode(), enterpriseName);
+    }
+
+    /**
+     * 获取租户权限标识
+     */
+    public static String getIsLessor() {
+        return get(SecurityConstants.Details.IS_LESSOR.getCode());
+    }
+
+    /**
+     * 设置租户权限标识
+     */
+    public static void setIsLessor(String isLessor) {
+        set(SecurityConstants.Details.IS_LESSOR.getCode(), isLessor);
+    }
+
+    /**
+     * 获取用户Id
+     */
+    public static Long getUserId() {
+        return Convert.toLong(get(SecurityConstants.Details.USER_ID.getCode()), 0L);
+    }
+
+    /**
+     * 设置用户Id
+     */
+    public static void setUserId(String userId) {
+        set(SecurityConstants.Details.USER_ID.getCode(), userId);
+    }
+
+    /**
+     * 获取用户名称
+     */
+    public static String getUserName() {
+        return get(SecurityConstants.Details.USER_NAME.getCode());
+    }
+
+    /**
+     * 设置用户名称
+     */
+    public static void setUserName(String userName) {
+        set(SecurityConstants.Details.USER_NAME.getCode(), userName);
+    }
+
+    /**
+     * 获取用户权限标识
+     */
+    public static String getUserType() {
+        return get(SecurityConstants.Details.USER_TYPE.getCode());
+    }
+
+    /**
+     * 设置用户权限标识
+     */
+    public static void setUserType(String userType) {
+        set(SecurityConstants.Details.USER_TYPE.getCode(), userType);
+    }
+
+    /**
+     * 获取租户策略源
+     */
+    public static String getSourceName() {
+        return get(SecurityConstants.Details.SOURCE_NAME.getCode());
+    }
+
+    /**
+     * 设置租户策略源
+     */
+    public static void setSourceName(String sourceName) {
+        set(SecurityConstants.Details.SOURCE_NAME.getCode(), sourceName);
+    }
+
+    /**
+     * 获取用户key
+     */
+    public static String getUserKey() {
+        return get(SecurityConstants.Details.USER_KEY.getCode());
+    }
+
+    /**
+     * 设置用户key
+     */
+    public static void setUserKey(String userKey) {
+        set(SecurityConstants.Details.USER_KEY.getCode(), userKey);
+    }
 
     public static void set(String key, Object value) {
         Map<String, Object> map = getLocalMap();
@@ -44,62 +157,6 @@ public class SecurityContextHolder {
 
     public static void setLocalMap(Map<String, Object> threadLocalMap) {
         THREAD_LOCAL.set(threadLocalMap);
-    }
-
-    public static Long getEnterpriseId() {
-        return Convert.toLong(get(SecurityConstants.Details.ENTERPRISE_ID.getCode()), 0L);
-    }
-
-    public static void setEnterpriseId(String enterpriseId) {
-        set(SecurityConstants.Details.ENTERPRISE_ID.getCode(), enterpriseId);
-    }
-
-    public static String getEnterpriseName() {
-        return get(SecurityConstants.Details.ENTERPRISE_NAME.getCode());
-    }
-
-    public static void setEnterpriseName(String enterpriseName) {
-        set(SecurityConstants.Details.ENTERPRISE_NAME.getCode(), enterpriseName);
-    }
-
-    public static String getIsLessor() {
-        return get(SecurityConstants.Details.IS_LESSOR.getCode());
-    }
-
-    public static void setIsLessor(String isLessor) {
-        set(SecurityConstants.Details.IS_LESSOR.getCode(), isLessor);
-    }
-
-    public static Long getUserId() {
-        return Convert.toLong(get(SecurityConstants.Details.USER_ID.getCode()), 0L);
-    }
-
-    public static void setUserId(String userId) {
-        set(SecurityConstants.Details.USER_ID.getCode(), userId);
-    }
-
-    public static String getUserName() {
-        return get(SecurityConstants.Details.USER_NAME.getCode());
-    }
-
-    public static void setUserName(String userName) {
-        set(SecurityConstants.Details.USER_NAME.getCode(), userName);
-    }
-
-    public static String getUserType() {
-        return get(SecurityConstants.Details.USER_TYPE.getCode());
-    }
-
-    public static void setUserType(String userType) {
-        set(SecurityConstants.Details.USER_TYPE.getCode(), userType);
-    }
-
-    public static String getUserKey() {
-        return get(SecurityConstants.Details.USER_KEY.getCode());
-    }
-
-    public static void setUserKey(String userKey) {
-        set(SecurityConstants.Details.USER_KEY.getCode(), userKey);
     }
 
     public static void remove() {

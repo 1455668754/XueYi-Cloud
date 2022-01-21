@@ -48,6 +48,7 @@ public class TokenService {
         Long userId = loginUser.getSysUser().getUserId();
         String userName = loginUser.getSysUser().getUserName();
         String userType = loginUser.getSysUser().getUserType();
+        String sourceName = loginUser.getSource().getMaster();
 
         loginUser.setToken(token);
         loginUser.setEnterpriseId(enterpriseId);
@@ -55,12 +56,13 @@ public class TokenService {
         loginUser.setIsLessor(isLessor);
         loginUser.setUserId(userId);
         loginUser.setUserName(userName);
+        loginUser.setSourceName(sourceName);
         loginUser.setUserType(userType);
         loginUser.setIpaddr(IpUtils.getIpAddr(ServletUtils.getRequest()));
         refreshToken(loginUser);
 
         // Jwt存储信息
-        Map<String, Object> claimsMap = new HashMap<String, Object>();
+        Map<String, Object> claimsMap = new HashMap<>();
         claimsMap.put(SecurityConstants.Details.USER_KEY.getCode(), token);
         claimsMap.put(SecurityConstants.Details.ENTERPRISE_ID.getCode(), enterpriseId);
         claimsMap.put(SecurityConstants.Details.ENTERPRISE_NAME.getCode(), enterpriseName);
@@ -68,9 +70,10 @@ public class TokenService {
         claimsMap.put(SecurityConstants.Details.USER_ID.getCode(), userId);
         claimsMap.put(SecurityConstants.Details.USER_NAME.getCode(), userName);
         claimsMap.put(SecurityConstants.Details.USER_TYPE.getCode(), userType);
+        claimsMap.put(SecurityConstants.Details.SOURCE_NAME.getCode(), sourceName);
 
         // 接口返回信息
-        Map<String, Object> rspMap = new HashMap<String, Object>();
+        Map<String, Object> rspMap = new HashMap<>();
         rspMap.put("access_token", JwtUtils.createToken(claimsMap));
         rspMap.put("expires_in", expireTime);
         return rspMap;

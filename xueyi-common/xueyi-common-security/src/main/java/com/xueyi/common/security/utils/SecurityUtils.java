@@ -47,7 +47,7 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取用户
+     * 获取用户名称
      */
     public static String getUserName() {
         return SecurityContextHolder.getUserName();
@@ -58,6 +58,13 @@ public class SecurityUtils {
      */
     public static String getUserType() {
         return SecurityContextHolder.getUserType();
+    }
+
+    /**
+     * 获取租户策略源
+     */
+    public static String getSourceName() {
+        return SecurityContextHolder.getSourceName();
     }
 
     /**
@@ -95,28 +102,37 @@ public class SecurityUtils {
      */
     public static String replaceTokenPrefix(String token) {
         // 如果前端设置了令牌前缀，则裁剪掉前缀
-        if (StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX)) {
-            token = token.replaceFirst(TokenConstants.PREFIX, "");
-        }
-        return token;
+        return StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX)
+                ? token.replaceFirst(TokenConstants.PREFIX, "")
+                : token;
     }
 
     /**
      * 是否为超管用户
-     *
-     * @return 结果
      */
     public static boolean isAdminUser() {
         return StringUtils.equals(AuthorityConstants.UserType.ADMIN.getCode(), getUserType());
     }
 
     /**
+     * 是否不为超管用户
+     */
+    public static boolean isNotAdminUser() {
+        return !StringUtils.equals(AuthorityConstants.UserType.ADMIN.getCode(), getUserType());
+    }
+
+    /**
      * 是否为超管租户
-     *
-     * @return 结果
      */
     public static boolean isAdminTenant() {
         return StringUtils.equals(AuthorityConstants.TenantType.ADMIN.getCode(), getIsLessor());
+    }
+
+    /**
+     * 是否不为超管租户
+     */
+    public static boolean isNotAdminTenant() {
+        return !StringUtils.equals(AuthorityConstants.TenantType.ADMIN.getCode(), getIsLessor());
     }
 
     /**

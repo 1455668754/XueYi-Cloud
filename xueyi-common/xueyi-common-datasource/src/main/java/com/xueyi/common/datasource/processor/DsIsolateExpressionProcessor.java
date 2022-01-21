@@ -30,7 +30,7 @@ public class DsIsolateExpressionProcessor extends DsProcessor {
         // 获取当前的用户
         LoginUser loginUser = tokenService.getLoginUser();
         if (StringUtils.isNotNull(loginUser)) {
-            return loginUser.getMainSource();
+            return loginUser.getSourceName();
 //            //通过循环策略集获取主数据源 | 为改造主从提供支持
 //            List<Source> sources = loginUser.getSource();
 //            for (Source source: sources){
