@@ -23,112 +23,112 @@ public class SecurityContextHolder {
      * 获取企业Id
      */
     public static Long getEnterpriseId() {
-        return Convert.toLong(get(SecurityConstants.Details.ENTERPRISE_ID.getCode()), BaseConstants.NONE_ID);
+        return Convert.toLong(get(SecurityConstants.ENTERPRISE_ID), BaseConstants.NONE_ID);
     }
 
     /**
      * 设置企业Id
      */
     public static void setEnterpriseId(String enterpriseId) {
-        set(SecurityConstants.Details.ENTERPRISE_ID.getCode(), enterpriseId);
+        set(SecurityConstants.ENTERPRISE_ID, enterpriseId);
     }
 
     /**
      * 获取企业名称
      */
     public static String getEnterpriseName() {
-        return get(SecurityConstants.Details.ENTERPRISE_NAME.getCode());
+        return get(SecurityConstants.ENTERPRISE_NAME);
     }
 
     /**
      * 设置企业名称
      */
     public static void setEnterpriseName(String enterpriseName) {
-        set(SecurityConstants.Details.ENTERPRISE_NAME.getCode(), enterpriseName);
+        set(SecurityConstants.ENTERPRISE_NAME, enterpriseName);
     }
 
     /**
      * 获取租户权限标识
      */
     public static String getIsLessor() {
-        return get(SecurityConstants.Details.IS_LESSOR.getCode());
+        return get(SecurityConstants.IS_LESSOR);
     }
 
     /**
      * 设置租户权限标识
      */
     public static void setIsLessor(String isLessor) {
-        set(SecurityConstants.Details.IS_LESSOR.getCode(), isLessor);
+        set(SecurityConstants.IS_LESSOR, isLessor);
     }
 
     /**
      * 获取用户Id
      */
     public static Long getUserId() {
-        return Convert.toLong(get(SecurityConstants.Details.USER_ID.getCode()), 0L);
+        return Convert.toLong(get(SecurityConstants.USER_ID), 0L);
     }
 
     /**
      * 设置用户Id
      */
     public static void setUserId(String userId) {
-        set(SecurityConstants.Details.USER_ID.getCode(), userId);
+        set(SecurityConstants.USER_ID, userId);
     }
 
     /**
      * 获取用户名称
      */
     public static String getUserName() {
-        return get(SecurityConstants.Details.USER_NAME.getCode());
+        return get(SecurityConstants.USER_NAME);
     }
 
     /**
      * 设置用户名称
      */
     public static void setUserName(String userName) {
-        set(SecurityConstants.Details.USER_NAME.getCode(), userName);
+        set(SecurityConstants.USER_NAME, userName);
     }
 
     /**
      * 获取用户权限标识
      */
     public static String getUserType() {
-        return get(SecurityConstants.Details.USER_TYPE.getCode());
+        return get(SecurityConstants.USER_TYPE);
     }
 
     /**
      * 设置用户权限标识
      */
     public static void setUserType(String userType) {
-        set(SecurityConstants.Details.USER_TYPE.getCode(), userType);
+        set(SecurityConstants.USER_TYPE, userType);
     }
 
     /**
      * 获取租户策略源
      */
     public static String getSourceName() {
-        return get(SecurityConstants.Details.SOURCE_NAME.getCode());
+        return get(SecurityConstants.SOURCE_NAME);
     }
 
     /**
      * 设置租户策略源
      */
     public static void setSourceName(String sourceName) {
-        set(SecurityConstants.Details.SOURCE_NAME.getCode(), sourceName);
+        set(SecurityConstants.SOURCE_NAME, sourceName);
     }
 
     /**
      * 获取用户key
      */
     public static String getUserKey() {
-        return get(SecurityConstants.Details.USER_KEY.getCode());
+        return get(SecurityConstants.USER_KEY);
     }
 
     /**
      * 设置用户key
      */
     public static void setUserKey(String userKey) {
-        set(SecurityConstants.Details.USER_KEY.getCode(), userKey);
+        set(SecurityConstants.USER_KEY, userKey);
     }
 
     public static void set(String key, Object value) {

@@ -73,14 +73,14 @@ public class AuthFilter implements GlobalFilter, Ordered {
             return unauthorizedResponse(exchange, "令牌验证失败");
         }
         // 设置用户信息到请求
-        addHeader(mutate, SecurityConstants.Details.ENTERPRISE_ID.getCode(), enterpriseId);
-        addHeader(mutate, SecurityConstants.Details.ENTERPRISE_NAME.getCode(), enterpriseName);
-        addHeader(mutate, SecurityConstants.Details.IS_LESSOR.getCode(), isLessor);
-        addHeader(mutate, SecurityConstants.Details.USER_ID.getCode(), userId);
-        addHeader(mutate, SecurityConstants.Details.USER_NAME.getCode(), userName);
-        addHeader(mutate, SecurityConstants.Details.USER_TYPE.getCode(), userType);
-        addHeader(mutate, SecurityConstants.Details.SOURCE_NAME.getCode(), sourceName);
-        addHeader(mutate, SecurityConstants.Details.USER_KEY.getCode(), userKey);
+        addHeader(mutate, SecurityConstants.ENTERPRISE_ID, enterpriseId);
+        addHeader(mutate, SecurityConstants.ENTERPRISE_NAME, enterpriseName);
+        addHeader(mutate, SecurityConstants.IS_LESSOR, isLessor);
+        addHeader(mutate, SecurityConstants.USER_ID, userId);
+        addHeader(mutate, SecurityConstants.USER_NAME, userName);
+        addHeader(mutate, SecurityConstants.USER_TYPE, userType);
+        addHeader(mutate, SecurityConstants.SOURCE_NAME, sourceName);
+        addHeader(mutate, SecurityConstants.USER_KEY, userKey);
         // 内部请求来源参数清除
         removeHeader(mutate, SecurityConstants.FROM_SOURCE);
         return chain.filter(exchange.mutate().request(mutate.build()).build());

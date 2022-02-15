@@ -26,21 +26,21 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
             return true;
         }
 
-        SecurityContextHolder.setEnterpriseId(ServletUtils.getHeader(request, SecurityConstants.Details.ENTERPRISE_ID.getCode()));
-        SecurityContextHolder.setEnterpriseName(ServletUtils.getHeader(request, SecurityConstants.Details.ENTERPRISE_NAME.getCode()));
-        SecurityContextHolder.setIsLessor(ServletUtils.getHeader(request, SecurityConstants.Details.IS_LESSOR.getCode()));
-        SecurityContextHolder.setUserId(ServletUtils.getHeader(request, SecurityConstants.Details.USER_ID.getCode()));
-        SecurityContextHolder.setUserName(ServletUtils.getHeader(request, SecurityConstants.Details.USER_NAME.getCode()));
-        SecurityContextHolder.setUserType(ServletUtils.getHeader(request, SecurityConstants.Details.USER_TYPE.getCode()));
-        SecurityContextHolder.setUserKey(ServletUtils.getHeader(request, SecurityConstants.Details.USER_KEY.getCode()));
-        SecurityContextHolder.setSourceName(ServletUtils.getHeader(request, SecurityConstants.Details.SOURCE_NAME.getCode()));
+        SecurityContextHolder.setEnterpriseId(ServletUtils.getHeader(request, SecurityConstants.ENTERPRISE_ID));
+        SecurityContextHolder.setEnterpriseName(ServletUtils.getHeader(request, SecurityConstants.ENTERPRISE_NAME));
+        SecurityContextHolder.setIsLessor(ServletUtils.getHeader(request, SecurityConstants.IS_LESSOR));
+        SecurityContextHolder.setUserId(ServletUtils.getHeader(request, SecurityConstants.USER_ID));
+        SecurityContextHolder.setUserName(ServletUtils.getHeader(request, SecurityConstants.USER_NAME));
+        SecurityContextHolder.setUserType(ServletUtils.getHeader(request, SecurityConstants.USER_TYPE));
+        SecurityContextHolder.setUserKey(ServletUtils.getHeader(request, SecurityConstants.USER_KEY));
+        SecurityContextHolder.setSourceName(ServletUtils.getHeader(request, SecurityConstants.SOURCE_NAME));
 
         String token = SecurityUtils.getToken();
         if (StringUtils.isNotEmpty(token)) {
             LoginUser loginUser = AuthUtil.getLoginUser(token);
             if (StringUtils.isNotNull(loginUser)) {
                 AuthUtil.verifyLoginUserExpire(loginUser);
-                SecurityContextHolder.set(SecurityConstants.Details.LOGIN_USER.getCode(), loginUser);
+                SecurityContextHolder.set(SecurityConstants.LOGIN_USER, loginUser);
             }
         }
         return true;

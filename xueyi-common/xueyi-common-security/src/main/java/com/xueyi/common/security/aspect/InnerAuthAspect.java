@@ -31,13 +31,13 @@ public class InnerAuthAspect implements Ordered
             throw new InnerAuthException("没有内部访问权限，不允许访问");
         }
 
-        String enterpriseId = ServletUtils.getRequest().getHeader(SecurityConstants.Details.ENTERPRISE_ID.getCode());
-        String enterpriseName = ServletUtils.getRequest().getHeader(SecurityConstants.Details.ENTERPRISE_NAME.getCode());
-        String isLessor = ServletUtils.getRequest().getHeader(SecurityConstants.Details.IS_LESSOR.getCode());
-        String userId = ServletUtils.getRequest().getHeader(SecurityConstants.Details.USER_ID.getCode());
-        String userName = ServletUtils.getRequest().getHeader(SecurityConstants.Details.USER_NAME.getCode());
-        String userType = ServletUtils.getRequest().getHeader(SecurityConstants.Details.USER_TYPE.getCode());
-        String sourceName = ServletUtils.getRequest().getHeader(SecurityConstants.Details.SOURCE_NAME.getCode());
+        String enterpriseId = ServletUtils.getRequest().getHeader(SecurityConstants.ENTERPRISE_ID);
+        String enterpriseName = ServletUtils.getRequest().getHeader(SecurityConstants.ENTERPRISE_NAME);
+        String isLessor = ServletUtils.getRequest().getHeader(SecurityConstants.IS_LESSOR);
+        String userId = ServletUtils.getRequest().getHeader(SecurityConstants.USER_ID);
+        String userName = ServletUtils.getRequest().getHeader(SecurityConstants.USER_NAME);
+        String userType = ServletUtils.getRequest().getHeader(SecurityConstants.USER_TYPE);
+        String sourceName = ServletUtils.getRequest().getHeader(SecurityConstants.SOURCE_NAME);
         // 用户信息验证
         if (innerAuth.isUser() && (StrUtil.hasBlank(enterpriseId, enterpriseName, isLessor, userId, userName, userType, sourceName))) {
             throw new InnerAuthException("没有设置用户信息，不允许访问");
