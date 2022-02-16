@@ -63,14 +63,14 @@ public class TokenService {
 
         // Jwt存储信息
         Map<String, Object> claimsMap = new HashMap<>();
-        claimsMap.put(SecurityConstants.Details.USER_KEY.getCode(), token);
-        claimsMap.put(SecurityConstants.Details.ENTERPRISE_ID.getCode(), enterpriseId);
-        claimsMap.put(SecurityConstants.Details.ENTERPRISE_NAME.getCode(), enterpriseName);
-        claimsMap.put(SecurityConstants.Details.IS_LESSOR.getCode(), isLessor);
-        claimsMap.put(SecurityConstants.Details.USER_ID.getCode(), userId);
-        claimsMap.put(SecurityConstants.Details.USER_NAME.getCode(), userName);
-        claimsMap.put(SecurityConstants.Details.USER_TYPE.getCode(), userType);
-        claimsMap.put(SecurityConstants.Details.SOURCE_NAME.getCode(), sourceName);
+        claimsMap.put(SecurityConstants.USER_KEY, token);
+        claimsMap.put(SecurityConstants.ENTERPRISE_ID, enterpriseId);
+        claimsMap.put(SecurityConstants.ENTERPRISE_NAME, enterpriseName);
+        claimsMap.put(SecurityConstants.IS_LESSOR, isLessor);
+        claimsMap.put(SecurityConstants.USER_ID, userId);
+        claimsMap.put(SecurityConstants.USER_NAME, userName);
+        claimsMap.put(SecurityConstants.USER_TYPE, userType);
+        claimsMap.put(SecurityConstants.SOURCE_NAME, sourceName);
 
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<>();
