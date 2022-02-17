@@ -16,6 +16,10 @@ public class TenantConstants {
     /** 主库 */
     public static final String MASTER = "#main";
 
+    /** 子库必须数据表 */
+    public static final String[] SLAVE_TABLE = {"sys_dept", "sys_logininfor", "sys_notice", "sys_notice_log", "sys_oper_log", "sys_organize_role",
+            "sys_post", "sys_role", "sys_role_dept_post", "sys_role_system_menu", "sys_user", "xy_material", "xy_material_folder"};
+
     /** 数据源 */
     public enum Source {
 
