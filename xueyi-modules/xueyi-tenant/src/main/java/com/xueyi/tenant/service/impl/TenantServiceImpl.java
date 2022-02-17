@@ -147,8 +147,11 @@ public class TenantServiceImpl implements ITenantService {
      */
     @Override
     public String mainCheckTenantNameUnique(Tenant tenant) {
+        if (StringUtils.isNull(tenant.getTenantId())) {
+            tenant.setTenantId(-1L);
+        }
         Tenant info = tenantMapper.mainCheckTenantNameUnique(tenant);
-        if (StringUtils.isNotNull(info)) {
+        if (StringUtils.isNotNull(info) && info.getTenantId().longValue() != tenant.getTenantId().longValue()) {
             return BaseConstants.Check.NOT_UNIQUE.getCode();
         }
         return BaseConstants.Check.UNIQUE.getCode();

@@ -63,7 +63,7 @@ public class TenantConstants {
     /** 源同步策略类型 */
     public enum SyncType {
 
-        UNCHANGED("0", "不变"), REFRESH("1", "刷新"), ADD("2", "新增"), DELETE("2", "删除");
+        UNCHANGED("0", "不变"), REFRESH("1", "刷新"), ADD("2", "新增"), DELETE("3", "删除");
 
         private final String code;
         private final String info;
