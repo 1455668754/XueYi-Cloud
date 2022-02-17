@@ -12,6 +12,7 @@ import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.tenant.api.domain.source.Source;
 import com.xueyi.tenant.service.ISourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -49,13 +50,22 @@ public class SourceController extends BaseController {
     }
 
     /**
+     * 数据源连接测试
+     */
+    @PostMapping("/connection")
+    public AjaxResult connection(@Validated @RequestBody Source source) {
+        DSUtils.testSlaveDs(source);
+        return success();
+    }
+
+    /**
      * 新增数据源
      */
     @RequiresPermissions("tenant:source:add")
     @Log(title = "数据源", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Source source) {
-        DSUtils.testDs(source);
+        DSUtils.testSlaveDs(source);
         return toAjax(sourceService.mainInsertSource(source));
     }
 
@@ -66,7 +76,7 @@ public class SourceController extends BaseController {
     @Log(title = "数据源", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Source source) {
-        DSUtils.testDs(source);
+        DSUtils.testSlaveDs(source);
         return toAjax(sourceService.mainUpdateSource(source));
     }
 
@@ -79,7 +89,7 @@ public class SourceController extends BaseController {
     public AjaxResult editStatus(@RequestBody Source source) {
         Source check = new Source(source.getSourceId());
         Source oldSource = sourceService.mainSelectSourceBySourceId(check);
-        DSUtils.testDs(oldSource);
+        DSUtils.testSlaveDs(oldSource);
         if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), source.getStatus())) {
             if (StringUtils.equals(TenantConstants.SourceType.WRITE.getCode(), oldSource.getType()) && sourceService.mainCheckSeparationSourceByWriteId(check)) {
                 return AjaxResult.error("该数据源未配置读数据源,请先进行读写配置再启用！");

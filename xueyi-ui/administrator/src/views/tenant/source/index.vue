@@ -217,6 +217,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="danger" :loading="submitLoading" @click="connectionForm">连接测试</el-button>
         <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -247,7 +248,7 @@ import {
   addSource,
   updateSource,
   updateSourceSort,
-  updateSourceStatus
+  updateSourceStatus, connectionSource
 } from '@/api/tenant/source'
 import {getSeparation, readSeparation, updateSeparation} from "@/api/tenant/separation"
 import {SYSTEM_DEFAULT, STATUS, STATUS_UPDATE_OPERATION} from '@constant/constants'
@@ -462,6 +463,20 @@ export default {
         this.$modal.msgWarning('请添加读数据源后再保存')
         this.submitLoading = false
       }
+    },
+    /** 连接测试按钮 */
+    connectionForm() {
+      this.submitLoading = true
+      this.$refs['form'].validate(valid => {
+          if (valid) {
+            connectionSource(this.form).then(response => {
+              this.$modal.msgSuccess('数据源连接成功')
+            }).catch()
+              .finally(() => this.submitLoading = false)
+          } else {
+            this.submitLoading = false
+          }
+      })
     },
     /** 提交按钮 */
     submitForm() {
