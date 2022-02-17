@@ -2,7 +2,7 @@
 <p align="center">     
     <p align="center">
         <a>
-            <img src="https://img.shields.io/badge/XueYi%20Cloud-v4.1.3-brightgreen" alt="xueYi-cloud">
+            <img src="https://img.shields.io/badge/XueYi%20Cloud-v4.2.4-brightgreen" alt="xueYi-cloud">
         </a>
         <a>
             <img src="https://img.shields.io/badge/Spring%20Cloud-2020-blue" alt="spring-cloud">
