@@ -44,10 +44,15 @@ public class TokenController {
     public R<?> logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
         if (StringUtils.isNotEmpty(token)) {
+            String sourceName =JwtUtils.getSourceName(token);
+            Long enterpriseId = Long.valueOf(JwtUtils.getEnterpriseId(token));
+            String enterpriseName =JwtUtils.getEnterpriseName(token);
+            Long userId = Long.valueOf(JwtUtils.getUserId(token));
+            String userName =JwtUtils.getUserName(token);
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
             // 记录用户退出日志
-            sysLoginService.logout(JwtUtils.getSourceName(token), Long.parseLong(JwtUtils.getEnterpriseId(token)), JwtUtils.getEnterpriseName(token), Long.parseLong(JwtUtils.getUserId(token)), JwtUtils.getUserName(token));
+            sysLoginService.logout(sourceName, enterpriseId, enterpriseName, userId, userName);
         }
         return R.ok();
     }
