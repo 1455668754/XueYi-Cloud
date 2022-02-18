@@ -19,6 +19,15 @@ export function getSource(query) {
   })
 }
 
+// 数据源连接测试
+export function connectionSource(data) {
+  return request({
+    url: '/tenant/source/connection',
+    method: 'post',
+    data: data
+  })
+}
+
 // 新增数据源
 export function addSource(data) {
   return request({
