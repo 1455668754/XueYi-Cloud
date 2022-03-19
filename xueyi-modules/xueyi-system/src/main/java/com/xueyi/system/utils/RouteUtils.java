@@ -8,7 +8,6 @@ import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.system.api.authority.domain.dto.SysMenuDto;
 import com.xueyi.system.utils.route.MetaVo;
 import com.xueyi.system.utils.route.RouterVo;
-import com.xueyi.system.utils.route.TagVo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,8 @@ import java.util.List;
  */
 public class RouteUtils {
 
-    private static final int DYNAMIC_LEVEL = 5;
+    /** 面包屑导航中不可被点击标识 */
+    private static final String NO_REDIRECT = "noRedirect";
 
     /** 路由树初始深度 */
     private static final int LEVEL_0 = 0;
@@ -101,19 +101,13 @@ public class RouteUtils {
         router.setMeta(getMeta(menu));
         router.setPath(getRouterPath(menu));
         router.setName(menu.getName());
-        router.setDisabled(StrUtil.equals(DictConstants.DicYesNo.YES.getCode(), menu.getIsDisabled()));
-        router.setParamPath(menu.getParamPath());
+        router.setQuery(menu.getParamPath());
+        router.setHidden(StrUtil.equals(DictConstants.DicShowHide.HIDE.getCode(), menu.getHideMenu()));
         router.setComponent(getComponent(menu));
-    }
-
-    /**
-     * 获取菜单标签信息
-     *
-     * @param menu 菜单信息
-     * @return 菜单标签信息
-     */
-    private static TagVo getTag(SysMenuDto menu) {
-        return new TagVo();
+        if (menu.isDir() && CollUtil.isNotEmpty(menu.getChildren())) {
+            router.setAlwaysShow(true);
+            router.setRedirect(NO_REDIRECT);
+        }
     }
 
     /**
@@ -126,27 +120,14 @@ public class RouteUtils {
         MetaVo meta = new MetaVo();
         meta.setTitle(menu.getTitle());
         meta.setIcon(menu.getIcon());
-        if (menu.isDetails()) {
-            meta.setDynamicLevel(DYNAMIC_LEVEL);
-            meta.setRealPath(menu.getRealPath());
-            meta.setCurrentActiveMenu(menu.getCurrentActiveMenu());
-        }
-        meta.setIgnoreKeepAlive(StrUtil.equals(DictConstants.DicYesNo.YES.getCode(), menu.getIsCache()));
-        meta.setAffix(StrUtil.equals(DictConstants.DicYesNo.YES.getCode(), menu.getIsAffix()));
+        meta.setNoCache(!StrUtil.equals(DictConstants.DicYesNo.YES.getCode(), menu.getIsCache()));
         if (menu.isEmbedded())
-            meta.setFrameSrc(menu.getFrameSrc());
-        meta.setTransitionName(menu.getTransitionName());
-        meta.setHideBreadcrumb(StrUtil.equals(DictConstants.DicShowHide.HIDE.getCode(), menu.getHideBreadcrumb()));
-        if (StrUtil.isNotEmpty(menu.getParamPath()))
-            meta.setCarryParam(true);
-        meta.setHideTab(StrUtil.equals(DictConstants.DicShowHide.HIDE.getCode(), menu.getHideTab()));
-        meta.setHideMenu(StrUtil.equals(DictConstants.DicShowHide.HIDE.getCode(), menu.getHideMenu()));
-        meta.setHideChildrenInMenu(StrUtil.equals(DictConstants.DicShowHide.HIDE.getCode(), menu.getHideChildren()));
-        if (menu.isExternalLinks())
-            meta.setLink(true);
-        meta.setOrderNo(menu.getSort());
-        meta.setIgnoreRoute(StrUtil.equals(DictConstants.DicYesNo.YES.getCode(), menu.getIgnoreRoute()));
-        meta.setHidePathForChildren(StrUtil.equals(DictConstants.DicShowHide.HIDE.getCode(), menu.getHidePathForChildren()));
+            meta.setLink(menu.getFrameSrc());
+        if (menu.isDetails()) {
+            meta.setActiveMenu(menu.getCurrentActiveMenu());
+        }
+        meta.setAffix(StrUtil.equals(DictConstants.DicYesNo.YES.getCode(), menu.getIsAffix()));
+        meta.setBreadcrumb(!StrUtil.equals(DictConstants.DicShowHide.HIDE.getCode(), menu.getHideBreadcrumb()));
         return meta;
     }
 

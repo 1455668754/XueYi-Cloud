@@ -18,20 +18,20 @@ public class RouterVo {
     /** 路由地址 */
     private String path;
 
+    /** 是否隐藏路由，当设置 true 的时候该路由不会再侧边栏出现 */
+    private boolean hidden;
+
     /** 重定向地址，当设置 noRedirect 的时候该路由在面包屑导航中不可被点击 */
-    private String redirect;  // 暂无
+    private String redirect;
 
     /** 组件地址 */
     private String component;
 
-    /** 是否禁用 */
-    private Boolean disabled;
-
-    /** 菜单标签设置 */
-    private TagVo tag;
-
     /** 路由参数：如 {"id": 1, "name": "xy"} */
-    private String paramPath;
+    private String query;
+
+    /** 当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式--如组件页面 */
+    private Boolean alwaysShow;
 
     /** 其他元素 */
     private MetaVo meta;
@@ -55,6 +55,14 @@ public class RouterVo {
         this.path = path;
     }
 
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
     public String getRedirect() {
         return redirect;
     }
@@ -71,28 +79,20 @@ public class RouterVo {
         this.component = component;
     }
 
-    public Boolean getDisabled() {
-        return disabled;
+    public String getQuery() {
+        return query;
     }
 
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+    public void setQuery(String query) {
+        this.query = query;
     }
 
-    public TagVo getTag() {
-        return tag;
+    public Boolean getAlwaysShow() {
+        return alwaysShow;
     }
 
-    public void setTag(TagVo tag) {
-        this.tag = tag;
-    }
-
-    public String getParamPath() {
-        return paramPath;
-    }
-
-    public void setParamPath(String paramPath) {
-        this.paramPath = paramPath;
+    public void setAlwaysShow(Boolean alwaysShow) {
+        this.alwaysShow = alwaysShow;
     }
 
     public MetaVo getMeta() {
@@ -109,20 +109,5 @@ public class RouterVo {
 
     public void setChildren(List<RouterVo> children) {
         this.children = children;
-    }
-
-    @Override
-    public String toString() {
-        return "RouterVo{" +
-                "name='" + name + '\'' +
-                ", path='" + path + '\'' +
-                ", redirect='" + redirect + '\'' +
-                ", component='" + component + '\'' +
-                ", disabled=" + disabled +
-                ", tag=" + tag +
-                ", paramPath='" + paramPath + '\'' +
-                ", meta=" + meta +
-                ", children=" + children +
-                '}';
     }
 }
