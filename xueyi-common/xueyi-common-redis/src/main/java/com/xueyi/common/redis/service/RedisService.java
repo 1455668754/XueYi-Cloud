@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * spring redis 工具类
  *
- * @author ruoyi
+ * @author xueyi
  **/
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 @Component
@@ -25,7 +25,7 @@ public class RedisService {
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
-     * @param key   缓存的键值
+     * @param key   Redis键
      * @param value 缓存的值
      */
     public <T> void setCacheObject(final String key, final T value) {
@@ -35,7 +35,7 @@ public class RedisService {
     /**
      * 缓存基本的对象，Integer、String、实体类等
      *
-     * @param key      缓存的键值
+     * @param key      Redis键
      * @param value    缓存的值
      * @param timeout  时间
      * @param timeUnit 时间颗粒度
@@ -63,7 +63,7 @@ public class RedisService {
      * @param unit    时间单位
      * @return true=设置成功；false=设置失败
      */
-    public boolean expire(final String key, final long timeout, final TimeUnit unit) {
+    public Boolean expire(final String key, final long timeout, final TimeUnit unit) {
         return redisTemplate.expire(key, timeout, unit);
     }
 
@@ -73,14 +73,14 @@ public class RedisService {
      * @param key Redis键
      * @return 有效时间
      */
-    public long getExpire(final String key) {
+    public Long getExpire(final String key) {
         return redisTemplate.getExpire(key);
     }
 
     /**
      * 判断 key是否存在
      *
-     * @param key 键
+     * @param key Redis键
      * @return true 存在 false不存在
      */
     public Boolean hasKey(String key) {
@@ -90,7 +90,7 @@ public class RedisService {
     /**
      * 获得缓存的基本对象。
      *
-     * @param key 缓存键值
+     * @param key Redis键
      * @return 缓存键值对应的数据
      */
     public <T> T getCacheObject(final String key) {
@@ -101,9 +101,10 @@ public class RedisService {
     /**
      * 删除单个对象
      *
-     * @param key
+     * @param key Redis键
+     * @return true=删除成功；false=删除失败
      */
-    public boolean deleteObject(final String key) {
+    public Boolean deleteObject(final String key) {
         return redisTemplate.delete(key);
     }
 
@@ -111,16 +112,16 @@ public class RedisService {
      * 删除集合对象
      *
      * @param collection 多个对象
-     * @return
+     * @return  结果
      */
-    public long deleteObject(final Collection collection) {
+    public Long deleteObject(final Collection collection) {
         return redisTemplate.delete(collection);
     }
 
     /**
      * 缓存List数据
      *
-     * @param key      缓存的键值
+     * @param key      Redis键
      * @param dataList 待缓存的List数据
      * @return 缓存的对象
      */
@@ -132,7 +133,7 @@ public class RedisService {
     /**
      * 获得缓存的list对象
      *
-     * @param key 缓存的键值
+     * @param key Redis键
      * @return 缓存键值对应的数据
      */
     public <T> List<T> getCacheList(final String key) {
@@ -142,15 +143,14 @@ public class RedisService {
     /**
      * 缓存Set
      *
-     * @param key     缓存键值
+     * @param key     Redis键
      * @param dataSet 缓存的数据
      * @return 缓存数据的对象
      */
     public <T> BoundSetOperations<String, T> setCacheSet(final String key, final Set<T> dataSet) {
         BoundSetOperations<String, T> setOperation = redisTemplate.boundSetOps(key);
-        Iterator<T> it = dataSet.iterator();
-        while (it.hasNext()) {
-            setOperation.add(it.next());
+        for (T t : dataSet) {
+            setOperation.add(t);
         }
         return setOperation;
     }
@@ -158,8 +158,8 @@ public class RedisService {
     /**
      * 获得缓存的set
      *
-     * @param key
-     * @return
+     * @param key Redis键
+     * @return 集合
      */
     public <T> Set<T> getCacheSet(final String key) {
         return redisTemplate.opsForSet().members(key);
@@ -168,8 +168,8 @@ public class RedisService {
     /**
      * 缓存Map
      *
-     * @param key
-     * @param dataMap
+     * @param key     Redis键
+     * @param dataMap map
      */
     public <T> void setCacheMap(final String key, final Map<String, T> dataMap) {
         if (dataMap != null) {
@@ -180,8 +180,8 @@ public class RedisService {
     /**
      * 获得缓存的Map
      *
-     * @param key
-     * @return
+     * @param key Redis键
+     * @return 哈希
      */
     public <T> Map<String, T> getCacheMap(final String key) {
         return redisTemplate.opsForHash().entries(key);
@@ -219,6 +219,17 @@ public class RedisService {
      */
     public <T> List<T> getMultiCacheMapValue(final String key, final Collection<Object> hKeys) {
         return redisTemplate.opsForHash().multiGet(key, hKeys);
+    }
+
+    /**
+     * 删除单个对象
+     *
+     * @param key Redis键
+     * @param hKey Hash键
+     * @return true=删除成功；false=删除失败
+     */
+    public Long deleteCacheMapHKey(final String key, final String hKey) {
+        return redisTemplate.opsForHash().delete(key,hKey);
     }
 
     /**

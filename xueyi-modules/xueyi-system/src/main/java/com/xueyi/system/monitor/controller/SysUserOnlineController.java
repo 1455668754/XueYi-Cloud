@@ -1,14 +1,16 @@
 package com.xueyi.system.monitor.controller;
 
-import com.xueyi.common.core.constant.CacheConstants;
+import cn.hutool.core.util.ArrayUtil;
+import com.xueyi.common.core.constant.basic.CacheConstants;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.web.controller.BaseController;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.common.security.auth.Auth;
 import com.xueyi.common.security.service.TokenService;
+import com.xueyi.common.web.entity.controller.BasisController;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.monitor.domain.SysUserOnline;
 import com.xueyi.system.monitor.service.ISysUserOnlineService;
@@ -27,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/online")
-public class SysUserOnlineController extends BaseController {
+public class SysUserOnlineController extends BasisController {
 
     @Autowired
     private ISysUserOnlineService userOnlineService;
@@ -38,11 +40,11 @@ public class SysUserOnlineController extends BaseController {
     @Autowired
     private TokenService tokenService;
 
-    @RequiresPermissions("monitor:online:list")
     @GetMapping("/list")
+    @RequiresPermissions(Auth.SYS_ONLINE_LIST)
     public AjaxResult list(String ipaddr, String userName) {
         Collection<String> keys = redisService.keys(CacheConstants.LOGIN_TOKEN_KEY + "*");
-        List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
+        List<SysUserOnline> userOnlineList = new ArrayList<>();
         LoginUser mine = tokenService.getLoginUser();
         for (String key : keys) {
             LoginUser user = redisService.getCacheObject(key);
@@ -72,11 +74,12 @@ public class SysUserOnlineController extends BaseController {
     /**
      * 强退用户
      */
-    @RequiresPermissions("monitor:online:forceLogout")
+    @DeleteMapping("/batch/{idList}")
+    @RequiresPermissions(Auth.SYS_ONLINE_FORCE_LOGOUT)
     @Log(title = "在线用户", businessType = BusinessType.FORCE)
-    @DeleteMapping("/{tokenId}")
-    public AjaxResult forceLogout(@PathVariable String tokenId) {
-        redisService.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + tokenId);
+    public AjaxResult forceLogout(@PathVariable List<String> idList) {
+        if (ArrayUtil.isNotEmpty(idList))
+            idList.forEach(id -> redisService.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + id));
         return AjaxResult.success();
     }
 }

@@ -1,14 +1,13 @@
 package com.xueyi.gateway.service.impl;
 
-import cn.hutool.json.JSONObject;
+import cn.hutool.core.util.IdUtil;
 import com.google.code.kaptcha.Producer;
-import com.xueyi.common.core.constant.CacheConstants;
-import com.xueyi.common.core.constant.Constants;
+import com.xueyi.common.core.constant.basic.CacheConstants;
+import com.xueyi.common.core.constant.basic.Constants;
 import com.xueyi.common.core.exception.CaptchaException;
-import com.xueyi.common.core.utils.IdUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.sign.Base64;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.gateway.config.properties.CaptchaProperties;
 import com.xueyi.gateway.service.ValidateCodeService;
@@ -20,6 +19,7 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,16 +46,16 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
      * 生成验证码
      */
     @Override
-    public AjaxResult createCapcha() throws IOException, CaptchaException {
+    public AjaxResult createCaptcha() throws IOException, CaptchaException {
         boolean captchaOnOff = captchaProperties.getEnabled();
-        JSONObject ajaxJson = new JSONObject();
-        ajaxJson.put("captchaOnOff", captchaOnOff);
+        HashMap<String, Object> ajax = new HashMap<>();
+        ajax.put("captchaOnOff", captchaOnOff);
         if (!captchaOnOff) {
-            return AjaxResult.success(ajaxJson);
+            return AjaxResult.success(ajax);
         }
 
         // 保存验证码信息
-        String uuid = IdUtils.simpleUUID();
+        String uuid = IdUtil.simpleUUID();
         String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
 
         String capStr = null, code = null;
@@ -81,16 +81,16 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         } catch (IOException e) {
             return AjaxResult.error(e.getMessage());
         }
-        ajaxJson.put("uuid", uuid);
-        ajaxJson.put("img", Base64.encode(os.toByteArray()));
-        return AjaxResult.success(ajaxJson);
+        ajax.put("uuid", uuid);
+        ajax.put("img", Base64.encode(os.toByteArray()));
+        return AjaxResult.success(ajax);
     }
 
     /**
      * 校验验证码
      */
     @Override
-    public void checkCapcha(String code, String uuid) throws CaptchaException {
+    public void checkCaptcha(String code, String uuid) throws CaptchaException {
         if (StringUtils.isEmpty(code)) {
             throw new CaptchaException("验证码不能为空");
         }

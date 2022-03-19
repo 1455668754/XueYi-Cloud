@@ -9,7 +9,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 /**
  * 监控权限配置
  * 
- * @author ruoyi
+ * @author xueyi
  */
 @Configuration
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter

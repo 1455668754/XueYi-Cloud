@@ -4,20 +4,21 @@
     <parent>
         <groupId>com.xueyi</groupId>
         <artifactId>xueyi</artifactId>
-        <version>4.2.4</version>
+        <version>5.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
         <module>xueyi-common-log</module>
+        <module>xueyi-common-web</module>
         <module>xueyi-common-core</module>
         <module>xueyi-common-redis</module>
-        <module>xueyi-common-socket</module>
-        <module>xueyi-common-message</module>
         <module>xueyi-common-swagger</module>
         <module>xueyi-common-security</module>
         <module>xueyi-common-datascope</module>
 		<module>xueyi-common-datasource</module>
+		<module>xueyi-common-message</module>
+		<module>xueyi-common-socket</module>
     </modules>
 
     <artifactId>xueyi-common</artifactId>

@@ -1,23 +1,24 @@
 package com.xueyi.gateway.config;
 
-import java.util.Properties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Properties;
+
 import static com.google.code.kaptcha.Constants.*;
 
 /**
  * 验证码配置
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 @Configuration
-public class CaptchaConfig
-{
+public class CaptchaConfig {
+
     @Bean(name = "captchaProducer")
-    public DefaultKaptcha getKaptchaBean()
-    {
+    public DefaultKaptcha getCaptchaBean() {
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         Properties properties = new Properties();
         // 是否有边框 默认为true 我们可以自己设置yes，no
@@ -42,10 +43,9 @@ public class CaptchaConfig
         defaultKaptcha.setConfig(config);
         return defaultKaptcha;
     }
-    
+
     @Bean(name = "captchaProducerMath")
-    public DefaultKaptcha getKaptchaBeanMath()
-    {
+    public DefaultKaptcha getCaptchaBeanMath() {
         DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
         Properties properties = new Properties();
         // 是否有边框 默认为true 我们可以自己设置yes，no
@@ -63,7 +63,7 @@ public class CaptchaConfig
         // KAPTCHA_SESSION_KEY
         properties.setProperty(KAPTCHA_SESSION_CONFIG_KEY, "kaptchaCodeMath");
         // 验证码文本生成器
-        properties.setProperty(KAPTCHA_TEXTPRODUCER_IMPL, "com.xueyi.gateway.config.KaptchaTextCreator");
+        properties.setProperty(KAPTCHA_TEXTPRODUCER_IMPL, "com.xueyi.gateway.config.CaptchaTextCreator");
         // 验证码文本字符间距 默认为2
         properties.setProperty(KAPTCHA_TEXTPRODUCER_CHAR_SPACE, "3");
         // 验证码文本字符长度 默认为5

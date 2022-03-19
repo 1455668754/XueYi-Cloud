@@ -1,18 +1,18 @@
 package com.xueyi.gateway.filter;
 
+import com.xueyi.common.core.utils.ServletUtils;
+import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.springframework.cloud.gateway.filter.GatewayFilter;
-import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.stereotype.Component;
-import com.xueyi.common.core.utils.ServletUtils;
-
 /**
  * 黑名单过滤器
  *
- * @author ruoyi
+ * @author xueyi
  */
 @Component
 public class BlackListUrlFilter extends AbstractGatewayFilterFactory<BlackListUrlFilter.Config> {
@@ -35,6 +35,7 @@ public class BlackListUrlFilter extends AbstractGatewayFilterFactory<BlackListUr
     }
 
     public static class Config {
+
         private List<String> blacklistUrl;
 
         private List<Pattern> blacklistUrlPattern = new ArrayList<>();

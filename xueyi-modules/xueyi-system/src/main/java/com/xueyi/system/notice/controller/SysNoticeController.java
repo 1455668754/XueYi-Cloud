@@ -1,82 +1,129 @@
 package com.xueyi.system.notice.controller;
 
-import com.xueyi.common.core.web.controller.BaseController;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.core.constant.basic.BaseConstants;
+import com.xueyi.common.core.constant.system.NoticeConstants;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.security.annotation.Logical;
 import com.xueyi.common.security.annotation.RequiresPermissions;
-import com.xueyi.system.notice.domain.SysNotice;
+import com.xueyi.common.security.auth.Auth;
+import com.xueyi.common.web.entity.controller.BaseController;
+import com.xueyi.system.notice.domain.dto.SysNoticeDto;
 import com.xueyi.system.notice.service.ISysNoticeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 import java.util.List;
 
 /**
- * 公告 信息操作处理
+ * 通知公告管理 业务处理
  *
- * @author ruoyi
+ * @author xueyi
  */
 @RestController
 @RequestMapping("/notice")
-public class SysNoticeController extends BaseController
-{
-    @Autowired
-    private ISysNoticeService noticeService;
+public class SysNoticeController extends BaseController<SysNoticeDto, ISysNoticeService> {
+
+    /** 定义节点名称 */
+    @Override
+    protected String getNodeName() {
+        return "通知公告";
+    }
 
     /**
-     * 获取通知公告列表
+     * 查询通知公告列表
      */
-    @RequiresPermissions("system:notice:list")
+    @Override
     @GetMapping("/list")
-    public AjaxResult list(SysNotice notice)
-    {
-        startPage();
-        List<SysNotice> list = noticeService.selectNoticeList(notice);
-        return getDataTable(list);
+    @RequiresPermissions(Auth.SYS_NOTICE_LIST)
+    public AjaxResult list(SysNoticeDto notice) {
+        return super.list(notice);
     }
 
     /**
-     * 根据通知公告编号获取详细信息
+     * 查询通知公告详细
      */
-    @RequiresPermissions("system:notice:query")
-    @GetMapping(value = "/byId")
-    public AjaxResult getInfo(SysNotice notice)
-    {
-        return AjaxResult.success(noticeService.selectNoticeById(notice));
+    @Override
+    @GetMapping(value = "/{id}")
+    @RequiresPermissions(Auth.SYS_NOTICE_SINGLE)
+    public AjaxResult getInfoExtra(@PathVariable Serializable id) {
+        return super.getInfoExtra(id);
     }
 
     /**
-     * 新增通知公告
+     * 通知公告导出
      */
-    @RequiresPermissions("system:notice:add")
-    @Log(title = "通知公告", businessType = BusinessType.INSERT)
+    @Override
+    @PostMapping("/export")
+    @RequiresPermissions(Auth.SYS_NOTICE_EXPORT)
+    @Log(title = "通知公告管理", businessType = BusinessType.EXPORT)
+    public void export(HttpServletResponse response, SysNoticeDto notice) {
+        super.export(response, notice);
+    }
+
+    /**
+     * 通知公告新增
+     */
+    @Override
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysNotice notice)
-    {
-        return toAjax(noticeService.insertNotice(notice));
+    @RequiresPermissions(Auth.SYS_NOTICE_ADD)
+    @Log(title = "通知公告管理", businessType = BusinessType.INSERT)
+    public AjaxResult add(@Validated @RequestBody SysNoticeDto notice) {
+        return super.add(notice);
     }
 
     /**
-     * 修改通知公告
+     * 通知公告修改
      */
-    @RequiresPermissions("system:notice:edit")
-    @Log(title = "通知公告", businessType = BusinessType.UPDATE)
+    @Override
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysNotice notice)
-    {
-        return toAjax(noticeService.updateNotice(notice));
+    @RequiresPermissions(Auth.SYS_NOTICE_EDIT)
+    @Log(title = "通知公告管理", businessType = BusinessType.UPDATE)
+    public AjaxResult edit(@Validated @RequestBody SysNoticeDto notice) {
+        return super.edit(notice);
     }
 
     /**
-     * 删除通知公告
+     * 通知公告修改状态
      */
-    @RequiresPermissions("system:notice:remove")
-    @Log(title = "通知公告", businessType = BusinessType.DELETE)
-    @DeleteMapping
-    public AjaxResult remove(@RequestBody SysNotice notice)
-    {
-        return toAjax(noticeService.deleteNoticeByIds(notice));
+    @Override
+    @PutMapping("/status")
+    @RequiresPermissions(value = {Auth.SYS_NOTICE_EDIT, Auth.SYS_NOTICE_EDIT_STATUS}, logical = Logical.OR)
+    @Log(title = "通知公告管理", businessType = BusinessType.UPDATE_STATUS)
+    public AjaxResult editStatus(@RequestBody SysNoticeDto notice) {
+        return super.editStatus(notice);
+    }
+
+    /**
+     * 通知公告批量删除
+     */
+    @Override
+    @DeleteMapping("/batch/{idList}")
+    @RequiresPermissions(Auth.SYS_NOTICE_DELETE)
+    @Log(title = "通知公告管理", businessType = BusinessType.DELETE)
+    public AjaxResult batchRemove(@PathVariable List<Long> idList) {
+        return super.batchRemove(idList);
+    }
+
+    /**
+     * 获取通知公告选择框列表
+     */
+    @Override
+    @GetMapping("/option")
+    public AjaxResult option() {
+        return super.option();
+    }
+
+    /**
+     * 前置校验 （强制）增加/修改
+     */
+    @Override
+    protected void AEHandleValidated(BaseConstants.Operate operate, SysNoticeDto notice) {
+        // 初始化发送状态
+        if(operate.isAdd())
+            notice.setStatus(NoticeConstants.NoticeStatus.READY.getCode());
     }
 }

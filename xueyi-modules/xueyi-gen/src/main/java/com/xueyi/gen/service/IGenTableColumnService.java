@@ -1,44 +1,22 @@
 package com.xueyi.gen.service;
 
+import com.xueyi.common.web.entity.service.IBaseService;
+import com.xueyi.gen.domain.dto.GenTableColumnDto;
+
 import java.util.List;
 
-import com.xueyi.gen.domain.GenTableColumn;
-
 /**
- * 业务字段 服务层
+ * 业务字段管理 服务层
  *
  * @author xueyi
  */
-public interface IGenTableColumnService {
-    /**
-     * 查询业务字段列表
-     *
-     * @param tableId 业务字段编号
-     * @return 业务字段集合
-     */
-    public List<GenTableColumn> selectGenTableColumnListByTableId(Long tableId);
+public interface IGenTableColumnService extends IBaseService<GenTableColumnDto> {
 
     /**
-     * 新增业务字段
+     * 根据表名称查询数据库表列信息
      *
-     * @param genTableColumn 业务字段信息
-     * @return 结果
+     * @param tableName 表名称
+     * @return 数据库表列信息
      */
-    public int insertGenTableColumn(GenTableColumn genTableColumn);
-
-    /**
-     * 修改业务字段
-     *
-     * @param genTableColumn 业务字段信息
-     * @return 结果
-     */
-    public int updateGenTableColumn(GenTableColumn genTableColumn);
-
-    /**
-     * 删除业务字段信息
-     *
-     * @param ids 需要删除的数据ID
-     * @return 结果
-     */
-    public int deleteGenTableColumnByIds(String ids);
+    List<GenTableColumnDto> selectDbTableColumnsByName(String tableName);
 }

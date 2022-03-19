@@ -1,11 +1,20 @@
 package com.xueyi.job.util;
 
-import com.xueyi.common.core.constant.ScheduleConstants;
+import com.xueyi.common.core.utils.StringUtils;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.CronTrigger;
+import org.quartz.Job;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.JobKey;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
+import com.xueyi.common.core.constant.job.ScheduleConstants;
 import com.xueyi.common.core.exception.job.TaskException;
 import com.xueyi.common.core.exception.job.TaskException.Code;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.job.domain.SysJob;
-import org.quartz.*;
+import com.xueyi.job.api.domain.dto.SysJobDto;
 
 import java.util.Objects;
 
@@ -21,7 +30,7 @@ public class ScheduleUtils {
      * @param sysJob 执行计划
      * @return 具体执行任务类
      */
-    private static Class<? extends Job> getQuartzJobClass(SysJob sysJob) {
+    private static Class<? extends Job> getQuartzJobClass(SysJobDto sysJob) {
         boolean isConcurrent = "0".equals(sysJob.getConcurrent());
         return isConcurrent ? QuartzJobExecution.class : QuartzDisallowConcurrentExecution.class;
     }
@@ -43,10 +52,10 @@ public class ScheduleUtils {
     /**
      * 创建定时任务
      */
-    public static void createScheduleJob(Scheduler scheduler, SysJob job) throws SchedulerException, TaskException {
+    public static void createScheduleJob(Scheduler scheduler, SysJobDto job) throws SchedulerException, TaskException {
         Class<? extends Job> jobClass = getQuartzJobClass(job);
         // 构建job信息
-        Long jobId = job.getJobId();
+        Long jobId = job.getId();
         String jobGroup = job.getJobGroup();
         JobDetail jobDetail = JobBuilder.newJob(jobClass).withIdentity(getJobKey(jobId, jobGroup)).build();
 
@@ -78,7 +87,7 @@ public class ScheduleUtils {
     /**
      * 设置定时任务策略
      */
-    public static CronScheduleBuilder handleCronScheduleMisfirePolicy(SysJob job, CronScheduleBuilder cb)
+    public static CronScheduleBuilder handleCronScheduleMisfirePolicy(SysJobDto job, CronScheduleBuilder cb)
             throws TaskException {
         switch (Objects.requireNonNull(ScheduleConstants.Misfire.getValue(job.getMisfirePolicy()))) {
             case DEFAULT:

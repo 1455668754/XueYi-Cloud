@@ -1,8 +1,8 @@
 package com.xueyi.common.core.context;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.xueyi.common.core.constant.BaseConstants;
-import com.xueyi.common.core.constant.SecurityConstants;
+import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.text.Convert;
 import com.xueyi.common.core.utils.StringUtils;
 
@@ -23,7 +23,7 @@ public class SecurityContextHolder {
      * 获取企业Id
      */
     public static Long getEnterpriseId() {
-        return Convert.toLong(get(SecurityConstants.ENTERPRISE_ID), BaseConstants.NONE_ID);
+        return Convert.toLong(get(SecurityConstants.ENTERPRISE_ID), SecurityConstants.EMPTY_TENANT_ID);
     }
 
     /**
@@ -65,7 +65,7 @@ public class SecurityContextHolder {
      * 获取用户Id
      */
     public static Long getUserId() {
-        return Convert.toLong(get(SecurityConstants.USER_ID), 0L);
+        return Convert.toLong(get(SecurityConstants.USER_ID), SecurityConstants.EMPTY_USER_ID);
     }
 
     /**
@@ -133,12 +133,12 @@ public class SecurityContextHolder {
 
     public static void set(String key, Object value) {
         Map<String, Object> map = getLocalMap();
-        map.put(key, value == null ? StringUtils.EMPTY : value);
+        map.put(key, value == null ? StrUtil.EMPTY : value);
     }
 
     public static String get(String key) {
         Map<String, Object> map = getLocalMap();
-        return Convert.toStr(map.getOrDefault(key, StringUtils.EMPTY));
+        return Convert.toStr(map.getOrDefault(key, StrUtil.EMPTY));
     }
 
     public static <T> T get(String key, Class<T> clazz) {

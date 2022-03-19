@@ -1,0 +1,5 @@
+/** ${functionName}主页路由名称 */
+export const ${BusinessName}IndexGo = '${menuName0}'
+
+/** ${functionName}详情页路由名称 */
+export const ${BusinessName}DetailGo = '${menuName1}'

@@ -4,13 +4,15 @@
     <parent>
         <groupId>com.xueyi</groupId>
         <artifactId>xueyi</artifactId>
-        <version>4.2.4</version>
+        <version>5.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
         <module>xueyi-api-system</module>
         <module>xueyi-api-tenant</module>
+        <module>xueyi-api-file</module>
+        <module>xueyi-api-job</module>
     </modules>
 
     <artifactId>xueyi-api</artifactId>

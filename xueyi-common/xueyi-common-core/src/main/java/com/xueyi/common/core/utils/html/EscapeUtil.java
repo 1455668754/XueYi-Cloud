@@ -5,9 +5,10 @@ import com.xueyi.common.core.utils.StringUtils;
 /**
  * 转义和反转义工具类
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class EscapeUtil {
+
     public static final String RE_HTML_MARK = "(<[^<]*?>)|(<[\\s]*?/[^<]*?>)|(<[^<]*?/[\\s]*?>)";
 
     private static final char[][] TEXT = new char[64][];

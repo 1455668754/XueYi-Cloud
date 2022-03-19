@@ -1,221 +1,148 @@
 package com.xueyi.system.dict.service.impl;
 
-import com.xueyi.common.core.constant.BaseConstants;
-import com.xueyi.common.core.exception.ServiceException;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.security.utils.DictUtils;
-import com.xueyi.system.api.domain.dict.SysDictData;
-import com.xueyi.system.api.domain.dict.SysDictType;
+import cn.hutool.core.util.ObjectUtil;
+import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
+import com.xueyi.common.core.constant.basic.BaseConstants;
+import com.xueyi.common.core.constant.basic.CacheConstants;
+import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.common.web.entity.service.impl.SubBaseServiceImpl;
+import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
+import com.xueyi.system.api.dict.domain.dto.SysDictTypeDto;
+import com.xueyi.system.dict.manager.SysDictTypeManager;
 import com.xueyi.system.dict.mapper.SysDictDataMapper;
 import com.xueyi.system.dict.mapper.SysDictTypeMapper;
+import com.xueyi.system.dict.service.ISysDictDataService;
 import com.xueyi.system.dict.service.ISysDictTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.util.Comparator;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+import static com.xueyi.common.core.constant.basic.TenantConstants.MASTER;
 
 /**
- * 字典 业务层处理
- * 
- * @author ruoyi
+ * 字典类型管理 业务层处理
+ *
+ * @author xueyi
  */
 @Service
-public class SysDictTypeServiceImpl implements ISysDictTypeService
-{
-    @Autowired
-    private SysDictTypeMapper dictTypeMapper;
+@DS(MASTER)
+public class SysDictTypeServiceImpl extends SubBaseServiceImpl<SysDictTypeDto, SysDictTypeManager, SysDictTypeMapper, SysDictDataDto, ISysDictDataService, SysDictDataMapper> implements ISysDictTypeService {
 
     @Autowired
-    private SysDictDataMapper dictDataMapper;
+    private RedisService redisService;
 
     /**
      * 项目启动时，初始化字典到缓存
      */
     @PostConstruct
-    public void init()
-    {
+    public void init() {
         loadingDictCache();
     }
 
     /**
-     * 根据条件分页查询字典类型
-     * 
-     * @param dictType 字典类型信息
-     * @return 字典类型集合信息
-     */
-    @Override
-    public List<SysDictType> selectDictTypeList(SysDictType dictType)
-    {
-        return dictTypeMapper.selectDictTypeList(dictType);
-    }
-
-    /**
-     * 根据所有字典类型
-     * 
-     * @return 字典类型集合信息
-     */
-    @Override
-    public List<SysDictType> selectDictTypeAll()
-    {
-        return dictTypeMapper.selectDictTypeAll();
-    }
-
-    /**
-     * 根据字典类型查询字典数据
-     * 
-     * @param dictType 字典类型
-     * @return 字典数据集合信息
-     */
-    @Override
-    public List<SysDictData> selectDictDataByType(String dictType)
-    {
-        List<SysDictData> dictDatas = DictUtils.getDictCache(dictType);
-        if (StringUtils.isNotEmpty(dictDatas))
-        {
-            return dictDatas;
-        }
-        dictDatas = dictDataMapper.selectDictDataByType(dictType);
-        if (StringUtils.isNotEmpty(dictDatas))
-        {
-            DictUtils.setDictCache(dictType, dictDatas);
-            return dictDatas;
-        }
-        return null;
-    }
-
-    /**
-     * 根据字典类型ID查询信息
-     * 
-     * @param dictId 字典类型ID
-     * @return 字典类型
-     */
-    @Override
-    public SysDictType selectDictTypeById(Long dictId)
-    {
-        return dictTypeMapper.selectDictTypeById(dictId);
-    }
-
-    /**
-     * 根据字典类型查询信息
-     * 
-     * @param dictType 字典类型
-     * @return 字典类型
-     */
-    @Override
-    public SysDictType selectDictTypeByType(String dictType)
-    {
-        return dictTypeMapper.selectDictTypeByType(dictType);
-    }
-
-    /**
-     * 批量删除字典类型信息
-     * 
-     * @param dictIds 需要删除的字典ID
+     * 新增数据对象
+     *
+     * @param dictType 数据对象
      * @return 结果
      */
     @Override
-    public void deleteDictTypeByIds(Long[] dictIds)
-    {
-        for (Long dictId : dictIds)
-        {
-            SysDictType dictType = selectDictTypeById(dictId);
-            if (dictDataMapper.countDictDataByType(dictType.getDictType()) > 0)
-            {
-                throw new ServiceException(String.format("%1$s已分配,不能删除", dictType.getDictName()));
-            }
-            dictTypeMapper.deleteDictTypeById(dictId);
-            DictUtils.removeDictCache(dictType.getDictType());
-        }
+    @DSTransactional
+    public int insert(SysDictTypeDto dictType) {
+        int row = super.insert(dictType);
+        if (row > 0)
+            redisService.setCacheMapValue(CacheConstants.SYS_DICT_KEY, dictType.getCode(), dictType.getSubList());
+        return row;
+    }
+
+    /**
+     * 根据Id删除参数对象
+     *
+     * @param id Id
+     * @return 结果
+     */
+    @Override
+    public int deleteById(Serializable id) {
+        SysDictTypeDto dict = baseManager.selectById(id);
+        deleteDictCache(dict.getCode());
+        return baseManager.deleteById(id);
+    }
+
+    /**
+     * 根据Id集合删除参数对象
+     *
+     * @param idList Id集合
+     * @return 结果
+     */
+    @Override
+    public int deleteByIds(Collection<? extends Serializable> idList) {
+        List<SysDictTypeDto> dictList = baseManager.selectListByIds(idList);
+        dictList.forEach(item -> deleteDictCache(item.getCode()));
+        return baseManager.deleteByIds(idList);
     }
 
     /**
      * 加载字典缓存数据
      */
-    public void loadingDictCache()
-    {
-        SysDictData dictData = new SysDictData();
-        dictData.setStatus("0");
-        Map<String, List<SysDictData>> dictDataMap = dictDataMapper.selectDictDataList(dictData).stream().collect(Collectors.groupingBy(SysDictData::getDictType));
-        for (Map.Entry<String, List<SysDictData>> entry: dictDataMap.entrySet()) {
-            DictUtils.setDictCache(entry.getKey(), entry.getValue().stream().sorted(Comparator.comparing(SysDictData::getDictSort)).collect(Collectors.toList()));
-        }
+    @Override
+    public void loadingDictCache() {
+        List<SysDictTypeDto> dictTypeList = baseManager.selectListExtra(null);
+        Map<String, List<SysDictDataDto>> dataMap = new HashMap<>();
+        dictTypeList.forEach(item -> dataMap.put(item.getCode(), item.getSubList()));
+        redisService.setCacheMap(CacheConstants.SYS_DICT_KEY, dataMap);
     }
 
     /**
      * 清空字典缓存数据
      */
-    public void clearDictCache()
-    {
-        DictUtils.clearDictCache();
+    @Override
+    public void clearDictCache() {
+        redisService.deleteObject(CacheConstants.SYS_DICT_KEY);
     }
 
     /**
      * 重置字典缓存数据
      */
-    public void resetDictCache()
-    {
+    @Override
+    public void resetDictCache() {
         clearDictCache();
         loadingDictCache();
     }
 
     /**
-     * 新增保存字典类型信息
-     * 
-     * @param dict 字典类型信息
-     * @return 结果
+     * 校验字典编码是否唯一
+     *
+     * @param Id       字典类型Id
+     * @param dictCode 字典类型编码
+     * @return 结果 | true/false 唯一/不唯一
      */
     @Override
-    public int insertDictType(SysDictType dict)
-    {
-        int row = dictTypeMapper.insertDictType(dict);
-        if (row > 0)
-        {
-            DictUtils.setDictCache(dict.getDictType(), null);
-        }
-        return row;
+    public boolean checkDictCodeUnique(Long Id, String dictCode) {
+        return ObjectUtil.isNotNull(baseManager.checkDictCodeUnique(ObjectUtil.isNull(Id) ? BaseConstants.NONE_ID : Id, dictCode));
     }
 
     /**
-     * 修改保存字典类型信息
-     * 
-     * @param dict 字典类型信息
-     * @return 结果
+     * 根据编码删除字典缓存
      */
-    @Override
-    @Transactional
-    public int updateDictType(SysDictType dict)
-    {
-        SysDictType oldDict = dictTypeMapper.selectDictTypeById(dict.getDictId());
-        dictDataMapper.updateDictDataType(oldDict.getDictType(), dict.getDictType());
-        int row = dictTypeMapper.updateDictType(dict);
-        if (row > 0)
-        {
-            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(dict.getDictType());
-            DictUtils.setDictCache(dict.getDictType(), dictDatas);
-        }
-        return row;
+    private void deleteDictCache(String code) {
+        redisService.deleteCacheMapHKey(CacheConstants.SYS_DICT_KEY, code);
     }
 
     /**
-     * 校验字典类型称是否唯一
-     * 
-     * @param dict 字典类型
-     * @return 结果
+     * 设置子数据的外键值
      */
     @Override
-    public String checkDictTypeUnique(SysDictType dict)
-    {
-        Long dictId = StringUtils.isNull(dict.getDictId()) ? -1L : dict.getDictId();
-        SysDictType dictType = dictTypeMapper.checkDictTypeUnique(dict.getDictType());
-        if (StringUtils.isNotNull(dictType) && dictType.getDictId().longValue() != dictId.longValue())
-        {
-            return BaseConstants.Check.NOT_UNIQUE.getCode();
-        }
-        return BaseConstants.Check.UNIQUE.getCode();
+    protected void setForeignKey(Collection<SysDictDataDto> dictDataList, SysDictDataDto dictData, SysDictTypeDto dictType, Serializable key) {
+        String code = ObjectUtil.isNotNull(dictType) ? dictType.getCode() : (String) key;
+        if (ObjectUtil.isNotNull(dictData))
+            dictData.setCode(code);
+        else
+            dictDataList.forEach(sub -> sub.setCode(code));
     }
 }

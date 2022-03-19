@@ -7,7 +7,7 @@ import com.xueyi.common.security.utils.SecurityUtils;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
 
-import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
+import static com.xueyi.common.core.constant.basic.TenantConstants.ISOLATE;
 
 /**
  * 租户库源策略

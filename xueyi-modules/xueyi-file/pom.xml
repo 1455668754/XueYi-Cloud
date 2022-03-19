@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.xueyi</groupId>
         <artifactId>xueyi-modules</artifactId>
-        <version>4.2.4</version>
+        <version>5.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -53,19 +53,19 @@
             <artifactId>minio</artifactId>
             <version>${minio.version}</version>
         </dependency>
-        
-        <!-- XueYi Api System -->
-        <dependency>
-            <groupId>com.xueyi</groupId>
-            <artifactId>xueyi-api-system</artifactId>
-        </dependency>
 
         <!-- XueYi Common Swagger -->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-swagger</artifactId>
         </dependency>
-        
+
+        <!-- XueYi Api File -->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-api-file</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

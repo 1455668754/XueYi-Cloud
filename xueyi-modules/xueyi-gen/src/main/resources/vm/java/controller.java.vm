@@ -1,130 +1,227 @@
 package ${packageName}.controller;
 
-import java.util.List;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+#if($table.base)
+#set($Entity="Base")
+#set($generics = "<"+${ClassName}+"Dto, I"+${ClassName}+"Service>")
+#elseif($table.tree)
+#set($Entity="Tree")
+#set($generics = "<"+${ClassName}+"Dto, I"+${ClassName}+"Service>")
+#elseif($table.subBase)
+#set($Entity="SubBase")
+#set($generics = "<"+${ClassName}+"Dto, I"+${ClassName}+"Service, "+${subClassName}+"Dto, I"+${subClassName}+"Service>")
+#elseif($table.subTree)
+#set($Entity="SubTree")
+#set($generics = "<"+${ClassName}+"Dto, I"+${ClassName}+"Service, "+${subClassName}+"Dto, I"+${subClassName}+"Service>")
+#end
+import ${packageName}.domain.dto.${ClassName}Dto;
+import ${packageName}.service.I${ClassName}Service;
+#if($table.subBase || $table.subTree)
+import ${subPackageName}.domain.dto.${subClassName}Dto;
+import ${subPackageName}.service.I${subClassName}Service;
+#end
+import com.xueyi.common.web.entity.controller.${Entity}Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.xueyi.common.log.annotation.Log;
-import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.security.annotation.RequiresPermissions;
-import ${packageName}.domain.${ClassName};
-import ${packageName}.service.I${ClassName}Service;
-import com.xueyi.common.core.web.controller.BaseController;
-import com.xueyi.common.core.web.domain.AjaxResult;
-import com.xueyi.common.core.utils.poi.ExcelUtil;
+#if($api.editStatus || $api.editStatusForce)
+import com.xueyi.common.security.annotation.Logical;
+#end
+import com.xueyi.common.core.web.result.AjaxResult;
+import com.ruoyi.common.log.enums.BusinessType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+#if($api.export)
+import javax.servlet.http.HttpServletResponse;
+#end
+#if($api.getInfo)
+import java.io.Serializable;
+#end
+#if($api.batchRemove || $api.batchRemoveForce)
+import java.util.List;
+#end
 
 /**
- * ${functionName} 业务处理
- * 
+ * ${functionName}管理 业务处理
+ *
  * @author ${author}
  */
 @RestController
 @RequestMapping("/${businessName}")
-public class ${ClassName}Controller extends BaseController {
+public class ${ClassName}Controller extends ${Entity}Controller${generics} {
 
-    @Autowired
-    private I${ClassName}Service ${classNameNoPrefix}Service;
+    /** 定义节点名称 */
+    @Override
+    protected String getNodeName() {
+        return "${functionName}";
+    }
+#if($table.subBase || $table.subTree)
+
+    /** 定义子数据名称 */
+    @Override
+    protected String getSubName() {
+        return "${subFunctionName}";
+    }
+#end
+#if($api.list)
 
     /**
      * 查询${functionName}列表
      */
-    @RequiresPermissions("${permissionPrefix}:list")
+    @Override
     @GetMapping("/list")
-#if($table.crud || $table.sub)
-    public AjaxResult list(${ClassName} ${classNameNoPrefix}) {
-        startPage();
-        List<${ClassName}> list = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}List(${classNameNoPrefix});
-        return getDataTable(list);
+    @RequiresPermissions("${authorityName}:${businessName}:list")
+    public AjaxResult list(${ClassName}Dto ${classNameNoPrefix}) {
+        return super.list(${classNameNoPrefix});
     }
-#elseif($table.tree)
-    public AjaxResult list(${ClassName} ${classNameNoPrefix}) {
-        List<${ClassName}> list = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}List(${classNameNoPrefix});
-        return AjaxResult.success(list);
-    }
-#end
-#if($table.tree)
+#if($table.tree || $table.subTree)
 
     /**
-     * 查询${functionName}树选项列表
+     * 查询${functionName}列表（排除节点）
      */
-    @GetMapping("/tree")
-    public AjaxResult tree(${ClassName} ${classNameNoPrefix}) {
-        List<${ClassName}> tree = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}Tree(${classNameNoPrefix});
-        return AjaxResult.success(tree);
+    @GetMapping("/list/exclude")
+    @RequiresPermissions("${authorityName}:${businessName}:list")
+    public AjaxResult listExNodes(${ClassName}Dto ${classNameNoPrefix}) {
+        return super.listExNodes(${classNameNoPrefix});
     }
 #end
+#end
+#if($api.getInfo)
 
     /**
-     * 导出${functionName}列表
+     * 查询${functionName}详细
      */
-    @RequiresPermissions("${permissionPrefix}:export")
-    @Log(title = "${functionName}", businessType = BusinessType.EXPORT)
+    @Override
+    @GetMapping(value = "/{id}")
+    @RequiresPermissions("${authorityName}:${businessName}:single")
+    public AjaxResult getInfoExtra(@PathVariable Serializable id) {
+        return super.getInfoExtra(id);
+    }
+#end
+#if($api.export)
+
+    /**
+     * ${functionName}导出
+     */
+    @Override
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ${ClassName} ${classNameNoPrefix}) {
-        List<${ClassName}> list = ${classNameNoPrefix}Service.select${ClassNameNoPrefix}List(${classNameNoPrefix});
-        ExcelUtil<${ClassName}> util = new ExcelUtil<${ClassName}>(${ClassName}.class);
-        util.exportExcel(response, list, "${functionName}数据");
+    @RequiresPermissions("${authorityName}:${businessName}:export")
+    @Log(title = "${functionName}管理", businessType = BusinessType.EXPORT)
+    public void export(HttpServletResponse response, ${ClassName}Dto ${classNameNoPrefix}) {
+        super.export(response, ${classNameNoPrefix});
     }
+#end
+#if($api.add)
 
     /**
-     * 获取${functionName}详细信息
+     * ${functionName}新增
      */
-    @RequiresPermissions("${permissionPrefix}:query")
-    @GetMapping(value = "/byId")
-    public AjaxResult getInfo(${ClassName} ${classNameNoPrefix}) {
-        return AjaxResult.success(${classNameNoPrefix}Service.select${ClassNameNoPrefix}By${pkColumn.capJavaField}(${classNameNoPrefix}));
-    }
-
-    /**
-     * 新增${functionName}
-     */
-    @RequiresPermissions("${permissionPrefix}:add")
-    @Log(title = "${functionName}", businessType = BusinessType.INSERT)
+    @Override
     @PostMapping
-    public AjaxResult add(@RequestBody ${ClassName} ${classNameNoPrefix}) {
-        return toAjax(${classNameNoPrefix}Service.insert${ClassNameNoPrefix}(${classNameNoPrefix}));
+    @RequiresPermissions("${authorityName}:${businessName}:add")
+    @Log(title = "${functionName}管理", businessType = BusinessType.INSERT)
+    public AjaxResult add(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+        return super.add(${classNameNoPrefix});
     }
+#end
+#if($api.addForce)
 
     /**
-     * 修改${functionName}
+     * ${functionName}强制新增
      */
-    @RequiresPermissions("${permissionPrefix}:edit")
-    @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
+    @Override
+    @PostMapping("/force")
+    @RequiresPermissions("${authorityName}:${businessName}:addForce")
+    @Log(title = "${functionName}管理", businessType = BusinessType.INSERT_FORCE)
+    public AjaxResult addForce(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+        return super.addForce(${classNameNoPrefix});
+    }
+#end
+#if($api.edit)
+
+    /**
+     * ${functionName}修改
+     */
+    @Override
     @PutMapping
-    public AjaxResult edit(@RequestBody ${ClassName} ${classNameNoPrefix}) {
-        return toAjax(${classNameNoPrefix}Service.update${ClassNameNoPrefix}(${classNameNoPrefix}));
+    @RequiresPermissions("${authorityName}:${businessName}:edit")
+    @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE)
+    public AjaxResult edit(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+        return super.edit(${classNameNoPrefix});
     }
+#end
+#if($api.editForce)
 
-#if($table.crud || $table.sub)
-#foreach ($column in $columns)
-#if($column.javaField == 'sort')
     /**
-     * 修改${functionName}排序
+     * ${functionName}强制修改
      */
-    @RequiresPermissions("${permissionPrefix}:edit")
-    @Log(title = "${functionName}", businessType = BusinessType.UPDATE)
-    @PutMapping(value = "/sort")
-    public AjaxResult updateSort(@RequestBody ${ClassName} ${classNameNoPrefix}) {
-        return toAjax(${classNameNoPrefix}Service.update${ClassNameNoPrefix}Sort(${classNameNoPrefix}));
+    @Override
+    @PutMapping("/force")
+    @RequiresPermissions("${authorityName}:${businessName}:editForce")
+    @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_FORCE)
+    public AjaxResult editForce(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+        return super.editForce(${classNameNoPrefix});
     }
+#end
+#if($api.editStatus)
 
-#end
-#end
-#end
     /**
-     * 删除${functionName}
+     * ${functionName}修改状态
      */
-    @RequiresPermissions("${permissionPrefix}:remove")
-    @Log(title = "${functionName}", businessType = BusinessType.DELETE)
-    @DeleteMapping
-    public AjaxResult remove(@RequestBody ${ClassName} ${classNameNoPrefix}) {
-        return toAjax(${classNameNoPrefix}Service.delete${ClassNameNoPrefix}By${pkColumn.capJavaField}#if(!$table.tree)s#end(${classNameNoPrefix}));
+    @Override
+    @PutMapping("/status")
+    @RequiresPermissions(value = {"${authorityName}:${businessName}:edit", "${authorityName}:${businessName}:es"}, logical = Logical.OR)
+    @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_STATUS)
+    public AjaxResult editStatus(@RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+        return super.editStatus(${classNameNoPrefix});
     }
+#end
+#if($api.editStatusForce)
+
+    /**
+     * ${functionName}强制修改状态
+     */
+    @Override
+    @PutMapping("/force/status")
+    @RequiresPermissions(value = {"${authorityName}:${businessName}:editForce", "${authorityName}:${businessName}:esForce"}, logical = Logical.OR)
+    @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_STATUS_FORCE)
+    public AjaxResult editStatusForce(@RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+        return super.editStatusForce(${classNameNoPrefix});
+    }
+#end
+#if($api.batchRemove)
+
+    /**
+     * ${functionName}批量删除
+     */
+    @Override
+    @DeleteMapping("/batch/{idList}")
+    @RequiresPermissions("${authorityName}:${businessName}:delete")
+    @Log(title = "${functionName}管理", businessType = BusinessType.DELETE)
+    public AjaxResult batchRemove(@PathVariable List<Long> idList) {
+        return super.batchRemove(idList);
+    }
+#end
+#if($api.batchRemoveForce)
+
+    /**
+     * ${functionName}强制批量删除
+     */
+    @Override
+    @DeleteMapping("/batch/force/{idList}")
+    @RequiresPermissions("${authorityName}:${businessName}:delForce")
+    @Log(title = "${functionName}管理", businessType = BusinessType.DELETE_FORCE)
+    public AjaxResult batchRemoveForce(@PathVariable List<Long> idList) {
+        return super.batchRemoveForce(idList);
+    }
+#end
+#if($api.list)
+
+    /**
+     * 获取${functionName}选择框列表
+     */
+    @Override
+    @GetMapping("/option")
+    public AjaxResult option() {
+        return super.option();
+    }
+#end
 }

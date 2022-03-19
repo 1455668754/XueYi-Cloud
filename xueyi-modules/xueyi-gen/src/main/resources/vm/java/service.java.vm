@@ -1,86 +1,28 @@
 package ${packageName}.service;
 
-import java.util.List;
-import ${packageName}.domain.${ClassName};
+#if($table.base)
+#set($Entity="Base")
+#set($generics = "<"+${ClassName}+"Dto>")
+#elseif($table.tree)
+#set($Entity="Tree")
+#set($generics = "<"+${ClassName}+"Dto>")
+#elseif($table.subBase)
+#set($Entity="SubBase")
+#set($generics = "<"+${ClassName}+"Dto, "+${subClassName}+"Dto>")
+#elseif($table.subTree)
+#set($Entity="SubTree")
+#set($generics = "<"+${ClassName}+"Dto, "+${subClassName}+"Dto>")
+#end
+import ${packageName}.domain.dto.${ClassName}Dto;
+#if($table.subBase || $table.subTree)
+import ${subPackageName}.domain.dto.${subClassName}Dto;
+#end
+import com.xueyi.common.web.entity.service.I${Entity}Service;
 
 /**
- * ${functionName} 业务层
- * 
+ * ${functionName}管理 服务层
+ *
  * @author ${author}
  */
-public interface I${ClassName}Service {
-
-    /**
-     * 查询${functionName}列表
-     *
-     * @param ${classNameNoPrefix} ${functionName}
-     * @return ${functionName}集合
-     */
-    public List<${ClassName}> select${ClassNameNoPrefix}List(${ClassName} ${classNameNoPrefix});
-#if($table.tree)
-
-    /**
-     * 查询${functionName}树选项列表
-     *
-     * @param ${classNameNoPrefix} ${functionName}
-     * @return ${functionName}集合
-     */
-    public List<${ClassName}> select${ClassNameNoPrefix}Tree(${ClassName} ${classNameNoPrefix});
-#end
-
-    /**
-     * 查询${functionName}
-     *
-     * @param ${classNameNoPrefix} ${functionName} | ${pkColumn.javaField} ${functionName}Id
-     * @return ${functionName}
-     */
-    public ${ClassName} select${ClassNameNoPrefix}By${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
-
-    /**
-     * 新增${functionName}
-     *
-     * @param ${classNameNoPrefix} ${functionName}
-     * @return 结果
-     */
-    public int insert${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix});
-
-    /**
-     * 修改${functionName}
-     *
-     * @param ${classNameNoPrefix} ${functionName}
-     * @return 结果
-     */
-    public int update${ClassNameNoPrefix}(${ClassName} ${classNameNoPrefix});
-
-#if($table.crud || $table.sub)
-#foreach ($column in $columns)
-#if($column.javaField == 'sort')
-    /**
-     * 修改${functionName}排序
-     *
-     * @param ${classNameNoPrefix} ${functionName}
-     * @return 结果
-     */
-    public int update${ClassNameNoPrefix}Sort(${ClassName} ${classNameNoPrefix});
-
-#end
-#end
-#end
-    /**
-     * 删除${functionName}信息
-     *
-     * @param ${classNameNoPrefix} ${functionName} | ${pkColumn.javaField} ${functionName}Id
-     * @return 结果
-     */
-    public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}(${ClassName} ${classNameNoPrefix});
-#if(!$table.tree)
-
-    /**
-     * 批量删除${functionName}
-     *
-     * @param ${classNameNoPrefix} ${functionName} | params.Ids 需要删除的${functionName}Ids组
-     * @return 结果
-     */
-    public int delete${ClassNameNoPrefix}By${pkColumn.capJavaField}s(${ClassName} ${classNameNoPrefix});
-#end
+public interface I${ClassName}Service extends I${Entity}Service${generics} {
 }

@@ -1,0 +1,156 @@
+version : '3.8'
+services:
+#  xueyi-nacos:
+#    container_name: xueyi-nacos
+#    image: nacos/nacos-server
+#    build:
+#      context: docker/nacos
+#    environment:
+#      - MODE=standalone
+#    volumes:
+#      - ./docker/nacos/logs/:/home/nacos/logs
+#      - ./docker/nacos/conf/application.properties:/home/nacos/conf/application.properties
+#    ports:
+#      - "8848:8848"
+#      - "9848:9848"
+#      - "9849:9849"
+#    depends_on:
+#      - xueyi-mysql
+#    links:
+#      - xueyi-mysql
+#  xueyi-mysql:
+#    container_name: xueyi-mysql
+#    image: mysql:8.0.26
+#    build:
+#      context: sql
+#      dockerfile: Dockerfile
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - ./docker/mysql/conf:/etc/mysql/conf.d
+#      - ./docker/mysql/logs:/logs
+#      - ./docker/mysql/data:/var/lib/mysql
+#    command: [
+#          'mysqld',
+#          '--innodb-buffer-pool-size=80M',
+#          '--character-set-server=utf8mb4',
+#          '--collation-server=utf8mb4_unicode_ci',
+#          '--default-time-zone=+8:00',
+#          '--lower-case-table-names=1'
+#        ]
+#    environment:
+#      MYSQL_DATABASE: 'xy-cloud'
+#      MYSQL_ROOT_PASSWORD: password
+#  xueyi-redis:
+#    container_name: xueyi-redis
+#    image: redis
+#    build:
+#      context: docker/redis
+#    ports:
+#      - "6379:6379"
+#    volumes:
+#      - ./docker/redis/conf/redis.conf:/home/xueyi/redis/redis.conf
+#      - ./docker/redis/data:/data
+#    command: redis-server /home/xueyi/redis/redis.conf
+  xueyi-gateway:
+    container_name: xueyi-gateway
+    build:
+      context: xueyi-gateway
+      dockerfile: ./Dockerfile
+    ports:
+      - "8080:8080"
+#    depends_on:
+#      - xueyi-nacos
+#      - xueyi-redis
+#    links:
+#      - xueyi-nacos
+#      - xueyi-redis
+  xueyi-auth:
+    container_name: xueyi-auth
+    build:
+      context: xueyi-auth
+      dockerfile: ./Dockerfile
+    ports:
+      - "9200:9200"
+#    depends_on:
+#      - xueyi-nacos
+#      - xueyi-redis
+#    links:
+#      - xueyi-nacos
+#      - xueyi-redis
+  xueyi-modules-tenant:
+    container_name: xueyi-modules-tenant
+    build:
+      context: xueyi-modules/xueyi-tenant
+      dockerfile: ./Dockerfile
+    ports:
+      - "9700:9700"
+#    depends_on:
+#      - xueyi-nacos
+#      - xueyi-redis
+#      - xueyi-mysql
+#    links:
+#      - xueyi-nacos
+#      - xueyi-redis
+#      - xueyi-mysql
+  xueyi-modules-system:
+    container_name: xueyi-modules-system
+    build:
+      context: xueyi-modules/xueyi-system
+      dockerfile: ./Dockerfile
+    ports:
+      - "9600:9600"
+#    depends_on:
+#      - xueyi-nacos
+#      - xueyi-redis
+#      - xueyi-mysql
+#    links:
+#      - xueyi-nacos
+#      - xueyi-redis
+#      - xueyi-mysql
+  xueyi-modules-gen:
+    container_name: xueyi-modules-gen
+    build:
+      context: xueyi-modules/xueyi-gen
+      dockerfile: ./Dockerfile
+    ports:
+      - "9400:9400"
+#    depends_on:
+#      - xueyi-nacos
+#      - xueyi-redis
+#      - xueyi-mysql
+#    links:
+#      - xueyi-nacos
+#      - xueyi-redis
+#      - xueyi-mysql
+  xueyi-modules-job:
+    container_name: xueyi-modules-job
+    build:
+      context: xueyi-modules/xueyi-job
+      dockerfile: ./Dockerfile
+    ports:
+      - "9500:9500"
+#    depends_on:
+#      - xueyi-nacos
+#      - xueyi-redis
+#      - xueyi-mysql
+#    links:
+#      - xueyi-nacos
+#      - xueyi-redis
+#      - xueyi-mysql
+  xueyi-modules-file:
+    container_name: xueyi-modules-file
+    build:
+      context: xueyi-modules/xueyi-file
+      dockerfile: ./Dockerfile
+    ports:
+      - "9300:9300"
+    volumes:
+    - ./xueyi/uploadPath:/home/xueyi/uploadPath
+  xueyi-visual-monitor:
+    container_name: xueyi-visual-monitor
+    build:
+      context: xueyi-visual/xueyi-monitor
+      dockerfile: ./Dockerfile
+    ports:
+      - "9100:9100"

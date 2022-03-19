@@ -1,0 +1,63 @@
+package ${packageName}.manager;
+
+#if($table.base)
+#set($Entity="Base")
+#set($generics = "<"+${ClassName}+"Dto, "+${ClassName}+"Mapper>")
+#elseif($table.tree)
+#set($Entity="Tree")
+#set($generics = "<"+${ClassName}+"Dto, "+${ClassName}+"Mapper>")
+#elseif($table.subBase)
+#set($Entity="SubBase")
+#set($generics = "<"+${ClassName}+"Dto, "+${ClassName}+"Mapper, "+${subClassName}+"Dto, "+${subClassName}+"Mapper>")
+#elseif($table.subTree)
+#set($Entity="SubTree")
+#set($generics = "<"+${ClassName}+"Dto, "+${ClassName}+"Mapper, "+${subClassName}+"Dto, "+${subClassName}+"Mapper>")
+#end
+import ${packageName}.domain.dto.${ClassName}Dto;
+import ${packageName}.mapper.${ClassName}Mapper;
+#if($table.subBase || $table.subTree)
+import ${subPackageName}.domain.dto.${subClassName}Dto;
+import ${subPackageName}.mapper.${subClassName}Mapper;
+import cn.hutool.core.util.ObjectUtil;
+import java.io.Serializable;
+import java.util.Collection;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+#end
+import com.xueyi.common.web.entity.manager.${Entity}Manager;
+import org.springframework.stereotype.Component;
+
+/**
+ * ${functionName}管理 数据封装层
+ *
+ * @author ${author}
+ */
+@Component
+public class ${ClassName}Manager extends ${Entity}Manager${generics} {
+#if($table.subBase || $table.subTree)
+#set($AttrName = $foreignColumn.javaField)
+#if($AttrName.length() > 2 && $AttrName.substring(1,2).matches("[A-Z]"))
+#set($field=$AttrName)
+#else
+#set($field=$AttrName.substring(0,1).toUpperCase() + ${AttrName.substring(1)})
+#end
+#set($subAttrName = $subForeignColumn.javaField)
+#if($subAttrName.length() > 2 && $subAttrName.substring(1,2).matches("[A-Z]"))
+#set($subField=$subAttrName)
+#else
+#set($subField=$subAttrName.substring(0,1).toUpperCase() + ${subAttrName.substring(1)})
+#end
+
+    /**
+     * 设置主子表中子表外键值
+     */
+    @Override
+    protected void setForeignKey(LambdaQueryWrapper<${subClassName}Dto> queryWrapper, LambdaUpdateWrapper<${subClassName}Dto> updateWrapper, ${ClassName}Dto ${classNameNoPrefix}, Serializable key) {
+        Serializable ${subForeignColumn.javaField} = ObjectUtil.isNotNull(${classNameNoPrefix}) ? ${classNameNoPrefix}.get${field}() : key;
+        if (ObjectUtil.isNotNull(queryWrapper))
+            queryWrapper.eq(${subClassName}Dto::get${subField}, ${subForeignColumn.javaField});
+        else
+            updateWrapper.eq(${subClassName}Dto::get${subField}, ${subForeignColumn.javaField});
+    }
+#end
+}

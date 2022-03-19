@@ -1,0 +1,238 @@
+import { FormSchema } from '@/components/Form'
+import { BasicColumn } from '@/components/Table'
+import { DescItem } from '@/components/Description'
+#if($dictMap)
+import { dicDictList } from '@service/sys/dict'
+import { dictConversion } from '@admin/utils'
+#end
+#set($InputNumber = false)
+#set($tinymce = false)
+#set($markdown = false)
+#foreach ($column in $columns)
+#if($column.htmlType == 'InputNumber' && ($column.isInsert() || $column.isEdit()))
+#set($InputNumber = true)
+#elseif($column.htmlType == 'tinymce' && ($column.isInsert() || $column.isEdit()))
+#set($tinymce = true)
+#elseif($column.htmlType == 'markdown' && ($column.isInsert() || $column.isEdit()))
+#set($markdown = true)
+#end
+#end
+#if($tinymce || $markdown)
+import { h } from 'vue'
+#end
+#if($InputNumber)
+import { DicSortEnum } from '@enums/basic'
+#end
+#if($tinymce)
+import { Tinymce } from '@/components/Tinymce'
+#end
+#if($markdown)
+import { MarkDown } from '@/components/Markdown'
+#end
+#foreach ($column in $columns)
+#if($column.dictType && $column.dictName)
+import { ${BusinessName}IM } from '@type/${moduleName}'
+#break
+#end
+#end
+
+#if($dictMap)
+/** 字典查询 */
+export const dictMap = await dicDictList([
+#foreach($item in $dictMap.entrySet())
+    '${item.key}',
+#end
+])
+
+/** 字典表 */
+export const dict: any = {
+#foreach($item in ${dictMap.entrySet()})
+    ${item.value}: dictMap['${item.key}'],
+#end
+}
+
+#end
+/** 表格数据 */
+export const columns: BasicColumn[] = [
+#foreach ($column in $columns)
+#set($hide = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#if($column.isList() == false)
+#set($hide = false)
+#end
+#if($hide)
+    {
+        title: '${column.readNameNoSuffix()}',
+        dataIndex: '${column.javaField}',
+        width: 220,
+#if($table.tree && $column.javaField == $nameColumn.javaField)
+        align: 'left',
+#end
+#if($column.dictType && $column.dictName)
+        customRender: ({ record }) => {
+            const data = record as ${BusinessName}IM
+            return dictConversion(dict.${column.dictName}, data.${column.javaField})
+        },
+#end
+    },
+#end
+#end
+]
+
+/** 查询数据 */
+export const searchFormSchema: FormSchema[] = [
+#foreach ($column in $columns)
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($show = false)
+#break
+#end
+#end
+#if($column.isQuery() == false)
+#set($show = false)
+#end
+#if($show)
+    {
+        label: '${column.readNameNoSuffix()}',
+        field: '${column.javaField}',
+#if($column.htmlType == 'DatePicker' && ($column.queryType == 'between' || $column.queryType == 'notBetween'))
+        component: 'RangePicker',
+#elseif($column.dictType && $column.dictName)
+        component: 'Select',
+        componentProps: {
+            options: dict.${column.dictName},
+            showSearch: true,
+            optionFilterProp: 'label',
+        },
+#elseif($column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
+        component: 'Input',
+#else
+        component: '${column.htmlType}',
+#end
+        colProps: { span: 6 },
+    },
+#end
+#end
+]
+
+/** 表单数据 */
+export const formSchema: FormSchema[] = [
+#foreach ($column in $columns)
+#if(($table.tree || $table.subTree) && $column.javaField == $treeMap.parentIdColumn.javaField)
+    {
+        label: '${treeMap.parentIdColumn.readNameNoSuffix()}',
+        field: '${treeMap.parentIdColumn.javaField}',
+        component: 'TreeSelect',
+        componentProps: {
+            showSearch: true,
+            treeNodeFilterProp: 'title',
+            fieldNames: {
+                label: '${treeMap.nameColumn.javaField}',
+                key: '${treeMap.idColumn.javaField}',
+                value: '${treeMap.idColumn.javaField}',
+            },
+            getPopupContainer: () => document.body,
+        },
+        required: true,
+        colProps: { span: 24 },
+    },
+#else
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item && !$column.isPk())
+#set($show = false)
+#break
+#end
+#end
+#if($column.isInsert() == false && !$column.isPk())
+#set($show = false)
+#end
+#if($show)
+    {
+        label: '${column.readNameNoSuffix()}',
+        field: '${column.javaField}',
+#if($column.htmlType == 'tinymce')
+        component: 'Input',
+        render: ({ model, field }) => {
+            return h(Tinymce, {
+                value: model[field],
+                onChange: (value: string) => {
+                    model[field] = value
+                },
+            })
+        },
+#elseif($column.htmlType == 'markdown')
+        component: 'Input',
+        render: ({ model, field }) => {
+            return h(MarkDown, {
+                value: model[field],
+                onChange: (value: string) => {
+                    model[field] = value
+                },
+            })
+        },
+#else
+        component: '${column.htmlType}',
+#if($column.htmlType == 'InputNumber')
+        defaultValue: DicSortEnum.ZERO,
+#end
+#if($column.dictType && $column.dictName)
+        componentProps: {
+            options: dict.${column.dictName},
+#if($column.htmlType == 'Select')
+            showSearch: true,
+            optionFilterProp: 'label',
+#end
+        },
+#end
+#end
+#if($column.isPk())
+        show: false,
+#end
+#if($column.isRequired())
+        required: true,
+#end
+#if($column.htmlType == 'InputTextArea' || $column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
+        colProps: { span: 24 },
+#else
+        colProps: { span: 12 },
+#end
+    },
+#end
+#end
+#end
+]
+
+/** 详情数据 */
+export const detailSchema: DescItem[] = [
+#foreach ($column in $columns)
+#set($hide = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#if($column.isView() == false)
+#set($hide = false)
+#end
+#if($hide)
+    {
+        label: '${column.readNameNoSuffix()}',
+        field: '${column.javaField}',
+#if($column.dictType && $column.dictName)
+        render: (val) => {
+            return dictConversion(dict.${column.dictName}, val)
+        },
+#end
+        span: 8,
+    },
+#end
+#end
+]

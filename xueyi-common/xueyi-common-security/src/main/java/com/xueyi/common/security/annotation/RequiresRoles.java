@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * 角色认证：必须具有指定角色标识才能进入该方法
  *
- * @author ruoyi
+ * @author xueyi
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})

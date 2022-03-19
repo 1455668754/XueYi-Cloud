@@ -1,6 +1,6 @@
 package com.xueyi.gateway.filter;
 
-import com.xueyi.common.core.constant.HttpConstants;
+import com.xueyi.common.core.constant.basic.HttpConstants;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;

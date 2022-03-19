@@ -5,21 +5,14 @@ import com.baomidou.dynamic.datasource.DynamicRoutingDataSource;
 import com.baomidou.dynamic.datasource.creator.DefaultDataSourceCreator;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DataSourceProperty;
 import com.baomidou.dynamic.datasource.toolkit.DynamicDataSourceContextHolder;
-import com.xueyi.common.core.constant.MessageConstant;
-import com.xueyi.common.core.constant.TenantConstants;
+import com.xueyi.common.core.constant.basic.TenantConstants;
 import com.xueyi.common.core.exception.ServiceException;
-import com.xueyi.common.core.utils.IdUtils;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.bean.BeanUtils;
-import com.xueyi.common.message.domain.Message;
-import com.xueyi.common.message.service.ProducerService;
-import com.xueyi.tenant.api.domain.source.Source;
+import com.xueyi.tenant.api.source.domain.dto.TeSourceDto;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +29,7 @@ public class DSUtils {
      *
      * @param source 数据源对象
      */
-    public static void addDs(Source source) {
+    public static void addDs(TeSourceDto source) {
         try {
             DefaultDataSourceCreator dataSourceCreator = SpringUtils.getBean(DefaultDataSourceCreator.class);
             DataSourceProperty dataSourceProperty = new DataSourceProperty();
@@ -81,37 +74,37 @@ public class DSUtils {
         return DynamicDataSourceContextHolder.peek();
     }
 
-    /**
-     * 异步同步数据源到数据源库
-     *
-     * @param source 数据源对象
-     */
-    public static void syncDs(Source source) {
-        ProducerService producerService = SpringUtils.getBean(ProducerService.class);
-        Message message = new Message(IdUtils.randomUUID(), source);
-        producerService.sendMsg(message, MessageConstant.EXCHANGE_SOURCE, MessageConstant.ROUTING_KEY_SOURCE);
-    }
+//    /**
+//     * 异步同步数据源到数据源库
+//     *
+//     * @param source 数据源对象
+//     */
+//    public static void syncDs(TeSourceDto source) {
+//        ProducerService producerService = SpringUtils.getBean(ProducerService.class);
+//        Message message = new Message(IdUtils.randomUUID(), source);
+//        producerService.sendMsg(message, MessageConstant.EXCHANGE_SOURCE, MessageConstant.ROUTING_KEY_SOURCE);
+//    }
 
     /**
      * 测试数据源是否可连接
      *
      * @param source 数据源对象
      */
-    public static void testDs(Source source) {
+    public static void testDs(TeSourceDto source) {
         try {
             Class.forName(source.getDriverClassName());
-        }catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            throw new ServiceException("数据源驱动加载失败！");
+            throw new ServiceException("数据源驱动加载失败，请检查驱动信息！");
         }
         try {
-            Connection dbConn= DriverManager.getConnection(source.getUrlPrepend()+source.getUrlAppend(),source.getUsername(),source.getPassword());
+            Connection dbConn = DriverManager.getConnection(source.getUrlPrepend() + source.getUrlAppend(), source.getUsername(), source.getPassword());
             dbConn.close();
-        }catch (Exception e) {
+        } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            throw new ServiceException("数据源连接失败！");
+            throw new ServiceException("数据源连接失败，请检查连接信息！");
         }
     }
 
@@ -120,14 +113,14 @@ public class DSUtils {
      *
      * @param source 数据源对象
      */
-    public static void testSlaveDs(Source source) {
-        String error = "数据源连接失败！";
+    public static void testSlaveDs(TeSourceDto source) {
+        String error = "数据源连接失败，请检查连接信息！";
         try {
             Class.forName(source.getDriverClassName());
         }catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            throw new ServiceException("数据源驱动加载失败！");
+            throw new ServiceException("数据源驱动加载失败");
         }
         try {
             Connection dbConn= DriverManager.getConnection(source.getUrlPrepend()+source.getUrlAppend(),source.getUsername(),source.getPassword());

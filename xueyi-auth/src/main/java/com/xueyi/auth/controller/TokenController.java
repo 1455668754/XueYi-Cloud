@@ -1,11 +1,12 @@
 package com.xueyi.auth.controller;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.xueyi.auth.form.LoginBody;
 import com.xueyi.auth.form.RegisterBody;
 import com.xueyi.auth.service.SysLoginService;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.utils.JwtUtils;
-import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.security.auth.AuthUtil;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.common.security.utils.SecurityUtils;
@@ -43,16 +44,18 @@ public class TokenController {
     @DeleteMapping("logout")
     public R<?> logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
-        if (StringUtils.isNotEmpty(token)) {
-            String sourceName =JwtUtils.getSourceName(token);
+        if (StrUtil.isNotEmpty(token)) {
+            LoginUser loginUser = tokenService.getLoginUser(request);
+            String sourceName = JwtUtils.getSourceName(token);
             Long enterpriseId = Long.valueOf(JwtUtils.getEnterpriseId(token));
-            String enterpriseName =JwtUtils.getEnterpriseName(token);
+            String enterpriseName = JwtUtils.getEnterpriseName(token);
             Long userId = Long.valueOf(JwtUtils.getUserId(token));
-            String userName =JwtUtils.getUserName(token);
+            String userName = JwtUtils.getUserName(token);
+            String userNick = loginUser.getUser().getNickName();
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
             // 记录用户退出日志
-            sysLoginService.logout(sourceName, enterpriseId, enterpriseName, userId, userName);
+            sysLoginService.logout(sourceName, enterpriseId, enterpriseName, userId, userName, userNick);
         }
         return R.ok();
     }
@@ -60,7 +63,7 @@ public class TokenController {
     @PostMapping("refresh")
     public R<?> refresh(HttpServletRequest request) {
         LoginUser loginUser = tokenService.getLoginUser(request);
-        if (StringUtils.isNotNull(loginUser)) {
+        if (ObjectUtil.isNotNull(loginUser)) {
             // 刷新令牌有效期
             tokenService.refreshToken(loginUser);
             return R.ok();

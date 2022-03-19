@@ -1,6 +1,6 @@
 package com.xueyi.common.security.interceptor;
 
-import com.xueyi.common.core.constant.SecurityConstants;
+import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author xueyi
  */
 public class HeaderInterceptor implements AsyncHandlerInterceptor {
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
@@ -32,8 +33,8 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
         SecurityContextHolder.setUserId(ServletUtils.getHeader(request, SecurityConstants.USER_ID));
         SecurityContextHolder.setUserName(ServletUtils.getHeader(request, SecurityConstants.USER_NAME));
         SecurityContextHolder.setUserType(ServletUtils.getHeader(request, SecurityConstants.USER_TYPE));
-        SecurityContextHolder.setUserKey(ServletUtils.getHeader(request, SecurityConstants.USER_KEY));
         SecurityContextHolder.setSourceName(ServletUtils.getHeader(request, SecurityConstants.SOURCE_NAME));
+        SecurityContextHolder.setUserKey(ServletUtils.getHeader(request, SecurityConstants.USER_KEY));
 
         String token = SecurityUtils.getToken();
         if (StringUtils.isNotEmpty(token)) {

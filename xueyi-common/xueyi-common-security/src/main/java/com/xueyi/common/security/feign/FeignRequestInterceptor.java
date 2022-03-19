@@ -1,7 +1,7 @@
 package com.xueyi.common.security.feign;
 
 import cn.hutool.core.util.StrUtil;
-import com.xueyi.common.core.constant.SecurityConstants;
+import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.ip.IpUtils;
@@ -14,18 +14,15 @@ import java.util.Map;
 
 /**
  * feign 请求拦截器
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 @Component
-public class FeignRequestInterceptor implements RequestInterceptor
-{
+public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
-    public void apply(RequestTemplate requestTemplate)
-    {
+    public void apply(RequestTemplate requestTemplate) {
         HttpServletRequest httpServletRequest = ServletUtils.getRequest();
-        if (StringUtils.isNotNull(httpServletRequest))
-        {
+        if (StringUtils.isNotNull(httpServletRequest)) {
             Map<String, String> headers = ServletUtils.getHeaders(httpServletRequest);
             // 传递用户信息请求头，防止丢失
             String enterpriseId = headers.get(SecurityConstants.ENTERPRISE_ID);

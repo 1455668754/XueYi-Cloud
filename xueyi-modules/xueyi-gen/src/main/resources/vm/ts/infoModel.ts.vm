@@ -1,0 +1,55 @@
+#if($table.base)
+#set($Entity="Base")
+#set($generics = "")
+#elseif($table.tree)
+#set($Entity="Tree")
+#set($generics = "<"+${BusinessName}+"IM>")
+#elseif($table.subBase)
+#set($Entity="SubBase")
+#set($generics = "<"+${subBusinessName}+"IM>")
+#elseif($table.subTree)
+#set($Entity="SubTree")
+#set($generics = "<"+${BusinessName}+"IM, "+${subBusinessName}+"IM>")
+#end
+import { BasicFetchResult, BasicPageParams, ${Entity}Entity } from '../../../src'
+#if($table.subBase || $table.subTree)
+import { ${subBusinessName}IM } from '${relativePath}/${subbusinessName}'
+#end
+
+/** ${businessName} info model */
+export interface ${BusinessName}IM extends ${Entity}Entity${generics} {
+#foreach ($column in $columns)
+#set($hide = true)
+#foreach($item in $frontHideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#if($hide)
+#set($columnName = $column.javaField)
+#if($column.javaType == 'Long')
+#set($columnType = 'string | number')
+#elseif($column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'BigDecimal')
+#set($columnType = 'number')
+#elseif($column.javaType == 'String')
+#set($columnType = 'string')
+#else
+#set($columnType = 'any')
+#end
+   ${columnName}: ${columnType}
+#end
+#end
+}
+
+/** ${businessName} list model */
+export type ${BusinessName}LM = ${BusinessName}IM[]
+
+/** ${businessName} param model */
+export type ${BusinessName}PM = ${BusinessName}IM
+
+/** ${businessName} page param model */
+export type ${BusinessName}PPM = BasicPageParams & ${BusinessName}PM
+
+/** ${businessName} list result model */
+export type ${BusinessName}LRM = BasicFetchResult<${BusinessName}IM>

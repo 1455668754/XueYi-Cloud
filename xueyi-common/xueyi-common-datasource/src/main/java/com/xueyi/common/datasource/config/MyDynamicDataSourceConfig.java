@@ -6,7 +6,7 @@ import com.baomidou.dynamic.datasource.processor.DsSessionProcessor;
 import com.baomidou.dynamic.datasource.processor.DsSpelExpressionProcessor;
 import com.baomidou.dynamic.datasource.spring.boot.autoconfigure.DynamicDataSourceAutoConfiguration;
 import com.xueyi.common.datasource.processor.DsIsolateExpressionProcessor;
-import com.xueyi.common.datasource.processor.DsMainExpressionProcessor;
+import com.xueyi.common.datasource.processor.DsMasterExpressionProcessor;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,13 +28,14 @@ public class MyDynamicDataSourceConfig {
         DsSessionProcessor sessionProcessor = new DsSessionProcessor();
         DsSpelExpressionProcessor spelExpressionProcessor = new DsSpelExpressionProcessor();
         DsIsolateExpressionProcessor isolateExpressionProcessor = new DsIsolateExpressionProcessor();
-        DsMainExpressionProcessor mainExpressionProcessor = new DsMainExpressionProcessor();
+        DsMasterExpressionProcessor masterExpressionProcessor = new DsMasterExpressionProcessor();
         headerProcessor.setNextProcessor(sessionProcessor);
         sessionProcessor.setNextProcessor(spelExpressionProcessor);
         spelExpressionProcessor.setNextProcessor(isolateExpressionProcessor);
-        isolateExpressionProcessor.setNextProcessor(mainExpressionProcessor);
+        isolateExpressionProcessor.setNextProcessor(masterExpressionProcessor);
         return headerProcessor;
     }
+
     /**
      * 解决warn- discard long time none received connection xxx
      * druid会优先使用pingMethod方法来检查空闲连接
@@ -42,6 +43,6 @@ public class MyDynamicDataSourceConfig {
      */
     @PostConstruct
     public void setProperty() {
-        System.setProperty("druid.mysql.usePingMethod","false");
+        System.setProperty("druid.mysql.usePingMethod", "false");
     }
 }

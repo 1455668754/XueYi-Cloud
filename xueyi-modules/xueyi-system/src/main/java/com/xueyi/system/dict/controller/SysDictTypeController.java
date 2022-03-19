@@ -1,114 +1,159 @@
 package com.xueyi.system.dict.controller;
 
-import com.xueyi.common.core.constant.BaseConstants;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.poi.ExcelUtil;
-import com.xueyi.common.core.web.controller.BaseController;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import cn.hutool.core.util.StrUtil;
+import com.xueyi.common.core.constant.basic.BaseConstants;
+import com.xueyi.common.core.exception.ServiceException;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.security.annotation.Logical;
 import com.xueyi.common.security.annotation.RequiresPermissions;
-import com.xueyi.system.api.domain.dict.SysDictType;
+import com.xueyi.common.security.auth.Auth;
+import com.xueyi.common.web.entity.controller.SubBaseController;
+import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
+import com.xueyi.system.api.dict.domain.dto.SysDictTypeDto;
+import com.xueyi.system.dict.service.ISysDictDataService;
 import com.xueyi.system.dict.service.ISysDictTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 import java.util.List;
 
 /**
- * 数据字典信息
+ * 字典类型管理 业务处理
  *
- * @author ruoyi
+ * @author xueyi
  */
 @RestController
 @RequestMapping("/dict/type")
-public class SysDictTypeController extends BaseController {
+public class SysDictTypeController extends SubBaseController<SysDictTypeDto, ISysDictTypeService, SysDictDataDto, ISysDictDataService> {
 
-    @Autowired
-    private ISysDictTypeService dictTypeService;
-
-    @RequiresPermissions("system:dict:list")
-    @GetMapping("/list")
-    public AjaxResult list(SysDictType dictType) {
-        startPage();
-        List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
-        return getDataTable(list);
+    /** 定义节点名称 */
+    @Override
+    protected String getNodeName() {
+        return "字典类型";
     }
 
-    @Log(title = "字典类型", businessType = BusinessType.EXPORT)
-    @RequiresPermissions("system:dict:export")
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysDictType dictType) {
-        List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
-        ExcelUtil<SysDictType> util = new ExcelUtil<SysDictType>(SysDictType.class);
-        util.exportExcel(response, list, "字典类型");
+    /** 定义子数据名称 */
+    @Override
+    protected String getSubName() {
+        return "字典数据";
+    }
+
+    /**
+     * 查询字典类型列表
+     */
+    @Override
+    @GetMapping("/list")
+    @RequiresPermissions(Auth.SYS_DICT_LIST)
+    public AjaxResult list(SysDictTypeDto dictType) {
+        return super.list(dictType);
     }
 
     /**
      * 查询字典类型详细
      */
-    @RequiresPermissions("system:dict:query")
-    @GetMapping(value = "/{dictId}")
-    public AjaxResult getInfo(@PathVariable Long dictId) {
-        return AjaxResult.success(dictTypeService.selectDictTypeById(dictId));
+    @Override
+    @GetMapping(value = "/{id}")
+    @RequiresPermissions(Auth.SYS_DICT_SINGLE)
+    public AjaxResult getInfoExtra(@PathVariable Serializable id) {
+        return super.getInfoExtra(id);
     }
 
     /**
-     * 新增字典类型
+     * 字典类型导出
      */
-    @RequiresPermissions("system:dict:add")
-    @Log(title = "字典类型", businessType = BusinessType.INSERT)
+    @Override
+    @PostMapping("/export")
+    @RequiresPermissions(Auth.SYS_DICT_EXPORT)
+    @Log(title = "字典类型管理", businessType = BusinessType.EXPORT)
+    public void export(HttpServletResponse response, SysDictTypeDto dictType) {
+        super.export(response, dictType);
+    }
+
+    /**
+     * 字典类型新增
+     */
+    @Override
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysDictType dict) {
-        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), dictTypeService.checkDictTypeUnique(dict))) {
-            return AjaxResult.error("新增字典'" + dict.getDictName() + "'失败，字典类型已存在");
-        }
-        return toAjax(dictTypeService.insertDictType(dict));
+    @RequiresPermissions(Auth.SYS_DICT_ADD)
+    @Log(title = "字典类型管理", businessType = BusinessType.INSERT)
+    public AjaxResult add(@Validated @RequestBody SysDictTypeDto dictType) {
+        return super.add(dictType);
     }
 
     /**
-     * 修改字典类型
+     * 字典类型修改
      */
-    @RequiresPermissions("system:dict:edit")
-    @Log(title = "字典类型", businessType = BusinessType.UPDATE)
+    @Override
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysDictType dict) {
-        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), dictTypeService.checkDictTypeUnique(dict))) {
-            return AjaxResult.error("修改字典'" + dict.getDictName() + "'失败，字典类型已存在");
-        }
-        return toAjax(dictTypeService.updateDictType(dict));
+    @RequiresPermissions(Auth.SYS_DICT_EDIT)
+    @Log(title = "字典类型管理", businessType = BusinessType.UPDATE)
+    public AjaxResult edit(@Validated @RequestBody SysDictTypeDto dictType) {
+        return super.edit(dictType);
     }
 
     /**
-     * 删除字典类型
+     * 字典类型修改状态
      */
-    @RequiresPermissions("system:dict:remove")
-    @Log(title = "字典类型", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{dictIds}")
-    public AjaxResult remove(@PathVariable Long[] dictIds) {
-        dictTypeService.deleteDictTypeByIds(dictIds);
-        return success();
+    @Override
+    @PutMapping("/status")
+    @RequiresPermissions(value = {Auth.SYS_DICT_EDIT, Auth.SYS_DICT_EDIT_STATUS}, logical = Logical.OR)
+    @Log(title = "字典类型管理", businessType = BusinessType.UPDATE_STATUS)
+    public AjaxResult editStatus(@RequestBody SysDictTypeDto dictType) {
+        return super.editStatus(dictType);
+    }
+
+    /**
+     * 字典类型批量删除
+     */
+    @Override
+    @DeleteMapping("/batch/{idList}")
+    @RequiresPermissions(Auth.SYS_DICT_DELETE)
+    @Log(title = "字典类型管理", businessType = BusinessType.DELETE)
+    public AjaxResult batchRemove(@PathVariable List<Long> idList) {
+        return super.batchRemove(idList);
+    }
+
+    /**
+     * 字典类型强制批量删除
+     */
+    @Override
+    @DeleteMapping("/batch/force/{idList}")
+    @RequiresPermissions(Auth.SYS_DICT_DELETE)
+    @Log(title = "字典类型管理", businessType = BusinessType.DELETE_FORCE)
+    public AjaxResult batchRemoveForce(@PathVariable List<Long> idList) {
+        return super.batchRemoveForce(idList);
     }
 
     /**
      * 刷新字典缓存
      */
-    @RequiresPermissions("system:dict:remove")
+    @RequiresPermissions(Auth.SYS_DICT_EDIT)
     @Log(title = "字典类型", businessType = BusinessType.CLEAN)
-    @DeleteMapping("/refreshCache")
+    @GetMapping("/refresh")
     public AjaxResult refreshCache() {
-        dictTypeService.resetDictCache();
+        baseService.resetDictCache();
         return AjaxResult.success();
     }
 
     /**
-     * 获取字典选择框列表
+     * 获取字典类型选择框列表
      */
-    @GetMapping("/optionSelect")
-    public AjaxResult optionSelect() {
-        List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();
-        return AjaxResult.success(dictTypes);
+    @Override
+    @GetMapping("/option")
+    public AjaxResult option() {
+        return super.option();
+    }
+
+    /**
+     * 前置校验 （强制）增加/修改
+     */
+    @Override
+    protected void AEHandleValidated(BaseConstants.Operate operate, SysDictTypeDto dictType) {
+        if (baseService.checkDictCodeUnique(dictType.getId(), dictType.getCode()))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，字典编码已存在", operate.getInfo(), getNodeName(), dictType.getName()));
     }
 }

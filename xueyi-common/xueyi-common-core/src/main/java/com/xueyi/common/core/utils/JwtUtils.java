@@ -1,7 +1,7 @@
 package com.xueyi.common.core.utils;
 
-import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.TokenConstants;
+import com.xueyi.common.core.constant.basic.SecurityConstants;
+import com.xueyi.common.core.constant.basic.TokenConstants;
 import com.xueyi.common.core.text.Convert;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

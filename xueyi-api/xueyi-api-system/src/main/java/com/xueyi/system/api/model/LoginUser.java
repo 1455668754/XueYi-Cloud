@@ -1,10 +1,12 @@
 package com.xueyi.system.api.model;
 
-import com.xueyi.system.api.domain.organize.SysEnterprise;
-import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.api.domain.source.Source;
+import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
+import com.xueyi.system.api.organize.domain.dto.SysUserDto;
+import com.xueyi.system.api.source.domain.Source;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,6 +39,9 @@ public class LoginUser implements Serializable {
     /** 用户标识 */
     private String userType;
 
+    /** 主数据源 */
+    private String sourceName;
+
     /** 登录时间 */
     private Long loginTime;
 
@@ -52,20 +57,29 @@ public class LoginUser implements Serializable {
     /** 角色权限列表 */
     private Set<String> roles;
 
-    /** 角色列表 */
+    /** 角色Id列表 */
     private Set<Long> roleIds;
-
-    /** 主数据源 */
-    private String sourceName;
 
     /** 源策略组 */
     private Source source;
 
     /** 企业信息 */
-    private SysEnterprise sysEnterprise;
+    private SysEnterpriseDto enterprise;
 
     /** 用户信息 */
-    private SysUser sysUser;
+    private SysUserDto user;
+
+    /** 数据权限 */
+    private DataScope scope;
+
+    /** 模块路由列表 */
+    private Object moduleRoute;
+
+    /** 菜单路由列表 */
+    private Map<String, Object> menuRoute;
+
+    /** 路由路径映射列表 */
+    private Map<String, String> routeURL;
 
     public String getToken() {
         return token;
@@ -123,6 +137,14 @@ public class LoginUser implements Serializable {
         this.userType = userType;
     }
 
+    public String getSourceName() {
+        return sourceName;
+    }
+
+    public void setSourceName(String sourceName) {
+        this.sourceName = sourceName;
+    }
+
     public Long getLoginTime() {
         return loginTime;
     }
@@ -171,14 +193,6 @@ public class LoginUser implements Serializable {
         this.roleIds = roleIds;
     }
 
-    public String getSourceName() {
-        return sourceName;
-    }
-
-    public void setSourceName(String sourceName) {
-        this.sourceName = sourceName;
-    }
-
     public Source getSource() {
         return source;
     }
@@ -187,19 +201,51 @@ public class LoginUser implements Serializable {
         this.source = source;
     }
 
-    public SysEnterprise getSysEnterprise() {
-        return sysEnterprise;
+    public SysEnterpriseDto getEnterprise() {
+        return enterprise;
     }
 
-    public void setSysEnterprise(SysEnterprise sysEnterprise) {
-        this.sysEnterprise = sysEnterprise;
+    public void setEnterprise(SysEnterpriseDto enterprise) {
+        this.enterprise = enterprise;
     }
 
-    public SysUser getSysUser() {
-        return sysUser;
+    public SysUserDto getUser() {
+        return user;
     }
 
-    public void setSysUser(SysUser sysUser) {
-        this.sysUser = sysUser;
+    public void setUser(SysUserDto user) {
+        this.user = user;
+    }
+
+    public DataScope getScope() {
+        return scope;
+    }
+
+    public void setScope(DataScope scope) {
+        this.scope = scope;
+    }
+
+    public Object getModuleRoute() {
+        return moduleRoute;
+    }
+
+    public void setModuleRoute(Object moduleRoute) {
+        this.moduleRoute = moduleRoute;
+    }
+
+    public Map<String, Object> getMenuRoute() {
+        return menuRoute == null ? new HashMap<>() : menuRoute;
+    }
+
+    public void setMenuRoute(Map<String, Object> menuRoute) {
+        this.menuRoute = menuRoute;
+    }
+
+    public Map<String, String> getRouteURL() {
+        return routeURL;
+    }
+
+    public void setRouteURL(Map<String, String> routeURL) {
+        this.routeURL = routeURL;
     }
 }

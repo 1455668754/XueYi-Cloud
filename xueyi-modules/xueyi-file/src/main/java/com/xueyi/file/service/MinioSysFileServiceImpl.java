@@ -1,21 +1,21 @@
 package com.xueyi.file.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import com.xueyi.file.config.MinioConfig;
 import com.xueyi.file.utils.FileUploadUtils;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Minio 文件存储
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 @Service
-public class MinioSysFileServiceImpl implements ISysFileService
-{
+public class MinioSysFileServiceImpl implements ISysFileService {
+
     @Autowired
     private MinioConfig minioConfig;
 
@@ -24,14 +24,12 @@ public class MinioSysFileServiceImpl implements ISysFileService
 
     /**
      * 本地文件上传接口
-     * 
+     *
      * @param file 上传的文件
      * @return 访问地址
-     * @throws Exception
      */
     @Override
-    public String uploadFile(MultipartFile file) throws Exception
-    {
+    public String uploadFile(MultipartFile file) throws Exception {
         String fileName = FileUploadUtils.extractFilename(file);
         PutObjectArgs args = PutObjectArgs.builder()
                 .bucket(minioConfig.getBucketName())
@@ -47,10 +45,9 @@ public class MinioSysFileServiceImpl implements ISysFileService
      * 文件删除接口
      *
      * @param url 文件地址
-     * @return 删除状态
-     * @throws Exception
+     * @return 结果
      */
-    public Boolean deleteFile(String url) throws Exception{
+    public Boolean deleteFile(String url) throws Exception {
         return true;
     }
 }

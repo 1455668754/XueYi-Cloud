@@ -8,16 +8,15 @@ import com.xueyi.gateway.handler.SentinelFallbackHandler;
 
 /**
  * 网关限流配置
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 @Configuration
-public class GatewayConfig
-{
+public class GatewayConfig {
+
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SentinelFallbackHandler sentinelGatewayExceptionHandler()
-    {
+    public SentinelFallbackHandler sentinelGatewayExceptionHandler() {
         return new SentinelFallbackHandler();
     }
 }

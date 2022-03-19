@@ -1,112 +1,109 @@
 package com.xueyi.system.dict.service.impl;
 
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.xueyi.system.api.domain.dict.SysDictData;
+import com.baomidou.dynamic.datasource.annotation.DS;
+import com.xueyi.common.core.constant.basic.CacheConstants;
+import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
+import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
+import com.xueyi.system.dict.manager.SysDictDataManager;
 import com.xueyi.system.dict.mapper.SysDictDataMapper;
 import com.xueyi.system.dict.service.ISysDictDataService;
-import com.xueyi.common.security.utils.DictUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.xueyi.common.core.constant.basic.TenantConstants.MASTER;
 
 /**
- * 字典 业务层处理
- * 
- * @author ruoyi
+ * 字典数据管理 业务层处理
+ *
+ * @author xueyi
  */
 @Service
-public class SysDictDataServiceImpl implements ISysDictDataService
-{
+@DS(MASTER)
+public class SysDictDataServiceImpl extends BaseServiceImpl<SysDictDataDto, SysDictDataManager, SysDictDataMapper> implements ISysDictDataService {
+
     @Autowired
-    private SysDictDataMapper dictDataMapper;
+    private RedisService redisService;
 
     /**
-     * 根据条件分页查询字典数据
-     * 
-     * @param dictData 字典数据信息
-     * @return 字典数据集合信息
-     */
-    @Override
-    public List<SysDictData> selectDictDataList(SysDictData dictData)
-    {
-        return dictDataMapper.selectDictDataList(dictData);
-    }
-
-    /**
-     * 根据字典类型和字典键值查询字典数据信息
-     * 
-     * @param dictType 字典类型
-     * @param dictValue 字典键值
-     * @return 字典标签
-     */
-    @Override
-    public String selectDictLabel(String dictType, String dictValue)
-    {
-        return dictDataMapper.selectDictLabel(dictType, dictValue);
-    }
-
-    /**
-     * 根据字典数据ID查询信息
-     * 
-     * @param dictCode 字典数据ID
-     * @return 字典数据
-     */
-    @Override
-    public SysDictData selectDictDataById(Long dictCode)
-    {
-        return dictDataMapper.selectDictDataById(dictCode);
-    }
-
-    /**
-     * 批量删除字典数据信息
-     * 
-     * @param dictCodes 需要删除的字典数据ID
+     * 新增数据对象
+     *
+     * @param data 数据对象
      * @return 结果
      */
     @Override
-    public void deleteDictDataByIds(Long[] dictCodes)
-    {
-        for (Long dictCode : dictCodes)
-        {
-            SysDictData data = selectDictDataById(dictCode);
-            dictDataMapper.deleteDictDataById(dictCode);
-            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(data.getDictType());
-            DictUtils.setDictCache(data.getDictType(), dictDatas);
-        }
+    public int insert(SysDictDataDto data) {
+        return refreshCache(baseManager.insert(data), data.getCode());
     }
 
     /**
-     * 新增保存字典数据信息
-     * 
-     * @param data 字典数据信息
+     * 修改数据对象
+     *
+     * @param data 数据对象
      * @return 结果
      */
     @Override
-    public int insertDictData(SysDictData data)
-    {
-        int row = dictDataMapper.insertDictData(data);
-        if (row > 0)
-        {
-            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(data.getDictType());
-            DictUtils.setDictCache(data.getDictType(), dictDatas);
-        }
-        return row;
+    public int update(SysDictDataDto data) {
+        return refreshCache(baseManager.update(data), data.getCode());
     }
 
     /**
-     * 修改保存字典数据信息
-     * 
-     * @param data 字典数据信息
+     * 根据Id删除数据对象
+     *
+     * @param id Id
      * @return 结果
      */
     @Override
-    public int updateDictData(SysDictData data)
-    {
-        int row = dictDataMapper.updateDictData(data);
-        if (row > 0)
-        {
-            List<SysDictData> dictDatas = dictDataMapper.selectDictDataByType(data.getDictType());
-            DictUtils.setDictCache(data.getDictType(), dictDatas);
+    public int deleteById(Serializable id) {
+        SysDictDataDto data = baseManager.selectById(id);
+        return refreshCache(baseManager.deleteById(id), data.getCode());
+    }
+
+    /**
+     * 根据Id集合删除数据对象
+     *
+     * @param idList Id集合
+     * @return 结果
+     */
+    @Override
+    public int deleteByIds(Collection<? extends Serializable> idList) {
+        List<SysDictDataDto> dataList = baseManager.selectListByIds(idList);
+        int rows = baseManager.deleteByIds(idList);
+        if (rows > 0) {
+            Set<String> codes = dataList.stream().map(SysDictDataDto::getCode).collect(Collectors.toSet());
+            for (String code : codes)
+                redisService.setCacheMapValue(CacheConstants.SYS_DICT_KEY, code, baseManager.selectListByCode(code));
         }
-        return row;
+        return rows;
+    }
+
+    /**
+     * 查询字典数据对象列表
+     *
+     * @param code 字典编码
+     * @return 字典数据对象集合
+     */
+    @Override
+    public List<SysDictDataDto> selectListByCode(String code) {
+        return baseManager.selectListByCode(code);
+    }
+
+    /**
+     * 新增/修改缓存
+     *
+     * @param rows 结果
+     * @param code 参数编码
+     * @return 结果
+     */
+    private int refreshCache(int rows, String code) {
+        if (rows > 0)
+            redisService.setCacheMapValue(CacheConstants.SYS_DICT_KEY, code, baseManager.selectListByCode(code));
+        return rows;
     }
 }

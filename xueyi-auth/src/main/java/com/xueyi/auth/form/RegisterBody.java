@@ -1,5 +1,12 @@
 package com.xueyi.auth.form;
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.xueyi.system.api.organize.domain.dto.SysDeptDto;
+import com.xueyi.system.api.organize.domain.dto.SysPostDto;
+import com.xueyi.system.api.organize.domain.dto.SysUserDto;
+import com.xueyi.tenant.api.tenant.domain.dto.TeTenantDto;
+
 /**
  * 用户注册对象
  *
@@ -7,135 +14,56 @@ package com.xueyi.auth.form;
  */
 public class RegisterBody {
 
-    /** 企业账号 */
-    private String enterpriseName;
+    /** 租户信息 */
+    private TeTenantDto tenant;
 
-    /** 系统名称 */
-    private String enterpriseSystemName;
+    /** 部门信息 */
+    private SysDeptDto dept;
 
-    /** 企业昵称 */
-    private String enterpriseNick;
+    /** 岗位信息 */
+    private SysPostDto post;
 
-    /** 企业logo */
-    private String logo;
+    /** 用户信息 */
+    private SysUserDto user;
 
-    /** 用户名 */
-    private String userName;
-
-    /** 用户昵称 */
-    private String nickName;
-
-    /** 用户邮箱 */
-    private String email;
-
-    /** 手机号码 */
-    private String phone;
-
-    /** 用户性别 */
-    private String sex;
-
-    /** 用户头像 */
-    private String avatar;
-
-    /** 个人简介 */
-    private String profile;
-
-    /** 密码 */
-    private String password;
-
-    public String getEnterpriseName() {
-        return enterpriseName;
+    public TeTenantDto getTenant() {
+        return tenant;
     }
 
-    public void setEnterpriseName(String enterpriseName) {
-        this.enterpriseName = enterpriseName;
+    public void setTenant(TeTenantDto tenant) {
+        this.tenant = tenant;
     }
 
-    public String getEnterpriseSystemName() {
-        return enterpriseSystemName;
+    public SysDeptDto getDept() {
+        return dept;
     }
 
-    public void setEnterpriseSystemName(String enterpriseSystemName) {
-        this.enterpriseSystemName = enterpriseSystemName;
+    public void setDept(SysDeptDto dept) {
+        this.dept = dept;
     }
 
-    public String getEnterpriseNick() {
-        return enterpriseNick;
+    public SysPostDto getPost() {
+        return post;
     }
 
-    public void setEnterpriseNick(String enterpriseNick) {
-        this.enterpriseNick = enterpriseNick;
+    public void setPost(SysPostDto post) {
+        this.post = post;
     }
 
-    public String getLogo() {
-        return logo;
+    public SysUserDto getUser() {
+        return user;
     }
 
-    public void setLogo(String logo) {
-        this.logo = logo;
+    public void setUser(SysUserDto user) {
+        this.user = user;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    /** 构造租户注册对象 */
+    public JSONObject buildJson(){
+        return JSONUtil.createObj()
+                .set("tenant", getTenant())
+                .set("dept", getDept())
+                .set("post", getPost())
+                .set("user", getUser());
     }
 }

@@ -1,76 +1,37 @@
 package com.xueyi.common.security.utils;
 
+import com.xueyi.common.core.constant.basic.CacheConstants;
+import com.xueyi.common.core.utils.SpringUtils;
+import com.xueyi.common.redis.service.RedisService;
+import com.xueyi.system.api.dict.domain.dto.SysDictDataDto;
+
 import java.util.Collection;
 import java.util.List;
 
-import com.xueyi.common.core.constant.CacheConstants;
-import com.xueyi.common.core.utils.SpringUtils;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.redis.service.RedisService;
-import com.xueyi.system.api.domain.dict.SysDictData;
-
 /**
- * 字典工具类
+ * 字典缓存管理工具类
  *
- * @author ruoyi
+ * @author xueyi
  */
-public class DictUtils
-{
-    /**
-     * 设置字典缓存
-     *
-     * @param key 参数键
-     * @param dictDatas 字典数据列表
-     */
-    public static void setDictCache(String key, List<SysDictData> dictDatas)
-    {
-        SpringUtils.getBean(RedisService.class).setCacheObject(getCacheKey(key), dictDatas);
-    }
+public class DictUtils {
 
     /**
      * 获取字典缓存
      *
-     * @param key 参数键
-     * @return dictDatas 字典数据列表
+     * @param code 字典编码
+     * @return 字典数据列表
      */
-    public static List<SysDictData> getDictCache(String key)
-    {
-        Object cacheObj = SpringUtils.getBean(RedisService.class).getCacheObject(getCacheKey(key));
-        if (StringUtils.isNotNull(cacheObj))
-        {
-            List<SysDictData> dictDatas = StringUtils.cast(cacheObj);
-            return dictDatas;
-        }
-        return null;
+    public static List<SysDictDataDto> getDictCache(String code) {
+        return SpringUtils.getBean(RedisService.class).getCacheMapValue(CacheConstants.SYS_DICT_KEY, code);
     }
 
     /**
-     * 删除指定字典缓存
-     * 
-     * @param key 字典键
-     */
-    public static void removeDictCache(String key)
-    {
-        SpringUtils.getBean(RedisService.class).deleteObject(getCacheKey(key));
-    }
-
-    /**
-     * 清空字典缓存
-     */
-    public static void clearDictCache()
-    {
-        Collection<String> keys = SpringUtils.getBean(RedisService.class).keys(CacheConstants.SYS_DICT_KEY + "*");
-        SpringUtils.getBean(RedisService.class).deleteObject(keys);
-    }
-
-    /**
-     * 设置cache key
+     * 获取多个字典缓存
      *
-     * @param configKey 参数键
-     * @return 缓存键key
+     * @param codeList 字典编码集合
+     * @return 字典数据列表
      */
-    public static String getCacheKey(String configKey)
-    {
-        return CacheConstants.SYS_DICT_KEY + configKey;
+    public static List<List<SysDictDataDto>> getDictListCache(Collection<Object> codeList) {
+        return SpringUtils.getBean(RedisService.class).getMultiCacheMapValue(CacheConstants.SYS_DICT_KEY, codeList);
     }
 }

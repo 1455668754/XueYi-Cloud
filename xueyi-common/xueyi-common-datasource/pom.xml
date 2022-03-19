@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.xueyi</groupId>
         <artifactId>xueyi-common</artifactId>
-        <version>4.2.4</version>
+        <version>5.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     
@@ -43,10 +43,10 @@
             <artifactId>xueyi-common-security</artifactId>
         </dependency>
 
-        <!-- XueYi Common Message -->
+        <!-- XueYi Common Redis-->
         <dependency>
             <groupId>com.xueyi</groupId>
-            <artifactId>xueyi-common-message</artifactId>
+            <artifactId>xueyi-common-redis</artifactId>
         </dependency>
 
     </dependencies>

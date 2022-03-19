@@ -1,0 +1,57 @@
+<template>
+  <PageWrapper :title="getTitle" @back="goBack">
+    <Description @register="register" class="mt-4" />
+  </PageWrapper>
+</template>
+
+<script lang="ts">
+import { defineComponent, onMounted, ref } from 'vue'
+import { get${BusinessName}Api } from '@service/${moduleName}/${authorityName}/${businessName}'
+import { Description, useDescription } from '@/components/Description'
+import { detailSchema } from './${businessName}.data'
+import { useRoute } from 'vue-router'
+import { ${BusinessName}IndexGo } from '@enums/${moduleName}'
+import { useTabs } from '@/hooks/web/useTabs'
+import { PageWrapper } from '@/components/Page'
+import { useUserStore } from '@/store/user'
+import { DescItemSizeEnum } from '@admin/tokens'
+
+export default defineComponent({
+  components: { Description, PageWrapper },
+  setup() {
+    const route = useRoute()
+    const { setTitle } = useTabs()
+    const getTitle = ref('${functionName}详情')
+
+    const [register, { setDescProps }] = useDescription({
+      title: '${functionName}详情',
+      schema: detailSchema,
+      column: DescItemSizeEnum.DEFAULT,
+    })
+#if($pkColumn.javaType == 'Long')
+#set($IdType = 'string | number')
+#elseif($pkColumn.javaType == 'Integer' || $pkColumn.javaType == 'Double' || $pkColumn.javaType == 'BigDecimal')
+#set($IdType = 'number')
+#elseif($pkColumn.javaType == 'String')
+#set($IdType = 'string')
+#else
+#set($IdType = 'any')
+#end
+
+    onMounted(async () => {
+      const ${pkColumn.javaField} = route.params.${pkColumn.javaField} as ${IdType}
+      const data = await get${BusinessName}Api(${pkColumn.javaField})
+      setDescProps({ data: data })
+      getTitle.value = '${functionName}详情:' + data?.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end
+      setTitle(getTitle.value)
+    })
+
+    /** 返回${functionName}主页 */
+    function goBack() {
+      useUserStore().getRoutePath(${BusinessName}IndexGo)
+    }
+
+    return { register, getTitle, goBack }
+  },
+})
+</script>

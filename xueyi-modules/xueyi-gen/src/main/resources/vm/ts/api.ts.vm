@@ -1,0 +1,86 @@
+import { ${BusinessName}IM,#if($table.tree || $table.subTree) ${BusinessName}PM#else ${BusinessName}PPM#end,#if($table.tree || $table.subTree) ${BusinessName}LM#else ${BusinessName}LRM#end } from '@admin/types/modules/${moduleName}'
+import { defaultRequest } from '../../../request'
+
+enum Api {
+#if($api.list)
+    LIST_${BUSINESSName} = '/${moduleName}/${businessName}/list',
+#if($table.tree || $table.subTree)
+    LIST_${BUSINESSName}_EXCLUDE_NODES = '/${moduleName}/${businessName}/list/exclude',
+#end
+    OPTION_${BUSINESSName} = '/${moduleName}/${businessName}/option',
+#end
+    GET_${BUSINESSName} = '/${moduleName}/${businessName}/',
+    ADD_${BUSINESSName} = '/${moduleName}/${businessName}',
+    EDIT_${BUSINESSName} = '/${moduleName}/${businessName}',
+#if($api.editStatus || $api.editStatusForce)
+    EDIT_STATUS_${BUSINESSName} = '/${moduleName}/${businessName}/status',
+#end
+    DEL_BATCH_${BUSINESSName} = '/${moduleName}/${businessName}/batch/',
+    DEL_BATCH_FORCE_${BUSINESSName} = '/${moduleName}/${businessName}/batch/force/',
+}
+
+#set($IdName = $pkColumn.javaField)
+#if($pkColumn.javaType == 'Long')
+#set($IdType = 'string | number')
+#elseif($pkColumn.javaType == 'Integer' || $pkColumn.javaType == 'Double' || $pkColumn.javaType == 'BigDecimal')
+#set($IdType = 'number')
+#elseif($pkColumn.javaType == 'String')
+#set($IdType = 'string')
+#else
+#set($IdType = 'any')
+#end
+#if($api.list)
+/** 查询${functionName}列表 */
+export const list${BusinessName}Api = (params?: #if($table.tree || $table.subTree)${BusinessName}PM#else${BusinessName}PPM#end) =>
+    defaultRequest.get<#if($table.tree || $table.subTree)${BusinessName}LM#else${BusinessName}LRM#end>({ url: Api.LIST_${BUSINESSName}, params })
+
+#if($table.tree || $table.subTree)
+/** 查询${functionName}列表（排除节点） */
+export const list${BusinessName}ExNodesApi = (${IdName}: ${IdType} | undefined) =>
+    defaultRequest.get<${BusinessName}LM>({
+        url: Api.LIST_${BUSINESSName}_EXCLUDE_NODES,
+        params: { ${IdName}: ${IdName} },
+    })
+
+#end
+/** 查询${functionName}选择框列表 */
+export const option${BusinessName}Api = () =>
+    defaultRequest.get<#if($table.tree || $table.subTree)${BusinessName}LM#else${BusinessName}LRM#end>({ url: Api.OPTION_${BUSINESSName} })
+
+#end
+/** 查询${functionName}详细 */
+export const get${BusinessName}Api = (${IdName}: ${IdType}) =>
+    defaultRequest.get<${BusinessName}IM>({ url: Api.GET_${BUSINESSName}, params: ${IdName} })
+
+/** 新增${functionName} */
+export const add${BusinessName}Api = (params: ${BusinessName}IM) => defaultRequest.post({ url: Api.ADD_${BUSINESSName}, params })
+
+/** 修改${functionName} */
+export const edit${BusinessName}Api = (params: ${BusinessName}IM) => defaultRequest.put({ url: Api.EDIT_${BUSINESSName}, params })
+#if($api.editStatus || $api.editStatusForce)
+#set($StatusName = $statusColumn.javaField)
+#if($statusColumn.javaType == 'Long')
+#set($StatusType = 'string | number')
+#elseif($statusColumn.javaType == 'Integer' || $statusColumn.javaType == 'Double' || $statusColumn.javaType == 'BigDecimal')
+#set($StatusType = 'number')
+#elseif($pkColumn.javaType == 'String')
+#set($StatusType = 'string')
+#else
+#set($StatusType = 'any')
+#end
+
+/** 修改${functionName}状态 */
+export const editStatus${BusinessName}Api = (${IdName}: ${IdType}, ${StatusName}: ${StatusType}) => defaultRequest.put({ url: Api.EDIT_STATUS_${BUSINESSName}, params: {${IdName}: ${IdName}, ${StatusName}: ${StatusName}} })
+#end
+
+#if($api.batchRemove)
+/** 删除${functionName} */
+export const del${BusinessName}Api = (${IdName}s: #if($IdType == 'string | number')(${IdType}) | (${IdType})[]#else${IdType} | ${IdType}[]#end) =>
+    defaultRequest.delete({ url: Api.DEL_BATCH_${BUSINESSName}, params: ${IdName}s.toString() })
+#end
+
+#if($api.batchRemoveForce)
+/** 强制删除${functionName} */
+export const delForce${BusinessName}Api = (${IdName}s: #if($IdType == 'string | number')(${IdType}) | (${IdType})[]#else${IdType} | ${IdType}[]#end) =>
+    defaultRequest.delete({ url: Api.DEL_BATCH_FORCE_${BUSINESSName}, params: ${IdName}s.toString() })
+#end

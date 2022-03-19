@@ -1,14 +1,15 @@
 package com.xueyi.common.core.utils;
 
+import cn.hutool.core.util.StrUtil;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  * 错误信息处理类。
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class ExceptionUtil {
 
@@ -18,19 +19,18 @@ public class ExceptionUtil {
     public static String getExceptionMessage(Throwable e) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw, true));
-        String str = sw.toString();
-        return str;
+        return sw.toString();
     }
 
     public static String getRootErrorMessage(Exception e) {
         Throwable root = ExceptionUtils.getRootCause(e);
         root = (root == null ? e : root);
         if (root == null) {
-            return "";
+            return StrUtil.EMPTY;
         }
         String msg = root.getMessage();
         if (msg == null) {
-            return "null";
+            return StrUtil.NULL;
         }
         return StringUtils.defaultString(msg);
     }

@@ -1,8 +1,9 @@
 package com.xueyi.job.util;
 
+import cn.hutool.core.util.StrUtil;
 import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.job.domain.SysJob;
+import com.xueyi.job.api.domain.dto.SysJobDto;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,19 +13,21 @@ import java.util.List;
 /**
  * 任务执行工具
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class JobInvokeUtil {
+
     /**
      * 执行方法
      *
      * @param sysJob 系统任务
      */
-    public static void invokeMethod(SysJob sysJob) throws Exception {
+    public static void invokeMethod(SysJobDto sysJob) throws Exception {
         String invokeTarget = sysJob.getInvokeTarget();
+        String invokeTenant = sysJob.getInvokeTenant();
         String beanName = getBeanName(invokeTarget);
         String methodName = getMethodName(invokeTarget);
-        List<Object[]> methodParams = getMethodParams(invokeTarget);
+        List<Object[]> methodParams = getMethodParams(invokeTarget, invokeTenant);
 
         if (!isValidClassName(beanName)) {
             Object bean = SpringUtils.getBean(beanName);
@@ -92,37 +95,35 @@ public class JobInvokeUtil {
      * @param invokeTarget 目标字符串
      * @return method方法相关参数列表
      */
-    public static List<Object[]> getMethodParams(String invokeTarget) {
-        String methodStr = StringUtils.substringBetween(invokeTarget, "(", ")");
-        if (StringUtils.isEmpty(methodStr)) {
-            return null;
-        }
+    public static List<Object[]> getMethodParams(String invokeTarget, String invokeTenant) {
+        String targetStr = StrUtil.subBetween(invokeTarget, "(", ")");
+        String methodStr = StrUtil.isNotEmpty(targetStr) ? StrUtil.concat(true, invokeTenant, StrUtil.COMMA, targetStr) : invokeTenant;
         String[] methodParams = methodStr.split(",(?=([^\"']*[\"'][^\"']*[\"'])*[^\"']*$)");
-        List<Object[]> classs = new LinkedList<>();
-        for (int i = 0; i < methodParams.length; i++) {
-            String str = StringUtils.trimToEmpty(methodParams[i]);
+        List<Object[]> clazz = new LinkedList<>();
+        for (String methodParam : methodParams) {
+            String str = StringUtils.trimToEmpty(methodParam);
             // String字符串类型，以'或"开头
             if (StringUtils.startsWithAny(str, "'", "\"")) {
-                classs.add(new Object[]{StringUtils.substring(str, 1, str.length() - 1), String.class});
+                clazz.add(new Object[]{StringUtils.substring(str, 1, str.length() - 1), String.class});
             }
             // boolean布尔类型，等于true或者false
             else if ("true".equalsIgnoreCase(str) || "false".equalsIgnoreCase(str)) {
-                classs.add(new Object[]{Boolean.valueOf(str), Boolean.class});
+                clazz.add(new Object[]{Boolean.valueOf(str), Boolean.class});
             }
             // long长整形，以L结尾
             else if (StringUtils.endsWith(str, "L")) {
-                classs.add(new Object[]{Long.valueOf(StringUtils.substring(str, 0, str.length() - 1)), Long.class});
+                clazz.add(new Object[]{Long.valueOf(StringUtils.substring(str, 0, str.length() - 1)), Long.class});
             }
             // double浮点类型，以D结尾
             else if (StringUtils.endsWith(str, "D")) {
-                classs.add(new Object[]{Double.valueOf(StringUtils.substring(str, 0, str.length() - 1)), Double.class});
+                clazz.add(new Object[]{Double.valueOf(StringUtils.substring(str, 0, str.length() - 1)), Double.class});
             }
             // 其他类型归类为整形
             else {
-                classs.add(new Object[]{Integer.valueOf(str), Integer.class});
+                clazz.add(new Object[]{Integer.valueOf(str), Integer.class});
             }
         }
-        return classs;
+        return clazz;
     }
 
     /**
@@ -132,13 +133,13 @@ public class JobInvokeUtil {
      * @return 参数类型列表
      */
     public static Class<?>[] getMethodParamsType(List<Object[]> methodParams) {
-        Class<?>[] classs = new Class<?>[methodParams.size()];
+        Class<?>[] clazz = new Class<?>[methodParams.size()];
         int index = 0;
         for (Object[] os : methodParams) {
-            classs[index] = (Class<?>) os[1];
+            clazz[index] = (Class<?>) os[1];
             index++;
         }
-        return classs;
+        return clazz;
     }
 
     /**
@@ -148,12 +149,12 @@ public class JobInvokeUtil {
      * @return 参数值列表
      */
     public static Object[] getMethodParamsValue(List<Object[]> methodParams) {
-        Object[] classs = new Object[methodParams.size()];
+        Object[] clazz = new Object[methodParams.size()];
         int index = 0;
         for (Object[] os : methodParams) {
-            classs[index] = (Object) os[0];
+            clazz[index] = (Object) os[0];
             index++;
         }
-        return classs;
+        return clazz;
     }
 }

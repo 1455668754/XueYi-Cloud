@@ -9,21 +9,20 @@ import java.util.Properties;
 
 /**
  * 定时任务配置（单机部署建议删除此类和qrtz数据库表，默认走内存会最高效）
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 @Configuration
-public class ScheduleConfig
-{
+public class ScheduleConfig {
+
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource)
-    {
+    public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource) {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
         factory.setDataSource(dataSource);
 
         // quartz参数
         Properties prop = new Properties();
-        prop.put("org.quartz.scheduler.instanceName", "RuoyiScheduler");
+        prop.put("org.quartz.scheduler.instanceName", "XueYiScheduler");
         prop.put("org.quartz.scheduler.instanceId", "AUTO");
         // 线程池配置
         prop.put("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
@@ -43,7 +42,7 @@ public class ScheduleConfig
         prop.put("org.quartz.jobStore.tablePrefix", "QRTZ_");
         factory.setQuartzProperties(prop);
 
-        factory.setSchedulerName("RuoyiScheduler");
+        factory.setSchedulerName("XueYiScheduler");
         // 延时启动
         factory.setStartupDelay(1);
         factory.setApplicationContextSchedulerContextKey("applicationContextKey");

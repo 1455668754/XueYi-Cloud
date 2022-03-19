@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.xueyi</groupId>
         <artifactId>xueyi-api</artifactId>
-        <version>4.2.4</version>
+        <version>5.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -17,7 +17,7 @@
 
     <dependencies>
 
-        <!-- XueYi Common Core-->
+        <!-- XueYi Common Core -->
         <dependency>
             <groupId>com.xueyi</groupId>
             <artifactId>xueyi-common-core</artifactId>

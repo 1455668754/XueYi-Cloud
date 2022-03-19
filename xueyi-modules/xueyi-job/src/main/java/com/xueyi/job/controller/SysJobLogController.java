@@ -1,82 +1,84 @@
 package com.xueyi.job.controller;
 
-import com.xueyi.common.core.utils.poi.ExcelUtil;
-import com.xueyi.common.core.web.controller.BaseController;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.core.domain.R;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.security.annotation.InnerAuth;
 import com.xueyi.common.security.annotation.RequiresPermissions;
-import com.xueyi.job.domain.SysJobLog;
+import com.xueyi.common.security.auth.Auth;
+import com.xueyi.common.web.entity.controller.BaseController;
+import com.xueyi.job.api.domain.dto.SysJobLogDto;
 import com.xueyi.job.service.ISysJobLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * 调度日志操作处理
+ * 调度日志管理 业务处理
  *
- * @author ruoyi
+ * @author xueyi
  */
 @RestController
 @RequestMapping("/job/log")
-public class SysJobLogController extends BaseController {
+public class SysJobLogController extends BaseController<SysJobLogDto, ISysJobLogService> {
 
-    @Autowired
-    private ISysJobLogService jobLogService;
+    /** 定义节点名称 */
+    @Override
+    protected String getNodeName() {
+        return "调度日志";
+    }
 
     /**
-     * 查询定时任务调度日志列表
+     * 新增调度日志 | 内部调用
      */
-    @RequiresPermissions("monitor:job:list")
+    @InnerAuth
+    @PostMapping
+    public R<Boolean> addInner(@RequestBody SysJobLogDto jobLog) {
+        baseService.insert(jobLog);
+        return R.ok();
+    }
+
+    /**
+     * 查询调度日志列表
+     */
+    @Override
     @GetMapping("/list")
-    public AjaxResult list(SysJobLog sysJobLog) {
-        startPage();
-        List<SysJobLog> list = jobLogService.selectJobLogList(sysJobLog);
-        return getDataTable(list);
+    @RequiresPermissions(Auth.SCHEDULE_JOB_LIST)
+    public AjaxResult list(SysJobLogDto jobLog) {
+        return super.list(jobLog);
     }
 
     /**
-     * 导出定时任务调度日志列表
+     * 查询调度日志详细
      */
-    @RequiresPermissions("monitor:job:export")
-    @Log(title = "任务调度日志", businessType = BusinessType.EXPORT)
+    @Override
+    @GetMapping(value = "/{id}")
+    @RequiresPermissions(Auth.SCHEDULE_JOB_SINGLE)
+    public AjaxResult getInfoExtra(@PathVariable Serializable id) {
+        return super.getInfoExtra(id);
+    }
+
+    /**
+     * 调度日志导出
+     */
+    @Override
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysJobLog sysJobLog) throws IOException {
-        List<SysJobLog> list = jobLogService.selectJobLogList(sysJobLog);
-        ExcelUtil<SysJobLog> util = new ExcelUtil<SysJobLog>(SysJobLog.class);
-        util.exportExcel(response, list, "调度日志");
+    @RequiresPermissions(Auth.SCHEDULE_JOB_EXPORT)
+    @Log(title = "调度日志管理", businessType = BusinessType.EXPORT)
+    public void export(HttpServletResponse response, SysJobLogDto jobLog) {
+        super.export(response, jobLog);
     }
 
     /**
-     * 根据调度编号获取详细信息
+     * 清空调度日志
      */
-    @RequiresPermissions("monitor:job:query")
-    @GetMapping(value = "/{configId}")
-    public AjaxResult getInfo(@PathVariable Long jobLogId) {
-        return AjaxResult.success(jobLogService.selectJobLogById(jobLogId));
-    }
-
-    /**
-     * 删除定时任务调度日志
-     */
-    @RequiresPermissions("monitor:job:remove")
-    @Log(title = "定时任务调度日志", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{jobLogIds}")
-    public AjaxResult remove(@PathVariable Long[] jobLogIds) {
-        return toAjax(jobLogService.deleteJobLogByIds(jobLogIds));
-    }
-
-    /**
-     * 清空定时任务调度日志
-     */
-    @RequiresPermissions("monitor:job:remove")
-    @Log(title = "调度日志", businessType = BusinessType.CLEAN)
     @DeleteMapping("/clean")
+    @RequiresPermissions(Auth.SCHEDULE_JOB_DELETE)
+    @Log(title = "调度日志管理", businessType = BusinessType.CLEAN)
     public AjaxResult clean() {
-        jobLogService.cleanJobLog();
+        baseService.cleanLog();
         return AjaxResult.success();
     }
 }

@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.xueyi.file.api.feign.factory.RemoteFileFallbackFactory

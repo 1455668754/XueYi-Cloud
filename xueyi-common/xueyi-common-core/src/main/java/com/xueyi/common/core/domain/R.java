@@ -1,16 +1,15 @@
 package com.xueyi.common.core.domain;
 
+import com.xueyi.common.core.constant.basic.Constants;
+
 import java.io.Serializable;
-import com.xueyi.common.core.constant.Constants;
 
 /**
  * 响应信息主体
  *
- * @author ruoyi
+ * @author xueyi
  */
-public class R<T> implements Serializable
-{
-    private static final long serialVersionUID = 1L;
+public class R<T> implements Serializable {
 
     /** 成功 */
     public static final int SUCCESS = Constants.SUCCESS;
@@ -18,88 +17,83 @@ public class R<T> implements Serializable
     /** 失败 */
     public static final int FAIL = Constants.FAIL;
 
+    private static final long serialVersionUID = 1L;
+
     private int code;
 
-    private String msg;
+    private String message;
 
-    private T data;
+    private T result;
 
-    public static <T> R<T> ok()
-    {
+    public static <T> R<T> ok() {
         return restResult(null, SUCCESS, null);
     }
 
-    public static <T> R<T> ok(T data)
-    {
+    public static <T> R<T> ok(T data) {
         return restResult(data, SUCCESS, null);
     }
 
-    public static <T> R<T> ok(T data, String msg)
-    {
+    public static <T> R<T> ok(T data, String msg) {
         return restResult(data, SUCCESS, msg);
     }
 
-    public static <T> R<T> fail()
-    {
+    public static <T> R<T> fail() {
         return restResult(null, FAIL, null);
     }
 
-    public static <T> R<T> fail(String msg)
-    {
+    public static <T> R<T> fail(String msg) {
         return restResult(null, FAIL, msg);
     }
 
-    public static <T> R<T> fail(T data)
-    {
+    public static <T> R<T> fail(T data) {
         return restResult(data, FAIL, null);
     }
 
-    public static <T> R<T> fail(T data, String msg)
-    {
+    public static <T> R<T> fail(T data, String msg) {
         return restResult(data, FAIL, msg);
     }
 
-    public static <T> R<T> fail(int code, String msg)
-    {
+    public static <T> R<T> fail(int code, String msg) {
         return restResult(null, code, msg);
     }
 
-    private static <T> R<T> restResult(T data, int code, String msg)
-    {
+    private static <T> R<T> restResult(T data, int code, String msg) {
         R<T> apiResult = new R<>();
         apiResult.setCode(code);
-        apiResult.setData(data);
-        apiResult.setMsg(msg);
+        apiResult.setResult(data);
+        apiResult.setMessage(msg);
         return apiResult;
     }
 
-    public int getCode()
-    {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(int code)
-    {
+    public void setCode(int code) {
         this.code = code;
     }
 
-    public String getMsg()
-    {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg)
-    {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public T getData()
-    {
-        return data;
+    public T getResult() {
+        return result;
     }
 
-    public void setData(T data)
-    {
-        this.data = data;
+    public void setResult(T result) {
+        this.result = result;
+    }
+
+    public boolean isOk() {
+        return this.code == SUCCESS;
+    }
+
+    public boolean isFail() {
+        return this.code == FAIL;
     }
 }

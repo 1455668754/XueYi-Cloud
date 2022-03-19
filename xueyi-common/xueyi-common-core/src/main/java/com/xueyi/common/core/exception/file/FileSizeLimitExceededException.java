@@ -3,7 +3,7 @@ package com.xueyi.common.core.exception.file;
 /**
  * 文件名大小限制异常类
  * 
- * @author ruoyi
+ * @author xueyi
  */
 public class FileSizeLimitExceededException extends FileException
 {

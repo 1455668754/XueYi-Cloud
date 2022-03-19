@@ -1,8 +1,10 @@
 package com.xueyi.common.security.utils;
 
-import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.constant.TokenConstants;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.xueyi.common.core.constant.system.AuthorityConstants;
+import com.xueyi.common.core.constant.basic.SecurityConstants;
+import com.xueyi.common.core.constant.basic.TokenConstants;
 import com.xueyi.common.core.context.SecurityContextHolder;
 import com.xueyi.common.core.utils.ServletUtils;
 import com.xueyi.common.core.utils.StringUtils;
@@ -103,22 +105,22 @@ public class SecurityUtils {
     public static String replaceTokenPrefix(String token) {
         // 如果前端设置了令牌前缀，则裁剪掉前缀
         return StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX)
-                ? token.replaceFirst(TokenConstants.PREFIX, "")
+                ? token.replaceFirst(TokenConstants.PREFIX, StrUtil.EMPTY)
                 : token;
     }
 
     /**
-     * 是否为超管用户
+     * 是否为空租户信息
      */
-    public static boolean isAdminUser() {
-        return StringUtils.equals(AuthorityConstants.UserType.ADMIN.getCode(), getUserType());
+    public static boolean isEmptyTenant() {
+        return ObjectUtil.equals(SecurityConstants.EMPTY_TENANT_ID, getEnterpriseId());
     }
 
     /**
-     * 是否不为超管用户
+     * 是否不为空租户信息
      */
-    public static boolean isNotAdminUser() {
-        return !StringUtils.equals(AuthorityConstants.UserType.ADMIN.getCode(), getUserType());
+    public static boolean isNotEmptyTenant() {
+        return !isEmptyTenant();
     }
 
     /**
@@ -132,7 +134,21 @@ public class SecurityUtils {
      * 是否不为超管租户
      */
     public static boolean isNotAdminTenant() {
-        return !StringUtils.equals(AuthorityConstants.TenantType.ADMIN.getCode(), getIsLessor());
+        return !isAdminTenant();
+    }
+
+    /**
+     * 是否为超管用户
+     */
+    public static boolean isAdminUser() {
+        return StringUtils.equals(AuthorityConstants.UserType.ADMIN.getCode(), getUserType());
+    }
+
+    /**
+     * 是否不为超管用户
+     */
+    public static boolean isNotAdminUser() {
+        return !isAdminUser();
     }
 
     /**

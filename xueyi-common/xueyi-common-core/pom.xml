@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.xueyi</groupId>
         <artifactId>xueyi-common</artifactId>
-        <version>4.2.4</version>
+        <version>5.1.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -47,10 +47,16 @@
             <artifactId>transmittable-thread-local</artifactId>
         </dependency>
 
+        <!-- Mybatis-Plus -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+
         <!-- PageHelper -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
-            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <artifactId>pagehelper</artifactId>
         </dependency>
 
         <!-- Hibernate Validator -->

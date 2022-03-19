@@ -4,26 +4,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件上传接口
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
-public interface ISysFileService
-{
+public interface ISysFileService {
+
     /**
      * 文件上传接口
-     * 
+     *
      * @param file 上传的文件
      * @return 访问地址
-     * @throws Exception
      */
-    public String uploadFile(MultipartFile file) throws Exception;
+    String uploadFile(MultipartFile file) throws Exception;
 
     /**
      * 文件删除接口
      *
      * @param url 文件地址
-     * @return 删除状态
-     * @throws Exception
+     * @return 结果
      */
-    public Boolean deleteFile(String url) throws Exception;
+    Boolean deleteFile(String url) throws Exception;
 }

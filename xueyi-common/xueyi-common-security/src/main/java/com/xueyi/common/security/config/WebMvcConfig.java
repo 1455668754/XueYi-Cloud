@@ -10,6 +10,7 @@ import com.xueyi.common.security.interceptor.HeaderInterceptor;
  * @author xueyi
  */
 public class WebMvcConfig implements WebMvcConfigurer {
+
     /**
      * 不需要拦截地址
      */

@@ -1,191 +1,157 @@
 package com.xueyi.system.authority.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
-import com.xueyi.common.core.constant.AuthorityConstants;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.multiTenancy.SortUtils;
-import com.xueyi.common.core.utils.multiTenancy.TreeUtils;
+import com.xueyi.common.core.constant.system.AuthorityConstants;
+import com.xueyi.common.core.utils.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
-import com.xueyi.common.redis.utils.AuthorityUtils;
-import com.xueyi.common.security.utils.SecurityUtils;
-import com.xueyi.system.api.domain.authority.SysMenu;
-import com.xueyi.system.api.domain.authority.SysRole;
-import com.xueyi.system.api.domain.authority.SystemMenu;
-import com.xueyi.system.api.utilTool.SysSearch;
+import com.xueyi.common.web.entity.service.impl.TreeServiceImpl;
+import com.xueyi.system.api.authority.domain.dto.SysMenuDto;
+import com.xueyi.system.authority.manager.SysMenuManager;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
-import com.xueyi.system.authority.service.ISysAuthorityService;
 import com.xueyi.system.authority.service.ISysMenuService;
-import com.xueyi.system.role.mapper.SysRoleSystemMenuMapper;
-import com.xueyi.system.utils.route.RouteUtils;
+import com.xueyi.system.utils.RouteUtils;
 import com.xueyi.system.utils.route.RouterVo;
-import com.xueyi.system.utils.vo.TreeSelect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-import static com.xueyi.common.core.constant.TenantConstants.ISOLATE;
-import static com.xueyi.common.core.constant.TenantConstants.MASTER;
+
+import static com.xueyi.common.core.constant.basic.SecurityConstants.CREATE_BY;
+import static com.xueyi.common.core.constant.basic.TenantConstants.MASTER;
 
 /**
- * 菜单 业务层处理
+ * 菜单管理 服务层处理
  *
  * @author xueyi
  */
 @Service
-@DS(MASTER)
-public class SysMenuServiceImpl implements ISysMenuService {
-
-    @Autowired
-    private SysMenuMapper menuMapper;
-
-    @Autowired
-    private SysRoleSystemMenuMapper roleSystemMenuMapper;
-
-    @Autowired
-    private ISysAuthorityService authorityService;
+public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuDto, SysMenuManager, SysMenuMapper> implements ISysMenuService {
 
     /**
-     * 根据用户Id查询菜单路由
+     * 登录校验 | 获取当前租户全部菜单权限标识集合
      *
-     * @param menu 菜单信息 | systemId 系统Id
+     * @return 菜单权限集合
+     */
+    @Override
+    public Set<String> loginPermission() {
+        List<SysMenuDto> menuList = baseManager.loginMenuList();
+        return CollUtil.isNotEmpty(menuList)
+                ? menuList.stream().map(SysMenuDto::getPerms).collect(Collectors.toSet())
+                : new HashSet<>();
+    }
+
+    /**
+     * 登录校验 | 获取菜单权限标识集合
+     *
+     * @param roleIds 角色Id集合
+     * @return 菜单权限集合
+     */
+    @Override
+    public Set<String> loginPermission(Set<Long> roleIds) {
+        List<SysMenuDto> menuList = baseManager.loginMenuList(roleIds);
+        return CollUtil.isNotEmpty(menuList)
+                ? menuList.stream().map(SysMenuDto::getPerms).collect(Collectors.toSet())
+                : new HashSet<>();
+    }
+
+    /**
+     * 登录校验 | 获取全部路由路径集合
+     *
+     * @return 路径集合
+     */
+    @Override
+    public Map<String, String> getLessorRouteMap() {
+        List<SysMenuDto> menuList = baseManager.loginLessorMenuList()
+                .stream().filter(menu -> ObjectUtil.notEqual(menu.getId(), AuthorityConstants.MENU_TOP_NODE) && (menu.isDir() || menu.isMenu() || menu.isDetails()))
+                .collect(Collectors.toList());
+        return buildRoutePath(menuList);
+    }
+
+    /**
+     * 登录校验 | 获取租户全部路由路径集合
+     *
+     * @return 路径集合
+     */
+    @Override
+    public Map<String, String> getRouteMap() {
+        List<SysMenuDto> menuList = baseManager.loginMenuList()
+                .stream().filter(menu -> ObjectUtil.notEqual(menu.getId(), AuthorityConstants.MENU_TOP_NODE) && (menu.isDir() || menu.isMenu() || menu.isDetails()))
+                .collect(Collectors.toList());
+        return buildRoutePath(menuList);
+    }
+
+    /**
+     * 登录校验 | 获取路由路径集合
+     *
+     * @param roleIds 角色Id集合
+     * @return 路径集合
+     */
+    @Override
+    public Map<String, String> getRouteMap(Set<Long> roleIds) {
+        List<SysMenuDto> menuList = baseManager.loginMenuList(roleIds)
+                .stream().filter(menu -> ObjectUtil.notEqual(menu.getId(), AuthorityConstants.MENU_TOP_NODE) && (menu.isDir() || menu.isMenu() || menu.isDetails()))
+                .collect(Collectors.toList());
+        return buildRoutePath(menuList);
+    }
+
+    /**
+     * 查询菜单对象列表 | 数据权限 | 附加数据
+     *
+     * @param menu 菜单对象
+     * @return 菜单对象集合
+     */
+    @Override
+    @DataScope(userAlias = CREATE_BY, mapperScope = {"SysMenuMapper"})
+    public List<SysMenuDto> selectListScope(SysMenuDto menu) {
+        return baseManager.selectListExtra(menu);
+    }
+    
+    /**
+     * 根据模块Id查询菜单路由
+     *
+     * @param moduleId 模块Id
      * @return 菜单列表
      */
     @Override
-    public List<SysMenu> getRoutes(SysMenu menu) {
-        Set<SysMenu> menuSet = AuthorityUtils.getRouteCache(SecurityUtils.getEnterpriseId(), menu.getSystemId());
-        Set<SysMenu> rangeSet;
-        // 管理员显示所有菜单信息
-        if (SecurityUtils.isAdminUser()) {
-            rangeSet = authorityService.selectMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false, true);
-        } else {
-            SysRole role = new SysRole();
-            role.getParams().put("userId", SecurityUtils.getUserId());
-            rangeSet = authorityService.selectMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true, true);
-        }
-        menuSet.retainAll(rangeSet);
-        return TreeUtils.buildTree(SortUtils.sortSetToList(menuSet), "menuId", "parentId", "children", AuthorityConstants.MENU_TOP_NODE, true);
+    public List<SysMenuDto> getRoutes(Long moduleId) {
+        return baseManager.getRoutes(moduleId);
     }
 
     /**
-     * 查询模块-菜单信息列表
+     * 根据菜单类型及模块Id获取可配菜单集
      *
-     * @param menu 菜单信息
-     * @return 模块-菜单信息集合
+     * @param moduleId 模块Id
+     * @param menuType 菜单类型
+     * @return 菜单列表
      */
     @Override
-    public List<TreeSelect> mainSelectSystemMenuList(SysMenu menu) {
-        Set<SystemMenu> menuSet = new HashSet<>();
-        Map<String, Set<SystemMenu>> map;
-        if (SecurityUtils.isAdminUser()) {
-            map = authorityService.assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByTenantId(SecurityUtils.getEnterpriseId()), SecurityUtils.isAdminTenant(), false, true);
-        } else {
-            SysRole role = new SysRole();
-            role.getParams().put("userId", SecurityUtils.getUserId());
-            map = authorityService.assembleSystemMenuSet(SecurityUtils.getEnterpriseId(), authorityService.selectRoleListByUserId(role), SecurityUtils.isAdminTenant(), true, true);
-        }
-        menuSet.addAll(map.get("halfIds"));
-        menuSet.addAll(map.get("wholeIds"));
-        menu.getParams().put("insideIds", menuSet);
-        List<SystemMenu> systemMenus = TreeUtils.buildTree(SortUtils.sortSetToList(menuMapper.mainSelectSystemMenuList(menu)), "Uid", "FUid", "children", AuthorityConstants.SYSTEM_TOP_NODE, false);
-        return systemMenus.stream().map(TreeSelect::new).collect(Collectors.toList());
+    public List<SysMenuDto> getMenuByMenuType(Long moduleId, String menuType) {
+        return baseManager.getMenuByMenuType(moduleId, menuType);
     }
 
     /**
-     * 根据菜单Id查询信息
+     * 校验菜单是否存在租户
      *
-     * @param menu 菜单信息 | menuId 菜单Id
-     * @return 菜单信息
+     * @param id 菜单Id
+     * @return 结果 | true/false 有/无
      */
     @Override
-    public SysMenu mainSelectMenuById(SysMenu menu) {
-        return menuMapper.mainSelectMenuById(menu);
-    }
-
-    /**
-     * 新增保存菜单信息
-     *
-     * @param menu 菜单信息
-     * @return 结果
-     */
-    @Override
-    @DataScope(uedAlias = "empty")
-    public int mainInsertMenu(SysMenu menu) {
-        if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
-            menu.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
-        }
-        return menuMapper.mainInsertMenu(menu);
-    }
-
-    /**
-     * 修改保存菜单信息
-     *
-     * @param menu 菜单信息
-     * @return 结果
-     */
-    @Override
-    @DataScope(uedAlias = "empty")
-    public int mainUpdateMenu(SysMenu menu) {
-        if (StringUtils.equals(AuthorityConstants.IsCommon.YES.getCode(), menu.getIsCommon()) && SecurityUtils.isAdminTenant()) {
-            menu.setEnterpriseId(AuthorityConstants.COMMON_ENTERPRISE);
-        }
-        return menuMapper.mainUpdateMenu(menu);
-    }
-
-    /**
-     * 删除菜单管理信息
-     *
-     * @param menu 菜单信息 | menuId 菜单Id
-     * @return 结果
-     */
-    @Override
-    public int mainDeleteMenuById(SysMenu menu) {
-        return menuMapper.mainDeleteMenuById(menu);
-    }
-
-    /**
-     * 校验菜单名称是否唯一
-     *
-     * @param menu 菜单信息 | menuId 菜单Id | parentId 父级菜单Id | menuName 菜单名称
-     * @return 结果
-     */
-    @Override
-    public boolean mainCheckMenuNameUnique(SysMenu menu) {
-        if (StringUtils.isNull(menu.getMenuId())) {
-            menu.setMenuId(-1L);
-        }
-        SysMenu info = menuMapper.mainCheckMenuNameUnique(menu);
-        return !StringUtils.isNotNull(info) || info.getMenuId().longValue() == menu.getMenuId().longValue();
-    }
-
-    /**
-     * 校验是否存在菜单子节点
-     *
-     * @param menu 菜单信息 | menuId 菜单Id
-     * @return 结果
-     */
-    @Override
-    public boolean mainHasChildByMenuId(SysMenu menu) {
-        int result = menuMapper.mainHasChildByMenuId(menu);
-        return result > 0;
+    public boolean checkMenuExistTenant(Long id) {
+        return ObjectUtil.isNotNull(baseManager.checkMenuExistTenant(id));
     }
 
     /**
      * 校验菜单是否存在角色
      *
-     * @param menu 菜单信息 | menuId 菜单Id
-     * @return 结果
+     * @param id 菜单Id
+     * @return 结果 | true/false 有/无
      */
     @Override
-    @DS(ISOLATE)
-    public boolean mainCheckMenuExistRole(SysMenu menu) {
-        SysSearch search = new SysSearch();
-        search.getSearch().put("systemMenuId", menu.getMenuId());
-        int result = roleSystemMenuMapper.checkSystemMenuExistRole(search);//@param search 万用组件 | systemMenuId 系统-菜单Id
-        return result > 0;
+    public boolean checkMenuExistRole(Long id) {
+        return ObjectUtil.isNotNull(baseManager.checkMenuExistRole(id));
     }
 
     /**
@@ -195,7 +161,54 @@ public class SysMenuServiceImpl implements ISysMenuService {
      * @return 路由列表
      */
     @Override
-    public List<RouterVo> buildMenus(List<SysMenu> menus) {
+    public List<RouterVo> buildMenus(List<SysMenuDto> menus) {
         return RouteUtils.buildMenus(menus);
+    }
+
+    /**
+     * 构建路由路径集合
+     *
+     * @param menus 菜单列表
+     * @return 路径集合
+     */
+    private Map<String, String> buildRoutePath(List<SysMenuDto> menus) {
+        Map<String, String> routeMap = new HashMap<>();
+        if (CollUtil.isEmpty(menus))
+            return new HashMap<>();
+        List<SysMenuDto> menuTree = TreeUtils.buildTree(menus);
+        SysMenuDto menu = new SysMenuDto();
+        menu.setFullPath(StrUtil.EMPTY);
+        menu.setChildren(menuTree);
+        menuTree.forEach(sonChild -> {
+            if (sonChild.isDetails())
+                routeMap.put(sonChild.getName(), StrUtil.SLASH + sonChild.getPath());
+        });
+        recursionFn(menu, routeMap);
+        return routeMap;
+    }
+
+    /**
+     * 递归菜单树
+     *
+     * @param menu     菜单对象
+     * @param routeMap 路径集合
+     */
+    private void recursionFn(SysMenuDto menu, Map<String, String> routeMap) {
+        if (CollUtil.isNotEmpty(menu.getChildren())) {
+            menu.getChildren().forEach(sonChild -> {
+                sonChild.setFullPath(menu.getFullPath() + StrUtil.SLASH + sonChild.getPath());
+                if (!sonChild.isDetails())
+                    routeMap.put(sonChild.getName(), sonChild.getFullPath());
+                if (CollUtil.isNotEmpty(sonChild.getChildren())) {
+                    sonChild.getChildren().forEach(grandsonChild -> {
+                        if (grandsonChild.isDetails()) {
+                            grandsonChild.setFullPath(menu.getFullPath() + StrUtil.SLASH + grandsonChild.getDetailsSuffix());
+                            routeMap.put(grandsonChild.getName(), grandsonChild.getFullPath());
+                        }
+                    });
+                    recursionFn(sonChild, routeMap);
+                }
+            });
+        }
     }
 }

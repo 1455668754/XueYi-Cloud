@@ -1,148 +1,159 @@
 package com.xueyi.job.controller;
 
-import com.xueyi.common.core.constant.HttpConstants;
-import com.xueyi.common.core.constant.ScheduleConstants;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import com.xueyi.common.core.constant.basic.BaseConstants;
+import com.xueyi.common.core.constant.basic.HttpConstants;
+import com.xueyi.common.core.constant.job.ScheduleConstants;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.exception.job.TaskException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
-import com.xueyi.common.core.web.controller.BaseController;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
+import com.xueyi.common.security.annotation.Logical;
 import com.xueyi.common.security.annotation.RequiresPermissions;
-import com.xueyi.job.domain.SysJob;
+import com.xueyi.common.security.auth.Auth;
+import com.xueyi.common.web.entity.controller.BasisController;
+import com.xueyi.job.api.domain.dto.SysJobDto;
 import com.xueyi.job.service.ISysJobService;
-import com.xueyi.job.util.CronUtils;
+import com.xueyi.job.api.utils.CronUtils;
 import com.xueyi.job.util.ScheduleUtils;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
- * 调度任务信息操作处理
+ * 调度任务管理 业务处理
  *
  * @author xueyi
  */
 @RestController
 @RequestMapping("/job")
-public class SysJobController extends BaseController {
+public class SysJobController extends BasisController {
 
     @Autowired
-    private ISysJobService jobService;
+    private ISysJobService baseService;
+
+    /** 定义节点名称 */
+    protected String getNodeName() {
+        return "调度任务";
+    }
 
     /**
      * 查询定时任务列表
      */
-    @RequiresPermissions("monitor:job:list")
     @GetMapping("/list")
-    public AjaxResult list(SysJob sysJob) {
+    @RequiresPermissions(Auth.SCHEDULE_JOB_LIST)
+    public AjaxResult list(SysJobDto job) {
         startPage();
-        List<SysJob> list = jobService.selectJobList(sysJob);
+        List<SysJobDto> list = baseService.selectListScope(job);
         return getDataTable(list);
     }
 
     /**
-     * 导出定时任务列表
+     * 查询调度任务详细
      */
-    @RequiresPermissions("monitor:job:export")
-    @Log(title = "定时任务", businessType = BusinessType.EXPORT)
+    @GetMapping(value = "/{id}")
+    @RequiresPermissions(Auth.SCHEDULE_JOB_SINGLE)
+    public AjaxResult getInfo(@PathVariable Long id) {
+        return AjaxResult.success(baseService.selectById(id));
+    }
+
+    /**
+     * 调度任务导出
+     */
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysJob sysJob) throws IOException {
-        List<SysJob> list = jobService.selectJobList(sysJob);
-        ExcelUtil<SysJob> util = new ExcelUtil<SysJob>(SysJob.class);
+    @RequiresPermissions(Auth.SCHEDULE_JOB_EXPORT)
+    public void export(HttpServletResponse response, SysJobDto job) {
+        List<SysJobDto> list = baseService.selectListScope(job);
+        ExcelUtil<SysJobDto> util = new ExcelUtil<>(SysJobDto.class);
         util.exportExcel(response, list, "定时任务");
     }
 
     /**
-     * 获取定时任务详细信息
+     * 调度任务新增
      */
-    @RequiresPermissions("monitor:job:query")
-    @GetMapping(value = "/{jobId}")
-    public AjaxResult getInfo(@PathVariable("jobId") Long jobId) {
-        return AjaxResult.success(jobService.selectJobById(jobId));
-    }
-
-    /**
-     * 新增定时任务
-     */
-    @RequiresPermissions("monitor:job:add")
-    @Log(title = "定时任务", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody SysJob job) throws SchedulerException, TaskException {
-        if (!CronUtils.isValid(job.getCronExpression())) {
-            return error("新增任务'" + job.getJobName() + "'失败，Cron表达式不正确");
-        } else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), HttpConstants.Type.LOOKUP_RMI.getCode())) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'rmi'调用");
-        } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{HttpConstants.Type.LOOKUP_LDAP.getCode(), HttpConstants.Type.LOOKUP_LDAPS.getCode()})) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap(s)'调用");
-        } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode()})) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)'调用");
-        } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), ScheduleConstants.JOB_ERROR_STR)) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串存在违规");
-        } else if (!ScheduleUtils.whiteList(job.getInvokeTarget())) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不在白名单内");
-        }
-        return toAjax(jobService.insertJob(job));
+    @RequiresPermissions(Auth.SCHEDULE_JOB_ADD)
+    @Log(title = "调度任务管理", businessType = BusinessType.INSERT)
+    public AjaxResult add(@Validated @RequestBody SysJobDto job) throws SchedulerException, TaskException {
+        AEHandleValidated(BaseConstants.Operate.ADD, job);
+        return toAjax(baseService.insert(job));
     }
 
     /**
-     * 修改定时任务
+     * 调度任务修改
      */
-    @RequiresPermissions("monitor:job:edit")
-    @Log(title = "定时任务", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody SysJob job) throws SchedulerException, TaskException {
-        if (!CronUtils.isValid(job.getCronExpression())) {
-            return error("修改任务'" + job.getJobName() + "'失败，Cron表达式不正确");
-        } else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), HttpConstants.Type.LOOKUP_RMI.getCode())) {
-            return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'rmi'调用");
-        } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{HttpConstants.Type.LOOKUP_LDAP.getCode(), HttpConstants.Type.LOOKUP_LDAPS.getCode()})) {
-            return error("新增任务'" + job.getJobName() + "'失败，目标字符串不允许'ldap(s)'调用");
-        } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode()})) {
-            return error("修改任务'" + job.getJobName() + "'失败，目标字符串不允许'http(s)'调用");
-        } else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), ScheduleConstants.JOB_ERROR_STR)) {
-            return error("修改任务'" + job.getJobName() + "'失败，目标字符串存在违规");
-        } else if (!ScheduleUtils.whiteList(job.getInvokeTarget())) {
-            return error("修改任务'" + job.getJobName() + "'失败，目标字符串不在白名单内");
-        }
-        return toAjax(jobService.updateJob(job));
+    @RequiresPermissions(Auth.SCHEDULE_JOB_EDIT)
+    @Log(title = "调度任务管理", businessType = BusinessType.UPDATE)
+    public AjaxResult edit(@Validated @RequestBody SysJobDto job) throws SchedulerException, TaskException {
+        AEHandleValidated(BaseConstants.Operate.EDIT, job);
+        return toAjax(baseService.update(job));
     }
 
     /**
-     * 定时任务状态修改
+     * 调度任务修改状态
      */
-    @RequiresPermissions("monitor:job:changeStatus")
-    @Log(title = "定时任务", businessType = BusinessType.UPDATE)
-    @PutMapping("/changeStatus")
-    public AjaxResult changeStatus(@RequestBody SysJob job) throws SchedulerException {
-        SysJob newJob = jobService.selectJobById(job.getJobId());
-        newJob.setStatus(job.getStatus());
-        return toAjax(jobService.changeStatus(newJob));
+    @PutMapping("/status")
+    @RequiresPermissions(value = {Auth.SCHEDULE_JOB_EDIT, Auth.SCHEDULE_JOB_EDIT_STATUS}, logical = Logical.OR)
+    @Log(title = "调度任务管理", businessType = BusinessType.UPDATE_STATUS)
+    public AjaxResult editStatus(@RequestBody SysJobDto job) throws SchedulerException {
+        return toAjax(baseService.updateStatus(job.getId(), job.getStatus()));
     }
 
     /**
      * 定时任务立即执行一次
      */
-    @RequiresPermissions("monitor:job:changeStatus")
-    @Log(title = "定时任务", businessType = BusinessType.UPDATE)
-    @PutMapping("/run")
-    public AjaxResult run(@RequestBody SysJob job) throws SchedulerException {
-        jobService.run(job);
+    @GetMapping("/run/{id}")
+    @RequiresPermissions(Auth.SCHEDULE_JOB_EDIT)
+    @Log(title = "定时任务 - 执行一次", businessType = BusinessType.UPDATE)
+    public AjaxResult run(@PathVariable Long id) throws SchedulerException {
+        baseService.run(id);
         return AjaxResult.success();
     }
 
     /**
-     * 删除定时任务
+     * 调度任务批量删除
      */
-    @RequiresPermissions("monitor:job:remove")
-    @Log(title = "定时任务", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{jobIds}")
-    public AjaxResult remove(@PathVariable Long[] jobIds) throws SchedulerException, TaskException {
-        jobService.deleteJobByIds(jobIds);
-        return AjaxResult.success();
+    @DeleteMapping("/batch/{idList}")
+    @RequiresPermissions(Auth.SCHEDULE_JOB_DELETE)
+    @Log(title = "调度任务管理", businessType = BusinessType.DELETE)
+    public AjaxResult batchRemove(@PathVariable List<Long> idList) throws SchedulerException {
+        if (CollUtil.isEmpty(idList))
+            throw new ServiceException(StrUtil.format("无待删除{}！", getNodeName()));
+        return toAjax(baseService.deleteByIds(idList));
+    }
+
+    /**
+     * 获取调度任务选择框列表
+     */
+    @GetMapping("/option")
+    public AjaxResult option() {
+        return list(null);
+    }
+
+    /**
+     * 前置校验 （强制）增加/修改
+     */
+    protected void AEHandleValidated(BaseConstants.Operate operate, SysJobDto job) {
+        if (!CronUtils.isValid(job.getCronExpression()))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，Cron表达式不正确", operate.getInfo(), getNodeName(), job.getName()));
+        else if (StringUtils.containsIgnoreCase(job.getInvokeTarget(), HttpConstants.Type.LOOKUP_RMI.getCode()))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，目标字符串不允许'rmi'调用", operate.getInfo(), getNodeName(), job.getName()));
+        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{HttpConstants.Type.LOOKUP_LDAP.getCode(), HttpConstants.Type.LOOKUP_LDAPS.getCode()}))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，目标字符串不允许'ldap(s)'调用", operate.getInfo(), getNodeName(), job.getName()));
+        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), new String[]{HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode()}))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，目标字符串不允许'http(s)'调用", operate.getInfo(), getNodeName(), job.getName()));
+        else if (StringUtils.containsAnyIgnoreCase(job.getInvokeTarget(), ScheduleConstants.JOB_ERROR_STR))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，目标字符串存在违规", operate.getInfo(), getNodeName(), job.getName()));
+        else if (!ScheduleUtils.whiteList(job.getInvokeTarget()))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，目标字符串不在白名单内", operate.getInfo(), getNodeName(), job.getName()));
     }
 }

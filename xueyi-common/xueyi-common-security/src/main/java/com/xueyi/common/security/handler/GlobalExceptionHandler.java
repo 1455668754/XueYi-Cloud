@@ -1,13 +1,13 @@
 package com.xueyi.common.security.handler;
 
-import com.xueyi.common.core.constant.HttpConstants;
+import com.xueyi.common.core.constant.basic.HttpConstants;
 import com.xueyi.common.core.exception.DemoModeException;
 import com.xueyi.common.core.exception.InnerAuthException;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.exception.auth.NotPermissionException;
 import com.xueyi.common.core.exception.auth.NotRoleException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.core.web.result.AjaxResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * 全局异常处理器
  *
- * @author ruoyi
+ * @author xueyi
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

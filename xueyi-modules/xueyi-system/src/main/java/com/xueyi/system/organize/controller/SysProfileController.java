@@ -1,36 +1,32 @@
 package com.xueyi.system.organize.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.common.core.constant.BaseConstants;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.web.controller.BaseController;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.common.security.utils.SecurityUtils;
-import com.xueyi.system.api.domain.material.SysFile;
-import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.api.feign.RemoteFileService;
+import com.xueyi.common.web.entity.controller.BasisController;
+import com.xueyi.file.api.domain.SysFile;
+import com.xueyi.file.api.feign.RemoteFileService;
 import com.xueyi.system.api.model.LoginUser;
+import com.xueyi.system.api.organize.domain.dto.SysUserDto;
 import com.xueyi.system.organize.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 /**
- * 个人信息 业务处理
+ * 个人信息管理 业务处理
  *
- * @author ruoyi
+ * @author xueyi
  */
 @RestController
 @RequestMapping("/user/profile")
-public class SysProfileController extends BaseController {
-
-    @Autowired
-    private ISysUserService userService;
+public class SysProfileController extends BasisController {
 
     @Autowired
     private TokenService tokenService;
@@ -38,101 +34,148 @@ public class SysProfileController extends BaseController {
     @Autowired
     private RemoteFileService remoteFileService;
 
+    @Autowired
+    private ISysUserService userService;
+
     /**
      * 个人信息
      */
     @GetMapping
     public AjaxResult profile() {
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        return AjaxResult.success(loginUser.getSysUser());
+        userService.userDesensitized(loginUser.getUser());
+        return AjaxResult.success(loginUser.getUser());
     }
 
     /**
      * 修改用户
      */
-    @Log(title = "个人信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult updateProfile(@RequestBody SysUser user) {
-        if (StringUtils.isNotEmpty(user.getPhone())
-                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
-        } else if (StringUtils.isNotEmpty(user.getEmail())
-                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkEmailUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
-        }
+    @Log(title = "个人信息管理 - 基本信息修改", businessType = BusinessType.UPDATE)
+    public AjaxResult editProfile(@Validated @RequestBody SysUserDto user) {
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        SysUser sysUser = loginUser.getSysUser();
-        user.setUserId(sysUser.getUserId());
-        user.setPassword(null);
-        if (userService.updateUserProfile(user) > 0) {
+        if (userService.updateUserProfile(loginUser.getUserId(), user.getNickName(), user.getSex(), user.getProfile()) > 0) {
             // 更新缓存用户信息
-            loginUser.getSysUser().setNickName(user.getNickName());
-            loginUser.getSysUser().setPhone(user.getPhone());
-            loginUser.getSysUser().setEmail(user.getEmail());
-            loginUser.getSysUser().setSex(user.getSex());
+            loginUser.getUser().setNickName(user.getNickName());
+            loginUser.getUser().setSex(user.getSex());
+            loginUser.getUser().setProfile(user.getProfile());
             tokenService.setLoginUser(loginUser);
             return AjaxResult.success();
         }
-        return AjaxResult.error("修改个人信息异常，请联系管理员");
+        return AjaxResult.error("修改个人信息异常，请联系管理员！");
     }
 
     /**
-     * 重置密码
+     * 修改账号
      */
-    @Log(title = "个人信息", businessType = BusinessType.UPDATE)
-    @PutMapping("/updatePwd")
-    public AjaxResult updatePwd(String oldPassword, String newPassword) {
-        Long userId = SecurityUtils.getUserId();
-        SysUser checkUser = new SysUser();
-        checkUser.setUserName(SecurityUtils.getUserName());
-        SysUser user = userService.selectUserByUserName(checkUser);
-        String password = user.getPassword();
-        if (!SecurityUtils.matchesPassword(oldPassword, password)) {
-            return AjaxResult.error("修改密码失败，旧密码错误");
-        }
-        if (SecurityUtils.matchesPassword(newPassword, password)) {
-            return AjaxResult.error("新密码不能与旧密码相同");
-        }
-        SysUser upUser = new SysUser(userId);
-        upUser.setPassword(SecurityUtils.encryptPassword(newPassword));
-        if (userService.resetUserPwd(upUser) > 0) {
-            // 更新缓存用户密码
-            LoginUser loginUser = SecurityUtils.getLoginUser();
-            loginUser.getSysUser().setPassword(SecurityUtils.encryptPassword(newPassword));
+    @PutMapping("/userName")
+    @Log(title = "个人信息管理 - 修改账号", businessType = BusinessType.UPDATE)
+    public AjaxResult editUserName(String userName) {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (StrUtil.isNotEmpty(userName))
+            return AjaxResult.error("不能设置为空账号！");
+        else if (StrUtil.equals(userName, loginUser.getUser().getUserName()))
+            return AjaxResult.error("该账号为当前使用账号，无需更换！");
+        else if (userService.checkUserNameUnique(loginUser.getUserId(), userName))
+            return AjaxResult.error("该账号已被使用！");
+        if (userService.updateUserName(loginUser.getUserId(), userName) > 0) {
+            // 更新缓存
+            loginUser.getUser().setUserName(userName);
             tokenService.setLoginUser(loginUser);
             return AjaxResult.success();
         }
-        return AjaxResult.error("修改密码异常，请联系管理员");
+        return AjaxResult.error("更绑邮箱异常，请联系管理员！");
+    }
+
+    /**
+     * 更绑邮箱
+     */
+    @PutMapping("/email")
+    @Log(title = "个人信息管理 - 更绑邮箱", businessType = BusinessType.UPDATE)
+    public AjaxResult editEmail(String email) {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (StrUtil.isNotEmpty(email))
+            return AjaxResult.error("不能设置为空邮箱！");
+        else if (StrUtil.equals(email, loginUser.getUser().getEmail()))
+            return AjaxResult.error("该邮箱为当前使用邮箱，无需更换！");
+        else if (userService.checkEmailUnique(loginUser.getUserId(), email))
+            return AjaxResult.error("该邮箱已被使用！");
+        if (userService.updateEmail(loginUser.getUserId(), email) > 0) {
+            // 更新缓存
+            loginUser.getUser().setEmail(email);
+            tokenService.setLoginUser(loginUser);
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("更绑邮箱异常，请联系管理员！");
+    }
+
+    /**
+     * 更绑手机号
+     */
+    @PutMapping("/phone")
+    @Log(title = "个人信息管理 - 更绑手机号", businessType = BusinessType.UPDATE)
+    public AjaxResult editPhone(String phone) {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (StrUtil.isNotEmpty(phone))
+            return AjaxResult.error("不能设置为空手机号！");
+        else if (StrUtil.equals(phone, loginUser.getUser().getPhone()))
+            return AjaxResult.error("该邮箱为当前使用手机号，无需更换！");
+        else if (userService.checkPhoneUnique(loginUser.getUserId(), phone))
+            return AjaxResult.error("该手机号已被使用！");
+        if (userService.updatePhone(loginUser.getUserId(), phone) > 0) {
+            // 更新缓存
+            loginUser.getUser().setPhone(phone);
+            tokenService.setLoginUser(loginUser);
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("更绑手机号异常，请联系管理员！");
+    }
+
+    /**
+     * 修改密码
+     */
+    @PutMapping("/password")
+    @Log(title = "个人信息管理 - 重置密码", businessType = BusinessType.UPDATE)
+    public AjaxResult editPassword(String oldPassword, String newPassword) {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        String password = loginUser.getUser().getPassword();
+        if (!SecurityUtils.matchesPassword(oldPassword, password))
+            return AjaxResult.error("修改失败，旧密码错误！");
+        if (SecurityUtils.matchesPassword(newPassword, password))
+            return AjaxResult.error("新旧密码不能相同！");
+        if (userService.resetUserPassword(loginUser.getUserId(), SecurityUtils.encryptPassword(newPassword)) > 0) {
+            // 更新缓存用户密码
+            loginUser.getUser().setPassword(SecurityUtils.encryptPassword(newPassword));
+            tokenService.setLoginUser(loginUser);
+            return AjaxResult.success();
+        }
+        return AjaxResult.error("修改密码异常，请联系管理员！");
     }
 
     /**
      * 头像上传
      */
-    @Log(title = "用户头像", businessType = BusinessType.UPDATE)
     @PostMapping("/avatar")
-    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws IOException {
+    @Log(title = "个人信息管理 - 修改头像", businessType = BusinessType.UPDATE)
+    public AjaxResult editAvatar(@RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
             LoginUser loginUser = SecurityUtils.getLoginUser();
             R<SysFile> fileResult = remoteFileService.upload(file);
-            if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
-                return AjaxResult.error("文件服务异常，请联系管理员");
-            }
-            String url = fileResult.getData().getUrl();
-            SysUser user = new SysUser(loginUser.getUserId());
-            user.setAvatar(url);
-            if (userService.updateUserAvatar(user)) {
-                String oldAvatarUrl = loginUser.getSysUser().getAvatar();
-                if (StringUtils.isNotEmpty(oldAvatarUrl)) {
+            if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getResult()))
+                return AjaxResult.error("文件服务异常，请联系管理员！");
+            String url = fileResult.getResult().getUrl();
+            if (userService.updateUserAvatar(SecurityUtils.getUserId(), url) > 0) {
+                String oldAvatarUrl = loginUser.getUser().getAvatar();
+                if (StringUtils.isNotEmpty(oldAvatarUrl))
                     remoteFileService.delete(oldAvatarUrl);
-                }
                 AjaxResult ajax = AjaxResult.success();
-                ajax.put("imgUrl", url);
-                // 更新缓存用户头像
-                loginUser.getSysUser().setAvatar(url);
+                ajax.put(AjaxResult.URL_TAG, url);
+                // 更新缓存 - 用户头像
+                loginUser.getUser().setAvatar(url);
                 tokenService.setLoginUser(loginUser);
                 return ajax;
             }
         }
-        return AjaxResult.error("上传图片异常，请联系管理员");
+        return AjaxResult.error("上传图片异常，请联系管理员！");
     }
 }

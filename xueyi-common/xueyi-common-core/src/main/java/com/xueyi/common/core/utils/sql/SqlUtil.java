@@ -6,7 +6,7 @@ import com.xueyi.common.core.utils.StringUtils;
 /**
  * sql操作工具类
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class SqlUtil {
 
@@ -42,8 +42,8 @@ public class SqlUtil {
             return;
         }
         String[] sqlKeywords = StringUtils.split(SQL_REGEX, "\\|");
-        for (int i = 0; i < sqlKeywords.length; i++) {
-            if (StringUtils.indexOfIgnoreCase(value, sqlKeywords[i]) > -1) {
+        for (String sqlKeyword : sqlKeywords) {
+            if (StringUtils.indexOfIgnoreCase(value, sqlKeyword) > -1) {
                 throw new UtilException("参数存在SQL注入风险");
             }
         }

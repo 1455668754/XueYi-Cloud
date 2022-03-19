@@ -13,15 +13,13 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 /**
  * Jackson配置
  *
- * @author ruoyi
- *
+ * @author xueyi
  */
 @Configuration
-public class JacksonConfig
-{
+public class JacksonConfig {
+
     @Bean
-    public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter()
-    {
+    public MappingJackson2HttpMessageConverter jackson2HttpMessageConverter() {
         final Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
         builder.serializationInclusion(JsonInclude.Include.NON_NULL);
         final ObjectMapper objectMapper = builder.build();

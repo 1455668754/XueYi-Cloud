@@ -1,0 +1,127 @@
+package ${packageName}.domain.po;
+
+#foreach ($import in $importList)
+import ${import};
+#end
+#if($table.base)
+#set($Entity="BaseEntity")
+#elseif($table.tree)
+#set($Entity="TreeEntity")
+#set($paramNotes = " * @param <D> Dto")
+#set($generics = "<D>")
+#elseif($table.subBase)
+#set($Entity="SubBaseEntity")
+#set($paramNotes = " * @param <S> SubDto")
+#set($generics = "<S>")
+#elseif($table.subTree)
+#set($Entity="SubTreeEntity")
+#set($paramNotes = " * @param <D> Dto\r\n * @param <S> SubDto")
+#set($generics = "<D, S>")
+#end
+#if($isTenant)
+#set($Entity = "T" + $Entity)
+import com.xueyi.common.core.web.tenant.base.${Entity};
+#else
+import com.xueyi.common.core.web.entity.base.${Entity};
+#end
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.xueyi.common.core.annotation.Excel;
+
+/**
+ * ${functionName} 持久化对象
+ *
+#if($paramNotes)
+${paramNotes}
+#end
+ * @author ${author}
+ */
+public class ${ClassName}Po#if($generics)${generics}#end extends ${Entity}#if($generics)${generics}#end {
+
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+#set($hide = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#foreach($item in $hideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#if($hide)
+    /** $column.comment */
+#if($column.list)
+#set($parentheseIndex=$column.comment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.comment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.comment)
+#end
+#if($parentheseIndex != -1)
+    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+#elseif($column.javaType == 'Date')
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Excel(name = "${comment}", width = 30, dateFormat = "yyyy-MM-dd")
+#else
+    @Excel(name = "${comment}")
+#end
+#end
+#if($column.isPk)
+    @TableId("${column.name}")
+#else
+    @TableField("${column.name}")
+#end
+    private $column.javaType $column.javaField;
+
+#end
+#end
+#foreach ($column in $columns)
+#set($hide = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#foreach($item in $hideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#if($hide)
+#set($cover = false)
+#foreach($item in $coverField)
+#if($column.javaField == $item)
+#set($cover = true)
+#break
+#end
+#end
+#set($AttrName = $column.javaField)
+#if($AttrName.length() > 2 && $AttrName.substring(1,2).matches("[A-Z]"))
+#set($field=$AttrName)
+#else
+#set($field=$AttrName.substring(0,1).toUpperCase() + ${AttrName.substring(1)})
+#end
+#if($cover)
+    @Override
+#end
+    public void set${field}($column.javaType $AttrName) {
+        this.$AttrName = $AttrName;
+    }
+
+#if($cover)
+    @Override
+#end
+    public $column.javaType get${field}() {
+        return $AttrName;
+    }
+
+#end
+#end
+}

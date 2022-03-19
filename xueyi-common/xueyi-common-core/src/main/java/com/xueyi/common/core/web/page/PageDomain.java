@@ -1,11 +1,12 @@
 package com.xueyi.common.core.web.page;
 
+import cn.hutool.core.util.StrUtil;
 import com.xueyi.common.core.utils.StringUtils;
 
 /**
  * 分页数据
- * 
- * @author ruoyi
+ *
+ * @author xueyi
  */
 public class PageDomain {
 
@@ -24,78 +25,61 @@ public class PageDomain {
     /** 分页参数合理化 */
     private Boolean reasonable = true;
 
-    public String getOrderBy()
-    {
-        if (StringUtils.isEmpty(orderByColumn))
-        {
-            return "";
+    public String getOrderBy() {
+        if (StringUtils.isEmpty(orderByColumn)) {
+            return StrUtil.EMPTY;
         }
-        return StringUtils.toUnderScoreCase(orderByColumn) + " " + isAsc;
+        return StringUtils.toUnderScoreCase(orderByColumn) + StrUtil.SPACE + isAsc;
     }
 
-    public Integer getPageNum()
-    {
+    public Integer getPageNum() {
         return pageNum;
     }
 
-    public void setPageNum(Integer pageNum)
-    {
+    public void setPageNum(Integer pageNum) {
         this.pageNum = pageNum;
     }
 
-    public Integer getPageSize()
-    {
+    public Integer getPageSize() {
         return pageSize;
     }
 
-    public void setPageSize(Integer pageSize)
-    {
+    public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
-    public String getOrderByColumn()
-    {
+    public String getOrderByColumn() {
         return orderByColumn;
     }
 
-    public void setOrderByColumn(String orderByColumn)
-    {
+    public void setOrderByColumn(String orderByColumn) {
         this.orderByColumn = orderByColumn;
     }
 
-    public String getIsAsc()
-    {
+    public String getIsAsc() {
         return isAsc;
     }
 
-    public void setIsAsc(String isAsc)
-    {
-        if (StringUtils.isNotEmpty(isAsc))
-        {
+    public void setIsAsc(String isAsc) {
+        if (StringUtils.isNotEmpty(isAsc)) {
             // 兼容前端排序类型
-            if ("ascending".equals(isAsc))
-            {
+            if ("ascending".equals(isAsc)) {
                 isAsc = "asc";
-            }
-            else if ("descending".equals(isAsc))
-            {
+            } else if ("descending".equals(isAsc)) {
                 isAsc = "desc";
             }
             this.isAsc = isAsc;
         }
     }
 
-    public Boolean getReasonable()
-    {
-        if (StringUtils.isNull(reasonable))
-        {
+    public Boolean getReasonable() {
+        if (StringUtils.isNull(reasonable)) {
             return Boolean.TRUE;
         }
         return reasonable;
     }
 
-    public void setReasonable(Boolean reasonable)
-    {
+    public void setReasonable(Boolean reasonable) {
         this.reasonable = reasonable;
     }
 }

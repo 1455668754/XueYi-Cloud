@@ -6,29 +6,29 @@
 
     <groupId>com.xueyi</groupId>
     <artifactId>xueyi</artifactId>
-    <version>4.2.4</version>
+    <version>5.1.2</version>
 
     <name>xueyi</name>
     <url>https://xueyitt.cn</url>
     <description>雪忆管理系统</description>
 
     <properties>
-        <xueyi.version>4.2.4</xueyi.version>
+        <xueyi.version>5.1.2</xueyi.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <spring-boot.version>2.6.4</spring-boot.version>
-        <spring-cloud.version>2021.0.0</spring-cloud.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <alibaba.nacos.version>2.0.4</alibaba.nacos.version>
         <spring-boot-admin.version>2.6.2</spring-boot-admin.version>
-        <spring-boot.mybatis>2.2.0</spring-boot.mybatis>
+        <spring-boot.mybatis-plus>3.4.3.4</spring-boot.mybatis-plus>
         <netty.version>4.1.67.Final</netty.version>
         <swagger.fox.version>3.0.0</swagger.fox.version>
         <swagger.core.version>1.6.2</swagger.core.version>
         <tobato.version>1.27.2</tobato.version>
         <kaptcha.version>2.3.2</kaptcha.version>
-        <pagehelper.boot.version>1.4.1</pagehelper.boot.version>
+        <pagehelper.version>5.3.0</pagehelper.version>
         <druid.version>1.2.8</druid.version>
         <dynamic-ds.version>3.5.0</dynamic-ds.version>
         <commons.io.version>2.11.0</commons.io.version>
@@ -36,11 +36,9 @@
         <velocity.version>2.3</velocity.version>
         <fastjson.version>1.2.79</fastjson.version>
         <minio.version>8.2.2</minio.version>
-		<poi.version>4.1.2</poi.version>
+        <poi.version>4.1.2</poi.version>
         <commons-collections.version>3.2.2</commons-collections.version>
-        <hutool-all.version>5.7.13</hutool-all.version>
-        <thumbnailator.version>0.4.14</thumbnailator.version>
-        <spring-test.version>5.1.3.RELEASE</spring-test.version>
+        <hutool-all.version>5.7.16</hutool-all.version>
         <jjwt.version>0.9.1</jjwt.version>
         <transmittable-thread-local.version>2.12.2</transmittable-thread-local.version>
     </properties>
@@ -58,7 +56,7 @@
                 <scope>import</scope>
             </dependency>
 
-			<!-- SpringCloud Alibaba 微服务 -->
+            <!-- SpringCloud Alibaba 微服务 -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -73,7 +71,7 @@
                 <artifactId>nacos-client</artifactId>
                 <version>${alibaba.nacos.version}</version>
             </dependency>
-            
+
             <!-- SpringBoot 依赖配置 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -97,11 +95,18 @@
                 <version>${tobato.version}</version>
             </dependency>
 
-            <!-- Mybatis 依赖配置 -->
+            <!-- Mybatis-Plus 依赖配置 -->
             <dependency>
-                <groupId>org.mybatis.spring.boot</groupId>
-                <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${spring-boot.mybatis}</version>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${spring-boot.mybatis-plus}</version>
+            </dependency>
+
+            <!-- pageHelper 分页插件 -->
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
 
             <!-- Swagger 依赖配置 -->
@@ -110,6 +115,7 @@
                 <artifactId>swagger-models</artifactId>
                 <version>${swagger.core.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
@@ -121,13 +127,6 @@
                 <groupId>com.github.penggle</groupId>
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
-            </dependency>
-
-            <!-- pagehelper 分页插件 -->
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${pagehelper.boot.version}</version>
             </dependency>
 
             <!-- io常用工具类 -->
@@ -159,9 +158,9 @@
             </dependency>
 
             <!-- Collection 增强Java集合框架 -->
-            <dependency> 
-                <groupId>commons-collections</groupId> 
-                <artifactId>commons-collections</artifactId> 
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
                 <version>${commons-collections.version}</version>
             </dependency>
 
@@ -187,23 +186,16 @@
             </dependency>
 
             <!-- 核心模块 -->
-	        <dependency>
+            <dependency>
                 <groupId>com.xueyi</groupId>
                 <artifactId>xueyi-common-core</artifactId>
                 <version>${xueyi.version}</version>
             </dependency>
 
-            <!-- 消息队列 -->
+            <!-- 通信模块 -->
             <dependency>
                 <groupId>com.xueyi</groupId>
-                <artifactId>xueyi-common-message</artifactId>
-                <version>${xueyi.version}</version>
-            </dependency>
-
-            <!-- 推送模块 -->
-            <dependency>
-                <groupId>com.xueyi</groupId>
-                <artifactId>xueyi-common-socket</artifactId>
+                <artifactId>xueyi-common-web</artifactId>
                 <version>${xueyi.version}</version>
             </dependency>
 
@@ -249,6 +241,20 @@
                 <version>${xueyi.version}</version>
             </dependency>
 
+            <!-- 消息推送 -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-common-socket</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
+            <!-- 消息队列 -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-common-message</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
             <!-- 系统接口 -->
             <dependency>
                 <groupId>com.xueyi</groupId>
@@ -263,11 +269,18 @@
                 <version>${xueyi.version}</version>
             </dependency>
 
-            <!-- Thumbnailator 图片处理工具-->
+            <!-- 文件管理接口 -->
             <dependency>
-                <groupId>net.coobird</groupId>
-                <artifactId>thumbnailator</artifactId>
-                <version>${thumbnailator.version}</version>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-api-file</artifactId>
+                <version>${xueyi.version}</version>
+            </dependency>
+
+            <!-- 定时任务接口 -->
+            <dependency>
+                <groupId>com.xueyi</groupId>
+                <artifactId>xueyi-api-job</artifactId>
+                <version>${xueyi.version}</version>
             </dependency>
 
             <!-- huTool 工具类库-->
@@ -277,22 +290,16 @@
                 <version>${hutool-all.version}</version>
             </dependency>
 
-            <!-- MockMultipartFile -->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring-test.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
-		<module>xueyi-auth</module>
-		<module>xueyi-gateway</module>
-		<module>xueyi-visual</module>
-		<module>xueyi-modules</module>
-		<module>xueyi-api</module>
-		<module>xueyi-common</module>
+        <module>xueyi-auth</module>
+        <module>xueyi-gateway</module>
+        <module>xueyi-visual</module>
+        <module>xueyi-modules</module>
+        <module>xueyi-api</module>
+        <module>xueyi-common</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -303,7 +310,7 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
-        
+
     </dependencies>
 
     <build>

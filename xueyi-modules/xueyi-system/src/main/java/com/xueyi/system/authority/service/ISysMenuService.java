@@ -1,89 +1,89 @@
 package com.xueyi.system.authority.service;
 
-import com.xueyi.system.api.domain.authority.SysMenu;
+import com.xueyi.common.web.entity.service.ITreeService;
+import com.xueyi.system.api.authority.domain.dto.SysMenuDto;
 import com.xueyi.system.utils.route.RouterVo;
-import com.xueyi.system.utils.vo.TreeSelect;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * 菜单 业务层
+ * 菜单管理 服务层
  *
  * @author xueyi
  */
-public interface ISysMenuService {
+public interface ISysMenuService extends ITreeService<SysMenuDto> {
 
     /**
-     * 根据用户Id查询菜单路由
+     * 登录校验 | 获取租户全部菜单权限标识集合
      *
-     * @param menu 菜单信息 | systemId 系统Id
+     * @return 菜单权限集合
+     */
+    Set<String> loginPermission();
+
+    /**
+     * 登录校验 | 获取菜单权限标识集合
+     *
+     * @param roleIds 角色Id集合
+     * @return 菜单权限集合
+     */
+    Set<String> loginPermission(Set<Long> roleIds);
+
+    /**
+     * 登录校验 | 获取全部路由路径集合
+     *
+     * @return 路径集合
+     */
+    Map<String, String> getLessorRouteMap();
+
+    /**
+     * 登录校验 | 获取租户全部路由路径集合
+     *
+     * @return 路径集合
+     */
+    Map<String, String> getRouteMap();
+
+    /**
+     * 登录校验 | 获取路由路径集合
+     *
+     * @param roleIds 角色Id集合
+     * @return 路径集合
+     */
+    Map<String, String> getRouteMap(Set<Long> roleIds);
+
+    /**
+     * 根据模块Id查询菜单路由
+     *
+     * @param moduleId 模块Id
      * @return 菜单列表
      */
-    public List<SysMenu> getRoutes(SysMenu menu);
+    List<SysMenuDto> getRoutes(Long moduleId);
 
     /**
-     * 查询模块-菜单信息列表
+     * 根据菜单类型及模块Id获取可配菜单集
      *
-     * @param menu 菜单信息
-     * @return 模块-菜单信息集合
+     * @param moduleId 模块Id
+     * @param menuType 菜单类型
+     * @return 菜单列表
      */
-    public List<TreeSelect> mainSelectSystemMenuList(SysMenu menu);
+    List<SysMenuDto> getMenuByMenuType(Long moduleId, String menuType);
 
     /**
-     * 根据菜单Id查询信息
+     * 校验菜单是否存在租户
      *
-     * @param menu 菜单信息 | menuId 菜单Id
-     * @return 菜单信息
+     * @param id 菜单Id
+     * @return 结果 | true/false 有/无
      */
-    public SysMenu mainSelectMenuById(SysMenu menu);
-
-    /**
-     * 新增保存菜单信息
-     *
-     * @param menu 菜单信息
-     * @return 结果
-     */
-    public int mainInsertMenu(SysMenu menu);
-
-    /**
-     * 修改保存菜单信息
-     *
-     * @param menu 菜单信息
-     * @return 结果
-     */
-    public int mainUpdateMenu(SysMenu menu);
-
-    /**
-     * 删除菜单管理信息
-     *
-     * @param menu 菜单信息 | menuId 菜单Id
-     * @return 结果
-     */
-    public int mainDeleteMenuById(SysMenu menu);
-
-    /**
-     * 校验菜单名称是否唯一
-     *
-     * @param menu 菜单信息 | menuId   菜单Id | parentId 父级菜单Id | menuName 菜单名称
-     * @return 结果
-     */
-    public boolean mainCheckMenuNameUnique(SysMenu menu);
-
-    /**
-     * 校验是否存在菜单子节点
-     *
-     * @param menu 菜单信息 | menuId 菜单Id
-     * @return 结果 true 存在 false 不存在
-     */
-    public boolean mainHasChildByMenuId(SysMenu menu);
+    boolean checkMenuExistTenant(Long id);
 
     /**
      * 校验菜单是否存在角色
      *
-     * @param menu 菜单信息 | menuId 菜单Id
-     * @return 结果 true 存在 false 不存在
+     * @param id 菜单Id
+     * @return 结果 | true/false 有/无
      */
-    public boolean mainCheckMenuExistRole(SysMenu menu);
+    boolean checkMenuExistRole(Long id);
 
     /**
      * 构建前端路由所需要的菜单
@@ -91,5 +91,5 @@ public interface ISysMenuService {
      * @param menus 菜单列表
      * @return 路由列表
      */
-    public List<RouterVo> buildMenus(List<SysMenu> menus);
+    List<RouterVo> buildMenus(List<SysMenuDto> menus);
 }

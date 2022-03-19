@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.xueyi</groupId>
+        <artifactId>xueyi-common</artifactId>
+        <version>5.1.2</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>xueyi-common-web</artifactId>
+
+    <description>
+        xueyi-common-web通信模块
+    </description>
+
+    <dependencies>
+
+        <!-- 权限范围 -->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-common-datascope</artifactId>
+        </dependency>
+
+        <!-- XueYi Common DataSource -->
+        <dependency>
+            <groupId>com.xueyi</groupId>
+            <artifactId>xueyi-common-datasource</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

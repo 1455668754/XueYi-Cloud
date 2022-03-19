@@ -1,103 +1,59 @@
 package com.xueyi.system.organize.controller;
 
-import cn.hutool.json.JSONObject;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
+import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.domain.R;
-import com.xueyi.common.core.constant.BaseConstants;
+import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.multiTenancy.ParamsUtils;
-import com.xueyi.common.core.utils.poi.ExcelUtil;
-import com.xueyi.common.core.web.controller.BaseController;
-import com.xueyi.common.core.web.domain.AjaxResult;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
-import com.xueyi.common.redis.utils.DataSourceUtils;
-import com.xueyi.common.redis.utils.EnterpriseUtils;
 import com.xueyi.common.security.annotation.InnerAuth;
+import com.xueyi.common.security.annotation.Logical;
 import com.xueyi.common.security.annotation.RequiresPermissions;
-import com.xueyi.common.security.service.TokenService;
+import com.xueyi.common.security.auth.Auth;
 import com.xueyi.common.security.utils.SecurityUtils;
-import com.xueyi.system.api.domain.authority.SysRole;
-import com.xueyi.system.api.domain.organize.SysEnterprise;
-import com.xueyi.system.api.domain.organize.SysPost;
-import com.xueyi.system.api.domain.organize.SysUser;
-import com.xueyi.system.api.domain.source.Source;
+import com.xueyi.common.web.entity.controller.BaseController;
 import com.xueyi.system.api.model.LoginUser;
-import com.xueyi.system.authority.service.ISysLoginService;
-import com.xueyi.system.authority.service.ISysRoleService;
-import com.xueyi.system.organize.service.ISysPostService;
+import com.xueyi.system.api.organize.domain.dto.SysUserDto;
+import com.xueyi.system.organize.service.ISysOrganizeService;
 import com.xueyi.system.organize.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
- * 用户信息
+ * 用户管理 业务处理
  *
  * @author xueyi
  */
 @RestController
 @RequestMapping("/user")
-public class SysUserController extends BaseController {
+public class SysUserController extends BaseController<SysUserDto, ISysUserService> {
 
     @Autowired
-    private ISysLoginService loginService;
+    private ISysOrganizeService organizeService;
 
-    @Autowired
-    private ISysUserService userService;
-
-    @Autowired
-    private ISysPostService postService;
-
-    @Autowired
-    private ISysRoleService roleService;
-
-    @Autowired
-    private TokenService tokenService;
+    /** 定义节点名称 */
+    @Override
+    protected String getNodeName() {
+        return "用户";
+    }
 
     /**
-     * 获取当前用户信息
+     * 新增用户 | 内部调用
      */
     @InnerAuth
-    @GetMapping("/info/{enterpriseName}/{userName}")
-    public R<LoginUser> info(@PathVariable("enterpriseName") String enterpriseName, @PathVariable("userName") String userName) {
-        SysEnterprise enterprise = EnterpriseUtils.getEnterpriseByEnterpriseName(enterpriseName);
-        if (StringUtils.isNull(enterprise)) {
-            return R.fail("账号或密码错误，请检查");
-        }
-        //查询租户的主从库信息
-        Source source = DataSourceUtils.getSourceByEnterpriseId(enterprise.getEnterpriseId());
-        //开始进入对应的主数据库
-        SysUser checkUser = new SysUser();
-        checkUser.setSourceName(source.getMaster());
-        checkUser.setEnterpriseId(enterprise.getEnterpriseId());
-        checkUser.setUserName(userName);
-        SysUser sysUser = loginService.checkLoginByEnterpriseIdANDUserName(checkUser);
-        if (StringUtils.isNull(sysUser)) {
-            return R.fail("账号或密码错误，请检查");
-        }
-        // 角色集合
-        List<SysRole> roleList = roleService.getRoleListByUserId(sysUser.getUserId(), enterprise.getEnterpriseId(), source.getMaster());
-        Set<Long> roleIds = roleList.stream().map(SysRole::getRoleId).collect(Collectors.toSet());
-        Set<String> roles = loginService.getRolePermission(roleIds, sysUser.getUserType(), enterprise.getEnterpriseId());
-        // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(roleIds, sysUser.getUserType(), enterprise.getEnterpriseId());
-        LoginUser sysUserVo = new LoginUser();
-        sysUserVo.setSysUser(sysUser);
-        sysUserVo.setUserType(sysUser.getUserType());
-        sysUserVo.setSysEnterprise(enterprise);
-        sysUserVo.setRoles(roles);
-        sysUserVo.setRoleIds(roleIds);
-        sysUserVo.setPermissions(permissions);
-        sysUserVo.setSource(source);
-        return R.ok(sysUserVo);
+    @PostMapping("/inner/add")
+    public R<SysUserDto> addInner(@RequestBody SysUserDto user) {
+        return baseService.addInner(user) > 0 ? R.ok(user) : R.fail();
     }
 
     /**
@@ -105,94 +61,113 @@ public class SysUserController extends BaseController {
      *
      * @return 用户信息
      */
-    @GetMapping("getInfo")
+    @GetMapping("/getInfo")
     public AjaxResult getInfo() {
-        LoginUser loginUser = tokenService.getLoginUser();
-        // 角色集合
-        Set<String> roles = loginService.getRolePermission(loginUser.getRoleIds(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
-        // 权限集合
-        Set<String> permissions = loginService.getMenuPermission(loginUser.getRoleIds(), loginUser.getSysUser().getUserType(), loginUser.getEnterpriseId());
-        JSONObject ajaxJson = new JSONObject();
-        ajaxJson.put("user", userService.selectUserById(new SysUser(loginUser.getSysUser().getUserId())));
-        ajaxJson.put("roles", roles);
-        ajaxJson.put("permissions", permissions);
-        return AjaxResult.success(ajaxJson);
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        baseService.userDesensitized(loginUser.getUser());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("user", loginUser.getUser());
+        map.put("roles", loginUser.getRoles());
+        map.put("permissions", loginUser.getPermissions());
+        map.put("routes", loginUser.getRouteURL());
+        return AjaxResult.success(map);
     }
 
     /**
-     * 获取用户列表
+     * 查询用户列表
      */
-    @RequiresPermissions("system:user:list")
+    @Override
     @GetMapping("/list")
-    public AjaxResult list(SysUser user) {
+    @RequiresPermissions(Auth.SYS_USER_LIST)
+    public AjaxResult list(SysUserDto user) {
         startPage();
-        List<SysUser> list = userService.selectUserList(user);
+        List<SysUserDto> list = baseService.selectListScope(user);
+        list.forEach(item -> baseService.userDesensitized(item));
         return getDataTable(list);
     }
 
     /**
-     * 根据用户Id获取详细信息
+     * 查询用户详细
      */
-    @RequiresPermissions("system:user:query")
-    @GetMapping(value = {"/", "/{userId}"})
-    public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
-        SysUser user = new SysUser(userId);
-        return AjaxResult.success(userService.selectUserById(user));
+    @Override
+    @GetMapping(value = "/{id}")
+    @RequiresPermissions(Auth.SYS_USER_SINGLE)
+    public AjaxResult getInfoExtra(@PathVariable Serializable id) {
+        return super.getInfoExtra(id);
     }
 
     /**
-     * 新增用户
+     * 查询用户关联的角色Id集
      */
-    @RequiresPermissions("system:user:add")
-    @Log(title = "用户管理", businessType = BusinessType.INSERT)
+    @GetMapping(value = "/auth/{id}")
+    @RequiresPermissions(Auth.SYS_USER_AUTH)
+    public AjaxResult getRoleAuth(@PathVariable Long id) {
+        return AjaxResult.success(organizeService.selectUserRoleMerge(id));
+    }
+
+    /**
+     * 用户导出
+     */
+    @Override
+    @PostMapping("/export")
+    @RequiresPermissions(Auth.SYS_USER_EXPORT)
+    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
+    public void export(HttpServletResponse response, SysUserDto user) {
+        super.export(response, user);
+    }
+
+    /**
+     * 用户新增
+     */
+    @Override
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody SysUser user) {
-        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkUserCodeUnique(user))) {
-            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，用户编码已存在");
-        } else if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkUserNameUnique(user))) {
-            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，用户账号已存在");
-        } else if (StringUtils.isNotEmpty(user.getPhone())
-                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
-        } else if (StringUtils.isNotEmpty(user.getEmail())
-                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkEmailUnique(user))) {
-            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
-        }
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        return toAjax(userService.insertUser(user));
+    @RequiresPermissions(Auth.SYS_USER_ADD)
+    @Log(title = "用户管理", businessType = BusinessType.INSERT)
+    public AjaxResult add(@Validated @RequestBody SysUserDto user) {
+        return super.add(user);
     }
 
     /**
-     * 修改用户
+     * 用户修改
      */
-    @RequiresPermissions("system:user:edit")
-    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    @Override
     @PutMapping
-    public AjaxResult edit(@Validated @RequestBody SysUser user) {
-        userService.checkUserAllowed(user);
-        if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkUserCodeUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户编码已存在");
-        } else if (StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkUserNameUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，用户账号已存在");
-        } else if (StringUtils.isNotEmpty(user.getPhone())
-                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkPhoneUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，手机号码已存在");
-        } else if (StringUtils.isNotEmpty(user.getEmail())
-                && StringUtils.equals(BaseConstants.Check.NOT_UNIQUE.getCode(), userService.checkEmailUnique(user))) {
-            return AjaxResult.error("修改用户'" + user.getUserName() + "'失败，邮箱账号已存在");
-        }
-        return toAjax(userService.updateUser(user));
+    @RequiresPermissions(Auth.SYS_USER_EDIT)
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
+    public AjaxResult edit(@Validated @RequestBody SysUserDto user) {
+        return super.edit(user);
     }
 
     /**
-     * 修改用户-角色关系
+     * 修改用户关联的角色Id集
      */
-    @RequiresPermissions("system:role:set")
-    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/changeUserRole")
-    public AjaxResult editUserRole(@Validated @RequestBody SysUser user) {
-        userService.checkUserAllowed(user);
-        return toAjax(userService.updateUserRole(user));
+    @PutMapping(value = "/auth")
+    @RequiresPermissions(Auth.SYS_USER_AUTH)
+    public AjaxResult editRoleAuth(@RequestBody SysUserDto user) {
+        organizeService.editUserRoleMerge(user.getId(), user.getRoleIds());
+        return AjaxResult.success();
+    }
+
+    /**
+     * 用户修改状态
+     */
+    @Override
+    @PutMapping("/status")
+    @RequiresPermissions(value = {Auth.SYS_USER_EDIT, Auth.SYS_USER_EDIT_STATUS}, logical = Logical.OR)
+    @Log(title = "用户管理", businessType = BusinessType.UPDATE_STATUS)
+    public AjaxResult editStatus(@RequestBody SysUserDto user) {
+        return super.editStatus(user);
+    }
+
+    /**
+     * 用户批量删除
+     */
+    @Override
+    @DeleteMapping("/batch/{idList}")
+    @RequiresPermissions(Auth.SYS_USER_DELETE)
+    @Log(title = "用户管理", businessType = BusinessType.DELETE)
+    public AjaxResult batchRemove(@PathVariable List<Long> idList) {
+        return super.batchRemove(idList);
     }
 
     /**
@@ -200,83 +175,78 @@ public class SysUserController extends BaseController {
      */
     @RequiresPermissions("system:user:edit")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/resetPwd")
-    public AjaxResult resetPwd(@RequestBody SysUser user) {
-        userService.checkUserAllowed(user);
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
-        return toAjax(userService.resetUserPwd(user));
+    @PutMapping("/resetPassword")
+    public AjaxResult resetPassword(@RequestBody SysUserDto user) {
+        adminValidated(user.getId());
+        return toAjax(baseService.resetUserPassword(user.getId(), SecurityUtils.encryptPassword(user.getPassword())));
     }
 
     /**
-     * 状态修改
+     * 获取用户选择框列表
      */
-    @RequiresPermissions("system:user:edit")
-    @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/changeStatus")
-    public AjaxResult changeStatus(@RequestBody SysUser user) {
-        userService.checkUserAllowed(user);
-        SysPost post = new SysPost(user.getPostId());
-        if (StringUtils.equals(BaseConstants.Status.NORMAL.getCode(), user.getStatus())
-                && StringUtils.equals(BaseConstants.Status.DISABLE.getCode(), postService.checkPostStatus(post))) {
-            return AjaxResult.error("启用失败，该用户的归属岗位已被禁用！");
+    @Override
+    @GetMapping("/option")
+    public AjaxResult option() {
+        return super.option();
+    }
+
+    /**
+     * 前置校验 （强制）增加/修改
+     */
+    @Override
+    protected void AEHandleValidated(BaseConstants.Operate operate, SysUserDto user) {
+        if (operate.isEdit())
+            adminValidated(user.getId());
+        if (baseService.checkUserCodeUnique(user.getId(), user.getCode()))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，用户编码已存在", operate.getInfo(), getNodeName(), user.getNickName()));
+        else if (baseService.checkUserNameUnique(user.getId(), user.getUserName()))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，用户账号已存在", operate.getInfo(), getNodeName(), user.getNickName()));
+        else if (StringUtils.isNotEmpty(user.getEmail()) && baseService.checkPhoneUnique(user.getId(), user.getCode()))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，手机号码已存在", operate.getInfo(), getNodeName(), user.getNickName()));
+        else if (StringUtils.isNotEmpty(user.getEmail()) && baseService.checkEmailUnique(user.getId(), user.getName()))
+            throw new ServiceException(StrUtil.format("{}{}{}失败，邮箱账号已存在", operate.getInfo(), getNodeName(), user.getNickName()));
+        // 防止修改操作更替密码
+        if (BaseConstants.Operate.ADD == operate)
+            user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
+    }
+
+    /**
+     * 前置校验 （强制）修改状态
+     *
+     * @param user 用户对象
+     */
+    @Override
+    protected void ESHandleValidated(BaseConstants.Operate operate, SysUserDto user) {
+        adminValidated(user.getId());
+    }
+
+    /**
+     * 前置校验 （强制）删除
+     *
+     * @param idList Id集合
+     */
+    @Override
+    protected void RHandleValidated(BaseConstants.Operate operate, List<Long> idList) {
+        int size = idList.size();
+        Long userId = SecurityUtils.getUserId();
+        // remove oneself or admin
+        for (int i = idList.size() - 1; i >= 0; i--) {
+            if (ObjectUtil.equals(idList.get(i), userId) || baseService.checkUserAllowed(idList.get(i)))
+                idList.remove(i);
         }
-        return toAjax(userService.updateUserStatus(user));
-    }
-
-    /**
-     * 删除用户
-     */
-    @RequiresPermissions("system:user:remove")
-    @Log(title = "用户管理", businessType = BusinessType.DELETE)
-    @DeleteMapping
-    public AjaxResult remove(@RequestBody SysUser user) {
-        List<Long> Ids = ParamsUtils.IdsObjectToLongList(user.getParams().get("Ids"));
-        for (int i = Ids.size() - 1; i >= 0; i--) {
-            if (Objects.equals(SecurityUtils.getUserId(), Ids.get(i))) {
-                Ids.remove(i);
-                if (Ids.size() <= 0) {
-                    return AjaxResult.error("删除失败，不能删除自己！");
-                } else {
-                    userService.deleteUserByIds(user);
-                    return AjaxResult.error("删除成功但未删除自己信息！");
-                }
-            }
+        if (CollUtil.isEmpty(idList))
+            throw new ServiceException("删除失败，不能删除自己或超管用户！");
+        else if (idList.size() != size) {
+            baseService.deleteByIds(idList);
+            throw new ServiceException("成功删除除自己及超管用户外的所有用户！");
         }
-        return toAjax(userService.deleteUserByIds(user));
     }
 
     /**
-     * 导出用户
+     * 校验归属的岗位是否启用
      */
-    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
-    @RequiresPermissions("system:user:export")
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysUser user) {
-        List<SysUser> list = userService.selectUserList(user);
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        util.exportExcel(response, list, "用户数据");
-    }
-
-    /**
-     * 导入用户
-     */
-    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
-    @RequiresPermissions("system:user:import")
-    @PostMapping("/importData")
-    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        List<SysUser> userList = util.importExcel(file.getInputStream());
-        String operName = SecurityUtils.getUserName();
-        String message = userService.importUser(userList, updateSupport, operName);
-        return AjaxResult.success(message);
-    }
-
-    /**
-     * 导入模板下载
-     */
-    @PostMapping("/importTemplate")
-    public void importTemplate(HttpServletResponse response) throws IOException {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        util.importTemplateExcel(response, "用户数据");
+    private void adminValidated(Long Id) {
+        if (!baseService.checkUserAllowed(Id))
+            throw new ServiceException("不允许操作超级管理员用户");
     }
 }

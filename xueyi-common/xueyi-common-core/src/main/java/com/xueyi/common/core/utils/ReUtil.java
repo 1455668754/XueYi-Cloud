@@ -1,14 +1,14 @@
 package com.xueyi.common.core.utils;
 
+import cn.hutool.core.util.StrUtil;
+import com.xueyi.common.core.text.Convert;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.xueyi.common.core.text.Convert;
-import com.xueyi.common.core.utils.StringUtils;
 
 public class ReUtil {
 
@@ -55,8 +55,8 @@ public class ReUtil {
      * @since 3.0.4
      */
     public static String replaceAll(CharSequence content, Pattern pattern, String replacementTemplate) {
-        if (StringUtils.isEmpty(content)) {
-            return StringUtils.EMPTY;
+        if (StrUtil.isEmpty(content)) {
+            return StrUtil.EMPTY;
         }
 
         final Matcher matcher = pattern.matcher(content);
@@ -129,8 +129,8 @@ public class ReUtil {
      * @return 转义后的文本
      */
     public static String escape(CharSequence content) {
-        if (StringUtils.isBlank(content)) {
-            return StringUtils.EMPTY;
+        if (StrUtil.isBlank(content)) {
+            return StrUtil.EMPTY;
         }
 
         final StringBuilder builder = new StringBuilder();

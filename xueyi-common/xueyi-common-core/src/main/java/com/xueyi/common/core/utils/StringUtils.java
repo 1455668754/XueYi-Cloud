@@ -1,22 +1,22 @@
 package com.xueyi.common.core.utils;
 
+import com.xueyi.common.core.constant.basic.HttpConstants;
+import com.xueyi.common.core.text.StrFormatter;
+import org.springframework.util.AntPathMatcher;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.xueyi.common.core.constant.HttpConstants;
-import org.springframework.util.AntPathMatcher;
-import com.xueyi.common.core.text.StrFormatter;
-
 /**
  * 字符串工具类
  *
- * @author ruoyi
+ * @author xueyi
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /** 空字符串 */
-    private static final String NULLSTR = "";
+    private static final String STR_NULL = "";
 
     /** 下划线 */
     private static final char SEPARATOR = '_';
@@ -98,7 +98,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return true：为空 false：非空
      */
     public static boolean isEmpty(String str) {
-        return isNull(str) || NULLSTR.equals(str.trim());
+        return isNull(str) || STR_NULL.equals(str.trim());
     }
 
     /**
@@ -157,7 +157,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     public static String substring(final String str, int start) {
         if (str == null) {
-            return NULLSTR;
+            return STR_NULL;
         }
 
         if (start < 0) {
@@ -168,7 +168,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             start = 0;
         }
         if (start > str.length()) {
-            return NULLSTR;
+            return STR_NULL;
         }
 
         return str.substring(start);
@@ -184,7 +184,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     public static String substring(final String str, int start, int end) {
         if (str == null) {
-            return NULLSTR;
+            return STR_NULL;
         }
 
         if (end < 0) {
@@ -199,7 +199,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
 
         if (start > end) {
-            return NULLSTR;
+            return STR_NULL;
         }
 
         if (start < 0) {
@@ -258,7 +258,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @param link 链接
      * @return 结果
      */
-    public static boolean ishttp(String link) {
+    public static boolean isHttp(String link) {
         return StringUtils.startsWithAny(link, HttpConstants.Type.HTTP.getCode(), HttpConstants.Type.HTTPS.getCode());
     }
 
@@ -401,7 +401,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      *
      * @param pattern 匹配规则
      * @param url     需要匹配的url
-     * @return
+     * @return 结果
      */
     public static boolean isMatch(String pattern, String url) {
         AntPathMatcher matcher = new AntPathMatcher();

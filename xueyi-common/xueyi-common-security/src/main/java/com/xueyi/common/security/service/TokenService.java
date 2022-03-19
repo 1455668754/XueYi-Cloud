@@ -1,8 +1,11 @@
 package com.xueyi.common.security.service;
 
-import com.xueyi.common.core.constant.CacheConstants;
-import com.xueyi.common.core.constant.SecurityConstants;
-import com.xueyi.common.core.utils.*;
+import cn.hutool.core.util.IdUtil;
+import com.xueyi.common.core.constant.basic.CacheConstants;
+import com.xueyi.common.core.constant.basic.SecurityConstants;
+import com.xueyi.common.core.utils.JwtUtils;
+import com.xueyi.common.core.utils.ServletUtils;
+import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.ip.IpUtils;
 import com.xueyi.common.redis.service.RedisService;
 import com.xueyi.common.security.utils.SecurityUtils;
@@ -40,14 +43,14 @@ public class TokenService {
      * 创建令牌
      */
     public Map<String, Object> createToken(LoginUser loginUser) {
-        String token = IdUtils.fastUUID();
+        String token = IdUtil.fastUUID();
 
-        Long enterpriseId = loginUser.getSysEnterprise().getEnterpriseId();
-        String enterpriseName = loginUser.getSysEnterprise().getEnterpriseName();
-        String isLessor = loginUser.getSysEnterprise().getIsLessor();
-        Long userId = loginUser.getSysUser().getUserId();
-        String userName = loginUser.getSysUser().getUserName();
-        String userType = loginUser.getSysUser().getUserType();
+        Long enterpriseId = loginUser.getEnterprise().getId();
+        String enterpriseName = loginUser.getEnterprise().getName();
+        String isLessor = loginUser.getEnterprise().getIsLessor();
+        Long userId = loginUser.getUser().getId();
+        String userName = loginUser.getUser().getUserName();
+        String userType = loginUser.getUser().getUserType();
         String sourceName = loginUser.getSource().getMaster();
 
         loginUser.setToken(token);
@@ -56,8 +59,8 @@ public class TokenService {
         loginUser.setIsLessor(isLessor);
         loginUser.setUserId(userId);
         loginUser.setUserName(userName);
-        loginUser.setSourceName(sourceName);
         loginUser.setUserType(userType);
+        loginUser.setSourceName(sourceName);
         loginUser.setIpaddr(IpUtils.getIpAddr(ServletUtils.getRequest()));
         refreshToken(loginUser);
 
