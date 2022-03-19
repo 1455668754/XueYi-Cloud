@@ -1,54 +1,83 @@
 {
-  "name": "xueyi-ui",
+  "name": "xueyi",
   "version": "5.1.2",
   "description": "雪忆管理系统",
-  "author": "雪忆",
-  "main": "index.js",
+  "author": "xueyi",
   "license": "Apache-2.0",
-  "sideEffects": false,
   "scripts": {
-    "install:administrator": "cd administrator && yarn",
-    "install:main": "cd main && yarn",
-    "install-all": "yarn install && npm-run-all install:*",
-    "start:administrator": "cd administrator && yarn start",
-    "start:main": "cd main && yarn start",
-    "start-all": "npm-run-all --parallel start:*",
-    "serve-all": "npm-run-all --parallel start:*",
-    "build:administrator": "cd administrator && vue-cli-service build",
-    "build:main": "cd main && vue-cli-service build",
-    "build-all": "concurrently \"cd administrator && vue-cli-service build\" \"cd main && vue-cli-service build\""
+    "dev": "vue-cli-service serve",
+    "build:prod": "vue-cli-service build",
+    "build:stage": "vue-cli-service build --mode staging",
+    "preview": "node build/index.js --preview",
+    "lint": "eslint --ext .js,.vue src"
   },
-  "keywords": [],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,vue}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "keywords": [
+    "vue",
+    "admin",
+    "dashboard",
+    "element-ui",
+    "boilerplate",
+    "admin-template",
+    "management-system"
+  ],
   "repository": {
     "type": "git",
     "url": "https://gitee.com/xueyitiantang/XueYi-Cloud.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@riophae/vue-treeselect": "0.4.0",
+    "axios": "0.24.0",
+    "clipboard": "2.0.8",
+    "core-js": "3.19.1",
+    "echarts": "4.9.0",
+    "element-ui": "2.15.6",
+    "file-saver": "2.0.5",
+    "fuse.js": "6.4.3",
+    "highlight.js": "9.18.5",
+    "js-beautify": "1.13.0",
+    "js-cookie": "3.0.1",
+    "jsencrypt": "3.2.1",
+    "nprogress": "0.2.0",
+    "quill": "1.3.7",
+    "screenfull": "5.0.2",
+    "sortablejs": "1.10.2",
+    "vue": "2.6.12",
+    "vue-count-to": "1.0.13",
+    "vue-cropper": "0.5.5",
+    "vue-meta": "2.4.0",
+    "vue-router": "3.4.9",
+    "vuedraggable": "2.24.3",
+    "vuex": "3.6.0"
+  },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "babel-eslint": "^10.1.0",
+    "@vue/cli-plugin-babel": "4.4.6",
+    "@vue/cli-plugin-eslint": "4.4.6",
+    "@vue/cli-service": "4.4.6",
+    "babel-eslint": "10.1.0",
+    "babel-plugin-dynamic-import-node": "2.3.3",
+    "chalk": "4.1.0",
+    "compression-webpack-plugin": "5.0.2",
+    "connect": "3.6.6",
     "eslint": "7.15.0",
     "eslint-plugin-vue": "7.2.0",
-    "npm-run-all": "^4.1.5",
-    "concurrently": "^6.2.0",
-    "vue-template-compiler": "^2.6.11",
-    "script-ext-html-webpack-plugin": "^2.1.5"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
+    "lint-staged": "10.5.3",
+    "runjs": "4.4.2",
+    "sass": "1.32.13",
+    "sass-loader": "10.1.1",
+    "script-ext-html-webpack-plugin": "2.1.5",
+    "svg-sprite-loader": "5.1.1",
+    "vue-template-compiler": "2.6.12"
   },
   "engines": {
     "node": ">=8.9",
@@ -56,7 +85,6 @@
   },
   "browserslist": [
     "> 1%",
-    "last 2 versions",
-    "not dead"
+    "last 2 versions"
   ]
 }
