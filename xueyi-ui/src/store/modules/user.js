@@ -1,11 +1,16 @@
-import { login, logout, getInfo, refreshToken } from '@/api/login'
+import { login, logout, refreshToken, getEnterpriseInfo, getUserInfo } from '@/api/login'
 import { getToken, setToken, setExpiresIn, removeToken } from '@/utils/auth'
+import { IS_LESSOR } from '@/constants/BaseConstants'
 
 const user = {
   state: {
     token: getToken(),
     name: '',
     avatar: '',
+    enterpriseName: '',
+    systemName: '',
+    logo: '',
+    isLessor: false,
     roles: [],
     permissions: []
   },
@@ -23,6 +28,18 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
+    SET_ENTERPRISE_NAME: (state, enterpriseName) => {
+      state.enterpriseName = enterpriseName
+    },
+    SET_SYSTEM_NAME: (state, systemName) => {
+      state.systemName = systemName
+    },
+    SET_LOGO: (state, logo) => {
+      state.logo = logo
+    },
+    SET_IS_LESSOR:(state, isLessor) => {
+      state.isLessor = isLessor
+    },
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
@@ -34,12 +51,13 @@ const user = {
   actions: {
     // 登录
     Login({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      const enterpriseName = userInfo.enterpriseName.trim()
+      const userName = userInfo.userName.trim()
       const password = userInfo.password
       const code = userInfo.code
       const uuid = userInfo.uuid
       return new Promise((resolve, reject) => {
-        login(username, password, code, uuid).then(res => {
+        login(enterpriseName, userName, password, code, uuid).then(res => {
           let data = res.data
           setToken(data.access_token)
           commit('SET_TOKEN', data.access_token)
@@ -55,12 +73,12 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(res => {
-          const user = res.user
-          const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : user.avatar;
-          if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', res.roles)
-            commit('SET_PERMISSIONS', res.permissions)
+        getUserInfo().then(res => {
+          const user = res.data.user
+          const avatar = (user.avatar === "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : user.avatar;
+          if (res.data.roles && res.data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_ROLES', res.data.roles)
+            commit('SET_PERMISSIONS', res.data.permissions)
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
@@ -70,11 +88,23 @@ const user = {
         }).catch(error => {
           reject(error)
         })
+        getEnterpriseInfo().then(res => {
+          const enterprise = res.data
+          const systemName = enterprise.systemName === "" ? "雪忆管理系统" : enterprise.systemName;
+          const logo = enterprise.logo === "" ? require("@/assets/images/logo.jpg") : enterprise.logo;
+          const isLessor = enterprise.isLessor === IS_LESSOR.TRUE
+          commit('SET_ENTERPRISE_NAME', enterprise.enterpriseName)
+          commit('SET_SYSTEM_NAME', systemName)
+          commit('SET_LOGO', logo)
+          commit('SET_IS_LESSOR', isLessor)
+        }).catch(error => {
+          reject(error)
+        })
       })
     },
 
     // 刷新token
-    RefreshToken({commit, state}) {
+    RefreshToken({ commit, state }) {
       return new Promise((resolve, reject) => {
         refreshToken(state.token).then(res => {
           setExpiresIn(res.data)
@@ -85,7 +115,7 @@ const user = {
         })
       })
     },
-    
+
     // 退出系统
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {

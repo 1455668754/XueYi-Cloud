@@ -1,14 +1,14 @@
 import request from '@/utils/request'
 
 // 登录方法
-export function login(username, password, code, uuid) {
+export function login(enterpriseName, userName, password, code, uuid) {
   return request({
     url: '/auth/login',
     headers: {
       isToken: false
     },
     method: 'post',
-    data: { username, password, code, uuid }
+    data: { enterpriseName, userName, password, code, uuid }
   })
 }
 
@@ -33,10 +33,18 @@ export function refreshToken() {
 }
 
 // 获取用户详细信息
-export function getInfo() {
+export function getUserInfo() {
   return request({
     url: '/system/user/getInfo',
     method: 'get'
+  })
+}
+
+// 获取企业信息
+export function getEnterpriseInfo() {
+  return request({
+    url: '/system/enterprise/getInfo',
+    method: 'get',
   })
 }
 

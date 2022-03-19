@@ -5,8 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.xueyi.auth.form.LoginBody;
 import com.xueyi.auth.form.RegisterBody;
 import com.xueyi.auth.service.SysLoginService;
-import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.utils.JwtUtils;
+import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.security.auth.AuthUtil;
 import com.xueyi.common.security.service.TokenService;
 import com.xueyi.common.security.utils.SecurityUtils;
@@ -34,15 +34,15 @@ public class TokenController {
     private SysLoginService sysLoginService;
 
     @PostMapping("login")
-    public R<?> login(@RequestBody LoginBody form) {
+    public AjaxResult login(@RequestBody LoginBody form) {
         // 用户登录
         LoginUser userInfo = sysLoginService.login(form.getEnterpriseName(), form.getUserName(), form.getPassword());
         // 获取登录token
-        return R.ok(tokenService.createToken(userInfo));
+        return AjaxResult.success(tokenService.createToken(userInfo));
     }
 
     @DeleteMapping("logout")
-    public R<?> logout(HttpServletRequest request) {
+    public AjaxResult logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
         if (StrUtil.isNotEmpty(token)) {
             LoginUser loginUser = tokenService.getLoginUser(request);
@@ -57,24 +57,24 @@ public class TokenController {
             // 记录用户退出日志
             sysLoginService.logout(sourceName, enterpriseId, enterpriseName, userId, userName, userNick);
         }
-        return R.ok();
+        return AjaxResult.success();
     }
 
     @PostMapping("refresh")
-    public R<?> refresh(HttpServletRequest request) {
+    public AjaxResult refresh(HttpServletRequest request) {
         LoginUser loginUser = tokenService.getLoginUser(request);
         if (ObjectUtil.isNotNull(loginUser)) {
             // 刷新令牌有效期
             tokenService.refreshToken(loginUser);
-            return R.ok();
+            return AjaxResult.success();
         }
-        return R.ok();
+        return AjaxResult.success();
     }
 
     @PostMapping("register")
-    public R<?> register(@RequestBody RegisterBody registerBody) {
+    public AjaxResult register(@RequestBody RegisterBody registerBody) {
         // 用户注册
         sysLoginService.register(registerBody);
-        return R.ok();
+        return AjaxResult.success();
     }
 }

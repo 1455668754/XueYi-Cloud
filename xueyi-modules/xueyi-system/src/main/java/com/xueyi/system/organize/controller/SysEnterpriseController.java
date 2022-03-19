@@ -32,15 +32,15 @@ public class SysEnterpriseController extends BaseController<SysEnterpriseDto, IS
      */
     @InnerAuth
     @GetMapping("/infoById/{enterpriseId}")
-    public R<SysEnterpriseDto> getInfo(@PathVariable("enterpriseId") Long enterpriseId) {
+    public R<SysEnterpriseDto> getInfoInner(@PathVariable Long enterpriseId) {
         return R.ok(baseService.selectById(enterpriseId));
     }
 
     /**
      * 获取当前企业信息
      */
-    @GetMapping("/profile")
-    public AjaxResult profile() {
+    @GetMapping("/getInfo")
+    public AjaxResult getInfo() {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         return AjaxResult.success(loginUser.getEnterprise());
     }
