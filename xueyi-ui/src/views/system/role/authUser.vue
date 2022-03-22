@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import { allocatedUserList, authUserCancel, authUserCancelAll } from "@/api/system/role";
+import { allocatedUserList, authUserCancel, authUserCancelAll } from "@/api/system/authority/role";
 import selectUser from "./selectUser";
 
 export default {
