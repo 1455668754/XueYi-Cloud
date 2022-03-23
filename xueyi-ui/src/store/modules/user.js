@@ -1,6 +1,6 @@
 import { login, logout, refreshToken, getEnterpriseInfo, getUserInfo } from '@/api/login'
 import { getToken, setToken, setExpiresIn, removeToken } from '@/utils/auth'
-import { IS_LESSOR } from '@/constants/BaseConstants'
+import { IS_LESSOR } from '@/constants/base.enum'
 
 const user = {
   state: {
@@ -12,7 +12,8 @@ const user = {
     logo: '',
     isLessor: false,
     roles: [],
-    permissions: []
+    permissions: [],
+    routePathMap:null
   },
 
   mutations: {
@@ -45,6 +46,9 @@ const user = {
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
+    },
+    SET_ROUTE_PATH: (state, routePathMap) => {
+      state.routePathMap = routePathMap
     }
   },
 
@@ -84,6 +88,7 @@ const user = {
           }
           commit('SET_NAME', user.userName)
           commit('SET_AVATAR', avatar)
+          commit('SET_ROUTE_PATH', res.data.routes)
           resolve(res)
         }).catch(error => {
           reject(error)

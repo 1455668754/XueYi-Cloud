@@ -111,7 +111,7 @@ public class GenController extends SubBaseController<GenTableDto, IGenTableServi
     @PostMapping("/importTable")
     @RequiresPermissions(Auth.GENERATE_GEN_IMPORT)
     @Log(title = "代码生成", businessType = BusinessType.IMPORT)
-    public AjaxResult importTableSave(String tables) {
+    public AjaxResult importTableSave(@RequestParam("tables") String tables) {
         String[] tableNames = Convert.toStrArray(tables);
         // 查询表信息
         List<GenTableDto> tableList = baseService.selectDbTableListByNames(tableNames);

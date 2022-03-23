@@ -4,7 +4,7 @@ import { getMenuRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
 import InnerLink from '@/layout/components/InnerLink'
-import { COMMON_MODULE, MODULE_CACHE } from '@/constants/AuthContants'
+import { COMMON_MODULE, MODULE_CACHE } from '@/constants/auth.enum'
 
 const permission = {
   state: {

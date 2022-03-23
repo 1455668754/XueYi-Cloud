@@ -158,7 +158,7 @@ public class AuthorityConstants {
     /** 组件标识 */
     public enum ComponentType {
 
-        LAYOUT("LAYOUT", "Layout"),
+        LAYOUT("Layout", "Layout"),
         PARENT_VIEW("ParentView", "ParentView"),
         IFRAME("IFrame", "IFrame");
 
