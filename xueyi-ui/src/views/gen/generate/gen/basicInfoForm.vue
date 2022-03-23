@@ -41,10 +41,10 @@ export default {
   data() {
     return {
       rules: {
-        tableName: [
+        name: [
           { required: true, message: "请输入表名称", trigger: "blur" }
         ],
-        tableComment: [
+        comment: [
           { required: true, message: "请输入表描述", trigger: "blur" }
         ],
         className: [
