@@ -242,11 +242,9 @@ public class VelocityUtils {
             templates.add("vm/java/manager.java.vm");
             templates.add("vm/java/mapper.java.vm");
             templates.add("vm/sql/sql.sql.vm");
-            templates.add("vm/ts/api.ts.vm");
-            templates.add("vm/ts/data.ts.vm");
-            templates.add("vm/ts/auth.ts.vm");
-            templates.add("vm/ts/enum.ts.vm");
-            templates.add("vm/ts/infoModel.ts.vm");
+            templates.add("vm/ts/api.js.vm");
+            templates.add("vm/ts/auth.js.vm");
+            templates.add("vm/ts/enum.js.vm");
             templates.add("vm/vue/detail.vue.vm");
             templates.add("vm/vue/index.vue.vm");
             templates.add("vm/vue/modal.vue.vm");
@@ -296,13 +294,13 @@ public class VelocityUtils {
         else if (template.contains("sql.sql.vm"))
             return StringUtils.format("sql/{}.sql", businessName);
 
-        else if (template.contains("api.ts.vm"))
+        else if (template.contains("api.js.vm"))
             return StringUtils.format("packages/service/modules/{}/{}/{}.ts", moduleName, authorityName, businessName);
         else if (template.contains("infoModel.ts.vm"))
             return StringUtils.format("packages/types/modules/{}/{}/{}.ts", moduleName, authorityName, businessName);
-        else if (template.contains("auth.ts.vm"))
+        else if (template.contains("auth.js.vm"))
             return StringUtils.format("packages/tokens/auth/{}/{}/{}.auth.ts", moduleName, authorityName, businessName);
-        else if (template.contains("enum.ts.vm"))
+        else if (template.contains("enum.js.vm"))
             return StringUtils.format("packages/tokens/enums/{}/{}/{}.enum.ts", moduleName, authorityName, businessName);
 
         else if (template.contains("data.ts.vm"))
