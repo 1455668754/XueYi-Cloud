@@ -1,11 +1,29 @@
 import request from '@/utils/request'
 
+const Api = {
+#if($api.list)
+    LIST_${BUSINESSName}: '/${moduleName}/${businessName}/list',
+#if($table.tree || $table.subTree)
+    LIST_${BUSINESSName}_EXCLUDE_NODES: '/${moduleName}/${businessName}/list/exclude',
+#end
+    OPTION_${BUSINESSName}: '/${moduleName}/${businessName}/option',
+#end
+    GET_${BUSINESSName}: '/${moduleName}/${businessName}/',
+    ADD_${BUSINESSName}: '/${moduleName}/${businessName}',
+    EDIT_${BUSINESSName}: '/${moduleName}/${businessName}',
+#if($api.editStatus || $api.editStatusForce)
+    EDIT_STATUS_${BUSINESSName}: '/${moduleName}/${businessName}/status',
+#end
+    DEL_BATCH_${BUSINESSName}: '/${moduleName}/${businessName}/batch/',
+    DEL_BATCH_FORCE_${BUSINESSName}: '/${moduleName}/${businessName}/batch/force/',
+}
+
 #set($IdName = $pkColumn.javaField)
 #if($api.list)
 /** 查询${functionName}列表 */
 export function list{BusinessName}Api(query) {
     return request({
-        url: '/${moduleName}/${businessName}/list',
+        url: Api.LIST_${BUSINESSName},
         method: 'get',
         params: query
     })
@@ -15,7 +33,7 @@ export function list{BusinessName}Api(query) {
 /** 查询${functionName}列表（排除节点） */
 export function list{BusinessName}ExNodesApi(${IdName}) {
     return request({
-        url: '/${moduleName}/${businessName}/list/exclude',
+        url: Api.LIST_${BUSINESSName}_EXCLUDE_NODES,
         method: 'get',
         params: { ${IdName}: ${IdName} }
     })
@@ -25,7 +43,7 @@ export function list{BusinessName}ExNodesApi(${IdName}) {
 /** 查询${functionName}选择框列表 */
 export function option{BusinessName}Api() {
     return request({
-        url: '/${moduleName}/${businessName}/option',
+        url: Api.OPTION_${BUSINESSName},
         method: 'get'
     })
 }
@@ -34,7 +52,7 @@ export function option{BusinessName}Api() {
 /** 查询${functionName}详细 */
 export function get{BusinessName}Api(${IdName}) {
     return request({
-        url: '/${moduleName}/${businessName}/' + ${IdName},
+        url: Api.GET_${BUSINESSName} + ${IdName},
         method: 'get'
     })
 }
@@ -42,7 +60,7 @@ export function get{BusinessName}Api(${IdName}) {
 /** 新增${functionName} */
 export function add${BusinessName}Api(data) {
     return request({
-        url: '/${moduleName}/${businessName}',
+        url: Api.ADD_${BUSINESSName},
         method: 'post',
         data: data
     })
@@ -51,7 +69,7 @@ export function add${BusinessName}Api(data) {
 /** 修改${functionName} */
 export function edit${BusinessName}Api(data) {
     return request({
-        url: '/${moduleName}/${businessName}',
+        url: Api.EDIT_${BUSINESSName},
         method: 'put',
         data: data
     })
@@ -62,7 +80,7 @@ export function edit${BusinessName}Api(data) {
 /** 修改${functionName}状态 */
 export function editStatus${BusinessName}Api(${IdName}, ${StatusName}) {
     return request({
-        url: '/${moduleName}/${businessName}/status',
+        url: Api.EDIT_STATUS_${BUSINESSName},
         method: 'put',
         data: {${IdName}: ${IdName}, ${StatusName}: ${StatusName}}
     })
@@ -73,7 +91,7 @@ export function editStatus${BusinessName}Api(${IdName}, ${StatusName}) {
 /** 删除${functionName} */
 export function del${BusinessName}Api(ids) {
     return request({
-        url: '/${moduleName}/${businessName}/batch/' + ids,
+        url: Api.DEL_BATCH_${BUSINESSName} + ids,
         method: 'delete'
     })
 }
@@ -83,7 +101,7 @@ export function del${BusinessName}Api(ids) {
 /** 强制删除${functionName} */
 export function delForce${BusinessName}Api(ids) {
     return request({
-        url: '/${moduleName}/${businessName}/batch/force/' + ids,
+        url: Api.DEL_BATCH_FORCE_${BUSINESSName} + ids,
         method: 'delete'
     })
 }
