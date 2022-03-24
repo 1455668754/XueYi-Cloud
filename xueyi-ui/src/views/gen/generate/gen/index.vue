@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="表名称" prop="tableName">
+      <el-form-item label="表名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入表名称"
@@ -9,7 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="表描述" prop="tableComment">
+      <el-form-item label="表描述" prop="comment">
         <el-input
           v-model="queryParams.comment"
           placeholder="请输入表描述"
@@ -43,7 +43,7 @@
           size="mini"
           :disabled="single"
           @click="handleGenTable"
-          v-hasPermi="['generate:gen:code']"
+          v-hasPermi="[GenAuth.CODE]"
         >生成
         </el-button>
       </el-col>
@@ -54,7 +54,7 @@
           icon="el-icon-upload"
           size="mini"
           @click="openImportTable"
-          v-hasPermi="['generate:gen:import']"
+          v-hasPermi="[GenAuth.IMPORT]"
         >导入
         </el-button>
       </el-col>
@@ -66,7 +66,7 @@
           size="mini"
           :disabled="single"
           @click="handleEditTable"
-          v-hasPermi="['generate:gen:edit']"
+          v-hasPermi="[GenAuth.EDIT]"
         >修改
         </el-button>
       </el-col>
@@ -78,7 +78,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['generate:gen:delete']"
+          v-hasPermi="[GenAuth.DELETE]"
         >删除
         </el-button>
       </el-col>
@@ -122,7 +122,7 @@
             size="small"
             icon="el-icon-view"
             @click="handlePreview(scope.row)"
-            v-hasPermi="['generate:gen:preview']"
+            v-hasPermi="[GenAuth.PREVIEW]"
           >预览
           </el-button>
           <el-button
@@ -130,7 +130,7 @@
             size="small"
             icon="el-icon-edit"
             @click="handleEditTable(scope.row)"
-            v-hasPermi="['generate:gen:edit']"
+            v-hasPermi="[GenAuth.EDIT]"
           >编辑
           </el-button>
           <el-button
@@ -138,7 +138,7 @@
             size="small"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['generate:gen:delete']"
+            v-hasPermi="[GenAuth.DELETE]"
           >删除
           </el-button>
           <el-button
@@ -146,7 +146,7 @@
             size="small"
             icon="el-icon-download"
             @click="handleGenTable(scope.row)"
-            v-hasPermi="['generate:gen:code']"
+            v-hasPermi="[GenAuth.CODE]"
           >生成代码
           </el-button>
         </template>
@@ -189,6 +189,7 @@ import 'highlight.js/styles/github-gist.css'
 import { delForceGenApi, generateGenApi, listGenApi, previewGenApi } from '@/api/gen/generate/gen'
 import { GenerationModeEnum, GenGenerateDetailGo } from '@enums/gen'
 import store from '@/store'
+import { GenAuth } from '@auth/gen'
 
 hljs.registerLanguage('java', require('highlight.js/lib/languages/java'))
 hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
@@ -203,6 +204,8 @@ export default {
   components: { importTable },
   data() {
     return {
+      //权限标识
+      GenAuth: GenAuth,
       // 遮罩层
       loading: true,
       // 唯一标识符
