@@ -602,7 +602,7 @@
 <script>
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
-import { TemplateTypeEnum } from '@/constants/gen/generate/gen.enum'
+import { TemplateTypeEnum } from '@enums/gen'
 
 export default {
   components: { Treeselect },

@@ -1,6 +1,13 @@
 import { login, logout, refreshToken, getEnterpriseInfo, getUserInfo } from '@/api/login'
 import { getToken, setToken, setExpiresIn, removeToken } from '@/utils/auth'
-import { IS_LESSOR } from '@/constants/base.enum'
+import {
+  SET_AVATAR_KEY, SET_ENTERPRISE_NAME_KEY, SET_EXPIRES_IN_KEY, SET_IS_LESSOR_KEY, SET_LOGO_KEY,
+  SET_NAME_KEY,
+  SET_PERMISSIONS_KEY,
+  SET_ROLES_KEY,
+  SET_ROUTE_PATH_KEY, SET_SYSTEM_NAME_KEY, SET_TOKEN_KEY,
+  TenantTypeEnum
+} from '@enums'
 
 const user = {
   state: {
@@ -13,7 +20,7 @@ const user = {
     isLessor: false,
     roles: [],
     permissions: [],
-    routePathMap:null
+    routePathMap: null
   },
 
   mutations: {
@@ -38,7 +45,7 @@ const user = {
     SET_LOGO: (state, logo) => {
       state.logo = logo
     },
-    SET_IS_LESSOR:(state, isLessor) => {
+    SET_IS_LESSOR: (state, isLessor) => {
       state.isLessor = isLessor
     },
     SET_ROLES: (state, roles) => {
@@ -64,9 +71,9 @@ const user = {
         login(enterpriseName, userName, password, code, uuid).then(res => {
           let data = res.data
           setToken(data.access_token)
-          commit('SET_TOKEN', data.access_token)
+          commit(SET_TOKEN_KEY, data.access_token)
           setExpiresIn(data.expires_in)
-          commit('SET_EXPIRES_IN', data.expires_in)
+          commit(SET_EXPIRES_IN_KEY, data.expires_in)
           resolve()
         }).catch(error => {
           reject(error)
@@ -79,29 +86,29 @@ const user = {
       return new Promise((resolve, reject) => {
         getUserInfo().then(res => {
           const user = res.data.user
-          const avatar = (user.avatar === "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : user.avatar;
+          const avatar = (user.avatar === '' || user.avatar == null) ? require('@/assets/images/profile.jpg') : user.avatar
           if (res.data.roles && res.data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', res.data.roles)
-            commit('SET_PERMISSIONS', res.data.permissions)
+            commit(SET_ROLES_KEY, res.data.roles)
+            commit(SET_PERMISSIONS_KEY, res.data.permissions)
           } else {
-            commit('SET_ROLES', ['ROLE_DEFAULT'])
+            commit(SET_ROLES_KEY, ['ROLE_DEFAULT'])
           }
-          commit('SET_NAME', user.userName)
-          commit('SET_AVATAR', avatar)
-          commit('SET_ROUTE_PATH', res.data.routes)
+          commit(SET_NAME_KEY, user.userName)
+          commit(SET_AVATAR_KEY, avatar)
+          commit(SET_ROUTE_PATH_KEY, res.data.routes)
           resolve(res)
         }).catch(error => {
           reject(error)
         })
         getEnterpriseInfo().then(res => {
           const enterprise = res.data
-          const systemName = enterprise.systemName === "" ? "雪忆管理系统" : enterprise.systemName;
-          const logo = enterprise.logo === "" ? require("@/assets/images/logo.jpg") : enterprise.logo;
-          const isLessor = enterprise.isLessor === IS_LESSOR.TRUE
-          commit('SET_ENTERPRISE_NAME', enterprise.enterpriseName)
-          commit('SET_SYSTEM_NAME', systemName)
-          commit('SET_LOGO', logo)
-          commit('SET_IS_LESSOR', isLessor)
+          const systemName = enterprise.systemName
+          const logo = enterprise.logo
+          const isLessor = enterprise.isLessor === TenantTypeEnum.ADMIN
+          commit(SET_ENTERPRISE_NAME_KEY, enterprise.enterpriseName)
+          commit(SET_SYSTEM_NAME_KEY, systemName)
+          commit(SET_LOGO_KEY, logo)
+          commit(SET_IS_LESSOR_KEY, isLessor)
         }).catch(error => {
           reject(error)
         })
@@ -113,7 +120,7 @@ const user = {
       return new Promise((resolve, reject) => {
         refreshToken(state.token).then(res => {
           setExpiresIn(res.data)
-          commit('SET_EXPIRES_IN', res.data)
+          commit(SET_EXPIRES_IN_KEY, res.data)
           resolve()
         }).catch(error => {
           reject(error)
@@ -125,9 +132,9 @@ const user = {
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
-          commit('SET_PERMISSIONS', [])
+          commit(SET_TOKEN_KEY, '')
+          commit(SET_ROLES_KEY, [])
+          commit(SET_PERMISSIONS_KEY, [])
           removeToken()
           resolve()
         }).catch(error => {
@@ -139,7 +146,7 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise(resolve => {
-        commit('SET_TOKEN', '')
+        commit(SET_TOKEN_KEY, '')
         removeToken()
         resolve()
       })

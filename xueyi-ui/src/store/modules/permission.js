@@ -4,7 +4,7 @@ import { getMenuRouters } from '@/api/menu'
 import Layout from '@/layout/index'
 import ParentView from '@/components/ParentView'
 import InnerLink from '@/layout/components/InnerLink'
-import { COMMON_MODULE, MODULE_CACHE } from '@/constants/auth.enum'
+import { COMMON_MODULE, MODULE_KEY } from '@enums'
 
 const permission = {
   state: {
@@ -34,7 +34,7 @@ const permission = {
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
         // 向后端请求路由数据
-        getMenuRouters(sessionStorage.getItem(MODULE_CACHE) || COMMON_MODULE).then(res => {
+        getMenuRouters(sessionStorage.getItem(MODULE_KEY) || COMMON_MODULE).then(res => {
           const sdata = JSON.parse(JSON.stringify(res.data))
           const rdata = JSON.parse(JSON.stringify(res.data))
           const sidebarRoutes = filterAsyncRouter(sdata)

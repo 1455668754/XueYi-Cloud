@@ -55,7 +55,9 @@ module.exports = {
     name: name,
     resolve: {
       alias: {
-        '@': resolve('src')
+        '@': resolve('src'),
+        '@auth': resolve('src/constants/auth'),
+        '@enums': resolve('src/constants/enums')
       }
     },
     plugins: [

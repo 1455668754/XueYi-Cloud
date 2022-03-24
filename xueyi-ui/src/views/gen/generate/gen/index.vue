@@ -183,12 +183,11 @@
 </template>
 
 <script>
-import { genCode } from '@/api/tool/gen'
 import importTable from './importTable'
 import hljs from 'highlight.js/lib/highlight'
 import 'highlight.js/styles/github-gist.css'
 import { delForceGenApi, generateGenApi, listGenApi, previewGenApi } from '@/api/gen/generate/gen'
-import { GenerationModeEnum, GenGenerateDetailGo } from '@/constants/gen/generate/gen.enum'
+import { GenerationModeEnum, GenGenerateDetailGo } from '@enums/gen'
 import store from '@/store'
 
 hljs.registerLanguage('java', require('highlight.js/lib/languages/java'))

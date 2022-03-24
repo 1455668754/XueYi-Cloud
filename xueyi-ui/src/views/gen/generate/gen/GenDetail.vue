@@ -150,7 +150,6 @@
 </template>
 
 <script>
-import { getGenTable, updateGenTable } from '@/api/tool/gen'
 import basicInfoForm from './basicInfoForm'
 import genInfoForm from './genInfoForm'
 import Sortable from 'sortablejs'
@@ -158,9 +157,9 @@ import { optionDictTypeApi } from '@/api/tenant/dict/dictType'
 import { editGenApi, getSubGenApi, listGenApi, listGenColumnApi } from '@/api/gen/generate/gen'
 import { optionModuleApi } from '@/api/system/authority/module'
 import { getMenuRouteListApi } from '@/api/system/authority/menu'
-import { MENU_TYPE as MenuTypeEnum } from '@/constants/auth.enum'
+import { MenuTypeEnum } from '@enums'
 import store from '@/store'
-import { GenGenerateDetailGo, GenIndexGo } from '@/constants/gen/generate/gen.enum'
+import { GenIndexGo } from '@enums/gen'
 
 export default {
   name: 'GenEdit',
