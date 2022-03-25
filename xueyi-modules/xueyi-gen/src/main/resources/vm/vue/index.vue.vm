@@ -1,203 +1,374 @@
 <template>
-  <div>
-    <BasicTable @register="registerTable">
-      <template #toolbar>
-        <a-button
-          :preIcon="IconEnum.ADD"
-          v-auth="${BusinessName}Auth.ADD"
-          @click="handleCreate"
-          type="primary"
-        >
-          新增
-        </a-button>
-#if($api.batchRemove || $api.batchRemoveForce)
-        <a-button
-          :preIcon="IconEnum.DELETE"
-          v-auth="${BusinessName}Auth.DELETE"
-          @click="handleDelete"
-          type="primary"
-          color="error"
-        >
-          删除
-        </a-button>
+  <div class="app-container">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+#foreach ($column in $columns)
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($show = false)
+#break
 #end
-#if($table.tree || $table.subTree)
-        <a-button type="primary" @click="expandAll">展开全部</a-button>
-        <a-button type="primary" @click="collapseAll">折叠全部</a-button>
 #end
-      </template>
-      <template #action="{ record }">
-        <TableAction
-          :actions="[
-            {
-              icon: IconEnum.VIEW,
-              tooltip: '查看',
-              auth: ${BusinessName}Auth.SINGLE,
-              onClick: handleView.bind(null, record),
-            },
-            {
-              icon: IconEnum.EDIT,
-              tooltip: '编辑',
-              auth: ${BusinessName}Auth.EDIT,
-              onClick: handleEdit.bind(null, record),
-            },
-#if($api.batchRemove || $api.batchRemoveForce)
-            {
-              icon: IconEnum.DELETE,
-              tooltip: '删除',
-              auth: ${BusinessName}Auth.DELETE,
-              color: 'error',
-              onClick: handleDelete.bind(null, record),
-            },
+#if($column.isQuery() == false)
+#set($show = false)
 #end
-          ]"
+#if($show)
+      <el-form-item label="${column.readNameNoSuffix()}"#if($column.htmlType == 'DatePicker' && ($column.queryType == 'between' || $column.queryType == 'notBetween')) prop="${column.javaField}"#end>
+#if($column.htmlType == 'DatePicker')
+#if($column.queryType == 'between' || $column.queryType == 'notBetween')
+        <el-date-picker
+          v-model="dateRange${column.javaField}"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
         />
-      </template>
-    </BasicTable>
-    <${BusinessName}Modal @register="registerModal" @success="handleSuccess" />
+#else
+        <el-date-picker clearable
+          v-model="queryParams.${column.javaField}"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择"
+        />
+#end
+#elseif($column.dictType == 'Select' || $column.dictType == 'CheckboxGroup' || $column.dictType == 'RadioButtonGroup' || $column.dictType == 'RadioGroup')
+        <el-select v-model="queryParams.${column.javaField}" placeholder="请选择"#if($column.dictType == 'RadioGroup') multiple#end clearable>
+#if(${column.dictType})
+          <el-option
+            v-for="dict in dict.type.${column.dictType}"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+#else
+          <el-option label="请选择字典生成" value="" />
+#end
+        </el-select>
+#else
+        <el-input
+          v-model="queryParams.${column.javaField}"
+          placeholder="请输入"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+#end
+      </el-form-item>
+#end
+#end
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="[${BusinessName}Auth.ADD]"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="[${BusinessName}Auth.EDIT]"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="[${BusinessName}Auth.DELETE]"
+        >删除</el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+    </el-row>
+
+    <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="序号" align="center" prop="noticeId" width="100" />
+      <el-table-column
+        label="公告标题"
+        align="center"
+        prop="noticeTitle"
+        :show-overflow-tooltip="true"
+      />
+      <el-table-column label="公告类型" align="center" prop="noticeType" width="100">
+        <template v-slot="scope">
+          <dict-tag :options="dict.type.sys_notice_type" :value="scope.row.noticeType"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status" width="100">
+        <template v-slot="scope">
+          <dict-tag :options="dict.type.sys_notice_status" :value="scope.row.status"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="创建者" align="center" prop="createBy" width="100" />
+      <el-table-column label="创建时间" align="center" prop="createTime" width="100">
+        <template v-slot="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template v-slot="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="[${BusinessName}Auth.EDIT]"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="[${BusinessName}Auth.DELETE]"
+          >删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.page"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getList"
+    />
+
+    <!-- 添加或修改公告对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="公告标题" prop="noticeTitle">
+              <el-input v-model="form.noticeTitle" placeholder="请输入公告标题" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="公告类型" prop="noticeType">
+              <el-select v-model="form.noticeType" placeholder="请选择公告类型">
+                <el-option
+                  v-for="dict in dict.type.sys_notice_type"
+                  :key="dict.value"
+                  :label="dict.label"
+                  :value="dict.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="状态">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="dict in dict.type.sys_notice_status"
+                  :key="dict.value"
+                  :label="dict.value"
+                >{{dict.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="内容">
+              <editor v-model="form.noticeContent" :min-height="192"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent#if($api.batchRemove || $api.batchRemoveForce), reactive#end } from 'vue'
-import { list${BusinessName}Api, del${BusinessName}Api } from '@service/${moduleName}/${authorityName}/${businessName}'
-import { useModal } from '@/components/Modal'
-import { useMessage } from '@/hooks/web/useMessage'
-import { IconEnum } from '@admin/tokens'
-import { BasicTable, TableAction, useTable } from '@/components/Table'
+<script>
+import { list${BusinessName}Api, get${BusinessName}Api, add${BusinessName}Api, edit${BusinessName}Api, del${BusinessName}Api } from '@/api/${moduleName}/${authorityName}/${businessName}'
 import { ${BusinessName}Auth } from '@auth/${moduleName}'
-import { columns, searchFormSchema } from './${businessName}.data'
-import { ${BusinessName}DetailGo } from '@enums/${moduleName}'
-import ${BusinessName}Modal from './${BusinessName}Modal.vue'
-import { useUserStore } from '@/store/user'
 
-export default defineComponent({
-  name: '${BusinessName}Management',
-  components: { BasicTable, ${BusinessName}Modal, TableAction },
-  setup() {
-    const { createMessage, createConfirm } = useMessage()
-    const [registerModal, { openModal }] = useModal()
-#if($api.batchRemove || $api.batchRemoveForce)
-    const state = reactive<{
-      ${pkColumn.javaField}s: (string | number)[]
-      ${pkColumn.javaField}Names: string
-    }>({
-      ${pkColumn.javaField}s: [],
-      ${pkColumn.javaField}Names: '',
-    })
+export default {
+  name: "${BusinessName}Management",
+#if($dictMap)
+  /** 字典查询 */
+  dicts: [#set($itemIndex=1)#foreach($item in $dictMap.entrySet())#set($itemIndex=$itemIndex+1)'${item.key}'#end#if($itemIndex < $dictMap.size()), #end],
 #end
-    const [registerTable, { reload#if($table.tree || $table.subTree), expandAll, collapseAll#end }] = useTable({
-      title: '${functionName}列表',
-      api: list${BusinessName}Api,
-      striped: false,
-      useSearchForm: true,
-      rowKey: '${pkColumn.javaField}',
-      bordered: true,
-      showIndexColumn: true,
-      columns,
-      formConfig: {
-        labelWidth: 120,
-        schemas: searchFormSchema,
-      },
-#if($table.tree || $table.subTree)
-      isTreeTable: true,
-      pagination: false,
-      canResize: false,
-#end
-      showTableSetting: true,
-      tableSetting: {
-        fullScreen: true,
-      },
-      actionColumn: {
-        width: 220,
-        title: '操作',
-        dataIndex: 'action',
-        slots: { customRender: 'action' },
-      },
-#if($api.batchRemove || $api.batchRemoveForce)
-      rowSelection: {
-        onChange: (selectedRowKeys, selectRows) => {
-          state.${pkColumn.javaField}s = selectedRowKeys
-          state.${pkColumn.javaField}Names = selectRows
-            .map((item) => {
-              return item.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end
-            })
-            .join(',')
-        },
-      },
-#end
-    })
-
-    /** 查看按钮 */
-    function handleView(record: Recordable) {
-      useUserStore().getRoutePath(${BusinessName}DetailGo, record.${pkColumn.javaField})
-    }
-
-    /** 新增按钮 */
-    function handleCreate() {
-      openModal(true, {
-        isUpdate: false,
-      })
-    }
-
-    /** 修改按钮 */
-    function handleEdit(record: Recordable) {
-      openModal(true, {
-        record,
-        isUpdate: true,
-      })
-    }
-#if($api.batchRemove || $api.batchRemoveForce)
-
-    /** 删除按钮 */
-    function handleDelete(record: Recordable) {
-      const delIds = record.${pkColumn.javaField} || state.${pkColumn.javaField}s
-      const delNames = record.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end || state.${pkColumn.javaField}Names
-      if (!record.${pkColumn.javaField} && state.${pkColumn.javaField}s.length === 0) {
-        createMessage.warning('请选择要操作的数据！')
-      } else {
-        createConfirm({
-          iconType: 'warning',
-          title: '提示',
-          content: '是否确定要删除' + delNames + '?',
-          onOk: () =>
-#if($api.batchRemove)
-            del${BusinessName}Api(delIds).then(() => {
-              createMessage.success('删除' + delNames + '成功！')
-              reload()
-            }),
-#elseif($api.batchRemoveForce)
-            delForce${BusinessName}Api(delIds).then(() => {
-              createMessage.success('删除' + delNames + '成功！')
-              reload()
-            }),
-#end
-        })
-      }
-    }
-#end
-
-    function handleSuccess() {
-      reload()
-    }
-
+  data() {
     return {
-      IconEnum,
-      ${BusinessName}Auth,
-      registerTable,
-      registerModal,
-      handleView,
-      handleCreate,
-      handleEdit,
-#if($api.batchRemove || $api.batchRemoveForce)
-      handleDelete,
+      //权限标识
+      ${BusinessName}Auth: ${BusinessName}Auth,
+      // 遮罩层
+      loading: true,
+      // 选中数组
+      ${pkColumn.javaField}s: [],
+      // 选中数组名称
+      ${pkColumn.javaField}Names: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      // 公告表格数据
+      tableList: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 查询参数
+      queryParams: {
+        page: 1,
+        pageSize: 10,
+#foreach ($column in $columns)
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($show = false)
+#break
 #end
-      handleSuccess,
-#if($table.tree || $table.subTree)
-      expandAll,
-      collapseAll,
 #end
-    }
+#if($column.isQuery() == false)
+#set($show = false)
+#end
+#if($show)
+        ${column.javaField}: undefined,
+#end
+#end
+      },
+      // 表单参数
+      form: {},
+      // 表单校验
+      rules: {
+        noticeTitle: [
+          { required: true, message: "公告标题不能为空", trigger: "blur" }
+        ],
+        noticeType: [
+          { required: true, message: "公告类型不能为空", trigger: "change" }
+        ]
+      }
+    };
   },
-})
+  created() {
+    this.getList();
+  },
+  methods: {
+    /** 查询公告列表 */
+    getList() {
+      this.loading = true;
+      list${BusinessName}Api(this.queryParams).then(response => {
+        this.tableList = response.items;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+#foreach ($column in $columns)
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item && !$column.isPk())
+#set($show = false)
+#break
+#end
+#end
+#if($column.isInsert() == false && !$column.isPk())
+#set($show = false)
+#end
+#if($show)
+        ${column.javaField}: undefined,
+#end
+#end
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.page = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    /** 多选框选中数据 */
+    handleSelectionChange(selection) {
+      this.${pkColumn.javaField}s = selection.map(item => item.${pkColumn.javaField})
+      this.${pkColumn.javaField}Names = selection.map(item => item.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加${functionName}";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.reset();
+      const ${pkColumn.javaField} = row.${pkColumn.javaField} || this.${pkColumn.javaField}s
+      get${BusinessName}Api(${pkColumn.javaField}).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改${functionName}";
+      });
+    },
+    /** 提交按钮 */
+    submitForm: function() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.${pkColumn.javaField} != undefined) {
+            edit${BusinessName}Api(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            add${BusinessName}Api(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const delIds = row.${pkColumn.javaField} || this.${pkColumn.javaField}s
+      const delNames = row.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end || this.${pkColumn.javaField}Names
+      this.$modal.confirm('是否确定要删除' + delNames + '？').then(function() {
+        return del${BusinessName}Api(delIds);
+      }).then(() => {
+        this.getList();
+        this.$modal.msgSuccess("删除成功！");
+      }).catch(() => {});
+    }
+  }
+};
 </script>
