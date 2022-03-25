@@ -9,7 +9,7 @@ export function listRoleApi(query) {
   })
 }
 
-/** 查询角色列表 */
+/** 查询角色选择框列表 */
 export function optionRoleApi() {
   return request({
     url: '/system/role/option',
@@ -59,29 +59,12 @@ export function editRoleApi(data) {
   })
 }
 
-/** 修改角色状态 */
-export function editStatusRoleApi(id, status) {
-  const data = {
-    id,
-    status
-  }
-  return request({
-    url: '/system/role/status',
-    method: 'put',
-    data: data
-  })
-}
-
 /** 修改角色功能权限 */
 export function editAuthScopeApi(id, authIds) {
-  const data = {
-    id,
-    authIds
-  }
   return request({
     url: '/system/role/auth',
     method: 'put',
-    data: data
+    data: { id: id, authIds: authIds }
   })
 }
 
@@ -94,10 +77,19 @@ export function editDataScopeApi(data) {
   })
 }
 
+/** 修改角色状态 */
+export function editStatusRoleApi(id, status) {
+  return request({
+    url: '/system/role/status',
+    method: 'put',
+    data: { id: id, status: status }
+  })
+}
+
 /** 删除角色 */
 export function delRoleApi(ids) {
   return request({
-    url: '/system/role/batch/' + ids.toString(),
+    url: '/system/role/list' + ids.toString(),
     method: 'delete'
   })
 }

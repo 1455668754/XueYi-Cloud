@@ -1,20 +1,9 @@
 import request from '@/utils/request'
 
-const Api = {
-  LIST_CONFIG: '/system/config/list',
-  OPTION_CONFIG: '/system/config/option',
-  GET_CONFIG: '/system/config/',
-  ADD_CONFIG: '/system/config',
-  EDIT_CONFIG: '/system/config',
-  DEL_BATCH_CONFIG: '/system/config/batch/',
-  DEL_BATCH_FORCE_CONFIG: '/system/config/batch/force/',
-  REFRESH_CONFIG: '/system/config/refresh'
-}
-
 /** 查询参数列表 */
 export function listConfigApi(query) {
   return request({
-    url: Api.LIST_CONFIG,
+    url: '/system/config/list',
     method: 'get',
     params: query
   })
@@ -23,7 +12,7 @@ export function listConfigApi(query) {
 /** 查询参数选择框列表 */
 export function optionConfigApi() {
   return request({
-    url: Api.OPTION_CONFIG,
+    url: '/system/config/option',
     method: 'get'
   })
 }
@@ -31,7 +20,7 @@ export function optionConfigApi() {
 /** 查询参数详细 */
 export function getConfigApi(id) {
   return request({
-    url: Api.GET_CONFIG + id,
+    url: '/system/config/' + id,
     method: 'get'
   })
 }
@@ -39,7 +28,7 @@ export function getConfigApi(id) {
 /** 新增参数 */
 export function addConfigApi(data) {
   return request({
-    url: Api.ADD_CONFIG,
+    url: '/system/config',
     method: 'post',
     data: data
   })
@@ -48,7 +37,7 @@ export function addConfigApi(data) {
 /** 修改参数 */
 export function editConfigApi(data) {
   return request({
-    url: Api.EDIT_CONFIG,
+    url: '/system/config',
     method: 'put',
     data: data
   })
@@ -57,7 +46,7 @@ export function editConfigApi(data) {
 /** 删除参数 */
 export function delConfigApi(ids) {
   return request({
-    url: Api.DEL_BATCH_CONFIG + ids.toString(),
+    url: '/system/config/batch/' + ids.toString(),
     method: 'delete'
   })
 }
@@ -65,7 +54,7 @@ export function delConfigApi(ids) {
 /** 强制删除参数 */
 export function delForceConfigApi(ids) {
   return request({
-    url: Api.DEL_BATCH_FORCE_CONFIG + ids.toString(),
+    url: '/system/config/batch/force/' + ids.toString(),
     method: 'delete'
   })
 }
@@ -73,7 +62,7 @@ export function delForceConfigApi(ids) {
 /** 刷新参数缓存 */
 export function refreshConfigApi() {
   return request({
-    url: Api.REFRESH_CONFIG,
+    url: '/system/config/refresh',
     method: 'get'
   })
 }

@@ -1,18 +1,9 @@
 import request from '@/utils/request'
 
-const Api = {
-  LIST_DICT_DATA: '/system/dict/data/list',
-  GET_DICT_DATA: '/system/dict/data/',
-  ADD_DICT_DATA: '/system/dict/data',
-  EDIT_DICT_DATA: '/system/dict/data',
-  EDIT_STATUS_DICT_DATA: '/system/dict/data/status',
-  DEL_BATCH_DICT_DATA: '/system/dict/data/batch/'
-}
-
 /** 查询字典数据列表 */
 export function listDictDataApi(query) {
   return request({
-    url: Api.LIST_DICT_DATA,
+    url: '/system/dict/data/list',
     method: 'get',
     params: query
   })
@@ -21,7 +12,7 @@ export function listDictDataApi(query) {
 /** 查询字典数据详细 */
 export function getDictDataApi(id) {
   return request({
-    url: Api.GET_DICT_DATA + id,
+    url: '/system/dict/data/' + id,
     method: 'get'
   })
 }
@@ -29,7 +20,7 @@ export function getDictDataApi(id) {
 /** 新增字典数据 */
 export function addDictDataApi(data) {
   return request({
-    url: Api.ADD_DICT_DATA,
+    url: '/system/dict/data',
     method: 'post',
     data: data
   })
@@ -38,7 +29,7 @@ export function addDictDataApi(data) {
 /** 修改字典数据 */
 export function editDictDataApi(data) {
   return request({
-    url: Api.EDIT_DICT_DATA,
+    url: '/system/dict/data',
     method: 'put',
     data: data
   })
@@ -47,7 +38,7 @@ export function editDictDataApi(data) {
 /** 修改字典数据状态 */
 export function editStatusDictDataApi(id, status) {
   return request({
-    url: Api.EDIT_STATUS_DICT_DATA,
+    url: '/system/dict/data/status',
     method: 'put',
     data: { id: id, status: status }
   })
@@ -56,7 +47,7 @@ export function editStatusDictDataApi(id, status) {
 /** 删除字典数据 */
 export function delDictDataApi(ids) {
   return request({
-    url: Api.DEL_BATCH_DICT_DATA + ids.toString(),
+    url: '/system/dict/data/batch/' + ids.toString(),
     method: 'delete'
   })
 }

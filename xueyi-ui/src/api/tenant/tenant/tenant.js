@@ -1,21 +1,9 @@
 import request from '@/utils/request'
 
-const Api = {
-  LIST_TENANT: '/tenant/tenant/list',
-  GET_TENANT: '/tenant/tenant/',
-  AUTH_SCOPE_TENANT: '/system/auth/tenant/authScope',
-  GET_AUTH_TENANT: '/tenant/tenant/auth/',
-  EDIT_AUTH_TENANT: '/tenant/tenant/auth',
-  ADD_TENANT: '/tenant/tenant',
-  EDIT_TENANT: '/tenant/tenant',
-  EDIT_STATUS_TENANT: '/tenant/tenant/status',
-  DEL_BATCH_TENANT: '/tenant/tenant/batch/'
-}
-
 /** 查询租户列表 */
 export function listTenantApi(query) {
   return request({
-    url: Api.LIST_TENANT,
+    url: '/tenant/tenant/list',
     method: 'get',
     params: query
   })
@@ -24,7 +12,7 @@ export function listTenantApi(query) {
 /** 查询租户详细 */
 export function getTenantApi(id) {
   return request({
-    url: Api.GET_TENANT + id,
+    url: '/tenant/tenant/' + id,
     method: 'get'
   })
 }
@@ -32,7 +20,7 @@ export function getTenantApi(id) {
 /** 查询租户权限（叶子节点） */
 export function getAuthTenantApi(id) {
   return request({
-    url: Api.GET_AUTH_TENANT + id,
+    url: '/tenant/tenant/auth/' + id,
     method: 'get'
   })
 }
@@ -40,7 +28,7 @@ export function getAuthTenantApi(id) {
 /** 查询公共权限范围树 */
 export function authScopeTenantApi() {
   return request({
-    url: Api.AUTH_SCOPE_TENANT,
+    url: '/system/auth/tenant/authScope',
     method: 'get'
   })
 }
@@ -48,7 +36,7 @@ export function authScopeTenantApi() {
 /** 新增租户 */
 export function addTenantApi(data) {
   return request({
-    url: Api.ADD_TENANT,
+    url: '/tenant/tenant',
     method: 'post',
     data: data
   })
@@ -57,7 +45,7 @@ export function addTenantApi(data) {
 /** 修改租户 */
 export function editTenantApi(data) {
   return request({
-    url: Api.EDIT_TENANT,
+    url: '/tenant/tenant',
     method: 'put',
     data: data
   })
@@ -66,7 +54,7 @@ export function editTenantApi(data) {
 /** 修改租户权限 */
 export function editAuthTenantApi(data) {
   return request({
-    url: Api.EDIT_AUTH_TENANT,
+    url: '/tenant/tenant/auth',
     method: 'put',
     data: data
   })
@@ -75,7 +63,7 @@ export function editAuthTenantApi(data) {
 /** 修改租户状态 */
 export function editStatusTenantApi(id, status) {
   return request({
-    url: Api.EDIT_STATUS_TENANT,
+    url: '/tenant/tenant/status',
     method: 'put',
     data: { id: id, status: status }
   })
@@ -84,7 +72,7 @@ export function editStatusTenantApi(id, status) {
 /** 删除租户 */
 export function delTenantApi(ids) {
   return request({
-    url: Api.DEL_BATCH_TENANT + ids.toString(),
+    url: '/tenant/tenant/batch/' + ids.toString(),
     method: 'delete'
   })
 }

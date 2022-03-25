@@ -1,20 +1,9 @@
 import request from '@/utils/request'
 
-const Api = {
-  LIST_SOURCE: '/tenant/source/list',
-  OPTION_SOURCE: '/tenant/source/option',
-  GET_SOURCE: '/tenant/source/',
-  CONNECTION: '/tenant/source/connection',
-  ADD_SOURCE: '/tenant/source',
-  EDIT_SOURCE: '/tenant/source',
-  EDIT_STATUS_SOURCE: '/tenant/source/status',
-  DEL_BATCH_SOURCE: '/tenant/source/batch/'
-}
-
 /** 查询数据源列表 */
 export function listSourceApi(query) {
   return request({
-    url: Api.LIST_SOURCE,
+    url: '/tenant/source/list',
     method: 'get',
     params: query
   })
@@ -23,7 +12,7 @@ export function listSourceApi(query) {
 /** 查询数据源选择框列表 */
 export function optionSourceApi() {
   return request({
-    url: Api.OPTION_SOURCE,
+    url: '/tenant/source/option',
     method: 'get'
   })
 }
@@ -31,7 +20,7 @@ export function optionSourceApi() {
 /** 查询数据源详细 */
 export function getSourceApi(id) {
   return request({
-    url: Api.GET_SOURCE + id,
+    url: '/tenant/source/' + id,
     method: 'get'
   })
 }
@@ -39,7 +28,7 @@ export function getSourceApi(id) {
 /** 数据源连接测试 */
 export function connectionSourceApi(data) {
   return request({
-    url: Api.CONNECTION,
+    url: '/tenant/source/connection',
     method: 'post',
     data: data
   })
@@ -48,7 +37,7 @@ export function connectionSourceApi(data) {
 /** 新增数据源 */
 export function addSourceApi(data) {
   return request({
-    url: Api.ADD_SOURCE,
+    url: '/tenant/source',
     method: 'post',
     data: data
   })
@@ -57,7 +46,7 @@ export function addSourceApi(data) {
 /** 修改数据源 */
 export function editSourceApi(data) {
   return request({
-    url: Api.EDIT_SOURCE,
+    url: '/tenant/source',
     method: 'put',
     data: data
   })
@@ -66,7 +55,7 @@ export function editSourceApi(data) {
 /** 修改数据源状态 */
 export function editStatusSourceApi(id, status) {
   return request({
-    url: Api.EDIT_STATUS_SOURCE,
+    url: '/tenant/source/status',
     method: 'put',
     data: { id: id, status: status }
   })
@@ -75,7 +64,7 @@ export function editStatusSourceApi(id, status) {
 /** 删除数据源 */
 export function delSourceApi(ids) {
   return request({
-    url: Api.DEL_BATCH_SOURCE + ids.toString(),
+    url: '/tenant/source/batch/' + ids.toString(),
     method: 'delete'
   })
 }
