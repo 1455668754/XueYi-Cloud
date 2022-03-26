@@ -60,6 +60,8 @@ public class VelocityUtils {
         velocityContext.put("ClassName", genTable.getClassName());
         // 实体类名称(首字母小写)
         velocityContext.put("className", StringUtils.uncapitalize(genTable.getClassName()));
+        // 实体类名称(全大写 | _划分)
+        velocityContext.put("ClASS_NAME", (StrUtil.toUnderlineCase(genTable.getClassName())).toUpperCase());
         // 实体类名称(首字母大写 | 无前缀)
         velocityContext.put("ClassNameNoPrefix", genTable.getClassName().replaceFirst(genTable.getPrefix(), ""));
         // 实体类名称(首字母小写 | 无前缀)

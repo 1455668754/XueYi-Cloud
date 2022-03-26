@@ -4,7 +4,7 @@
       <el-col :span="12">
         <el-form-item prop="tplCategory">
           <span slot="label">生成模板</span>
-          <el-select v-model="info.tplCategory" @change="tplSelectChange">
+          <el-select v-model="info.tplCategory">
             <el-option
               v-for="dict in dict.type.gen_template_type"
               :key="dict.value"

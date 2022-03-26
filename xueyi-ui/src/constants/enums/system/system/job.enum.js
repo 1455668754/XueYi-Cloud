@@ -34,3 +34,4 @@ export const JobMisfireEnum = {
   // 不触发立即执行
   DO_NOTHING: '3'
 }
+

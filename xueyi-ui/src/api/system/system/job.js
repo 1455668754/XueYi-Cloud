@@ -63,7 +63,7 @@ export function editStatusJobApi(id, status) {
 /** 删除调度任务 */
 export function delJobApi(ids) {
   return request({
-    url: '/schedule/job/list' + ids.toString(),
+    url: '/schedule/job/batch/' + ids.toString(),
     method: 'delete'
   })
 }

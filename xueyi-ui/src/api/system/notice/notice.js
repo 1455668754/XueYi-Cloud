@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 /** 查询通知公告列表 */
-export function listConfigApi(query) {
+export function listNoticeApi(query) {
   return request({
     url: '/system/notice/list',
     method: 'get',
@@ -59,3 +59,5 @@ export function delNoticeApi(ids) {
     method: 'delete'
   })
 }
+
+

@@ -157,7 +157,7 @@ import { optionDictTypeApi } from '@/api/tenant/dict/dictType'
 import { editGenApi, getSubGenApi, listGenApi, listGenColumnApi } from '@/api/gen/generate/gen'
 import { optionModuleApi } from '@/api/system/authority/module'
 import { getMenuRouteListApi } from '@/api/system/authority/menu'
-import { MenuTypeEnum } from '@enums'
+import { MenuTypeEnum } from '@enums/system'
 import store from '@/store'
 import { GenIndexGo } from '@enums/gen'
 

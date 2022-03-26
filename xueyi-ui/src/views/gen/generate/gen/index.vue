@@ -115,7 +115,7 @@
       />
       <el-table-column label="创建时间" align="center" prop="createTime" width="160"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="160"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template v-slot="scope">
           <el-button
             type="text"
@@ -161,7 +161,7 @@
     />
     <!-- 预览界面 -->
     <el-dialog :title="preview.title" :visible.sync="preview.open" width="80%" top="5vh" append-to-body
-               class="scrollbar"
+               class="scrollbar" :before-close="handleClose"
     >
       <el-tabs v-model="preview.activeName">
         <el-tab-pane
@@ -222,7 +222,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 表数据
+      // 表格数据
       tableList: [],
       // 日期范围
       dateRange: '',
@@ -287,6 +287,13 @@ export default {
         this.preview.activeName = 'dto.java'
       })
     },
+    /** 模态框取消操作 */
+    handleClose() {
+      this.$modal.confirm('确认关闭？').then(_ => {
+        this.preview.open = false
+      }).catch(_ => {
+      })
+    },
     /** 高亮显示 */
     highlightedCode(item) {
       const result = hljs.highlight(item.language, item.template || '', true)
@@ -296,7 +303,7 @@ export default {
     clipboardSuccess() {
       this.$modal.msgSuccess('复制成功')
     },
-    // 多选框选中数据
+    /** 多选框选中数据 */
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
       this.names = selection.map(item => item.name)
@@ -325,12 +332,12 @@ export default {
     handleGenTable(row) {
       if (row.genType === GenerationModeEnum.CUSTOM) {
         generateGenApi(row.id).then(() => {
-          this.$modal.msgSuccess('成功生成到自定义路径：\n后端：' + row.genPath+'\n前端：'+row.uiPath)
+          this.$modal.msgSuccess('成功生成到自定义路径：\n后端：' + row.genPath + '\n前端：' + row.uiPath)
         })
       } else {
         this.$download.zip('/code/gen/download/' + row.id, 'xueyi')
       }
-    },
+    }
   }
 }
 

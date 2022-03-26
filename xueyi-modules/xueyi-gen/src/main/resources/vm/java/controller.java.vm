@@ -68,7 +68,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @GetMapping("/list")
-    @RequiresPermissions("${authorityName}:${businessName}:list")
+    @RequiresPermissions(Auth.${ClASS_NAME}_LIST)
     public AjaxResult list(${ClassName}Dto ${classNameNoPrefix}) {
         return super.list(${classNameNoPrefix});
     }
@@ -78,7 +78,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      * 查询${functionName}列表（排除节点）
      */
     @GetMapping("/list/exclude")
-    @RequiresPermissions("${authorityName}:${businessName}:list")
+    @RequiresPermissions(Auth.${ClASS_NAME}_LIST)
     public AjaxResult listExNodes(${ClassName}Dto ${classNameNoPrefix}) {
         return super.listExNodes(${classNameNoPrefix});
     }
@@ -91,7 +91,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @GetMapping(value = "/{id}")
-    @RequiresPermissions("${authorityName}:${businessName}:single")
+    @RequiresPermissions(Auth.${ClASS_NAME}_SINGLE)
     public AjaxResult getInfoExtra(@PathVariable Serializable id) {
         return super.getInfoExtra(id);
     }
@@ -103,7 +103,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PostMapping("/export")
-    @RequiresPermissions("${authorityName}:${businessName}:export")
+    @RequiresPermissions(Auth.${ClASS_NAME}_EXPORT)
     @Log(title = "${functionName}管理", businessType = BusinessType.EXPORT)
     public void export(HttpServletResponse response, ${ClassName}Dto ${classNameNoPrefix}) {
         super.export(response, ${classNameNoPrefix});
@@ -116,7 +116,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PostMapping
-    @RequiresPermissions("${authorityName}:${businessName}:add")
+    @RequiresPermissions(Auth.${ClASS_NAME}_ADD)
     @Log(title = "${functionName}管理", businessType = BusinessType.INSERT)
     public AjaxResult add(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.add(${classNameNoPrefix});
@@ -129,7 +129,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PostMapping("/force")
-    @RequiresPermissions("${authorityName}:${businessName}:addForce")
+    @RequiresPermissions(Auth.${ClASS_NAME}_ADDFORCE)
     @Log(title = "${functionName}管理", businessType = BusinessType.INSERT_FORCE)
     public AjaxResult addForce(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.addForce(${classNameNoPrefix});
@@ -142,7 +142,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PutMapping
-    @RequiresPermissions("${authorityName}:${businessName}:edit")
+    @RequiresPermissions(Auth.${ClASS_NAME}_EDIT)
     @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE)
     public AjaxResult edit(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.edit(${classNameNoPrefix});
@@ -155,7 +155,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PutMapping("/force")
-    @RequiresPermissions("${authorityName}:${businessName}:editForce")
+    @RequiresPermissions(Auth.${ClASS_NAME}_EDIT_FORCE)
     @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_FORCE)
     public AjaxResult editForce(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.editForce(${classNameNoPrefix});
@@ -168,7 +168,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {"${authorityName}:${businessName}:edit", "${authorityName}:${businessName}:es"}, logical = Logical.OR)
+    @RequiresPermissions(value = Auth.${ClASS_NAME}_ES, logical = Logical.OR)
     @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.editStatus(${classNameNoPrefix});
@@ -181,7 +181,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PutMapping("/force/status")
-    @RequiresPermissions(value = {"${authorityName}:${businessName}:editForce", "${authorityName}:${businessName}:esForce"}, logical = Logical.OR)
+    @RequiresPermissions(value = Auth.${ClASS_NAME}_ES_FORCE, logical = Logical.OR)
     @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_STATUS_FORCE)
     public AjaxResult editStatusForce(@RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.editStatusForce(${classNameNoPrefix});
@@ -194,7 +194,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @DeleteMapping("/batch/{idList}")
-    @RequiresPermissions("${authorityName}:${businessName}:delete")
+    @RequiresPermissions(Auth.${ClASS_NAME}_DEL)
     @Log(title = "${functionName}管理", businessType = BusinessType.DELETE)
     public AjaxResult batchRemove(@PathVariable List<Long> idList) {
         return super.batchRemove(idList);
@@ -207,7 +207,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @DeleteMapping("/batch/force/{idList}")
-    @RequiresPermissions("${authorityName}:${businessName}:delForce")
+    @RequiresPermissions(Auth.${ClASS_NAME}_DEL_FORCE)
     @Log(title = "${functionName}管理", businessType = BusinessType.DELETE_FORCE)
     public AjaxResult batchRemoveForce(@PathVariable List<Long> idList) {
         return super.batchRemoveForce(idList);
@@ -224,4 +224,55 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
         return super.option();
     }
 #end
+
+    interface Auth {
+#if($api.list)
+        /** 系统 - ${functionName}管理 - 列表 */
+        String ${ClASS_NAME}_LIST = "${authorityName}:${businessName}:list";
+#end
+#if($api.getInfo)
+        /** 系统 - ${functionName}管理 - 详情 */
+        String ${ClASS_NAME}_SINGLE = "${authorityName}:${businessName}:single";
+#end
+#if($api.add)
+        /** 系统 - ${functionName}管理 - 新增 */
+        String ${ClASS_NAME}_ADD = "${authorityName}:${businessName}:add";
+#end
+#if($api.addForce)
+        /** 系统 - ${functionName}管理 - 强制新增 */
+        String ${ClASS_NAME}_ADD_FORCE = "${authorityName}:${businessName}:addForce";
+#end
+#if($api.edit)
+        /** 系统 - ${functionName}管理 - 修改 */
+        String ${ClASS_NAME}_EDIT = "${authorityName}:${businessName}:edit";
+#end
+#if($api.editForce)
+        /** 系统 - ${functionName}管理 - 强制修改 */
+        String ${ClASS_NAME}_EDIT_FORCE = "${authorityName}:${businessName}:editForce";
+#end
+#if($api.editStatus)
+        /** 系统 - ${functionName}管理 - 修改状态 */
+        String[] ${ClASS_NAME}_ES = {"${authorityName}:${businessName}:edit", "${authorityName}:${businessName}:es"};
+#end
+#if($api.editStatusForce)
+        /** 系统 - ${functionName}管理 - 强制修改状态 */
+        String[] ${ClASS_NAME}_ES_FORCE = {"${authorityName}:${businessName}:editForce", "${authorityName}:${businessName}:esForce"};
+#end
+#if($api.batchRemove)
+        /** 系统 - ${functionName}管理 - 删除 */
+        String ${ClASS_NAME}_DEL = "${authorityName}:${businessName}:delete";
+#end
+#if($api.batchRemoveForce)
+        /** 系统 - ${functionName}管理 - 强制删除 */
+        String ${ClASS_NAME}_DEL_FORCE = "${authorityName}:${businessName}:delForce";
+#end
+#if($api.import)
+        /** 系统 - ${functionName}管理 - 导入 */
+        String ${ClASS_NAME}_IMPORT = "${authorityName}:${businessName}:import";
+#end
+#if($api.export)
+        /** 系统 - ${functionName}管理 - 导出 */
+        String ${ClASS_NAME}_EXPORT = "${authorityName}:${businessName}:export";
+#end
+    }
 }

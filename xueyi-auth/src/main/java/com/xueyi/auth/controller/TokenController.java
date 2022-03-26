@@ -43,6 +43,7 @@ public class TokenController {
 
     @DeleteMapping("logout")
     public AjaxResult logout(HttpServletRequest request) {
+        System.out.println(request);
         String token = SecurityUtils.getToken(request);
         if (StrUtil.isNotEmpty(token)) {
             LoginUser loginUser = tokenService.getLoginUser(request);

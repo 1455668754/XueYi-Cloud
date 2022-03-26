@@ -26,8 +26,8 @@
 #end
           placeholder="请选择"
         />
-#elseif($column.dictType == 'Select' || $column.dictType == 'CheckboxGroup' || $column.dictType == 'RadioButtonGroup' || $column.dictType == 'RadioGroup')
-        <el-select v-model="queryParams.${column.javaField}" placeholder="请选择"#if($column.dictType == 'RadioGroup') multiple#end clearable>
+#elseif($column.htmlType == 'Select' || $column.htmlType == 'CheckboxGroup' || $column.htmlType == 'RadioButtonGroup' || $column.htmlType == 'RadioGroup')
+        <el-select v-model="queryParams.${column.javaField}" placeholder="请选择"#if($column.htmlType == 'RadioGroup') multiple#end clearable>
 #if(${column.dictType})
           <el-option
             v-for="dict in dict.type.${column.dictType}"
@@ -102,6 +102,7 @@
 #set($cloumnKey = 2)
 #foreach ($column in $columns)
 #set($show = true)
+#set($slot = false)
 #foreach($item in $mustHideField)
 #if($column.javaField == $item)
 #set($show = false)
@@ -130,7 +131,7 @@
 #set($cloumnKey = $cloumnKey + 1)
 #end
 #end
-      <el-table-column label="操作" align="center" v-if="columns[${cloumnKey}].visible" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" v-if="columns[${cloumnKey}].visible" class-name="small-padding fixed-width" width="120" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -159,25 +160,39 @@
     />
 
     <!-- 添加或修改公告对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="780px" :before-close="handleClose" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
 #foreach ($column in $columns)
+#set($justOperate = false)
+#set($justEdit = false)
+#set($justInsert = false)
 #set($show = true)
 #foreach($item in $mustHideField)
-#if($column.javaField == $item && !$column.isPk())
+#if($column.isPk())
+#set($show = false)
+#end
+#if($column.javaField == $item)
 #set($show = false)
 #break
 #end
 #end
-#if($column.isInsert() == false && !$column.isPk())
+#if($column.isInsert() == false && $column.isEdit() == false)
 #set($show = false)
+#elseif($column.isInsert() == false || $column.isEdit() == false)
+#set($justOperate = true)
+#if($column.isInsert() == false)
+#set($justEdit = true)
+#if($column.isEdit() == false)
+#set($justInsert = true)
+#end
+#end
 #end
 #if($show)
 #if($column.htmlType == 'ImageUpload' || $column.htmlType == 'Upload' || $column.htmlType == 'InputTextArea' || $column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
-          <el-col :span="24">
+          <el-col :span="24" #if($justOperate == true)v-if="${pkColumn.javaField} #if($justInsert == true)=#elseif($justEdit == true)!#end== undefined"#end>
 #else
-          <el-col :span="12">
+          <el-col :span="12" #if($justOperate == true)v-if="${pkColumn.javaField} #if($justInsert == true)=#elseif($justEdit == true)!#end== undefined"#end>
 #end
             <el-form-item label="${column.readNameNoSuffix()}" prop="${column.javaField}">
 #if($column.htmlType == 'Input' || $column.htmlType == 'InputPassword' || $column.htmlType == 'InputTextArea')
@@ -259,7 +274,7 @@ export default {
   name: "${BusinessName}Management",
 #if($dictMap)
   /** 字典查询 */
-  dicts: [#set($itemIndex=1)#foreach($item in $dictMap.entrySet())#set($itemIndex=$itemIndex+1)'${item.key}'#end#if($itemIndex < $dictMap.size()), #end],
+  dicts: [#set($itemIndex=0)#foreach($item in $dictMap.entrySet())#set($itemIndex=$itemIndex+1)'${item.key}'#if($itemIndex < $dictMap.size()), #end#end],
 #end
   data() {
     return {
@@ -279,7 +294,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 公告表格数据
+      // 表格数据
       tableList: [],
       // 弹出层标题
       title: "",
@@ -333,14 +348,18 @@ export default {
       // 表单校验
       rules: {
 #foreach ($column in $columns)
+#set($changeSet=false)
 #set($show = true)
+#if($column.isPk() == true)
+#set($show = false)
+#end
 #foreach($item in $mustHideField)
-#if($column.javaField == $item && !$column.isPk())
+#if($column.javaField == $item)
 #set($show = false)
 #break
 #end
 #end
-#if($column.isInsert() == false && !$column.isPk())
+#if($column.isRequired() == false)
 #set($show = false)
 #end
 #if($show)
@@ -348,7 +367,7 @@ export default {
 #set($changeSet=true)
 #end
         ${column.javaField}: [
-          { required: true, message: "${column.readNameNoSuffix()}不能为空", trigger: #if($changeSet)"change"#else"blur"#end }
+          { required: true, message: "${column.readNameNoSuffix()}不能为空", trigger: #if($changeSet == true)"change"#else"blur"#end }
         ],
 #end
 #end
@@ -363,10 +382,17 @@ export default {
     getList() {
       this.loading = true;
       list${BusinessName}Api(this.queryParams).then(response => {
-        this.tableList = response.items;
-        this.total = response.total;
+        this.tableList = response.data.items;
+        this.total = response.data.total;
         this.loading = false;
       });
+    },
+    /** 模态框取消操作 */
+    handleClose() {
+      this.#[[$modal]]#.confirm('确认关闭？').then(_ => {
+        this.cancel()
+      }).catch(_ => {
+      })
     },
     /** 取消操作 */
     cancel() {
@@ -431,7 +457,7 @@ export default {
     submitForm: function() {
       this.#[[$]]#refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.${pkColumn.javaField} != undefined) {
+          if (this.form.${pkColumn.javaField} !== undefined) {
             edit${BusinessName}Api(this.form).then(response => {
               this.#[[$modal]]#.msgSuccess("修改成功");
               this.open = false;
