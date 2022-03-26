@@ -13,26 +13,19 @@
 #set($show = false)
 #end
 #if($show)
-      <el-form-item label="${column.readNameNoSuffix()}"#if($column.htmlType == 'DatePicker' && ($column.queryType == 'between' || $column.queryType == 'notBetween')) prop="${column.javaField}"#end>
-#if($column.htmlType == 'DatePicker')
-#if($column.queryType == 'between' || $column.queryType == 'notBetween')
-        <el-date-picker
-          v-model="dateRange${column.javaField}"
-          style="width: 240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-#else
+      <el-form-item label="${column.readNameNoSuffix()}" prop="${column.javaField}">
+#if($column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker')
         <el-date-picker clearable
           v-model="queryParams.${column.javaField}"
+#if($column.htmlType == 'DatePicker')
           type="date"
           value-format="yyyy-MM-dd"
+#elseif($column.htmlType == 'TimePicker')
+          type="datetime"
+          value-format="yyyy-MM-dd HH:mm:ss"
+#end
           placeholder="请选择"
         />
-#end
 #elseif($column.dictType == 'Select' || $column.dictType == 'CheckboxGroup' || $column.dictType == 'RadioButtonGroup' || $column.dictType == 'RadioGroup')
         <el-select v-model="queryParams.${column.javaField}" placeholder="请选择"#if($column.dictType == 'RadioGroup') multiple#end clearable>
 #if(${column.dictType})
@@ -96,35 +89,48 @@
           v-hasPermi="[${BusinessName}Auth.DELETE]"
         >删除</el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="序号" align="center" prop="noticeId" width="100" />
-      <el-table-column
-        label="公告标题"
-        align="center"
-        prop="noticeTitle"
-        :show-overflow-tooltip="true"
-      />
-      <el-table-column label="公告类型" align="center" prop="noticeType" width="100">
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" width="55"/>
+      <el-table-column label="序号" align="center" v-if="columns[1].visible" width="80">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_notice_type" :value="scope.row.noticeType"/>
+          <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" width="100">
+#set($cloumnKey = 2)
+#foreach ($column in $columns)
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($show = false)
+#break
+#end
+#end
+#if($column.isList() == false)
+#set($show = false)
+#end
+#if($show)
+#set($tableWidth='100')
+#if(${column.dictType} || $column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker')
+#set($slot = true)
+#end
+      <el-table-column label="${column.readNameNoSuffix()}" align="center" prop="${column.javaField}" v-if="columns[${cloumnKey}].visible" :show-overflow-tooltip="true" min-width="${tableWidth}"#if(!$slot)/#end>
+#if($slot)
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_notice_status" :value="scope.row.status"/>
+#if($column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker')
+          <span>{{ parseTime(scope.row.${column.javaField}, '{y}-{m}-{d}#if($column.htmlType == 'TimePicker') {h}:{i}:{s}#end') }}</span>
+#elseif(${column.dictType})
+          <dict-tag :options="dict.type.${column.dictType}" :value="scope.row.${column.javaField}"/>
+#end
         </template>
       </el-table-column>
-      <el-table-column label="创建者" align="center" prop="createBy" width="100" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="100">
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+#end
+#set($cloumnKey = $cloumnKey + 1)
+#end
+#end
+      <el-table-column label="操作" align="center" v-if="columns[${cloumnKey}].visible" class-name="small-padding fixed-width">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -156,39 +162,85 @@
     <el-dialog :title="title" :visible.sync="open" width="780px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
+#foreach ($column in $columns)
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item && !$column.isPk())
+#set($show = false)
+#break
+#end
+#end
+#if($column.isInsert() == false && !$column.isPk())
+#set($show = false)
+#end
+#if($show)
+#if($column.htmlType == 'ImageUpload' || $column.htmlType == 'Upload' || $column.htmlType == 'InputTextArea' || $column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
+          <el-col :span="24">
+#else
           <el-col :span="12">
-            <el-form-item label="公告标题" prop="noticeTitle">
-              <el-input v-model="form.noticeTitle" placeholder="请输入公告标题" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="公告类型" prop="noticeType">
-              <el-select v-model="form.noticeType" placeholder="请选择公告类型">
-                <el-option
-                  v-for="dict in dict.type.sys_notice_type"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-                ></el-option>
+#end
+            <el-form-item label="${column.readNameNoSuffix()}" prop="${column.javaField}">
+#if($column.htmlType == 'Input' || $column.htmlType == 'InputPassword' || $column.htmlType == 'InputTextArea')
+              <el-input v-model="form.${column.javaField}" placeholder="请输入${column.readNameNoSuffix()}"#if($column.htmlType == 'InputTextArea') type="textarea"#end#if($column.htmlType == 'InputPassword') show-password#end/>
+#elseif($column.htmlType == 'Select')
+              <el-select v-model="form.${column.javaField}" placeholder="请选择" clearable>
+#if(${column.dictType})
+                  <el-option
+                    v-for="dict in dict.type.${column.dictType}"
+                    :key="dict.value"
+                    :label="dict.label"
+                    :value="dict.value"
+                  />
+#else
+                  <el-option label="请选择字典生成" value="" />
+#end
               </el-select>
+#elseif($column.htmlType == 'CheckboxGroup' || $column.htmlType == 'RadioButtonGroup' || $column.htmlType == 'RadioGroup')
+#if($column.htmlType == 'CheckboxGroup')
+#set($component = 'el-radio-group')
+#set($componentItem = 'el-option')
+#elseif($column.htmlType == 'RadioButtonGroup')
+#set($component = 'el-radio-group')
+#set($componentItem = 'el-radio-button')
+#elseif($column.htmlType == 'RadioGroup')
+#set($component = 'el-checkbox-group')
+#set($componentItem = 'el-checkbox-group')
+#end
+              <${component} v-model="form.${column.javaField}">
+#if(${column.dictType})
+                  <${componentItem}
+                      v-for="dict in dict.type.${column.dictType}"
+                      :key="dict.value"
+                      :label="dict.value"
+                      :value="dict.value"
+                  >{{ dict.label }}
+                  </${componentItem}>
+#else
+                  <${componentItem} label="请选择字典生成" value=""/>
+#end
+              </${component}>
+#elseif($column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker')
+              <el-date-picker clearable
+                v-model="form.${column.javaField}"
+#if($column.htmlType == 'DatePicker')
+                type="date"
+                value-format="yyyy-MM-dd"
+#elseif($column.htmlType == 'TimePicker')
+                type="datetime"
+                value-format="yyyy-MM-dd HH:mm:ss"
+#end
+                placeholder="请选择"/>
+#elseif($column.htmlType == 'ImageUpload')
+              <image-upload v-model="form.${column.javaField}"/>
+#elseif($column.htmlType == 'Upload')
+              <file-upload v-model="form.${column.javaField}"/>
+#elseif($column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
+              <editor v-model="form.${column.javaField}" :min-height="192"/>
+#end
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in dict.type.sys_notice_status"
-                  :key="dict.value"
-                  :label="dict.value"
-                >{{dict.label}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="内容">
-              <editor v-model="form.noticeContent" :min-height="192"/>
-            </el-form-item>
-          </el-col>
+#end
+#end
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -253,16 +305,53 @@ export default {
 #end
 #end
       },
+      // 列信息
+      columns: [
+        { key: 0, label: `勾选列`, visible: true },
+        { key: 1, label: `序号列`, visible: true },
+#set($cloumnKey = 2)
+#foreach ($column in $columns)
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($show = false)
+#break
+#end
+#end
+#if($column.isList() == false)
+#set($show = false)
+#end
+#if($show)
+        { key: ${cloumnKey}, label: `${column.readNameNoSuffix()}`, visible: true },
+#set($cloumnKey = $cloumnKey + 1)
+#end
+#end
+        { key: ${cloumnKey}, label: `操作列`, visible: true }
+      ],
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        noticeTitle: [
-          { required: true, message: "公告标题不能为空", trigger: "blur" }
+#foreach ($column in $columns)
+#set($show = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item && !$column.isPk())
+#set($show = false)
+#break
+#end
+#end
+#if($column.isInsert() == false && !$column.isPk())
+#set($show = false)
+#end
+#if($show)
+#if($column.htmlType == 'Select' || $column.htmlType == 'TreeSelect' || $column.htmlType == 'CheckboxGroup' || $column.htmlType == 'RadioButtonGroup' || $column.htmlType == 'RadioGroup')
+#set($changeSet=true)
+#end
+        ${column.javaField}: [
+          { required: true, message: "${column.readNameNoSuffix()}不能为空", trigger: #if($changeSet)"change"#else"blur"#end }
         ],
-        noticeType: [
-          { required: true, message: "公告类型不能为空", trigger: "change" }
-        ]
+#end
+#end
       }
     };
   },
@@ -270,7 +359,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询公告列表 */
+    /** 查询${functionName}列表 */
     getList() {
       this.loading = true;
       list${BusinessName}Api(this.queryParams).then(response => {
@@ -279,12 +368,12 @@ export default {
         this.loading = false;
       });
     },
-    // 取消按钮
+    /** 取消操作 */
     cancel() {
       this.open = false;
       this.reset();
     },
-    // 表单重置
+    /** 表单重置 */
     reset() {
       this.form = {
 #foreach ($column in $columns)
@@ -305,12 +394,12 @@ export default {
       };
       this.resetForm("form");
     },
-    /** 搜索按钮操作 */
+    /** 搜索操作 */
     handleQuery() {
       this.queryParams.page = 1;
       this.getList();
     },
-    /** 重置按钮操作 */
+    /** 重置操作 */
     resetQuery() {
       this.resetForm("queryForm");
       this.handleQuery();
@@ -322,13 +411,13 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-    /** 新增按钮操作 */
+    /** 新增操作 */
     handleAdd() {
       this.reset();
       this.open = true;
       this.title = "添加${functionName}";
     },
-    /** 修改按钮操作 */
+    /** 修改操作 */
     handleUpdate(row) {
       this.reset();
       const ${pkColumn.javaField} = row.${pkColumn.javaField} || this.${pkColumn.javaField}s
@@ -338,19 +427,19 @@ export default {
         this.title = "修改${functionName}";
       });
     },
-    /** 提交按钮 */
+    /** 提交操作 */
     submitForm: function() {
-      this.$refs["form"].validate(valid => {
+      this.#[[$]]#refs["form"].validate(valid => {
         if (valid) {
           if (this.form.${pkColumn.javaField} != undefined) {
             edit${BusinessName}Api(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
+              this.#[[$modal]]#.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
             add${BusinessName}Api(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
+              this.#[[$modal]]#.msgSuccess("新增成功");
               this.open = false;
               this.getList();
             });
@@ -358,15 +447,15 @@ export default {
         }
       });
     },
-    /** 删除按钮操作 */
+    /** 删除操作 */
     handleDelete(row) {
       const delIds = row.${pkColumn.javaField} || this.${pkColumn.javaField}s
       const delNames = row.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end || this.${pkColumn.javaField}Names
-      this.$modal.confirm('是否确定要删除' + delNames + '？').then(function() {
+      this.#[[$modal]]#.confirm('是否确定要删除' + delNames + '？').then(function() {
         return del${BusinessName}Api(delIds);
       }).then(() => {
         this.getList();
-        this.$modal.msgSuccess("删除成功！");
+        this.#[[$modal]]#.msgSuccess("删除成功！");
       }).catch(() => {});
     }
   }

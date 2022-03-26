@@ -3,7 +3,7 @@ import request from '@/utils/request'
 #set($IdName = $pkColumn.javaField)
 #if($api.list)
 /** 查询${functionName}列表 */
-export function list{BusinessName}Api(query) {
+export function list${BusinessName}Api(query) {
     return request({
         url: '/${moduleName}/${businessName}/list',
         method: 'get',
@@ -13,7 +13,7 @@ export function list{BusinessName}Api(query) {
 
 #if($table.tree || $table.subTree)
 /** 查询${functionName}列表（排除节点） */
-export function list{BusinessName}ExNodesApi(${IdName}) {
+export function list${BusinessName}ExNodesApi(${IdName}) {
     return request({
         url: '/${moduleName}/${businessName}/list/exclude',
         method: 'get',
@@ -23,7 +23,7 @@ export function list{BusinessName}ExNodesApi(${IdName}) {
 
 #end
 /** 查询${functionName}选择框列表 */
-export function option{BusinessName}Api() {
+export function option${BusinessName}Api() {
     return request({
         url: '/${moduleName}/${businessName}/option',
         method: 'get'
@@ -32,7 +32,7 @@ export function option{BusinessName}Api() {
 
 #end
 /** 查询${functionName}详细 */
-export function get{BusinessName}Api(${IdName}) {
+export function get${BusinessName}Api(${IdName}) {
     return request({
         url: '/${moduleName}/${businessName}/' + ${IdName},
         method: 'get'
