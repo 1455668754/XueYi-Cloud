@@ -3,7 +3,6 @@ package com.xueyi.system.authority.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.common.core.utils.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -20,7 +19,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.xueyi.common.core.constant.basic.SecurityConstants.CREATE_BY;
-import static com.xueyi.common.core.constant.basic.TenantConstants.MASTER;
 
 /**
  * 菜单管理 服务层处理
@@ -108,7 +106,7 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuDto, SysMenuManag
     public List<SysMenuDto> selectListScope(SysMenuDto menu) {
         return baseManager.selectListExtra(menu);
     }
-    
+
     /**
      * 根据模块Id查询菜单路由
      *

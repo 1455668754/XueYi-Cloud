@@ -11,6 +11,7 @@ import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.file.FileTypeUtils;
 import com.xueyi.common.core.utils.file.ImageUtils;
 import com.xueyi.common.core.utils.reflect.ReflectUtils;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellRangeAddressList;
@@ -40,11 +41,14 @@ import java.util.stream.Collectors;
  */
 public class ExcelUtil<T> {
 
+    private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
+
     public static final String[] FORMULA_STR = {"=", "-", "+", "@"};
+
+    public static final String FORMULA_REGEX_STR = "=|-|\\+|@";
 
     /** Excel sheet最大行数，默认65536 */
     public static final int sheetSize = 65536;
-    private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
 
     /** 数字格式 */
     private static final DecimalFormat DOUBLE_FORMAT = new DecimalFormat("######0.00");
@@ -535,8 +539,8 @@ public class ExcelUtil<T> {
         if (ColumnType.STRING == attr.cellType()) {
             String cellValue = Convert.toStr(value);
             // 对于任何以表达式触发字符 =-+@开头的单元格，直接使用tab字符作为前缀，防止CSV注入。
-            if (StringUtils.containsAny(cellValue, FORMULA_STR)) {
-                cellValue = StringUtils.replaceEach(cellValue, FORMULA_STR, new String[]{"\t=", "\t-", "\t+", "\t@"});
+            if (StringUtils.startsWithAny(cellValue, FORMULA_STR)) {
+                cellValue = RegExUtils.replaceFirst(cellValue, FORMULA_REGEX_STR, "\t$0");
             }
             cell.setCellValue(StringUtils.isNull(cellValue) ? attr.defaultValue() : cellValue + attr.suffix());
         } else if (ColumnType.NUMERIC == attr.cellType()) {
