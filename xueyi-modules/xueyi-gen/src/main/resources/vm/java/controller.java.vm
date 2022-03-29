@@ -25,7 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 #if($api.editStatus || $api.editStatusForce)
 import com.xueyi.common.security.annotation.Logical;
 #end
+import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

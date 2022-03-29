@@ -155,30 +155,6 @@ public class AuthorityConstants {
         }
     }
 
-    /** 组件标识 */
-    public enum ComponentType {
-
-        LAYOUT("Layout", "Layout"),
-        PARENT_VIEW("ParentView", "ParentView"),
-        IFRAME("IFrame", "IFrame");
-
-        private final String code;
-        private final String info;
-
-        ComponentType(String code, String info) {
-            this.code = code;
-            this.info = info;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getInfo() {
-            return info;
-        }
-    }
-
     /** 权限类型 */
     public enum AuthorityType {
 

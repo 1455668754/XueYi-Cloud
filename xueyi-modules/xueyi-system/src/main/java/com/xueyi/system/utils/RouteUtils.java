@@ -20,7 +20,7 @@ import java.util.List;
 public class RouteUtils {
 
     /** 面包屑导航中不可被点击标识 */
-    private static final String NO_REDIRECT = "noRedirect";
+    private static final String NO_REDIRECT = "noRedirect" ;
 
     /** 路由树初始深度 */
     private static final int LEVEL_0 = 0;
@@ -155,7 +155,35 @@ public class RouteUtils {
      */
     private static String getComponent(SysMenuDto menu) {
         return ObjectUtil.equals(AuthorityConstants.MENU_TOP_NODE, menu.getParentId()) || menu.isExternalLinks()
-                ? AuthorityConstants.ComponentType.LAYOUT.getCode()
-                : menu.getComponent();
+                ? ComponentType.LAYOUT.getCode()
+                : isParentView(menu) ? ComponentType.PARENT_VIEW.getCode() : menu.getComponent();
+    }
+
+    /**
+     * 是否为parent_view组件
+     *
+     * @param menu 菜单信息
+     * @return 结果
+     */
+    public static boolean isParentView(SysMenuDto menu) {
+        return CollUtil.isNotEmpty(menu.getChildren()) && menu.isDir();
+    }
+
+    /** 组件标识 */
+    private enum ComponentType {
+
+        LAYOUT("Layout"),
+        PARENT_VIEW("ParentView"),
+        IFRAME("InnerLink");
+
+        private final String code;
+
+        ComponentType(String code) {
+            this.code = code;
+        }
+
+        public String getCode() {
+            return code;
+        }
     }
 }

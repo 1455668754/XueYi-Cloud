@@ -12,7 +12,7 @@ export function listLoginLogApi(query) {
 /** 删除系统访问记录 */
 export function delLoginLogApi(ids) {
   return request({
-    url: '//system/loginLog/batch/' + ids.toString(),
+    url: '/system/loginLog/batch/' + ids.toString(),
     method: 'delete'
   })
 }

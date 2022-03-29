@@ -17,7 +17,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="登录IP地址" prop="ipaddr">
+      <el-form-item label="登录IP" prop="ipaddr">
         <el-input
           v-model="queryParams.ipaddr"
           placeholder="请输入"
@@ -217,15 +217,15 @@ export default {
     /** 多选框选中数据 */
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.idNames = selection.map(item => item.id)
+      this.idNames = selection.map(item => item.userName)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 删除操作 */
     handleDelete(row) {
       const delIds = row.id || this.ids
-      const delNames = row.id || this.idNames
-      this.$modal.confirm('是否确定要删除' + delNames + '？').then(function() {
+      const delNames = row.userName || this.idNames
+      this.$modal.confirm('是否确定要删除' + delNames + '的登录记录？').then(function() {
         return delLoginLogApi(delIds)
       }).then(() => {
         this.getList()

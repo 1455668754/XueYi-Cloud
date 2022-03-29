@@ -29,6 +29,8 @@ import com.xueyi.common.web.entity.service.impl.${Entity}ServiceImpl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * ${functionName}管理 服务层处理
  *
@@ -45,7 +47,7 @@ public class ${ClassName}ServiceImpl extends ${Entity}ServiceImpl${generics} imp
      */
     @Override
     //@DataScope(userAlias = "createBy", mapperScope = {"${ClassName}Mapper"})
-    public List<SysRoleDto> selectListScope(${ClassName}Dto ${classNameNoPrefix}) {
+    public List<${ClassName}Dto> selectListScope(${ClassName}Dto ${classNameNoPrefix}) {
         return baseManager.selectListExtra(${classNameNoPrefix});
     }
 

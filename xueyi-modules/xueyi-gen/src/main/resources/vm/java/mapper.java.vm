@@ -18,6 +18,7 @@ import ${packageName}.domain.dto.${ClassName}Dto;
 import ${subPackageName}.domain.dto.${subClassName}Dto;
 #end
 import com.xueyi.common.web.entity.mapper.${Entity}Mapper;
+import com.baomidou.dynamic.datasource.annotation.DS;
 
 import static com.xueyi.common.core.constant.basic.TenantConstants.${sourceMode};
 
