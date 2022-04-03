@@ -269,7 +269,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -298,6 +298,8 @@ export default {
       JobAuth: JobAuth,
       // 遮罩层
       loading: true,
+      // 提交状态
+      submitLoading: false,
       // 选中数组
       ids: [],
       // 选中数组名称
@@ -408,6 +410,7 @@ export default {
         remark: undefined
       }
       this.resetForm('form')
+      this.submitLoading = false
     },
     /** 搜索操作 */
     handleQuery() {
@@ -481,6 +484,7 @@ export default {
     },
     /** 提交操作 */
     submitForm: function() {
+      this.submitLoading = true
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
@@ -488,16 +492,17 @@ export default {
               this.$modal.msgSuccess('修改成功')
               this.open = false
               this.getList()
-            })
+            }).catch()
           } else {
             addJobApi(this.form).then(response => {
               this.$modal.msgSuccess('新增成功')
               this.open = false
               this.getList()
-            })
+            }).catch()
           }
         }
       })
+      this.submitLoading = false
     },
     /** 删除操作 */
     handleDelete(row) {

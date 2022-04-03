@@ -86,8 +86,8 @@
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" width="55"></el-table-column>
-      <el-table-column label="序号" type="index" width="50" align="center">
+      <el-table-column type="selection" align="center" min-width="55"></el-table-column>
+      <el-table-column label="序号" type="index" min-width="50" align="center">
         <template v-slot="scope">
           <span>{{ (queryParams.page - 1) * queryParams.pageSize + scope.$index + 1 }}</span>
         </template>
@@ -97,25 +97,25 @@
         align="center"
         prop="name"
         :show-overflow-tooltip="true"
-        width="120"
+        min-width="120"
       />
       <el-table-column
         label="表描述"
         align="center"
         prop="comment"
         :show-overflow-tooltip="true"
-        width="120"
+        min-width="120"
       />
       <el-table-column
         label="实体"
         align="center"
         prop="name"
         :show-overflow-tooltip="true"
-        width="120"
+        min-width="120"
       />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="160"/>
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="160"/>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
+      <el-table-column label="创建时间" align="center" prop="createTime" min-width="160"/>
+      <el-table-column label="更新时间" align="center" prop="updateTime" min-width="160"/>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="250" fixed="right">
         <template v-slot="scope">
           <el-button
             type="text"

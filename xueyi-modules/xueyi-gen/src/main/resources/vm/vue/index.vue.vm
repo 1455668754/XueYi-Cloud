@@ -93,8 +93,8 @@
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" width="55"/>
-      <el-table-column label="序号" align="center" v-if="columns[1].visible" width="80">
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+      <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
@@ -114,13 +114,15 @@
 #end
 #if($show)
 #set($tableWidth='100')
-#if(${column.dictType} || $column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker')
+#if(${column.dictType} || $column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker' || $column.htmlType == 'ImageUpload')
 #set($slot = true)
 #end
       <el-table-column label="${column.readNameNoSuffix()}" align="center" prop="${column.javaField}" v-if="columns[${cloumnKey}].visible" :show-overflow-tooltip="true" min-width="${tableWidth}"#if(!$slot)/#end>
 #if($slot)
         <template v-slot="scope">
-#if($column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker')
+#if($column.htmlType == 'ImageUpload')
+        <el-image style="width: 80px; height: 80px" :src="scope.row.${column.javaField}" fit="cover"/>
+#elseif($column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker')
           <span>{{ parseTime(scope.row.${column.javaField}, '{y}-{m}-{d}#if($column.htmlType == 'TimePicker') {h}:{i}:{s}#end') }}</span>
 #elseif(${column.dictType})
           <dict-tag :options="dict.type.${column.dictType}" :value="scope.row.${column.javaField}"/>
@@ -159,7 +161,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改公告对话框 -->
+    <!-- 添加或修改${functionName}对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" :before-close="handleClose" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
@@ -190,13 +192,15 @@
 #end
 #if($show)
 #if($column.htmlType == 'ImageUpload' || $column.htmlType == 'Upload' || $column.htmlType == 'InputTextArea' || $column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
-          <el-col :span="24" #if($justOperate == true)v-if="${pkColumn.javaField} #if($justInsert == true)=#elseif($justEdit == true)!#end== undefined"#end>
+          <el-col :span="24" #if($justOperate == true)v-if="form.${pkColumn.javaField} #if($justInsert == true)=#elseif($justEdit == true)!#end== undefined"#end>
 #else
-          <el-col :span="12" #if($justOperate == true)v-if="${pkColumn.javaField} #if($justInsert == true)=#elseif($justEdit == true)!#end== undefined"#end>
+          <el-col :span="12" #if($justOperate == true)v-if="form.${pkColumn.javaField} #if($justInsert == true)=#elseif($justEdit == true)!#end== undefined"#end>
 #end
             <el-form-item label="${column.readNameNoSuffix()}" prop="${column.javaField}">
 #if($column.htmlType == 'Input' || $column.htmlType == 'InputPassword' || $column.htmlType == 'InputTextArea')
               <el-input v-model="form.${column.javaField}" placeholder="请输入${column.readNameNoSuffix()}"#if($column.htmlType == 'InputTextArea') type="textarea"#end#if($column.htmlType == 'InputPassword') show-password#end/>
+#elseif($column.htmlType == 'InputNumber')
+              <el-input-number v-model="form.${column.javaField}" :max="65535" />
 #elseif($column.htmlType == 'Select')
               <el-select v-model="form.${column.javaField}" placeholder="请选择" clearable>
 #if(${column.dictType})
@@ -251,6 +255,8 @@
               <file-upload v-model="form.${column.javaField}"/>
 #elseif($column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
               <editor v-model="form.${column.javaField}" :min-height="192"/>
+#else
+              <el-input v-model="form.${column.javaField}" placeholder="请输入${column.readNameNoSuffix()} />
 #end
             </el-form-item>
           </el-col>
@@ -259,7 +265,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
@@ -300,6 +306,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 提交状态
+      submitLoading: false,
       // 查询参数
       queryParams: {
         page: 1,
@@ -419,6 +427,7 @@ export default {
 #end
       };
       this.resetForm("form");
+      this.submitLoading = false
     },
     /** 搜索操作 */
     handleQuery() {
@@ -455,6 +464,7 @@ export default {
     },
     /** 提交操作 */
     submitForm: function() {
+      this.submitLoading = false
       this.#[[$]]#refs["form"].validate(valid => {
         if (valid) {
           if (this.form.${pkColumn.javaField} !== undefined) {
@@ -462,16 +472,17 @@ export default {
               this.#[[$modal]]#.msgSuccess("修改成功");
               this.open = false;
               this.getList();
-            });
+            }).catch()
           } else {
             add${BusinessName}Api(this.form).then(response => {
               this.#[[$modal]]#.msgSuccess("新增成功");
               this.open = false;
               this.getList();
-            });
+            }).catch()
           }
         }
       });
+      this.submitLoading = false
     },
     /** 删除操作 */
     handleDelete(row) {

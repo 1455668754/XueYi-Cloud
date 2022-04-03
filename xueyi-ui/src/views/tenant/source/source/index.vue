@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="公告标题" prop="name">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
+      <el-form-item label="数据源名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入"
@@ -9,20 +9,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="公告类型" prop="type">
-        <el-select v-model="queryParams.type" placeholder="请选择" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_notice_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
+      <el-form-item label="数据源编码" prop="slave">
+        <el-input
+          v-model="queryParams.slave"
+          placeholder="请输入"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
-      <el-form-item label="公告状态" prop="status">
+      <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择" clearable>
           <el-option
-            v-for="dict in dict.type.sys_notice_status"
+            v-for="dict in dict.type.sys_normal_disable"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -43,7 +41,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="[NoticeAuth.ADD]"
+          v-hasPermi="[SourceAuth.ADD]"
         >新增
         </el-button>
       </el-col>
@@ -55,7 +53,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="[NoticeAuth.EDIT]"
+          v-hasPermi="[SourceAuth.EDIT]"
         >修改
         </el-button>
       </el-col>
@@ -67,7 +65,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="[NoticeAuth.DELETE]"
+          v-hasPermi="[SourceAuth.DELETE]"
         >删除
         </el-button>
       </el-col>
@@ -81,24 +79,24 @@
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="公告标题" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true"
+      <el-table-column label="数据源名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true"
                        min-width="100"
       />
-      <el-table-column label="公告类型" align="center" prop="type" v-if="columns[3].visible" :show-overflow-tooltip="true"
+      <el-table-column label="数据源编码" align="center" prop="slave" v-if="columns[3].visible" :show-overflow-tooltip="true"
+                       min-width="100"
+      />
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[4].visible" :show-overflow-tooltip="true"
                        min-width="100"
       >
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_notice_type" :value="scope.row.type"/>
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="公告内容" align="center" prop="content" v-if="columns[4].visible"
+      <el-table-column label="默认数据源" align="center" prop="isDefault" v-if="columns[5].visible"
                        :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="公告状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true"
-                       min-width="100"
       >
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_notice_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isDefault"/>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible"
@@ -109,7 +107,7 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width"
-                       fixed="right"
+                       width="120" fixed="right"
       >
         <template v-slot="scope">
           <el-button
@@ -117,7 +115,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="[NoticeAuth.EDIT]"
+            v-hasPermi="[SourceAuth.EDIT]"
           >修改
           </el-button>
           <el-button
@@ -125,7 +123,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="[NoticeAuth.DELETE]"
+            v-hasPermi="[SourceAuth.DELETE]"
           >删除
           </el-button>
         </template>
@@ -140,20 +138,50 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改公告对话框 -->
+    <!-- 添加或修改数据源对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" :before-close="handleClose" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="公告标题" prop="name">
-              <el-input v-model="form.name" placeholder="请输入公告标题"/>
+            <el-form-item label="数据源名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入数据源名称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="公告类型" prop="type">
-              <el-radio-group v-model="form.type">
+            <el-form-item label="数据源编码" prop="slave" v-if="form.id !== undefined">
+              <el-input v-model="form.slave" placeholder="请输入数据源编码" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="驱动" prop="driverClassName">
+              <el-input v-model="form.driverClassName" placeholder="请输入驱动"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="连接地址" prop="urlPrepend">
+              <el-input v-model="form.urlPrepend" placeholder="请输入连接地址"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="连接参数" prop="urlAppend">
+              <el-input v-model="form.urlAppend" placeholder="请输入连接参数" type="textarea"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model="form.username" placeholder="请输入用户名"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="form.password" placeholder="请输入密码" show-password/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-radio-group v-model="form.status">
                 <el-radio-button
-                  v-for="dict in dict.type.sys_notice_type"
+                  v-for="dict in dict.type.sys_normal_disable"
                   :key="dict.value"
                   :label="dict.value"
                   :value="dict.value"
@@ -162,9 +190,22 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="24">
-            <el-form-item label="公告内容" prop="content">
-              <editor v-model="form.content" :min-height="192"/>
+          <el-col :span="12">
+            <el-form-item label="默认数据源" prop="isDefault" v-if="form.id !== undefined">
+              <el-radio-group v-model="form.isDefault" disabled>
+                <el-radio-button
+                  v-for="dict in dict.type.sys_yes_no"
+                  :key="dict.value"
+                  :label="dict.value"
+                  :value="dict.value"
+                >{{ dict.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="显示顺序" prop="sort">
+              <el-input-number v-model="form.sort" :max="65535"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -175,6 +216,7 @@
         </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="danger" :loading="submitLoading" @click="connectionForm">连接测试</el-button>
         <el-button type="primary" :loading="submitLoading" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
@@ -183,18 +225,26 @@
 </template>
 
 <script>
-import { listNoticeApi, getNoticeApi, addNoticeApi, editNoticeApi, delNoticeApi } from '@/api/system/notice/notice'
-import { NoticeAuth } from '@auth/system'
-import { NoticeTypeEnum } from '@enums/system'
+import {
+  listSourceApi,
+  getSourceApi,
+  addSourceApi,
+  editSourceApi,
+  delSourceApi,
+  connectionSourceApi
+} from '@/api/tenant/source/source'
+import { SourceAuth } from '@auth/tenant'
+import { DRIVER_CLASSNAME, URL_APPEND, URL_PREPEND } from '@enums/tenant'
+import { DicSortEnum, DicStatusEnum } from '@enums'
 
 export default {
-  name: 'NoticeManagement',
+  name: 'SourceManagement',
   /** 字典查询 */
-  dicts: ['sys_notice_type', 'sys_notice_status'],
+  dicts: ['sys_yes_no', 'sys_normal_disable'],
   data() {
     return {
       //权限标识
-      NoticeAuth: NoticeAuth,
+      SourceAuth: SourceAuth,
       // 遮罩层
       loading: true,
       // 提交状态
@@ -211,7 +261,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 公告表格数据
+      // 表格数据
       tableList: [],
       // 弹出层标题
       title: '',
@@ -222,17 +272,17 @@ export default {
         page: 1,
         pageSize: 10,
         name: undefined,
-        type: undefined,
+        slave: undefined,
         status: undefined
       },
       // 列信息
       columns: [
         { key: 0, label: `勾选列`, visible: true },
         { key: 1, label: `序号列`, visible: true },
-        { key: 2, label: `公告标题`, visible: true },
-        { key: 3, label: `公告类型`, visible: true },
-        { key: 4, label: `公告内容`, visible: true },
-        { key: 5, label: `公告状态`, visible: true },
+        { key: 2, label: `数据源名称`, visible: true },
+        { key: 3, label: `数据源编码`, visible: true },
+        { key: 4, label: `状态`, visible: true },
+        { key: 5, label: `默认数据源`, visible: true },
         { key: 6, label: `创建时间`, visible: true },
         { key: 7, label: `操作列`, visible: true }
       ],
@@ -241,14 +291,26 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: '公告标题不能为空', trigger: 'blur' }
+          { required: true, message: '数据源名称不能为空', trigger: 'blur' }
         ],
-        type: [
-          { required: true, message: '公告类型不能为空', trigger: 'change' }
+        slave: [
+          { required: true, message: '数据源编码不能为空', trigger: 'blur' }
         ],
-        content: [
-          { required: true, message: '公告内容不能为空', trigger: 'blur' }
-        ]
+        driverClassName: [
+          { required: true, message: '驱动不能为空', trigger: 'blur' }
+        ],
+        urlPrepend: [
+          { required: true, message: '连接地址不能为空', trigger: 'blur' }
+        ],
+        username: [
+          { required: true, message: '用户名不能为空', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' }
+        ],
+        status: [
+          { required: true, message: "状态不能为空", trigger: "change" }
+        ],
       }
     }
   },
@@ -256,10 +318,10 @@ export default {
     this.getList()
   },
   methods: {
-    /** 查询通知公告列表 */
+    /** 查询数据源列表 */
     getList() {
       this.loading = true
-      listNoticeApi(this.queryParams).then(response => {
+      listSourceApi(this.queryParams).then(response => {
         this.tableList = response.data.items
         this.total = response.data.total
         this.loading = false
@@ -282,9 +344,16 @@ export default {
       this.form = {
         id: undefined,
         name: undefined,
-        type: NoticeTypeEnum.NOTIFY,
-        content: undefined,
-        remark: undefined
+        slave: undefined,
+        driverClassName: DRIVER_CLASSNAME,
+        urlPrepend: URL_PREPEND,
+        urlAppend: URL_APPEND,
+        username: undefined,
+        password: undefined,
+        sort: DicSortEnum.ZERO,
+        status: DicStatusEnum.NORMAL,
+        remark: undefined,
+        isDefault: undefined
       }
       this.resetForm('form')
       this.submitLoading = false
@@ -310,17 +379,29 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加通知公告'
+      this.title = '添加数据源'
     },
     /** 修改操作 */
     handleUpdate(row) {
       this.reset()
       const id = row.id || this.ids
-      getNoticeApi(id).then(response => {
+      getSourceApi(id).then(response => {
         this.form = response.data
         this.open = true
-        this.title = '修改通知公告'
+        this.title = '修改数据源'
       })
+    },
+    /** 连接测试操作 */
+    connectionForm() {
+      this.submitLoading = true
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          connectionSourceApi(this.form).then(response => {
+            this.$modal.msgSuccess('数据源连接成功')
+          }).catch()
+        }
+      })
+      this.submitLoading = false
     },
     /** 提交操作 */
     submitForm: function() {
@@ -328,13 +409,13 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
-            editNoticeApi(this.form).then(response => {
+            editSourceApi(this.form).then(response => {
               this.$modal.msgSuccess('修改成功')
               this.open = false
               this.getList()
             }).catch()
           } else {
-            addNoticeApi(this.form).then(response => {
+            addSourceApi(this.form).then(response => {
               this.$modal.msgSuccess('新增成功')
               this.open = false
               this.getList()
@@ -349,7 +430,7 @@ export default {
       const delIds = row.id || this.ids
       const delNames = row.name || this.idNames
       this.$modal.confirm('是否确定要删除' + delNames + '？').then(function() {
-        return delNoticeApi(delIds)
+        return delSourceApi(delIds)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功！')
