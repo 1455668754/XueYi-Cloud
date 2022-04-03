@@ -30,8 +30,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" :icon="IconEnum.SEARCH" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button :icon="IconEnum.RESET" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -40,7 +40,7 @@
         <el-button
           type="primary"
           plain
-          icon="el-icon-plus"
+          :icon="IconEnum.ADD"
           size="mini"
           @click="handleAdd"
           v-hasPermi="[NoticeAuth.ADD]"
@@ -51,7 +51,7 @@
         <el-button
           type="success"
           plain
-          icon="el-icon-edit"
+          :icon="IconEnum.EDIT"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
@@ -63,7 +63,7 @@
         <el-button
           type="danger"
           plain
-          icon="el-icon-delete"
+          :icon="IconEnum.DELETE"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
@@ -115,7 +115,7 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="IconEnum.EDIT"
             @click="handleUpdate(scope.row)"
             v-hasPermi="[NoticeAuth.EDIT]"
           >修改
@@ -123,7 +123,7 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
             v-hasPermi="[NoticeAuth.DELETE]"
           >删除
@@ -186,6 +186,7 @@
 import { listNoticeApi, getNoticeApi, addNoticeApi, editNoticeApi, delNoticeApi } from '@/api/system/notice/notice'
 import { NoticeAuth } from '@auth/system'
 import { NoticeTypeEnum } from '@enums/system'
+import { IconEnum } from '@enums'
 
 export default {
   name: 'NoticeManagement',
@@ -195,6 +196,8 @@ export default {
     return {
       //权限标识
       NoticeAuth: NoticeAuth,
+      // 图标标识
+      IconEnum: IconEnum,
       // 遮罩层
       loading: true,
       // 提交状态

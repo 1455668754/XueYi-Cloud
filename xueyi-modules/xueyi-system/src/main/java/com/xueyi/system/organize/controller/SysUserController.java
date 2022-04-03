@@ -230,10 +230,9 @@ public class SysUserController extends BaseController<SysUserDto, ISysUserServic
         int size = idList.size();
         Long userId = SecurityUtils.getUserId();
         // remove oneself or admin
-        for (int i = idList.size() - 1; i >= 0; i--) {
-            if (ObjectUtil.equals(idList.get(i), userId) || baseService.checkUserAllowed(idList.get(i)))
+        for (int i = idList.size() - 1; i >= 0; i--)
+            if (ObjectUtil.equals(idList.get(i), userId) || !baseService.checkUserAllowed(idList.get(i)))
                 idList.remove(i);
-        }
         if (CollUtil.isEmpty(idList))
             throw new ServiceException("删除失败，不能删除自己或超管用户！");
         else if (idList.size() != size) {

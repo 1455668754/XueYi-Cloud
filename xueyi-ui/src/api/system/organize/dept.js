@@ -12,8 +12,9 @@ export function listDeptApi(query) {
 /** 查询部门列表（排除节点） */
 export function listDeptExNodesApi(id) {
   return request({
-    url: '/system/dept/list/exclude' + id,
-    method: 'get'
+    url: '/system/dept/list/exclude',
+    method: 'get',
+    params: { id: id }
   })
 }
 

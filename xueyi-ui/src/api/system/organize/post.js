@@ -55,7 +55,7 @@ export function editPostApi(data) {
 export function editAuthPostScopeApi(id, roleIds) {
   return request({
     url: '/system/post/auth',
-    method: 'get',
+    method: 'put',
     data: { id: id, roleIds: roleIds }
   })
 }

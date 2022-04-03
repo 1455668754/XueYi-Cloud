@@ -10,7 +10,7 @@ export const DeptAuth = {
   EDIT: 'organize:dept:edit',
   // 修改部门状态
   EDIT_STATUS: 'organize:dept:es',
-  // 部门分配角色
+  // 部门角色分配
   AUTH: 'organize:dept:auth',
   // 删除部门
   DELETE: 'organize:dept:delete',

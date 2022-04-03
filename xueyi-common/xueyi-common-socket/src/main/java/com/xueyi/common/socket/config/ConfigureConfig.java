@@ -1,6 +1,6 @@
 package com.xueyi.common.socket.config;
 
-import com.xueyi.common.core.constant.HttpConstants;
+import com.xueyi.common.socket.constants.HttpConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

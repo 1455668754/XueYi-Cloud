@@ -50,5 +50,28 @@ export const DicCommonPrivateEnum = {
   PRIVATE: '1'
 }
 
+/** 图标枚举 */
+export const IconEnum = {
+  VIEW: 'el-icon-view',
+  ADD: 'el-icon-plus',
+  IMPORT: 'ant-design:vertical-align-top-outlined',
+  EXPORT: 'ant-design:vertical-align-bottom-outlined',
+  EDIT: 'el-icon-edit',
+  AUTH: 'el-icon-circle-check',
+  DATA: 'clarity:note-edit-line',
+  DELETE: 'el-icon-delete',
+  SEARCH: 'el-icon-search',
+  RESET: 'el-icon-refresh',
+  UPLOAD: 'el-icon-upload',
+  DOWNLOAD: 'el-icon-download',
+  PREVIEW: 'ant-design:eye-outlined',
+  ADD_FOLD: 'ant-design:folder-add-outlined',
+  LOG: 'ant-design:exception-outlined',
+}
+
+
 /** 默认模块 */
 export const COMMON_MODULE = '1'
+
+/** 默认模块 */
+export const DEFAULT_TREE_NODE = '0'

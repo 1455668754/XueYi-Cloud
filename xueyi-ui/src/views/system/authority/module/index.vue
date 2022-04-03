@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="策略名称" prop="name">
+      <el-form-item label="模块名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入"
@@ -9,13 +9,23 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="数据源" prop="sourceId">
-        <el-select v-model="queryParams.sourceId" placeholder="请选择" clearable>
+      <el-form-item label="模块类型" prop="type">
+        <el-select v-model="queryParams.type" placeholder="请选择" clearable>
           <el-option
-            v-for="dict in sourceOptions"
-            :key="dict.id"
-            :label="dict.name"
-            :value="dict.id"
+            v-for="dict in dict.type.auth_frame_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="显隐状态" prop="hideModule">
+        <el-select v-model="queryParams.hideModule" placeholder="请选择" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_show_hide"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
           />
         </el-select>
       </el-form-item>
@@ -23,6 +33,16 @@
         <el-select v-model="queryParams.status" placeholder="请选择" clearable>
           <el-option
             v-for="dict in dict.type.sys_normal_disable"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="公共模块" prop="isCommon">
+        <el-select v-model="queryParams.isCommon" placeholder="请选择" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_common_private"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -43,7 +63,7 @@
           :icon="IconEnum.ADD"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="[StrategyAuth.ADD]"
+          v-hasPermi="[ModuleAuth.ADD]"
         >新增
         </el-button>
       </el-col>
@@ -55,7 +75,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="[StrategyAuth.EDIT]"
+          v-hasPermi="[ModuleAuth.EDIT]"
         >修改
         </el-button>
       </el-col>
@@ -67,7 +87,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="[StrategyAuth.DELETE]"
+          v-hasPermi="[ModuleAuth.DELETE]"
         >删除
         </el-button>
       </el-col>
@@ -81,38 +101,46 @@
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="策略名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true"
+      <el-table-column label="模块名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true"
                        min-width="100"
       />
-      <el-table-column label="数据源Id" align="center" prop="sourceId" v-if="columns[3].visible"
+      <el-table-column label="模块logo" align="center" prop="logo" v-if="columns[3].visible" :show-overflow-tooltip="true"
+                       min-width="100"
+      >
+        <template v-slot="scope">
+          <el-image style="width: 80px; height: 80px" :src="scope.row.logo" fit="cover"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="模块类型" align="center" prop="type" v-if="columns[4].visible" :show-overflow-tooltip="true"
+                       min-width="100"
+      >
+        <template v-slot="scope">
+          <dict-tag :options="dict.type.auth_frame_type" :value="scope.row.type"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="显隐状态" align="center" prop="hideModule" v-if="columns[5].visible"
                        :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="数据源编码" align="center" prop="sourceSlave" v-if="columns[4].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true"
+      >
+        <template v-slot="scope">
+          <dict-tag :options="dict.type.sys_show_hide" :value="scope.row.hideModule"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[6].visible" :show-overflow-tooltip="true"
                        min-width="100"
       >
         <template v-slot="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="默认策略" align="center" prop="isDefault" v-if="columns[6].visible"
+      <el-table-column label="公共模块" align="center" prop="isCommon" v-if="columns[7].visible"
                        :show-overflow-tooltip="true" min-width="100"
       >
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isDefault"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[7].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
-        <template v-slot="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <dict-tag :options="dict.type.sys_common_private" :value="scope.row.isCommon"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" v-if="columns[8].visible" class-name="small-padding fixed-width"
-                       width="120" fixed="right"
+                       width="180" fixed="right"
       >
         <template v-slot="scope">
           <el-button
@@ -120,7 +148,7 @@
             type="text"
             :icon="IconEnum.EDIT"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="[StrategyAuth.EDIT]"
+            v-hasPermi="[ModuleAuth.EDIT]"
           >修改
           </el-button>
           <el-button
@@ -128,7 +156,7 @@
             type="text"
             :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
-            v-hasPermi="[StrategyAuth.DELETE]"
+            v-hasPermi="[ModuleAuth.DELETE]"
           >删除
           </el-button>
         </template>
@@ -143,25 +171,54 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改策略对话框 -->
+    <!-- 添加或修改模块对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" :before-close="handleClose" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="策略名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入策略名称"/>
+            <el-form-item label="模块名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入模块名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="模块logo" prop="logo">
+              <image-upload v-model="form.logo" :limit="1" :isShowTip="false"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="数据源" prop="sourceId">
-              <el-select v-model="form.sourceId" placeholder="请选择" clearable>
-                <el-option
-                  v-for="dict in sourceOptions"
-                  :key="dict.id"
-                  :label="dict.name"
-                  :value="dict.id"
-                />
-              </el-select>
+            <el-form-item label="路由地址" prop="path">
+              <el-input v-model="form.path" placeholder="请输入路由地址"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="路由参数" prop="paramPath">
+              <el-input v-model="form.paramPath" placeholder="请输入路由参数"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="模块类型" prop="type">
+              <el-radio-group v-model="form.type">
+                <el-radio-button
+                  v-for="dict in dict.type.auth_frame_type"
+                  :key="dict.value"
+                  :label="dict.value"
+                  :value="dict.value"
+                >{{ dict.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="显隐状态" prop="hideModule">
+              <el-radio-group v-model="form.hideModule">
+                <el-radio-button
+                  v-for="dict in dict.type.sys_show_hide"
+                  :key="dict.value"
+                  :label="dict.value"
+                  :value="dict.value"
+                >{{ dict.label }}
+                </el-radio-button>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -177,11 +234,11 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.id !== undefined">
-            <el-form-item label="默认策略" prop="isDefault">
-              <el-radio-group v-model="form.isDefault" disabled>
+          <el-col :span="12" v-if="isLessor">
+            <el-form-item label="公共模块" prop="isCommon">
+              <el-radio-group v-model="form.isCommon" :disabled="form.id !== undefined">
                 <el-radio-button
-                  v-for="dict in dict.type.sys_yes_no"
+                  v-for="dict in dict.type.sys_common_private"
                   :key="dict.value"
                   :label="dict.value"
                   :value="dict.value"
@@ -211,37 +268,28 @@
 </template>
 
 <script>
-import {
-  listStrategyApi,
-  getStrategyApi,
-  addStrategyApi,
-  editStrategyApi,
-  delStrategyApi
-} from '@/api/tenant/tenant/strategy'
-import { StrategyAuth } from '@auth/tenant'
-import { DicSortEnum, DicStatusEnum, IconEnum } from '@enums'
-import { optionSourceApi } from '@/api/tenant/source/source'
+import { listModuleApi, getModuleApi, addModuleApi, editModuleApi, delModuleApi } from '@/api/system/authority/module'
+import { ModuleAuth } from '@auth/system'
+import { DicCommonPrivateEnum, DicShowHideEnum, DicSortEnum, DicStatusEnum, IconEnum } from '@enums'
+import { FrameTypeEnum } from '@enums/system'
+import store from '@/store'
 
 export default {
-  name: 'StrategyManagement',
+  name: 'ModuleManagement',
   /** 字典查询 */
-  dicts: ['sys_yes_no', 'sys_normal_disable'],
+  dicts: ['sys_yes_no', 'auth_frame_type', 'sys_show_hide', 'sys_normal_disable', 'sys_common_private'],
   data() {
     return {
       //权限标识
-      StrategyAuth: StrategyAuth,
+      ModuleAuth: ModuleAuth,
       // 图标标识
       IconEnum: IconEnum,
       // 遮罩层
       loading: true,
-      // 提交状态
-      submitLoading: false,
       // 选中数组
       ids: [],
       // 选中数组名称
       idNames: [],
-      // 数据源选项
-      sourceOptions: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -256,24 +304,30 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
+      // 提交状态
+      submitLoading: false,
+      // 是否为租管租户
+      isLessor:store.getters.isLessor,
       // 查询参数
       queryParams: {
         page: 1,
         pageSize: 10,
         name: undefined,
-        sourceId: undefined,
-        status: undefined
+        type: undefined,
+        hideModule: undefined,
+        status: undefined,
+        isCommon: undefined
       },
       // 列信息
       columns: [
         { key: 0, label: `勾选列`, visible: true },
         { key: 1, label: `序号列`, visible: true },
-        { key: 2, label: `策略名称`, visible: true },
-        { key: 3, label: `数据源Id`, visible: true },
-        { key: 4, label: `数据源编码`, visible: true },
-        { key: 5, label: `状态`, visible: true },
-        { key: 6, label: `默认策略`, visible: true },
-        { key: 7, label: `创建时间`, visible: true },
+        { key: 2, label: `模块名称`, visible: true },
+        { key: 3, label: `模块logo`, visible: true },
+        { key: 4, label: `模块类型`, visible: true },
+        { key: 5, label: `显隐状态`, visible: true },
+        { key: 6, label: `状态`, visible: true },
+        { key: 7, label: `公共模块`, visible: true },
         { key: 8, label: `操作列`, visible: true }
       ],
       // 表单参数
@@ -281,10 +335,16 @@ export default {
       // 表单校验
       rules: {
         name: [
-          { required: true, message: '策略名称不能为空', trigger: 'blur' }
+          { required: true, message: '模块名称不能为空', trigger: 'blur' }
         ],
-        sourceId: [
-          { required: true, message: '数据源不能为空', trigger: 'change' }
+        logo: [
+          { required: true, message: '模块logo不能为空', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '模块类型不能为空', trigger: 'change' }
+        ],
+        hideModule: [
+          { required: true, message: '显隐状态不能为空', trigger: 'change' }
         ],
         status: [
           { required: true, message: '状态不能为空', trigger: 'change' }
@@ -294,23 +354,15 @@ export default {
   },
   created() {
     this.getList()
-    this.getOptions()
   },
   methods: {
-    /** 查询源策略列表 */
+    /** 查询模块列表 */
     getList() {
       this.loading = true
-      listStrategyApi(this.queryParams).then(response => {
+      listModuleApi(this.queryParams).then(response => {
         this.tableList = response.data.items
         this.total = response.data.total
         this.loading = false
-      })
-    },
-    /** 查询选项列表 */
-    getOptions() {
-      this.sourceOptions = []
-      optionSourceApi().then(response => {
-        this.sourceOptions = response.data.items
       })
     },
     /** 模态框取消操作 */
@@ -330,9 +382,14 @@ export default {
       this.form = {
         id: undefined,
         name: undefined,
-        sourceId: undefined,
+        logo: undefined,
+        path: undefined,
+        paramPath: undefined,
+        type: FrameTypeEnum.NORMAL,
+        hideModule: DicShowHideEnum.SHOW,
         sort: DicSortEnum.ZERO,
         status: DicStatusEnum.NORMAL,
+        isCommon: DicCommonPrivateEnum.PRIVATE,
         remark: undefined
       }
       this.resetForm('form')
@@ -359,16 +416,16 @@ export default {
     handleAdd() {
       this.reset()
       this.open = true
-      this.title = '添加源策略'
+      this.title = '添加模块'
     },
     /** 修改操作 */
     handleUpdate(row) {
       this.reset()
       const id = row.id || this.ids
-      getStrategyApi(id).then(response => {
+      getModuleApi(id).then(response => {
         this.form = response.data
         this.open = true
-        this.title = '修改源策略'
+        this.title = '修改模块'
       })
     },
     /** 提交操作 */
@@ -377,13 +434,13 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
-            editStrategyApi(this.form).then(response => {
+            editModuleApi(this.form).then(response => {
               this.$modal.msgSuccess('修改成功')
               this.open = false
               this.getList()
             }).catch()
           } else {
-            addStrategyApi(this.form).then(response => {
+            addModuleApi(this.form).then(response => {
               this.$modal.msgSuccess('新增成功')
               this.open = false
               this.getList()
@@ -398,7 +455,7 @@ export default {
       const delIds = row.id || this.ids
       const delNames = row.name || this.idNames
       this.$modal.confirm('是否确定要删除' + delNames + '？').then(function() {
-        return delStrategyApi(delIds)
+        return delModuleApi(delIds)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功！')

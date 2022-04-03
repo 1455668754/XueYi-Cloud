@@ -43,8 +43,8 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" :icon="IconEnum.SEARCH" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button :icon="IconEnum.RESET" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -53,7 +53,7 @@
         <el-button
           type="danger"
           plain
-          icon="el-icon-delete"
+          :icon="IconEnum.DELETE"
           size="mini"
           @click="handleClean"
           v-hasPermi="[JobAuth.DELETE]"
@@ -115,7 +115,7 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="IconEnum.VIEW"
             @click="handleView(scope.row)"
             v-hasPermi="[JobAuth.SINGLE]"
           >查看
@@ -158,7 +158,7 @@ import { optionJobApi } from '@/api/system/system/job'
 import { cleanJobLogApi, listJobLogApi } from '@/api/system/system/jobLog'
 import store from '@/store'
 import { JobIndexGo } from '@enums/system'
-import { DicStatusEnum } from '@enums'
+import { DicStatusEnum, IconEnum } from '@enums'
 
 export default {
   name: 'JobLogManagement',
@@ -168,6 +168,8 @@ export default {
     return {
       //权限标识
       JobAuth: JobAuth,
+      // 图标标识
+      IconEnum: IconEnum,
       // 状态字典
       StatusEnum: DicStatusEnum,
       // 遮罩层
@@ -209,8 +211,8 @@ export default {
   },
   created() {
     this.getJobOption()
-    const jobId = this.$route.query.id
-    if (jobId !== undefined) {
+    const jobId = this.$route.params && this.$route.params.id
+    if (jobId !== undefined && jobId !== 'undefined') {
       this.queryParams.jobId = jobId
     }
     this.getList()

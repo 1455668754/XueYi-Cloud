@@ -2,140 +2,144 @@
   <!-- 添加对话框 -->
   <el-dialog :title="title" :visible.sync="open" width="780px" :before-close="handleClose" append-to-body>
     <div>
-    <el-steps :active="active" finish-status="success" align-center>
-      <el-step title="策略源"/>
-      <el-step title="租户信息"/>
-      <el-step title="租户数据"/>
-      <el-step title="租户权限"/>
-    </el-steps>
+      <el-steps :active="active" finish-status="success" align-center>
+        <el-step title="策略源"/>
+        <el-step title="租户信息"/>
+        <el-step title="租户数据"/>
+        <el-step title="租户权限"/>
+      </el-steps>
     </div>
     <div style="height: 500px;margin-top:20px">
-    <el-form ref="strategyForm" :model="tenant" :rules="strategyRules" label-width="100px" v-show="active === 0">
-      <el-col :span="24">
-        <el-form-item label="源策略" prop="strategyId">
-          <el-select v-model="tenant.strategyId" placeholder="请选择" clearable>
-            <el-option
-              v-for="dict in strategyOptions"
-              :key="dict.id"
-              :label="dict.name"
-              :value="dict.id"
-            />
-          </el-select>
-        </el-form-item>
-      </el-col>
-    </el-form>
+      <el-form ref="strategyForm" :model="tenant" :rules="strategyRules" label-width="100px" v-show="active === 0">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="源策略" prop="strategyId">
+              <el-select v-model="tenant.strategyId" placeholder="请选择" clearable>
+                <el-option
+                  v-for="dict in strategyOptions"
+                  :key="dict.id"
+                  :label="dict.name"
+                  :value="dict.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
 
-    <el-form ref="tenantForm" :model="tenant" :rules="tenantRules" label-width="100px" v-show="active === 1">
-      <el-col :span="12">
-        <el-form-item label="租户名称" prop="nick">
-          <el-input v-model="tenant.nick" placeholder="请输入租户名称"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="租户账号" prop="name">
-          <el-input v-model="tenant.name" placeholder="请输入租户账号"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="系统名称" prop="systemName">
-          <el-input v-model="tenant.systemName" placeholder="请输入系统名称"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="账号修改次数" prop="nameFrequency">
-          <el-input-number v-model="tenant.nameFrequency" :max="65535"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="租户logo" prop="logo">
-          <image-upload v-model="tenant.logo" :limit="1" :isShowTip="false"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="超管租户" prop="isLessor">
-          <el-radio-group v-model="tenant.isLessor">
-            <el-radio-button
-              v-for="dict in dict.type.sys_yes_no"
-              :key="dict.value"
-              :label="dict.value"
-              :value="dict.value"
-            >{{ dict.label }}
-            </el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="tenant.status">
-            <el-radio-button
-              v-for="dict in dict.type.sys_normal_disable"
-              :key="dict.value"
-              :label="dict.value"
-              :value="dict.value"
-            >{{ dict.label }}
-            </el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="显示顺序" prop="sort">
-          <el-input-number v-model="tenant.sort" :max="65535"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="tenant.remark" placeholder="请输入备注" type="textarea"/>
-        </el-form-item>
-      </el-col>
-    </el-form>
+      <el-row>
+        <el-form ref="tenantForm" :model="tenant" :rules="tenantRules" label-width="100px" v-show="active === 1">
+          <el-col :span="12">
+            <el-form-item label="租户名称" prop="nick">
+              <el-input v-model="tenant.nick" placeholder="请输入租户名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="租户账号" prop="name">
+              <el-input v-model="tenant.name" placeholder="请输入租户账号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="系统名称" prop="systemName">
+              <el-input v-model="tenant.systemName" placeholder="请输入系统名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="账号修改次数" prop="nameFrequency">
+              <el-input-number v-model="tenant.nameFrequency" :max="65535"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="租户logo" prop="logo">
+              <image-upload v-model="tenant.logo" :limit="1" :isShowTip="false"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="超管租户" prop="isLessor">
+              <el-radio-group v-model="tenant.isLessor">
+                <el-radio-button
+                  v-for="dict in dict.type.sys_yes_no"
+                  :key="dict.value"
+                  :label="dict.value"
+                  :value="dict.value"
+                >{{ dict.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="状态" prop="status">
+              <el-radio-group v-model="tenant.status">
+                <el-radio-button
+                  v-for="dict in dict.type.sys_normal_disable"
+                  :key="dict.value"
+                  :label="dict.value"
+                  :value="dict.value"
+                >{{ dict.label }}
+                </el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="显示顺序" prop="sort">
+              <el-input-number v-model="tenant.sort" :max="65535"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="备注" prop="remark">
+              <el-input v-model="tenant.remark" placeholder="请输入备注" type="textarea"/>
+            </el-form-item>
+          </el-col>
+        </el-form>
 
-    <el-form ref="deptForm" :model="dept" :rules="deptRules" label-width="100px" v-show="active === 2">
-      <el-col :span="24">
-        <el-divider>组织信息</el-divider>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="部门名称" prop="name">
-          <el-input v-model="dept.name" placeholder="请输入部门名称"/>
-        </el-form-item>
-      </el-col>
-    </el-form>
+        <el-form ref="deptForm" :model="dept" :rules="deptRules" label-width="100px" v-show="active === 2">
+          <el-col :span="24">
+            <el-divider>组织信息</el-divider>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="部门名称" prop="name">
+              <el-input v-model="dept.name" placeholder="请输入部门名称"/>
+            </el-form-item>
+          </el-col>
+        </el-form>
 
-    <el-form ref="postForm" :model="post" :rules="postRules" label-width="100px" v-show="active === 2">
-      <el-col :span="12">
-        <el-form-item label="岗位名称" prop="name">
-          <el-input v-model="post.name" placeholder="请输入岗位名称"/>
-        </el-form-item>
-      </el-col>
-    </el-form>
+        <el-form ref="postForm" :model="post" :rules="postRules" label-width="100px" v-show="active === 2">
+          <el-col :span="12">
+            <el-form-item label="岗位名称" prop="name">
+              <el-input v-model="post.name" placeholder="请输入岗位名称"/>
+            </el-form-item>
+          </el-col>
+        </el-form>
 
-    <el-form ref="userForm" :model="user" :rules="userRules" label-width="100px" v-show="active === 2">
-      <el-col :span="24">
-        <el-divider>管理员信息</el-divider>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="账号" prop="userName">
-          <el-input v-model="user.userName" placeholder="请输入账号"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="昵称" prop="nickName">
-          <el-input v-model="user.nickName" placeholder="请输入昵称"/>
-        </el-form-item>
-      </el-col>
-      <el-col :span="12">
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="user.password" placeholder="请输入密码" show-password/>
-        </el-form-item>
-      </el-col>
-    </el-form>
+        <el-form ref="userForm" :model="user" :rules="userRules" label-width="100px" v-show="active === 2">
+          <el-col :span="24">
+            <el-divider>管理员信息</el-divider>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="账号" prop="userName">
+              <el-input v-model="user.userName" placeholder="请输入账号"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="昵称" prop="nickName">
+              <el-input v-model="user.nickName" placeholder="请输入昵称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="密码" prop="password">
+              <el-input v-model="user.password" placeholder="请输入密码" show-password/>
+            </el-form-item>
+          </el-col>
+        </el-form>
 
-    <el-form ref="authForm" :model="form" label-width="100px" v-show="active === 3">
-      <el-col :span="24">
-        <el-form-item label="菜单分配" prop="authIds">
-          <TenantAuthModal ref="authRef" :menuOptions="menuOptions"/>
-        </el-form-item>
-      </el-col>
-    </el-form>
+        <el-form ref="authForm" :model="form" label-width="100px" v-show="active === 3">
+          <el-col :span="24">
+            <el-form-item label="菜单分配" prop="authIds">
+              <TenantAuthModal ref="authRef" :menuOptions="menuOptions"/>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
     </div>
     <div slot="footer" class="dialog-footer">
       <el-button style="margin-top: 12px;" @click="handleBack" v-if="active > 0">上一步</el-button>
@@ -318,6 +322,9 @@ export default {
       this.reset()
       this.open = true
       this.title = '添加租户'
+      this.$nextTick(() => {
+        this.$refs.authRef.handleTreeNodeAll()
+      })
     },
     /** 提交操作 */
     submitForm: function() {
@@ -334,7 +341,7 @@ export default {
                       addTenantApi(this.form).then(response => {
                         this.$modal.msgSuccess('修改成功')
                         this.open = false
-                        this.$emit("getList")
+                        this.$emit('getList')
                       }).catch()
                     } else {
                       this.active = 2

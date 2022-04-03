@@ -51,8 +51,8 @@
 #end
 #end
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" :icon="IconEnum.SEARCH" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button :icon="IconEnum.RESET" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -61,7 +61,7 @@
         <el-button
           type="primary"
           plain
-          icon="el-icon-plus"
+          :icon="IconEnum.ADD"
           size="mini"
           @click="handleAdd"
           v-hasPermi="[${BusinessName}Auth.ADD]"
@@ -71,7 +71,7 @@
         <el-button
           type="success"
           plain
-          icon="el-icon-edit"
+          :icon="IconEnum.EDIT"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
@@ -82,24 +82,43 @@
         <el-button
           type="danger"
           plain
-          icon="el-icon-delete"
+          :icon="IconEnum.DELETE"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="[${BusinessName}Auth.DELETE]"
         >删除</el-button>
       </el-col>
+#if($table.tree || $table.subTree)
+      <el-col :span="1.5">
+        <el-button
+            type="info"
+            plain
+            icon="el-icon-sort"
+            size="mini"
+            @click="toggleExpandAll"
+        >展开/折叠</el-button>
+      </el-col>
+#end
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
     </el-row>
 
+#if($table.tree || $table.subTree)
+    <el-table v-if="refreshTable" v-loading="loading" :data="tableList" :indent="30" row-key="${treeMap.idColumn.javaField}" :default-expand-all="isExpandAll" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" @selection-change="handleSelectionChange">
+#else
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
+#end
       <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+#if($table.tree || $table.subTree)
+#set($cloumnKey = 1)
+#else
       <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
 #set($cloumnKey = 2)
+#end
 #foreach ($column in $columns)
 #set($show = true)
 #set($slot = false)
@@ -117,7 +136,11 @@
 #if(${column.dictType} || $column.htmlType == 'DatePicker' || $column.htmlType == 'TimePicker' || $column.htmlType == 'ImageUpload')
 #set($slot = true)
 #end
+#if(($table.tree || $table.subTree) && $column.javaField == $treeMap.nameColumn.javaField)
+      <el-table-column label="${column.readNameNoSuffix()}" align="left" prop="${column.javaField}" v-if="columns[${cloumnKey}].visible" :show-overflow-tooltip="true" min-width="${tableWidth}"#if(!$slot)/#end>
+#else
       <el-table-column label="${column.readNameNoSuffix()}" align="center" prop="${column.javaField}" v-if="columns[${cloumnKey}].visible" :show-overflow-tooltip="true" min-width="${tableWidth}"#if(!$slot)/#end>
+#end
 #if($slot)
         <template v-slot="scope">
 #if($column.htmlType == 'ImageUpload')
@@ -133,25 +156,36 @@
 #set($cloumnKey = $cloumnKey + 1)
 #end
 #end
-      <el-table-column label="操作" align="center" v-if="columns[${cloumnKey}].visible" class-name="small-padding fixed-width" width="120" fixed="right">
+      <el-table-column label="操作" align="center" v-if="columns[${cloumnKey}].visible" class-name="small-padding fixed-width" width="180" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="IconEnum.EDIT"
             @click="handleUpdate(scope.row)"
             v-hasPermi="[${BusinessName}Auth.EDIT]"
           >修改</el-button>
+#if($table.tree || $table.subTree)
+          <el-button
+              size="mini"
+              type="text"
+              :icon="IconEnum.ADD"
+              @click="handleAdd(scope.row)"
+              v-hasPermi="[${BusinessName}Auth.ADD]"
+          >新增</el-button>
+#end
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
             v-hasPermi="[${BusinessName}Auth.DELETE]"
           >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+#if($table.tree || $table.subTree)
+#else
 
     <pagination
       v-show="total>0"
@@ -160,6 +194,7 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+#end
 
     <!-- 添加或修改${functionName}对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" :before-close="handleClose" append-to-body>
@@ -191,13 +226,15 @@
 #end
 #end
 #if($show)
-#if($column.htmlType == 'ImageUpload' || $column.htmlType == 'Upload' || $column.htmlType == 'InputTextArea' || $column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
+#if($column.htmlType == 'ImageUpload' || $column.htmlType == 'Upload' || $column.htmlType == 'InputTextArea' || $column.htmlType == 'tinymce' || $column.htmlType == 'markdown' || ($table.tree || $table.subTree) && $column.javaField == $treeMap.parentIdColumn.javaField)
           <el-col :span="24" #if($justOperate == true)v-if="form.${pkColumn.javaField} #if($justInsert == true)=#elseif($justEdit == true)!#end== undefined"#end>
 #else
           <el-col :span="12" #if($justOperate == true)v-if="form.${pkColumn.javaField} #if($justInsert == true)=#elseif($justEdit == true)!#end== undefined"#end>
 #end
             <el-form-item label="${column.readNameNoSuffix()}" prop="${column.javaField}">
-#if($column.htmlType == 'Input' || $column.htmlType == 'InputPassword' || $column.htmlType == 'InputTextArea')
+#if(($table.tree || $table.subTree) && $column.javaField == $treeMap.parentIdColumn.javaField)
+              <treeselect v-model="form.${treeMap.parentIdColumn.javaField}" :options="treeOptions" :normalizer="normalizer" placeholder="选择${treeMap.parentIdColumn.readNameNoSuffix()}" />
+#elseif($column.htmlType == 'Input' || $column.htmlType == 'InputPassword' || $column.htmlType == 'InputTextArea')
               <el-input v-model="form.${column.javaField}" placeholder="请输入${column.readNameNoSuffix()}"#if($column.htmlType == 'InputTextArea') type="textarea"#end#if($column.htmlType == 'InputPassword') show-password#end/>
 #elseif($column.htmlType == 'InputNumber')
               <el-input-number v-model="form.${column.javaField}" :max="65535" />
@@ -250,7 +287,7 @@
 #end
                 placeholder="请选择"/>
 #elseif($column.htmlType == 'ImageUpload')
-              <image-upload v-model="form.${column.javaField}"/>
+              <image-upload v-model="form.${column.javaField}" :limit="1" :isShowTip="false"/>
 #elseif($column.htmlType == 'Upload')
               <file-upload v-model="form.${column.javaField}"/>
 #elseif($column.htmlType == 'tinymce' || $column.htmlType == 'markdown')
@@ -273,11 +310,19 @@
 </template>
 
 <script>
-import { list${BusinessName}Api, get${BusinessName}Api, add${BusinessName}Api, edit${BusinessName}Api, del${BusinessName}Api } from '@/api/${moduleName}/${authorityName}/${businessName}'
+import { list${BusinessName}Api, get${BusinessName}Api, add${BusinessName}Api, edit${BusinessName}Api, del${BusinessName}Api#if($table.tree || $table.subTree), list${BusinessName}ExNodesApi#end } from '@/api/${moduleName}/${authorityName}/${businessName}'
 import { ${BusinessName}Auth } from '@auth/${moduleName}'
+#if($table.tree || $table.subTree)
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+#end
+import { IconEnum } from '@enums'
 
 export default {
   name: "${BusinessName}Management",
+#if($table.tree || $table.subTree)
+  components: { Treeselect },
+#end
 #if($dictMap)
   /** 字典查询 */
   dicts: [#set($itemIndex=0)#foreach($item in $dictMap.entrySet())#set($itemIndex=$itemIndex+1)'${item.key}'#if($itemIndex < $dictMap.size()), #end#end],
@@ -286,20 +331,28 @@ export default {
     return {
       //权限标识
       ${BusinessName}Auth: ${BusinessName}Auth,
+      // 图标标识
+      IconEnum: IconEnum,
       // 遮罩层
       loading: true,
       // 选中数组
       ${pkColumn.javaField}s: [],
       // 选中数组名称
       ${pkColumn.javaField}Names: [],
+#if($table.tree || $table.subTree)
+      // 上级树选项
+      treeOptions: [],
+#end
       // 非单个禁用
       single: true,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
       showSearch: true,
+#if($table.base || $table.subBase)
       // 总条数
       total: 0,
+#end
       // 表格数据
       tableList: [],
       // 弹出层标题
@@ -308,6 +361,12 @@ export default {
       open: false,
       // 提交状态
       submitLoading: false,
+#if($table.tree || $table.subTree)
+      // 是否展开，默认全部展开
+      isExpandAll: true,
+      // 重新渲染表格状态
+      refreshTable: true,
+#end
       // 查询参数
       queryParams: {
         page: 1,
@@ -331,8 +390,12 @@ export default {
       // 列信息
       columns: [
         { key: 0, label: `勾选列`, visible: true },
+#if($table.tree || $table.subTree)
+#set($cloumnKey = 1)
+#else
         { key: 1, label: `序号列`, visible: true },
 #set($cloumnKey = 2)
+#end
 #foreach ($column in $columns)
 #set($show = true)
 #foreach($item in $mustHideField)
@@ -390,11 +453,29 @@ export default {
     getList() {
       this.loading = true;
       list${BusinessName}Api(this.queryParams).then(response => {
+#if($table.tree || $table.subTree)
+        this.tableList = response.data;
+#else
         this.tableList = response.data.items;
         this.total = response.data.total;
+#end
         this.loading = false;
       });
     },
+#if($table.tree || $table.subTree)
+    /** 转换树数据结构 */
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.${treeMap.idColumn.javaField},
+        label: node.${treeMap.nameColumn.javaField},
+        isDisabled: false,
+        children: node.children
+      };
+    },
+#end
     /** 模态框取消操作 */
     handleClose() {
       this.#[[$modal]]#.confirm('确认关闭？').then(_ => {
@@ -446,11 +527,29 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
+#if($table.tree || $table.subTree)
+    /** 展开/折叠操作 */
+    toggleExpandAll() {
+      this.refreshTable = false;
+      this.isExpandAll = !this.isExpandAll;
+      this.$nextTick(() => {
+        this.refreshTable = true;
+      });
+    },
+#end
     /** 新增操作 */
-    handleAdd() {
+    handleAdd(#if($table.tree || $table.subTree)row#end) {
       this.reset();
       this.open = true;
       this.title = "添加${functionName}";
+#if($table.tree || $table.subTree)
+      if (row !== undefined) {
+        this.form.${treeMap.parentIdColumn.javaField} = row.${treeMap.idColumn.javaField};
+      }
+      list${BusinessName}ExNodesApi(undefined).then(response => {
+        this.treeOptions = response.data
+      });
+#end
     },
     /** 修改操作 */
     handleUpdate(row) {
@@ -461,6 +560,11 @@ export default {
         this.open = true;
         this.title = "修改${functionName}";
       });
+#if($table.tree || $table.subTree)
+      list${BusinessName}ExNodesApi(row.${treeMap.idColumn.javaField}).then(response => {
+        this.treeOptions = response.data
+      });
+#end
     },
     /** 提交操作 */
     submitForm: function() {

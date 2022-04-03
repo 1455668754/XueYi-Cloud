@@ -15,10 +15,10 @@
 </template>
 
 <script>
-import { getAuthTenantApi } from '@/api/tenant/tenant/tenant'
+import { getAuthRoleApi } from '@/api/system/authority/role'
 
 export default {
-  name: 'TenantAuthModal',
+  name: 'RoleAuthModal',
   props: {
     // 源策略选项
     menuOptions: {
@@ -40,7 +40,7 @@ export default {
   methods: {
     /** 获取树权限 */
     getAuthScope(id) {
-      getAuthTenantApi(id).then(response => {
+      getAuthRoleApi(id).then(response => {
         const authIds = response.data
         this.$nextTick(() => {
           authIds.forEach((v) => {

@@ -12,6 +12,8 @@ export const PostAuth = {
   EDIT_STATUS: 'organize:post:es',
   // 删除部门
   DELETE: 'organize:post:delete',
+  // 岗位角色分配
+  AUTH: 'organize:post:auth',
   // 部门导入
   IMPORT: 'organize:post:import',
   // 部门导出

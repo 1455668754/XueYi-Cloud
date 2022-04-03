@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="策略名称" prop="name">
+      <el-form-item label="部门名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入"
@@ -9,15 +9,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="数据源" prop="sourceId">
-        <el-select v-model="queryParams.sourceId" placeholder="请选择" clearable>
-          <el-option
-            v-for="dict in sourceOptions"
-            :key="dict.id"
-            :label="dict.name"
-            :value="dict.id"
-          />
-        </el-select>
+      <el-form-item label="负责人" prop="leader">
+        <el-input
+          v-model="queryParams.leader"
+          placeholder="请输入"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select v-model="queryParams.status" placeholder="请选择" clearable>
@@ -43,7 +41,7 @@
           :icon="IconEnum.ADD"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="[StrategyAuth.ADD]"
+          v-hasPermi="[DeptAuth.ADD]"
         >新增
         </el-button>
       </el-col>
@@ -55,7 +53,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="[StrategyAuth.EDIT]"
+          v-hasPermi="[DeptAuth.EDIT]"
         >修改
         </el-button>
       </el-col>
@@ -67,52 +65,47 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="[StrategyAuth.DELETE]"
+          v-hasPermi="[DeptAuth.DELETE]"
         >删除
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-sort"
+          size="mini"
+          @click="toggleExpandAll"
+        >展开/折叠
         </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
     </el-row>
 
-    <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
+    <el-table v-if="refreshTable" :indent="30" v-loading="loading" :data="tableList" row-key="id"
+              :default-expand-all="isExpandAll" :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+              @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
-      <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
-        <template v-slot="scope">
-          <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="策略名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true"
+      <el-table-column label="部门名称" align="left" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true"
                        min-width="100"
       />
-      <el-table-column label="数据源Id" align="center" prop="sourceId" v-if="columns[3].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="数据源编码" align="center" prop="sourceSlave" v-if="columns[4].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true"
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[2].visible" :show-overflow-tooltip="true"
                        min-width="100"
       >
         <template v-slot="scope">
           <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="默认策略" align="center" prop="isDefault" v-if="columns[6].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
-        <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isDefault"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[7].visible"
+      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[3].visible"
                        :show-overflow-tooltip="true" min-width="100"
       >
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" v-if="columns[8].visible" class-name="small-padding fixed-width"
-                       width="120" fixed="right"
+      <el-table-column label="操作" align="center" v-if="columns[4].visible" class-name="small-padding fixed-width"
+                       width="260" fixed="right"
       >
         <template v-slot="scope">
           <el-button
@@ -120,48 +113,69 @@
             type="text"
             :icon="IconEnum.EDIT"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="[StrategyAuth.EDIT]"
+            v-hasPermi="[DeptAuth.EDIT]"
           >修改
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            :icon="IconEnum.ADD"
+            @click="handleAdd(scope.row)"
+            v-hasPermi="[DeptAuth.ADD]"
+          >新增
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            :icon="IconEnum.AUTH"
+            @click="handleAuth(scope.row)"
+            v-hasPermi="[DeptAuth.AUTH]"
+          >分配角色
           </el-button>
           <el-button
             size="mini"
             type="text"
             :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
-            v-hasPermi="[StrategyAuth.DELETE]"
+            v-hasPermi="[DeptAuth.DELETE]"
           >删除
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total>0"
-      :total="total"
-      :page.sync="queryParams.page"
-      :limit.sync="queryParams.pageSize"
-      @pagination="getList"
-    />
-
-    <!-- 添加或修改策略对话框 -->
+    <!-- 添加或修改部门对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="780px" :before-close="handleClose" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
-          <el-col :span="12">
-            <el-form-item label="策略名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入策略名称"/>
+          <el-col :span="24">
+            <el-form-item label="上级部门" prop="parentId">
+              <treeselect v-model="form.parentId" :options="treeOptions" :normalizer="normalizer" placeholder="选择上级部门"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="数据源" prop="sourceId">
-              <el-select v-model="form.sourceId" placeholder="请选择" clearable>
-                <el-option
-                  v-for="dict in sourceOptions"
-                  :key="dict.id"
-                  :label="dict.name"
-                  :value="dict.id"
-                />
-              </el-select>
+            <el-form-item label="部门名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入部门名称"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="部门编码" prop="code">
+              <el-input v-model="form.code" placeholder="请输入部门编码"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="负责人" prop="leader">
+              <el-input v-model="form.leader" placeholder="请输入负责人"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="联系电话" prop="phone">
+              <el-input v-model="form.phone" placeholder="请输入联系电话"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="form.email" placeholder="请输入邮箱"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -169,19 +183,6 @@
               <el-radio-group v-model="form.status">
                 <el-radio-button
                   v-for="dict in dict.type.sys_normal_disable"
-                  :key="dict.value"
-                  :label="dict.value"
-                  :value="dict.value"
-                >{{ dict.label }}
-                </el-radio-button>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12" v-if="form.id !== undefined">
-            <el-form-item label="默认策略" prop="isDefault">
-              <el-radio-group v-model="form.isDefault" disabled>
-                <el-radio-button
-                  v-for="dict in dict.type.sys_yes_no"
                   :key="dict.value"
                   :label="dict.value"
                   :value="dict.value"
@@ -207,84 +208,94 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <DeptRoleModal ref="authRef" :roleOptions="roleOptions"/>
   </div>
 </template>
 
 <script>
 import {
-  listStrategyApi,
-  getStrategyApi,
-  addStrategyApi,
-  editStrategyApi,
-  delStrategyApi
-} from '@/api/tenant/tenant/strategy'
-import { StrategyAuth } from '@auth/tenant'
+  listDeptApi,
+  getDeptApi,
+  addDeptApi,
+  editDeptApi,
+  delDeptApi,
+  listDeptExNodesApi
+} from '@/api/system/organize/dept'
+import { DeptAuth } from '@auth/system'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { DicSortEnum, DicStatusEnum, IconEnum } from '@enums'
-import { optionSourceApi } from '@/api/tenant/source/source'
+import { optionRoleApi } from '@/api/system/authority/role'
+import DeptRoleModal from '@/views/system/organize/dept/DeptRoleModal'
 
 export default {
-  name: 'StrategyManagement',
+  name: 'DeptManagement',
+  components: { DeptRoleModal, Treeselect },
   /** 字典查询 */
-  dicts: ['sys_yes_no', 'sys_normal_disable'],
+  dicts: ['sys_normal_disable'],
   data() {
     return {
       //权限标识
-      StrategyAuth: StrategyAuth,
+      DeptAuth: DeptAuth,
       // 图标标识
       IconEnum: IconEnum,
       // 遮罩层
       loading: true,
-      // 提交状态
-      submitLoading: false,
       // 选中数组
       ids: [],
       // 选中数组名称
       idNames: [],
-      // 数据源选项
-      sourceOptions: [],
+      // 上级树选项
+      treeOptions: [],
+      // 角色选项
+      roleOptions: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
       multiple: true,
       // 显示搜索条件
       showSearch: true,
-      // 总条数
-      total: 0,
       // 表格数据
       tableList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
       open: false,
+      // 提交状态
+      submitLoading: false,
+      // 是否展开，默认全部展开
+      isExpandAll: true,
+      // 重新渲染表格状态
+      refreshTable: true,
       // 查询参数
       queryParams: {
         page: 1,
         pageSize: 10,
         name: undefined,
-        sourceId: undefined,
+        leader: undefined,
         status: undefined
       },
       // 列信息
       columns: [
         { key: 0, label: `勾选列`, visible: true },
-        { key: 1, label: `序号列`, visible: true },
-        { key: 2, label: `策略名称`, visible: true },
-        { key: 3, label: `数据源Id`, visible: true },
-        { key: 4, label: `数据源编码`, visible: true },
-        { key: 5, label: `状态`, visible: true },
-        { key: 6, label: `默认策略`, visible: true },
-        { key: 7, label: `创建时间`, visible: true },
-        { key: 8, label: `操作列`, visible: true }
+        { key: 1, label: `部门名称`, visible: true },
+        { key: 2, label: `状态`, visible: true },
+        { key: 3, label: `创建时间`, visible: true },
+        { key: 4, label: `操作列`, visible: true }
       ],
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: '策略名称不能为空', trigger: 'blur' }
+        parentId: [
+          { required: true, message: '上级部门不能为空', trigger: 'blur' }
         ],
-        sourceId: [
-          { required: true, message: '数据源不能为空', trigger: 'change' }
+        code: [
+          { required: true, message: '部门编码不能为空', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '部门名称不能为空', trigger: 'blur' }
         ],
         status: [
           { required: true, message: '状态不能为空', trigger: 'change' }
@@ -297,21 +308,32 @@ export default {
     this.getOptions()
   },
   methods: {
-    /** 查询源策略列表 */
+    /** 查询部门列表 */
     getList() {
       this.loading = true
-      listStrategyApi(this.queryParams).then(response => {
-        this.tableList = response.data.items
-        this.total = response.data.total
+      listDeptApi(this.queryParams).then(response => {
+        this.tableList = response.data
         this.loading = false
       })
     },
     /** 查询选项列表 */
     getOptions() {
-      this.sourceOptions = []
-      optionSourceApi().then(response => {
-        this.sourceOptions = response.data.items
+      this.roleOptions = []
+      optionRoleApi().then(response => {
+        this.roleOptions = response.data.items
       })
+    },
+    /** 转换树数据结构 */
+    normalizer(node) {
+      if (node.children && !node.children.length) {
+        delete node.children
+      }
+      return {
+        id: node.id,
+        label: node.name,
+        isDisabled: false,
+        children: node.children
+      }
     },
     /** 模态框取消操作 */
     handleClose() {
@@ -329,8 +351,12 @@ export default {
     reset() {
       this.form = {
         id: undefined,
+        parentId: undefined,
+        code: undefined,
         name: undefined,
-        sourceId: undefined,
+        leader: undefined,
+        phone: undefined,
+        email: undefined,
         sort: DicSortEnum.ZERO,
         status: DicStatusEnum.NORMAL,
         remark: undefined
@@ -355,21 +381,42 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
+    /** 展开/折叠操作 */
+    toggleExpandAll() {
+      this.refreshTable = false
+      this.isExpandAll = !this.isExpandAll
+      this.$nextTick(() => {
+        this.refreshTable = true
+      })
+    },
     /** 新增操作 */
-    handleAdd() {
+    handleAdd(row) {
       this.reset()
       this.open = true
-      this.title = '添加源策略'
+      this.title = '添加部门'
+      if (row !== undefined) {
+        this.form.parentId = row.id
+      }
+      listDeptExNodesApi(undefined).then(response => {
+        this.treeOptions = response.data
+      })
     },
     /** 修改操作 */
     handleUpdate(row) {
       this.reset()
       const id = row.id || this.ids
-      getStrategyApi(id).then(response => {
+      getDeptApi(id).then(response => {
         this.form = response.data
         this.open = true
-        this.title = '修改源策略'
+        this.title = '修改部门'
       })
+      listDeptExNodesApi(row.id).then(response => {
+        this.treeOptions = response.data
+      })
+    },
+    /** 角色分配操作 */
+    handleAuth(row) {
+      this.$refs.authRef.handleAuth(row)
     },
     /** 提交操作 */
     submitForm: function() {
@@ -377,13 +424,13 @@ export default {
       this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.id !== undefined) {
-            editStrategyApi(this.form).then(response => {
+            editDeptApi(this.form).then(response => {
               this.$modal.msgSuccess('修改成功')
               this.open = false
               this.getList()
             }).catch()
           } else {
-            addStrategyApi(this.form).then(response => {
+            addDeptApi(this.form).then(response => {
               this.$modal.msgSuccess('新增成功')
               this.open = false
               this.getList()
@@ -398,7 +445,7 @@ export default {
       const delIds = row.id || this.ids
       const delNames = row.name || this.idNames
       this.$modal.confirm('是否确定要删除' + delNames + '？').then(function() {
-        return delStrategyApi(delIds)
+        return delDeptApi(delIds)
       }).then(() => {
         this.getList()
         this.$modal.msgSuccess('删除成功！')

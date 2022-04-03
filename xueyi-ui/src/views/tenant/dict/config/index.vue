@@ -28,8 +28,8 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" :icon="IconEnum.SEARCH" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button :icon="IconEnum.RESET" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -38,7 +38,7 @@
         <el-button
           type="primary"
           plain
-          icon="el-icon-plus"
+          :icon="IconEnum.ADD"
           size="mini"
           @click="handleAdd"
           v-hasPermi="[ConfigAuth.ADD]"
@@ -48,7 +48,7 @@
         <el-button
           type="success"
           plain
-          icon="el-icon-edit"
+          :icon="IconEnum.EDIT"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
@@ -59,12 +59,22 @@
         <el-button
           type="danger"
           plain
-          icon="el-icon-delete"
+          :icon="IconEnum.DELETE"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="[ConfigAuth.DELETE]"
         >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          :icon="IconEnum.RESET"
+          size="mini"
+          @click="handleRefreshCache"
+          v-hasPermi="[ConfigAuth.EDIT]"
+        >刷新缓存</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
     </el-row>
@@ -94,14 +104,14 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="IconEnum.EDIT"
             @click="handleUpdate(scope.row)"
             v-hasPermi="[ConfigAuth.EDIT]"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
             v-hasPermi="[ConfigAuth.DELETE]"
           >删除</el-button>
@@ -176,10 +186,10 @@ import {
   addConfigApi,
   editConfigApi,
   delConfigApi,
-  delForceConfigApi
+  delForceConfigApi, refreshConfigApi
 } from '@/api/tenant/dict/config'
 import { ConfigAuth } from '@auth/tenant'
-import { DicSortEnum, DicYesNoEnum } from '@enums'
+import { DicSortEnum, DicYesNoEnum, IconEnum } from '@enums'
 
 export default {
   name: "ConfigManagement",
@@ -189,6 +199,8 @@ export default {
     return {
       //权限标识
       ConfigAuth: ConfigAuth,
+      // 图标标识
+      IconEnum: IconEnum,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -359,6 +371,12 @@ export default {
           this.getList();
           this.$modal.msgSuccess("删除成功！");
         }).catch(() => {});
+      });
+    },
+    /** 刷新缓存操作 */
+    handleRefreshCache() {
+      refreshConfigApi().then(() => {
+        this.$modal.msgSuccess("刷新成功");
       });
     }
   }

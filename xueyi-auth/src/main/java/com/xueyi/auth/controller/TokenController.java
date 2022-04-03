@@ -43,20 +43,21 @@ public class TokenController {
 
     @DeleteMapping("logout")
     public AjaxResult logout(HttpServletRequest request) {
-        System.out.println(request);
         String token = SecurityUtils.getToken(request);
         if (StrUtil.isNotEmpty(token)) {
-            LoginUser loginUser = tokenService.getLoginUser(request);
-            String sourceName = JwtUtils.getSourceName(token);
-            Long enterpriseId = Long.valueOf(JwtUtils.getEnterpriseId(token));
-            String enterpriseName = JwtUtils.getEnterpriseName(token);
-            Long userId = Long.valueOf(JwtUtils.getUserId(token));
-            String userName = JwtUtils.getUserName(token);
-            String userNick = loginUser.getUser().getNickName();
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
-            // 记录用户退出日志
-            sysLoginService.logout(sourceName, enterpriseId, enterpriseName, userId, userName, userNick);
+            LoginUser loginUser = tokenService.getLoginUser(request);
+            if(ObjectUtil.isNotNull(loginUser)) {
+                String sourceName = JwtUtils.getSourceName(token);
+                Long enterpriseId = Long.valueOf(JwtUtils.getEnterpriseId(token));
+                String enterpriseName = JwtUtils.getEnterpriseName(token);
+                Long userId = Long.valueOf(JwtUtils.getUserId(token));
+                String userName = JwtUtils.getUserName(token);
+                String userNick = loginUser.getUser().getNickName();
+                // 记录用户退出日志
+                sysLoginService.logout(sourceName, enterpriseId, enterpriseName, userId, userName, userNick);
+            }
         }
         return AjaxResult.success();
     }

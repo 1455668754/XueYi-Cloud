@@ -29,8 +29,8 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" :icon="IconEnum.SEARCH" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button :icon="IconEnum.RESET" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -39,7 +39,7 @@
         <el-button
           type="primary"
           plain
-          icon="el-icon-download"
+          :icon="IconEnum.DOWNLOAD"
           size="mini"
           :disabled="single"
           @click="handleGenTable"
@@ -51,7 +51,7 @@
         <el-button
           type="info"
           plain
-          icon="el-icon-upload"
+          :icon="IconEnum.UPLOAD"
           size="mini"
           @click="openImportTable"
           v-hasPermi="[GenAuth.IMPORT]"
@@ -62,7 +62,7 @@
         <el-button
           type="success"
           plain
-          icon="el-icon-edit"
+          :icon="IconEnum.EDIT"
           size="mini"
           :disabled="single"
           @click="handleEditTable"
@@ -74,7 +74,7 @@
         <el-button
           type="danger"
           plain
-          icon="el-icon-delete"
+          :icon="IconEnum.DELETE"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
@@ -120,7 +120,7 @@
           <el-button
             type="text"
             size="small"
-            icon="el-icon-view"
+            :icon="IconEnum.VIEW"
             @click="handlePreview(scope.row)"
             v-hasPermi="[GenAuth.PREVIEW]"
           >预览
@@ -128,7 +128,7 @@
           <el-button
             type="text"
             size="small"
-            icon="el-icon-edit"
+            :icon="IconEnum.EDIT"
             @click="handleEditTable(scope.row)"
             v-hasPermi="[GenAuth.EDIT]"
           >编辑
@@ -136,7 +136,7 @@
           <el-button
             type="text"
             size="small"
-            icon="el-icon-delete"
+            :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
             v-hasPermi="[GenAuth.DELETE]"
           >删除
@@ -144,7 +144,7 @@
           <el-button
             type="text"
             size="small"
-            icon="el-icon-download"
+            :icon="IconEnum.DOWNLOAD"
             @click="handleGenTable(scope.row)"
             v-hasPermi="[GenAuth.CODE]"
           >生成代码
@@ -190,6 +190,7 @@ import { delForceGenApi, generateGenApi, listGenApi, previewGenApi } from '@/api
 import { GenerationModeEnum, GenGenerateDetailGo } from '@enums/gen'
 import store from '@/store'
 import { GenAuth } from '@auth/gen'
+import { IconEnum } from '@enums'
 
 hljs.registerLanguage('java', require('highlight.js/lib/languages/java'))
 hljs.registerLanguage('xml', require('highlight.js/lib/languages/xml'))
@@ -206,6 +207,8 @@ export default {
     return {
       //权限标识
       GenAuth: GenAuth,
+      // 图标标识
+      IconEnum: IconEnum,
       // 遮罩层
       loading: true,
       // 唯一标识符

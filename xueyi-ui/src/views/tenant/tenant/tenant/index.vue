@@ -68,7 +68,7 @@
         <el-button
           type="primary"
           plain
-          icon="el-icon-plus"
+          :icon="IconEnum.ADD"
           size="mini"
           @click="handleAdd"
           v-hasPermi="[TenantAuth.ADD]"
@@ -79,7 +79,7 @@
         <el-button
           type="success"
           plain
-          icon="el-icon-edit"
+          :icon="IconEnum.EDIT"
           size="mini"
           :disabled="single"
           @click="handleUpdate"
@@ -91,7 +91,7 @@
         <el-button
           type="danger"
           plain
-          icon="el-icon-delete"
+          :icon="IconEnum.DELETE"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
@@ -166,7 +166,7 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="IconEnum.EDIT"
             @click="handleUpdate(scope.row)"
             v-hasPermi="[TenantAuth.EDIT]"
           >修改
@@ -174,16 +174,16 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="IconEnum.AUTH"
             v-if="!isAdminTenant(scope.row)"
-            @click="handleAuthUpdate(scope.row)"
+            @click="handleAuth(scope.row)"
             v-hasPermi="[TenantAuth.AUTH]"
           >菜单权限
           </el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
             v-hasPermi="[TenantAuth.DELETE]"
           >删除
@@ -328,7 +328,7 @@ import {
   editAuthTenantApi
 } from '@/api/tenant/tenant/tenant'
 import { TenantAuth } from '@auth/tenant'
-import { DicSortEnum, DicStatusEnum, DicYesNoEnum } from '@enums'
+import { DicSortEnum, DicStatusEnum, DicYesNoEnum, IconEnum } from '@enums'
 import { optionStrategyApi } from '@/api/tenant/tenant/strategy'
 import TenantInitModal from './TenantInitModal'
 import TenantAuthModal from './TenantAuthModal'
@@ -342,6 +342,8 @@ export default {
     return {
       //权限标识
       TenantAuth: TenantAuth,
+      // 图标标识
+      IconEnum: IconEnum,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -523,12 +525,13 @@ export default {
       })
     },
     /** 权限修改操作 */
-    handleAuthUpdate(row) {
+    handleAuth(row) {
       this.reset()
       this.authForm = row
       this.openAuth = true
       this.title = '租户权限分配'
       this.$nextTick(() => {
+        this.$refs.authRef.handleTreeNodeAll()
         this.$refs.authRef.getAuthScope(row.id)
       })
     },

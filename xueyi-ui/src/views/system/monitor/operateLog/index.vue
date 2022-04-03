@@ -47,8 +47,8 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" :icon="IconEnum.SEARCH" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button :icon="IconEnum.RESET" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
@@ -57,7 +57,7 @@
         <el-button
           type="danger"
           plain
-          icon="el-icon-delete"
+          :icon="IconEnum.DELETE"
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
@@ -69,7 +69,7 @@
         <el-button
           type="danger"
           plain
-          icon="el-icon-delete"
+          :icon="IconEnum.DELETE"
           size="mini"
           @click="handleClean"
           v-hasPermi="[OperateLogAuth.DELETE]"
@@ -117,14 +117,14 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            :icon="IconEnum.VIEW"
             @click="handleUpdate(scope.row)"
             v-hasPermi="[OperateLogAuth.SINGLE]"
           >查看</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
             v-hasPermi="[OperateLogAuth.DELETE]"
           >删除</el-button>
@@ -180,7 +180,7 @@ import {
   delOperateLogApi,
   cleanOperateLogApi
 } from '@/api/system/monitor/operateLog'
-import { DicStatusEnum } from '@enums'
+import { DicStatusEnum, IconEnum } from '@enums'
 
 export default {
   name: "OperateLogManagement",
@@ -190,6 +190,8 @@ export default {
     return {
       //权限标识
       OperateLogAuth: OperateLogAuth,
+      // 图标标识
+      IconEnum: IconEnum,
       // 状态字典
       StatusEnum: DicStatusEnum,
       // 遮罩层

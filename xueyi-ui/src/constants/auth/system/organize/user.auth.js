@@ -12,6 +12,8 @@ export const UserAuth = {
   EDIT_STATUS: 'organize:user:es',
   // 删除部门
   DELETE: 'organize:user:delete',
+  // 用户角色分配
+  AUTH: 'organize:user:auth',
   // 部门导入
   IMPORT: 'organize:user:import',
   // 部门导出

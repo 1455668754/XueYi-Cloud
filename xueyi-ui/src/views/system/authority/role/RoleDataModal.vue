@@ -4,9 +4,9 @@
     <el-checkbox v-model="menuNodeAll" @change="handleTreeNodeAll">全选/全不选</el-checkbox>
     <el-tree
       class="tree-border"
-      :data="menuOptions"
+      :data="dataOptions"
       show-checkbox
-      ref="authRef"
+      ref="dataRef"
       node-key="id"
       empty-text="加载中，请稍候"
       :props="defaultProps"
@@ -15,13 +15,13 @@
 </template>
 
 <script>
-import { getAuthTenantApi } from '@/api/tenant/tenant/tenant'
+import { getOrganizeRoleApi } from '@/api/system/authority/role'
 
 export default {
-  name: 'TenantAuthModal',
+  name: 'RoleDataModal',
   props: {
     // 源策略选项
-    menuOptions: {
+    dataOptions: {
       type: Array,
       default: () => []
     }
@@ -39,13 +39,13 @@ export default {
   },
   methods: {
     /** 获取树权限 */
-    getAuthScope(id) {
-      getAuthTenantApi(id).then(response => {
+    getDataScope(id) {
+      getOrganizeRoleApi(id).then(response => {
         const authIds = response.data
         this.$nextTick(() => {
           authIds.forEach((v) => {
             this.$nextTick(() => {
-              this.$refs.authRef.setChecked(v, true, false)
+              this.$refs.dataRef.setChecked(v, true, false)
             })
           })
         })
@@ -53,21 +53,21 @@ export default {
     },
     /** 树权限（展开/折叠） */
     handleTreeExpand(value) {
-      let treeList = this.menuOptions
+      let treeList = this.dataOptions
       for (let i = 0; i < treeList.length; i++) {
-        this.$refs.authRef.store.nodesMap[treeList[i].id].expanded = value
+        this.$refs.dataRef.store.nodesMap[treeList[i].id].expanded = value
       }
     },
     /** 树权限（全选/全不选） */
     handleTreeNodeAll(value) {
-      this.$refs.authRef.setCheckedNodes(value ? this.menuOptions : [])
+      this.$refs.dataRef.setCheckedNodes(value ? this.dataOptions : [])
     },
     /** 所有权限节点数据 */
     getAllCheckedKeys() {
       // 目前被选中的节点
-      let checkedKeys = this.$refs.authRef.getCheckedKeys()
+      let checkedKeys = this.$refs.dataRef.getCheckedKeys()
       // 半选中的节点
-      let halfCheckedKeys = this.$refs.authRef.getHalfCheckedKeys()
+      let halfCheckedKeys = this.$refs.dataRef.getHalfCheckedKeys()
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
       return checkedKeys
     }
