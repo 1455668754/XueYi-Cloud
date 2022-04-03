@@ -76,6 +76,13 @@ public class BasisController {
     }
 
     /**
+     * 清理分页的线程变量
+     */
+    protected void clearPage() {
+        PageUtils.clearPage();
+    }
+
+    /**
      * 响应请求分页数据
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
