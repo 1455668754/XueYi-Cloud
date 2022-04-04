@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
     <div class="system-title">工作台</div>
-    {{ routeList }}
     <el-card class="system-card" shadow="hover" v-for="(item) in routeList">
       <div class="card-main">
         <div class="card-image">
@@ -46,13 +45,18 @@ export default {
       })
     },
     handleJump(item) {
-      const moduleId = sessionStorage.getItem(MODULE_KEY) || MODULE_KEY
+      const moduleId = localStorage.getItem(MODULE_KEY) || MODULE_KEY
       if (item.id === moduleId) {
         this.$modal.msgSuccess('当前正处于[' + item.name + ']，无需切换！')
       }else {
         this.$modal.confirm('确定要跳转到模块：【' + item.name + '】， 并重新加载其资源吗？').then(function() {
-          sessionStorage.setItem(MODULE_KEY, item.id)
+        }).then(() => {
+          localStorage.setItem(MODULE_KEY, item.id)
           this.$modal.msgSuccess('已成功切换至' + item.name + '！')
+          setTimeout(() => {
+            location.reload()
+          }, 500);
+
         }).catch(() => {
           this.$modal.msgWarning('切换失败！')
         })

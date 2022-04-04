@@ -1,6 +1,7 @@
 import { login, logout, refreshToken, getEnterpriseInfo, getUserInfo } from '@/api/login'
 import { getToken, setToken, setExpiresIn, removeToken } from '@/utils/auth'
 import {
+  MODULE_KEY,
   SET_AVATAR_KEY, SET_ENTERPRISE_NAME_KEY, SET_EXPIRES_IN_KEY, SET_IS_LESSOR_KEY, SET_LOGO_KEY,
   SET_NAME_KEY,
   SET_PERMISSIONS_KEY,
@@ -132,6 +133,7 @@ const user = {
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
+          localStorage.removeItem(MODULE_KEY)
           commit(SET_TOKEN_KEY, '')
           commit(SET_ROLES_KEY, [])
           commit(SET_PERMISSIONS_KEY, [])

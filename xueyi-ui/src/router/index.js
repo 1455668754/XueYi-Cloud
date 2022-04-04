@@ -65,17 +65,18 @@ export const constantRoutes = [
     path: '',
     component: Layout,
     redirect: 'index',
+    meta: { title: '首页', icon: 'dashboard' },
     children: [
       {
         path: 'index',
         component: () => import('@/views/sys'),
         name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        meta: { title: '分析页', icon: 'dashboard' }
       },
       {
         path: 'workbench',
-        component: () => import('@/views/sys/workbench'),
-        name: 'Index',
+        component: () => import('@/views/sys/workbench/index'),
+        name: 'Workbench',
         meta: { title: '工作台', icon: 'dashboard', affix: true }
       }
     ]
