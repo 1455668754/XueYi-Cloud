@@ -82,51 +82,37 @@
         >日志
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" width="55"/>
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" width="55" />
       <el-table-column label="序号" align="center" v-if="columns[1].visible" width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="任务名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="任务组名" align="center" prop="jobGroup" v-if="columns[3].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="任务名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="任务组名" align="center" prop="jobGroup" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_job_group" :value="scope.row.jobGroup"/>
+          <dict-tag :options="dict.type.sys_job_group" :value="scope.row.jobGroup" />
         </template>
       </el-table-column>
-      <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" v-if="columns[4].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="cron执行表达式" align="center" prop="cronExpression" v-if="columns[5].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="计划执行错误策略" align="center" prop="misfirePolicy" v-if="columns[6].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="cron执行表达式" align="center" prop="cronExpression" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="计划执行错误策略" align="center" prop="misfirePolicy" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_job_policy" :value="scope.row.misfirePolicy"/>
+          <dict-tag :options="dict.type.sys_job_policy" :value="scope.row.misfirePolicy" />
         </template>
       </el-table-column>
-      <el-table-column label="是否并发执行" align="center" prop="concurrent" v-if="columns[7].visible"
-                       :show-overflow-tooltip="true" min-width="80"
-      >
+      <el-table-column label="是否并发执行" align="center" prop="concurrent" v-if="columns[7].visible" :show-overflow-tooltip="true" min-width="80">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_job_concurrent" :value="scope.row.concurrent"/>
+          <dict-tag :options="dict.type.sys_job_concurrent" :value="scope.row.concurrent" />
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[8].visible" :show-overflow-tooltip="true"
-                       min-width="60"
-      >
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[8].visible" :show-overflow-tooltip="true" min-width="60">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_job_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_job_status" :value="scope.row.status" />
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="160" fixed="right">
@@ -182,7 +168,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="任务名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入任务名称"/>
+              <el-input v-model="form.name" placeholder="请输入任务名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -204,13 +190,13 @@
                 <el-tooltip placement="top">
                   <div slot="content">
                     Bean调用示例：ryTask.ryParams('xy')
-                    <br/>Class类调用示例：com.xueyi.quartz.task.RyTask.ryParams('xy')
-                    <br/>参数说明：支持字符串，布尔类型，长整型，浮点型，整型
+                    <br />Class类调用示例：com.xueyi.quartz.task.RyTask.ryParams('xy')
+                    <br />参数说明：支持字符串，布尔类型，长整型，浮点型，整型
                   </div>
                   <i class="el-icon-question"></i>
                 </el-tooltip>
               </span>
-              <el-input v-model="form.invokeTarget" placeholder="请输入调用目标字符串"/>
+              <el-input v-model="form.invokeTarget" placeholder="请输入调用目标字符串" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -263,7 +249,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>

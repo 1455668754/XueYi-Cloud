@@ -36,34 +36,22 @@
         >强退
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
       <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="会话编号" align="center" prop="tokenId" v-if="columns[2].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="用户账号" align="center" prop="userName" v-if="columns[3].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="用户名称" align="center" prop="userNick" v-if="columns[4].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="登录IP地址" align="center" prop="ipaddr" v-if="columns[5].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="登录时间" align="center" prop="loginTime" v-if="columns[6].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width"
-                       width="100" fixed="right"
-      >
+      <el-table-column label="会话编号" align="center" prop="tokenId" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="用户账号" align="center" prop="userName" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="用户名称" align="center" prop="userNick" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="登录IP地址" align="center" prop="ipaddr" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="登录时间" align="center" prop="loginTime" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width" width="100" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -126,7 +114,7 @@ export default {
         pageSize: 10,
         userName: undefined,
         userNick: undefined,
-        ipaddr: undefined,
+        ipaddr: undefined
       },
       // 列信息
       columns: [

@@ -99,8 +99,8 @@
 import { DicSortEnum, DicStatusEnum } from '@enums'
 import { addRoleApi } from '@/api/system/authority/role'
 import { DataScopeEnum } from '@enums/system'
-import RoleAuthModal from '@/views/system/authority/role/RoleAuthModal'
-import RoleDataModal from '@/views/system/authority/role/RoleDataModal'
+import RoleAuthModal from './RoleAuthModal'
+import RoleDataModal from './RoleDataModal'
 
 export default {
   name: 'RoleInitModal',

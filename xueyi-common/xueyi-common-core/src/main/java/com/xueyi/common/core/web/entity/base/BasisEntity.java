@@ -2,7 +2,9 @@ package com.xueyi.common.core.web.entity.base;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.xueyi.common.core.web.validate.V_E;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class BasisEntity implements Serializable {
     @TableField(exist = false)
     private Map<String, Object> params;
 
+    @NotEmpty(message = "id不能为空", groups = {V_E.class})
     public Long getId() {
         return id;
     }

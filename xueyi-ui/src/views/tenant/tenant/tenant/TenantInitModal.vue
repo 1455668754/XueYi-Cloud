@@ -153,7 +153,7 @@
 <script>
 import { addTenantApi } from '@/api/tenant/tenant/tenant'
 import { DicSortEnum, DicStatusEnum, DicYesNoEnum } from '@enums'
-import TenantAuthModal from '@/views/tenant/tenant/tenant/TenantAuthModal'
+import TenantAuthModal from './TenantAuthModal'
 
 export default {
   name: 'TenantInitModal',

@@ -2,7 +2,6 @@ package com.xueyi.common.message.listener;
 
 import com.alibaba.fastjson.JSONObject;
 import com.rabbitmq.client.Channel;
-import com.xueyi.common.core.constant.MessageConstant;
 import com.xueyi.common.message.domain.Message;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -155,7 +154,7 @@ public abstract class BaseListener {
             redisTemplate.opsForValue().setIfAbsent(redisCountKey, "1", 5, TimeUnit.MINUTES);
             logger.info("开始第一次尝试：");
         } else {
-            if (Integer.parseInt(retryCount) < MessageConstant.CONNECT_TIMES) {
+            if (Integer.parseInt(retryCount) < 5) {
                 redisTemplate.opsForValue().set(redisCountKey, retryCount);
                 logger.info("开始第 " + Integer.parseInt(retryCount) + " 次尝试：");
             } else {

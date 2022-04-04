@@ -67,9 +67,10 @@
           icon="el-icon-close"
           size="mini"
           @click="handleClose"
-        >关闭</el-button>
+        >关闭
+        </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
     <el-table v-loading="loading" :data="tableList">
@@ -78,39 +79,25 @@
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="任务名称" align="center" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="任务组名" align="center" prop="jobGroup" v-if="columns[2].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="任务名称" align="center" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="任务组名" align="center" prop="jobGroup" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_job_group" :value="scope.row.jobGroup"/>
+          <dict-tag :options="dict.type.sys_job_group" :value="scope.row.jobGroup" />
         </template>
       </el-table-column>
-      <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" v-if="columns[3].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="执行状态" align="center" prop="status" v-if="columns[4].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      >
+      <el-table-column label="调用目标字符串" align="center" prop="invokeTarget" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="执行状态" align="center" prop="status" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_message_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_message_status" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="执行时间" align="center" prop="createTime" v-if="columns[5].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="执行时间" align="center" prop="createTime" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="日志信息" align="center" prop="jobMessage" v-if="columns[6].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width"
-                       width="120" fixed="right"
-      >
+      <el-table-column label="日志信息" align="center" prop="jobMessage" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width" width="120" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -135,15 +122,15 @@
     <!-- 调度日志详细 -->
     <el-dialog title="调度日志详细" :visible.sync="open" width="700px" append-to-body>
       <el-descriptions :column="2" border>
-            <el-descriptions-item label="任务名称">{{ form.name }}</el-descriptions-item>
-            <el-descriptions-item label="任务分组">{{ form.jobGroup }}</el-descriptions-item>
-            <el-descriptions-item :span="2" label="调用方法">{{ form.invokeTarget }}</el-descriptions-item>
-            <el-descriptions-item label="执行状态">
-              <dict-tag :options="dict.type.sys_message_status" :value="form.status"/>
-            </el-descriptions-item>
-            <el-descriptions-item label="执行时间">{{ form.createTime }}</el-descriptions-item>
-            <el-descriptions-item :span="2" label="日志信息">{{ form.jobMessage }}</el-descriptions-item>
-            <el-descriptions-item :span="2" label="异常信息" v-if="form.status === StatusEnum.EXCEPTION">{{ form.exceptionInfo }}</el-descriptions-item>
+        <el-descriptions-item label="任务名称">{{ form.name }}</el-descriptions-item>
+        <el-descriptions-item label="任务分组">{{ form.jobGroup }}</el-descriptions-item>
+        <el-descriptions-item :span="2" label="调用方法">{{ form.invokeTarget }}</el-descriptions-item>
+        <el-descriptions-item label="执行状态">
+          <dict-tag :options="dict.type.sys_message_status" :value="form.status" />
+        </el-descriptions-item>
+        <el-descriptions-item label="执行时间">{{ form.createTime }}</el-descriptions-item>
+        <el-descriptions-item :span="2" label="日志信息">{{ form.jobMessage }}</el-descriptions-item>
+        <el-descriptions-item :span="2" label="异常信息" v-if="form.status === StatusEnum.EXCEPTION">{{ form.exceptionInfo }}</el-descriptions-item>
       </el-descriptions>
       <div slot="footer" class="dialog-footer">
         <el-button @click="open = false">关 闭</el-button>
@@ -222,9 +209,9 @@ export default {
     getList() {
       this.loading = true
       listJobLogApi(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
-        this.tableList = response.data.items;
-        this.total = response.data.total;
-        this.loading = false;
+          this.tableList = response.data.items
+          this.total = response.data.total
+          this.loading = false
         }
       )
     },

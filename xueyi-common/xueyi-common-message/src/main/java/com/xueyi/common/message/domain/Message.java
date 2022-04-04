@@ -1,6 +1,6 @@
 package com.xueyi.common.message.domain;
 
-import com.xueyi.common.core.utils.IdUtils;
+import cn.hutool.core.util.IdUtil;
 
 /**
  * 消息对象
@@ -10,7 +10,7 @@ import com.xueyi.common.core.utils.IdUtils;
 public class Message {
 
     /** 消息Id */
-    protected String id = IdUtils.randomUUID();
+    protected String id = IdUtil.randomUUID();
 
     /** 单个消息过期时间 */
     protected String expiration;

@@ -7,6 +7,7 @@ import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.annotation.Excel.Type;
 import com.xueyi.common.core.annotation.Excels;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
+import com.xueyi.common.core.web.validate.V_A_E;
 import com.xueyi.system.api.authority.domain.dto.SysRoleDto;
 import com.xueyi.system.api.organize.domain.po.SysUserPo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -68,7 +69,7 @@ public class SysUserDto extends SysUserPo {
         this.roles = roles;
     }
 
-    @NotEmpty(message = "归属岗位不能为空")
+    @NotEmpty(message = "归属岗位不能为空", groups = {V_A_E.class})
     public Long[] getPostIds() {
         return postIds;
     }

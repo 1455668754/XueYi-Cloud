@@ -99,69 +99,47 @@
         >删除
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
       <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="租户名称" align="center" prop="nick" v-if="columns[2].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="租户账号" align="center" prop="name" v-if="columns[3].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="租户logo" align="center" prop="logo" v-if="columns[4].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      >
+      <el-table-column label="租户名称" align="center" prop="nick" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="租户账号" align="center" prop="name" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="租户logo" align="center" prop="logo" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <el-image style="width: 80px; height: 80px" :src="scope.row.logo" fit="cover"/>
+          <el-image style="width: 80px; height: 80px" :src="scope.row.logo" fit="cover" />
         </template>
       </el-table-column>
-      <el-table-column label="系统名称" align="center" prop="systemName" v-if="columns[5].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="策略Id" align="center" prop="strategyId" v-if="columns[6].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="账号修改次数" align="center" prop="nameFrequency" v-if="columns[7].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="超管租户" align="center" prop="isLessor" v-if="columns[8].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="系统名称" align="center" prop="systemName" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="策略Id" align="center" prop="strategyId" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="账号修改次数" align="center" prop="nameFrequency" v-if="columns[7].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="超管租户" align="center" prop="isLessor" v-if="columns[8].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isLessor"/>
+          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isLessor" />
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[9].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      >
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[9].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="默认租户" align="center" prop="isDefault" v-if="columns[10].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="默认租户" align="center" prop="isDefault" v-if="columns[10].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isDefault"/>
+          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isDefault" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[11].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[11].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" v-if="columns[12].visible" class-name="small-padding fixed-width"
-                       width="220" fixed="right"
-      >
+      <el-table-column label="操作" align="center" v-if="columns[12].visible" class-name="small-padding fixed-width" width="220" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -206,17 +184,17 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="租户名称" prop="nick">
-              <el-input v-model="form.nick" placeholder="请输入租户名称"/>
+              <el-input v-model="form.nick" placeholder="请输入租户名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="租户账号" prop="name">
-              <el-input v-model="form.name" placeholder="请输入租户账号" disabled/>
+              <el-input v-model="form.name" placeholder="请输入租户账号" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="系统名称" prop="systemName">
-              <el-input v-model="form.systemName" placeholder="请输入系统名称"/>
+              <el-input v-model="form.systemName" placeholder="请输入系统名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -233,7 +211,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="租户logo" prop="logo">
-              <image-upload v-model="form.logo" :limit="1" :isShowTip="false"/>
+              <image-upload v-model="form.logo" :limit="1" :isShowTip="false" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -264,17 +242,17 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="修改次数" prop="nameFrequency">
-              <el-input-number v-model="form.nameFrequency" :max="65535"/>
+              <el-input-number v-model="form.nameFrequency" :max="65535" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示顺序" prop="sort">
-              <el-input-number v-model="form.sort" :max="65535"/>
+              <el-input-number v-model="form.sort" :max="65535" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -291,17 +269,17 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="名称" prop="nick">
-              <el-input v-model="authForm.nick" disabled/>
+              <el-input v-model="authForm.nick" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="账号" prop="name">
-              <el-input v-model="authForm.name" disabled/>
+              <el-input v-model="authForm.name" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="菜单分配" prop="authIds">
-              <TenantAuthModal ref="authRef" :menuOptions="menuOptions"/>
+              <TenantAuthModal ref="authRef" :menuOptions="menuOptions" />
             </el-form-item>
           </el-col>
         </el-row>

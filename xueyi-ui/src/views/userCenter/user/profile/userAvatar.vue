@@ -22,7 +22,7 @@
           </div>
         </el-col>
       </el-row>
-      <br />
+      <br/>
       <el-row>
         <el-col :lg="2" :md="2">
           <el-upload action="#" :http-request="requestUpload" :show-file-list="false" :before-upload="beforeUpload">
@@ -56,6 +56,7 @@
 import store from "@/store";
 import { VueCropper } from "vue-cropper";
 import { uploadAvatar } from "@/api/system/user";
+import { SET_AVATAR_KEY } from '@enums'
 
 export default {
   components: { VueCropper },
@@ -109,7 +110,7 @@ export default {
     },
     // 上传预处理
     beforeUpload(file) {
-      if (file.type.indexOf("image/") == -1) {
+      if (file.type.indexOf("image/") === -1) {
         this.$modal.msgError("文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。");
       } else {
         const reader = new FileReader();
@@ -123,11 +124,11 @@ export default {
     uploadImg() {
       this.$refs.cropper.getCropBlob(data => {
         let formData = new FormData();
-        formData.append("avatarfile", data);
+        formData.append("file", data);
         uploadAvatar(formData).then(response => {
           this.open = false;
-          this.options.img = response.imgUrl;
-          store.commit('SET_AVATAR', this.options.img);
+          this.options.img = response.url;
+          store.commit(SET_AVATAR_KEY, this.options.img);
           this.$modal.msgSuccess("修改成功");
           this.visible = false;
         });
@@ -140,7 +141,7 @@ export default {
     // 关闭窗口
     closeDialog() {
       this.options.img = store.getters.avatar
-      this.visible = false;
+	    this.visible = false;
     }
   }
 };

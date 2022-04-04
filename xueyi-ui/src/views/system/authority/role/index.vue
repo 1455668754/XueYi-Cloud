@@ -79,39 +79,29 @@
         >删除
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
       <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="角色编码" align="center" prop="code" v-if="columns[2].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="角色名称" align="center" prop="name" v-if="columns[3].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="数据范围" align="center" prop="dataScope" v-if="columns[4].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="角色编码" align="center" prop="code" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="角色名称" align="center" prop="name" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="数据范围" align="center" prop="dataScope" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.auth_data_scope" :value="scope.row.dataScope"/>
+          <dict-tag :options="dict.type.auth_data_scope" :value="scope.row.dataScope" />
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      >
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" v-if="columns[6].visible" class-name="small-padding fixed-width"
-                       width="300" fixed="right"
-      >
+      <el-table-column label="操作" align="center" v-if="columns[6].visible" class-name="small-padding fixed-width" width="300" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -163,12 +153,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="角色编码" prop="code">
-              <el-input v-model="form.code" placeholder="请输入角色编码"/>
+              <el-input v-model="form.code" placeholder="请输入角色编码" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="角色名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入角色名称"/>
+              <el-input v-model="form.name" placeholder="请输入角色名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -186,12 +176,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示顺序" prop="sort">
-              <el-input-number v-model="form.sort" :max="65535"/>
+              <el-input-number v-model="form.sort" :max="65535" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -208,12 +198,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="角色名称" prop="name">
-              <el-input v-model="form.name" disabled/>
+              <el-input v-model="form.name" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="菜单分配" prop="authIds">
-              <RoleAuthModal ref="authRef" :menuOptions="menuOptions"/>
+              <RoleAuthModal ref="authRef" :menuOptions="menuOptions" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -230,12 +220,12 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="角色名称" prop="name">
-              <el-input v-model="form.name" disabled/>
+              <el-input v-model="form.name" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="权限字符串" prop="roleKey">
-              <el-input v-model="form.roleKey" placeholder="请输入权限字符串"/>
+              <el-input v-model="form.roleKey" placeholder="请输入权限字符串" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -252,7 +242,7 @@
           </el-col>
           <el-col :span="24" v-show="form.dataScope === DataScopeEnum.CUSTOM">
             <el-form-item label="数据权限" prop="organizeIds">
-              <RoleDataModal ref="dataRef" :dataOptions="dataOptions"/>
+              <RoleDataModal ref="dataRef" :dataOptions="dataOptions" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -263,7 +253,7 @@
       </div>
     </el-dialog>
 
-    <RoleInitModal ref="initRef" :menuOptions="menuOptions" :dataOptions="dataOptions" @getList="getList"/>
+    <RoleInitModal ref="initRef" :menuOptions="menuOptions" :dataOptions="dataOptions" @getList="getList" />
   </div>
 </template>
 
@@ -278,10 +268,10 @@ import { RoleAuth } from '@auth/system'
 import { DicSortEnum, DicStatusEnum, IconEnum } from '@enums'
 import { organizeScopeApi } from '@/api/system/organize/organize'
 import { authScopeEnterpriseApi } from '@/api/system/authority/auth'
-import RoleInitModal from '@/views/system/authority/role/RoleInitModal'
-import RoleAuthModal from '@/views/system/authority/role/RoleAuthModal'
+import RoleInitModal from './RoleInitModal'
+import RoleAuthModal from './RoleAuthModal'
 import { DataScopeEnum } from '@enums/system'
-import RoleDataModal from '@/views/system/authority/role/RoleDataModal'
+import RoleDataModal from './RoleDataModal'
 
 export default {
   name: 'RoleManagement',

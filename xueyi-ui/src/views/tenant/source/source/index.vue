@@ -69,46 +69,34 @@
         >删除
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
       <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="数据源名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="数据源编码" align="center" prop="slave" v-if="columns[3].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[4].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      >
+      <el-table-column label="数据源名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="数据源编码" align="center" prop="slave" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="默认数据源" align="center" prop="isDefault" v-if="columns[5].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="默认数据源" align="center" prop="isDefault" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isDefault"/>
+          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.isDefault" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width"
-                       width="120" fixed="right"
-      >
+      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width" width="120" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -144,37 +132,37 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="数据源名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入数据源名称"/>
+              <el-input v-model="form.name" placeholder="请输入数据源名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="数据源编码" prop="slave" v-if="form.id !== undefined">
-              <el-input v-model="form.slave" placeholder="请输入数据源编码" disabled/>
+              <el-input v-model="form.slave" placeholder="请输入数据源编码" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="驱动" prop="driverClassName">
-              <el-input v-model="form.driverClassName" placeholder="请输入驱动"/>
+              <el-input v-model="form.driverClassName" placeholder="请输入驱动" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="连接地址" prop="urlPrepend">
-              <el-input v-model="form.urlPrepend" placeholder="请输入连接地址"/>
+              <el-input v-model="form.urlPrepend" placeholder="请输入连接地址" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="连接参数" prop="urlAppend">
-              <el-input v-model="form.urlAppend" placeholder="请输入连接参数" type="textarea"/>
+              <el-input v-model="form.urlAppend" placeholder="请输入连接参数" type="textarea" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="用户名" prop="username">
-              <el-input v-model="form.username" placeholder="请输入用户名"/>
+              <el-input v-model="form.username" placeholder="请输入用户名" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入密码" show-password/>
+              <el-input v-model="form.password" placeholder="请输入密码" show-password />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -205,12 +193,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示顺序" prop="sort">
-              <el-input-number v-model="form.sort" :max="65535"/>
+              <el-input-number v-model="form.sort" :max="65535" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -311,8 +299,8 @@ export default {
           { required: true, message: '密码不能为空', trigger: 'blur' }
         ],
         status: [
-          { required: true, message: "状态不能为空", trigger: "change" }
-        ],
+          { required: true, message: '状态不能为空', trigger: 'change' }
+        ]
       }
     }
   },

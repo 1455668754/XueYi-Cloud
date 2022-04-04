@@ -71,46 +71,34 @@
         >删除
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
       <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="公告标题" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="公告类型" align="center" prop="type" v-if="columns[3].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      >
+      <el-table-column label="公告标题" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="公告类型" align="center" prop="type" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_notice_type" :value="scope.row.type"/>
+          <dict-tag :options="dict.type.sys_notice_type" :value="scope.row.type" />
         </template>
       </el-table-column>
-      <el-table-column label="公告内容" align="center" prop="content" v-if="columns[4].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      />
-      <el-table-column label="公告状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      >
+      <el-table-column label="公告内容" align="center" prop="content" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="公告状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_notice_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_notice_status" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width"
-                       fixed="right"
-      >
+      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -146,7 +134,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="公告标题" prop="name">
-              <el-input v-model="form.name" placeholder="请输入公告标题"/>
+              <el-input v-model="form.name" placeholder="请输入公告标题" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -164,12 +152,12 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="公告内容" prop="content">
-              <editor v-model="form.content" :min-height="192"/>
+              <editor v-model="form.content" :min-height="192" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>

@@ -8,6 +8,8 @@ import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.InnerAuth;
@@ -123,7 +125,7 @@ public class SysUserController extends BaseController<SysUserDto, ISysUserServic
     @PostMapping
     @RequiresPermissions(Auth.SYS_USER_ADD)
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysUserDto user) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysUserDto user) {
         return super.add(user);
     }
 
@@ -134,7 +136,7 @@ public class SysUserController extends BaseController<SysUserDto, ISysUserServic
     @PutMapping
     @RequiresPermissions(Auth.SYS_USER_EDIT)
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysUserDto user) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysUserDto user) {
         return super.edit(user);
     }
 

@@ -98,38 +98,25 @@
             >删除
             </el-button>
           </el-col>
-          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
         </el-row>
 
         <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+          <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
           <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
             <template v-slot="scope">
               <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="岗位名称" align="center" prop="name" v-if="columns[2].visible"
-                           :show-overflow-tooltip="true"
-                           min-width="100"
-          />
-          <el-table-column label="岗位编码" align="center" prop="code" v-if="columns[3].visible"
-                           :show-overflow-tooltip="true"
-                           min-width="100"
-          />
-          <el-table-column label="部门Id" align="center" prop="deptId" v-if="columns[4].visible"
-                           :show-overflow-tooltip="true" min-width="100"
-          />
-          <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible"
-                           :show-overflow-tooltip="true"
-                           min-width="100"
-          >
+          <el-table-column label="岗位名称" align="center" prop="name" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
+          <el-table-column label="岗位编码" align="center" prop="code" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100" />
+          <el-table-column label="部门Id" align="center" prop="deptId" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100" />
+          <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100">
             <template v-slot="scope">
-              <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+              <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" v-if="columns[6].visible" class-name="small-padding fixed-width"
-                           width="220" fixed="right"
-          >
+          <el-table-column label="操作" align="center" v-if="columns[6].visible" class-name="small-padding fixed-width" width="220" fixed="right">
             <template v-slot="scope">
               <el-button
                 size="mini"
@@ -175,22 +162,22 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="归属部门" prop="deptId">
-              <treeselect v-model="form.deptId" :options="deptOptions"  :normalizer="normalizer" placeholder="请选择归属部门"/>
+              <treeselect v-model="form.deptId" :options="deptOptions" :normalizer="normalizer" placeholder="请选择归属部门" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="岗位编码" prop="code">
-              <el-input v-model="form.code" placeholder="请输入岗位编码"/>
+              <el-input v-model="form.code" placeholder="请输入岗位编码" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="岗位名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入岗位名称"/>
+              <el-input v-model="form.name" placeholder="请输入岗位名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示顺序" prop="sort">
-              <el-input-number v-model="form.sort" :max="65535"/>
+              <el-input-number v-model="form.sort" :max="65535" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -208,7 +195,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -219,7 +206,7 @@
       </div>
     </el-dialog>
 
-    <PostRoleModal  ref="authRef" :roleOptions="roleOptions"/>
+    <PostRoleModal ref="authRef" :roleOptions="roleOptions" />
   </div>
 </template>
 
@@ -231,7 +218,7 @@ import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { optionDeptApi } from '@/api/system/organize/dept'
 import { optionRoleApi } from '@/api/system/authority/role'
-import PostRoleModal from '@/views/system/organize/post/PostRoleModal'
+import PostRoleModal from './PostRoleModal'
 
 export default {
   name: 'PostManagement',
@@ -351,14 +338,14 @@ export default {
     /** 转换树数据结构 */
     normalizer(node) {
       if (node.children && !node.children.length) {
-        delete node.children;
+        delete node.children
       }
       return {
         id: node.id,
         label: node.name,
         isDisabled: false,
         children: node.children
-      };
+      }
     },
     /** 模态框取消操作 */
     handleClose() {

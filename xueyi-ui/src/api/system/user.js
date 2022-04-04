@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import { parseStrEmpty } from "@/utils/ruoyi";
+import { parseStrEmpty } from '@/utils/ruoyi'
 
 // 查询用户列表
 export function listUser(query) {
@@ -89,14 +89,10 @@ export function updateUserProfile(data) {
 
 // 用户密码重置
 export function updateUserPwd(oldPassword, newPassword) {
-  const data = {
-    oldPassword,
-    newPassword
-  }
   return request({
-    url: '/system/user/profile/updatePwd',
+    url: '/system/user/profile/password',
     method: 'put',
-    params: data
+    params: { oldPassword, newPassword }
   })
 }
 

@@ -79,34 +79,24 @@
         >展开/折叠
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
-    <el-table v-if="refreshTable" :indent="30" v-loading="loading" :data="tableList" row-key="id"
-              :default-expand-all="isExpandAll" :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-              @selection-change="handleSelectionChange"
-    >
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
-      <el-table-column label="部门名称" align="left" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      />
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[2].visible" :show-overflow-tooltip="true"
-                       min-width="100"
-      >
+    <el-table v-if="refreshTable" :indent="30" v-loading="loading" :data="tableList" row-key="id" :default-expand-all="isExpandAll"
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
+      <el-table-column label="部门名称" align="left" prop="name" v-if="columns[1].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[3].visible"
-                       :show-overflow-tooltip="true" min-width="100"
-      >
+      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" v-if="columns[4].visible" class-name="small-padding fixed-width"
-                       width="260" fixed="right"
-      >
+      <el-table-column label="操作" align="center" v-if="columns[4].visible" class-name="small-padding fixed-width" width="260" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -150,32 +140,32 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="上级部门" prop="parentId">
-              <treeselect v-model="form.parentId" :options="treeOptions" :normalizer="normalizer" placeholder="选择上级部门"/>
+              <treeselect v-model="form.parentId" :options="treeOptions" :normalizer="normalizer" placeholder="选择上级部门" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="部门名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入部门名称"/>
+              <el-input v-model="form.name" placeholder="请输入部门名称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="部门编码" prop="code">
-              <el-input v-model="form.code" placeholder="请输入部门编码"/>
+              <el-input v-model="form.code" placeholder="请输入部门编码" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="负责人" prop="leader">
-              <el-input v-model="form.leader" placeholder="请输入负责人"/>
+              <el-input v-model="form.leader" placeholder="请输入负责人" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="联系电话" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入联系电话"/>
+              <el-input v-model="form.phone" placeholder="请输入联系电话" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱"/>
+              <el-input v-model="form.email" placeholder="请输入邮箱" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -193,12 +183,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示顺序" prop="sort">
-              <el-input-number v-model="form.sort" :max="65535"/>
+              <el-input-number v-model="form.sort" :max="65535" />
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -209,7 +199,7 @@
       </div>
     </el-dialog>
 
-    <DeptRoleModal ref="authRef" :roleOptions="roleOptions"/>
+    <DeptRoleModal ref="authRef" :roleOptions="roleOptions" />
   </div>
 </template>
 
@@ -227,7 +217,7 @@ import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { DicSortEnum, DicStatusEnum, IconEnum } from '@enums'
 import { optionRoleApi } from '@/api/system/authority/role'
-import DeptRoleModal from '@/views/system/organize/dept/DeptRoleModal'
+import DeptRoleModal from './DeptRoleModal'
 
 export default {
   name: 'DeptManagement',

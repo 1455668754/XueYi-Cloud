@@ -76,35 +76,35 @@
         >清空
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
       <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="模块标题" align="center" prop="title" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100"/>
+      <el-table-column label="模块标题" align="center" prop="title" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
       <el-table-column label="业务类型" align="center" prop="businessType" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_operate_business" :value="scope.row.businessType"/>
+          <dict-tag :options="dict.type.sys_operate_business" :value="scope.row.businessType" />
         </template>
       </el-table-column>
-      <el-table-column label="方法名称" align="center" prop="method" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100"/>
-      <el-table-column label="请求方式" align="center" prop="requestMethod" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100"/>
+      <el-table-column label="方法名称" align="center" prop="method" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="请求方式" align="center" prop="requestMethod" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100" />
       <el-table-column label="操作类别" align="center" prop="operateType" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_operate_type" :value="scope.row.operateType"/>
+          <dict-tag :options="dict.type.sys_operate_type" :value="scope.row.operateType" />
         </template>
       </el-table-column>
-      <el-table-column label="操作人员账号" align="center" prop="userName" v-if="columns[7].visible" :show-overflow-tooltip="true" min-width="100"/>
-      <el-table-column label="操作人员名称" align="center" prop="userNick" v-if="columns[8].visible" :show-overflow-tooltip="true" min-width="100"/>
-      <el-table-column label="主机地址" align="center" prop="ip" v-if="columns[9].visible" :show-overflow-tooltip="true" min-width="100"/>
+      <el-table-column label="操作人员账号" align="center" prop="userName" v-if="columns[7].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="操作人员名称" align="center" prop="userNick" v-if="columns[8].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="主机地址" align="center" prop="ip" v-if="columns[9].visible" :show-overflow-tooltip="true" min-width="100" />
       <el-table-column label="操作状态" align="center" prop="status" v-if="columns[10].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_operate_status" :value="scope.row.status"/>
+          <dict-tag :options="dict.type.sys_operate_status" :value="scope.row.status" />
         </template>
       </el-table-column>
       <el-table-column label="操作时间" align="center" prop="operateTime" v-if="columns[11].visible" :show-overflow-tooltip="true" min-width="100">
@@ -120,14 +120,16 @@
             :icon="IconEnum.VIEW"
             @click="handleUpdate(scope.row)"
             v-hasPermi="[OperateLogAuth.SINGLE]"
-          >查看</el-button>
+          >查看
+          </el-button>
           <el-button
             size="mini"
             type="text"
             :icon="IconEnum.DELETE"
             @click="handleDelete(scope.row)"
             v-hasPermi="[OperateLogAuth.DELETE]"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -145,12 +147,12 @@
       <el-descriptions :column="2" border>
         <el-descriptions-item label="模块标题">{{ form.title }}</el-descriptions-item>
         <el-descriptions-item label="业务类型">
-          <dict-tag :options="dict.type.sys_operate_business" :value="form.businessType"/>
+          <dict-tag :options="dict.type.sys_operate_business" :value="form.businessType" />
         </el-descriptions-item>
         <el-descriptions-item :span="2" label="方法名称">{{ form.method }}</el-descriptions-item>
         <el-descriptions-item label="请求方式">{{ form.requestMethod }}</el-descriptions-item>
         <el-descriptions-item label="操作类别">
-          <dict-tag :options="dict.type.sys_operate_type" :value="form.operateType"/>
+          <dict-tag :options="dict.type.sys_operate_type" :value="form.operateType" />
         </el-descriptions-item>
         <el-descriptions-item label="操作人员账号">{{ form.userName }}</el-descriptions-item>
         <el-descriptions-item label="操作人员名称">{{ form.userNick }}</el-descriptions-item>
@@ -158,7 +160,7 @@
         <el-descriptions-item label="操作地点">{{ form.location }}</el-descriptions-item>
         <el-descriptions-item :span="2" label="请求URL">{{ form.url }}</el-descriptions-item>
         <el-descriptions-item label="操作状态">
-          <dict-tag :options="dict.type.sys_operate_status" :value="form.status"/>
+          <dict-tag :options="dict.type.sys_operate_status" :value="form.status" />
         </el-descriptions-item>
         <el-descriptions-item label="操作时间">{{ form.operateTime }}</el-descriptions-item>
         <el-descriptions-item :span="2" label="错误消息" v-if="form.status === StatusEnum.EXCEPTION">{{ form.errorMsg }}</el-descriptions-item>
@@ -173,7 +175,7 @@
 </template>
 
 <script>
-import {  OperateLogAuth } from '@auth/system'
+import { OperateLogAuth } from '@auth/system'
 import {
   listOperateLogApi,
   getOperateLogApi,
@@ -183,7 +185,7 @@ import {
 import { DicStatusEnum, IconEnum } from '@enums'
 
 export default {
-  name: "OperateLogManagement",
+  name: 'OperateLogManagement',
   /** 字典查询 */
   dicts: ['sys_operate_type', 'sys_operate_status', 'sys_operate_business'],
   data() {
@@ -213,7 +215,7 @@ export default {
       // 是否显示弹出层
       open: false,
       // 弹出层标题
-      title: "",
+      title: '',
       // 查询参数
       queryParams: {
         page: 1,
@@ -221,7 +223,7 @@ export default {
         title: undefined,
         businessType: undefined,
         method: undefined,
-        requestMethod: undefined,
+        requestMethod: undefined
       },
       // 列信息
       columns: [
@@ -240,7 +242,7 @@ export default {
         { key: 12, label: `操作列`, visible: true }
       ],
       // 表单参数
-      form: {},
+      form: {}
     }
   },
   created() {
@@ -259,8 +261,8 @@ export default {
     },
     /** 取消操作 */
     cancel() {
-      this.open = false;
-      this.reset();
+      this.open = false
+      this.reset()
     },
     /** 表单重置 */
     reset() {
@@ -280,8 +282,8 @@ export default {
         jsonResult: undefined,
         status: undefined,
         errorMsg: undefined,
-        operateTime: undefined,
-      };
+        operateTime: undefined
+      }
     },
     /** 搜索操作 */
     handleQuery() {
@@ -303,13 +305,13 @@ export default {
     },
     /** 修改操作 */
     handleUpdate(row) {
-      this.reset();
+      this.reset()
       const id = row.id || this.ids
       getOperateLogApi(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "查看操作日志";
-      });
+        this.form = response.data
+        this.open = true
+        this.title = '查看操作日志'
+      })
     },
     /** 删除操作 */
     handleDelete(row) {
