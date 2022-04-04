@@ -73,7 +73,7 @@ public class GenConstants {
     public static final String[] SUB_FRONT_ENTITY = {};
 
     /** 必定隐藏字段（前后端均隐藏） */
-    public static final String[] COLUMN_MUST_HIDE = {"delFlag", "tenantId"};
+    public static final String[] COLUMN_MUST_HIDE = {"delFlag", "tenantId", "ancestors"};
 
     /** 字典名称转换移除匹配字段 */
     public static final String[] DICT_TYPE_REMOVE = {"sys_", "te_", "gen_"};

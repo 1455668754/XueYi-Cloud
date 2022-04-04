@@ -295,22 +295,14 @@ public class VelocityUtils {
             return StringUtils.format("sql/{}.sql", businessName);
 
         else if (template.contains("api.js.vm"))
-            return StringUtils.format("packages/service/modules/{}/{}/{}.ts", moduleName, authorityName, businessName);
-        else if (template.contains("infoModel.ts.vm"))
-            return StringUtils.format("packages/types/modules/{}/{}/{}.ts", moduleName, authorityName, businessName);
+            return StringUtils.format("xueyi-ui/src/api/{}/{}/{}.js", moduleName, authorityName, businessName);
         else if (template.contains("auth.js.vm"))
-            return StringUtils.format("packages/tokens/auth/{}/{}/{}.auth.ts", moduleName, authorityName, businessName);
+            return StringUtils.format("xueyi-ui/src/constants/auth/{}/{}/{}.auth.js", moduleName, authorityName, businessName);
         else if (template.contains("enum.js.vm"))
-            return StringUtils.format("packages/tokens/enums/{}/{}/{}.enum.ts", moduleName, authorityName, businessName);
+            return StringUtils.format("xueyi-ui/src/constants/enums/{}/{}/{}.enum.js", moduleName, authorityName, businessName);
 
-        else if (template.contains("data.ts.vm"))
-            return StringUtils.format("admin/src/views/{}/{}/{}/{}.data.ts", moduleName, authorityName, businessName, businessName);
         else if (template.contains("index.vue.vm"))
-            return StringUtils.format("admin/src/views/{}/{}/{}/index.vue", moduleName, authorityName, businessName);
-        else if (template.contains("detail.vue.vm"))
-            return StringUtils.format("admin/src/views/{}/{}/{}/{}Detail.vue", moduleName, authorityName, businessName, BusinessName);
-        else if (template.contains("modal.vue.vm"))
-            return StringUtils.format("admin/src/views/{}/{}/{}/{}Modal.vue", moduleName, authorityName, businessName, BusinessName);
+            return StringUtils.format("xueyi-ui/src/views/{}/{}/{}/index.vue", moduleName, authorityName, businessName);
         return "";
     }
 
