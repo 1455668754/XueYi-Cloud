@@ -3,7 +3,6 @@ package com.xueyi.system.organize.service.impl;
 import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
@@ -18,15 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
-import static com.xueyi.common.core.constant.basic.TenantConstants.ISOLATE;
-
 /**
  * 用户管理 服务层处理
  *
  * @author xueyi
  */
 @Service
-@DS(ISOLATE)
 public class SysUserServiceImpl extends BaseServiceImpl<SysUserDto, SysUserManager, SysUserMapper> implements ISysUserService {
 
     /**

@@ -18,15 +18,13 @@ import ${packageName}.domain.dto.${ClassName}Dto;
 import ${subPackageName}.domain.dto.${subClassName}Dto;
 #end
 import com.xueyi.common.web.entity.mapper.${Entity}Mapper;
-import com.baomidou.dynamic.datasource.annotation.DS;
-
-import static com.xueyi.common.core.constant.basic.TenantConstants.${sourceMode};
+import com.xueyi.common.datasource.annotation.${sourceMode};
 
 /**
  * ${functionName}管理 数据层
  *
  * @author ${author}
  */
-@DS(${sourceMode})
+@${sourceMode}
 public interface ${ClassName}Mapper extends ${Entity}Mapper${generics} {
 }

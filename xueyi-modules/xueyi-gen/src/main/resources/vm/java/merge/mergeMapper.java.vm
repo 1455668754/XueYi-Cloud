@@ -2,14 +2,13 @@ package ${packageName}.mapper.merge;
 
 import com.xueyi.common.web.entity.mapper.BaseMapper;
 import ${packageName}.domain.merge.${ClassName}Merge;
-
-import static com.xueyi.common.core.constant.TenantConstants.${sourceMode};
+import com.xueyi.common.datasource.annotation.${sourceMode};
 
 /**
  * ${functionName} 数据层
  *
  * @author ${author}
  */
-@DS(${sourceMode})
+@${sourceMode}
 public interface ${ClassName}MergeMapper extends BaseMapper<${ClassName}Merge> {
 }

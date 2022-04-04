@@ -1,7 +1,6 @@
 package com.xueyi.system.organize.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.datascope.annotation.DataScope;
 import com.xueyi.common.web.entity.service.impl.SubTreeServiceImpl;
@@ -20,15 +19,12 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
-import static com.xueyi.common.core.constant.basic.TenantConstants.ISOLATE;
-
 /**
  * 部门管理 服务层处理
  *
  * @author xueyi
  */
 @Service
-@DS(ISOLATE)
 public class SysDeptServiceImpl extends SubTreeServiceImpl<SysDeptDto, SysDeptManager, SysDeptMapper, SysPostDto, ISysPostService, SysPostMapper> implements ISysDeptService {
 
     /**

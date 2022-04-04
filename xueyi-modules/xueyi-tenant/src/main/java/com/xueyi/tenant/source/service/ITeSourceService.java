@@ -1,7 +1,7 @@
 package com.xueyi.tenant.source.service;
 
-import com.xueyi.tenant.api.source.domain.dto.TeSourceDto;
 import com.xueyi.common.web.entity.service.IBaseService;
+import com.xueyi.tenant.api.source.domain.dto.TeSourceDto;
 
 /**
  * 数据源管理 服务层

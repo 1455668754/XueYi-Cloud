@@ -510,8 +510,8 @@ values (1, '男', '0', 'sys_user_sex', '', '', 'Y', '性别男'),
        (13, 'MarkDown编辑器控件', 'markdown', 'gen_display_type', '', '', 'N', '代码生成-显示类型：MarkDown编辑器控件'),
        (0, 'zip压缩包', '0', 'gen_generation_mode', '', '', 'Y', '代码生成-生成方式：zip压缩包'),
        (1, '自定义路径', '1', 'gen_generation_mode', '', '', 'N', '代码生成-生成方式：自定义路径'),
-       (0, '策略源', 'ISOLATE', 'gen_source_mode', '', '', 'Y', '代码生成-源策略模式：策略源'),
-       (1, '主数据源', 'MASTER', 'gen_source_mode', '', '', 'N', '代码生成-源策略模式：主数据源');
+       (0, '策略源', 'Isolate', 'gen_source_mode', '', '', 'Y', '代码生成-源策略模式：策略源'),
+       (1, '主数据源', 'Master', 'gen_source_mode', '', '', 'N', '代码生成-源策略模式：主数据源');
 
 -- ----------------------------
 -- 10、参数配置表

@@ -40,9 +40,9 @@ export const GenerationModeEnum = {
 /** 字典：源策略 */
 export const SourceModeEnum = {
   // 主数据源
-  MASTER: 'MASTER',
+  MASTER: 'Master',
   // 策略源
-  ISOLATE: 'ISOLATE'
+  ISOLATE: 'Isolate'
 }
 
 /** 是否勾选 */

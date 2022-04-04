@@ -2,7 +2,6 @@ package com.xueyi.tenant.tenant.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
@@ -30,15 +29,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.xueyi.common.core.constant.basic.TenantConstants.MASTER;
-
 /**
  * 租户管理 服务层处理
  *
  * @author xueyi
  */
 @Service
-@DS(MASTER)
 public class TeTenantServiceImpl extends BaseServiceImpl<TeTenantDto, TeTenantManager, TeTenantMapper> implements ITeTenantService {
 
     @Autowired

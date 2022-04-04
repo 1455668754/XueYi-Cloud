@@ -4,16 +4,16 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 
 import java.lang.annotation.*;
 
-import static com.xueyi.common.core.constant.basic.TenantConstants.MASTER;
+import static com.xueyi.common.core.constant.basic.TenantConstants.ISOLATE;
 
 /**
- * 主数据源
+ * 租户策略源
  *
  * @author xueyi
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@DS(MASTER)
-public @interface Master {
+@DS(ISOLATE)
+public @interface Isolate {
 }

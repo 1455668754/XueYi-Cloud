@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xueyi.common.core.constant.basic.SqlConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
@@ -60,12 +59,11 @@ public class SysUserManager extends BaseManager<SysUserDto, SysUserMapper> {
      * @param password 用户密码
      * @return 用户对象
      */
-
     public SysUserDto userLogin(String userName, String password) {
         SysUserDto userDto = baseMapper.selectOne(
                 Wrappers.<SysUserDto>query().lambda()
                         .eq(SysUserDto::getUserName, userName));
-        //check password is true
+        // check password is true
         if (ObjectUtil.isNull(userDto) || !SecurityUtils.matchesPassword(password, userDto.getPassword()))
             return null;
 
@@ -92,20 +90,27 @@ public class SysUserManager extends BaseManager<SysUserDto, SysUserMapper> {
                 }
             }
         }
-
-        // select roles in user
-        LambdaQueryWrapper<SysOrganizeRoleMerge> organizeRoleMergeQueryWrapper = new LambdaQueryWrapper<>();
-        organizeRoleMergeQueryWrapper
-                .eq(SysOrganizeRoleMerge::getUserId, userDto.getId());
-        if (CollUtil.isNotEmpty(postIds))
-            organizeRoleMergeQueryWrapper
-                    .or().in(SysOrganizeRoleMerge::getPostId, postIds)
-                    .or().in(SysOrganizeRoleMerge::getDeptId, deptIds);
-
-        List<SysOrganizeRoleMerge> organizeRoleMerges = organizeRoleMergeMapper.selectList(organizeRoleMergeQueryWrapper);
-        userDto.setRoles(CollUtil.isNotEmpty(organizeRoleMerges)
-                ? roleMapper.selectBatchIds(organizeRoleMerges.stream().map(SysOrganizeRoleMerge::getRoleId).collect(Collectors.toList()))
-                : new ArrayList<>());
+        // 是否为超管用户 ? 无角色集合 : 获取角色集合
+        if (userDto.isAdmin()) {
+            userDto.setRoles(new ArrayList<>());
+        } else {
+            // select roles in user
+            List<Long> finalDeptIds = deptIds;
+            List<SysOrganizeRoleMerge> organizeRoleMerges = organizeRoleMergeMapper.selectList(
+                    Wrappers.<SysOrganizeRoleMerge>query().lambda()
+                            .eq(SysOrganizeRoleMerge::getUserId, userDto.getId())
+                            .func(i -> {
+                                if (CollUtil.isNotEmpty(postIds))
+                                    i.or().in(SysOrganizeRoleMerge::getPostId, postIds);
+                            })
+                            .func(i -> {
+                                if (CollUtil.isNotEmpty(finalDeptIds))
+                                    i.or().in(SysOrganizeRoleMerge::getDeptId, finalDeptIds);
+                            }));
+            userDto.setRoles(CollUtil.isNotEmpty(organizeRoleMerges)
+                    ? roleMapper.selectBatchIds(organizeRoleMerges.stream().map(SysOrganizeRoleMerge::getRoleId).collect(Collectors.toList()))
+                    : new ArrayList<>());
+        }
         return userDto;
     }
 

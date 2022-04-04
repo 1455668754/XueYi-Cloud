@@ -1,6 +1,5 @@
 package com.xueyi.system.monitor.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
 import com.xueyi.system.api.log.domain.dto.SysOperateLogDto;
 import com.xueyi.system.monitor.manager.SysOperateLogManager;
@@ -8,15 +7,12 @@ import com.xueyi.system.monitor.mapper.SysOperateLogMapper;
 import com.xueyi.system.monitor.service.ISysOperateLogService;
 import org.springframework.stereotype.Service;
 
-import static com.xueyi.common.core.constant.basic.TenantConstants.ISOLATE;
-
 /**
  * 操作日志管理 服务层处理
  *
  * @author xueyi
  */
 @Service
-@DS(ISOLATE)
 public class SysOperateLogServiceImpl extends BaseServiceImpl<SysOperateLogDto, SysOperateLogManager, SysOperateLogMapper> implements ISysOperateLogService {
 
     /**

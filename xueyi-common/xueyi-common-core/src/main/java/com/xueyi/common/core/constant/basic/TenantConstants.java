@@ -55,28 +55,6 @@ public class TenantConstants {
         }
     }
 
-    /** 数据源类型 */
-    public enum SourceType {
-
-        READ_WRITE("0", "读写"), READ("1", "只读"), WRITE("2", "只写");
-
-        private final String code;
-        private final String info;
-
-        SourceType(String code, String info) {
-            this.code = code;
-            this.info = info;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public String getInfo() {
-            return info;
-        }
-    }
-
     /** 源同步策略类型 */
     public enum SyncType {
 

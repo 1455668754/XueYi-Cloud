@@ -1,7 +1,6 @@
 package com.xueyi.system.dict.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.CacheConstants;
@@ -24,15 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xueyi.common.core.constant.basic.TenantConstants.MASTER;
-
 /**
  * 字典类型管理 业务层处理
  *
  * @author xueyi
  */
 @Service
-@DS(MASTER)
 public class SysDictTypeServiceImpl extends SubBaseServiceImpl<SysDictTypeDto, SysDictTypeManager, SysDictTypeMapper, SysDictDataDto, ISysDictDataService, SysDictDataMapper> implements ISysDictTypeService {
 
     @Autowired

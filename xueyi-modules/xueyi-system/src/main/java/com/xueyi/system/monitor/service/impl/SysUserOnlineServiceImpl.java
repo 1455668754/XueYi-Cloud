@@ -1,10 +1,10 @@
 package com.xueyi.system.monitor.service.impl;
 
-import org.springframework.stereotype.Service;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.monitor.domain.SysUserOnline;
 import com.xueyi.system.monitor.service.ISysUserOnlineService;
+import org.springframework.stereotype.Service;
 
 /**
  * 在线用户 服务层处理

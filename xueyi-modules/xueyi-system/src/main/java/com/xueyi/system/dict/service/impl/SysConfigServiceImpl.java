@@ -2,7 +2,6 @@ package com.xueyi.system.dict.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.CacheConstants;
 import com.xueyi.common.redis.service.RedisService;
@@ -21,15 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.xueyi.common.core.constant.basic.TenantConstants.MASTER;
-
 /**
  * 参数配置管理 服务层实现
  *
  * @author xueyi
  */
 @Service
-@DS(MASTER)
 public class SysConfigServiceImpl extends BaseServiceImpl<SysConfigDto, SysConfigManager, SysConfigMapper> implements ISysConfigService {
 
     @Autowired

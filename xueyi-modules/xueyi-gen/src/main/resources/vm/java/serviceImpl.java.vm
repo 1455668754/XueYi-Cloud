@@ -26,7 +26,6 @@ import java.io.Serializable;
 import java.util.Collection;
 #end
 import com.xueyi.common.web.entity.service.impl.${Entity}ServiceImpl;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

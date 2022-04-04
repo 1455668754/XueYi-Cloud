@@ -106,7 +106,7 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuDto, SysMenuManag
     public List<SysMenuDto> selectListScope(SysMenuDto menu) {
         return baseManager.selectListExtra(menu);
     }
-
+    
     /**
      * 根据模块Id查询菜单路由
      *

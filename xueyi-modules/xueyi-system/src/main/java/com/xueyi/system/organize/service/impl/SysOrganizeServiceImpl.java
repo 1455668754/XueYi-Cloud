@@ -2,7 +2,6 @@ package com.xueyi.system.organize.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.xueyi.common.core.constant.system.OrganizeConstants;
 import com.xueyi.common.core.utils.TreeUtils;
 import com.xueyi.system.organize.domain.vo.SysOrganizeTree;
@@ -15,15 +14,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import static com.xueyi.common.core.constant.basic.TenantConstants.ISOLATE;
-
 /**
  * 组织管理 服务层处理
  *
  * @author xueyi
  */
 @Service
-@DS(ISOLATE)
 public class SysOrganizeServiceImpl implements ISysOrganizeService {
 
     @Autowired
