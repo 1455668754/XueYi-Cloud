@@ -247,9 +247,7 @@ public class VelocityUtils {
             templates.add("vm/js/api.js.vm");
             templates.add("vm/js/auth.js.vm");
             templates.add("vm/js/enum.js.vm");
-            templates.add("vm/vue/detail.vue.vm");
             templates.add("vm/vue/index.vue.vm");
-            templates.add("vm/vue/modal.vue.vm");
         }
         return templates;
     }
