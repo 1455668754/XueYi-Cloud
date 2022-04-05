@@ -1,28 +1,18 @@
 package com.xueyi.common.web.entity.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.xueyi.common.core.config.DemoProperties;
-import com.xueyi.common.core.exception.DemoModeException;
 import com.xueyi.common.core.utils.DateUtils;
 import com.xueyi.common.core.utils.PageUtils;
-import com.xueyi.common.core.utils.ServletUtils;
-import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.page.TableDataInfo;
 import com.xueyi.common.core.web.result.AjaxResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyEditorSupport;
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * web层 通用数据处理
@@ -32,27 +22,6 @@ import java.util.Objects;
 public class BasisController {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
-    /* ---演示模式控制 生产环境可移除 且可同步移除DemoProperties文件 start--- */
-    @Autowired
-    private DemoProperties demoProperties;
-
-    @ModelAttribute
-    public void init(HttpServletRequest httpServletRequest, HttpServletResponse response) throws IOException {
-        if (!demoProperties.isEnabled()) {
-            return;
-        }
-        String url = Objects.requireNonNull(ServletUtils.getRequest()).getRequestURI();
-        // 需要放开的url
-        if (StringUtils.isNotEmpty(url) && (url.contains("/demo") || url.contains("/tool/gen") || url.contains("/operateLog") || url.contains("/loginLog")))
-            return;
-        // 增删改 请求
-        if ("DELETE".equals(httpServletRequest.getMethod()) || "POST".equals(httpServletRequest.getMethod())
-                || "PUT".equals(httpServletRequest.getMethod())) {
-            throw new DemoModeException();
-        }
-    }
-    /* ---演示模式控制 生产环境可移除 end--- */
 
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型

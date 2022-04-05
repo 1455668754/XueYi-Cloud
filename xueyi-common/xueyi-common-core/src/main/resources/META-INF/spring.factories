@@ -1,5 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.xueyi.common.core.config.DemoProperties,\
   com.xueyi.common.core.utils.SpringUtils
 
   
