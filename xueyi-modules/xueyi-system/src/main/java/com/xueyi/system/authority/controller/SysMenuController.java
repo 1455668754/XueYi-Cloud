@@ -25,6 +25,7 @@ import com.xueyi.system.api.authority.domain.dto.SysModuleDto;
 import com.xueyi.system.api.model.LoginUser;
 import com.xueyi.system.authority.service.ISysMenuService;
 import com.xueyi.system.authority.service.ISysModuleService;
+import com.xueyi.system.utils.RouteUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -79,7 +80,7 @@ public class SysMenuController extends TreeController<SysMenuDto, ISysMenuServic
         Map<String, Object> menuMap = loginUser.getMenuRoute();
         if (ObjectUtil.isNull(menuMap.get(moduleId.toString()))) {
             List<SysMenuDto> menus = baseService.getRoutes(moduleId);
-            menuMap.put(moduleId.toString(), baseService.buildMenus(TreeUtils.buildTree(menus)));
+            menuMap.put(moduleId.toString(), RouteUtils.buildMenus(TreeUtils.buildTree(menus)));
             tokenService.setLoginUser(loginUser);
         }
         return AjaxResult.success(menuMap.get(moduleId.toString()));

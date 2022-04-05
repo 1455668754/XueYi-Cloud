@@ -46,12 +46,13 @@ public class SysUserDto extends SysUserPo {
     @TableField(exist = false)
     private Long[] roleIds;
 
-    public SysUserDto() {
-    }
+    /** 岗位Id - 查询 */
+    @TableField(exist = false)
+    private Long postId;
 
-    public SysUserDto(Long userId) {
-        setId(userId);
-    }
+    /** 部门Id - 查询 */
+    @TableField(exist = false)
+    private Long deptId;
 
     public List<SysPostDto> getPosts() {
         return posts;
@@ -86,6 +87,22 @@ public class SysUserDto extends SysUserPo {
         this.roleIds = roleIds;
     }
 
+    public Long getPostId() {
+        return postId;
+    }
+
+    public void setPostId(Long postId) {
+        this.postId = postId;
+    }
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
     public boolean isNotAdmin() {
         return !isAdmin(this.getUserType());
     }
@@ -114,6 +131,8 @@ public class SysUserDto extends SysUserPo {
                 .append("sex", getSex())
                 .append("posts", getPosts())
                 .append("postIds", getPostIds())
+                .append("postId", getPostId())
+                .append("deptId", getDeptId())
                 .append("roles", getRoles())
                 .append("avatar", getAvatar())
                 .append("profile", getProfile())

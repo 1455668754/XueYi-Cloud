@@ -2,7 +2,6 @@ package com.xueyi.system.authority.service;
 
 import com.xueyi.common.web.entity.service.ITreeService;
 import com.xueyi.system.api.authority.domain.dto.SysMenuDto;
-import com.xueyi.system.utils.route.RouterVo;
 
 import java.util.List;
 import java.util.Map;
@@ -84,12 +83,4 @@ public interface ISysMenuService extends ITreeService<SysMenuDto> {
      * @return 结果 | true/false 有/无
      */
     boolean checkMenuExistRole(Long id);
-
-    /**
-     * 构建前端路由所需要的菜单
-     *
-     * @param menus 菜单列表
-     * @return 路由列表
-     */
-    List<RouterVo> buildMenus(List<SysMenuDto> menus);
 }

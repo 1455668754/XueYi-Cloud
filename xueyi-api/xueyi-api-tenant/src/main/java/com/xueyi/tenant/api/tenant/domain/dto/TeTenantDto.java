@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
-import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.tenant.api.tenant.domain.po.TeTenantPo;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -27,10 +26,6 @@ public class TeTenantDto extends TeTenantPo {
     @TableField(exist = false)
     private Long[] authIds;
 
-    public static boolean isAdmin(String isLessor) {
-        return StrUtil.equals(AuthorityConstants.TenantType.ADMIN.getCode(), isLessor);
-    }
-
     public TeStrategyDto getStrategy() {
         return strategy;
     }
@@ -47,12 +42,19 @@ public class TeTenantDto extends TeTenantPo {
         this.authIds = authIds;
     }
 
+    /** 校验是否非租管租户 */
     public boolean isNotAdmin() {
         return !isAdmin(this.getIsLessor());
     }
 
+    /** 校验是否为租管租户 */
     public boolean isAdmin() {
         return isAdmin(this.getIsLessor());
+    }
+
+    /** 校验是否为租管租户 */
+    public static boolean isAdmin(String isLessor) {
+        return StrUtil.equals(AuthorityConstants.TenantType.ADMIN.getCode(), isLessor);
     }
 
     @Override

@@ -20,13 +20,6 @@ public class Source extends BaseEntity {
     @TableField("source_slave")
     String master;
 
-    public Source() {
-    }
-
-    public Source(Long Id) {
-        setId(Id);
-    }
-
     public String getMaster() {
         return master;
     }

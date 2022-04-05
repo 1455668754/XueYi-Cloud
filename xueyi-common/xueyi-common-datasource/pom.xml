@@ -43,11 +43,5 @@
             <artifactId>xueyi-common-security</artifactId>
         </dependency>
 
-        <!-- XueYi Common Redis-->
-        <dependency>
-            <groupId>com.xueyi</groupId>
-            <artifactId>xueyi-common-redis</artifactId>
-        </dependency>
-
     </dependencies>
 </project>

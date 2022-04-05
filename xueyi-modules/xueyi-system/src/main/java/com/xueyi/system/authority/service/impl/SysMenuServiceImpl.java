@@ -11,8 +11,6 @@ import com.xueyi.system.api.authority.domain.dto.SysMenuDto;
 import com.xueyi.system.authority.manager.SysMenuManager;
 import com.xueyi.system.authority.mapper.SysMenuMapper;
 import com.xueyi.system.authority.service.ISysMenuService;
-import com.xueyi.system.utils.RouteUtils;
-import com.xueyi.system.utils.route.RouterVo;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -150,17 +148,6 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuDto, SysMenuManag
     @Override
     public boolean checkMenuExistRole(Long id) {
         return ObjectUtil.isNotNull(baseManager.checkMenuExistRole(id));
-    }
-
-    /**
-     * 构建前端路由所需要的菜单
-     *
-     * @param menus 菜单列表
-     * @return 路由列表
-     */
-    @Override
-    public List<RouterVo> buildMenus(List<SysMenuDto> menus) {
-        return RouteUtils.buildMenus(menus);
     }
 
     /**

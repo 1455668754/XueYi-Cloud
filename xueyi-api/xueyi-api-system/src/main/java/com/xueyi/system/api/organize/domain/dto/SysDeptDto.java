@@ -27,13 +27,6 @@ public class SysDeptDto extends SysDeptPo<SysDeptDto, SysPostDto> {
     @TableField(exist = false)
     private Long[] roleIds;
 
-    public SysDeptDto() {
-    }
-
-    public SysDeptDto(Long deptId) {
-        setId(deptId);
-    }
-
     public List<SysRoleDto> getRoles() {
         return roles;
     }
