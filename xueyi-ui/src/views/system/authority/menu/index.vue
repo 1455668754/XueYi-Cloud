@@ -602,7 +602,12 @@ export default {
           { required: true, message: '路由名称不能为空', trigger: 'blur' }
         ],
         frameSrc: [
-          { required: true, message: '外链路径', trigger: 'blur' }
+          { required: true, message: '外链路径', trigger: 'blur' },
+          {
+            type: 'url',
+            message: '请输入正确的外链路径',
+            trigger: ['change', 'blur']
+          }
         ],
         perms: [
           { required: true, message: '权限标识不能为空', trigger: 'blur' }
@@ -619,7 +624,12 @@ export default {
       },
       externalLinksMenuRules: {
         frameSrc: [
-          { required: true, message: '外链路径', trigger: 'blur' }
+          { required: true, message: '外链路径', trigger: 'blur' },
+          {
+            type: 'url',
+            message: '请输入正确的外链路径',
+            trigger: ['change', 'blur']
+          }
         ]
       },
       rules: {}

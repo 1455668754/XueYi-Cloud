@@ -72,7 +72,7 @@ public class SysProfileController extends BasisController {
     @Log(title = "个人信息管理 - 修改账号", businessType = BusinessType.UPDATE)
     public AjaxResult editUserName(String userName) {
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        if (StrUtil.isNotEmpty(userName))
+        if (StrUtil.isEmpty(userName))
             return AjaxResult.error("不能设置为空账号！");
         else if (StrUtil.equals(userName, loginUser.getUser().getUserName()))
             return AjaxResult.error("该账号为当前使用账号，无需更换！");
@@ -94,7 +94,7 @@ public class SysProfileController extends BasisController {
     @Log(title = "个人信息管理 - 更绑邮箱", businessType = BusinessType.UPDATE)
     public AjaxResult editEmail(String email) {
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        if (StrUtil.isNotEmpty(email))
+        if (StrUtil.isEmpty(email))
             return AjaxResult.error("不能设置为空邮箱！");
         else if (StrUtil.equals(email, loginUser.getUser().getEmail()))
             return AjaxResult.error("该邮箱为当前使用邮箱，无需更换！");
@@ -116,7 +116,7 @@ public class SysProfileController extends BasisController {
     @Log(title = "个人信息管理 - 更绑手机号", businessType = BusinessType.UPDATE)
     public AjaxResult editPhone(String phone) {
         LoginUser loginUser = SecurityUtils.getLoginUser();
-        if (StrUtil.isNotEmpty(phone))
+        if (StrUtil.isEmpty(phone))
             return AjaxResult.error("不能设置为空手机号！");
         else if (StrUtil.equals(phone, loginUser.getUser().getPhone()))
             return AjaxResult.error("该邮箱为当前使用手机号，无需更换！");

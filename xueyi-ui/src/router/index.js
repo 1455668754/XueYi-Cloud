@@ -89,7 +89,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'profile',
-        component: () => import('@/views/userCenter/user/profile/index'),
+        component: () => import('@/views/sys/userCenter/user/profile/index'),
         name: 'Profile',
         meta: { title: '个人中心', icon: 'user' }
       }
