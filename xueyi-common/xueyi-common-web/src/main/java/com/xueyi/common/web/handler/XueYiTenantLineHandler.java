@@ -56,7 +56,7 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
         return new LongValue(SecurityUtils.getEnterpriseId());
     }
 
-    public Expression getCommonTenantId() {
+    public MultipleExpression getCommonTenantId() {
         List<Expression> childList = new ArrayList<>();
         if (SecurityUtils.isNotEmptyTenant())
             childList.add(new LongValue(SecurityConstants.COMMON_TENANT_ID));
