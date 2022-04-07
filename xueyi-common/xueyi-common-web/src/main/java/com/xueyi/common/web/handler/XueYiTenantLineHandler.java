@@ -1,11 +1,13 @@
 package com.xueyi.common.web.handler;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.basic.TenantConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.web.annotation.TenantIgnore;
+import com.xueyi.common.web.config.properties.TenantProperties;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.schema.Column;
@@ -13,10 +15,10 @@ import net.sf.jsqlparser.util.cnfexpression.MultipleExpression;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -27,6 +29,9 @@ import java.util.List;
 @Aspect
 @Component
 public class XueYiTenantLineHandler implements TenantLineHandler {
+
+    @Autowired
+    private TenantProperties tenantProperties;
 
     /**
      * 通过ThreadLocal记录权限相关的属性值
@@ -77,7 +82,7 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
     @Override
     public boolean ignoreTable(String tableName) {
         TenantIgnore tenantIgnore = threadLocal.get();
-        return (ObjectUtil.isNotNull(tenantIgnore) && tenantIgnore.tenantLine()) || Arrays.asList(TenantConstants.EXCLUDE_TENANT_TABLE).contains(tableName);
+        return (ObjectUtil.isNotNull(tenantIgnore) && tenantIgnore.tenantLine()) || ArrayUtil.contains(tenantProperties.getExcludeTable(), tableName);
     }
 
     @Override
@@ -86,7 +91,7 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
     }
 
     public boolean isCommonTable(String tableName) {
-        return Arrays.asList(TenantConstants.COMMON_TENANT_TABLE).contains(tableName);
+        return ArrayUtil.contains(tenantProperties.getCommonTable(), tableName);
     }
 
     public boolean isLessor() {

@@ -32,19 +32,452 @@ CREATE TABLE `config_info` (
   UNIQUE KEY `uk_configinfo_datagrouptenant` (`data_id`,`group_id`,`tenant_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='config_info';
 
-insert into config_info(id, data_id, group_id, content, md5, src_user, src_ip, app_name, tenant_id, c_desc, c_use, effect, type, c_schema) values
-(1,'application-dev.yml','DEFAULT_GROUP','xueyi:\n  # 演示模式开关\n  demo:\n    enabled: ${secret.demo.enabled}\n\nspring:\n  main:\n    allow-circular-references: true\n    allow-bean-definition-overriding: true\n  autoconfigure:\n    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure\n  mvc:\n    pathmatch:\n      matching-strategy: ant_path_matcher\n  cloud:\n    sentinel:\n      filter:\n        # sentinel 在 springboot 2.6.x 不兼容问题的处理\n        enabled: false\n\n# feign 配置\nfeign:\n  sentinel:\n    enabled: true\n  okhttp:\n    enabled: true\n  httpclient:\n    enabled: false\n  client:\n    config:\n      default:\n        connectTimeout: 10000\n        readTimeout: 10000\n  compression:\n    request:\n      enabled: true\n    response:\n      enabled: true\n\n# 暴露监控端点\nmanagement:\n  endpoints:\n    web:\n      exposure:\n        include: \'*\'\n','db868af6c3e2b2bbc45a12787a3c33f6',NULL,'0:0:0:0:0:0:0:1','','','通用配置','null','null','yaml','null'),
-(2,'application-secret-dev.yml','DEFAULT_GROUP','secret:\r\n  #redis参数信息\r\n  redis:\r\n    host: localhost\r\n    port: 6379\r\n    password:\r\n  #服务状态监控参数信息\r\n  security:\r\n    name: xueyi\r\n    password: xueyi123\r\n    title: 服务状态监控\r\n  # swagger参数信息\r\n  swagger:\r\n    title: 接口文档\r\n    license: Powered By xueyi\r\n    licenseUrl: https://doc.xueyitt.cn\r\n  # datasource主库参数信息\r\n  datasource:\r\n    driver-class-name: com.mysql.cj.jdbc.Driver\r\n    url: jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8\r\n    username: root\r\n    password: password\r\n  # druid控制台参数信息\r\n  druid:\r\n    stat-view-servlet:\r\n      enabled: true\r\n      loginUsername: admin\r\n      loginPassword: 123456\r\n  # nacos参数信息\r\n  nacos:\r\n    serverAddr: 127.0.0.1:8848','6c8e60827ff9635a7a67d65e08497ad6',NULL,'0:0:0:0:0:0:0:1','','','通用参数配置','null','null','yaml','null'),
-(3,'application-datasource-dev.yml','DEFAULT_GROUP','# spring配置\r\nspring: \r\n  redis:\r\n    host: ${secret.redis.host}\r\n    port: ${secret.redis.port}\r\n    password: ${secret.redis.password}\r\n  datasource:\r\n    druid:\r\n      stat-view-servlet:\r\n        enabled: ${secret.druid.stat-view-servlet.enabled}\r\n        loginUsername: ${secret.druid.stat-view-servlet.loginUsername}\r\n        loginPassword: ${secret.druid.stat-view-servlet.loginPassword}\r\n    dynamic:\r\n      druid:\r\n        initial-size: 5\r\n        min-idle: 5\r\n        maxActive: 20\r\n        maxWait: 60000\r\n        timeBetweenEvictionRunsMillis: 60000\r\n        minEvictableIdleTimeMillis: 300000\r\n        validationQuery: SELECT 1 FROM DUAL\r\n        testWhileIdle: true\r\n        testOnBorrow: false\r\n        testOnReturn: false\r\n        poolPreparedStatements: true\r\n        breakAfterAcquireFailure: true\r\n        ConnectionErrorRetryAttempts: 2\r\n        maxPoolPreparedStatementPerConnectionSize: 20\r\n        filters: stat,slf4j\r\n        connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=5000\r\n      datasource:\r\n          # 主库数据源\r\n          master:\r\n            driver-class-name: ${secret.datasource.driver-class-name}\r\n            url: ${secret.datasource.url}\r\n            username: ${secret.datasource.username}\r\n            password: ${secret.datasource.password}\r\n          # 数据源信息会通过master库进行获取并生成，请在主库的xy_tenant_source中配置即可\r\n      # seata: true    # 开启seata代理，开启后默认每个数据源都代理，如果某个不需要代理可单独关闭\r\n\r\n# seata配置\r\nseata:\r\n  # 默认关闭，如需启用spring.datasource.dynami.seata需要同时开启\r\n  enabled: false\r\n  # Seata 应用编号，默认为 ${spring.application.name}\r\n  application-id: ${spring.application.name}\r\n  # Seata 事务组编号，用于 TC 集群名\r\n  tx-service-group: ${spring.application.name}-group\r\n  # 关闭自动代理\r\n  enable-auto-data-source-proxy: false\r\n  config:\r\n    type: nacos\r\n    nacos:\r\n      serverAddr: ${secret.nacos.serverAddr}\r\n      group: SEATA_GROUP\r\n      namespace:\r\n  registry:\r\n    type: nacos\r\n    nacos:\r\n      application: seata-server\r\n      server-addr: ${secret.nacos.serverAddr}\r\n      namespace:\r\n\r\n# mybatis-plus配置\r\nmybatis-plus:\r\n    global-config:\r\n      #是否控制台 print mybatis-plus 的 LOGO\r\n      banner: false\r\n    db-config:\r\n      #字段验证策略之 select\r\n      selectStrategy: FieldStrategy.NOT_EMPTY\r\n      #字段验证策略之 insert\r\n      insertStrategy: FieldStrategy.NOT_EMPTY\r\n      #字段验证策略之 update\r\n      updateStrategy: FieldStrategy.NOT_EMPTY','7d0baf11143dafe9e87220b52b6188b4',NULL,'0:0:0:0:0:0:0:1','','','通用动态多数据源配置','null','null','yaml','null'),
-(4,'xueyi-gateway-dev.yml','DEFAULT_GROUP','# spring配置\r\nspring:\n  redis:\n    host: ${secret.redis.host}\n    port: ${secret.redis.port}\n    password: ${secret.redis.password}\n  cloud:\n    gateway:\n      discovery:\n        locator:\n          lowerCaseServiceId: true\n          enabled: true\n      routes:\n        # 认证中心\n        - id: xueyi-auth\n          uri: lb://xueyi-auth\n          predicates:\n            - Path=/auth/**\n          filters:\n            # 验证码处理\n            - CacheRequestFilter\n            - ValidateCodeFilter\n            - StripPrefix=1\n        # 代码生成\n        - id: xueyi-gen\n          uri: lb://xueyi-gen\n          predicates:\n            - Path=/code/**\n          filters:\n            - StripPrefix=1\n        # 定时任务\n        - id: xueyi-job\n          uri: lb://xueyi-job\n          predicates:\n            - Path=/schedule/**\n          filters:\n            - StripPrefix=1\n        # 系统模块\n        - id: xueyi-system\n          uri: lb://xueyi-system\n          predicates:\n            - Path=/system/**\n          filters:\n            - StripPrefix=1\n        # 租户模块\n        - id: xueyi-tenant\n          uri: lb://xueyi-tenant\n          predicates:\n            - Path=/tenant/**\n          filters:\n            - StripPrefix=1\n        # 文件服务\n        - id: xueyi-file\n          uri: lb://xueyi-file\n          predicates:\n            - Path=/file/**\n          filters:\n            - StripPrefix=1\n\n# 安全配置\nsecurity:\n  # 验证码\n  captcha:\n    enabled: true\n    type: math\n  # 防止XSS攻击\n  xss:\n    enabled: true\n    excludeUrls:\n      - /system/notice\n  # 不校验白名单\n  ignore:\n    whites:\n      - /auth/logout\n      - /auth/login\n      - /auth/register\n      - /*/v2/api-docs\n      - /csrf\n','ef4a58daf989827334b3aac1c9d68392',NULL,'0:0:0:0:0:0:0:1','','','网关模块','null','null','yaml','null'),
-(5,'xueyi-auth-dev.yml','DEFAULT_GROUP','# spring配置\r\nspring: \r\n  redis:\r\n    host: ${secret.redis.host}\r\n    port: ${secret.redis.port}\r\n    password: ${secret.redis.password}\r\n','b7354e1eb62c2d846d44a796d9ec6930',NULL,'0:0:0:0:0:0:0:1','','','认证中心','null','null','yaml','null'),
-(6,'xueyi-monitor-dev.yml','DEFAULT_GROUP','# spring配置\r\nspring: \r\n  security:\r\n    user:\r\n      name: ${secret.security.name}\r\n      password: ${secret.security.password}\r\n  boot:\r\n    admin:\r\n      ui:\r\n        title: ${secret.security.title}\r\n','d8997d0707a2fd5d9fc4e8409da38129',NULL,'0:0:0:0:0:0:0:1','','','监控中心','null','null','yaml','null'),
-(7,'xueyi-tenant-dev.yml','DEFAULT_GROUP','# mybatis-plus配置\r\nmybatis-plus:\r\n    # 搜索指定包别名\r\n    typeAliasesPackage: com.xueyi.tenant\r\n    # 配置mapper的扫描，找到所有的mapper.xml映射文件\r\n    mapperLocations: classpath:mapper/**/*.xml\r\n\r\n# swagger配置\r\nswagger:\r\n  title: 租户模块${secret.swagger.title}\r\n  license: ${secret.swagger.license}\r\n  licenseUrl: ${secret.swagger.licenseUrl}\r\n\r\n# seata配置\r\nseata:\r\n  # 服务配置项\r\n  service:\r\n    # 虚拟组和分组的映射\r\n    vgroup-mapping:\r\n      xueyi-tenant-group: default\r\n','37aa8c4052266fe4ba8722210bd7525b',NULL,'0:0:0:0:0:0:0:1','','','租户管理模块','null','null','yaml','null'),
-(8,'xueyi-system-dev.yml','DEFAULT_GROUP','# mybatis-plus配置\r\nmybatis-plus:\r\n    # 搜索指定包别名\r\n    typeAliasesPackage: com.xueyi.system\r\n    # 配置mapper的扫描，找到所有的mapper.xml映射文件\r\n    mapperLocations: classpath:mapper/**/*.xml\r\n\r\n# swagger配置\r\nswagger:\r\n  title: 系统模块${secret.swagger.title}\r\n  license: ${secret.swagger.license}\r\n  licenseUrl: ${secret.swagger.licenseUrl}\r\n\r\n# seata配置\r\nseata:\r\n  # 服务配置项\r\n  service:\r\n    # 虚拟组和分组的映射\r\n    vgroup-mapping:\r\n      xueyi-system-group: default\r\n','5241d073dc33e0e240174bc71ddcce63',NULL,'0:0:0:0:0:0:0:1','','','系统模块','null','null','yaml','null'),
-(9,'xueyi-gen-dev.yml','DEFAULT_GROUP','# mybatis-plus配置\r\nmybatis-plus:\r\n    # 搜索指定包别名\r\n    typeAliasesPackage: com.xueyi.gen\r\n    # 配置mapper的扫描，找到所有的mapper.xml映射文件\r\n    mapperLocations: classpath:mapper/**/*.xml\r\n    configuration:\r\n      jdbc-type-for-null: ''null''\r\n\r\n# swagger配置\r\nswagger:\r\n  title: 代码生成${secret.swagger.title}\r\n  license: ${secret.swagger.license}\r\n  licenseUrl: ${secret.swagger.licenseUrl}\r\n\r\n# 代码生成\r\ngen: \r\n  # 作者\r\n  author: xueyi\r\n  # ui路径（空代表生成在后端主路径下，可设置为ui项目地址如：C:\\Users\\xueyi\\MultiSaas-UI）\r\n  uiPath: \r\n  # 自动去除表前缀，默认是true\r\n  autoRemovePre: true\r\n  remove-lists:\r\n      # 表前缀（生成类名不会包含表前缀）\r\n    - prefix: sys_\r\n      # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool\r\n      packageName: com.xueyi.system\r\n      frontPackageName: system\r\n    - prefix: te_\r\n      packageName: com.xueyi.tenant\r\n      frontPackageName: tenant\r\n\r\n# seata配置\r\nseata:\r\n  # 服务配置项\r\n  service:\r\n    # 虚拟组和分组的映射\r\n    vgroup-mapping:\r\n      xueyi-gen-group: default\r\n','8c79f64a4cca9b821a03dc8b27a2d8eb',NULL,'0:0:0:0:0:0:0:1','','','代码生成','null','null','yaml','null'),
-(10,'xueyi-job-dev.yml','DEFAULT_GROUP','# mybatis-plus配置\r\nmybatis-plus:\r\n    # 搜索指定包别名\r\n    typeAliasesPackage: com.xueyi.job\r\n    # 配置mapper的扫描，找到所有的mapper.xml映射文件\r\n    mapperLocations: classpath:mapper/**/*.xml\r\n\r\n# swagger配置\r\nswagger:\r\n  title: 定时任务${secret.swagger.title}\r\n  license: ${secret.swagger.license}\r\n  licenseUrl: ${secret.swagger.licenseUrl}\r\n\r\n# seata配置\r\nseata:\r\n  # 服务配置项\r\n  service:\r\n    # 虚拟组和分组的映射\r\n    vgroup-mapping:\r\n      xueyi-job-group: default\r\n','d6dfade9a2c93c463ae857cd503cb172',NULL,'0:0:0:0:0:0:0:1','','','定时任务','null','null','yaml','null'),
-(11,'xueyi-file-dev.yml','DEFAULT_GROUP','# 本地文件上传    \r\nfile:\r\n    domain: http://127.0.0.1:9300\r\n    path: D:/xueyi/uploadPath\r\n    prefix: /statics\r\n\r\n# FastDFS配置\r\nfdfs:\r\n  domain: http://8.129.231.12\r\n  soTimeout: 3000\r\n  connectTimeout: 2000\r\n  trackerList: 8.129.231.12:22122\r\n\r\n# Minio配置\r\nminio:\r\n  url: http://8.129.231.12:9000\r\n  accessKey: minioadmin\r\n  secretKey: minioadmin\r\n  bucketName: test','5382b93f3d8059d6068c0501fdd41195',NULL,'0:0:0:0:0:0:0:1','','','文件服务','null','null','yaml','null'),
-(12,'sentinel-xueyi-gateway','DEFAULT_GROUP','[\r\n    {\r\n        \"resource\": \"xueyi-auth\",\r\n        \"count\": 500,\r\n        \"grade\": 1,\r\n        \"limitApp\": \"default\",\r\n        \"strategy\": 0,\r\n        \"controlBehavior\": 0\r\n    },\r\n	{\r\n        \"resource\": \"xueyi-system\",\r\n        \"count\": 1000,\r\n        \"grade\": 1,\r\n        \"limitApp\": \"default\",\r\n        \"strategy\": 0,\r\n        \"controlBehavior\": 0\r\n    },\r\n	{\r\n        \"resource\": \"xueyi-tenant\",\r\n        \"count\": 500,\r\n        \"grade\": 1,\r\n        \"limitApp\": \"default\",\r\n        \"strategy\": 0,\r\n        \"controlBehavior\": 0\r\n    },\r\n	{\r\n        \"resource\": \"xueyi-gen\",\r\n        \"count\": 200,\r\n        \"grade\": 1,\r\n        \"limitApp\": \"default\",\r\n        \"strategy\": 0,\r\n        \"controlBehavior\": 0\r\n    },\r\n	{\r\n        \"resource\": \"xueyi-job\",\r\n        \"count\": 300,\r\n        \"grade\": 1,\r\n        \"limitApp\": \"default\",\r\n        \"strategy\": 0,\r\n        \"controlBehavior\": 0\r\n    }\r\n]','9f3a3069261598f74220bc47958ec252',NULL,'0:0:0:0:0:0:0:1','','','限流策略','null','null','json','null');
+INSERT INTO config_info (id, data_id, group_id, content, md5, gmt_create, gmt_modified, src_user, src_ip, app_name, tenant_id, c_desc, c_use, effect, type, c_schema) VALUES
+(1, 'application-dev.yml', 'DEFAULT_GROUP', 'spring:
+  main:
+    allow-circular-references: true
+    allow-bean-definition-overriding: true
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  cloud:
+    sentinel:
+      filter:
+        # sentinel 在 springboot 2.6.x 不兼容问题的处理
+        enabled: false
+
+# feign 配置
+feign:
+  sentinel:
+    enabled: true
+  okhttp:
+    enabled: true
+  httpclient:
+    enabled: false
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 10000
+  compression:
+    request:
+      enabled: true
+    response:
+      enabled: true
+
+# 暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ''*''
+', 'db868af6c3e2b2bbc45a12787a3c33f6', '2022-02-01 16:11:30', '2022-02-01 16:11:30', null, '0:0:0:0:0:0:0:1', '', '', '通用配置', 'null', 'null', 'yaml', 'null'),
+(2, 'application-secret-dev.yml', 'DEFAULT_GROUP', 'secret:
+  # 验证码
+  captcha:
+    enabled: false
+    type: math
+  #redis参数信息
+  redis:
+    host: localhost
+    port: 6379
+    password:
+  #服务状态监控参数信息
+  security:
+    name: xueyi
+    password: xueyi123
+    title: 服务状态监控
+  # swagger参数信息
+  swagger:
+    title: 接口文档
+    license: Powered By xueyi
+    licenseUrl: https://doc.xueyitt.cn
+  # datasource主库参数信息
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/xy-cloud?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+    username: root
+    password: password
+  # druid控制台参数信息
+  druid:
+    stat-view-servlet:
+      enabled: true
+      loginUsername: admin
+      loginPassword: 123456
+  # nacos参数信息
+  nacos:
+    serverAddr: 127.0.0.1:8848', 'c28955605f738593b0f70a6cc3816a11', '2022-02-01 16:11:30', '2022-04-07 07:46:59', null, '192.168.73.204', '', '', '通用参数配置', 'null', 'null', 'yaml', 'null'),
+(3, 'application-datasource-dev.yml', 'DEFAULT_GROUP', '# spring配置
+spring:
+  redis:
+    host: ${secret.redis.host}
+    port: ${secret.redis.port}
+    password: ${secret.redis.password}
+  datasource:
+    druid:
+      stat-view-servlet:
+        enabled: ${secret.druid.stat-view-servlet.enabled}
+        loginUsername: ${secret.druid.stat-view-servlet.loginUsername}
+        loginPassword: ${secret.druid.stat-view-servlet.loginPassword}
+    dynamic:
+      druid:
+        initial-size: 5
+        min-idle: 5
+        maxActive: 20
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 1 FROM DUAL
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        breakAfterAcquireFailure: true
+        ConnectionErrorRetryAttempts: 2
+        maxPoolPreparedStatementPerConnectionSize: 20
+        filters: stat,slf4j
+        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      datasource:
+          # 主库数据源
+          master:
+            driver-class-name: ${secret.datasource.driver-class-name}
+            url: ${secret.datasource.url}
+            username: ${secret.datasource.username}
+            password: ${secret.datasource.password}
+          # 数据源信息会通过master库进行获取并生成，请在主库的xy_tenant_source中配置即可
+      # seata: true    # 开启seata代理，开启后默认每个数据源都代理，如果某个不需要代理可单独关闭
+
+# mybatis-plus配置
+mybatis-plus:
+    global-config:
+      # 是否控制台 print mybatis-plus 的 LOGO
+      banner: false
+    db-config:
+      # 字段验证策略之 select
+      selectStrategy: FieldStrategy.NOT_EMPTY
+      # 字段验证策略之 insert
+      insertStrategy: FieldStrategy.NOT_EMPTY
+      # 字段验证策略之 update
+      updateStrategy: FieldStrategy.NOT_EMPTY
+    configuration:
+      log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# seata配置
+seata:
+  # 默认关闭，如需启用spring.datasource.dynami.seata需要同时开启
+  enabled: false
+  # Seata 应用编号，默认为 ${spring.application.name}
+  application-id: ${spring.application.name}
+  # Seata 事务组编号，用于 TC 集群名
+  tx-service-group: ${spring.application.name}-group
+  # 关闭自动代理
+  enable-auto-data-source-proxy: false
+  config:
+    type: nacos
+    nacos:
+      serverAddr: ${secret.nacos.serverAddr}
+      group: SEATA_GROUP
+      namespace:
+  registry:
+    type: nacos
+    nacos:
+      application: seata-server
+      server-addr: ${secret.nacos.serverAddr}
+      namespace:
+', '3e7f0ebc7439a0e1d997404a6b473aa9', '2022-02-01 16:11:30', '2022-04-07 08:59:58', null, '192.168.73.204', '', '', '通用动态多数据源配置', 'null', 'null', 'yaml', 'null'),
+(4, 'xueyi-gateway-dev.yml', 'DEFAULT_GROUP', '# spring配置
+spring:
+  redis:
+    host: ${secret.redis.host}
+    port: ${secret.redis.port}
+    password: ${secret.redis.password}
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          lowerCaseServiceId: true
+          enabled: true
+      routes:
+        # 认证中心
+        - id: xueyi-auth
+          uri: lb://xueyi-auth
+          predicates:
+            - Path=/auth/**
+          filters:
+            # 验证码处理
+            - CacheRequestFilter
+            - ValidateCodeFilter
+            - StripPrefix=1
+        # 代码生成
+        - id: xueyi-gen
+          uri: lb://xueyi-gen
+          predicates:
+            - Path=/code/**
+          filters:
+            - StripPrefix=1
+        # 定时任务
+        - id: xueyi-job
+          uri: lb://xueyi-job
+          predicates:
+            - Path=/schedule/**
+          filters:
+            - StripPrefix=1
+        # 系统模块
+        - id: xueyi-system
+          uri: lb://xueyi-system
+          predicates:
+            - Path=/system/**
+          filters:
+            - StripPrefix=1
+        # 租户模块
+        - id: xueyi-tenant
+          uri: lb://xueyi-tenant
+          predicates:
+            - Path=/tenant/**
+          filters:
+            - StripPrefix=1
+        # 文件服务
+        - id: xueyi-file
+          uri: lb://xueyi-file
+          predicates:
+            - Path=/file/**
+          filters:
+            - StripPrefix=1
+
+# 安全配置
+security:
+  # 验证码
+  captcha:
+    enabled: ${secret.captcha.enabled}
+    type: ${secret.captcha.type}
+  # 防止XSS攻击
+  xss:
+    enabled: true
+    excludeUrls:
+      - /system/notice
+  # 不校验白名单
+  ignore:
+    whites:
+      - /auth/logout
+      - /auth/login
+      - /auth/register
+      - /*/v2/api-docs
+      - /csrf
+', '20c5e882255155e0594f03af0877804a', '2022-02-01 16:11:30', '2022-04-07 07:47:32', null, '192.168.73.204', '', '', '网关模块', 'null', 'null', 'yaml', 'null'),
+(5, 'xueyi-auth-dev.yml', 'DEFAULT_GROUP', '# spring配置
+spring:
+  redis:
+    host: ${secret.redis.host}
+    port: ${secret.redis.port}
+    password: ${secret.redis.password}
+', 'b7354e1eb62c2d846d44a796d9ec6930', '2022-02-01 16:11:30', '2022-02-01 16:11:30', null, '0:0:0:0:0:0:0:1', '', '', '认证中心', 'null', 'null', 'yaml', 'null'),
+(6, 'xueyi-monitor-dev.yml', 'DEFAULT_GROUP', '# spring配置
+spring:
+  security:
+    user:
+      name: ${secret.security.name}
+      password: ${secret.security.password}
+  boot:
+    admin:
+      ui:
+        title: ${secret.security.title}
+', 'd8997d0707a2fd5d9fc4e8409da38129', '2022-02-01 16:11:30', '2022-02-01 16:11:30', null, '0:0:0:0:0:0:0:1', '', '', '监控中心', 'null', 'null', 'yaml', 'null'),
+(7, 'xueyi-tenant-dev.yml', 'DEFAULT_GROUP', 'xueyi:
+  # 租户配置
+  tenant:
+    # 公共表配置
+    common-table:
+      - sys_menu
+      - sys_module
+    # 非租户表配置
+    exclude-table:
+      - te_tenant
+      - te_strategy
+      - te_source
+
+# mybatis-plus配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.xueyi.tenant
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath:mapper/**/*.xml
+
+# swagger配置
+swagger:
+  title: 租户模块${secret.swagger.title}
+  license: ${secret.swagger.license}
+  licenseUrl: ${secret.swagger.licenseUrl}
+
+#seata配置
+seata:
+  # 服务配置项
+  service:
+    # 虚拟组和分组的映射
+    vgroup-mapping:
+      xueyi-tenant-group: default
+', '840ef59c3cea0d055675ac638f90a09d', '2022-02-01 16:11:30', '2022-04-07 07:44:52', null, '192.168.73.204', '', '', '租户管理模块', 'null', 'null', 'yaml', 'null'),
+(8, 'xueyi-system-dev.yml', 'DEFAULT_GROUP', 'xueyi:
+  # 租户配置
+  tenant:
+    # 公共表配置
+    common-table:
+      - sys_menu
+      - sys_module
+    # 非租户表配置
+    exclude-table:
+      - te_tenant
+      - te_strategy
+      - sys_dict_type
+      - sys_dict_data
+      - sys_config
+
+# mybatis-plus配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.xueyi.system
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath:mapper/**/*.xml
+
+# swagger配置
+swagger:
+  title: 系统模块${secret.swagger.title}
+  license: ${secret.swagger.license}
+  licenseUrl: ${secret.swagger.licenseUrl}
+
+#seata配置
+seata:
+  # 服务配置项
+  service:
+    # 虚拟组和分组的映射
+    vgroup-mapping:
+      xueyi-system-group: default', 'cc2fef8a73408605894dd30d36db445e', '2022-02-01 16:11:30', '2022-04-07 07:41:51', null, '192.168.73.204', '', '', '系统模块', 'null', 'null', 'yaml', 'null'),
+(9, 'xueyi-gen-dev.yml', 'DEFAULT_GROUP', 'xueyi:
+  # 租户配置
+  tenant:
+    # 非租户表配置
+    exclude-table:
+      - gen_table
+      - gen_table_column
+
+# mybatis-plus配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.xueyi.gen
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath:mapper/**/*.xml
+  configuration:
+    jdbc-type-for-null: ''null''
+
+# swagger配置
+swagger:
+  title: 代码生成${secret.swagger.title}
+  license: ${secret.swagger.license}
+  licenseUrl: ${secret.swagger.licenseUrl}
+
+# 代码生成
+gen:
+  # 作者
+  author: xueyi
+  # ui路径（空代表生成在后端主路径下，可设置为ui项目地址如：C:\\Users\\xueyi\\MultiSaas-UI）
+  uiPath:
+  # 自动去除表前缀，默认是true
+  autoRemovePre: true
+  remove-lists:
+      # 表前缀（生成类名不会包含表前缀）
+    - prefix: sys_
+      # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
+      packageName: com.xueyi.system
+      frontPackageName: system
+    - prefix: te_
+      packageName: com.xueyi.tenant
+      frontPackageName: tenant
+
+', '2e6867d025381dacc98efa66d4ff357a', '2022-02-01 16:11:30', '2022-04-07 08:03:05', null, '192.168.73.204', '', '', '代码生成', 'null', 'null', 'yaml', 'null'),
+(10, 'xueyi-job-dev.yml', 'DEFAULT_GROUP', '# mybatis-plus配置
+mybatis-plus:
+  # 搜索指定包别名
+  typeAliasesPackage: com.xueyi.job
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath:mapper/**/*.xml
+
+# swagger配置
+swagger:
+  title: 定时任务${secret.swagger.title}
+  license: ${secret.swagger.license}
+  licenseUrl: ${secret.swagger.licenseUrl}
+
+#seata配置
+seata:
+  # 服务配置项
+  service:
+    # 虚拟组和分组的映射
+    vgroup-mapping:
+      xueyi-job-group: default
+', 'ebb507f8a468ef381b4948ae7ecd5017', '2022-02-01 16:11:30', '2022-04-07 08:02:40', null, '192.168.73.204', '', '', '定时任务', 'null', 'null', 'yaml', 'null'),
+(11, 'xueyi-file-dev.yml', 'DEFAULT_GROUP', '# 本地文件上传
+file:
+  domain: http://127.0.0.1:9300
+  path: D:/xueyi/uploadPath
+  prefix: /statics
+
+# FastDFS配置
+fdfs:
+  domain: http://8.129.231.12
+  soTimeout: 3000
+  connectTimeout: 2000
+  trackerList: 8.129.231.12:22122
+
+# Minio配置
+minio:
+  url: http://8.129.231.12:9000
+  accessKey: minioadmin
+  secretKey: minioadmin
+  bucketName: test', 'e507ba4ba82516bd5b9d1bea147bd910', '2022-02-01 16:11:30', '2022-04-07 07:45:53', null, '192.168.73.204', '', '', '文件服务', 'null', 'null', 'yaml', 'null'),
+(12, 'sentinel-xueyi-gateway', 'DEFAULT_GROUP', '[
+    {
+        "resource": "xueyi-auth",
+        "count": 500,
+        "grade": 1,
+        "limitApp": "default",
+        "strategy": 0,
+        "controlBehavior": 0
+    },
+	{
+        "resource": "xueyi-system",
+        "count": 1000,
+        "grade": 1,
+        "limitApp": "default",
+        "strategy": 0,
+        "controlBehavior": 0
+    },
+	{
+        "resource": "xueyi-tenant",
+        "count": 500,
+        "grade": 1,
+        "limitApp": "default",
+        "strategy": 0,
+        "controlBehavior": 0
+    },
+	{
+        "resource": "xueyi-gen",
+        "count": 200,
+        "grade": 1,
+        "limitApp": "default",
+        "strategy": 0,
+        "controlBehavior": 0
+    },
+	{
+        "resource": "xueyi-job",
+        "count": 300,
+        "grade": 1,
+        "limitApp": "default",
+        "strategy": 0,
+        "controlBehavior": 0
+    }
+]', '9f3a3069261598f74220bc47958ec252', '2022-02-01 16:11:30', '2022-02-01 16:11:30', null, '0:0:0:0:0:0:0:1', '', '', '限流策略', 'null', 'null', 'json', 'null');
+
 
 /******************************************/
 /*   表名称 = config_info_aggr   */
