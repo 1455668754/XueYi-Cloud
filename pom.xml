@@ -22,7 +22,7 @@
         <spring-cloud-alibaba.version>2021.1</spring-cloud-alibaba.version>
         <alibaba.nacos.version>2.0.4</alibaba.nacos.version>
         <spring-boot-admin.version>2.6.3</spring-boot-admin.version>
-        <spring-boot.mybatis-plus>3.4.3.4</spring-boot.mybatis-plus>
+        <spring-boot.mybatis-plus>3.5.1</spring-boot.mybatis-plus>
         <netty.version>4.1.67.Final</netty.version>
         <swagger.fox.version>3.0.0</swagger.fox.version>
         <swagger.core.version>1.6.2</swagger.core.version>
@@ -30,7 +30,7 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <pagehelper.version>5.3.0</pagehelper.version>
         <druid.version>1.2.8</druid.version>
-        <dynamic-ds.version>3.5.0</dynamic-ds.version>
+        <dynamic-ds.version>3.5.1</dynamic-ds.version>
         <commons.io.version>2.11.0</commons.io.version>
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <velocity.version>2.3</velocity.version>

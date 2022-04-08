@@ -3,6 +3,7 @@ package com.xueyi.system.organize.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.datascope.annotation.DataScope;
+import com.xueyi.common.datasource.annotation.Isolate;
 import com.xueyi.common.web.entity.service.impl.BaseServiceImpl;
 import com.xueyi.system.api.organize.domain.dto.SysPostDto;
 import com.xueyi.system.organize.manager.SysPostManager;
@@ -21,6 +22,7 @@ import java.util.List;
  * @author xueyi
  */
 @Service
+@Isolate
 public class SysPostServiceImpl extends BaseServiceImpl<SysPostDto, SysPostManager, SysPostMapper> implements ISysPostService {
 
     /**

@@ -1,43 +1,32 @@
-<div style="text-align:center">
-    <h3>XueYi-Cloud 多租户Saas快速开发平台</h3>
-</div>
-
-<p style="text-align:center">
-    <a>
-        <img src="https://img.shields.io/badge/XueYi%20Cloud-v5.1.2-brightgreen" alt="xueYi-cloud">
+<h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">XueYi-Cloud 多租户Saas快速开发平台</h1>
+<h4 align="center">基于 Vue2/Element-UI 和 Spring Cloud & Alibaba/Mybatis-Plus 的多租户SaaS开发框架。</h4>
+<p align="center">
+    <a style="margin-right: 5px">
+       <img src="https://img.shields.io/badge/XueYi%20Cloud-v5.1.2-brightgreen" alt="xueYi-cloud">
     </a>
-    <a>
-        <img src="https://img.shields.io/badge/Spring%20Cloud-2020-blue" alt="spring-cloud">
-    </a>
-    <a>
-       <img src="https://img.shields.io/badge/Mybatis--Plus-3.4.0%2B-brightgreen" alt="xueYi-MultiSaas">
-    </a>
-    <a>
-        <img src="https://img.shields.io/badge/element--ui-2.15-brightgreen" alt="element-ui">
-    </a>
-    <a>
+    <a style="margin-right: 5px">
        <img src="https://gitee.com/xueyitiantang/XueYi-Cloud/badge/star.svg?theme=dark" alt="xueYi-MultiSaas">
     </a>
-    <a>
+    <a style="margin-right: 5px">
        <img src="https://gitee.com/xueyitiantang/XueYi-Cloud/badge/fork.svg?theme=dark" alt="xueYi-MultiSaas">
     </a>
 </p>
 
 ## 简介
-基于SpringBoot | Mybatis-Plus | RabbitMQ | Vue2 | Element-UI 的多租户SaaS开发框架，已支持消息队列、数据权限、动态源、多租户、数据物理&逻辑双隔离等，为企业级多租户Saas及集团化应用提供快速开发解决方案。
+基于SpringBoot | Spring Cloud & Alibaba | Mybatis-Plus | Vue2 | Element-UI 的微服务多租户SaaS开发框架，为企业级多租户Saas及集团化应用提供快速开发解决方案。
 
 ## vue3 | ant版本
+
 **[XueYi-MultiSaas](https://gitee.com/xueyitiantang/XueYi-MultiSaas)**
 
 ## 特性
-- **多租户Saas**： 物理隔离&&逻辑隔离 --- 共享多租户&&隔离多租户
-- **动态多源策略**：租户-策略-数据源 --- 动态源增减与租户策略配置
-- **素材管理模块**：素材集中管理 --- 文件&&图片统一管理，配置
-- **权限控制优化**：角色-模块-菜单 --- 优化角色控制逻辑
-- **租户菜单层级**：租管可动态指定租户可用模块或菜单
-- **组织管理优化**：部门-岗位-用户 --- 更完善的组织架构操作与管理逻辑
-- **微聚合多前端**：前端素材&&组件公用 --- 降低系统重复冗余
-- **分布式主键**：  Snowflake全局唯一标识 --- 保证全局唯一性&&信息安全
+
+- **多重隔离控制**：物理隔离&&逻辑隔离，共享多租户&&隔离多租户
+- **动态多源策略**：动态源增减&&租户动态识别源
+- **租户控制优化**：通用数据&&混合租户&&独立租户多种租户模式，自动拦截，开发无感知
+- **权限控制优化**：部门&&岗位&&用户多级可控，自动拦截，开发无感知
+- **租户可配菜单**：多种混合模式控制租户菜单
+- **组织管理优化**：更完善的组织架构操作与管理逻辑
 
 star 别忘点上 :kissing_heart:
 
@@ -58,11 +47,11 @@ star 别忘点上 :kissing_heart:
   密码：admin123
 
 - **演示**
-    >https://demo.xueyitt.cn         
+  >[demo.xueyitt.cn](https://demo.xueyitt.cn)
 - **文档**
-    >https://doc.xueyitt.cn     
+  >[doc.xueyitt.cn](https://doc.xueyitt.cn)
 - **视频**
-    >https://space.bilibili.com/479745149
+  >[space.bilibili.com](https://space.bilibili.com/479745149)
 
 ## 结构
 * 采用前后端分离的模式，微服务版本前端。

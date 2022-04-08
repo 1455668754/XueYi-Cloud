@@ -17,13 +17,6 @@ public class TenantConstants {
     public static final String[] SLAVE_TABLE = {"sys_dept", "sys_login_log", "sys_notice", "sys_job_log", "sys_notice_log", "sys_operate_log", "sys_organize_role_merge", "sys_post", "sys_role",
             "sys_role_menu_merge", "sys_role_module_merge", "sys_tenant_menu_merge", "sys_tenant_module_merge", "sys_role_dept_merge", "sys_role_post_merge", "sys_user", "sys_user_post_merge", "xy_material", "xy_material_folder"};
 
-    /** 具备公共数据的表名 */
-    public static final String[] COMMON_TENANT_TABLE = {"sys_menu", "sys_module"};
-
-    /** 不进行租户控制的表名 */
-    public static final String[] EXCLUDE_TENANT_TABLE = {"te_tenant", "te_strategy", "te_strategy_source_merge",
-            "te_source", "te_source_separation_merge", "sys_dict_type", "sys_dict_data", "sys_config", "gen_table", "gen_table_column"};
-
     /** 策略源标识 */
     public static final String ISOLATE = "#isolute";
 
