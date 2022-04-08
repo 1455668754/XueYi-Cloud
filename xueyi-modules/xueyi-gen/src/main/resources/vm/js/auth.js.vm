@@ -1,21 +1,21 @@
 /** ${functionName}权限标识 */
-export enum ${BusinessName}Auth {
+export const ${BusinessName}Auth = {
   // 查看${functionName}列表
-  LIST = '${authorityName}:${businessName}:list',
+  LIST: '${authorityName}:${businessName}:list',
   // 查询${functionName}详情
-  SINGLE = '${authorityName}:${businessName}:single',
+  SINGLE: '${authorityName}:${businessName}:single',
   // 新增${functionName}
-  ADD = '${authorityName}:${businessName}:add',
+  ADD: '${authorityName}:${businessName}:add',
   // 修改${functionName}
-  EDIT = '${authorityName}:${businessName}:edit',
-#if($api.editStatus || $api.editStatusForce)
-  // 修改${functionName}状态
-  EDIT_STATUS = '${authorityName}:${businessName}:es',
-#end
+  EDIT: '${authorityName}:${businessName}:edit',
+  #if($api.editStatus || $api.editStatusForce)
+    // 修改${functionName}状态
+    EDIT_STATUS: '${authorityName}:${businessName}:es',
+  #end
   // 删除${functionName}
-  DELETE = '${authorityName}:${businessName}:delete',
+  DELETE: '${authorityName}:${businessName}:delete',
   // ${functionName}导入
-  IMPORT = '${authorityName}:${businessName}:import',
+  IMPORT: '${authorityName}:${businessName}:import',
   // ${functionName}导出
-  EXPORT = '${authorityName}:${businessName}:export',
+  EXPORT: '${authorityName}:${businessName}:export',
 }

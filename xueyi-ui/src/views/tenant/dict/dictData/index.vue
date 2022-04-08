@@ -130,7 +130,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="字典编码" prop="code">
-              <el-select v-model="form.code" placeholder="请选择" disabled>
+              <el-select v-model="form.code" placeholder="请选择" :disabled="form.id !== undefined">
                 <el-option
                   v-for="dict in codeOptions"
                   :key="dict.code"

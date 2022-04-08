@@ -30,7 +30,6 @@ public abstract class TreeHandleController<D extends TreeEntity<D>, DS extends I
      *
      * @param list 待排除数据对象集合
      * @see com.xueyi.common.web.entity.controller.TreeController#listExNodes(TreeEntity)
-     * @see com.xueyi.common.web.entity.controller.TreeController#listExNodesExtra(TreeEntity)
      */
     protected void SHandleExNodes(Collection<D> list, Serializable id) {
         Iterator<D> it = list.iterator();
