@@ -326,7 +326,7 @@
 
 <script>
 import { list${BusinessName}Api, get${BusinessName}Api, add${BusinessName}Api, edit${BusinessName}Api, del${BusinessName}Api#if($table.tree || $table.subTree), list${BusinessName}ExNodesApi#end } from '@/api/${moduleName}/${authorityName}/${businessName}'
-import { ${BusinessName}Auth } from '@auth/${moduleName}'
+import { ${BusinessName}Auth } from '@auth/${moduleName}/${authorityName}/${businessName}.auth'
 #if($table.tree || $table.subTree)
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
