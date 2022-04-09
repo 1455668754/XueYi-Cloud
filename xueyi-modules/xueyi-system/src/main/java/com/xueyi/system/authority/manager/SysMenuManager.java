@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.basic.DictConstants;
-import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.basic.SqlConstants;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
@@ -62,9 +61,10 @@ public class SysMenuManager extends TreeManager<SysMenuDto, SysMenuMapper> {
         List<SysTenantMenuMerge> tenantMenuMerges = tenantMenuMergeMapper.selectList(Wrappers.query());
         // 2.获取租户全部可使用的菜单
         return baseMapper.selectList(Wrappers.<SysMenuDto>query().lambda()
+                .eq(SysMenuDto::getIsCommon, DictConstants.DicCommonPrivate.PRIVATE.getCode())
                 .func(i -> {
                     if (CollUtil.isNotEmpty(tenantMenuMerges)) {
-                        i.in(SysMenuDto::getId, tenantMenuMerges.stream().map(SysTenantMenuMerge::getMenuId).collect(Collectors.toSet()));
+                        i.or().in(SysMenuDto::getId, tenantMenuMerges.stream().map(SysTenantMenuMerge::getMenuId).collect(Collectors.toSet()));
                     }
                 }));
     }
@@ -76,7 +76,7 @@ public class SysMenuManager extends TreeManager<SysMenuDto, SysMenuMapper> {
      * @return 菜单集合
      */
     public List<SysMenuDto> loginMenuList(Set<Long> roleIds) {
-        if(CollUtil.isEmpty(roleIds))
+        if (CollUtil.isEmpty(roleIds))
             return new ArrayList<>();
         // 1.获取用户可使用角色集内的所有菜单Ids
         List<SysRoleMenuMerge> roleMenuMerges = roleMenuMergeMapper.selectList(
@@ -155,13 +155,13 @@ public class SysMenuManager extends TreeManager<SysMenuDto, SysMenuMapper> {
                 // 1.获取租户授权的公共菜单Ids
                 List<SysTenantMenuMerge> tenantMenuMerges = tenantMenuMergeMapper.selectList(Wrappers.query());
                 // 2.获取租户全部可使用的菜单
-                if (CollUtil.isNotEmpty(tenantMenuMerges)) {
-                    menuQueryWrapper
-                            .in(SysMenuDto::getId, tenantMenuMerges.stream().map(SysTenantMenuMerge::getMenuId).collect(Collectors.toSet()));
-                } else {
-                    menuQueryWrapper
-                            .ne(SysMenuDto::getEnterpriseId, SecurityConstants.COMMON_TENANT_ID);
-                }
+                menuQueryWrapper
+                        .eq(SysMenuDto::getIsCommon, DictConstants.DicCommonPrivate.PRIVATE.getCode())
+                        .func(i -> {
+                            if (CollUtil.isNotEmpty(tenantMenuMerges)) {
+                                i.or().in(SysMenuDto::getId, tenantMenuMerges.stream().map(SysTenantMenuMerge::getMenuId).collect(Collectors.toSet()));
+                            }
+                        });
             }
         } else {
             LoginUser loginUser = SecurityUtils.getLoginUser();
