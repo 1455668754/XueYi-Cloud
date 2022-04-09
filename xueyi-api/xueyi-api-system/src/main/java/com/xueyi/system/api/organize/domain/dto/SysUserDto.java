@@ -3,9 +3,6 @@ package com.xueyi.system.api.organize.domain.dto;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.xueyi.common.core.annotation.Excel;
-import com.xueyi.common.core.annotation.Excel.Type;
-import com.xueyi.common.core.annotation.Excels;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.common.core.web.validate.V_A_E;
 import com.xueyi.system.api.authority.domain.dto.SysRoleDto;
@@ -27,10 +24,6 @@ public class SysUserDto extends SysUserPo {
     private static final long serialVersionUID = 1L;
 
     /** 岗位对象 */
-    @Excels({
-            @Excel(name = "岗位名称", targetAttr = "postName", type = Type.EXPORT),
-            @Excel(name = "岗位编码(*)", targetAttr = "postCode", type = Type.IMPORT)
-    })
     @TableField(exist = false)
     private List<SysPostDto> posts;
 

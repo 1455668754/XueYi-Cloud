@@ -125,35 +125,60 @@
             >删除
             </el-button>
           </el-col>
-          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
+          <el-col :span="1.5">
+            <el-button
+              type="warning"
+              plain
+              :icon="IconEnum.EXPORT"
+              size="mini"
+              @click="handleExport"
+              v-hasPermi="[UserAuth.EXPORT]"
+            >导出
+            </el-button>
+          </el-col>
+          <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
         </el-row>
 
         <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-          <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
+          <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
           <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
             <template v-slot="scope">
               <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="用户昵称" align="center" prop="nickName" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
-          <el-table-column label="用户账号" align="center" prop="userName" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100" />
-          <el-table-column label="用户编码" align="center" prop="code" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100" />
-          <el-table-column label="用户性别" align="center" prop="sex" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100">
+          <el-table-column label="用户昵称" align="center" prop="nickName" v-if="columns[2].visible"
+                           :show-overflow-tooltip="true" min-width="100"
+          />
+          <el-table-column label="用户账号" align="center" prop="userName" v-if="columns[3].visible"
+                           :show-overflow-tooltip="true" min-width="100"
+          />
+          <el-table-column label="用户编码" align="center" prop="code" v-if="columns[4].visible"
+                           :show-overflow-tooltip="true" min-width="100"
+          />
+          <el-table-column label="用户性别" align="center" prop="sex" v-if="columns[5].visible"
+                           :show-overflow-tooltip="true" min-width="100"
+          >
             <template v-slot="scope">
-              <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex" />
+              <dict-tag :options="dict.type.sys_user_sex" :value="scope.row.sex"/>
             </template>
           </el-table-column>
-          <el-table-column label="状态" align="center" prop="status" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100">
+          <el-table-column label="状态" align="center" prop="status" v-if="columns[6].visible"
+                           :show-overflow-tooltip="true" min-width="100"
+          >
             <template v-slot="scope">
-              <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />
+              <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
             </template>
           </el-table-column>
-          <el-table-column label="最后登录时间" align="center" prop="loginDate" v-if="columns[7].visible" :show-overflow-tooltip="true" min-width="100">
+          <el-table-column label="最后登录时间" align="center" prop="loginDate" v-if="columns[7].visible"
+                           :show-overflow-tooltip="true" min-width="100"
+          >
             <template v-slot="scope">
               <span>{{ parseTime(scope.row.loginDate, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作" align="center" v-if="columns[8].visible" class-name="small-padding fixed-width" width="220" fixed="right">
+          <el-table-column label="操作" align="center" v-if="columns[8].visible" class-name="small-padding fixed-width"
+                           width="220" fixed="right"
+          >
             <template v-slot="scope">
               <el-button
                 size="mini"
@@ -206,32 +231,32 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户昵称" prop="nickName">
-              <el-input v-model="form.nickName" placeholder="请输入用户昵称" />
+              <el-input v-model="form.nickName" placeholder="请输入用户昵称"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户编码" prop="code">
-              <el-input v-model="form.code" placeholder="请输入用户编码" />
+              <el-input v-model="form.code" placeholder="请输入用户编码"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户账号" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入用户账号" :disabled="form.id !== undefined" />
+              <el-input v-model="form.userName" placeholder="请输入用户账号" :disabled="form.id !== undefined"/>
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.id === undefined">
             <el-form-item label="密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入密码" show-password />
+              <el-input v-model="form.password" placeholder="请输入密码" show-password/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="form.phone" placeholder="请输入手机号码" />
+              <el-input v-model="form.phone" placeholder="请输入手机号码"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入用户邮箱" />
+              <el-input v-model="form.email" placeholder="请输入用户邮箱"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -261,12 +286,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示顺序" prop="sort">
-              <el-input-number v-model="form.sort" :max="65535" />
+              <el-input-number v-model="form.sort" :max="65535"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -277,7 +302,7 @@
       </div>
     </el-dialog>
 
-    <UserRoleModal ref="authRef" :roleOptions="roleOptions" />
+    <UserRoleModal ref="authRef" :roleOptions="roleOptions"/>
   </div>
 </template>
 
@@ -387,16 +412,16 @@ export default {
         ],
         email: [
           {
-            type: "email",
-            message: "请输入正确的邮箱地址",
-            trigger: ["blur", "change"]
+            type: 'email',
+            message: '请输入正确的邮箱地址',
+            trigger: ['blur', 'change']
           }
         ],
-        phone:[
+        phone: [
           {
             pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-            message: "请输入正确的手机号码",
-            trigger: "blur"
+            message: '请输入正确的手机号码',
+            trigger: 'blur'
           }
         ]
       }
@@ -565,6 +590,13 @@ export default {
         this.$modal.msgSuccess('删除成功！')
       }).catch(() => {
       })
+    },
+    /** 导出操作 */
+    handleExport() {
+      this.download('/system/user/export', {
+        ...this.queryParams
+      }, `用户_${new Date().getTime()}.xlsx`)
+      this.$modal.msgSuccess('导出成功！')
     }
   }
 }

@@ -55,7 +55,7 @@ export const IconEnum = {
   VIEW: 'el-icon-view',
   ADD: 'el-icon-plus',
   IMPORT: 'ant-design:vertical-align-top-outlined',
-  EXPORT: 'ant-design:vertical-align-bottom-outlined',
+  EXPORT: 'el-icon-download',
   EDIT: 'el-icon-edit',
   AUTH: 'el-icon-circle-check',
   DATA: 'clarity:note-edit-line',

@@ -78,6 +78,7 @@
           v-hasPermi="[${BusinessName}Auth.EDIT]"
         >修改</el-button>
       </el-col>
+#if($api.batchRemove || $api.batchRemoveForce)
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -89,6 +90,20 @@
           v-hasPermi="[${BusinessName}Auth.DELETE]"
         >删除</el-button>
       </el-col>
+#end
+#if($api.export)
+      <el-col :span="1.5">
+        <el-button
+            type="warning"
+            plain
+            :icon="IconEnum.EXPORT"
+            size="mini"
+            @click="handleExport"
+            v-hasPermi="[${BusinessName}Auth.EXPORT]"
+        >导出
+        </el-button>
+      </el-col>
+#end
 #if($table.tree || $table.subTree)
       <el-col :span="1.5">
         <el-button
@@ -588,17 +603,32 @@ export default {
       });
       this.submitLoading = false
     },
+#if($api.export)
+    /** 导出操作 */
+    handleExport() {
+      this.download('/${moduleName}/${businessName}/export', {
+        ...this.queryParams
+      }, `${functionName}_#[[${new Date().getTime()}.xlsx`)]]#
+      this.#[[$modal]]#.msgSuccess('导出成功！')
+    },
+#end
+#if($api.batchRemove || $api.batchRemoveForce)
     /** 删除操作 */
     handleDelete(row) {
       const delIds = row.${pkColumn.javaField} || this.${pkColumn.javaField}s
       const delNames = row.#if($nameColumn)${nameColumn.javaField}#else${pkColumn.javaField}#end || this.${pkColumn.javaField}Names
       this.#[[$modal]]#.confirm('是否确定要删除' + delNames + '？').then(function() {
+#if($api.batchRemove)
         return del${BusinessName}Api(delIds);
+#elseif($api.batchRemoveForce)
+        return delForce${BusinessName}Api(delIds);
+#end
       }).then(() => {
         this.getList();
         this.#[[$modal]]#.msgSuccess("删除成功！");
       }).catch(() => {});
     }
   }
+#end
 };
 </script>
