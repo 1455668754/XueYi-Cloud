@@ -15,7 +15,7 @@ public class CBasisEntity extends BasisEntity {
 
     private static final long serialVersionUID = 1L;
 
-    /** 公共数据（Y是 N否） */
+    /** 公共数据（0是 1否） */
     @TableField(value = "is_common", updateStrategy = FieldStrategy.NEVER)
     private String isCommon;
 

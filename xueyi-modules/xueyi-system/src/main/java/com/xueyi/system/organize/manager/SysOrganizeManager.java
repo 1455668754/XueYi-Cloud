@@ -170,8 +170,8 @@ public class SysOrganizeManager {
      * @param organizeIds 组织Ids
      */
     public void addRoleOrganizeMerge(Long roleId, Long[] organizeIds) {
-        List<Long> organizeIdList = new ArrayList<>(Arrays.asList(organizeIds));
-        if (CollUtil.isNotEmpty(organizeIdList)) {
+        if (ArrayUtil.isNotEmpty(organizeIds)) {
+            List<Long> organizeIdList = new ArrayList<>(Arrays.asList(organizeIds));
             List<SysDeptDto> deptList = deptManager.selectListByIds(organizeIdList);
             if (CollUtil.isNotEmpty(deptList)) {
                 // 1.组织Ids中的部门Ids与岗位Ids分开
@@ -195,9 +195,9 @@ public class SysOrganizeManager {
      * @param organizeIds 组织Ids
      */
     public void editRoleOrganizeMerge(Long roleId, Long[] organizeIds) {
-        List<Long> organizeIdList = new ArrayList<>(Arrays.asList(organizeIds));
         // 1.校验organizeIds是否为空 ? 删除不存在的,增加新增的 : 删除所有
-        if (CollUtil.isNotEmpty(organizeIdList)) {
+        if (ArrayUtil.isNotEmpty(organizeIds)) {
+            List<Long> organizeIdList = new ArrayList<>(Arrays.asList(organizeIds));
             // 2.查询organizeIds中的部门Id，分离deptIds与postIds
             List<SysDeptDto> deptList = deptManager.selectListByIds(organizeIdList);
             if (CollUtil.isNotEmpty(deptList)) {
