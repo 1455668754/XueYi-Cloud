@@ -6,6 +6,8 @@ import cn.hutool.core.util.StrUtil;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.Logical;
@@ -83,7 +85,7 @@ public class TeStrategyController extends BaseController<TeStrategyDto, ITeStrat
     @PostMapping
     @RequiresPermissions(Auth.TE_STRATEGY_ADD)
     @Log(title = "数据源策略管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody TeStrategyDto strategy) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody TeStrategyDto strategy) {
         return super.add(strategy);
     }
 
@@ -94,7 +96,7 @@ public class TeStrategyController extends BaseController<TeStrategyDto, ITeStrat
     @PutMapping
     @RequiresPermissions(Auth.TE_STRATEGY_EDIT)
     @Log(title = "数据源策略管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody TeStrategyDto strategy) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody TeStrategyDto strategy) {
         return super.edit(strategy);
     }
 

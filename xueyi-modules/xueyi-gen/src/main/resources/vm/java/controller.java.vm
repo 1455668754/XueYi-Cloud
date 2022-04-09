@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.xueyi.common.security.annotation.Logical;
 #end
 import com.xueyi.common.security.annotation.RequiresPermissions;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.core.web.result.AjaxResult;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
@@ -120,7 +122,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
     @PostMapping
     @RequiresPermissions(Auth.${ClASS_NAME}_ADD)
     @Log(title = "${functionName}管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.add(${classNameNoPrefix});
     }
 #end
@@ -133,7 +135,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
     @PostMapping("/force")
     @RequiresPermissions(Auth.${ClASS_NAME}_ADDFORCE)
     @Log(title = "${functionName}管理", businessType = BusinessType.INSERT_FORCE)
-    public AjaxResult addForce(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+    public AjaxResult addForce(@Validated({V_A.class}) @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.addForce(${classNameNoPrefix});
     }
 #end
@@ -146,7 +148,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
     @PutMapping
     @RequiresPermissions(Auth.${ClASS_NAME}_EDIT)
     @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.edit(${classNameNoPrefix});
     }
 #end
@@ -159,7 +161,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
     @PutMapping("/force")
     @RequiresPermissions(Auth.${ClASS_NAME}_EDIT_FORCE)
     @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_FORCE)
-    public AjaxResult editForce(@Validated @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
+    public AjaxResult editForce(@Validated({V_E.class}) @RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.editForce(${classNameNoPrefix});
     }
 #end

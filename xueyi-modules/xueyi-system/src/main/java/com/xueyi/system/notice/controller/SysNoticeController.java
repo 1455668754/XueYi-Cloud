@@ -3,6 +3,8 @@ package com.xueyi.system.notice.controller;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.system.NoticeConstants;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.Logical;
@@ -71,7 +73,7 @@ public class SysNoticeController extends BaseController<SysNoticeDto, ISysNotice
     @PostMapping
     @RequiresPermissions(Auth.SYS_NOTICE_ADD)
     @Log(title = "通知公告管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysNoticeDto notice) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysNoticeDto notice) {
         return super.add(notice);
     }
 
@@ -82,7 +84,7 @@ public class SysNoticeController extends BaseController<SysNoticeDto, ISysNotice
     @PutMapping
     @RequiresPermissions(Auth.SYS_NOTICE_EDIT)
     @Log(title = "通知公告管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysNoticeDto notice) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysNoticeDto notice) {
         return super.edit(notice);
     }
 

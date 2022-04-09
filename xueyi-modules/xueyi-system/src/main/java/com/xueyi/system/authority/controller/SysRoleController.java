@@ -5,6 +5,8 @@ import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.TreeUtils;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.Logical;
@@ -102,7 +104,7 @@ public class SysRoleController extends BaseController<SysRoleDto, ISysRoleServic
     @PostMapping
     @RequiresPermissions(Auth.SYS_ROLE_ADD)
     @Log(title = "角色管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysRoleDto role) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysRoleDto role) {
         return super.add(role);
     }
 
@@ -113,7 +115,7 @@ public class SysRoleController extends BaseController<SysRoleDto, ISysRoleServic
     @PutMapping
     @RequiresPermissions(Auth.SYS_ROLE_EDIT)
     @Log(title = "角色管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysRoleDto role) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysRoleDto role) {
         return super.edit(role);
     }
 

@@ -6,6 +6,8 @@ import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.InnerAuth;
@@ -107,7 +109,7 @@ public class SysPostController extends BaseController<SysPostDto, ISysPostServic
     @PostMapping
     @RequiresPermissions(Auth.SYS_POST_ADD)
     @Log(title = "岗位管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysPostDto post) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysPostDto post) {
         return super.add(post);
     }
 
@@ -118,7 +120,7 @@ public class SysPostController extends BaseController<SysPostDto, ISysPostServic
     @PutMapping
     @RequiresPermissions(Auth.SYS_POST_EDIT)
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysPostDto post) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysPostDto post) {
         return super.edit(post);
     }
 

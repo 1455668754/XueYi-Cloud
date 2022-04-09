@@ -5,10 +5,13 @@ import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.entity.base.BaseEntity;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.web.entity.controller.handle.BaseHandleController;
 import com.xueyi.common.web.entity.service.IBaseService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
@@ -59,7 +62,7 @@ public abstract class BaseController<D extends BaseEntity, DS extends IBaseServi
     /**
      * 新增
      */
-    public AjaxResult add(@Validated @RequestBody D d) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody D d) {
         AEHandleValidated(BaseConstants.Operate.ADD, d);
         return toAjax(baseService.insert(d));
     }
@@ -67,7 +70,7 @@ public abstract class BaseController<D extends BaseEntity, DS extends IBaseServi
     /**
      * 强制新增
      */
-    public AjaxResult addForce(@Validated @RequestBody D d) {
+    public AjaxResult addForce(@Validated({V_A.class}) @RequestBody D d) {
         AEHandleValidated(BaseConstants.Operate.ADD_FORCE, d);
         return toAjax(baseService.insert(d));
     }
@@ -75,7 +78,7 @@ public abstract class BaseController<D extends BaseEntity, DS extends IBaseServi
     /**
      * 修改
      */
-    public AjaxResult edit(@Validated @RequestBody D d) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody D d) {
         AEHandleValidated(BaseConstants.Operate.EDIT, d);
         return toAjax(baseService.update(d));
     }
@@ -83,7 +86,7 @@ public abstract class BaseController<D extends BaseEntity, DS extends IBaseServi
     /**
      * 强制修改
      */
-    public AjaxResult editForce(@Validated @RequestBody D d) {
+    public AjaxResult editForce(@Validated({V_E.class}) @RequestBody D d) {
         AEHandleValidated(BaseConstants.Operate.EDIT_FORCE, d);
         return toAjax(baseService.update(d));
     }

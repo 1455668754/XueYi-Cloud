@@ -3,6 +3,8 @@ package com.xueyi.system.dict.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.RequiresPermissions;
@@ -95,7 +97,7 @@ public class SysDictDataController extends BaseController<SysDictDataDto, ISysDi
     @PostMapping
     @RequiresPermissions(Auth.SYS_DICT_DICT)
     @Log(title = "字典数据管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysDictDataDto dictData) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysDictDataDto dictData) {
         return super.add(dictData);
     }
 
@@ -106,7 +108,7 @@ public class SysDictDataController extends BaseController<SysDictDataDto, ISysDi
     @PutMapping
     @RequiresPermissions(Auth.SYS_DICT_DICT)
     @Log(title = "字典数据管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysDictDataDto dictData) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysDictDataDto dictData) {
         return super.edit(dictData);
     }
 

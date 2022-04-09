@@ -6,6 +6,8 @@ import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.Logical;
@@ -89,7 +91,7 @@ public class SysConfigController extends BaseController<SysConfigDto, ISysConfig
     @PostMapping
     @RequiresPermissions(Auth.SYS_CONFIG_ADD)
     @Log(title = "参数管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysConfigDto config) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysConfigDto config) {
         return super.add(config);
     }
 
@@ -100,7 +102,7 @@ public class SysConfigController extends BaseController<SysConfigDto, ISysConfig
     @PutMapping
     @RequiresPermissions(Auth.SYS_CONFIG_EDIT)
     @Log(title = "参数管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysConfigDto config) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysConfigDto config) {
         return super.edit(config);
     }
 

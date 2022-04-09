@@ -5,6 +5,8 @@ import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.InnerAuth;
@@ -114,7 +116,7 @@ public class SysDeptController extends SubTreeController<SysDeptDto, ISysDeptSer
     @PostMapping
     @RequiresPermissions(Auth.SYS_DEPT_ADD)
     @Log(title = "部门管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysDeptDto dept) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysDeptDto dept) {
         return super.add(dept);
     }
 
@@ -125,7 +127,7 @@ public class SysDeptController extends SubTreeController<SysDeptDto, ISysDeptSer
     @PutMapping
     @RequiresPermissions(Auth.SYS_DEPT_EDIT)
     @Log(title = "部门管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysDeptDto dept) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysDeptDto dept) {
         return super.edit(dept);
     }
 

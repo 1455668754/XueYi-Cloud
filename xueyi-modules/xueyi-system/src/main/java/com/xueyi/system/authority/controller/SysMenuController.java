@@ -11,6 +11,8 @@ import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.TreeUtils;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.InnerAuth;
@@ -151,7 +153,7 @@ public class SysMenuController extends TreeController<SysMenuDto, ISysMenuServic
     @PostMapping
     @RequiresPermissions(Auth.SYS_MENU_ADD)
     @Log(title = "菜单管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysMenuDto menu) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysMenuDto menu) {
         return super.add(menu);
     }
 
@@ -162,7 +164,7 @@ public class SysMenuController extends TreeController<SysMenuDto, ISysMenuServic
     @PutMapping
     @RequiresPermissions(Auth.SYS_MENU_EDIT)
     @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysMenuDto menu) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysMenuDto menu) {
         return super.edit(menu);
     }
 

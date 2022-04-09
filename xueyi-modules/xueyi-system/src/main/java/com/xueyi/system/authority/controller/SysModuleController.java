@@ -7,6 +7,8 @@ import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.Logical;
@@ -103,7 +105,7 @@ public class SysModuleController extends SubBaseController<SysModuleDto, ISysMod
     @PostMapping
     @RequiresPermissions(Auth.SYS_MODULE_ADD)
     @Log(title = "模块管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysModuleDto module) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysModuleDto module) {
         return super.add(module);
     }
 
@@ -114,7 +116,7 @@ public class SysModuleController extends SubBaseController<SysModuleDto, ISysMod
     @PutMapping
     @RequiresPermissions(Auth.SYS_MODULE_EDIT)
     @Log(title = "模块管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysModuleDto module) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysModuleDto module) {
         return super.edit(module);
     }
 

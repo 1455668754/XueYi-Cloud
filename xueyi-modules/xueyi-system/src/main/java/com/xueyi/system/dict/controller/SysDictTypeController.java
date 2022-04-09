@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.Logical;
@@ -80,7 +82,7 @@ public class SysDictTypeController extends SubBaseController<SysDictTypeDto, ISy
     @PostMapping
     @RequiresPermissions(Auth.SYS_DICT_ADD)
     @Log(title = "字典类型管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysDictTypeDto dictType) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysDictTypeDto dictType) {
         return super.add(dictType);
     }
 
@@ -91,7 +93,7 @@ public class SysDictTypeController extends SubBaseController<SysDictTypeDto, ISy
     @PutMapping
     @RequiresPermissions(Auth.SYS_DICT_EDIT)
     @Log(title = "字典类型管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysDictTypeDto dictType) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysDictTypeDto dictType) {
         return super.edit(dictType);
     }
 

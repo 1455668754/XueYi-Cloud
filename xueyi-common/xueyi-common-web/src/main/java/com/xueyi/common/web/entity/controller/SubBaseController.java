@@ -4,6 +4,7 @@ import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.web.entity.base.BaseEntity;
 import com.xueyi.common.core.web.entity.base.SubBaseEntity;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.web.entity.controller.handle.SubBaseHandleController;
 import com.xueyi.common.web.entity.service.IBaseService;
 import com.xueyi.common.web.entity.service.ISubBaseService;
@@ -31,7 +32,7 @@ public abstract class SubBaseController<D extends SubBaseEntity<S>, DS extends I
      * @see #EHandleSubStatusValidated(SubBaseEntity) 主子树型 归属数据状态逻辑校验
      */
     @Override
-    public AjaxResult edit(@Validated @RequestBody D d) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody D d) {
         EHandleSubStatusValidated(d);
         return super.edit(d);
     }

@@ -10,6 +10,8 @@ import com.xueyi.common.core.exception.job.TaskException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.utils.poi.ExcelUtil;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.Logical;
@@ -17,8 +19,8 @@ import com.xueyi.common.security.annotation.RequiresPermissions;
 import com.xueyi.common.security.auth.Auth;
 import com.xueyi.common.web.entity.controller.BasisController;
 import com.xueyi.job.api.domain.dto.SysJobDto;
-import com.xueyi.job.service.ISysJobService;
 import com.xueyi.job.api.utils.CronUtils;
+import com.xueyi.job.service.ISysJobService;
 import com.xueyi.job.util.ScheduleUtils;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,7 +84,7 @@ public class SysJobController extends BasisController {
     @PostMapping
     @RequiresPermissions(Auth.SCHEDULE_JOB_ADD)
     @Log(title = "调度任务管理", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody SysJobDto job) throws SchedulerException, TaskException {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody SysJobDto job) throws SchedulerException, TaskException {
         AEHandleValidated(BaseConstants.Operate.ADD, job);
         return toAjax(baseService.insert(job));
     }
@@ -93,7 +95,7 @@ public class SysJobController extends BasisController {
     @PutMapping
     @RequiresPermissions(Auth.SCHEDULE_JOB_EDIT)
     @Log(title = "调度任务管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody SysJobDto job) throws SchedulerException, TaskException {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody SysJobDto job) throws SchedulerException, TaskException {
         AEHandleValidated(BaseConstants.Operate.EDIT, job);
         return toAjax(baseService.update(job));
     }

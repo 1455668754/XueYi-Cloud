@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.text.Convert;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.log.annotation.Log;
 import com.xueyi.common.log.enums.BusinessType;
 import com.xueyi.common.security.annotation.RequiresPermissions;
@@ -126,7 +127,7 @@ public class GenController extends SubBaseController<GenTableDto, IGenTableServi
     @PutMapping
     @RequiresPermissions(Auth.GENERATE_GEN_EDIT)
     @Log(title = "代码生成管理", businessType = BusinessType.UPDATE)
-    public AjaxResult edit(@Validated @RequestBody GenTableDto table) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody GenTableDto table) {
         return super.edit(table);
     }
 

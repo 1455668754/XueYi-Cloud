@@ -4,6 +4,8 @@ import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.utils.TreeUtils;
 import com.xueyi.common.core.web.entity.base.TreeEntity;
 import com.xueyi.common.core.web.result.AjaxResult;
+import com.xueyi.common.core.web.validate.V_A;
+import com.xueyi.common.core.web.validate.V_E;
 import com.xueyi.common.web.entity.controller.handle.TreeHandleController;
 import com.xueyi.common.web.entity.service.ITreeService;
 import org.springframework.validation.annotation.Validated;
@@ -49,7 +51,7 @@ public abstract class TreeController<D extends TreeEntity<D>, DS extends ITreeSe
      * @see #AHandleTreeStatusValidated(D) 树型 父节点逻辑校验
      */
     @Override
-    public AjaxResult add(@Validated @RequestBody D d) {
+    public AjaxResult add(@Validated({V_A.class}) @RequestBody D d) {
         AEHandleValidated(BaseConstants.Operate.ADD, d);
         AHandleTreeStatusValidated(d);
         return toAjax(baseService.insert(d));
@@ -63,7 +65,7 @@ public abstract class TreeController<D extends TreeEntity<D>, DS extends ITreeSe
      * @see #EHandleTreeStatusValidated(D) 树型 父子节点逻辑校验
      */
     @Override
-    public AjaxResult edit(@Validated @RequestBody D d) {
+    public AjaxResult edit(@Validated({V_E.class}) @RequestBody D d) {
         AEHandleValidated(BaseConstants.Operate.EDIT, d);
         EHandleTreeLoopValidated(d);
         EHandleTreeStatusValidated(d);
@@ -76,7 +78,7 @@ public abstract class TreeController<D extends TreeEntity<D>, DS extends ITreeSe
      * @see #EHandleTreeLoopValidated(D) 树型 父节点不能为自己或自己的子节点
      */
     @Override
-    public AjaxResult editForce(@Validated @RequestBody D d) {
+    public AjaxResult editForce(@Validated({V_E.class}) @RequestBody D d) {
         AEHandleValidated(BaseConstants.Operate.EDIT_FORCE, d);
         EHandleTreeLoopValidated(d);
         return toAjax(baseService.update(d));
