@@ -187,7 +187,8 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuDto, SysMenuManag
                 if (CollUtil.isNotEmpty(sonChild.getChildren())) {
                     sonChild.getChildren().forEach(grandsonChild -> {
                         if (grandsonChild.isDetails()) {
-                            grandsonChild.setFullPath(menu.getFullPath() + StrUtil.SLASH + grandsonChild.getDetailsSuffix());
+                            String detailsSuffix = grandsonChild.getDetailsSuffix();
+                            grandsonChild.setFullPath(StrUtil.isNotEmpty(detailsSuffix) ? menu.getFullPath() + StrUtil.SLASH + detailsSuffix : menu.getFullPath());
                             routeMap.put(grandsonChild.getName(), grandsonChild.getFullPath());
                         }
                     });

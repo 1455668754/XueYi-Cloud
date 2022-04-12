@@ -106,7 +106,7 @@
 
     <el-table v-if="refreshTable" v-loading="loading" :data="tableList" :indent="30" row-key="id" :default-expand-all="isExpandAll" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" @selection-change="handleSelectionChange">
       <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
-      <el-table-column label="菜单标题" align="center" prop="title" v-if="columns[1].visible" :show-overflow-tooltip="true" min-width="100" />
+      <el-table-column label="菜单标题" align="left" prop="title" v-if="columns[1].visible" :show-overflow-tooltip="true" min-width="220" />
       <el-table-column label="菜单图标" align="center" prop="icon" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
           <svg-icon :icon-class="scope.row.icon === undefined ? '':scope.row.icon" />
