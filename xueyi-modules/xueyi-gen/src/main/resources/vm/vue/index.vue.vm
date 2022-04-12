@@ -518,7 +518,11 @@ export default {
 #set($show = false)
 #end
 #if($show)
+#if($column.htmlType == 'RadioGroup')
+        ${column.javaField}: [],
+#else
         ${column.javaField}: undefined,
+#end
 #end
 #end
       };
