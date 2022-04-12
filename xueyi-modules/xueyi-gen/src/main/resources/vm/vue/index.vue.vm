@@ -275,7 +275,7 @@
 #set($componentItem = 'el-radio-button')
 #elseif($column.htmlType == 'RadioGroup')
 #set($component = 'el-checkbox-group')
-#set($componentItem = 'el-checkbox-group')
+#set($componentItem = 'el-checkbox')
 #end
               <${component} v-model="form.${column.javaField}">
 #if(${column.dictType})
