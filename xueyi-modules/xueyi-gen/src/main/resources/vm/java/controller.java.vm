@@ -172,7 +172,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = Auth.${ClASS_NAME}_ES, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.${ClASS_NAME}_EDIT, Auth.${ClASS_NAME}_ES}, logical = Logical.OR)
     @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.editStatus(${classNameNoPrefix});
@@ -185,7 +185,7 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
      */
     @Override
     @PutMapping("/force/status")
-    @RequiresPermissions(value = Auth.${ClASS_NAME}_ES_FORCE, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.${ClASS_NAME}_EDIT_FORCE, Auth.${ClASS_NAME}_ES_FORCE}, logical = Logical.OR)
     @Log(title = "${functionName}管理", businessType = BusinessType.UPDATE_STATUS_FORCE)
     public AjaxResult editStatusForce(@RequestBody ${ClassName}Dto ${classNameNoPrefix}) {
         return super.editStatusForce(${classNameNoPrefix});
@@ -256,11 +256,11 @@ public class ${ClassName}Controller extends ${Entity}Controller${generics} {
 #end
 #if($api.editStatus)
         /** 系统 - ${functionName}管理 - 修改状态 */
-        String[] ${ClASS_NAME}_ES = {"${authorityName}:${businessName}:edit", "${authorityName}:${businessName}:es"};
+        String ${ClASS_NAME}_ES = "${authorityName}:${businessName}:es";
 #end
 #if($api.editStatusForce)
         /** 系统 - ${functionName}管理 - 强制修改状态 */
-        String[] ${ClASS_NAME}_ES_FORCE = {"${authorityName}:${businessName}:editForce", "${authorityName}:${businessName}:esForce"};
+        String ${ClASS_NAME}_ES_FORCE = "${authorityName}:${businessName}:esForce";
 #end
 #if($api.batchRemove)
         /** 系统 - ${functionName}管理 - 删除 */
