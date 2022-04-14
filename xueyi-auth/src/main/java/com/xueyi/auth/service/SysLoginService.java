@@ -13,9 +13,7 @@ import com.xueyi.system.api.authority.feign.RemoteLoginService;
 import com.xueyi.system.api.log.domain.dto.SysLoginLogDto;
 import com.xueyi.system.api.log.feign.RemoteLogService;
 import com.xueyi.system.api.model.LoginUser;
-import com.xueyi.system.api.organize.domain.dto.SysEnterpriseDto;
 import com.xueyi.system.api.organize.domain.dto.SysUserDto;
-import com.xueyi.system.api.source.domain.Source;
 import com.xueyi.tenant.api.tenant.feign.RemoteTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -66,30 +64,17 @@ public class SysLoginService {
             recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "用户密码不在指定范围");
             throw new ServiceException("用户密码不在指定范围");
         }
-        // 查询企业信息与策略源信息
-        R<LoginUser> enterpriseResult = remoteLoginService.getEnterpriseInfoInner(enterpriseName, SecurityConstants.INNER);
-        if (enterpriseResult.isFail()) {
+        // 查询登录信息
+        R<LoginUser> loginInfoResult = remoteLoginService.getLoginInfoInner(enterpriseName, userName, password, SecurityConstants.INNER);
+        if (loginInfoResult.isFail()) {
             throw new ServiceException("当前访问人数过多，请稍后再试！");
-        } else if (ObjectUtil.isNull(enterpriseResult.getResult())) {
-            recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, "登录企业账号不存在");
+        } else if (ObjectUtil.isNull(loginInfoResult.getResult())) {
+            recordLoginInfo(enterpriseName, userName, Constants.LOGIN_FAIL, loginInfoResult.getMessage());
             throw new ServiceException("企业账号/员工账号/密码错误，请检查！");
         }
-        SysEnterpriseDto enterprise = enterpriseResult.getResult().getEnterprise();
-        Source source = enterpriseResult.getResult().getSource();
-        Long enterpriseId = enterprise.getId();
-        String isLessor = enterprise.getIsLessor();
-        String sourceName = source.getMaster();
-        // 查询用户信息
-        R<LoginUser> userResult = remoteLoginService.getUserInfoInner(userName, password, enterpriseId, isLessor, sourceName, SecurityConstants.INNER);
-        if (userResult.isFail()) {
-            throw new ServiceException("当前访问人数过多，请稍后再试！");
-        } else if (ObjectUtil.isNull(userResult.getResult())) {
-            recordLoginInfo(sourceName, enterpriseId, enterpriseName, userName, Constants.LOGIN_FAIL, "登录用户不存在");
-            throw new ServiceException("企业账号/员工账号/密码错误，请检查！");
-        }
-        LoginUser loginUser = userResult.getResult();
-        loginUser.setEnterprise(enterprise);
-        loginUser.setSource(source);
+        LoginUser loginUser = loginInfoResult.getResult();
+        Long enterpriseId = loginUser.getEnterpriseId();
+        String sourceName = loginUser.getSourceName();
         SysUserDto user = loginUser.getUser();
         Long userId = user.getId();
         String userNick = user.getNickName();
