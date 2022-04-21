@@ -747,14 +747,14 @@ export default {
     /** 修改操作 */
     handleUpdate(row) {
       this.reset()
-      this.selectRuleChange()
       const id = row.id || this.ids
       getMenuApi(id).then(response => {
         this.form = response.data
         this.open = true
         this.title = '修改菜单'
+        this.selectRuleChange()
+        this.selectModuleChange()
       })
-      this.selectModuleChange()
     },
     /** 提交操作 */
     submitForm: function() {
