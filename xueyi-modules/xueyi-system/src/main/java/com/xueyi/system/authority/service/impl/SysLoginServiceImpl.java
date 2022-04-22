@@ -134,10 +134,8 @@ public class SysLoginServiceImpl implements ISysLoginService {
             }
         }
         // 3.组建权限集
-        Set<Long> deptScope, postScope, userScope, customRoleId;
-        int isCustom, isDept, isDeptAndChild, isPost, isSelf;
-        deptScope = postScope = userScope = customRoleId = new HashSet<>();
-        isCustom = isDept = isDeptAndChild = isPost = isSelf = 0;
+        Set<Long> deptScope = new HashSet<>(), postScope = new HashSet<>(), userScope = new HashSet<>(), customRoleId = new HashSet<>();
+        int isCustom = 0, isDept = 0, isDeptAndChild = 0, isPost = 0, isSelf = 0;
         for (SysRoleDto role : roleList) {
             switch (Objects.requireNonNull(AuthorityConstants.DataScope.getValue(role.getDataScope()))) {
                 case CUSTOM:
