@@ -26,7 +26,7 @@ public class BaseEntity extends BasisEntity {
 
     /** 显示顺序 */
     @TableField("sort")
-    @OrderBy(asc = true, sort = 20)
+    @OrderBy(asc = true, sort = 10)
     protected Integer sort;
 
     /** 备注 */
@@ -38,7 +38,7 @@ public class BaseEntity extends BasisEntity {
     private Long createBy;
 
     /** 创建时间 */
-    @OrderBy(asc = true, sort = 10)
+    @OrderBy(sort = 20)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField(value = "create_time", insertStrategy = FieldStrategy.NEVER, updateStrategy = FieldStrategy.NEVER)
     private Date createTime;
