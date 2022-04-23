@@ -1,21 +1,21 @@
 /** 岗位权限标识 */
 export const PostAuth = {
-  // 查看部门列表
+  // 查看岗位列表
   LIST: 'organize:post:list',
-  // 查询部门详情
+  // 查询岗位详情
   SINGLE: 'organize:post:single',
-  // 新增部门
+  // 新增岗位
   ADD: 'organize:post:add',
-  // 修改部门
+  // 修改岗位
   EDIT: 'organize:post:edit',
-  // 修改部门状态
+  // 修改岗位状态
   EDIT_STATUS: 'organize:post:es',
-  // 删除部门
+  // 删除岗位
   DELETE: 'organize:post:delete',
   // 岗位角色分配
   AUTH: 'organize:post:auth',
-  // 部门导入
+  // 岗位导入
   IMPORT: 'organize:post:import',
-  // 部门导出
+  // 岗位导出
   EXPORT: 'organize:post:export'
 }

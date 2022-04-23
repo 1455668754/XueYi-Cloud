@@ -53,6 +53,8 @@ public interface SystemConstants {
     String SYS_USER_ADD = "organize:user:add";
     /** 系统 - 用户管理 - 修改 */
     String SYS_USER_EDIT = "organize:user:edit";
+    /** 系统 - 用户管理 - 密码修改 */
+    String SYS_USER_RESET_PASSWORD = "organize:user:rp";
     /** 系统 - 用户管理 - 权限 */
     String SYS_USER_AUTH = "organize:user:auth";
     /** 系统 - 用户管理 - 修改状态 */

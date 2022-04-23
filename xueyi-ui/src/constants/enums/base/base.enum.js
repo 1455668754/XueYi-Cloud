@@ -67,6 +67,7 @@ export const IconEnum = {
   PREVIEW: 'ant-design:eye-outlined',
   ADD_FOLD: 'ant-design:folder-add-outlined',
   LOG: 'ant-design:exception-outlined',
+  EDIT_PASSWORD: 'el-icon-key'
 }
 
 
