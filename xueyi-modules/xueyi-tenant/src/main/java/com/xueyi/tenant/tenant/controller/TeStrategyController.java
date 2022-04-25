@@ -105,7 +105,7 @@ public class TeStrategyController extends BaseController<TeStrategyDto, ITeStrat
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.TE_STRATEGY_EDIT, Auth.TE_STRATEGY_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.TE_STRATEGY_EDIT, Auth.TE_STRATEGY_ES}, logical = Logical.OR)
     @Log(title = "数据源策略管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody TeStrategyDto strategy) {
         return super.editStatus(strategy);

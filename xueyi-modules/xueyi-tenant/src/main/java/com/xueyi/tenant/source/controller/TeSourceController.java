@@ -109,7 +109,7 @@ public class TeSourceController extends BaseController<TeSourceDto, ITeSourceSer
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.TE_SOURCE_EDIT, Auth.TE_SOURCE_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.TE_SOURCE_EDIT, Auth.TE_SOURCE_ES}, logical = Logical.OR)
     @Log(title = "数据源管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody TeSourceDto source) {
         return super.editStatus(source);

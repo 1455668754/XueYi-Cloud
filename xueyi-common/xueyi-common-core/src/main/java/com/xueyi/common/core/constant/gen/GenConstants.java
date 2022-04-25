@@ -178,8 +178,8 @@ public class GenConstants {
         API_ADD_FORCE("apiAddForce", "接口：强制新增", null),
         API_EDIT("apiEdit", "接口：修改", null),
         API_EDIT_FORCE("apiEditForce", "接口：强制修改", null),
-        API_EDIT_STATUS("apiEditStatus", "接口：修改状态", null),
-        API_EDIT_STATUS_FORCE("apiEditStatusForce", "接口：强制修改状态", null),
+        API_ES("apiEditStatus", "接口：修改状态", null),
+        API_ES_FORCE("apiEditStatusForce", "接口：强制修改状态", null),
         API_BATCH_REMOVE("apiBatchRemove", "接口：批量删除", null),
         API_BATCH_REMOVE_FORCE("apiBatchRemoveForce", "接口：强制批量删除", null);
 

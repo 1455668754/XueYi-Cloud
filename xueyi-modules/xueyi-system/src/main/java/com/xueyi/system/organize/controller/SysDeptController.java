@@ -146,7 +146,7 @@ public class SysDeptController extends SubTreeController<SysDeptDto, ISysDeptSer
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.SYS_DEPT_EDIT, Auth.SYS_DEPT_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.SYS_DEPT_EDIT, Auth.SYS_DEPT_ES}, logical = Logical.OR)
     @Log(title = "部门管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody SysDeptDto dept) {
         return super.editStatus(dept);

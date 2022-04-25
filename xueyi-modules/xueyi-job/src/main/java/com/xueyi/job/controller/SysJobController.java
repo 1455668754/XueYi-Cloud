@@ -104,7 +104,7 @@ public class SysJobController extends BasisController {
      * 调度任务修改状态
      */
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.SCHEDULE_JOB_EDIT, Auth.SCHEDULE_JOB_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.SCHEDULE_JOB_EDIT, Auth.SCHEDULE_JOB_ES}, logical = Logical.OR)
     @Log(title = "调度任务管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody SysJobDto job) throws SchedulerException {
         return toAjax(baseService.updateStatus(job.getId(), job.getStatus()));

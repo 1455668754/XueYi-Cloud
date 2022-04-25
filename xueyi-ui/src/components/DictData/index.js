@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import DataDict from '@/utils/dict'
-import { getDicts as getDicts } from '@/api/system/dict/data'
+import { dicDict } from '@/api/sys/dict'
 
 function install() {
   Vue.use(DataDict, {
@@ -9,7 +9,7 @@ function install() {
         labelField: 'dictLabel',
         valueField: 'dictValue',
         request(dictMeta) {
-          return getDicts(dictMeta.type).then(res => res.data)
+          return dicDict(dictMeta.type).then(res => res.data)
         },
       },
     },

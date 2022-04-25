@@ -139,7 +139,7 @@ public class SysPostController extends BaseController<SysPostDto, ISysPostServic
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.SYS_POST_EDIT, Auth.SYS_POST_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.SYS_POST_EDIT, Auth.SYS_POST_ES}, logical = Logical.OR)
     @Log(title = "岗位管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody SysPostDto post) {
         return super.editStatus(post);

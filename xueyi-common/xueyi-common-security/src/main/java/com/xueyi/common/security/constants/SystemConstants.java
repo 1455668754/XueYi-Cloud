@@ -18,7 +18,7 @@ public interface SystemConstants {
     /** 系统 - 部门管理 - 权限 */
     String SYS_DEPT_AUTH = "organize:dept:auth";
     /** 系统 - 部门管理 - 修改状态 */
-    String SYS_DEPT_EDIT_STATUS = "organize:dept:es";
+    String SYS_DEPT_ES = "organize:dept:es";
     /** 系统 - 部门管理 - 删除 */
     String SYS_DEPT_DELETE = "organize:dept:delete";
     /** 系统 - 部门管理 - 导入 */
@@ -37,7 +37,7 @@ public interface SystemConstants {
     /** 系统 - 岗位管理 - 权限 */
     String SYS_POST_AUTH = "organize:post:auth";
     /** 系统 - 岗位管理 - 修改状态 */
-    String SYS_POST_EDIT_STATUS = "organize:post:es";
+    String SYS_POST_ES = "organize:post:es";
     /** 系统 - 岗位管理 - 删除 */
     String SYS_POST_DELETE = "organize:post:delete";
     /** 系统 - 岗位管理 - 导入 */
@@ -58,7 +58,7 @@ public interface SystemConstants {
     /** 系统 - 用户管理 - 权限 */
     String SYS_USER_AUTH = "organize:user:auth";
     /** 系统 - 用户管理 - 修改状态 */
-    String SYS_USER_EDIT_STATUS = "organize:user:es";
+    String SYS_USER_ES = "organize:user:es";
     /** 系统 - 用户管理 - 删除 */
     String SYS_USER_DELETE = "organize:user:delete";
     /** 系统 - 用户管理 - 导入 */
@@ -75,7 +75,7 @@ public interface SystemConstants {
     /** 系统 - 模块管理 - 修改 */
     String SYS_MODULE_EDIT = "authority:module:edit";
     /** 系统 - 模块管理 - 修改状态 */
-    String SYS_MODULE_EDIT_STATUS = "authority:module:es";
+    String SYS_MODULE_ES = "authority:module:es";
     /** 系统 - 模块管理 - 删除 */
     String SYS_MODULE_DELETE = "authority:module:delete";
     /** 系统 - 模块管理 - 导入 */
@@ -92,7 +92,7 @@ public interface SystemConstants {
     /** 系统 - 菜单管理 - 修改 */
     String SYS_MENU_EDIT = "authority:menu:edit";
     /** 系统 - 菜单管理 - 修改状态 */
-    String SYS_MENU_EDIT_STATUS = "authority:menu:es";
+    String SYS_MENU_ES = "authority:menu:es";
     /** 系统 - 菜单管理 - 删除 */
     String SYS_MENU_DELETE = "authority:menu:delete";
     /** 系统 - 菜单管理 - 导入 */
@@ -111,7 +111,7 @@ public interface SystemConstants {
     /** 系统 - 角色管理 - 权限 */
     String SYS_ROLE_AUTH = "authority:role:auth";
     /** 系统 - 角色管理 - 修改状态 */
-    String SYS_ROLE_EDIT_STATUS = "authority:role:es";
+    String SYS_ROLE_ES = "authority:role:es";
     /** 系统 - 角色管理 - 删除 */
     String SYS_ROLE_DELETE = "authority:role:delete";
     /** 系统 - 角色管理 - 导入 */
@@ -128,7 +128,7 @@ public interface SystemConstants {
     /** 系统 - 字典管理 - 修改 */
     String SYS_DICT_EDIT = "dict:dict:edit";
     /** 系统 - 字典管理 - 修改状态 */
-    String SYS_DICT_EDIT_STATUS = "dict:dict:es";
+    String SYS_DICT_ES = "dict:dict:es";
     /** 系统 - 字典管理 - 删除 */
     String SYS_DICT_DELETE = "dict:dict:delete";
     /** 系统 - 字典管理 - 导入 */
@@ -147,7 +147,7 @@ public interface SystemConstants {
     /** 系统 - 参数管理 - 修改 */
     String SYS_CONFIG_EDIT = "dict:config:edit";
     /** 系统 - 参数管理 - 修改状态 */
-    String SYS_CONFIG_EDIT_STATUS = "dict:config:es";
+    String SYS_CONFIG_ES = "dict:config:es";
     /** 系统 - 参数管理 - 删除 */
     String SYS_CONFIG_DELETE = "dict:config:delete";
     /** 系统 - 参数管理 - 强制删除 */
@@ -166,7 +166,7 @@ public interface SystemConstants {
     /** 系统 - 通知公告 - 修改 */
     String SYS_NOTICE_EDIT = "system:notice:edit";
     /** 系统 - 通知公告 - 修改状态 */
-    String SYS_NOTICE_EDIT_STATUS = "system:notice:es";
+    String SYS_NOTICE_ES = "system:notice:es";
     /** 系统 - 通知公告 - 删除 */
     String SYS_NOTICE_DELETE = "system:notice:delete";
     /** 系统 - 通知公告 - 导入 */

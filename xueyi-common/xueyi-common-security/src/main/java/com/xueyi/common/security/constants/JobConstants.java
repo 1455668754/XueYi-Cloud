@@ -16,7 +16,7 @@ public interface JobConstants {
     /** 定时任务 - 调度任务管理 - 修改 */
     String SCHEDULE_JOB_EDIT = "schedule:job:edit";
     /** 定时任务 - 调度任务管理 - 修改状态 */
-    String SCHEDULE_JOB_EDIT_STATUS = "schedule:job:es";
+    String SCHEDULE_JOB_ES = "schedule:job:es";
     /** 定时任务 - 调度任务管理 - 删除 */
     String SCHEDULE_JOB_DELETE = "schedule:job:delete";
     /** 定时任务 - 调度任务管理 - 导入 */

@@ -18,7 +18,7 @@ public interface TenantConstants {
     /** 租户 - 租户管理 - 权限 */
     String TE_TENANT_AUTH = "tenant:tenant:auth";
     /** 租户 - 租户管理 - 修改状态 */
-    String TE_TENANT_EDIT_STATUS = "tenant:tenant:es";
+    String TE_TENANT_ES = "tenant:tenant:es";
     /** 租户 - 租户管理 - 删除 */
     String TE_TENANT_DELETE = "tenant:tenant:delete";
     /** 租户 - 租户管理 - 导入 */
@@ -35,7 +35,7 @@ public interface TenantConstants {
     /** 租户 - 数据源策略管理 - 修改 */
     String TE_STRATEGY_EDIT = "tenant:strategy:edit";
     /** 租户 - 数据源策略管理 - 修改状态 */
-    String TE_STRATEGY_EDIT_STATUS = "tenant:strategy:es";
+    String TE_STRATEGY_ES = "tenant:strategy:es";
     /** 租户 - 数据源策略管理 - 删除 */
     String TE_STRATEGY_DELETE = "tenant:strategy:delete";
     /** 租户 - 数据源策略管理 - 导入 */
@@ -52,7 +52,7 @@ public interface TenantConstants {
     /** 租户 - 数据源管理 - 修改 */
     String TE_SOURCE_EDIT = "tenant:source:edit";
     /** 租户 - 数据源管理 - 修改状态 */
-    String TE_SOURCE_EDIT_STATUS = "tenant:source:es";
+    String TE_SOURCE_ES = "tenant:source:es";
     /** 租户 - 数据源管理 - 删除 */
     String TE_SOURCE_DELETE = "tenant:source:delete";
     /** 租户 - 数据源管理 - 导入 */

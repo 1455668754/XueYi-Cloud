@@ -93,7 +93,7 @@ public class SysNoticeController extends BaseController<SysNoticeDto, ISysNotice
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.SYS_NOTICE_EDIT, Auth.SYS_NOTICE_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.SYS_NOTICE_EDIT, Auth.SYS_NOTICE_ES}, logical = Logical.OR)
     @Log(title = "通知公告管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody SysNoticeDto notice) {
         return super.editStatus(notice);

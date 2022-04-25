@@ -155,7 +155,7 @@ public class SysUserController extends BaseController<SysUserDto, ISysUserServic
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.SYS_USER_EDIT, Auth.SYS_USER_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.SYS_USER_EDIT, Auth.SYS_USER_ES}, logical = Logical.OR)
     @Log(title = "用户管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody SysUserDto user) {
         return super.editStatus(user);
@@ -175,9 +175,9 @@ public class SysUserController extends BaseController<SysUserDto, ISysUserServic
     /**
      * 重置密码
      */
+    @PutMapping("/resetPwd")
     @RequiresPermissions(Auth.SYS_USER_RESET_PASSWORD)
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/resetPwd")
     public AjaxResult resetPassword(@RequestBody SysUserDto user) {
         adminValidated(user.getId());
         return toAjax(baseService.resetUserPassword(user.getId(), SecurityUtils.encryptPassword(user.getPassword())));

@@ -216,8 +216,8 @@ public class VelocityUtils {
         apiJSon.put("addForce", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_ADD_FORCE.getCode()), DictConstants.DicYesNo.YES.getCode()));
         apiJSon.put("edit", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_EDIT.getCode()), DictConstants.DicYesNo.YES.getCode()));
         apiJSon.put("editForce", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_EDIT_FORCE.getCode()), DictConstants.DicYesNo.YES.getCode()));
-        apiJSon.put("editStatus", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_EDIT_STATUS.getCode()), DictConstants.DicYesNo.YES.getCode()));
-        apiJSon.put("editStatusForce", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_EDIT_STATUS_FORCE.getCode()), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("editStatus", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_ES.getCode()), DictConstants.DicYesNo.YES.getCode()));
+        apiJSon.put("editStatusForce", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_ES_FORCE.getCode()), DictConstants.DicYesNo.YES.getCode()));
         apiJSon.put("batchRemove", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_BATCH_REMOVE.getCode()), DictConstants.DicYesNo.YES.getCode()));
         apiJSon.put("batchRemoveForce", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_BATCH_REMOVE_FORCE.getCode()), DictConstants.DicYesNo.YES.getCode()));
         apiJSon.put("export", StrUtil.equals(optionsObj.getString(GenConstants.OptionField.API_EXPORT.getCode()), DictConstants.DicYesNo.YES.getCode()));

@@ -145,7 +145,7 @@ public class SysRoleController extends BaseController<SysRoleDto, ISysRoleServic
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.SYS_ROLE_EDIT, Auth.SYS_ROLE_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.SYS_ROLE_EDIT, Auth.SYS_ROLE_ES}, logical = Logical.OR)
     @Log(title = "角色管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody SysRoleDto role) {
         return super.editStatus(role);

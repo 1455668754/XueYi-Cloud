@@ -116,7 +116,7 @@ public class TeTenantController extends BaseController<TeTenantDto, ITeTenantSer
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.TE_TENANT_EDIT, Auth.TE_TENANT_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.TE_TENANT_EDIT, Auth.TE_TENANT_ES}, logical = Logical.OR)
     @Log(title = "租户管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody TeTenantDto tenant) {
         return super.editStatus(tenant);

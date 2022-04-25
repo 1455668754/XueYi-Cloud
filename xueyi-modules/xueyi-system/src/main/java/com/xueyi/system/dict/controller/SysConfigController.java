@@ -111,7 +111,7 @@ public class SysConfigController extends BaseController<SysConfigDto, ISysConfig
      */
     @Override
     @PutMapping("/status")
-    @RequiresPermissions(value = {Auth.SYS_CONFIG_EDIT, Auth.SYS_CONFIG_EDIT_STATUS}, logical = Logical.OR)
+    @RequiresPermissions(value = {Auth.SYS_CONFIG_EDIT, Auth.SYS_CONFIG_ES}, logical = Logical.OR)
     @Log(title = "参数管理", businessType = BusinessType.UPDATE_STATUS)
     public AjaxResult editStatus(@RequestBody SysConfigDto config) {
         return super.editStatus(config);
