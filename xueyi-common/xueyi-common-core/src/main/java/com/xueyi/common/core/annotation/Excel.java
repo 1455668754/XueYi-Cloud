@@ -1,6 +1,8 @@
 package com.xueyi.common.core.annotation;
 
 import com.xueyi.common.core.utils.poi.ExcelHandlerAdapter;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.IndexedColors;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -16,7 +18,7 @@ import java.math.BigDecimal;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Excel {
-    
+
     /** 导出时在excel中排序 */
     public int sort() default Integer.MAX_VALUE;
 
@@ -37,9 +39,6 @@ public @interface Excel {
 
     /** BigDecimal 舍入规则 默认:BigDecimal.ROUND_HALF_EVEN */
     public int roundingMode() default BigDecimal.ROUND_HALF_EVEN;
-
-    /** 导出类型（0数字 1字符串） */
-    public ColumnType cellType() default ColumnType.STRING;
 
     /** 导出时在excel中每个列的高度 单位为字符 */
     public double height() default 14;
@@ -68,27 +67,21 @@ public @interface Excel {
     /** 是否自动统计数据,在最后追加一行统计数据总和 */
     public boolean isStatistics() default false;
 
+    /** 导出类型（0数字 1字符串） */
+    public ColumnType cellType() default ColumnType.STRING;
+
+    /** 导出字体颜色 */
+    public IndexedColors color() default IndexedColors.BLACK;
+
     /** 导出字段对齐方式（0：默认；1：靠左；2：居中；3：靠右） */
-    public Align align() default Align.AUTO;
+    public HorizontalAlignment align() default HorizontalAlignment.CENTER;
+
 
     /** 自定义数据处理器 */
     public Class<?> handler() default ExcelHandlerAdapter.class;
 
     /** 自定义数据处理器参数 */
     public String[] args() default {};
-
-    public enum Align {
-        AUTO(0), LEFT(1), CENTER(2), RIGHT(3);
-        private final int value;
-
-        Align(int value) {
-            this.value = value;
-        }
-
-        public int value() {
-            return this.value;
-        }
-    }
 
     /** 字段类型（0：导出导入；1：仅导出；2：仅导入） */
     Type type() default Type.ALL;
