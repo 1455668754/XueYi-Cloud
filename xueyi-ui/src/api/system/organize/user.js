@@ -80,7 +80,7 @@ export function delUserApi(ids) {
 /** 用户密码重置 */
 export function resetUserPwdApi(id, password) {
   return request({
-    url: '/system/user/resetPassword',
+    url: '/system/user/resetPwd',
     method: 'put',
     data: { id: id, password: password }
   })

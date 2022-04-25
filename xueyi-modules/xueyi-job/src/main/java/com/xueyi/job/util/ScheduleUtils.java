@@ -1,5 +1,6 @@
 package com.xueyi.job.util;
 
+import com.xueyi.common.core.utils.SpringUtils;
 import com.xueyi.common.core.utils.StringUtils;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -24,6 +25,7 @@ import java.util.Objects;
  * @author xueyi
  */
 public class ScheduleUtils {
+
     /**
      * 得到quartz任务类
      *
@@ -113,6 +115,10 @@ public class ScheduleUtils {
     public static boolean whiteList(String invokeTarget) {
         String packageName = StringUtils.substringBefore(invokeTarget, "(");
         int count = StringUtils.countMatches(packageName, ".");
-        return count < 1 || StringUtils.containsAnyIgnoreCase(invokeTarget, ScheduleConstants.JOB_WHITELIST_STR);
+        if (count > 1) {
+            return StringUtils.containsAnyIgnoreCase(invokeTarget, ScheduleConstants.JOB_WHITELIST_STR);
+        }
+        Object obj = SpringUtils.getBean(StringUtils.split(invokeTarget, ".")[0]);
+        return StringUtils.containsAnyIgnoreCase(obj.getClass().getPackage().getName(), ScheduleConstants.JOB_WHITELIST_STR);
     }
 }
