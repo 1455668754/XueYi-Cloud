@@ -175,9 +175,9 @@ public class SysUserController extends BaseController<SysUserDto, ISysUserServic
     /**
      * 重置密码
      */
-    @RequiresPermissions("system:user:edit")
+    @RequiresPermissions(Auth.SYS_USER_RESET_PASSWORD)
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/resetPassword")
+    @PutMapping("/resetPwd")
     public AjaxResult resetPassword(@RequestBody SysUserDto user) {
         adminValidated(user.getId());
         return toAjax(baseService.resetUserPassword(user.getId(), SecurityUtils.encryptPassword(user.getPassword())));

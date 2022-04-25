@@ -77,11 +77,15 @@ export function delUserApi(ids) {
   })
 }
 
-/** 用户密码重置 */
-export function resetUserPwdApi(oldPassword, newPassword) {
+// 用户密码重置
+export function resetUserPwdApi(id, password) {
+  const data = {
+    id,
+    password
+  }
   return request({
     url: '/system/user/resetPwd',
     method: 'put',
-    data: { oldPassword, newPassword }
+    data: data
   })
 }
