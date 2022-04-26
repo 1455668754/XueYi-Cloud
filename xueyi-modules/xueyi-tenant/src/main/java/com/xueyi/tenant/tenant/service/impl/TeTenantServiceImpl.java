@@ -25,6 +25,7 @@ import com.xueyi.tenant.tenant.service.ITeStrategyService;
 import com.xueyi.tenant.tenant.service.ITeTenantService;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TeTenantServiceImpl extends BaseServiceImpl<TeTenantDto, TeTenantManager, TeTenantMapper> implements ITeTenantService {
 
+    @Lazy
     @Autowired
     ITeTenantService oneselfService;
 
