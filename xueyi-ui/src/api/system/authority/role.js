@@ -89,7 +89,7 @@ export function editStatusRoleApi(id, status) {
 /** 删除角色 */
 export function delRoleApi(ids) {
   return request({
-    url: '/system/role/list' + ids.toString(),
+    url: '/system/role/batch/' + ids.toString(),
     method: 'delete'
   })
 }
