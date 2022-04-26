@@ -630,7 +630,11 @@ export default {
       }).then(() => {
         this.getList();
         this.#[[$modal]]#.msgSuccess("删除成功！");
-      }).catch(() => {});
+      }).catch(() => {
+#if($table.tree || $table.subTree)
+        this.getList()
+#end
+    });
     }
   }
 #end

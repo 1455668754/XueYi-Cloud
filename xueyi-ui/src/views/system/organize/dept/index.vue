@@ -454,6 +454,7 @@ export default {
         this.getList()
         this.$modal.msgSuccess('删除成功！')
       }).catch(() => {
+        this.getList()
       })
     }
   }
