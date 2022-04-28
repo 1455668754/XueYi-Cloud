@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class XueYiTenantLineInnerInterceptor extends TenantLineInnerInterceptor {
 
-    private XueYiTenantLineHandler tenantLineHandler;
+    private final XueYiTenantLineHandler tenantLineHandler;
 
     public XueYiTenantLineInnerInterceptor(final XueYiTenantLineHandler tenantLineHandler) {
         this.tenantLineHandler = tenantLineHandler;
@@ -84,16 +84,16 @@ public class XueYiTenantLineInnerInterceptor extends TenantLineInnerInterceptor 
     protected void processInsert(Insert insert, int index, String sql, Object obj) {
         if (!this.tenantLineHandler.ignoreTable(insert.getTable().getName())) {
             List<Column> columns = insert.getColumns();
+            String tableName = insert.getTable().getName();
             if (!CollectionUtils.isEmpty(columns)) {
                 String tenantIdColumn = this.tenantLineHandler.getTenantIdColumn();
                 if (!this.tenantLineHandler.ignoreInsert(columns, tenantIdColumn)) {
-
                     columns.add(new Column(tenantIdColumn));
                     List<Expression> duplicateUpdateColumns = insert.getDuplicateUpdateExpressionList();
                     if (CollectionUtils.isNotEmpty(duplicateUpdateColumns)) {
                         EqualsTo equalsTo = new EqualsTo();
                         equalsTo.setLeftExpression(new StringValue(tenantIdColumn));
-                        equalsTo.setRightExpression(this.tenantLineHandler.getTenantId());
+                        equalsTo.setRightExpression(this.getTenantId(tableName));
                         duplicateUpdateColumns.add(equalsTo);
                     }
 
@@ -108,10 +108,10 @@ public class XueYiTenantLineInnerInterceptor extends TenantLineInnerInterceptor 
                         ItemsList itemsList = insert.getItemsList();
                         if (itemsList instanceof MultiExpressionList) {
                             ((MultiExpressionList) itemsList).getExpressionLists().forEach((el) -> {
-                                el.getExpressions().add(this.tenantLineHandler.getTenantId());
+                                el.getExpressions().add(this.getTenantId(tableName));
                             });
                         } else {
-                            ((ExpressionList) itemsList).getExpressions().add(this.tenantLineHandler.getTenantId());
+                            ((ExpressionList) itemsList).getExpressions().add(this.getTenantId(tableName));
                         }
                     }
                 }
@@ -125,11 +125,10 @@ public class XueYiTenantLineInnerInterceptor extends TenantLineInnerInterceptor 
     @Override
     protected void processUpdate(Update update, int index, String sql, Object obj) {
         final Table table = update.getTable();
-        if (tenantLineHandler.ignoreTable(table.getName())) {
-            // 过滤退出执行
+        // 忽略控制
+        if (tenantLineHandler.ignoreTable(table.getName()))
             return;
-        }
-        // 核心逻辑：区分混合数据与租户数据
+        // 混合租户控制
         if (this.tenantLineHandler.isCommonTable(table.getName()) && this.tenantLineHandler.isLessor())
             update.setWhere(this.inExpression(table, update.getWhere()));
         else
@@ -142,11 +141,10 @@ public class XueYiTenantLineInnerInterceptor extends TenantLineInnerInterceptor 
     @Override
     protected void processDelete(Delete delete, int index, String sql, Object obj) {
         final Table table = delete.getTable();
-        if (tenantLineHandler.ignoreTable(delete.getTable().getName())) {
-            // 过滤退出执行
+        // 忽略控制
+        if (tenantLineHandler.ignoreTable(delete.getTable().getName()))
             return;
-        }
-        // 核心逻辑：区分混合数据与租户数据
+        // 混合租户控制
         if (this.tenantLineHandler.isCommonTable(table.getName()) && this.tenantLineHandler.isLessor())
             delete.setWhere(this.inExpression(table, delete.getWhere()));
         else
@@ -154,7 +152,16 @@ public class XueYiTenantLineInnerInterceptor extends TenantLineInnerInterceptor 
     }
 
     /**
-     * delete update 语句 where 处理
+     * insert -> insert | tenant
+     */
+    protected Expression getTenantId(String tableName) {
+        return tenantLineHandler.isCommonTable(tableName)
+                ? this.tenantLineHandler.getMixTenantId()
+                : this.tenantLineHandler.getTenantId();
+    }
+
+    /**
+     * delete/update -> where | common tenant
      */
     protected Expression inExpression(Table table, Expression where) {
         //获得where条件表达式

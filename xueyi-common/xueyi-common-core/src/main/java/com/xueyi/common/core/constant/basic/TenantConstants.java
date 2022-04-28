@@ -7,8 +7,11 @@ package com.xueyi.common.core.constant.basic;
  */
 public class TenantConstants {
 
-    /** 租户Id */
+    /** 租户字段名 */
     public static final String TENANT_ID = "tenant_id";
+
+    /** 公共字段名 */
+    public static final String COMMON_ID = "is_common";
 
     /** 注册租户默认策略Id */
     public static final Long REGISTER_TENANT_STRATEGY_ID = BaseConstants.COMMON_ID;

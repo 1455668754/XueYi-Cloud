@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.xueyi.common.core.constant.basic.BaseConstants;
-import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
@@ -230,11 +229,6 @@ public class SysMenuController extends TreeController<SysMenuDto, ISysMenuServic
                 throw new ServiceException("数据不存在！");
             if (parentMenu.isNotCommon())
                 throw new ServiceException(StrUtil.format("{}{}{}失败，公共{}必须挂载在公共{}下！", operate.getInfo(), getNodeName(), menu.getTitle(), getNodeName(), getNodeName()));
-        }
-
-        // 待移除：混合逻辑完成后移除
-        if (operate.isAdd() && menu.isCommon()) {
-            menu.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID);
         }
     }
 

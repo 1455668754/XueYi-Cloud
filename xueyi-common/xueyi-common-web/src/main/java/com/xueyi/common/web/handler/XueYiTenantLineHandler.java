@@ -3,13 +3,14 @@ package com.xueyi.common.web.handler;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.extension.plugins.handler.TenantLineHandler;
+import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.basic.TenantConstants;
 import com.xueyi.common.security.utils.SecurityUtils;
 import com.xueyi.common.web.annotation.TenantIgnore;
 import com.xueyi.common.web.config.properties.TenantProperties;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.LongValue;
+import net.sf.jsqlparser.expression.*;
+import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.util.cnfexpression.MultipleExpression;
 import org.aspectj.lang.annotation.After;
@@ -67,7 +68,22 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
     }
 
     /**
-     * 公共表租户控制
+     * 公共表租户控制 | insert
+     *
+     * @return 租户值
+     */
+    public Expression getMixTenantId(){
+        CaseExpression caseExpression = new CaseExpression();
+        WhenClause commonCase = new WhenClause();
+        commonCase.setWhenExpression(new EqualsTo(new HexValue(TenantConstants.COMMON_ID), new StringValue(DictConstants.DicCommonPrivate.COMMON.getCode())));
+        commonCase.setThenExpression(new LongValue(SecurityConstants.COMMON_TENANT_ID));
+        caseExpression.setSwitchExpression(commonCase);
+        caseExpression.setElseExpression(this.getTenantId());
+        return caseExpression;
+    }
+
+    /**
+     * 公共表租户控制 | select
      *
      * @return 租户值
      */
@@ -85,9 +101,9 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
     }
 
     /**
-     * 获取租户字段
+     * 获取租户字段名
      *
-     * @return 租户字段
+     * @return 租户字段名
      */
     @Override
     public String getTenantIdColumn() {
@@ -101,8 +117,12 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
      */
     @Override
     public boolean ignoreTable(String tableName) {
-        TenantIgnore tenantIgnore = threadLocal.get();
-        return (ObjectUtil.isNotNull(tenantIgnore) && tenantIgnore.tenantLine()) || isExcludeTable(tableName);
+        if (isExcludeTable(tableName)) {
+            return true;
+        } else {
+            TenantIgnore tenantIgnore = threadLocal.get();
+            return ObjectUtil.isNotNull(tenantIgnore) && tenantIgnore.tenantLine();
+        }
     }
 
     /**

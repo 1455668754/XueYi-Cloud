@@ -3,7 +3,6 @@ package com.xueyi.system.authority.controller;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.xueyi.common.core.constant.basic.BaseConstants;
-import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.core.web.result.AjaxResult;
@@ -168,11 +167,6 @@ public class SysModuleController extends SubBaseController<SysModuleDto, ISysMod
                 throw new ServiceException(StrUtil.format("{}{}{}失败，无操作权限！", operate.getInfo(), getNodeName(), module.getName()));
             if (!StringUtils.equals(module.getIsCommon(), original.getIsCommon()))
                 throw new ServiceException(StrUtil.format("{}{}{}失败，公共{}属性禁止变更！", operate.getInfo(), getNodeName(), module.getName(), getNodeName()));
-        }
-
-        // 待移除：混合逻辑完成后移除
-        if (operate.isAdd() && module.isCommon()) {
-            module.setEnterpriseId(SecurityConstants.COMMON_TENANT_ID);
         }
     }
 }
