@@ -2,6 +2,7 @@ package com.xueyi.common.web.config;
 
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.github.pagehelper.PageInterceptor;
 import com.xueyi.common.datascope.interceptor.XueYiDataScopeHandler;
@@ -38,7 +39,7 @@ public class XueYiMyBatisPlusConfig {
     }
 
     /**
-     * 批量新增|修改
+     * 方法注入
      */
     @Bean
     public CustomizedSqlInjector customizedSqlInjector() {
@@ -56,16 +57,16 @@ public class XueYiMyBatisPlusConfig {
     }
 
     /**
-     * 多租户 && 数据权限
+     * 插件配置
      */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        // 添加数据权限插件
-        DataPermissionInterceptor dataPermissionInterceptor = new DataPermissionInterceptor();
-        // 添加自定义的数据权限处理器
-        dataPermissionInterceptor.setDataPermissionHandler(dataScopeAspect);
-        interceptor.addInnerInterceptor(dataPermissionInterceptor);
+        // 禁全表更删插件
+        interceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
+        // 数据权限插件
+        interceptor.addInnerInterceptor(new DataPermissionInterceptor(dataScopeAspect));
+        // 租户控制插件
         interceptor.addInnerInterceptor(new XueYiTenantLineInnerInterceptor(tenantLineHandler));
         return interceptor;
     }
