@@ -34,12 +34,12 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
     private TenantProperties tenantProperties;
 
     /**
-     * 通过ThreadLocal记录权限相关的属性值
+     * 通过ThreadLocal记录租户控制相关的属性值
      */
     public ThreadLocal<TenantIgnore> threadLocal = new ThreadLocal<>();
 
     /**
-     * 清空当前线程上次保存的权限信息
+     * 清空当前线程上次保存的租户控制信息
      */
     @After("@annotation(controllerTenantIgnore)")
     public void clearThreadLocal(TenantIgnore controllerTenantIgnore) {
@@ -56,11 +56,21 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
             threadLocal.set(controllerTenantIgnore);
     }
 
+    /**
+     * 租户表租户控制
+     *
+     * @return 租户值
+     */
     @Override
     public Expression getTenantId() {
         return new LongValue(SecurityUtils.getEnterpriseId());
     }
 
+    /**
+     * 公共表租户控制
+     *
+     * @return 租户值
+     */
     public MultipleExpression getCommonTenantId() {
         List<Expression> childList = new ArrayList<>();
         if (SecurityUtils.isNotEmptyTenant())
@@ -74,26 +84,60 @@ public class XueYiTenantLineHandler implements TenantLineHandler {
         };
     }
 
+    /**
+     * 获取租户字段
+     *
+     * @return 租户字段
+     */
     @Override
     public String getTenantIdColumn() {
         return TenantConstants.TENANT_ID;
     }
 
+    /**
+     * 忽略租户控制
+     *
+     * @return 结果
+     */
     @Override
     public boolean ignoreTable(String tableName) {
         TenantIgnore tenantIgnore = threadLocal.get();
-        return (ObjectUtil.isNotNull(tenantIgnore) && tenantIgnore.tenantLine()) || ArrayUtil.contains(tenantProperties.getExcludeTable(), tableName);
+        return (ObjectUtil.isNotNull(tenantIgnore) && tenantIgnore.tenantLine()) || isExcludeTable(tableName);
     }
 
+    /**
+     * 忽略租户控制
+     *
+     * @return 结果
+     */
     @Override
     public boolean ignoreInsert(List<Column> columns, String tenantIdColumn) {
         return TenantLineHandler.super.ignoreInsert(columns, tenantIdColumn);
     }
 
+    /**
+     * 判断是否为公共表
+     *
+     * @return 结果
+     */
     public boolean isCommonTable(String tableName) {
         return ArrayUtil.contains(tenantProperties.getCommonTable(), tableName);
     }
 
+    /**
+     * 判断是否为非租户表
+     *
+     * @return 结果
+     */
+    public boolean isExcludeTable(String tableName) {
+        return ArrayUtil.contains(tenantProperties.getExcludeTable(), tableName);
+    }
+
+    /**
+     * 判断是否为租管租户
+     *
+     * @return 结果
+     */
     public boolean isLessor() {
         return SecurityUtils.isAdminTenant();
     }
