@@ -82,11 +82,11 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      * @return 生成地址
      */
     public static String getUiPath(GenTableDto table, String template) {
-        String genPath = table.getGenPath();
-        if (StringUtils.equals(genPath, StrUtil.SLASH)) {
+        String uiPath = table.getUiPath();
+        if (StringUtils.equals(uiPath, StrUtil.SLASH)) {
             return System.getProperty("user.dir") + File.separator + "MultiSaas-UI" + File.separator + VelocityUtils.getFileName(template, table);
         }
-        return genPath + File.separator + VelocityUtils.getFileName(template, table);
+        return uiPath + File.separator + VelocityUtils.getFileName(template, table);
     }
 
     /**
