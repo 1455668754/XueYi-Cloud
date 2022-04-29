@@ -49,7 +49,7 @@ public class GenUtils {
         optionJson.put(GenConstants.OptionField.PARENT_MENU_ID.getCode(), AuthorityConstants.MENU_TOP_NODE.toString());
         // 检测是否为多租户模式
         optionJson.put(GenConstants.OptionField.IS_TENANT.getCode(),
-                arraysContains(GenConstants.TENANT_ENTITY, javaFields)
+                arraysContains(GenConfig.getEntity().getBack().getTenant(), javaFields)
                         ? DictConstants.DicYesNo.YES.getCode()
                         : DictConstants.DicYesNo.NO.getCode());
         // 设置默认源策略模式
@@ -105,7 +105,7 @@ public class GenUtils {
         // 设置默认查询类型（长整型防精度丢失，到前端会自动转成字符串，故使用文本框）
         column.setQueryType(GenConstants.QueryType.EQ.getCode());
 
-        if (arraysContains(GenConstants.COLUMN_TYPE_STR, dataType) && !StrUtil.equals(column.getComment(), column.readNameNoSuffix())) {
+        if (arraysContains(GenConfig.getDataBase().getTypeStr(), dataType) && !StrUtil.equals(column.getComment(), column.readNameNoSuffix())) {
             column.setHtmlType(GenConstants.DisplayType.SELECT.getCode());
             if (StrUtil.contains(column.getComment(), GenConstants.GenCheck.NORMAL_DISABLE.getInfo())) {
                 column.setHtmlType(GenConstants.DisplayType.RADIO_BUTTON_GROUP.getCode());
@@ -117,38 +117,38 @@ public class GenUtils {
                 column.setHtmlType(GenConstants.DisplayType.RADIO_BUTTON_GROUP.getCode());
                 column.setDictType(DictConstants.DictType.SYS_YES_NO.getCode());
             }
-        } else if (arraysContains(GenConstants.COLUMN_TYPE_TEXT, dataType)) {
+        } else if (arraysContains(GenConfig.getDataBase().getTypeText(), dataType)) {
             column.setHtmlType(GenConstants.DisplayType.INPUT_TEXTAREA.getCode());
-        } else if (arraysContains(GenConstants.COLUMN_TYPE_DATE, dataType)) {
+        } else if (arraysContains(GenConfig.getDataBase().getTypeDate(), dataType)) {
             column.setJavaType(GenConstants.JavaType.DATE.getCode());
             column.setHtmlType(GenConstants.DisplayType.DATE_PICKER.getCode());
-        } else if (arraysContains(GenConstants.COLUMN_TYPE_FLOAT, dataType)) {
+        } else if (arraysContains(GenConfig.getDataBase().getTypeFloat(), dataType)) {
             column.setHtmlType(GenConstants.DisplayType.INPUT_NUMBER.getCode());
             column.setJavaType(GenConstants.JavaType.BIG_DECIMAL.getCode());
-        } else if (arraysContains(GenConstants.COLUMN_TYPE_NUMBER, dataType)) {
+        } else if (arraysContains(GenConfig.getDataBase().getTypeNumber(), dataType)) {
             column.setHtmlType(GenConstants.DisplayType.INPUT_NUMBER.getCode());
             column.setJavaType(GenConstants.JavaType.INTEGER.getCode());
-        } else if (arraysContains(GenConstants.COLUMN_TYPE_LONG, dataType)) {
+        } else if (arraysContains(GenConfig.getDataBase().getTypeLong(), dataType)) {
             column.setJavaType(GenConstants.JavaType.LONG.getCode());
         }
 
         // 插入字段（默认除必须移除的参数外所有字段都需要插入）
-        boolean mustCheck = arraysContains(GenConstants.COLUMN_MUST_HIDE, javaField) || column.isPk();
-        column.setInsert(!(arraysContains(GenConstants.COLUMN_NAME_NOT_INSERT, javaField) || mustCheck));
+        boolean mustCheck = arraysContains(GenConfig.getEntity().getMustHide(), javaField) || column.isPk();
+        column.setInsert(!(arraysContains(GenConfig.getOperate().getNotInsert(), javaField) || mustCheck));
         // 查看字段
-        column.setView(!(arraysContains(GenConstants.COLUMN_NAME_NOT_VIEW, javaField) || mustCheck));
+        column.setView(!(arraysContains(GenConfig.getOperate().getNotView(), javaField) || mustCheck));
         // 编辑字段
-        column.setEdit(!(arraysContains(GenConstants.COLUMN_NAME_NOT_EDIT, javaField) || mustCheck));
+        column.setEdit(!(arraysContains(GenConfig.getOperate().getNotEdit(), javaField) || mustCheck));
         // 列表字段
-        column.setList(!(arraysContains(GenConstants.COLUMN_NAME_NOT_LIST, javaField) || mustCheck));
+        column.setList(!(arraysContains(GenConfig.getOperate().getNotList(), javaField) || mustCheck));
         // 查询字段
-        column.setQuery(!(arraysContains(GenConstants.COLUMN_NAME_NOT_QUERY, javaField) || mustCheck));
+        column.setQuery(!(arraysContains(GenConfig.getOperate().getNotQuery(), javaField) || mustCheck));
         // 导入字段
-        column.setImport(!(arraysContains(GenConstants.COLUMN_NAME_NOT_IMPORT, javaField) || mustCheck));
+        column.setImport(!(arraysContains(GenConfig.getOperate().getNotImport(), javaField) || mustCheck));
         // 导出字段
-        column.setExport(!(arraysContains(GenConstants.COLUMN_NAME_NOT_EXPORT, javaField) || mustCheck));
+        column.setExport(!(arraysContains(GenConfig.getOperate().getNotExport(), javaField) || mustCheck));
         // 隐藏字段
-        column.setHide(arraysContains(GenConstants.COLUMN_MUST_HIDE, javaField));
+        column.setHide(arraysContains(GenConfig.getEntity().getMustHide(), javaField));
         // 覆盖字段（默认无需覆盖字段）
         column.setCover(false);
 
@@ -266,7 +266,7 @@ public class GenUtils {
             }
         }
         // 校验是否需要隐藏
-        boolean isMustHide = StrUtil.equalsAny(column.getName(), GenConstants.COLUMN_MUST_HIDE);
+        boolean isMustHide = StrUtil.equalsAny(column.getName(), GenConfig.getEntity().getMustHide());
         if (column.isHide() || isMustHide) {
             if (isMustHide) {
                 column.setHide(true);
@@ -316,17 +316,17 @@ public class GenUtils {
      * @param genTable 业务表对象
      */
     public static void getRemoveItem(GenTableDto genTable) {
-        boolean autoRemovePre = GenConfig.isAutoRemovePre();
-        if (autoRemovePre && CollUtil.isNotEmpty(GenConfig.getRemoveLists()))
-            for (GenConfig.RemoveItem removeItem : GenConfig.getRemoveLists())
-                if (StrUtil.equals(StrUtil.sub(genTable.getName(),
-                        0, removeItem.getPrefix().length()), removeItem.getPrefix())) {
+        if (GenConfig.isAutoRemovePre() && CollUtil.isNotEmpty(GenConfig.getRemoveLists())) {
+            for (GenConfig.RemoveItem removeItem : GenConfig.getRemoveLists()) {
+                if (StrUtil.equals(StrUtil.sub(genTable.getName(), 0, removeItem.getPrefix().length()), removeItem.getPrefix())) {
                     genTable.setPrefix(StringUtils.convertToCamelCase(removeItem.getPrefix()));
                     genTable.setPackageName(removeItem.getPackageName());
                     genTable.setModuleName(getModuleName(removeItem.getPackageName()));
                     genTable.setAuthorityName(genTable.getModuleName());
                     return;
                 }
+            }
+        }
     }
 
     /**

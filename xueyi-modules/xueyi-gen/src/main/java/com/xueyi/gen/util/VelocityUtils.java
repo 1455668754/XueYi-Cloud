@@ -6,10 +6,11 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
-import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.gen.GenConstants;
+import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.gen.config.GenConfig;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
 import com.xueyi.gen.domain.dto.GenTableDto;
 import org.apache.velocity.VelocityContext;
@@ -25,16 +26,13 @@ import java.util.stream.Collectors;
 public class VelocityUtils {
 
     /** 项目空间路径 */
-    private static final String PROJECT_PATH = "main/java";
-
-    /** mybatis空间路径 */
-    private static final String MYBATIS_PATH = "main/resources/mapper";
+    private static final String PROJECT_PATH = "main/java" ;
 
     /** 隐藏字段数组 */
-    private static final String HIDE = "hide";
+    private static final String HIDE = "hide" ;
 
     /** 覆写字段数组 */
-    private static final String COVER = "cover";
+    private static final String COVER = "cover" ;
 
     /**
      * 设置模板变量信息
@@ -101,7 +99,7 @@ public class VelocityUtils {
         // 前端隐藏字段集合 (生成po的控制参数)
         velocityContext.put("frontHideField", getFrontHideField(genTable.getTplCategory()));
         // 必定隐藏字段集合 (全局隐藏的控制参数)
-        velocityContext.put("mustHideField", Arrays.asList(GenConstants.COLUMN_MUST_HIDE));
+        velocityContext.put("mustHideField", Arrays.asList(GenConfig.getEntity().getMustHide()));
         // 是否为多租户（true | false）
         velocityContext.put("isTenant", isTenant(genTable));
         // 源策略模式
@@ -270,7 +268,6 @@ public class VelocityUtils {
         String BusinessName = StringUtils.capitalize(genTable.getBusinessName());
 
         String javaPath = PROJECT_PATH + StrUtil.SLASH + StringUtils.replace(packageName, StrUtil.DOT, StrUtil.SLASH);
-        String mybatisPath = MYBATIS_PATH + StrUtil.SLASH + moduleName;
 
         if (template.contains("dto.java.vm"))
             return StringUtils.format("{}/domain/dto/{}Dto.java", javaPath, className);
@@ -303,7 +300,7 @@ public class VelocityUtils {
 
         else if (template.contains("index.vue.vm"))
             return StringUtils.format("xueyi-ui/src/views/{}/{}/{}/index.vue", moduleName, authorityName, businessName);
-        return "";
+        return "" ;
     }
 
     /**
@@ -357,22 +354,22 @@ public class VelocityUtils {
         Set<String> hideSet = genTable.getSubList().stream().filter(GenTableColumnDto::isHide).map(GenTableColumnDto::getJavaField).collect(Collectors.toSet());
         switch (Objects.requireNonNull(GenConstants.TemplateType.getValue(genTable.getTplCategory()))) {
             case TREE:
-                Set<String> treeSet = new HashSet<>(Arrays.asList(ArrayUtil.addAll(GenConstants.BASE_ENTITY, GenConstants.TREE_ENTITY)));
+                Set<String> treeSet = new HashSet<>(Arrays.asList(ArrayUtil.addAll(GenConfig.getEntity().getBack().getBase(), GenConfig.getEntity().getBack().getTree())));
                 treeSet.removeAll(coverSet);
                 hideSet.addAll(treeSet);
                 break;
             case SUB_TREE:
-                Set<String> subTreeSet = new HashSet<>(Arrays.asList(ArrayUtil.addAll(GenConstants.BASE_ENTITY, GenConstants.TREE_ENTITY, GenConstants.SUB_ENTITY)));
+                Set<String> subTreeSet = new HashSet<>(Arrays.asList(ArrayUtil.addAll(GenConfig.getEntity().getBack().getBase(), GenConfig.getEntity().getBack().getTree(), GenConfig.getEntity().getBack().getSub())));
                 subTreeSet.removeAll(coverSet);
                 hideSet.addAll(subTreeSet);
                 break;
             case SUB_BASE:
-                Set<String> subBaseSet = new HashSet<>(Arrays.asList(ArrayUtil.addAll(GenConstants.BASE_ENTITY, GenConstants.SUB_ENTITY)));
+                Set<String> subBaseSet = new HashSet<>(Arrays.asList(ArrayUtil.addAll(GenConfig.getEntity().getBack().getBase(), GenConfig.getEntity().getBack().getSub())));
                 subBaseSet.removeAll(coverSet);
                 hideSet.addAll(subBaseSet);
                 break;
             case BASE:
-                Set<String> baseSet = new HashSet<>(Arrays.asList(ArrayUtil.addAll(GenConstants.BASE_ENTITY)));
+                Set<String> baseSet = new HashSet<>(Arrays.asList(ArrayUtil.addAll(GenConfig.getEntity().getBack().getBase())));
                 baseSet.removeAll(coverSet);
                 hideSet.addAll(baseSet);
                 break;
@@ -411,18 +408,18 @@ public class VelocityUtils {
      * @return 前端隐藏字段集合
      */
     public static Set<String> getFrontHideField(String tplCategory) {
-        Set<String> stringSet = new HashSet<>(Arrays.asList(GenConstants.COLUMN_MUST_HIDE));
+        Set<String> stringSet = new HashSet<>(Arrays.asList(GenConfig.getEntity().getMustHide()));
         switch (Objects.requireNonNull(GenConstants.TemplateType.getValue(tplCategory))) {
             case TREE:
-                stringSet.addAll(Arrays.asList(GenConstants.TREE_FRONT_ENTITY));
-                stringSet.addAll(Arrays.asList(GenConstants.BASE_FRONT_ENTITY));
+                stringSet.addAll(Arrays.asList(GenConfig.getEntity().getFront().getTree()));
+                stringSet.addAll(Arrays.asList(GenConfig.getEntity().getFront().getBase()));
                 break;
             case SUB_TREE:
-                stringSet.addAll(Arrays.asList(GenConstants.TREE_FRONT_ENTITY));
+                stringSet.addAll(Arrays.asList(GenConfig.getEntity().getFront().getTree()));
             case SUB_BASE:
-                stringSet.addAll(Arrays.asList(GenConstants.SUB_FRONT_ENTITY));
+                stringSet.addAll(Arrays.asList(GenConfig.getEntity().getFront().getSub()));
             case BASE:
-                stringSet.addAll(Arrays.asList(GenConstants.BASE_FRONT_ENTITY));
+                stringSet.addAll(Arrays.asList(GenConfig.getEntity().getFront().getBase()));
         }
         return stringSet;
     }
@@ -494,11 +491,11 @@ public class VelocityUtils {
      * @return 返回字典名称
      */
     public static String getDictName(String dictType) {
-        for (String removeName : GenConstants.DICT_TYPE_REMOVE) {
+        for (String removeName : GenConfig.getDictTypeRemove()) {
             if (dictType.startsWith(removeName))
-                return GenConstants.DICT_NAME_START + StringUtils.convertToCamelCase(StrUtil.removePrefix(dictType, removeName)) + GenConstants.DICT_NAME_END;
+                return StrUtil.format(GenConstants.DICT_NAME, StringUtils.convertToCamelCase(StrUtil.removePrefix(dictType, removeName)));
         }
-        return GenConstants.DICT_NAME_START + StringUtils.convertToCamelCase(dictType) + GenConstants.DICT_NAME_END;
+        return StrUtil.format(GenConstants.DICT_NAME, StringUtils.convertToCamelCase(dictType));
     }
 
     /**
@@ -510,22 +507,22 @@ public class VelocityUtils {
     public static Set<String> getExcludePropertyList(GenTableDto genTable) {
         Set<String> excludeList = new HashSet<>();
         String[] columnNames = genTable.getSubList().stream().map(GenTableColumnDto::getJavaField).toArray(String[]::new);
-        if (!genTable.isMerge() && ArrayUtil.isNotEmpty(GenConstants.BASE_ENTITY)) {
-            for (String field : GenConstants.BASE_ENTITY) {
+        if (!genTable.isMerge() && ArrayUtil.isNotEmpty(GenConfig.getEntity().getBack().getBase())) {
+            for (String field : GenConfig.getEntity().getBack().getBase()) {
                 if (!StrUtil.equalsAny(field, columnNames)) {
                     excludeList.add(field);
                 }
             }
         }
-        if ((genTable.isTree() || genTable.isSubTree()) && ArrayUtil.isNotEmpty(GenConstants.TREE_ENTITY)) {
-            for (String field : GenConstants.TREE_ENTITY) {
+        if ((genTable.isTree() || genTable.isSubTree()) && ArrayUtil.isNotEmpty(GenConfig.getEntity().getBack().getTree())) {
+            for (String field : GenConfig.getEntity().getBack().getTree()) {
                 if (!StrUtil.equalsAny(field, columnNames)) {
                     excludeList.add(field);
                 }
             }
         }
-        if ((genTable.isSubBase() || genTable.isSubTree()) && ArrayUtil.isNotEmpty(GenConstants.SUB_ENTITY)) {
-            for (String field : GenConstants.SUB_ENTITY) {
+        if ((genTable.isSubBase() || genTable.isSubTree()) && ArrayUtil.isNotEmpty(GenConfig.getEntity().getBack().getSub())) {
+            for (String field : GenConfig.getEntity().getBack().getSub()) {
                 if (!StrUtil.equalsAny(field, columnNames)) {
                     excludeList.add(field);
                 }

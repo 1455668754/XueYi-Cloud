@@ -9,80 +9,8 @@ import cn.hutool.core.util.StrUtil;
  */
 public class GenConstants {
 
-    /** 数据库字符串类型 */
-    public static final String[] COLUMN_TYPE_STR = {"char", "varchar", "nvarchar", "varchar2"};
-
-    /** 数据库文本类型 */
-    public static final String[] COLUMN_TYPE_TEXT = {"tinytext", "text", "mediumtext", "longtext"};
-
-    /** 数据库日期类型 */
-    public static final String[] COLUMN_TYPE_DATE = {"datetime", "time", "date", "timestamp"};
-
-//    /** 数据库时间类型 */
-//    public static final String[] COLUMN_TYPE_TIME = { "datetime", "time", "date", "timestamp" };
-
-    /** 数据库数字类型 */
-    public static final String[] COLUMN_TYPE_NUMBER = {"tinyint", "smallint", "mediumint", "int", "number", "integer"};
-
-    /** 数据库长数字类型 */
-    public static final String[] COLUMN_TYPE_LONG = {"bigint"};
-
-    /** 数据库浮点类型 */
-    public static final String[] COLUMN_TYPE_FLOAT = {"float", "double", "decimal"};
-
-    /** 页面不需要编辑字段 */
-    public static final String[] COLUMN_NAME_NOT_INSERT = {"id", "createBy", "createTime", "updateBy", "updateTime"};
-
-    /** 页面不需要查看字段 */
-    public static final String[] COLUMN_NAME_NOT_VIEW = {"id", "createBy", "createTime", "updateBy", "updateTime"};
-
-    /** 页面不需要编辑字段 */
-    public static final String[] COLUMN_NAME_NOT_EDIT = {"id", "createBy", "createTime", "updateBy", "updateTime"};
-
-    /** 页面不需要显示的列表字段 */
-    public static final String[] COLUMN_NAME_NOT_LIST = {"id", "createBy", "createTime", "updateBy", "updateTime", "remark"};
-
-    /** 页面不需要查询字段 */
-    public static final String[] COLUMN_NAME_NOT_QUERY = {"id", "sort", "createBy", "createTime", "updateBy", "updateTime", "remark"};
-
-    /** 页面不需要导入字段 */
-    public static final String[] COLUMN_NAME_NOT_IMPORT = {"id", "createBy", "createTime", "updateBy", "updateTime"};
-
-    /** 页面不需要导出字段 */
-    public static final String[] COLUMN_NAME_NOT_EXPORT = {"id", "sort", "createBy", "updateBy"};
-
-    /** 后端base基类字段 */
-    public static final String[] BASE_ENTITY = {"id", "name", "status", "sort", "remark", "createBy", "createTime", "updateBy", "updateTime", "delFlag"};
-
-    /** 后端tree基类字段 */
-    public static final String[] TREE_ENTITY = {"parentId", "ancestors"};
-
-    /** 后端sub基类字段 */
-    public static final String[] SUB_ENTITY = {};
-
-    /** 后端tenant字段 */
-    public static final String[] TENANT_ENTITY = {"tenantId"};
-
-    /** 前端base基类字段 */
-    public static final String[] BASE_FRONT_ENTITY = {"createBy", "createName", "createTime", "updateBy", "updateName", "updateTime", "delFlag"};
-
-    /** 前端tree基类字段 */
-    public static final String[] TREE_FRONT_ENTITY = {"parentId", "ancestors"};
-
-    /** 前端sub基类字段 */
-    public static final String[] SUB_FRONT_ENTITY = {};
-
-    /** 必定隐藏字段（前后端均隐藏） */
-    public static final String[] COLUMN_MUST_HIDE = {"delFlag", "tenantId", "ancestors"};
-
-    /** 字典名称转换移除匹配字段 */
-    public static final String[] DICT_TYPE_REMOVE = {"sys_", "te_", "gen_"};
-
-    /** 字典名称结尾字段 */
-    public static final String DICT_NAME_START = "Dic";
-
-    /** 字典名称结尾字段 */
-    public static final String DICT_NAME_END = "Options";
+    /** 字典名称 */
+    public static final String DICT_NAME = "Dic{}Options";
 
     /** 校验内容 */
     public enum GenCheck {

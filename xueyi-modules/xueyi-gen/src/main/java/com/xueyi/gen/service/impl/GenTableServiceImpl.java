@@ -5,16 +5,16 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.DictConstants;
-import com.xueyi.common.core.constant.gen.GenConstants;
-import com.xueyi.common.core.constant.gen.GenConstants.OptionField;
-import com.xueyi.common.core.constant.gen.GenConstants.TemplateType;
 import com.xueyi.common.core.constant.basic.HttpConstants;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
+import com.xueyi.common.core.constant.gen.GenConstants.OptionField;
+import com.xueyi.common.core.constant.gen.GenConstants.TemplateType;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.exception.ServiceException;
 import com.xueyi.common.core.text.CharsetKit;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.common.web.entity.service.impl.SubBaseServiceImpl;
+import com.xueyi.gen.config.GenConfig;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
 import com.xueyi.gen.domain.dto.GenTableDto;
 import com.xueyi.gen.manager.GenTableManager;
@@ -148,7 +148,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
         int row = baseManager.update(table);
         if (row > 0)
             GenUtils.updateCheckColumn(table);
-            table.getSubList().forEach(column -> subService.update(column));
+        table.getSubList().forEach(column -> subService.update(column));
         return row;
     }
 
@@ -347,7 +347,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
         }
         if (StrUtil.isNotEmpty(optionsObj.getString(OptionField.IS_TENANT.getCode())) && StrUtil.equals(optionsObj.getString(OptionField.IS_TENANT.getCode()), DictConstants.DicYesNo.YES.getCode())) {
             for (GenTableColumnDto column : genTable.getSubList()) {
-                if (StrUtil.equalsAny(column.getJavaField(), GenConstants.TENANT_ENTITY)) {
+                if (StrUtil.equalsAny(column.getJavaField(), GenConfig.getEntity().getBack().getTenant())) {
                     return;
                 }
             }
