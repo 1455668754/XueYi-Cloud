@@ -1,7 +1,7 @@
 package ${packageName}.mapper.merge;
 
 import com.xueyi.common.web.entity.mapper.BaseMapper;
-import ${packageName}.domain.merge.${ClassName}Merge;
+import ${packageName}.domain.merge.${ClassName};
 import com.xueyi.common.datasource.annotation.${sourceMode};
 
 /**
@@ -10,5 +10,5 @@ import com.xueyi.common.datasource.annotation.${sourceMode};
  * @author ${author}
  */
 @${sourceMode}
-public interface ${ClassName}MergeMapper extends BaseMapper<${ClassName}Merge> {
+public interface ${ClassName}Mapper extends BaseMapper<${ClassName}> {
 }

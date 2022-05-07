@@ -284,9 +284,9 @@ public class VelocityUtils {
         else if (template.contains("mapper.java.vm"))
             return StringUtils.format("{}/mapper/{}Mapper.java", javaPath, className);
         else if (template.contains("merge.java.vm"))
-            return StringUtils.format("{}/domain/merge/{}Merge.java", javaPath, className);
+            return StringUtils.format("{}/domain/merge/{}.java", javaPath, className);
         else if (template.contains("mergeMapper.java.vm"))
-            return StringUtils.format("{}/mapper/merge/{}MergeMapper.java", javaPath, className);
+            return StringUtils.format("{}/mapper/merge/{}Mapper.java", javaPath, className);
 
         else if (template.contains("sql.sql.vm"))
             return StringUtils.format("sql/{}.sql", businessName);

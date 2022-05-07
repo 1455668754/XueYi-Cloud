@@ -71,7 +71,7 @@ public class ${ClassName}Po#if($generics)${generics}#end extends ${Entity}#if($g
     @Excel(name = "${comment}")
 #end
 #end
-#if($column.isPk)
+#if($column.isPk())
     @TableId("${column.name}")
 #else
     @TableField("${column.name}")

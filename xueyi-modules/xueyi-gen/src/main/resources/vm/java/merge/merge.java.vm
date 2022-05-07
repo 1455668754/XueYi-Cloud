@@ -20,25 +20,28 @@ import com.xueyi.common.core.annotation.Excel;
  * @author ${author}
  */
 @TableName(#if(${excludeProperty.size()} > 0 )value = "${tableName}", excludeProperty = {#set($times = true)#foreach($field in $excludeProperty)#if($times)#set($times = false)#else,#end"${field}"#end}#else"${tableName}"#end)
-public class ${ClassName}Po#if($generics)${generics}#end extends ${Entity} {
+public class ${ClassName}#if($generics)${generics}#end extends ${Entity} {
 
     private static final long serialVersionUID = 1L;
 
 #foreach ($column in $columns)
-#set($hide = true)
+#set($show = true)
+#if($column.isPk())
+#set($show = false)
+#end
 #foreach($item in $mustHideField)
 #if($column.javaField == $item)
-#set($hide = false)
+#set($show = false)
 #break
 #end
 #end
-#foreach($item in $hideField)
+#foreach($item in $showField)
 #if($column.javaField == $item)
-#set($hide = false)
+#set($show = false)
 #break
 #end
 #end
-#if($hide)
+#if($show)
     /** $column.comment */
 #if($column.list)
 #if($column.javaType == 'Date')
@@ -51,20 +54,23 @@ public class ${ClassName}Po#if($generics)${generics}#end extends ${Entity} {
 #end
 #end
 #foreach ($column in $columns)
-#set($hide = true)
+#set($show = true)
+#if($column.isPk())
+#set($show = false)
+#end
 #foreach($item in $mustHideField)
 #if($column.javaField == $item)
-#set($hide = false)
+#set($show = false)
 #break
 #end
 #end
-#foreach($item in $hideField)
+#foreach($item in $showField)
 #if($column.javaField == $item)
-#set($hide = false)
+#set($show = false)
 #break
 #end
 #end
-#if($hide)
+#if($show)
 #set($cover = false)
 #foreach($item in $coverField)
 #if($column.javaField == $item)
@@ -94,3 +100,4 @@ public class ${ClassName}Po#if($generics)${generics}#end extends ${Entity} {
 
 #end
 #end
+}
