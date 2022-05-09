@@ -53,9 +53,10 @@ public class SysLoginLogPo extends TBaseEntity {
     private String msg;
 
     /** 访问时间 */
+    @OrderBy(sort = 10)
+    @TableField("access_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Excel(name = "访问时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
-    @TableField("access_time")
     private Date accessTime;
 
     public String getEnterpriseName() {

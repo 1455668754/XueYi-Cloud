@@ -91,9 +91,10 @@ public class SysOperateLogPo extends TBaseEntity {
     private String errorMsg;
 
     /** 操作时间 */
+    @OrderBy(sort = 10)
+    @TableField("operate_time")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Excel(name = "操作时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
-    @TableField("operate_time")
     private Date operateTime;
 
     public String getTitle() {
