@@ -45,9 +45,9 @@ public class TokenController {
     public AjaxResult logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
         if (StrUtil.isNotEmpty(token)) {
+            LoginUser loginUser = tokenService.getLoginUser(request);
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
-            LoginUser loginUser = tokenService.getLoginUser(request);
             if(ObjectUtil.isNotNull(loginUser)) {
                 String sourceName = JwtUtils.getSourceName(token);
                 Long enterpriseId = Long.valueOf(JwtUtils.getEnterpriseId(token));
