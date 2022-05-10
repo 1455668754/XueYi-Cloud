@@ -61,7 +61,6 @@ public abstract class SubTreeController<D extends SubTreeEntity<D, S>, DS extend
         RHandleValidated(BaseConstants.Operate.DELETE, idList);
         RHandleEmptyValidated(idList);
         RHandleTreeSubValidated(idList);
-        RHandleTreeChildValidated(idList);
         return toAjax(baseService.deleteByIds(idList));
     }
 }
