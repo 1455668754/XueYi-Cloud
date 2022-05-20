@@ -10,7 +10,6 @@ import com.xueyi.common.web.handler.XueYiMetaObjectHandler;
 import com.xueyi.common.web.handler.XueYiTenantLineHandler;
 import com.xueyi.common.web.injector.CustomizedSqlInjector;
 import com.xueyi.common.web.interceptor.XueYiTenantLineInnerInterceptor;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +20,6 @@ import org.springframework.context.annotation.Configuration;
  * @author xueyi
  */
 @Configuration
-@MapperScan("com.xueyi.**.mapper")
 public class XueYiMyBatisPlusConfig {
 
     @Autowired
