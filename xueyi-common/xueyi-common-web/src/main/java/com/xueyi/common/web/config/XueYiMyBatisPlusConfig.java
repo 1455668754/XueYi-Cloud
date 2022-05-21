@@ -6,10 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerIntercep
 import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.github.pagehelper.PageInterceptor;
 import com.xueyi.common.datascope.interceptor.XueYiDataScopeHandler;
+import com.xueyi.common.web.handler.TenantLineHandler;
 import com.xueyi.common.web.handler.XueYiMetaObjectHandler;
-import com.xueyi.common.web.handler.XueYiTenantLineHandler;
 import com.xueyi.common.web.injector.CustomizedSqlInjector;
-import com.xueyi.common.web.interceptor.XueYiTenantLineInnerInterceptor;
+import com.xueyi.common.web.interceptor.TenantLineInnerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +26,7 @@ public class XueYiMyBatisPlusConfig {
     private XueYiDataScopeHandler dataScopeAspect;
 
     @Autowired
-    private XueYiTenantLineHandler tenantLineHandler;
+    private TenantLineHandler tenantLineHandler;
 
     /**
      * PageHelper分页配置
@@ -65,7 +65,7 @@ public class XueYiMyBatisPlusConfig {
         // 数据权限插件
         interceptor.addInnerInterceptor(new DataPermissionInterceptor(dataScopeAspect));
         // 租户控制插件
-        interceptor.addInnerInterceptor(new XueYiTenantLineInnerInterceptor(tenantLineHandler));
+        interceptor.addInnerInterceptor(new TenantLineInnerInterceptor(tenantLineHandler));
         return interceptor;
     }
 }

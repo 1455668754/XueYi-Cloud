@@ -18,6 +18,12 @@ public class BaseConstants {
     /** 空节点Id */
     public static final Long NONE_ID = -2L;
 
+    /** 默认 - 非租户表配置 */
+    public static final String[] INIT_EXCLUDE_TABLE = {"sys_config", "sys_dict_type", "sys_dict_data", "te_strategy"};
+
+    /** 默认 - 公共表配置 */
+    public static final String[] INIT_COMMON_TABLE = {};
+
     /** 操作类型 */
     public enum Operate {
 

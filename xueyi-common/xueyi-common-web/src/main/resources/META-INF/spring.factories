@@ -2,4 +2,4 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.xueyi.common.web.config.properties.TenantProperties,\
   com.xueyi.common.web.config.XueYiMyBatisPlusConfig,\
   com.xueyi.common.web.handler.XueYiMetaObjectHandler,\
-  com.xueyi.common.web.handler.XueYiTenantLineHandler
+  com.xueyi.common.web.handler.TenantLineHandler
