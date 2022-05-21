@@ -29,7 +29,6 @@ public class SysUserPostMerge extends TBasisEntity {
     public SysUserPostMerge(Long userId, Long postId) {
         setUserId(userId);
         setPostId(postId);
-        setEnterpriseId(SecurityUtils.getEnterpriseId());
     }
 
     public Long getUserId() {

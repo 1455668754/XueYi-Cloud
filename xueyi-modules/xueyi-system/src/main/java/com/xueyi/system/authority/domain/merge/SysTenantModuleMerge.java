@@ -23,7 +23,6 @@ public class SysTenantModuleMerge extends TBasisEntity {
 
     public SysTenantModuleMerge(Long moduleId){
         setModuleId(moduleId);
-        setEnterpriseId(SecurityUtils.getEnterpriseId());
     }
 
     public Long getModuleId() {

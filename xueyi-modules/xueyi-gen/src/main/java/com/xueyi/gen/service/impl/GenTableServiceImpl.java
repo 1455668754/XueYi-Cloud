@@ -117,17 +117,16 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      * @param tableList 导入表列表
      */
     @Override
-    @DSTransactional
     public void importGenTable(List<GenTableDto> tableList) {
         try {
             tableList.forEach(table -> {
                 GenUtils.initTable(table);
                 int row = baseManager.insert(table);
                 if (row > 0) {
-                    // 保存列信息
                     List<GenTableColumnDto> columnList = subService.selectDbTableColumnsByName(table.getName());
                     columnList.forEach(column -> GenUtils.initColumnField(column, table));
                     subService.insertBatch(columnList);
+                    columnList = baseManager.selectSubByForeignKey(table.getId());
                     GenUtils.initTableOptions(columnList, table);
                     baseManager.update(table);
                 }

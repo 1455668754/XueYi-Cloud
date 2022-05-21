@@ -29,7 +29,6 @@ public class SysRoleModuleMerge extends TBasisEntity {
     public SysRoleModuleMerge(Long roleId, Long moduleId) {
         setRoleId(roleId);
         setModuleId(moduleId);
-        setEnterpriseId(SecurityUtils.getEnterpriseId());
     }
 
     public Long getRoleId() {

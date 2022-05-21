@@ -4,7 +4,6 @@ package com.xueyi.system.organize.domain.merge;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.xueyi.common.core.web.tenant.base.TBasisEntity;
-import com.xueyi.common.security.utils.SecurityUtils;
 
 /**
  * 角色-部门关联（权限范围） 持久化对象
@@ -30,7 +29,6 @@ public class SysRoleDeptMerge extends TBasisEntity {
     public SysRoleDeptMerge(Long roleId, Long deptId) {
         setRoleId(roleId);
         setDeptId(deptId);
-        setEnterpriseId(SecurityUtils.getEnterpriseId());
     }
 
     public Long getRoleId() {

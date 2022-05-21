@@ -65,7 +65,7 @@ public class TenantLineHandler implements BasicLineHandler {
     }
 
     /**
-     * 忽略商户控制
+     * 忽略租户控制
      *
      * @return 结果
      */

@@ -7,21 +7,21 @@ import java.util.List;
 /**
  * SubTree 基类
  *
- * @param <D> Dto
- * @param <S> SubDto
+ * @param <D>  Dto
+ * @param <SD> SubDto
  * @author xueyi
  */
-public class SubTreeEntity<D, S> extends TreeEntity<D> {
+public class SubTreeEntity<D, SD> extends TreeEntity<D> {
 
     /** 子数据集合 */
     @TableField(exist = false)
-    private List<S> subList;
+    private List<SD> subList;
 
-    public List<S> getSubList() {
+    public List<SD> getSubList() {
         return subList;
     }
 
-    public void setSubList(List<S> subList) {
+    public void setSubList(List<SD> subList) {
         this.subList = subList;
     }
 }

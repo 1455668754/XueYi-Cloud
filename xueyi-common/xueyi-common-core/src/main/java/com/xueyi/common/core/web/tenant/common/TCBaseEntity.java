@@ -16,7 +16,7 @@ public class TCBaseEntity extends CBaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 租户Id */
-    @TableField(value = TENANT_ID, updateStrategy = FieldStrategy.NEVER, select = false)
+    @TableField(exist = false)
     private Long enterpriseId;
 
     public Long getEnterpriseId() {

@@ -23,7 +23,6 @@ public class SysTenantMenuMerge extends TBasisEntity {
 
     public SysTenantMenuMerge(Long menuId){
         setMenuId(menuId);
-        setEnterpriseId(SecurityUtils.getEnterpriseId());
     }
 
     public Long getMenuId() {
