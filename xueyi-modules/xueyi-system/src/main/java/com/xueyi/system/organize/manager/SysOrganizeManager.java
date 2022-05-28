@@ -223,6 +223,8 @@ public class SysOrganizeManager {
                     List<SysRoleDeptMerge> roleDeptMerges = deptIdList.stream().map(deptId -> new SysRoleDeptMerge(roleId, deptId)).collect(Collectors.toList());
                     roleDeptMergeMapper.insertBatch(roleDeptMerges);
                 }
+            } else {
+                roleDeptMergeMapper.delete(Wrappers.<SysRoleDeptMerge>query().lambda().eq(SysRoleDeptMerge::getRoleId, roleId));
             }
             // // 4.查询原始的角色与岗位关联数据,新增/删除差异关联数据
             List<SysRolePostMerge> originalPostList = rolePostMergeMapper.selectList(
