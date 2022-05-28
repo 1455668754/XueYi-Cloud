@@ -58,7 +58,7 @@
         <el-form ref="dataForm" :model="form" :rules="dataRules" label-width="100px" v-show="active === 2">
           <el-col :span="12">
             <el-form-item label="角色名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入角色名称"/>
+              <el-input v-model="form.name" placeholder="请输入角色名称" disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
