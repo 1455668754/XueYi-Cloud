@@ -2,7 +2,6 @@ package com.xueyi.system.api.organize.domain.po;
 
 import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.xueyi.common.core.annotation.Excel;
 import com.xueyi.common.core.annotation.Excel.Type;
 import com.xueyi.common.core.web.tenant.base.TBaseEntity;
@@ -162,7 +161,6 @@ public class SysUserPo extends TBaseEntity {
         this.profile = profile;
     }
 
-    @JsonProperty
     public String getPassword() {
         return password;
     }
