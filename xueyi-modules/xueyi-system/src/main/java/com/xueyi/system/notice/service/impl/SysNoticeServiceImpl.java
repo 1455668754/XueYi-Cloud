@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.xueyi.common.core.constant.basic.SecurityConstants.CREATE_BY;
+
 /**
  * 通知公告管理 服务层处理
  *
@@ -25,7 +27,7 @@ public class SysNoticeServiceImpl extends BaseServiceImpl<SysNoticeDto, SysNotic
      * @return 通知公告对象集合
      */
     @Override
-    @DataScope(userAlias = "createBy", mapperScope = {"SysNoticeMapper"})
+    @DataScope(userAlias = CREATE_BY, mapperScope = {"SysNoticeMapper"})
     public List<SysNoticeDto> selectListScope(SysNoticeDto notice) {
         return baseManager.selectListExtra(notice);
     }
