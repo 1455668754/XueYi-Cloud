@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="字典编码" prop="code">
-        <el-select v-model="queryParams.code" placeholder="请选择" clearable>
+        <el-select v-model="queryParams.code" placeholder="请选择" @change="handleQuery" clearable>
           <el-option
             v-for="dict in codeOptions"
             :key="dict.code"
