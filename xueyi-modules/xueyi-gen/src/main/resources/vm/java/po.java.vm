@@ -24,6 +24,25 @@ import com.xueyi.common.core.web.tenant.base.${Entity};
 #else
 import com.xueyi.common.core.web.entity.base.${Entity};
 #end
+#foreach ($column in $columns)
+#set($hide = true)
+#foreach($item in $mustHideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#foreach($item in $hideField)
+#if($column.javaField == $item)
+#set($hide = false)
+#break
+#end
+#end
+#if($hide && $column.isPk())
+import com.baomidou.mybatisplus.annotation.TableId;
+#break
+#end
+#end
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.xueyi.common.core.annotation.Excel;
 
@@ -63,20 +82,20 @@ public class ${ClassName}Po#if($generics)${generics}#end extends ${Entity}#if($g
 #set($comment=$column.comment)
 #end
 #if($parentheseIndex != -1)
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+@Excel(name = "${comment}" , readConverterExp = "$column.readConverterExp()" )
 #elseif($column.javaType == 'Date')
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Excel(name = "${comment}", width = 30, dateFormat = "yyyy-MM-dd")
+@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss" , timezone = "GMT+8" )
+@Excel(name = "${comment}" , width = 30, dateFormat = "yyyy-MM-dd" )
 #else
-    @Excel(name = "${comment}")
+@Excel(name = "${comment}" )
 #end
 #end
 #if($column.isPk())
-    @TableId("${column.name}")
+@TableId("${column.name}" )
 #else
-    @TableField("${column.name}")
+@TableField("${column.name}" )
 #end
-    private $column.javaType $column.javaField;
+private $column.javaType $column.javaField;
 
 #end
 #end
@@ -109,18 +128,18 @@ public class ${ClassName}Po#if($generics)${generics}#end extends ${Entity}#if($g
 #set($field=$AttrName.substring(0,1).toUpperCase() + ${AttrName.substring(1)})
 #end
 #if($cover)
-    @Override
+@Override
 #end
-    public void set${field}($column.javaType $AttrName) {
-        this.$AttrName = $AttrName;
-    }
+public void set${field}($column.javaType $AttrName) {
+    this.$AttrName = $AttrName;
+}
 
 #if($cover)
-    @Override
+@Override
 #end
-    public $column.javaType get${field}() {
-        return $AttrName;
-    }
+public $column.javaType get${field}() {
+    return $AttrName;
+}
 
 #end
 #end

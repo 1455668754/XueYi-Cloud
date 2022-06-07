@@ -33,7 +33,11 @@
             v-for="dict in dict.type.${column.dictType}"
             :key="dict.value"
             :label="dict.label"
+#if($column.javaType == 'Integer')
+            :value="parseInt(dict.value)"
+#else
             :value="dict.value"
+#end
           />
 #else
           <el-option label="请选择字典生成" value="" />
@@ -260,7 +264,11 @@
                     v-for="dict in dict.type.${column.dictType}"
                     :key="dict.value"
                     :label="dict.label"
+#if($column.javaType == 'Integer')
+                    :value="parseInt(dict.value)"
+#else
                     :value="dict.value"
+#end
                   />
 #else
                   <el-option label="请选择字典生成" value="" />
@@ -283,7 +291,11 @@
                       v-for="dict in dict.type.${column.dictType}"
                       :key="dict.value"
                       :label="dict.value"
+#if($column.javaType == 'Integer')
+                      :value="parseInt(dict.value)"
+#else
                       :value="dict.value"
+#end
                   >{{ dict.label }}
                   </${componentItem}>
 #else
