@@ -69,7 +69,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
     public static String getGenPath(GenTableDto table, String template) {
         String genPath = table.getGenPath();
         if (StringUtils.equals(genPath, StrUtil.SLASH)) {
-            return System.getProperty("user.dir" ) + File.separator + "src" + File.separator + VelocityUtils.getFileName(template, table);
+            return System.getProperty("user.dir") + File.separator + "src" + File.separator + VelocityUtils.getFileName(template, table);
         }
         return genPath + File.separator + VelocityUtils.getFileName(template, table);
     }
@@ -84,7 +84,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
     public static String getUiPath(GenTableDto table, String template) {
         String uiPath = table.getUiPath();
         if (StringUtils.equals(uiPath, StrUtil.SLASH)) {
-            return System.getProperty("user.dir" ) + File.separator + VelocityUtils.getFileName(template, table);
+            return System.getProperty("user.dir") + File.separator + VelocityUtils.getFileName(template, table);
         }
         return uiPath + File.separator + VelocityUtils.getFileName(template, table);
     }
@@ -177,10 +177,10 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
             tpl.merge(context, sw);
             data = new JSONObject();
             String vmName = StrUtil.subAfter(template, StrUtil.SLASH, true);
-            vmName = StrUtil.removeSuffix(vmName, (".vm" ));
-            data.put("name" , vmName);
-            data.put("language" , StrUtil.subAfter(vmName, StrUtil.DOT, true));
-            data.put("template" , sw.toString());
+            vmName = StrUtil.removeSuffix(vmName, (".vm"));
+            data.put("name", vmName);
+            data.put("language", StrUtil.subAfter(vmName, StrUtil.DOT, true));
+            data.put("template", sw.toString());
             dataMap.add(data);
         }
         return dataMap;
@@ -216,7 +216,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
 
         // 获取模板列表
         List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory());
-        String[] genFiles = {"merge.java.vm" , "mergeMapper.java.vm" , "dto.java.vm" , "po.java.vm" , "controller.java.vm" , "service.java.vm" , "serviceImpl.java.vm" , "manager.java.vm" , "mapper.java.vm" , "sql.sql.vm"};
+        String[] genFiles = {"merge.java.vm", "mergeMapper.java.vm", "dto.java.vm", "po.java.vm", "controller.java.vm", "service.java.vm", "serviceImpl.java.vm", "manager.java.vm", "mapper.java.vm", "sql.sql.vm"};
         for (String template : templates) {
             // 渲染模板
             StringWriter sw = new StringWriter();
@@ -247,7 +247,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
 
         List<GenTableColumnDto> dbTableColumns = subService.selectDbTableColumnsByName(tableName);
         if (StringUtils.isEmpty(dbTableColumns)) {
-            throw new ServiceException("同步数据失败，原表结构不存在" );
+            throw new ServiceException("同步数据失败，原表结构不存在");
         }
         List<String> dbTableColumnNames = dbTableColumns.stream().map(GenTableColumnDto::getName).collect(Collectors.toList());
         dbTableColumns.forEach(column -> {
@@ -342,7 +342,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      */
     private void checkTclBasic(GenTableDto genTable, JSONObject optionsObj) {
         if (StrUtil.isEmpty(optionsObj.getString(OptionField.SOURCE_MODE.getCode()))) {
-            throw new ServiceException("未设置源策略模式！" );
+            throw new ServiceException("未设置源策略模式！");
         }
         if (StrUtil.isNotEmpty(optionsObj.getString(OptionField.IS_TENANT.getCode())) && StrUtil.equals(optionsObj.getString(OptionField.IS_TENANT.getCode()), DictConstants.DicYesNo.YES.getCode())) {
             for (GenTableColumnDto column : genTable.getSubList()) {
@@ -350,7 +350,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
                     return;
                 }
             }
-            throw new ServiceException("未在业务表中发现多租户关键字，请关闭多租户模式重试！" );
+            throw new ServiceException("未在业务表中发现多租户关键字，请关闭多租户模式重试！");
         }
     }
 
@@ -362,14 +362,14 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      */
     private void checkTclBase(GenTableDto genTable, JSONObject optionsObj) {
         if (StrUtil.isEmpty(optionsObj.getString(OptionField.PARENT_MODULE_ID.getCode())))
-            throw new ServiceException("归属模块不能为空" );
+            throw new ServiceException("归属模块不能为空");
         else if (StrUtil.isEmpty(optionsObj.getString(OptionField.PARENT_MENU_ID.getCode())))
-            throw new ServiceException("归属菜单不能为空" );
+            throw new ServiceException("归属菜单不能为空");
         else if (StrUtil.isEmpty(optionsObj.getString(OptionField.ID.getCode())))
-            throw new ServiceException("主键字段不能为空" );
+            throw new ServiceException("主键字段不能为空");
         for (GenTableColumnDto column : genTable.getSubList())
             if (column.isPk() && !ObjectUtil.equals(column.getId(), optionsObj.getLong(OptionField.ID.getCode())))
-                throw new ServiceException("主键字段只能为数据表主键" );
+                throw new ServiceException("主键字段只能为数据表主键");
     }
 
     /**
@@ -379,13 +379,13 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      */
     private void checkTclTree(JSONObject optionsObj) {
         if (StrUtil.isEmpty(optionsObj.getString(OptionField.TREE_ID.getCode())))
-            throw new ServiceException("树编码字段不能为空" );
+            throw new ServiceException("树编码字段不能为空");
         else if (StringUtils.isEmpty(optionsObj.getString(OptionField.PARENT_ID.getCode())))
-            throw new ServiceException("树父编码字段不能为空" );
+            throw new ServiceException("树父编码字段不能为空");
         else if (StringUtils.isEmpty(optionsObj.getString(OptionField.TREE_NAME.getCode())))
-            throw new ServiceException("树名称字段不能为空" );
+            throw new ServiceException("树名称字段不能为空");
         else if (StringUtils.isEmpty(optionsObj.getString(OptionField.ANCESTORS.getCode())))
-            throw new ServiceException("树祖籍列表字段不能为空" );
+            throw new ServiceException("树祖籍列表字段不能为空");
     }
 
     /**
@@ -395,11 +395,11 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      */
     private void checkTclSub(JSONObject optionsObj) {
         if (StrUtil.isEmpty(optionsObj.getString(OptionField.FOREIGN_ID.getCode())))
-            throw new ServiceException("外键关联的主表字段不能为空" );
+            throw new ServiceException("外键关联的主表字段不能为空");
         else if (StrUtil.isEmpty(optionsObj.getString(OptionField.SUB_TABLE_ID.getCode())))
-            throw new ServiceException("关联子表的表名字段不能为空" );
+            throw new ServiceException("关联子表的表名字段不能为空");
         else if (StringUtils.isEmpty(optionsObj.getString(OptionField.SUB_FOREIGN_ID.getCode())))
-            throw new ServiceException("关联子表的外键名字段不能为空" );
+            throw new ServiceException("关联子表的外键名字段不能为空");
     }
 
     /**
@@ -475,10 +475,13 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
         Long menuId = optionsObj.getLong(OptionField.PARENT_MENU_ID.getCode());
         R<SysMenuDto> result = remoteMenuService.getInfoInner(menuId, SecurityConstants.INNER);
         if (result.isFail())
-            throw new ServiceException("菜单服务异常，请联系管理员！" );
+            throw new ServiceException("菜单服务异常，请联系管理员！");
         else if (ObjectUtil.isNull(result.getResult()))
-            throw new ServiceException("该服务对应的菜单已被删除，请先修改后再生成代码！" );
-        optionsObj.put(OptionField.PARENT_MENU_ANCESTORS.getCode(), result.getResult().getAncestors() + "," + result.getResult().getId());
+            throw new ServiceException("该服务对应的菜单已被删除，请先修改后再生成代码！");
+        if (StrUtil.isEmpty(result.getResult().getAncestors()))
+            optionsObj.put(OptionField.PARENT_MENU_ANCESTORS.getCode(), result.getResult().getId());
+        else
+            optionsObj.put(OptionField.PARENT_MENU_ANCESTORS.getCode(), result.getResult().getAncestors() + "," + result.getResult().getId());
         table.setOptions(optionsObj.toString());
     }
 
