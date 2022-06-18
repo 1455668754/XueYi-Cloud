@@ -19,7 +19,6 @@ public class ReUtil {
      */
     public final static Set<Character> RE_KEYS = new HashSet<>(
             Arrays.asList('$', '(', ')', '*', '+', '.', '[', ']', '?', '\\', '^', '{', '}', '|'));
-    ;
 
     /**
      * 正则替换指定值<br>
