@@ -249,20 +249,6 @@
                 <version>${xueyi.version}</version>
             </dependency>
 
-            <!-- 消息推送 -->
-            <dependency>
-                <groupId>com.xueyi</groupId>
-                <artifactId>xueyi-common-socket</artifactId>
-                <version>${xueyi.version}</version>
-            </dependency>
-
-            <!-- 消息队列 -->
-            <dependency>
-                <groupId>com.xueyi</groupId>
-                <artifactId>xueyi-common-message</artifactId>
-                <version>${xueyi.version}</version>
-            </dependency>
-
             <!-- 系统接口 -->
             <dependency>
                 <groupId>com.xueyi</groupId>

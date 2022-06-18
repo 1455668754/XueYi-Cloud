@@ -16,16 +16,14 @@
         <module>xueyi-common-swagger</module>
         <module>xueyi-common-security</module>
         <module>xueyi-common-datascope</module>
-		<module>xueyi-common-datasource</module>
-		<module>xueyi-common-message</module>
-		<module>xueyi-common-socket</module>
+        <module>xueyi-common-datasource</module>
     </modules>
 
     <artifactId>xueyi-common</artifactId>
     <packaging>pom</packaging>
 
     <description>
-	    xueyi-common通用模块
+        xueyi-common通用模块
     </description>
 
 </project>
