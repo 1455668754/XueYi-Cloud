@@ -2,7 +2,8 @@ package com.xueyi.gen.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.basic.HttpConstants;
@@ -318,7 +319,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      */
     @Override
     public void validateEdit(GenTableDto genTable) {
-        JSONObject optionsObj = JSONObject.parseObject(genTable.getOptions());
+        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
         checkTclBasic(genTable, optionsObj);
         switch (Objects.requireNonNull(TemplateType.getValue(genTable.getTplCategory()))) {
             case SUB_BASE:
@@ -410,7 +411,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      */
     private GenTableDto initTable(Long id) {
         GenTableDto table = baseManager.selectByIdExtra(id);
-        JSONObject optionsObj = JSONObject.parseObject(table.getOptions());
+        JSONObject optionsObj = JSON.parseObject(table.getOptions());
         // 设置列信息
         switch (Objects.requireNonNull(TemplateType.getValue(table.getTplCategory()))) {
             case SUB_BASE:
@@ -458,7 +459,7 @@ public class GenTableServiceImpl extends SubBaseServiceImpl<GenTableDto, GenTabl
      */
     private void setSubTable(GenTableDto table, JSONObject optionsObj) {
         table.setSubTable(baseManager.selectByIdExtra(optionsObj.getLong(OptionField.SUB_TABLE_ID.getCode())));
-        JSONObject subOptionsObj = JSONObject.parseObject(table.getSubTable().getOptions());
+        JSONObject subOptionsObj = JSON.parseObject(table.getSubTable().getOptions());
         setBaseTable(table.getSubTable(), subOptionsObj);
         if (StrUtil.equalsAny(table.getSubTable().getTplCategory()
                 , TemplateType.TREE.getCode(), TemplateType.SUB_TREE.getCode()))

@@ -1,8 +1,11 @@
 package com.xueyi.gateway.filter;
 
-import java.nio.CharBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.atomic.AtomicReference;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
+import com.xueyi.common.core.utils.ServletUtils;
+import com.xueyi.common.core.utils.StringUtils;
+import com.xueyi.gateway.config.properties.CaptchaProperties;
+import com.xueyi.gateway.service.ValidateCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -10,12 +13,11 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import com.alibaba.fastjson.JSONObject;
-import com.xueyi.common.core.utils.StringUtils;
-import com.xueyi.common.core.utils.ServletUtils;
-import com.xueyi.gateway.config.properties.CaptchaProperties;
-import com.xueyi.gateway.service.ValidateCodeService;
 import reactor.core.publisher.Flux;
+
+import java.nio.CharBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 验证码过滤器
@@ -33,9 +35,9 @@ public class ValidateCodeFilter extends AbstractGatewayFilterFactory<Object> {
     @Autowired
     private CaptchaProperties captchaProperties;
 
-    private static final String CODE = "code";
+    private static final String CODE = "code" ;
 
-    private static final String UUID = "uuid";
+    private static final String UUID = "uuid" ;
 
     @Override
     public GatewayFilter apply(Object config) {
@@ -48,7 +50,7 @@ public class ValidateCodeFilter extends AbstractGatewayFilterFactory<Object> {
             }
             try {
                 String rspStr = resolveBodyFromRequest(request);
-                JSONObject obj = JSONObject.parseObject(rspStr);
+                JSONObject obj = JSON.parseObject(rspStr);
                 validateCodeService.checkCaptcha(obj.getString(CODE), obj.getString(UUID));
             } catch (Exception e) {
                 return ServletUtils.webFluxResponseWriter(exchange.getResponse(), e.getMessage());

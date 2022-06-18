@@ -5,7 +5,8 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.gen.GenConstants;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
@@ -25,13 +26,19 @@ import java.util.stream.Collectors;
  */
 public class VelocityUtils {
 
-    /** 项目空间路径 */
+    /**
+     * 项目空间路径
+     */
     private static final String PROJECT_PATH = "main/java" ;
 
-    /** 隐藏字段数组 */
+    /**
+     * 隐藏字段数组
+     */
     private static final String HIDE = "hide" ;
 
-    /** 覆写字段数组 */
+    /**
+     * 覆写字段数组
+     */
     private static final String COVER = "cover" ;
 
     /**
@@ -44,7 +51,7 @@ public class VelocityUtils {
         String packageName = genTable.getPackageName();
         String tplCategory = genTable.getTplCategory();
         String functionName = genTable.getFunctionName();
-        JSONObject optionsObj = JSONObject.parseObject(genTable.getOptions());
+        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
         Map<String, Set<String>> domainMap = getCoverMap(genTable);
 
         VelocityContext velocityContext = new VelocityContext();
@@ -310,7 +317,7 @@ public class VelocityUtils {
      * @return 外键关联的主表字段对象
      */
     public static GenTableColumnDto getForeignMainColumn(GenTableDto genTable) {
-        JSONObject optionsObj = JSONObject.parseObject(genTable.getOptions());
+        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
         for (GenTableColumnDto column : genTable.getSubList()) {
             if (ObjectUtil.equals(column.getId(), optionsObj.getLong(GenConstants.OptionField.FOREIGN_ID.getCode()))) {
                 return column;
@@ -326,7 +333,7 @@ public class VelocityUtils {
      * @return 外键对象
      */
     public static GenTableColumnDto getForeignColumn(GenTableDto genTable) {
-        JSONObject optionsObj = JSONObject.parseObject(genTable.getOptions());
+        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
         for (GenTableColumnDto subColumn : genTable.getSubTable().getSubList()) {
             if (ObjectUtil.equals(subColumn.getId(), optionsObj.getLong(GenConstants.OptionField.SUB_FOREIGN_ID.getCode()))) {
                 return subColumn;
@@ -387,7 +394,7 @@ public class VelocityUtils {
      * @return 是否为多租户
      */
     public static boolean isTenant(GenTableDto genTable) {
-        JSONObject optionsObj = JSONObject.parseObject(genTable.getOptions());
+        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
         return StrUtil.equals(optionsObj.getString(GenConstants.OptionField.IS_TENANT.getCode()), DictConstants.DicYesNo.YES.getCode());
     }
 
@@ -431,7 +438,7 @@ public class VelocityUtils {
      * @return 是否为多租户
      */
     public static boolean isMasterSource(GenTableDto genTable) {
-        JSONObject optionsObj = JSONObject.parseObject(genTable.getOptions());
+        JSONObject optionsObj = JSON.parseObject(genTable.getOptions());
         return StrUtil.equals(optionsObj.getString(GenConstants.OptionField.SOURCE_MODE.getCode()), GenConstants.SourceMode.MASTER.getCode());
     }
 

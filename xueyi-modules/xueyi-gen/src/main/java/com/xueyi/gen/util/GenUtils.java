@@ -3,10 +3,11 @@ package com.xueyi.gen.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
-import com.xueyi.common.core.constant.system.AuthorityConstants;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.xueyi.common.core.constant.basic.DictConstants;
 import com.xueyi.common.core.constant.gen.GenConstants;
+import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.common.core.utils.StringUtils;
 import com.xueyi.gen.config.GenConfig;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
@@ -185,7 +186,7 @@ public class GenUtils {
      * 最终校验列属性字段
      */
     public static void updateCheckColumn(GenTableDto table) {
-        JSONObject objectJson = JSONObject.parseObject(table.getOptions());
+        JSONObject objectJson = JSON.parseObject(table.getOptions());
         table.getSubList().forEach(column -> {
             if (ObjectUtil.equals(column.getId(), objectJson.getLong(GenConstants.OptionField.ID.getCode()))) {
                 column.setJavaField(GenConstants.OptionField.ID.getCode());

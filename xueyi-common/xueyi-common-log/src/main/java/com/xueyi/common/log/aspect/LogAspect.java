@@ -2,7 +2,7 @@ package com.xueyi.common.log.aspect;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
 import com.xueyi.common.core.constant.basic.SecurityConstants;
 import com.xueyi.common.core.constant.basic.TenantConstants;
 import com.xueyi.common.core.utils.ServletUtils;
@@ -157,13 +157,13 @@ public class LogAspect {
      * 参数拼装
      */
     private String argsArrayToString(Object[] paramsArray) {
-        String params = "";
+        String params = "" ;
         if (paramsArray != null && paramsArray.length > 0) {
             for (Object o : paramsArray) {
                 if (StringUtils.isNotNull(o) && !isFilterObject(o)) {
                     try {
                         Object jsonObj = JSON.toJSON(o);
-                        params += jsonObj.toString() + " ";
+                        params += jsonObj.toString() + " " ;
                     } catch (Exception e) {
                     }
                 }

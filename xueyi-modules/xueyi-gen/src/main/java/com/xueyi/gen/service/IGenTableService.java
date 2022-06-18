@@ -1,6 +1,6 @@
 package com.xueyi.gen.service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.xueyi.common.web.entity.service.ISubBaseService;
 import com.xueyi.gen.domain.dto.GenTableColumnDto;
 import com.xueyi.gen.domain.dto.GenTableDto;

@@ -1,6 +1,6 @@
 package com.xueyi.gen.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.text.Convert;
 import com.xueyi.common.core.web.result.AjaxResult;
@@ -32,16 +32,20 @@ import java.util.List;
 @RequestMapping("/gen")
 public class GenController extends SubBaseController<GenTableDto, IGenTableService, GenTableColumnDto, IGenTableColumnService> {
 
-    /** 定义节点名称 */
+    /**
+     * 定义节点名称
+     */
     @Override
     protected String getNodeName() {
-        return "业务表";
+        return "业务表" ;
     }
 
-    /** 定义子数据名称 */
+    /**
+     * 定义子数据名称
+     */
     @Override
     protected String getSubName() {
-        return "业务字段";
+        return "业务字段" ;
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.xueyi.common.core.utils;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSON;
 import com.xueyi.common.core.constant.basic.HttpConstants;
 import com.xueyi.common.core.domain.R;
 import com.xueyi.common.core.text.Convert;
@@ -254,7 +254,7 @@ public class ServletUtils {
         response.setStatusCode(status);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, contentType);
         R<?> result = R.fail(code, value.toString());
-        DataBuffer dataBuffer = response.bufferFactory().wrap(JSONObject.toJSONString(result).getBytes());
+        DataBuffer dataBuffer = response.bufferFactory().wrap(JSON.toJSONString(result).getBytes());
         return response.writeWith(Mono.just(dataBuffer));
     }
 }
