@@ -112,7 +112,7 @@ export function selectDictLabels(datas, value, separator) {
 // 字符串格式化(%s )
 export function sprintf(str) {
   var args = arguments, flag = true, i = 1
-  str = str.replace(/%s/g, function() {
+  str = str.replace(/%s/g, function () {
     var arg = args[i++]
     if (typeof arg === 'undefined') {
       flag = false
@@ -211,7 +211,7 @@ export function tansParams(params) {
     if (value !== null && value !== '' && typeof (value) !== 'undefined') {
       if (typeof value === 'object') {
         for (const key of Object.keys(value)) {
-          if (value[key] !== null && value !== '' && typeof (value[key]) !== 'undefined') {
+          if (value[key] !== null && value[key] !== "" && typeof (value[key]) !== 'undefined') {
             let params = propName + '[' + key + ']'
             var subPart = encodeURIComponent(params) + '='
             result += subPart + encodeURIComponent(value[key]) + '&'
