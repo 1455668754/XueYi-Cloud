@@ -1,8 +1,10 @@
 package com.xueyi.system.authority.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.xueyi.common.core.constant.basic.BaseConstants;
 import com.xueyi.common.core.constant.system.AuthorityConstants;
 import com.xueyi.common.core.utils.TreeUtils;
 import com.xueyi.common.datascope.annotation.DataScope;
@@ -104,7 +106,7 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuDto, SysMenuManag
     public List<SysMenuDto> selectListScope(SysMenuDto menu) {
         return baseManager.selectListExtra(menu);
     }
-    
+
     /**
      * 根据模块Id查询菜单路由
      *
@@ -126,6 +128,31 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuDto, SysMenuManag
     @Override
     public List<SysMenuDto> getMenuByMenuType(Long moduleId, String menuType) {
         return baseManager.getMenuByMenuType(moduleId, menuType);
+    }
+
+    /**
+     * 新增菜单对象
+     *
+     * @param menu 菜单对象
+     * @return 结果
+     */
+    @Override
+    public int insert(SysMenuDto menu) {
+        menu.setName(IdUtil.simpleUUID());
+        return super.insert(menu);
+    }
+
+    /**
+     * 新增菜单对象（批量）
+     *
+     * @param menuList 菜单对象集合
+     * @return 结果
+     */
+    @Override
+    public int insertBatch(Collection<SysMenuDto> menuList) {
+        if (CollUtil.isNotEmpty(menuList))
+            menuList.forEach(menu -> menu.setName(IdUtil.simpleUUID()));
+        return super.insertBatch(menuList);
     }
 
     /**
@@ -195,6 +222,27 @@ public class SysMenuServiceImpl extends TreeServiceImpl<SysMenuDto, SysMenuManag
                     recursionFn(sonChild, routeMap);
                 }
             });
+        }
+    }
+    
+    /**
+     * 检验祖籍或归属模块是否变更
+     * 是否变更，变更则同步变更子菜单祖籍及其归属模块
+     *
+     * @param menu 菜单对象 | id id | parentId 父Id | moduleId 模块Id
+     */
+    @Override
+    protected void UHandleAncestorsCheck(SysMenuDto menu) {
+        SysMenuDto original = baseManager.selectById(menu.getId());
+        if (ObjectUtil.notEqual(menu.getParentId(), original.getParentId()) || ObjectUtil.notEqual(menu.getModuleId(), original.getModuleId())) {
+            String oldAncestors = original.getAncestors();
+            if (ObjectUtil.equals(BaseConstants.TOP_ID, menu.getParentId())) {
+                menu.setAncestors(String.valueOf(BaseConstants.TOP_ID));
+            } else {
+                SysMenuDto parent = baseManager.selectById(menu.getParentId());
+                menu.setAncestors(parent.getAncestors() + StrUtil.COMMA + menu.getParentId());
+            }
+            baseManager.updateChildrenAncestors(menu.getId(), menu.getAncestors(), oldAncestors, menu.getModuleId());
         }
     }
 }
