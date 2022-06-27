@@ -71,30 +71,36 @@
         >删除
         </el-button>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns" />
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList" :columns="columns"/>
     </el-row>
 
     <el-table v-loading="loading" :data="tableList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55" />
+      <el-table-column type="selection" align="center" v-if="columns[0].visible" min-width="55"/>
       <el-table-column label="序号" align="center" v-if="columns[1].visible" min-width="80">
         <template v-slot="scope">
           <span>{{ queryParams.pageSize * (queryParams.page - 1) + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="字典编码" align="center" prop="code" v-if="columns[2].visible" :show-overflow-tooltip="true" min-width="100" />
-      <el-table-column label="数据键值" align="center" prop="value" v-if="columns[3].visible" :show-overflow-tooltip="true" min-width="100" />
-      <el-table-column label="数据标签" align="center" prop="label" v-if="columns[4].visible" :show-overflow-tooltip="true" min-width="100" />
-      <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true" min-width="100">
+      <el-table-column label="字典编码" align="center" prop="code" v-if="columns[2].visible" :show-overflow-tooltip="true"
+                       min-width="100"/>
+      <el-table-column label="数据键值" align="center" prop="value" v-if="columns[3].visible" :show-overflow-tooltip="true"
+                       min-width="100"/>
+      <el-table-column label="数据标签" align="center" prop="label" v-if="columns[4].visible" :show-overflow-tooltip="true"
+                       min-width="100"/>
+      <el-table-column label="状态" align="center" prop="status" v-if="columns[5].visible" :show-overflow-tooltip="true"
+                       min-width="100">
         <template v-slot="scope">
-          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status" />
+          <dict-tag :options="dict.type.sys_normal_disable" :value="scope.row.status"/>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible" :show-overflow-tooltip="true" min-width="100">
+      <el-table-column label="创建时间" align="center" prop="createTime" v-if="columns[6].visible"
+                       :show-overflow-tooltip="true" min-width="100">
         <template v-slot="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width" width="120" fixed="right">
+      <el-table-column label="操作" align="center" v-if="columns[7].visible" class-name="small-padding fixed-width"
+                       width="120" fixed="right">
         <template v-slot="scope">
           <el-button
             size="mini"
@@ -142,12 +148,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="数据键值" prop="value">
-              <el-input v-model="form.value" placeholder="请输入数据键值" />
+              <el-input v-model="form.value" placeholder="请输入数据键值"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="数据标签" prop="label">
-              <el-input v-model="form.label" placeholder="请输入数据标签" />
+              <el-input v-model="form.label" placeholder="请输入数据标签"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -163,12 +169,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="表格回显样式" prop="listClass">
+            <el-form-item label="回显样式" prop="listClass">
               <el-select v-model="form.listClass" placeholder="请选择" clearable>
                 <el-option
                   v-for="dict in dict.type.sys_dict_color"
                   :key="dict.value"
-                  :label="dict.label"
+                  :label="dict.label + '(' + dict.value + ')'"
                   :value="dict.value"
                 />
               </el-select>
@@ -202,12 +208,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="显示顺序" prop="sort">
-              <el-input-number v-model="form.sort" :max="65535" />
+              <el-input-number v-model="form.sort" :max="65535"/>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea" />
+              <el-input v-model="form.remark" placeholder="请输入备注" type="textarea"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -222,15 +228,15 @@
 
 <script>
 import {
-  listDictDataApi,
-  getDictDataApi,
   addDictDataApi,
+  delDictDataApi,
   editDictDataApi,
-  delDictDataApi
+  getDictDataApi,
+  listDictDataApi
 } from '@/api/tenant/dict/dictData'
-import { DictTypeAuth } from '@auth/tenant'
-import { DicSortEnum, DicStatusEnum, IconEnum } from '@enums'
-import { optionDictTypeApi } from '@/api/tenant/dict/dictType'
+import {DictTypeAuth} from '@auth/tenant'
+import {DicSortEnum, DicStatusEnum, IconEnum} from '@enums'
+import {optionDictTypeApi} from '@/api/tenant/dict/dictType'
 
 export default {
   name: 'DictDataManagement',
@@ -276,30 +282,30 @@ export default {
       },
       // 列信息
       columns: [
-        { key: 0, label: `勾选列`, visible: true },
-        { key: 1, label: `序号列`, visible: true },
-        { key: 2, label: `字典编码`, visible: true },
-        { key: 3, label: `数据键值`, visible: true },
-        { key: 4, label: `数据标签`, visible: true },
-        { key: 5, label: `状态`, visible: true },
-        { key: 6, label: `创建时间`, visible: true },
-        { key: 7, label: `操作列`, visible: true }
+        {key: 0, label: `勾选列`, visible: true},
+        {key: 1, label: `序号列`, visible: true},
+        {key: 2, label: `字典编码`, visible: true},
+        {key: 3, label: `数据键值`, visible: true},
+        {key: 4, label: `数据标签`, visible: true},
+        {key: 5, label: `状态`, visible: true},
+        {key: 6, label: `创建时间`, visible: true},
+        {key: 7, label: `操作列`, visible: true}
       ],
       // 表单参数
       form: {},
       // 表单校验
       rules: {
         value: [
-          { required: true, message: '数据键值不能为空', trigger: 'blur' }
+          {required: true, message: '数据键值不能为空', trigger: 'blur'}
         ],
         label: [
-          { required: true, message: '数据标签不能为空', trigger: 'blur' }
+          {required: true, message: '数据标签不能为空', trigger: 'blur'}
         ],
         isDefault: [
-          { required: true, message: '是否默认不能为空', trigger: 'change' }
+          {required: true, message: '是否默认不能为空', trigger: 'change'}
         ],
         status: [
-          { required: true, message: '状态不能为空', trigger: 'change' }
+          {required: true, message: '状态不能为空', trigger: 'change'}
         ]
       }
     }
@@ -392,7 +398,7 @@ export default {
       })
     },
     /** 提交操作 */
-    submitForm: function() {
+    submitForm: function () {
       this.submitLoading = false
       this.$refs['form'].validate(valid => {
         if (valid) {
@@ -417,7 +423,7 @@ export default {
     handleDelete(row) {
       const delIds = row.id || this.ids
       const delNames = row.label || this.idNames
-      this.$modal.confirm('是否确定要删除' + delNames + '？').then(function() {
+      this.$modal.confirm('是否确定要删除' + delNames + '？').then(function () {
         return delDictDataApi(delIds)
       }).then(() => {
         this.getList()
